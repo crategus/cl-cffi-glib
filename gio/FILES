@@ -1,0 +1,84 @@
+Content from the GIO Reference Manual for Version 2.68
+
+    *   - needs update
+    %   - not fully implemented
+    &   - objects and structures are implemented, some functions are missing
+   (**) - deprecated
+
+File Operations
+
+  gio.file-lisp - File and Directory Handling                      - GIO 2.66 &
+
+  GFileAttribute — Key-Value Paired File Attributes
+  GFileInfo — File Information and Attributes
+  GFileEnumerator — Enumerated Files Routines
+  GIOError — Error helper functions
+  GMountOperation — Object used for authentication and user interaction
+
+File types and applications
+
+  gio.content-type.lisp        - Platform-specific content typing  - GIO 2.66
+  gio.app-info.lisp            - GAppInfo                          - GIO 2.68
+
+  not implemented              - GAppInfoMonitor
+  not implemented              - GDesktopAppInfo
+
+Icons
+
+  gio.icon.lisp                - GIcon                             - GIO 2.68
+  gio.file-icon.lisp           - GFileIcon                         - GIO 2.68
+
+  not implemented              - GBytesIcon
+  gio.loadable-icon.lisp       - GLoadableIcon                     - GIO 2.68 &
+
+  gio.themed-icon.lisp         - GThemedIcon                       - GIO 2.68
+  gio.emblemed-icon.lisp       - Icon with emblems                 - GIO 2.68
+  gio.emblem.lisp              - An object for emblems             - GIO 2.68
+
+Settings
+
+  GSettings - High-level API for application settings
+  GSettingsBackend - Interface for settings backend implementations
+  GSettingsSchema - Loading of GSettings schemas
+
+Resources
+
+  gio.resource.lisp            - GResource                         - GIO 2.66 &
+
+Permissions
+
+  gio.permission.lisp          - GPermission                       - GIO 2.68 %
+
+  GSimplePermission — A GPermission that does not change value
+
+Data Models
+
+  gio.list-model.lisp          - GListModel                        - GIO 2.68
+  gio.list-store.lisp          - GListStore                        - GIO 2.68 &
+
+Application support
+
+  gio.application.lisp         - GApplication                      - GIO 2.68 &
+  gio.appliation-command-line  - GApplicationCommandLine           - GIO 2.68 &
+  gio.action-group.lisp        - GActionGroup                      - GIO 2.62 &
+  gio.action-map.lisp          - GActionMap                        - GIO 2.68
+  gio.simple-action-group.lisp - GSimpleActionGroup                - GIO 2.62
+  gio.action.lisp              - GAction                           - GIO 2.62
+  gio.simple-action.lisp       - GSimpleAction                     - GIO 2.62
+  gio.property-action.lisp     - GPropertyAction                   - GIO 2.64 &
+
+  not implemented              - GRemoteActionGroup
+  not implemented              - GActionGroup exporter
+  not implemented              - GDBusActionGroup
+
+  not implemented              - GMemoryMonitor
+
+  gio.menu-model.lisp          - GMenuModel                        - GIO 2.36.4%
+  gio.menu.lisp                - GMenu                             - GIO 2.38.1%
+
+  not implemented              - GMenuModel exporter
+  not implemented              - GDBusMenuModel
+
+  gio.notification.lisp        - GNotification                     - GIO 2.68
+
+;;; 2021-10-8
