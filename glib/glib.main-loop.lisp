@@ -1,13 +1,13 @@
 ;;; ----------------------------------------------------------------------------
 ;;; glib.main-loop.lisp
 ;;;
-;;; The documentation of this file is taken from the GLib 2.72 Reference
+;;; The documentation of this file is taken from the GLib 2.74 Reference
 ;;; Manual and modified to document the Lisp binding to the GLib library.
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
 ;;; available from <http://www.crategus.com/books/cl-cffi-gtk/>.
 ;;;
 ;;; Copyright (C) 2009 - 2011 Kalyanov Dmitry
-;;; Copyright (C) 2011 - 2022 Dieter Kaiser
+;;; Copyright (C) 2011 - 2023 Dieter Kaiser
 ;;;
 ;;; This program is free software: you can redistribute it and/or modify
 ;;; it under the terms of the GNU Lesser General Public License for Lisp
@@ -629,11 +629,11 @@
 ;;; g_main_loop_new ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_main_loop_new" main-loop-new) (:pointer (:struct main-loop))
+(defun main-loop-new (context is-running)
  #+liber-documentation
- "@version{2022-11-21}
-  @argument[context]{a @type{g:main-context} instance, if a @code{null-pointer},
-    the default context will be used}
+ "@version{2023-1-5}
+  @argument[context]{a @type{g:main-context} instance, if @code{nil}, the
+    default context will be used}
   @argument[is-running]{set to @em{true} to indicate that the main loop is
     running}
   @return{A new @type{g:main-loop} instance.}
@@ -641,7 +641,7 @@
   @begin[Example]{dictionary}
     Create a running main loop with a default context and quit the main loop.
     @begin{pre}
-(setq mainloop (g:main-loop-new (cffi:null-pointer) t))
+(setq mainloop (g:main-loop-new nil t))
 => #.(SB-SYS:INT-SAP #X0808DF88)
 (g:main-loop-is-running mainloop) => T
 (g:main-loop-quit mainloop)
@@ -651,8 +651,11 @@
   @see-type{g:main-loop}
   @see-type{g:main-context}
   @see-function{g:main-loop-run}"
-  (context (:pointer (:struct main-context)))
-  (is-running :boolean))
+  (let ((context (if context context (cffi:null-pointer))))
+    (cffi:foreign-funcall "g_main_loop_new"
+                          (:pointer (:struct main-context)) context
+                          :boolean is-running
+                          (:pointer (:struct main-loop)))))
 
 (export 'main-loop-new)
 
@@ -925,11 +928,11 @@
 ;;; g_main_context_iteration ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_main_context_iteration" main-context-iteration) :boolean
+(defun main-context-iteration (context block)
  #+liber-documentation
- "@version{#2022-11-21}
-  @argument[context]{a @type{g:main-context} instance, if @code{null-pointer},
-    the default context will be used}
+ "@version{#2023-1-5}
+  @argument[context]{a @type{g:main-context} instance, if @code{nil}, the
+    default context will be used}
   @argument[block]{a boolean whether the call may block}
   @return{@em{True} if events were dispatched.}
   @begin{short}
@@ -948,8 +951,11 @@
   since the wait may be interrupted for other reasons than an event source
   becoming ready.
   @see-type{g:main-context}"
-  (context (:pointer (:struct main-context)))
-  (block :boolean))
+  (let ((context (if context context (cffi:null-pointer))))
+    (cffi:foreign-funcall "g_main_context_iteration"
+                          (:pointer (:struct main-context)) context
+                          :boolean block
+                          :boolean)))
 
 (export 'main-context-iteration)
 
@@ -979,15 +985,18 @@
 ;;; g_main_context_pending ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_main_context_pending" main-context-pending) :boolean
+(defun main-context-pending (context)
  #+liber-documentation
- "@version{#2022-11-21}
-  @argument[context]{a @type{g:main-context} instance, if @code{null-pointer},
-    the default context will be used}
+ "@version{#2023-1-5}
+  @argument[context]{a @type{g:main-context} instance, if @code{nil}, the
+    default context will be used}
   @return{@em{True} if events are pending.}
   @short{Checks if any sources have pending events for the given main context.}
   @see-type{g:main-context}"
-  (context (:pointer (:struct main-context))))
+  (let ((context (if context context (cffi:null-pointer))))
+    (cffi:foreign-funcall "g_main_context_pending"
+                          (:pointer (:struct main-context)) context
+                          :boolean)))
 
 (export 'main-context-pending)
 
@@ -1012,34 +1021,38 @@
 ;;; g_main_context_find_source_by_id ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_main_context_find_source_by_id" main-context-find-source-by-id)
-    (:pointer (:struct source))
+(defun main-context-find-source-by-id (context source)
  #+liber-documentation
- "@version{2022-11-21}
-  @argument[context]{a @type{g:main-context} instance, if @code{null-pointer},
-    the default context will be used}
+ "@version{2023-1-5}
+  @argument[context]{a @type{g:main-context} instance, if @code{nil}, the
+    default context will be used}
   @argument[source]{an unsigned integer source ID, as returned by the
     @fun{g:source-id} function}
-  @return{The @type{g:source} instance if found, otherwise, a
-    @code{null-pointer}.}
+  @return{The @type{g:source} instance if found, otherwise @code{nil}.}
   @begin{short}
     Finds a source given a pair of context and ID.
   @end{short}
-  It is a programmer error to attempt to look up a non-existent source.
-
-  More specifically, source IDs can be reissued after a source has been
-  destroyed and therefore it is never valid to use this function with a source
-  ID which may have already been removed. An example is when scheduling an idle
-  to run in another thread with the @fun{g:idle-add} function. The idle may
-  already have run and been removed by the time this function is called on its
-  (now invalid) source ID. This source ID may have been reissued, leading to
-  the operation being performed against the wrong source.
+  It is a programmer error to attempt to look up a non-existent source. More
+  specifically, source IDs can be reissued after a source has been destroyed and
+  therefore it is never valid to use this function with a source ID which may
+  have already been removed. An example is when scheduling an idle to run in
+  another thread with the @fun{g:idle-add} function. The idle may already have
+  run and been removed by the time this function is called on its (now invalid)
+  source ID. This source ID may have been reissued, leading to the operation
+  being performed against the wrong source.
   @see-type{g:main-context}
   @see-type{g:source}
   @see-function{g:source-id}
   @see-function{g:idle-add}"
-  (context (:pointer (:struct main-context)))
-  (source :uint))
+  (let ((result nil)
+        (context (if context context (cffi:null-pointer))))
+    (setf result
+          (cffi:foreign-funcall "g_main_context_find_source_by_id"
+                                (:pointer (:struct main-context)) context
+                                :uint source
+                                (:pointer (:struct source))))
+    (unless (cffi:null-pointer-p result)
+      result)))
 
 (export 'main-context-find-source-by-id)
 
@@ -1248,8 +1261,6 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 ;;; ----------------------------------------------------------------------------
 ;;; g_main_context_query ()                                not exported
 ;;; ----------------------------------------------------------------------------
-
-;; TODO: Return the foreign values timeout, and fds
 
 (defcfun ("g_main_context_query" main-context-query) :int
  #+liber-documentation
@@ -1780,7 +1791,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 (defcfun ("g_timeout_source_new_seconds" timeout-source-new-seconds)
     (:pointer (:struct source))
  #+liber-documentation
- "@version{2022-11-22}
+ "@version{2023-1-5}
   @argument[interval]{an integer with the timeout interval in seconds}
   @return{The newly created @type{g:source} timeout source.}
   @begin{short}
@@ -1788,7 +1799,6 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
   @end{short}
   The source will not initially be associated with any context and must be added
   to one with the @fun{g:source-attach} function before it will be executed.
-
   The scheduling granularity/accuracy of this timeout source will be in
   seconds.
   @see-type{g:source}
@@ -2402,12 +2412,12 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 ;;; g_source_attach ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_source_attach" source-attach) :uint
+(defun source-attach (source context)
  #+liber-documentation
- "@version{2022-11-22}
+ "@version{2023-1-5}
   @argument[source]{a @type{g:source} instance}
-  @argument[context]{a @type{g:main-context} instance, if @code{null-pointer},
-    the default context will be used}
+  @argument[context]{a @type{g:main-context} instance, if @code{nil}, the
+    default context will be used}
   @begin{return}
     The unsigned integer ID greater than 0 for the source within @arg{context}.
   @end{return}
@@ -2418,8 +2428,11 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
   @see-type{g:source}
   @see-type{g:main-context}
   @see-function{g:source-destroy}"
-  (source (:pointer (:struct source)))
-  (context (:pointer (:struct main-context))))
+  (let ((context (if context context (cffi:null-pointer))))
+    (cffi:foreign-funcall "g_source_attach"
+                          (:pointer (:struct source)) source
+                          (:pointer (:struct main-context)) context
+                          :uint)))
 
 (export 'source-attach)
 
@@ -2476,7 +2489,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 
 (defcfun ("g_source_get_priority" source-priority) :int
  #+liber-documentation
- "@version{2022-11-22}
+ "@version{2023-1-5}
   @syntax[]{(g:source-priority source) => priority}
   @syntax[]{(setf (g:source-priority source) => priority)}
   @argument[source]{a @type{g:source} instance}
@@ -2484,11 +2497,10 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
   @begin{short}
     The @sym{g:source-priority} function gets the priority of the source.
   @end{short}
-  The @sym{(setf g:source-priority)} function sets the priority.
-
-  While the main loop is being run, a source will be dispatched if it is ready
-  to be dispatched and no sources at a higher (numerically smaller) priority
-  are ready to be dispatched.
+  The @sym{(setf g:source-priority)} function sets the priority. While the main
+  loop is being run, a source will be dispatched if it is ready to be dispatched
+  and no sources at a higher (numerically smaller) priority are ready to be
+  dispatched.
   @see-type{g:source}"
   (source (:pointer (:struct source))))
 
@@ -2508,7 +2520,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 
 (defcfun ("g_source_get_can_recurse" source-can-recurse) :boolean
  #+liber-documentation
- "@version{2022-11-22}
+ "@version{2023-1-5}
   @syntax[]{(g:source-can-recurse source) => can-recurse}
   @syntax[]{(setf g:source-can-recurse source) can-recurse)}
   @argument[source]{a @type{g:source} instance}
@@ -2518,11 +2530,10 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
     to be called recursively.
   @end{short}
   The @sym{(setf g:source-can-recurse)} function sets whether the source can be
-  called recursively.
-
-  If the @arg{can-recurse} argument is @em{true}, then while the source is being
-  dispatched then this source will be processed normally. Otherwise, all
-  processing of this source is blocked until the dispatch function returns.
+  called recursively. If the @arg{can-recurse} argument is @em{true}, then while
+  the source is being dispatched then this source will be processed normally.
+  Otherwise, all processing of this source is blocked until the dispatch
+  function returns.
   @see-type{g:source}"
   (source (:pointer (:struct source))))
 
@@ -2555,15 +2566,16 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf source-name) (name source)
-  (cffi:foreign-funcall "g_source_set_name"
-                        (:pointer (:struct source)) source
-                        :string name
-                        :void)
+  (let ((str (if name name (cffi:null-pointer))))
+    (cffi:foreign-funcall "g_source_set_name"
+                          (:pointer (:struct source)) source
+                          :string str
+                          :void))
   name)
 
 (defcfun ("g_source_get_name" source-name) :string
  #+liber-documentation
- "@version{2022-11-22}
+ "@version{2023-1-5}
   @syntax[]{(g:source-name source) => name}
   @syntax[]{(setf (g:source-name source) name)}
   @argument[source]{a @type{g:source} instance}
@@ -2573,11 +2585,9 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
     debugging and profiling.
   @end{short}
   The @sym{(setf g:source-name)} function sets a name for the source. The name
-  may be @code{null-pointer}.
-
-  The source name should describe in a human readable way what the source
-  does. For example, \"X11 event queue\" or \"GTK repaint idle handler\" or
-  whatever it is.
+  may be @code{nil}. The source name should describe in a human readable way
+  what the source does. For example, \"X11 event queue\" or \"GTK repaint idle
+  handler\" or whatever it is.
 
   It is permitted to call this function multiple times, but is not recommended
   due to the potential performance impact. For example, one could change the
@@ -2615,13 +2625,12 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 ;;; g_source_get_context () -> source-context
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_source_get_context" source-context)
-    (:pointer (:struct main-context))
+(defun source-context (source)
  #+liber-documentation
- "@version{2022-11-22}
+ "@version{2023-1-5}
   @argument[source]{a @type{g:source} instance}
   @return{The @type{g:main-context} instance with which the source is
-    associated, or @code{null-pointer} if the context has not yet been added to
+    associated, or @code{nil} if the context has not yet been added to
     a source.}
   @begin{short}
     Gets the context with which the source is associated.
@@ -2629,7 +2638,13 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
   Calling this function on a destroyed source is an error.
   @see-type{g:source}
   @see-type{g:main-context}"
-  (source (:pointer (:struct source))))
+  (let ((result nil))
+    (setf result
+          (cffi:foreign-funcall "g_source_get_context"
+                                (:pointer (:struct source)) source
+                                (:pointer (:struct main-context))))
+    (unless (cffi:null-pointer-p result)
+      result)))
 
 (export 'source-context)
 
@@ -2645,17 +2660,15 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 
 (defun source-set-callback (source func)
  #+liber-documentation
- "@version{2022-11-22}
+ "@version{2023-1-5}
   @argument[source]{a @type{g:source} instance}
   @argument[func]{a @symbol{g:source-func} callback function}
   @begin{short}
     Sets the callback function for a source.
   @end{short}
   The callback function for a source is called from the dispatch function of
-  the source.
-
-  Typically, you will not use this function. Instead use functions specific to
-  the type of source you are using.
+  the source. Typically, you will not use this function. Instead use functions
+  specific to the type of source you are using.
   @see-type{g:source}
   @see-symbol{g:source-func}"
   (%source-set-callback source
@@ -2690,6 +2703,40 @@ lambda ()
       @var{+g-source-continue+} and @var{+g-source-remove+} are memorable names
       for the return value.}
   @end{table}
+  @begin[Example]{dictionary}
+    This example shows a timeout callback function, which runs 10 times and
+    then quits the main loop.
+    @begin{pre}
+(let ((counter 0) (max 10))
+  (defun timeout-callback (loop)
+    (incf counter)
+    (if (>= counter max)
+        (progn
+          ;; Reset the counter
+          (setf counter 0)
+          ;; Stop the main loop from running
+          (g:main-loop-quit loop)
+          ;; Stop the source
+          +g-source-remove+)
+        ;; Continue the source
+        +g-source-continue+)))
+
+(defun example-timeout-source ()
+  (let* ((context (g:main-context-new))
+         (mainloop (g:main-loop-new context nil))
+         ;; Create a new timeout source
+         (source (g:timeout-source-new 10)))
+    ;; Attach source to context
+    (g:source-attach source context)
+    ;; Set the callback for source
+    (g:source-set-callback source
+                           (lambda ()
+                             (timeout-callback mainloop)))
+    ;; Start the main loop
+    (g:main-loop-run mainloop)
+    (g:main-loop-unref mainloop)))
+    @end{pre}
+  @end{dictionary}
   @see-function{g:timeout-add}
   @see-function{g:idle-add}")
 
@@ -2734,29 +2781,24 @@ lambda ()
 
 (defcfun ("g_source_get_ready_time" source-ready-time) :int64
  #+liber-documentation
- "@version{2022-11-22}
+ "@version{2023-1-5}
   @syntax[]{(g:source-ready-time source) => time}
   @syntax[]{(setf (g:source-readey-time source) time)}
   @argument[source]{a @type{g:source} instance}
-  @argument[time]{a @code{:int64} value with the monotonic time at which the
-    source will be ready, 0 for \"immediately\", -1 for \"never\"}
+  @argument[time]{an integer with the monotonic time at which the source will
+    be ready, 0 for \"immediately\", -1 for \"never\"}
   @begin{short}
     The @sym{g:source-ready-time} function gets the \"ready time\" of the
     source.
   @end{short}
-  Any time before the current monotonic time (including 0) is an indication that
-  the source will fire immediately.
-
-  The @sym{(setf g:source-ready-time)} function sets a source to be dispatched
-  when the given monotonic time is reached (or passed). If the monotonic time
-  is in the past, as it always will be if @arg{time} is 0, then the source will
-  be dispatched immediately.
-
-  If @arg{time} is -1 then the source is never woken up on the basis of the
-  passage of time.
-
-  Dispatching the source does not reset the ready time. You should do so
-  yourself, from the source dispatch function.
+  Any time before the current monotonic time, including 0, is an indication that
+  the source will fire immediately. The @sym{(setf g:source-ready-time)}
+  function sets a source to be dispatched when the given monotonic time is
+  reached (or passed). If the monotonic time is in the past, as it always will
+  be if @arg{time} is 0, then the source will be dispatched immediately. If
+  @arg{time} is -1 then the source is never woken up on the basis of the
+  passage of time. Dispatching the source does not reset the ready time. You
+  should do so yourself, from the source dispatch function.
 
   Note that if you have a pair of sources where the ready time of one suggests
   that it will be delivered first but the priority for the other suggests that
@@ -3007,7 +3049,7 @@ lambda ()
 
 (defcfun ("g_source_remove" source-remove) :boolean
  #+liber-documentation
- "@version{2022-11-22}
+ "@version{2023-1-5}
   @argument[source]{an unsigned integer ID for the source to remove}
   @return{@em{True} if the source was found and removed.}
   @begin{short}
@@ -3015,10 +3057,8 @@ lambda ()
   @end{short}
   The ID of a @type{g:source} instance is given by the @fun{g:source-id}
   function, or will be returned by the @fun{g:source-attach}, @fun{g:idle-add},
-  @fun{g:timeout-add} functions.
-
-  You must use the @fun{g:source-destroy} function for sources added to a
-  non-default main context.
+  @fun{g:timeout-add} functions. You must use the @fun{g:source-destroy}
+  function for sources added to a non-default main context.
   @see-type{g:source}
   @see-function{g:source-id}
   @see-function{g:source-attach}
