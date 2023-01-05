@@ -1,0 +1,8 @@
+*.tmp
+*.gresource
+doc/**/*.html
+doc/**/*.css
+doc/**/*.ico
+doc/**/*.xml
+test/rtest-templates.lisp
+TODO
