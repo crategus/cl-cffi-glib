@@ -155,8 +155,8 @@
     @about-function{source-name}
     @about-function{source-set-name-by-id}
     @about-function{source-context}
-    @about-function{source-set-callback}
     @about-symbol{source-func}
+    @about-function{source-set-callback}
     @about-function{source-time}
     @about-function{source-ready-time}
     @about-function{source-remove}
