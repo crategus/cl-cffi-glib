@@ -1,0 +1,82 @@
+;;; ----------------------------------------------------------------------------
+;;; glib.stable-pointer.lisp
+;;;
+;;; Copyright (C) 2009 - 2011 Kalyanov Dmitry
+;;; Copyright (C) 2011 - 2021 Dieter Kaiser
+;;;
+;;; This program is free software: you can redistribute it and/or modify
+;;; it under the terms of the GNU Lesser General Public License for Lisp
+;;; as published by the Free Software Foundation, either version 3 of the
+;;; License, or (at your option) any later version and with a preamble to
+;;; the GNU Lesser General Public License that clarifies the terms for use
+;;; with Lisp programs and is referred as the LLGPL.
+;;;
+;;; This program is distributed in the hope that it will be useful,
+;;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;;; GNU Lesser General Public License for more details.
+;;;
+;;; You should have received a copy of the GNU Lesser General Public
+;;; License along with this program and the preamble to the Gnu Lesser
+;;; General Public License.  If not, see <http://www.gnu.org/licenses/>
+;;; and <http://opensource.franz.com/preamble.html>.
+;;; ----------------------------------------------------------------------------
+
+(in-package :glib)
+
+;; Allocates the stable pointer for thing. Stable pointer is an integer that
+;; can be dereferenced with get-stable-pointer-value and freed with
+;; free-stable-pointer. Stable pointers are used to pass references to lisp
+;; objects to foreign code. thing is any object. The return value is an integer.
+
+(let ((stable-pointers (make-array 0 :adjustable t :fill-pointer t))
+      (stable-pointers-length 0))
+
+  (defun allocate-stable-pointer (thing)
+    (flet ((find-fresh-id ()
+             (or ;; Search a free place for the pointer
+                 (position nil stable-pointers)
+                 ;; Add a place for the pointer and increment the array length.
+                 (progn
+                   (vector-push-extend nil stable-pointers)
+                   (1- (incf stable-pointers-length))))))
+      (let ((id (find-fresh-id)))
+        (setf (aref stable-pointers id) thing)
+        (cffi:make-pointer id))))
+
+  ;; Frees the stable pointer previously allocated by allocate-stable-pointer
+
+  (defun free-stable-pointer (stable-pointer)
+    (setf (aref stable-pointers (cffi:pointer-address stable-pointer))
+          nil))
+
+  ;; Returns the objects that is referenced by stable pointer previously
+  ;; allocated by allocate-stable-pointer. May be called any number of times.
+
+  (defun get-stable-pointer-value (stable-pointer)
+    (let ((ptr-id (cffi:pointer-address stable-pointer)))
+      (when (<= 0 ptr-id stable-pointers-length)
+        (aref stable-pointers ptr-id))))
+
+  (defun set-stable-pointer-value (stable-pointer data)
+    (let ((ptr-id (cffi:pointer-address stable-pointer)))
+      (when (<= 0 ptr-id stable-pointers-length)
+        (setf (aref stable-pointers ptr-id) data))))
+)
+
+;; Executes body with ptr bound to the stable pointer to result of evaluating
+;; expr. ptr is a symbol naming the variable which will hold the stable pointer
+;; value and expr is an expression
+
+(defmacro with-stable-pointer ((ptr expr) &body body)
+  `(let ((,ptr (allocate-stable-pointer ,expr)))
+     (unwind-protect
+       (progn ,@body)
+       (free-stable-pointer ,ptr))))
+
+;; Callback function to free a pointer
+
+(defcallback stable-pointer-destroy-notify :void ((data :pointer))
+  (free-stable-pointer data))
+
+;;; --- End of file glib.stable-pointer.lisp -----------------------------------
