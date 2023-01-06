@@ -347,6 +347,7 @@ Application Options:
 
 ;;;     g_option_group_set_translate_func
 
+#-windows
 (test option-group-set-translate-func
   (with-g-option-group (group "a" "b" "c")
     (is-false (g:option-group-set-translate-func group #'translate-func))
@@ -371,6 +372,36 @@ Help Options:
   --help-all          Show all help options
 
 Application Options:
+  -a, --long-name     DESCRIPTION
+
+"
+                     (g:option-context-help context t)))))))
+
+#+windows
+(test option-group-set-translate-func
+  (with-g-option-group (group "a" "b" "c")
+    (is-false (g:option-group-set-translate-func group #'translate-func))
+    (with-g-option-context (context "Description")
+      (let ((entries '(("long-name"       ; long-name
+                        #\a               ; short-name
+                        (:in-main)        ; flags
+                        :none             ; arg
+                        nil               ; arg-data
+                        "description"     ; description
+                        nil))))           ; arg-description
+        (g:option-group-add-entries group entries)
+        (g:option-context-add-group context group)
+        (when *verbose-g-option*
+          (format t "~%~a~%" (g:option-context-help context t)))
+        (is (string=
+"Aufruf:
+  glib-test [OPTION …] Description
+
+Hilfeoptionen:
+  -h, --help          Hilfeoptionen anzeigen
+  --help-all          Alle Hilfeoptionen anzeigen
+
+Anwendungsoptionen:
   -a, --long-name     DESCRIPTION
 
 "
@@ -448,4 +479,4 @@ Application Options:
             ;; Show the help output
             (format t "~&~%~a~%" (g:option-context-help context t))))))
 
-;;; --- 2023-1-4 ---------------------------------------------------------------
+;;; --- 2023-1-6 ---------------------------------------------------------------
