@@ -1907,10 +1907,10 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 (defun timeout-add-seconds (interval func
                             &key (priority +g-priority-default+))
  #+liber-documentation
- "@version{2022-11-22}
+ "@version{2023-1-6}
   @argument[interval]{an unsigned integer with the time between calls to
     @arg{func}, in seconds}
-  @argument[function]{a @symbol{g:source-func} callback function to call}
+  @argument[func]{a @symbol{g:source-func} callback function to call}
   @argument[priority]{an integer with the priority of the timeout source,
     typically this will be in the range between @var{+g-priority-default+} and
     @var{+g-priority-high+} values}

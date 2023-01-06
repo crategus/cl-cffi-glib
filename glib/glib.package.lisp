@@ -104,6 +104,11 @@
       @about-function{filename-to-utf8}
       @about-function{filename-from-utf8}
     @end{subsection}
+    @begin[Utility Functions]{subsection}
+      A selection of portable utility functions. Two functions are implemened.
+      @about-function{application-name}
+      @about-function{prgname}
+    @end{subsection}
   @end{section}
   @begin[The Main Event Loop]{section}
     The Main Event Loop manages all available sources of events.
@@ -180,68 +185,12 @@
     @about-function{bytes-unref-to-data}
     @about-function{bytes-unref-to-array}
   @end{section}
-  @begin[Utility Functions]{section}
-    A selection of portable utility functions.
-    @about-type{user-directory}
-    @about-type{GDebugKey}
-    @about-type{GFormatSizeFlags}
-    @about-function{application-name}
-    @about-function{prgname}
-    @about-function{environ}
-    @about-function{environ-getenv}
-    @about-function{environ-setenv}
-    @about-function{environ-unsetenv}
-    @about-function{getenv}
-    @about-function{setenv}
-    @about-function{unsetenv}
-    @about-function{listenv}
-    @about-function{user-name}
-    @about-function{real-name}
-    @about-function{user-cache-dir}
-    @about-function{user-data-dir}
-    @about-function{user-config-dir}
-    @about-function{user-runtime-dir}
-    @about-function{user-special-dir}
-    @about-function{system-data-dirs}
-    @about-function{system-config-dirs}
-    @about-function{reload-user-special-dirs-cache}
-    @about-function{host-name}
-    @about-function{home-dir}
-    @about-function{tmp-dir}
-    @about-function{current-dir}
-    @about-function{basename}
-    @about-function{dirname}
-    @about-function{path-is-absolute}
-    @about-function{path-skip-root}
-    @about-function{path-basename}
-    @about-function{path-dirname}
-    @about-function{build-filename}
-    @about-function{build-filenamev}
-    @about-function{build-path}
-    @about-function{build-pathv}
-    @about-function{format-size}
-    @about-function{format-size-full}
-    @about-function{format-size-for-display}
-    @about-function{find-program-in-path}
-    @about-function{bit-nth-lsf}
-    @about-function{bit-nth-msf}
-    @about-function{bit-storage}
-    @about-function{spaced-primes-closest}
-    @about-function{atexit}
-    @about-function{parse-debug-string}
-    @about-function{qsort-with-data}
-    @about-function{nullify-pointer}
-  @end{section}
   @begin[Command line option parser]{section}
     Parses command line options.
-    @about-symbol{option-error}
-    @about-symbol{OPTION_ERROR}
     @about-symbol{option-arg}
     @about-symbol{option-flags}
-    @about-symbol{OPTION_REMAINING}
-    @about-macro{with-g-option-context}
-    @about-macro{with-g-option-group}
     @about-type{option-context}
+    @about-macro{with-g-option-context}
     @about-function{option-context-new}
     @about-function{option-context-summary}
     @about-function{option-context-description}
@@ -259,6 +208,7 @@
     @about-function{option-context-add-group}
     @about-function{option-context-main-group}
     @about-type{option-group}
+    @about-macro{with-g-option-group}
     @about-function{option-group-new}
     @about-function{option-group-ref}
     @about-function{option-group-unref}
