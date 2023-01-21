@@ -92,7 +92,7 @@
 ;;;    (:all 1)
 ;;;    (:cursor 2))
 ;;;
-;;; g-name :
+;;; gtype :
 ;;;     a string. Specifies the GEnum name
 ;;;
 ;;; name :
@@ -100,6 +100,13 @@
 ;;;
 ;;; export :
 ;;;     a boolean. If true, name will be exported.
+;;;
+;;; base-type :
+;;;     A symbol denoting a foreign type, default value :int
+;;;
+;;; allow-undeclared-values :
+;;;     Whether ot pass through integer values that were not explicitly declared
+;;;     in the enumeration when translating from foreign memory.
 ;;;
 ;;; type-initializer :
 ;;;     a NIL or a string or a function designator. If non-NIL, specifies the
@@ -115,14 +122,16 @@
 ;;;    (see CFFI manual)
 ;;; ----------------------------------------------------------------------------
 
-;; TODO: Consider to implement the key argument :allow-undeclared-values
-
-(defmacro define-g-enum (g-name name (&key (export t)
-                                           type-initializer)
-                                      &body values)
+(defmacro define-g-enum (gtype name (&key (export t)
+                                          (base-type :int)
+                                          (allow-undeclared-values nil)
+                                          type-initializer)
+                                     &body values)
   `(progn
-     (defcenum (,name :int) ,@values)
-     (setf (symbol-for-gtype ,g-name) ',name)
+     (defcenum (,name ,base-type
+                      :allow-undeclared-values ,allow-undeclared-values)
+               ,@values)
+     (setf (symbol-for-gtype ,gtype) ',name)
      ,@(when export
          (list `(export ',name
                         (find-package ,(package-name (symbol-package name))))))
@@ -410,7 +419,7 @@
 ;;;   (:iconified 2) (:maximized 4) (:sticky 8) (:fullscreen 16)
 ;;;   (:above 32) (:below 64))
 ;;;
-;;; g-name :
+;;; gtype :
 ;;;     a string. Specifies the GEnum name
 ;;;
 ;;; name :
@@ -418,6 +427,9 @@
 ;;;
 ;;; export :
 ;;;     a boolean. If true, name will be exported.
+;;;
+;;; base-type :
+;;;     A symbol denoting a foreign type. The default is :int
 ;;;
 ;;; type-initializer :
 ;;;     a  NIL or a string or a function designator. If non-NIL, specifies the
@@ -432,12 +444,13 @@
 ;;;     specified, it is generated automatically (see CFFI manual)
 ;;; ----------------------------------------------------------------------------
 
-(defmacro define-g-flags (g-name name (&key (export t) type-initializer)
-                                       &body values)
+(defmacro define-g-flags (gtype name (&key (export t)
+                                           (base-type :int)
+                                           type-initializer)
+                                      &body values)
   `(progn
-     (defbitfield ,name ,@values)
-     (setf (symbol-for-gtype ,g-name) ',name)
-;     (register-flags-type ,g-name ',name)
+     (defbitfield ,name ,base-type ,@values)
+     (setf (symbol-for-gtype ,gtype) ',name)
      ,@(when export
          (list `(export ',name
                         (find-package ,(package-name (symbol-package name))))))
