@@ -7,7 +7,7 @@
 
 (test define-g-enum-macro
   (is (equal '(PROGN
- (DEFCENUM (GTK-RESPONSE-TYPE :INT)
+ (DEFCENUM (GTK-RESPONSE-TYPE :INT :ALLOW-UNDECLARED-VALUES NIL)
    (:NONE -1)
    (:REJECT -2)
    (:ACCEPT -3)
@@ -44,7 +44,7 @@
 
 (test define-g-flags-macro
   (is (equal '(PROGN
- (DEFBITFIELD GDK-DRAG-ACTION
+ (DEFBITFIELD GDK-DRAG-ACTION :INT
    (:DEFAULT 1)
    (:COPY 2)
    (:MOVE 4)

@@ -54,3 +54,4 @@
   (mapcar #'gobject:enum-item-value
           (gobject:get-enum-items gtype)))
 
+;;; --- 2023-1-16 --------------------------------------------------------------

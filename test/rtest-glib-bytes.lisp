@@ -20,7 +20,7 @@
   (is (eq 'gobject::boxed-opaque-info
           (type-of (get-boxed-info "GBytes"))))
   (is (eq 'glib::bytes (gobject::boxed-info-name (get-boxed-info "GBytes"))))
-  (is (string= "GBytes" (gobject::boxed-info-type (get-boxed-info "GBytes"))))
+  (is (string= "GBytes" (gobject::boxed-info-gtype (get-boxed-info "GBytes"))))
   (is-false (gobject::boxed-opaque-info-alloc (get-boxed-info "GBytes")))
   (is-false (gobject::boxed-opaque-info-free (get-boxed-info "GBytes"))))
 

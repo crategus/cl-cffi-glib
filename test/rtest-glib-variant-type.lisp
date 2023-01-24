@@ -3,6 +3,8 @@
 (def-suite glib-variant-type :in glib-suite)
 (in-suite glib-variant-type)
 
+(defvar *verbose-glib-variant-type* t)
+
 (defparameter vtypes
               (list "b" "y" "n" "q"  "i" "u" "x" "t" "h" "d" "s" "o" "g" "v"
                     "*" "?" "m*" "a*" "r" "()"  "{?*}" "a{?*}" "as" "ao" "ay"
@@ -48,12 +50,55 @@
 ;;;     G_VARIANT_TYPE
 
 ;;;     g_variant_type_free
+
 ;;;     g_variant_type_copy
+
+(test variant-type-copy
+  (when *verbose-glib-variant-type*
+    (format t "~%")
+    (trace tg:finalize)
+    (trace cffi:translate-from-foreign)
+    (trace cffi:translate-to-foreign)
+    (trace g:variant-type-copy))
+
+  (let* ((variant1 (g:variant-type-new "b"))
+         (variant2 (g:variant-type-copy variant1)))
+
+    (is-false variant1)
+    (is-false (gobject::boxed-opaque-pointer variant1))
+    (is-false variant2)
+    (is-false (gobject::boxed-opaque-pointer variant2))
+  )
+
+  (when *verbose-glib-variant-type*
+    (untrace tg:finalize)
+    (untrace cffi:translate-from-foreign)
+    (untrace cffi:translate-to-foreign)
+    (untrace g:variant-type-copy)))
+
 
 ;;;     g_variant_type_new
 
 (test variant-type-new.1
-  (is (typep (g:variant-type-new "b") 'g:variant-type)))
+
+  (when *verbose-glib-variant-type*
+    (format t "~%")
+    (trace tg:finalize)
+    (trace cffi:translate-from-foreign)
+    (trace cffi:translate-to-foreign)
+    (trace g:variant-type-new))
+
+  (let ((variant (g:variant-type-new "b")))
+    (is (typep variant 'g:variant-type))
+    (is (cffi:pointerp (gobject::boxed-opaque-pointer variant)))
+  )
+
+  (when *verbose-glib-variant-type*
+    (untrace tg:finalize)
+    (untrace cffi:translate-from-foreign)
+    (untrace cffi:translate-to-foreign)
+    (untrace g:variant-type-new)))
+
 
 (test variant-type-new.2
   (is (every (lambda (x) (typep x 'g:variant-type))

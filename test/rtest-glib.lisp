@@ -56,10 +56,10 @@
                          #:+g-type-variant+
                          #:+g-type-checksum+
 
-                         #:define-g-enum
-                         #:define-g-flags
                          #:parse-g-value
                          #:set-g-value
+
+                         #:define-g-boxed-opaque
 
                          #:define-g-enum
                          #:define-g-flags
