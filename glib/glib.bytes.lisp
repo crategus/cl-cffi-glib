@@ -59,22 +59,23 @@
 ;;; ----------------------------------------------------------------------------
 
 (gobject::define-g-boxed-opaque bytes "GBytes"
-  :alloc (bytes-new (cffi:null-pointer) 0))
+  :alloc (%bytes-new (cffi:null-pointer) 0))
 
 #+liber-documentation
 (setf (liber:alias-for-class 'bytes)
       "GBoxed"
       (documentation 'bytes 'type)
- "@version{2023-1-6}
+ "@version{2023-1-24}
   @begin{short}
-    The @sym{g:bytes} structure is a simple refcounted data type representing 
+    The @sym{g:bytes} structure is a simple refcounted data type representing
     an immutable sequence of zero or more bytes from an unspecified origin.
-  @end{short} The purpose of a @sym{g:bytes} instance is to keep the memory 
-  region that it holds alive for as long as anyone holds a reference to the 
-  bytes. When the last reference count is dropped, the memory is released. 
-  Multiple unrelated callers can use byte data in the @sym{g:bytes} instance  
-  without coordinating their activities, resting assured that the byte data 
-  will not change or move while they hold a reference.
+  @end{short}
+  The purpose of a @sym{g:bytes} instance is to keep the memory region that it
+  holds alive for as long as anyone holds a reference to the bytes. When the
+  last reference count is dropped, the memory is released. Multiple unrelated
+  callers can use byte data in the @sym{g:bytes} instance without coordinating
+  their activities, resting assured that the byte data will not change or move
+  while they hold a reference.
 
   A @sym{g:bytes} instance can come from many different origins that may have
   different procedures for freeing the memory region. Examples are memory from
@@ -103,7 +104,11 @@
 ;;; g_bytes_new () -> bytes-new
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_bytes_new" bytes-new) (gobject:boxed bytes)
+(defcfun ("g_bytes_new" %bytes-new) :pointer
+  (data :pointer)
+  (size :size))
+
+(defcfun ("g_bytes_new" bytes-new) (gobject:boxed bytes :return)
  #+liber-documentation
  "@version{2022-11-22}
   @argument[data]{a pointer to the data to be used for the bytes}
@@ -260,9 +265,9 @@
   instance.
 
   A @code{null-pointer} value may be returned if the @arg{size} value is 0. This
-  is not guaranteed, as the @class{g:bytes} instance may represent an empty 
+  is not guaranteed, as the @class{g:bytes} instance may represent an empty
   string with @arg{data} not a @code{null-pointer} value and the @arg{size}
-  value as 0. A @code{null-pointer} value will not be returned if the @arg{size} 
+  value as 0. A @code{null-pointer} value will not be returned if the @arg{size}
   value is non-zero.
   @see-class{g:bytes}"
   (with-foreign-object (size :size)
