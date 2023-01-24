@@ -7,7 +7,7 @@
 ;;; available from <http://www.crategus.com/books/cl-cffi-gtk/>.
 ;;;
 ;;; Copyright (C) 2009 - 2011 Kalyanov Dmitry
-;;; Copyright (C) 2011 - 2022 Dieter Kaiser
+;;; Copyright (C) 2011 - 2023 Dieter Kaiser
 ;;;
 ;;; This program is free software: you can redistribute it and/or modify
 ;;; it under the terms of the GNU Lesser General Public License for Lisp
@@ -72,7 +72,7 @@
 ;; WITH-G-ERROR, WITH-IGNORE-G-ERROr, and WITH-CATCHING-TO-G-ERROR macros are
 ;; exported for use.
 
-(define-condition g-error-condition (error)
+(define-condition g-error-condition (cl:error)
   ((domain  :initarg :domain
             :initform nil
             :reader g-error-condition-domain)
@@ -91,10 +91,11 @@
 
 (defun maybe-raise-g-error-condition (err)
   (unless (cffi:null-pointer-p err)
-    (error 'g-error-condition
-           :domain (cffi:foreign-slot-value err '(:struct %g-error) :domain)
-           :code (cffi:foreign-slot-value err '(:struct %g-error) :code)
-           :message (cffi:foreign-slot-value err '(:struct %g-error) :message))))
+    (cl:error 'g-error-condition
+              :domain (cffi:foreign-slot-value err '(:struct %g-error) :domain)
+              :code (cffi:foreign-slot-value err '(:struct %g-error) :code)
+              :message (cffi:foreign-slot-value err
+                                                '(:struct %g-error) :message))))
 
 (defmacro with-g-error ((err) &body body)
   `(with-foreign-object (,err :pointer)

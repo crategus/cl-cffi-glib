@@ -29,6 +29,7 @@
 
 (defpackage :glib
   (:use :common-lisp)
+  (:shadow #:error)
   (:import-from :cffi #:defcfun
                       #:defcvar
                       #:defcenum

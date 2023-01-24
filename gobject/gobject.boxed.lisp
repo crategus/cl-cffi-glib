@@ -95,6 +95,17 @@
 ;;; g_bytes_ref(), and the GBoxedFreeFunc is g_bytes_unref().
 ;;; ----------------------------------------------------------------------------
 
+(in-package :glib)
+
+;; TODO: Improve the implementation of GError
+;; GError is a boxed type. We export the type for usage in signals handlers,
+;; when getting a GError as argument. Because we need the implemenation if
+;;; GBoxed this code is move to this place.
+(gobject:define-g-boxed-opaque error "GError"
+  :alloc (cl:error "GError cannot be created from the Lisp side."))
+
+(export 'error)
+
 (in-package :gobject)
 
 ;;; ----------------------------------------------------------------------------

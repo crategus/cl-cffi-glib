@@ -1,6 +1,7 @@
 (defpackage :glib-user
   (:nicknames :g)
   (:use :glib :gobject :gio :common-lisp)
+  (:shadow #:error)
   (:export ;; Symbols from glib.version.lisp
            #:+glib+major-version+
            #:+glib-minor-version+
@@ -19,6 +20,7 @@
            #:slist-t
 
            ;; Symbols from glib.error.lisp
+           #:error
            #:with-g-error
            #:with-ignore-g-error
            #:with-catching-to-g-error

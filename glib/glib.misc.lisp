@@ -115,8 +115,8 @@
         ((cffi-features:cffi-feature-p :ppc32)  (defctype size-t :uint32))
         ((cffi-features:cffi-feature-p :ppc64)  (defctype size-t :uint64))
         (t
-         (error "Can not define 'size-t', unknown CPU architecture ~
-                (known are x86 and x86-64)"))))
+         (cl:error "Can not define 'size-t', unknown CPU architecture ~
+                   (known are x86 and x86-64)"))))
 
 #+nil
 (setf (documentation 'size-t 'type)

@@ -508,7 +508,7 @@
   (cffi:foreign-funcall "g_variant_dict_get_type" :size))
 
 (gobject::define-g-boxed-opaque variant-dict "GVariantDict"
-  :alloc (error "GVariantDict cannot be created from the Lisp side."))
+  :alloc (cl:error "GVariantDict cannot be created from the Lisp side."))
 
 #+liber-documentation
 (setf (liber:alias-for-class 'variant-dict)
