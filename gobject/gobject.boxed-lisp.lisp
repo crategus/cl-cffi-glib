@@ -2,7 +2,7 @@
 ;;; gobject.boxed-lisp.lisp
 ;;;
 ;;; Copyright (C) 2009 - 2011 Kalyanov Dmitry
-;;; Copyright (C) 2011 - 2022 Dieter Kaiser
+;;; Copyright (C) 2011 - 2023 Dieter Kaiser
 ;;;
 ;;; This program is free software: you can redistribute it and/or modify
 ;;; it under the terms of the GNU Lesser General Public License for Lisp
@@ -24,7 +24,7 @@
 
 (in-package :gobject)
 
-;; TODO: Rework the implementation of GBoxed.
+;; TODO: More work needed to rework the implementation of GBoxed.
 
 ;;; Garbage Collection for GBoxed objects
 
@@ -35,15 +35,14 @@
   (bt:with-recursive-lock-held (*gboxed-gc-hooks-lock*)
     (when *gboxed-gc-hooks*
       (log-for :gc "activating gc hooks for boxeds: ~A~%" *gboxed-gc-hooks*)
-      (loop
-         for (pointer type) in *gboxed-gc-hooks*
-         do (boxed-free-fn type pointer))
+      (loop for (pointer info) in *gboxed-gc-hooks*
+            do (boxed-free-fn info pointer))
       (setf *gboxed-gc-hooks* nil))))
 
-(defun register-gboxed-for-gc (type pointer)
+(defun register-gboxed-for-gc (info pointer)
   (bt:with-recursive-lock-held (*gboxed-gc-hooks-lock*)
     (let ((locks-were-present (not (null *gboxed-gc-hooks*))))
-      (push (list pointer type) *gboxed-gc-hooks*)
+      (push (list pointer info) *gboxed-gc-hooks*)
       (unless locks-were-present
         (log-for :gc "adding gboxed idle-gc-hook to main loop~%")
         (glib:idle-add #'activate-gboxed-gc-hooks)))))
@@ -51,8 +50,8 @@
 ;;; ----------------------------------------------------------------------------
 
 ;; Hash table to store the Lisp infos for a boxed type.
-;; The key is of type symbol. The accessors works for a symbol, a string
-;; which represents a GType and a GType.
+;; The key is of type symbol. The accessors works for a symbol or a string
+;; which represents a GType.
 
 (defvar *boxed-infos* (make-hash-table :test 'eq))
 
@@ -76,43 +75,12 @@
 
 ;;; ----------------------------------------------------------------------------
 
-;; Helper functions to create an internal symbol
-
-(defun generated-cstruct-name (symbol)
-  (intern (format nil "~A-CSTRUCT" (symbol-name symbol))
-          (symbol-package symbol)))
-
-(defun generated-cunion-name (symbol)
-  (intern (format nil "~A-CUNION" (symbol-name symbol))
-          (symbol-package symbol)))
-
-;;; ----------------------------------------------------------------------------
-
-;; Helper function used by the method boxed-copy-fn
-
-(defun memcpy (target source bytes)
-  (iter (for i from 0 below bytes)
-        (setf (cffi:mem-aref target :uchar i)
-              (cffi:mem-aref source :uchar i))))
-
-;;; ----------------------------------------------------------------------------
-
-;; Define the base type g-boxed-foreign
+;; Define the base type boxed-type
 ;;
 ;; This type is specialized further to:
-;;    g-boxed-opaque-foreign-type
-;;    g-boxed-cstruct-foreign-type
-;;    g-boxed-variant-cstruct-foreign-type
-
-#+nil
-(define-foreign-type g-boxed-foreign-type ()
-  ((info :initarg :info
-         :accessor g-boxed-foreign-info
-         :initform (error "info must be specified"))
-   (return-p :initarg :return-p
-             :accessor g-boxed-foreign-return-p
-             :initform nil))
-  (:actual-type :pointer))
+;;    boxed-opaque-type
+;;    boxed-cstruct-type
+;;    boxed-variant-cstruct-type
 
 (define-foreign-type boxed-type ()
   ((info :initarg :info
@@ -123,22 +91,9 @@
              :initform nil))
   (:actual-type :pointer))
 
-
 (defgeneric make-boxed-type (info &key returnp))
 
-#+nil
-(define-parse-method g-boxed-foreign (name &rest options)
-  (let ((info (get-boxed-info name)))
-    (make-foreign-type info
-                       :return-p (member :return options))))
-
-#+nil
-(export 'g-boxed-foreign)
-
 ;;; ----------------------------------------------------------------------------
-
-;; TODO: A second implementatin which allow to tuse g:boxed
-;; Replace all occurences of g-boxed-foreign with g:boxed
 
 (define-parse-method boxed (name &rest options)
   (let ((info (get-boxed-info name)))
@@ -166,7 +121,7 @@
 
 (defstruct boxed-info
   name
-  type)
+  gtype)
 
 ;;; ----------------------------------------------------------------------------
 
@@ -174,17 +129,18 @@
 
 (defgeneric boxed-copy-fn (info native)
   (:method (info native)
-             (boxed-copy (boxed-info-type info) native)))
+             (boxed-copy (boxed-info-gtype info) native)))
 
 (defgeneric boxed-free-fn (info native)
   (:method (info native)
-             (boxed-free (boxed-info-type info) native)))
+             (boxed-free (boxed-info-gtype info) native)))
 
 ;;; ----------------------------------------------------------------------------
-;;;
 ;;; Imlementation of boxed-opaque-type
-;;;
 ;;; ----------------------------------------------------------------------------
+
+;; TODO: The alloc and free slots are unused in the implementation. Consider
+;; to remove the slots.
 
 (defstruct (boxed-opaque-info (:include boxed-info))
   alloc
@@ -192,15 +148,15 @@
 
 (define-foreign-type boxed-opaque-type (boxed-type) ())
 
-(defclass g-boxed-opaque ()
+(defclass boxed-opaque ()
   ((pointer :initarg :pointer
             :initform nil
-            :accessor g-boxed-opaque-pointer)))
+            :accessor boxed-opaque-pointer)))
 
 (defgeneric pointer (object))
 
-(defmethod pointer ((object g-boxed-opaque))
-  (g-boxed-opaque-pointer object))
+(defmethod pointer ((object boxed-opaque))
+  (boxed-opaque-pointer object))
 
 (defmethod make-boxed-type ((info boxed-opaque-info) &key returnp)
   (make-instance 'boxed-opaque-type
@@ -211,63 +167,94 @@
   (if (null proxy)
       (cffi:null-pointer)
       (prog1
-        (g-boxed-opaque-pointer proxy)
+        (boxed-opaque-pointer proxy)
         (when (boxed-type-returnp type)
           (tg:cancel-finalization proxy)
-          (setf (g-boxed-opaque-pointer proxy) nil)))))
+          (setf (boxed-opaque-pointer proxy) nil)))))
 
 (defmethod cffi:free-translated-object (native (type boxed-opaque-type) param)
   (declare (ignore native type param)))
 
-(defun make-boxed-free-finalizer (type pointer)
-  (lambda ()
-    (register-gboxed-for-gc type pointer)))
-
-(defmethod cffi:translate-from-foreign (native (foreign-type boxed-opaque-type))
-  (let* ((type (boxed-type-info foreign-type))
+(defmethod cffi:translate-from-foreign (native (type boxed-opaque-type))
+  (let* ((info (boxed-type-info type))
          ;; Changed 2021-8-2:
          ;; If NATIVE is NIL we return NIL. This handles the case of slots which
          ;; are initialized to a NULL pointer for the GBoxed opaque type.
          (proxy (when native
-                    (make-instance (boxed-info-name type)
-                                   :pointer native))))
-    proxy))
+                  (make-instance (boxed-info-name info) :pointer native))))
+    (if (and proxy (boxed-type-returnp type))
+        ;; Changed 2023-1-24:
+        ;; Add a finanlizer for return values of type :RETURN
+        (tg:finalize proxy (make-boxed-free-finalizer info native))
+        proxy)))
 
 (defmethod cleanup-translated-object-for-callback
     ((type boxed-opaque-type) proxy native)
   (declare (ignore native))
   (tg:cancel-finalization proxy)
-  (setf (g-boxed-opaque-pointer proxy) nil))
+  (setf (boxed-opaque-pointer proxy) nil))
 
 ;;; ----------------------------------------------------------------------------
 
+(defun make-boxed-free-finalizer (info pointer)
+  (lambda ()
+    (register-gboxed-for-gc info pointer)))
+
 (defmacro define-g-boxed-opaque (name
                                  gtype
-                                 &key (alloc (error "Alloc must be specified")))
+                                 &key type-initializer
+                                      (alloc (error "Alloc must be specified")))
   (let ((native-copy (gensym "NATIVE-COPY-"))
         (instance (gensym "INSTANCE-")))
     `(progn
-       (defclass ,name (g-boxed-opaque) ())
+       (defclass ,name (boxed-opaque) ())
        (defmethod initialize-instance
                   :after ((,instance ,name) &key &allow-other-keys)
-         (unless (g-boxed-opaque-pointer ,instance)
+         (unless (boxed-opaque-pointer ,instance)
            (let ((,native-copy ,alloc))
-             (setf (g-boxed-opaque-pointer ,instance) ,native-copy)
+             (assert (cffi:pointerp ,native-copy))
+             (setf (boxed-opaque-pointer ,instance) ,native-copy)
              (tg:finalize ,instance
                           (make-boxed-free-finalizer (get-boxed-info ',name)
                                                      ,native-copy)))))
+       ;; Change 2023-1-24:
+       ;; Add call to the type initializer, when available
+       ,@(when type-initializer
+           (list `(glib-init:at-init ()
+                     ,(type-initializer-call type-initializer))))
        (eval-when (:compile-toplevel :load-toplevel :execute)
          ;; Register the Lisp symbol NAME for GTYPE
          (setf (symbol-for-gtype ,gtype) ',name)
          ;; Store the structure in a hash table
          (setf (get-boxed-info ',name)
                (make-boxed-opaque-info :name ',name
-                                       :type ,gtype))))))
+                                       :gtype ,gtype))))))
 
 ;;; ----------------------------------------------------------------------------
 ;;;
 ;;; Imlementation of boxed-cstruct-type
 ;;;
+;;; ----------------------------------------------------------------------------
+
+;; Helper function used by the method boxed-copy-fn
+
+(defun memcpy (target source bytes)
+  (iter (for i from 0 below bytes)
+        (setf (cffi:mem-aref target :uchar i)
+              (cffi:mem-aref source :uchar i))))
+
+;;; ----------------------------------------------------------------------------
+
+;; Helper functions to create an internal symbol
+
+(defun generated-cstruct-name (symbol)
+  (intern (format nil "~A-CSTRUCT" (symbol-name symbol))
+          (symbol-package symbol)))
+
+(defun generated-cunion-name (symbol)
+  (intern (format nil "~A-CUNION" (symbol-name symbol))
+          (symbol-package symbol)))
+
 ;;; ----------------------------------------------------------------------------
 
 (defstruct cstruct-description
@@ -353,7 +340,7 @@
          ;; Store the structure in a hash table
          (setf (get-boxed-info ',name)
                (make-boxed-cstruct-info :name ',name
-                                        :type ,gtype
+                                        :gtype ,gtype
                                         :cstruct-description
                                         ,cstruct-description))
          (setf (get ',name 'structure-constructor)
@@ -368,8 +355,8 @@
                  :returnp returnp))
 
 (defmethod boxed-copy-fn ((info boxed-cstruct-info) native)
-  (if (boxed-info-type info)
-      (boxed-copy (boxed-info-type info) native)
+  (if (boxed-info-gtype info)
+      (boxed-copy (boxed-info-gtype info) native)
       (let ((copy
              (cffi:foreign-alloc
                  (generated-cstruct-name (boxed-info-name info)))))
@@ -381,8 +368,8 @@
         copy)))
 
 (defmethod boxed-free-fn ((info boxed-cstruct-info) native)
-  (if (boxed-info-type info)
-      (boxed-free (boxed-info-type info) native)
+  (if (boxed-info-gtype info)
+      (boxed-free (boxed-info-gtype info) native)
       (cffi:foreign-free native)))
 
 ;;; ----------------------------------------------------------------------------
@@ -711,7 +698,7 @@
         (setf (get-boxed-info ',name)
               (make-boxed-variant-info
                        :name ',name
-                       :type ,gtype
+                       :gtype ,gtype
                        :root ,structure
                        :native-type-decision-procedure
                        ,(generate-native-type-decision-procedure structure)
@@ -722,8 +709,8 @@
   (funcall (boxed-variant-info-native-type-decision-procedure info) proxy))
 
 (defmethod boxed-copy-fn ((info boxed-variant-info) native)
-  (if (boxed-info-type info)
-      (boxed-copy (boxed-info-type info) native)
+  (if (boxed-info-gtype info)
+      (boxed-copy (boxed-info-gtype info) native)
       (let ((copy (cffi:foreign-alloc
                       (generated-cunion-name (boxed-info-name info)))))
         (memcpy copy
@@ -734,8 +721,8 @@
         copy)))
 
 (defmethod boxed-free-fn ((info boxed-variant-info) native)
-  (if (boxed-info-type info)
-      (boxed-free (boxed-info-type info) native)
+  (if (boxed-info-gtype info)
+      (boxed-free (boxed-info-gtype info) native)
       (cffi:foreign-free native)))
 
 (defmethod cffi:translate-to-foreign
