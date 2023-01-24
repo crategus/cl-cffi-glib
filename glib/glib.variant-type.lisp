@@ -6,7 +6,7 @@
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
 ;;; available from <http://www.crategus.com/books/cl-cffi-gtk/>.
 ;;;
-;;; Copyright (C) 2012 - 2022 Dieter Kaiser
+;;; Copyright (C) 2012 - 2023 Dieter Kaiser
 ;;;
 ;;; This program is free software: you can redistribute it and/or modify
 ;;; it under the terms of the GNU Lesser General Public License for Lisp
@@ -115,7 +115,7 @@
 
 ;; No variant-type form the Lisp side, we return a NULL-Pointer
 (gobject:define-g-boxed-opaque variant-type "GVariantType"
-  :alloc (error "GVariantType cannot be created from the Lisp side."))
+  :alloc (cl:error "GVariantType cannot be created from the Lisp side."))
 
 #+liber-documentation
 (setf (liber:alias-for-class 'variant-type)
@@ -303,12 +303,15 @@
 ;;; g_variant_type_free ()
 ;;; ----------------------------------------------------------------------------
 
+;; TODO: Check the usage of this function. It should not be neccessary.
+;; The implementation of GBoxed opaque should do all memory menagement.
+
 (defcfun ("g_variant_type_free" variant-type-free) :void
  #+liber-documentation
  "@version{#2022-12-30}
   @argument[vtype]{a @class{g:variant-type} instance}
   @begin{short}
-    Frees a @class{g;variant-type} instance that was allocated with the
+    Frees a @class{g:variant-type} instance that was allocated with the
     @fun{g:variant-type-copy}, @fun{g:variant-type-new} functions or one of the
     container type constructor functions.
   @end{short}
@@ -323,7 +326,8 @@
 ;;; g_variant_type_copy ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_type_copy" variant-type-copy) (gobject:boxed variant-type)
+(defcfun ("g_variant_type_copy" variant-type-copy)
+    (gobject:boxed variant-type :return)
  #+liber-documentation
  "@version{#2022-12-30}
   @argument[vtype]{a @class{g:variant-type} instance}
@@ -343,7 +347,8 @@
 ;;; g_variant_type_new ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_type_new" variant-type-new) (gobject:boxed variant-type)
+(defcfun ("g_variant_type_new" variant-type-new)
+    (gobject:boxed variant-type :return)
  #+liber-documentation
  "@version{2022-12-30}
   @argument[string]{a valid @class{g:variant-type} type string}
@@ -719,7 +724,7 @@
 ;;; ----------------------------------------------------------------------------
 
 (defcfun ("g_variant_type_new_maybe" variant-type-new-maybe)
-    (gobject:boxed variant-type)
+    (gobject:boxed variant-type :return)
  #+liber-documentation
  "@version{#2022-12-30}
   @argument[vtype]{a @class{g:variant-type} instance}
@@ -741,7 +746,7 @@
 ;;; ----------------------------------------------------------------------------
 
 (defcfun ("g_variant_type_new_array" variant-type-new-array)
-    (gobject:boxed variant-type)
+    (gobject:boxed variant-type :return)
  #+liber-documentation
  "@version{#2022-12-30}
   @argument[vtype]{a @class{g:variant-type} instance}
@@ -763,7 +768,7 @@
 ;;; ----------------------------------------------------------------------------
 
 (defcfun ("g_variant_type_new_tuple" %variant-type-new-tuple)
-    (gobject:boxed variant-type)
+    (gobject:boxed variant-type :return)
   (items :pointer)
   (length :int))
 
@@ -795,7 +800,7 @@
 ;;; ----------------------------------------------------------------------------
 
 (defcfun ("g_variant_type_new_dict_entry" variant-type-new-dict-entry)
-    (gobject:boxed variant-type)
+    (gobject:boxed variant-type :return)
  #+liber-documentation
  "@version{#2022-12-30}
   @argument[key]{a basic @class{g:variant-type} instance}
@@ -819,7 +824,7 @@
 ;;; ----------------------------------------------------------------------------
 
 (defcfun ("g_variant_type_element" variant-type-element)
-    (gobject:boxed variant-type)
+    (gobject:boxed variant-type :return)
  #+liber-documentation
  "@version{#2022-12-30}
   @argument[vtype]{an array or maybe @class{g:variant-type} instance}
