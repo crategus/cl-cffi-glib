@@ -18,6 +18,7 @@
            #:strv-t
            #:list-t
            #:slist-t
+           #:date-time
 
            ;; Symbols from glib.error.lisp
            #:error

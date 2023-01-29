@@ -227,6 +227,7 @@
     @about-symbol{key-file-error}
     @about-symbol{key-file-flags}
     @about-type{key-file}
+    @about-macro{with-g-key-file}
     @about-function{key-file-new}
     @about-function{key-file-free}
     @about-function{key-file-ref}

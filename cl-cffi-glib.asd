@@ -139,7 +139,6 @@
     :components
     (;; glib-suite
      (:file "rtest-glib")
-     (:file "rtest-utilities")                   ; Utilities for the testsutie
      (:file "rtest-glib-stable-pointer")
      (:file "rtest-glib-version")
      (:file "rtest-glib-quark")
@@ -153,7 +152,6 @@
      (:file "rtest-glib-variant")
      (:file "rtest-glib-bytes")
      ;; gobject-suite
-     (:file "rtest-gobject")
      (:file "rtest-gobject-generating")
      (:file "rtest-gobject-type-info")
      (:file "rtest-gobject-gvalue")
@@ -167,7 +165,6 @@
      (:file "rtest-gobject-binding")
      (:file "rtest-gobject-utils")
      ;; gio-suite
-     (:file "rtest-gio")
      (:file "rtest-gio-content-type")
      (:file "rtest-gio-app-info")
      (:file "rtest-gio-icon")
