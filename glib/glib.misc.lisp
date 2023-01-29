@@ -7,7 +7,7 @@
 ;;; available from <http://www.crategus.com/books/cl-cffi-gtk/>.
 ;;;
 ;;; Copyright (C) 2009 - 2011 Kalyanov Dmitry
-;;; Copyright (C) 2011 - 2022 Dieter Kaiser
+;;; Copyright (C) 2011 - 2023 Dieter Kaiser
 ;;;
 ;;; This program is free software: you can redistribute it and/or modify
 ;;; it under the terms of the GNU Lesser General Public License for Lisp
@@ -525,6 +525,31 @@
   (if (cffi:null-pointer-p lst)
       (cffi:null-pointer)
       (cffi:foreign-slot-value lst '(:struct %slist-t) 'next)))
+
+;;; ----------------------------------------------------------------------------
+;;; GDateTime
+;;; ----------------------------------------------------------------------------
+
+(define-foreign-type date-time-type ()
+  ()
+  (:actual-type :pointer)
+  (:simple-parser date-time))
+
+(let ((offset (encode-universal-time 0 0 0 1 1 1970)))
+  (defmethod cffi:translate-to-foreign
+      (value (type date-time-type))
+    (cffi:foreign-funcall "g_date_time_new_from_unix_utc"
+                          :int64 (- value offset)
+                          :pointer))
+
+  (defmethod cffi:translate-from-foreign
+      (value (type date-time-type))
+    (+ offset
+       (cffi:foreign-funcall "g_date_time_to_unix"
+                             :pointer value
+                             :int64))))
+
+(export 'date-time)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_chdir                                                not implemented
