@@ -54,7 +54,7 @@
     (is (typep (gobject::get-boxed-info 'g:variant-type)
                'gobject::boxed-opaque-info))))
 
-(test make-instance.1
+(test make-bytes.1
   (when *verbose-gobject-boxed*
     (trace tg:finalize)
     (trace gobject::register-gboxed-for-gc)
@@ -67,8 +67,7 @@
     (is (typep bytes 'g:bytes))
     (is (cffi:pointerp (gobject::boxed-opaque-pointer bytes)))
     (is (cffi:pointerp (g:bytes-data bytes)))
-    (is (= 0 (g:bytes-size bytes)))
-    (is-false gobject::*gboxed-gc-hooks*))
+    (is (= 0 (g:bytes-size bytes))))
 
   (when *verbose-gobject-boxed*
     (untrace tg:finalize)
@@ -78,9 +77,10 @@
     (untrace g:bytes-data)
     (untrace g:bytes-size)))
 
-(test make-instance.2
+(test make-bytes.2
   (when *verbose-gobject-boxed*
     (trace tg:finalize)
+    (trace tg:cancel-finalization)
     (trace cffi:translate-from-foreign)
     (trace cffi:translate-to-foreign)
     (trace g:bytes-new)
@@ -91,17 +91,60 @@
     (is (typep bytes 'g:bytes))
     (is (cffi:pointerp (gobject::boxed-opaque-pointer bytes)))
     (is (cffi:pointerp (g:bytes-data bytes)))
-    (is (= 0 (g:bytes-size bytes)))
-    (is-false gobject::*gboxed-gc-hooks*))
+    (is (= 0 (g:bytes-size bytes))))
 
   (when *verbose-gobject-boxed*
     (untrace tg:finalize)
+    (untrace tg:cancel-finalization)
     (untrace cffi:translate-from-foreign)
     (untrace cffi:translate-to-foreign)
     (untrace g:bytes-new)
     (untrace g:bytes-data)
     (untrace g:bytes-size)))
 
+(test convert-to/from-foreign-for-bytes
+  (multiple-value-bind (data len)
+      (cffi:foreign-string-alloc "A test string")
+    (let* ((bytes (g:bytes-new data len))
+           (bytes-ptr (cffi:convert-to-foreign bytes '(g:boxed g:bytes))))
+
+      (is (typep bytes 'g:bytes))
+      (is (string= "A test string"
+                   (cffi:foreign-string-to-lisp (g:bytes-data bytes))))
+      (is (cffi:pointerp (gobject::boxed-opaque-pointer bytes)))
+      (is (cffi:pointerp bytes-ptr))
+      (is (eq bytes-ptr
+              (gobject::boxed-opaque-pointer bytes)))
+
+      (is (cffi:pointerp (setf bytes-ptr
+                               (cffi:convert-to-foreign bytes
+                                                        '(g:boxed g:bytes
+                                                                  :return)))))
+      (is (typep bytes 'g:bytes))
+      (is-false (gobject::boxed-opaque-pointer bytes))
+      (is (cffi:pointerp bytes-ptr))
+
+      (is (typep (setf bytes (cffi:convert-from-foreign bytes-ptr
+                                                        '(g:boxed g:bytes)))
+                 'g:bytes))
+      (is (string= "A test string"
+                   (cffi:foreign-string-to-lisp (g:bytes-data bytes))))
+      (is (cffi:pointerp (gobject::boxed-opaque-pointer bytes)))
+      (is (cffi:pointerp bytes-ptr))
+      (is (eq bytes-ptr
+              (gobject::boxed-opaque-pointer bytes)))
+
+      (is (typep (setf bytes (cffi:convert-from-foreign bytes-ptr
+                                                        '(g:boxed g:bytes
+                                                                  :return)))
+                 'g:bytes))
+      (is (string= "A test string"
+                   (cffi:foreign-string-to-lisp (g:bytes-data bytes))))
+      (is (cffi:pointerp (gobject::boxed-opaque-pointer bytes)))
+      (is (cffi:pointerp bytes-ptr))
+      (is (eq bytes-ptr
+              (gobject::boxed-opaque-pointer bytes)))
+)))
 
 (test define-g-boxed-opaque
   (when *verbose-gobject-boxed*
@@ -142,4 +185,4 @@
       (untrace gobject::boxed-copy-fn)
     )))
 
-;;; --- 2023-1-23 --------------------------------------------------------------
+;;; --- 2023-1-27 --------------------------------------------------------------

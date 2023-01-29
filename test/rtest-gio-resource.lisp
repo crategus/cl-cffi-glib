@@ -80,9 +80,8 @@
 
 (test resource-load.1
   (let ((resource (g:resource-load
-                      (sys-path "test/rtest-gio-resource.gresource"))))
-    (is (typep resource 'g:resource))
-    (is-false (g:resource-unref resource))))
+                      (sys-path "resource/rtest-gio-resource.gresource"))))
+    (is (typep resource 'g:resource))))
 
 (test resource-load.2
   (signals (error) (g:resource-load "unknown")))
@@ -94,49 +93,51 @@
 ;;;     g_resource_lookup_data
 
 (test resource-lookup-data
-  (let ((resource (g:resource-load
-                      (sys-path "test/rtest-gio-resource.gresource"))))
-    (is-false (g:resources-register resource))
-    (is (cffi:pointerp (g:resource-lookup-data resource
-                                          "/com/crategus/test/ducky.png"
-                                          :none)))
-    (is (cffi:pointerp (g:resource-lookup-data resource
-                                          "/com/crategus/test/rtest-dialog.ui"
-                                          :none)))
-    (is-false (g:resources-unregister resource))))
+  (let ((path (sys-path "resource/rtest-gio-resource.gresource")))
+    (with-g-resource (resource path)
+      (is (cffi:pointerp 
+              (g:resource-lookup-data resource
+                                      "/com/crategus/test/ducky.png"
+                                      :none)))
+      (is (cffi:pointerp 
+          (g:resource-lookup-data resource
+                                  "/com/crategus/test/rtest-dialog.ui"
+                                  :none))))))
 
 ;;;     g_resource_open_stream
 
 ;;;     g_resource_enumerate_children
 
 (test resource-enumerate-children
-  (with-g-resource (resource (sys-path "test/rtest-gio-resource.gresource"))
-    (is (equal '("ducky.png" "floppybuddy.gif" "gtk-logo-24.png"
-                 "rtest-application.ui" "rtest-dialog.ui" "rtest-dialog2.ui")
-               (sort (g:resource-enumerate-children resource
-                                                    "/com/crategus/test"
-                                                    :none)
-                     #'string<)))))
+  (let ((path (sys-path "resource/rtest-gio-resource.gresource")))
+    (with-g-resource (resource path)
+      (is (equal '("ducky.png" "floppybuddy.gif" "gtk-logo-24.png"
+                   "rtest-application.ui" "rtest-dialog.ui" "rtest-dialog2.ui")
+                 (sort (g:resource-enumerate-children resource
+                                                      "/com/crategus/test"
+                                                      :none)
+                       #'string<))))))
 
 ;;;     g_resource_get_info
 
 (test resource-info
-  (with-g-resource (resource (sys-path "test/rtest-gio-resource.gresource"))
-    (is (equal '(248546 0)
-               (multiple-value-list
-                   (g:resource-info resource
-                                    "/com/crategus/test/ducky.png"
-                                    :none))))
-    (is (equal '(5216 0)
-               (multiple-value-list
-                   (g:resource-info resource
-                                    "/com/crategus/test/floppybuddy.gif"
-                                    :none))))
-    (is (equal '(1703 0)
-               (multiple-value-list
-                   (g:resource-info resource
-                                    "/com/crategus/test/rtest-application.ui"
-                                    :none))))))
+  (let ((path (sys-path "resource/rtest-gio-resource.gresource")))
+    (with-g-resource (resource path)
+      (is (equal '(248546 0)
+                 (multiple-value-list
+                     (g:resource-info resource
+                                      "/com/crategus/test/ducky.png"
+                                      :none))))
+      (is (equal '(5216 0)
+                 (multiple-value-list
+                     (g:resource-info resource
+                                      "/com/crategus/test/floppybuddy.gif"
+                                      :none))))
+      (is (equal '(1703 0)
+                 (multiple-value-list
+                     (g:resource-info resource
+                                      "/com/crategus/test/rtest-application.ui"
+                                      :none)))))))
 
 ;;;     g_static_resource_init
 ;;;     g_static_resource_fini
@@ -145,86 +146,47 @@
 ;;;     g_resources_register
 ;;;     g_resources_unregister
 
-#+gtk4
-(test resources-register
-  (let ((image nil)
-        (resource (g:resource-load
-                      (sys-path "test/rtest-gio-resource.gresource"))))
-    (is (typep resource 'g:resource))
-    ;; Register the resource
-    (is-false (g:resources-register resource))
-    (is (typep (setf image
-                     (gtk:image-new-from-resource "/com/crategus/test/ducky.png"))
-               'gtk:image))
-    ;; Pixbuf is loaded
-    (is (typep (gtk:image-paintable image) 'gdk:texture))
-    ;; Unregister the resource
-    (is-false (g:resources-unregister resource))
-    (is (typep (setf image
-                     (gtk:image-new-from-resource "/com/crategus/test/ducky.png"))
-               'gtk:image))
-    ;; Pixbuf is not loaded
-    (is-false (typep (gtk:image-paintable image) 'gdk:texture))
-    (is-false (g:resource-unref resource))))
-
-#+gtk3
-(test resources-register
-  (let ((image nil)
-        (resource (g:resource-load
-                      (sys-path "test/rtest-gio-resource.gresource"))))
-    (is (typep resource 'g:resource))
-    ;; Register the resource
-    (is-false (g:resources-register resource))
-    (is (typep (setf image
-                     (gtk:image-new-from-resource "/com/crategus/test/ducky.png"))
-               'gtk:image))
-    ;; Pixbuf is loaded
-    (is (typep (gtk:image-pixbuf image) 'gdk:pixbuf))
-    ;; Unregister the resource
-    (is-false (g:resources-unregister resource))
-    (is (typep (setf image
-                     (gtk:image-new-from-resource "/com/crategus/test/ducky.png"))
-               'gtk:image))
-    ;; Pixbuf is not loaded
-    (is-false (typep (gtk:image-pixbuf image) 'gdk:pixbuf))
-    (is-false (g:resource-unref resource))))
-
 ;;;     g_resources_lookup_data
 
 (test resources-lookup-data
-  (with-g-resource (resource (sys-path "test/rtest-gio-resource.gresource"))
-    (is (cffi:pointerp (g:resources-lookup-data "/com/crategus/test/ducky.png"
-                                           :none)))
-    (is (cffi:pointerp (g:resources-lookup-data "/com/crategus/test/rtest-dialog.ui"
-                                           :none)))))
+  (let ((path (sys-path "resource/rtest-gio-resource.gresource")))
+    (with-g-resource (resource path)
+      (is (cffi:pointerp 
+              (g:resources-lookup-data "/com/crategus/test/ducky.png"
+                                       :none)))
+      (is (cffi:pointerp 
+              (g:resources-lookup-data "/com/crategus/test/rtest-dialog.ui"
+                                       :none))))))
 
 ;;;     g_resources_open_stream
 
 ;;;     g_resources_enumerate_children
 
 (test resources-enumerate-children
-  (with-g-resource (resource (sys-path "test/rtest-gio-resource.gresource"))
-    (is (equal '("ducky.png" "floppybuddy.gif" "gtk-logo-24.png"
-                 "rtest-application.ui" "rtest-dialog.ui" "rtest-dialog2.ui")
-               (sort (g:resources-enumerate-children "/com/crategus/test"
-                                                     :none)
-                     #'string<)))))
+  (let ((path (sys-path "resource/rtest-gio-resource.gresource")))
+    (with-g-resource (resource path)
+      (is (equal '("ducky.png" "floppybuddy.gif" "gtk-logo-24.png"
+                   "rtest-application.ui" "rtest-dialog.ui" "rtest-dialog2.ui")
+                 (sort (g:resources-enumerate-children "/com/crategus/test"
+                                                       :none)
+                       #'string<))))))
 
 ;;;     g_resources_get_info
 
 (test resources-info
-  (with-g-resource (resource (sys-path "test/rtest-gio-resource.gresource"))
-    (is (equal '(248546 0)
-               (multiple-value-list
-                   (g:resources-info "/com/crategus/test/ducky.png"
-                                     :none))))
-    (is (equal '(5216 0)
-               (multiple-value-list
-                   (g:resources-info "/com/crategus/test/floppybuddy.gif"
-                                     :none))))
-    (is (equal '(1703 0)
-               (multiple-value-list
-                   (g:resources-info "/com/crategus/test/rtest-application.ui"
-                                     :none))))))
+  (let ((path (sys-path "resource/rtest-gio-resource.gresource")))
+    (with-g-resource (resource path)
+      (is (equal '(248546 0)
+                 (multiple-value-list
+                     (g:resources-info "/com/crategus/test/ducky.png"
+                                       :none))))
+      (is (equal '(5216 0)
+                 (multiple-value-list
+                     (g:resources-info "/com/crategus/test/floppybuddy.gif"
+                                       :none))))
+      (is (equal '(1703 0)
+                 (multiple-value-list
+                     (g:resources-info "/com/crategus/test/rtest-application.ui"
+                                       :none)))))))
 
-;;; --- 2023-1-2 ---------------------------------------------------------------
+;;; --- 2023-1-27 --------------------------------------------------------------

@@ -48,11 +48,11 @@
 ;;;     g_file_icon_new
 
 (test file-icon-new
-  (let* ((filename (sys-path "test/gtk-logo-24.png"))
-         (file (g:file-new-for-path filename))
+  (let* ((path (sys-path "resource/gtk-logo-24.png"))
+         (file (g:file-new-for-path path))
          (icon (g:file-icon-new file)))
     (is (typep icon 'g:file-icon))
     (is (string= "gtk-logo-24.png"
                  (g:file-basename (g:file-icon-file icon))))))
 
-;;; --- 2022-12-27 -------------------------------------------------------------
+;;; --- 2023-1-29 --------------------------------------------------------------

@@ -96,12 +96,12 @@
 (test action-group-action-parameter-type
   (let ((group (g:simple-action-group-new)))
     (is-false (g:action-map-add-action-entries group *action-entries*))
-    ;; FIXME: Does not return nil, null-pointer or a valid g:variant-type value
-    (is (typep (g:action-group-action-parameter-type group "copy") 'g:variant-type))
-    ;; But this code works as expected, the return value is nil
+    ;; Does not return a g:variant-type, but nil
+    (is-false (g:action-group-action-parameter-type group "copy"))
+    ;; Again this code works as expected, the return value is nil
     (let ((action (g:action-map-lookup-action group "copy")))
       (is-false (g:action-parameter-type action)))
-    ;; This is the expected case.
+    ;; This is the expected case for a valid g:variant-type
     (is (typep (g:action-group-action-parameter-type group "markup")
                'g:variant-type))
     (is (string= "s"
@@ -113,12 +113,12 @@
 (test action-group-action-state-type
   (let ((group (g:simple-action-group-new)))
     (is-false (g:action-map-add-action-entries group *action-entries*))
-    ;; FIXME: Does not return nil, null-pointer or a valid g:variant-type value
-    (is (typep (g:action-group-action-state-type group "copy") 'g:variant-type))
-    ;; But this code works as expected, the return value is nil
+    ;; Does not return a g:variant-type instance, but nil
+    (is-false (g:action-group-action-state-type group "copy"))
+    ;; Again this code works as expected, the return value is nil
     (let ((action (g:action-map-lookup-action group "copy")))
       (is-false (g:action-state-type action)))
-    ;; This is the expected case.
+    ;; This is case with for a valid g:variant-type
     (is (typep (g:action-group-action-state-type group "toolbar")
                'g:variant-type))
     (is (string= "b"
@@ -171,13 +171,13 @@
     (is-false (g:variant-boolean (g:action-group-action-state group "toolbar")))
     ;; Change a string state
     (is (string= "vala"
-                 (g:variant-string 
+                 (g:variant-string
                      (g:action-group-action-state group "sources"))))
-    (is-false (g:action-group-change-action-state 
+    (is-false (g:action-group-change-action-state
                                             group "sources"
                                             (g:variant-new-string "new value")))
     (is (string= "new value"
-                 (g:variant-string 
+                 (g:variant-string
                      (g:action-group-action-state group "sources"))))))
 
 ;;;     g_action_group_activate_action

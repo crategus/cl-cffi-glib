@@ -3,7 +3,7 @@
 (def-suite glib-variant-type :in glib-suite)
 (in-suite glib-variant-type)
 
-(defvar *verbose-glib-variant-type* t)
+(defvar *verbose-glib-variant-type* nil)
 
 (defparameter vtypes
               (list "b" "y" "n" "q"  "i" "u" "x" "t" "h" "d" "s" "o" "g" "v"
@@ -64,10 +64,10 @@
   (let* ((variant1 (g:variant-type-new "b"))
          (variant2 (g:variant-type-copy variant1)))
 
-    (is-false variant1)
-    (is-false (gobject::boxed-opaque-pointer variant1))
-    (is-false variant2)
-    (is-false (gobject::boxed-opaque-pointer variant2))
+    (is (typep variant1 'g:variant-type))
+    (is (cffi:pointerp (gobject::boxed-opaque-pointer variant1)))
+    (is (typep variant2 'g:variant-type))
+    (is (cffi:pointerp (gobject::boxed-opaque-pointer variant2)))
   )
 
   (when *verbose-glib-variant-type*
@@ -312,4 +312,4 @@
     (is (string= "n" (g:variant-type-dup-string (g:variant-type-key dict))))
     (is (string= "b" (g:variant-type-dup-string (g:variant-type-value dict))))))
 
-;;; 2021-7-31
+;;; --- 2023-1-27 --------------------------------------------------------------

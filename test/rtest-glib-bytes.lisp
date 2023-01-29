@@ -7,9 +7,6 @@
 
 ;;;     GBytes
 
-(eval-when (:compile-toplevel :load-toplevel :execute)
-  (cffi:foreign-funcall "g_bytes_get_type" :size))
-
 (test bytes-structure
   ;; Type check
   (is (g:type-is-a (g:gtype "GBytes") (g:gtype "GBoxed")))
