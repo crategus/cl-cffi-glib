@@ -6,7 +6,7 @@
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
 ;;; available from <http://www.crategus.com/books/cl-cffi-gtk/>.
 ;;;
-;;; Copyright (C) 2012 - 2022 Dieter Kaiser
+;;; Copyright (C) 2012 - 2023 Dieter Kaiser
 ;;;
 ;;; This program is free software: you can redistribute it and/or modify
 ;;; it under the terms of the GNU Lesser General Public License for Lisp
@@ -343,11 +343,9 @@ lambda (action value)    :run-last
   @see-function{g:variant-type-new}"
   (if (stringp vtype)
       (let ((vtype1 (glib:variant-type-new vtype)))
-        (unwind-protect
-          (make-instance 'simple-action
-                         :name name
-                         :parameter-type vtype1)
-          (glib:variant-type-free vtype1)))
+        (make-instance 'simple-action
+                       :name name
+                       :parameter-type vtype1))
       (make-instance 'simple-action
                      :name name
                      :parameter-type vtype)))
@@ -382,12 +380,10 @@ lambda (action value)    :run-last
   @see-function{g:variant-type-new}"
   (if (stringp vtype)
       (let ((vtype1 (glib:variant-type-new vtype)))
-        (unwind-protect
-          (make-instance 'simple-action
-                         :name name
-                         :parameter-type vtype1
-                         :state state)
-          (glib:variant-type-free vtype1)))
+        (make-instance 'simple-action
+                       :name name
+                       :parameter-type vtype1
+                       :state state))
       (make-instance 'simple-action
                      :name name
                      :parameter-type vtype

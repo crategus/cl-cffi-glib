@@ -6,7 +6,7 @@
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
 ;;; available from <http://www.crategus.com/books/cl-cffi-gtk/>.
 ;;;
-;;; Copyright (C) 2013 - 2022 Dieter Kaiser
+;;; Copyright (C) 2013 - 2023 Dieter Kaiser
 ;;;
 ;;; This program is free software: you can redistribute it and/or modify
 ;;; it under the terms of the GNU Lesser General Public License for Lisp
@@ -1043,9 +1043,7 @@
   @see-class{g:variant-type}"
   (if (stringp vtype)
       (let ((vtype1 (glib:variant-type-new vtype)))
-        (unwind-protect
-          (%menu-item-attribute-value item attribute vtype1)
-          (glib:variant-type-free vtype1)))
+        (%menu-item-attribute-value item attribute vtype1))
       (%menu-item-attribute-value item attribute vtype)))
 
 (export 'menu-item-attribute-value)

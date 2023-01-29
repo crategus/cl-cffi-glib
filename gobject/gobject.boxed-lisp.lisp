@@ -24,9 +24,11 @@
 
 (in-package :gobject)
 
+(defvar *debug-gboxed-gc* nil)
+
 ;; TODO: More work needed to rework the implementation of GBoxed.
 
-;;; Garbage Collection for GBoxed objects
+;;; Garbage Collection for GBoxed opaque objects
 
 (defvar *gboxed-gc-hooks-lock* (bt:make-recursive-lock "gboxed-gc-hooks-lock"))
 (defvar *gboxed-gc-hooks* nil) ; pointers to objects to be freed
@@ -34,7 +36,8 @@
 (defun activate-gboxed-gc-hooks ()
   (bt:with-recursive-lock-held (*gboxed-gc-hooks-lock*)
     (when *gboxed-gc-hooks*
-      (log-for :gc "activating gc hooks for boxeds: ~A~%" *gboxed-gc-hooks*)
+      (log-for :gboxed-gc
+               "*%Activating gc hooks for boxed opaque: ~A~%" *gboxed-gc-hooks*)
       (loop for (pointer info) in *gboxed-gc-hooks*
             do (boxed-free-fn info pointer))
       (setf *gboxed-gc-hooks* nil))))
@@ -44,7 +47,7 @@
     (let ((locks-were-present (not (null *gboxed-gc-hooks*))))
       (push (list pointer info) *gboxed-gc-hooks*)
       (unless locks-were-present
-        (log-for :gc "adding gboxed idle-gc-hook to main loop~%")
+        (log-for :gboxed-gc "~%Adding gboxed-gc-hook to main loop~%")
         (glib:idle-add #'activate-gboxed-gc-hooks)))))
 
 ;;; ----------------------------------------------------------------------------
@@ -180,7 +183,9 @@
          ;; Changed 2021-8-2:
          ;; If NATIVE is NIL we return NIL. This handles the case of slots which
          ;; are initialized to a NULL pointer for the GBoxed opaque type.
-         (proxy (when native
+         ;; Changed 2023-1-24:
+         ;; In addition we do not return a boxed value for NULL-POINTER
+         (proxy (when (and native (not (cffi:null-pointer-p native)))
                   (make-instance (boxed-info-name info) :pointer native))))
     (if (and proxy (boxed-type-returnp type))
         ;; Changed 2023-1-24:

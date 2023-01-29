@@ -108,20 +108,15 @@
 ;;; GVariantType
 ;;; ----------------------------------------------------------------------------
 
-;; Call the type intializer at this point.
-
-(glib-init:at-init ()
-  (cffi:foreign-funcall "g_variant_type_get_gtype" :size))
-
-;; No variant-type form the Lisp side, we return a NULL-Pointer
 (gobject:define-g-boxed-opaque variant-type "GVariantType"
+  :type-initializer "g_variant_type_get_gtype"
   :alloc (cl:error "GVariantType cannot be created from the Lisp side."))
 
 #+liber-documentation
 (setf (liber:alias-for-class 'variant-type)
       "GBoxed"
       (documentation 'variant-type 'type)
- "@version{2022-12-30}
+ "@version{2023-1-27}
   @begin{short}
     The GVariant type system is based, in large part, on the D-Bus type system,
     with two major changes and some minor lifting of restrictions.
@@ -300,11 +295,8 @@
   (string :string))
 
 ;;; ----------------------------------------------------------------------------
-;;; g_variant_type_free ()
+;;; g_variant_type_free ()                                 not needed
 ;;; ----------------------------------------------------------------------------
-
-;; TODO: Check the usage of this function. It should not be neccessary.
-;; The implementation of GBoxed opaque should do all memory menagement.
 
 (defcfun ("g_variant_type_free" variant-type-free) :void
  #+liber-documentation
@@ -320,8 +312,6 @@
   @see-function{g:variant-type-new}"
   (vtype (gobject:boxed variant-type)))
 
-(export 'variant-type-free)
-
 ;;; ----------------------------------------------------------------------------
 ;;; g_variant_type_copy ()
 ;;; ----------------------------------------------------------------------------
@@ -329,7 +319,7 @@
 (defcfun ("g_variant_type_copy" variant-type-copy)
     (gobject:boxed variant-type :return)
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2023-1-27}
   @argument[vtype]{a @class{g:variant-type} instance}
   @return{A new @class{g:variant-type} instance.}
   @begin{short}
@@ -350,17 +340,15 @@
 (defcfun ("g_variant_type_new" variant-type-new)
     (gobject:boxed variant-type :return)
  #+liber-documentation
- "@version{2022-12-30}
+ "@version{2023-1-27}
   @argument[string]{a valid @class{g:variant-type} type string}
   @return{A new @class{g:variant-type} instance.}
   @begin{short}
     Creates a new @class{g:variant-type} instance corresponding to the type
     string given by @arg{string}.
   @end{short}
-  It is appropriate to call the @fun{g:variant-type-free} function on the
-  return value. It is a programmer error to call this function with an invalid
-  type string. Use the @fun{g:variant-type-string-is-valid} function if you are
-  unsure.
+  It is a programmer error to call this function with an invalid type string.
+  Use the @fun{g:variant-type-string-is-valid} function if you are unsure.
   @begin[Examples]{dictionary}
     @begin{pre}
 ;; A string variant type

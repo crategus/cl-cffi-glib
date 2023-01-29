@@ -6,7 +6,7 @@
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
 ;;; available from <http://www.crategus.com/books/cl-cffi-gtk/>.
 ;;;
-;;; Copyright (C) 2019 - 2022 Dieter Kaiser
+;;; Copyright (C) 2019 - 2023 Dieter Kaiser
 ;;;
 ;;; This program is free software: you can redistribute it and/or modify
 ;;; it under the terms of the GNU Lesser General Public License for Lisp
@@ -82,9 +82,7 @@
        (resources-register ,resource)
        (unwind-protect
          (progn ,@body)
-         (progn
-           (resources-unregister ,resource)
-           (resource-unref ,resource)))))
+         (resources-unregister ,resource))))
 
 (export 'with-g-resource)
 
@@ -102,7 +100,7 @@
 (setf (liber:alias-for-symbol 'resource-flags)
       "GFlags"
       (liber:symbol-documentation 'resource-flags)
- "@version{#2022-12-30}
+ "@version{2023-1-26}
   @begin{short}
     The @sym{g:resource-flags} flags give information about a particular file
     inside a resource bundle.
@@ -133,7 +131,7 @@
 (setf (liber:alias-for-symbol 'resource-lookup-flags)
       "GFlags"
       (liber:symbol-documentation 'resource-lookup-flags)
- "@version{#2022-12-30}
+ "@version{2023-1-26}
   @begin{short}
     The @sym{g:resource-lookup-flags} flags determine how resource path lookups
     are handled.
@@ -185,17 +183,15 @@
 ;;; GResource
 ;;; ----------------------------------------------------------------------------
 
-(glib-init:at-init ()
-  (cffi:foreign-funcall "g_resource_get_type" :size))
-
 (gobject:define-g-boxed-opaque resource "GResource"
+  :type-initializer "g_resource_get_type"
   :alloc (error "GResource cannot be created from the Lisp side."))
 
 #+liber-documentation
 (setf (liber:alias-for-class 'resource)
       "GBoxed"
       (documentation 'resource 'type)
- "@version{#2022-12-30}
+ "@version{2023-1-26}
   @begin{short}
     Applications and libraries often contain binary or textual data that is
     really part of the application, rather than user data.
@@ -350,15 +346,15 @@
 ;;; g_resource_load ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_resource_load" %resource-load) (gobject:boxed resource)
+(defcfun ("g_resource_load" %resource-load) (gobject:boxed resource :return)
   (filename :string)
   (err :pointer))
 
-(defun resource-load (filename)
+(defun resource-load (path)
  #+liber-documentation
- "@version{2022-12-30}
-  @argument[filename]{a string with the path of a filename to load, in the
-    GLib filenname encoding}
+ "@version{2023-1-26}
+  @argument[path]{a pathname or namestring with the path of a file to load, in 
+    the GLib filenname encoding}
   @return{A new @class{g:resource} instance.}
   @begin{short}
     Loads a binary resource bundle and creates a @class{g:resource} instance
@@ -370,7 +366,7 @@
   @see-class{g:resource}
   @see-function{g:resources-register}"
   (with-g-error (err)
-    (%resource-load filename err)))
+    (%resource-load (namestring path) err)))
 
 (export 'resource-load)
 
@@ -406,7 +402,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_resource_ref ()
+;;; g_resource_ref ()                                      not needed
 ;;; ----------------------------------------------------------------------------
 
 (defcfun ("g_resource_ref" resource-ref) (gobject:boxed resource)
@@ -421,10 +417,8 @@
   @see-class{g:resource}"
   (resource (gobject:boxed resource)))
 
-(export 'resource-ref)
-
 ;;; ----------------------------------------------------------------------------
-;;; g_resource_unref ()
+;;; g_resource_unref ()                                    not needed
 ;;; ----------------------------------------------------------------------------
 
 (defcfun ("g_resource_unref" resource-unref) :void
@@ -439,11 +433,11 @@
   @see-class{g:resource}"
   (resource (gobject:boxed resource)))
 
-(export 'resource-unref)
-
 ;;; ----------------------------------------------------------------------------
 ;;; g_resource_lookup_data ()
 ;;; ----------------------------------------------------------------------------
+
+;; TODO: 
 
 (defcfun ("g_resource_lookup_data" %resource-lookup-data) :pointer
   (resource (gobject:boxed resource))
@@ -453,7 +447,7 @@
 
 (defun resource-lookup-data (resource path lookup)
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2023-1-26}
   @argument[resource]{a @class{g:resource} instance}
   @argument[path]{a string with a pathname inside the resource}
   @argument[lookup]{a @symbol{g:resource-lookup-flags} value}

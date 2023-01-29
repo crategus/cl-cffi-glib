@@ -59,6 +59,7 @@
 ;;; ----------------------------------------------------------------------------
 
 (gobject::define-g-boxed-opaque bytes "GBytes"
+  :type-initializer "g_bytes_get_type"
   :alloc (%bytes-new (cffi:null-pointer) 0))
 
 #+liber-documentation
