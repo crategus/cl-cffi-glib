@@ -322,7 +322,7 @@ lambda (group name parameter)    :detailed
            action-group-action-parameter-type)
     (gobject:boxed glib:variant-type)
  #+liber-documentation
- "@version{2022-12-30}
+ "@version{2023-1-24}
   @argument[group]{a @class{g:action-group} object}
   @argument[name]{a string with the name of the action to query}
   @return{The @class{g:variant-type} parameter type.}
@@ -340,13 +340,6 @@ lambda (group name parameter)    :detailed
   The parameter type of a particular action will never change but it is
   possible for an action to be removed and for a new action to be added with
   the same name but a different parameter type.
-  @begin[Note]{dictionary}
-    This function does not return @code{nil} as expected for an action with
-    no @class{g:variant-type} parameter type. Your will get a correct return
-    value using the @fun{g:action-map-lookup-action} function to get the action
-    from the action group and the @fun{g:action-parameter-type} function to get
-    the parameter type.
-  @end{dictionary}
   @see-class{g:action-group}
   @see-class{g:variant-type}
   @see-type{g:variant}
@@ -365,7 +358,7 @@ lambda (group name parameter)    :detailed
 (defcfun ("g_action_group_get_action_state_type"
            action-group-action-state-type) (gobject:boxed glib:variant-type)
  #+liber-documentation
- "@version{2022-12-30}
+ "@version{2023-1-24}
   @argument[group]{a @class{g:action-group} object}
   @argument[name]{a string with the name of the action to query}
   @return{The @class{g:variant-type} state type, if the action is stateful.}
@@ -386,13 +379,6 @@ lambda (group name parameter)    :detailed
   The state type of a particular action will never change but it is possible
   for an action to be removed and for a new action to be added with the same
   name but a different state type.
-  @begin[Note]{dictionary}
-    This function does not return @code{nil} as expected for an action with
-    no @class{g:variant-type} state type. Your will get a correct return
-    value using the @fun{g:action-map-lookup-action} function to get the action
-    from the action group and the @fun{g:action-state-type} function to get
-    the parameter type.
-  @end{dictionary}
   @see-class{g:action-group}
   @see-class{g:variant-type}
   @see-type{g:variant}
