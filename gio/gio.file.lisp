@@ -6,7 +6,7 @@
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
 ;;; available from <http://www.crategus.com/books/cl-cffi-gtk/>.
 ;;;
-;;; Copyright (C) 2020 - 2022 Dieter Kaiser
+;;; Copyright (C) 2020 - 2023 Dieter Kaiser
 ;;;
 ;;; This program is free software: you can redistribute it and/or modify
 ;;; it under the terms of the GNU Lesser General Public License for Lisp
@@ -643,11 +643,14 @@
 ;;; g_file_new_for_path ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_file_new_for_path" file-new-for-path) (gobject:object file)
+(defcfun ("g_file_new_for_path" %file-new-for-path) (gobject:object file)
+  (path :string))
+
+(defun file-new-for-path (path)
  #+liber-documentation
- "@version{2022-12-27}
-  @argument[path]{a string containing a relative or absolute path, the string
-    must be encoded in the GLib filename encoding.}
+ "@version{2023-1-27}
+  @argument[path]{a pathname or namestring containing a relative or absolute 
+    path, the path must be encoded in the GLib filename encoding}
   @return{A new @class{g:file} object for the given path.}
   @begin{short}
     Constructs a @class{g:file} object for a given path.
@@ -655,7 +658,7 @@
   This operation never fails, but the returned object might not support any I/O
   operation if the @arg{path} argument is malformed.
   @see-class{g:file}"
-  (path :string))
+  (%file-new-for-path (namestring path)))
 
 (export 'file-new-for-path)
 
