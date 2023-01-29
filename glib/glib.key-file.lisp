@@ -6,7 +6,7 @@
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
 ;;; available from <http://www.crategus.com/books/cl-cffi-gtk/>.
 ;;;
-;;; Copyright (C) 2020 - 2022 Dieter Kaiser
+;;; Copyright (C) 2020 - 2023 Dieter Kaiser
 ;;;
 ;;; This program is free software: you can redistribute it and/or modify
 ;;; it under the terms of the GNU Lesser General Public License for Lisp
@@ -123,6 +123,11 @@
 
 (in-package :glib)
 
+(declaim (inline ensure-pointer))
+
+(defun ensure-pointer (value)
+  (if value value (cffi:null-pointer)))
+
 ;;; ----------------------------------------------------------------------------
 ;;; G_KEY_FILE_ERROR
 ;;;
@@ -180,7 +185,7 @@
 (setf (liber:alias-for-symbol 'key-file-flags)
       "Bitfield"
       (liber:symbol-documentation 'key-file-flags)
- "@version{#2022-12-30}
+ "@version{2023-1-25}
   @begin{short}
     Flags which influence the parsing of key values.
   @end{short}
@@ -213,7 +218,7 @@
 (setf (liber:alias-for-type 'key-file)
       "CStruct"
       (documentation 'key-file 'type)
- "@version{#2022-12-30}
+ "@version{2023-1-25}
   @begin{short}
     The @sym{g:key-file} structure lets you parse, edit or create files
     containing groups of key-value pairs, which we call key files for lack of a
@@ -288,7 +293,7 @@ Booleans=true;false;true;true
   @begin[Examples]{dictionary}
     Here is an example of loading a key file and reading a value:
     @begin{pre}
-(let ((keyfile (g:key-file-new)))
+(with-g-key-file (keyfile)
   ;; Load the key file
   (unless (g:key-file-load-from-file keyfile \"rtest-glib-key-file.ini\" :none)
     (error \"Error loading the key file: RTEST-GLIB-KEY-FILE.INI\"))
@@ -300,16 +305,14 @@ Booleans=true;false;true;true
     @end{pre}
     Here is an example of creating and saving a key file:
     @begin{pre}
-(let ((keyfile (g:key-file-new)))
+(with-g-key-file (keyfile)
   ;; Load existing key file
   (g:key-file-load-from-file keyfile \"rtest-glib-key-file.ini\" :none)
   ;; Add a string to the First Group
   (setf (g:key-file-string keyfile \"First Group\" \"SomeKey\") \"New Value\")
-
   ;; Save to a file
   (unless (g:key-file-save-to-file keyfile \"rtest-glib-key-file-example.ini\")
     (error \"Error saving key file.\"))
-
   ;; Or save to data for use elsewhere
   (let ((data (g:key-file-to-data keyfile)))
     (unless data
@@ -317,9 +320,31 @@ Booleans=true;false;true;true
     ... ))
     @end{pre}
   @end{dictionary}
-  @see-function{g:key-file-new}")
+  @see-macro{with-g-key-file}")
 
 (export 'key-file)
+
+;;; ----------------------------------------------------------------------------
+;;; with-g-key-file
+;;; ----------------------------------------------------------------------------
+
+(defmacro with-g-key-file ((keyfile) &body body)
+ #+liber-documentation
+ "@version{2023-1-25}
+  @syntax[]{with-g-key-file (keyfile) body => result}
+  @argument[keyfile]{a newly allocated @type{g:key-file} instance}
+  @begin{short}
+    The @sym{with-g-file-key} macro allocates a new @type{g:key-file} instance
+    and executes the body that uses the key file.
+  @end{short}
+  After execution of the body the allocated memory for the key file is released.
+  @see-type{g:key-file}"
+  `(let ((,keyfile (key-file-new)))
+     (unwind-protect
+       (progn ,@body)
+       (key-file-free ,keyfile))))
+
+(export 'with-g-key-file)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_key_file_new ()
@@ -327,7 +352,7 @@ Booleans=true;false;true;true
 
 (defcfun ("g_key_file_new" key-file-new) (:pointer (:struct key-file))
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2023-1-25}
   @return{An empty @type{g:key-file} instance.}
   @begin{short}
     Creates a new empty @type{g:key-file} instance.
@@ -342,48 +367,59 @@ Booleans=true;false;true;true
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_key_file_free ()
-;;;
-;;; void g_key_file_free (GKeyFile *key_file);
-;;;
-;;; Clears all keys and groups from key_file, and decreases the reference count
-;;; by 1. If the reference count reaches zero, frees the key file and all its
-;;; allocated memory.
-;;;
-;;; key_file :
-;;;     a GKeyFile
-;;;
-;;; Since 2.6
 ;;; ----------------------------------------------------------------------------
+
+(defcfun ("g_key_file_free" key-file-free) :void
+ #+liber-documentation
+ "@version{2023-1-25}
+  @argument[keyfile]{a @type{g:key-file} instance}
+  @begin{short}
+    Clears all keys and groups from @arg{keyfile}, and decreases the reference
+    count by 1.
+  @end{short}
+  If the reference count reaches zero, frees the key file and all its allocated
+  memory.
+  @see-type{g:key-file}"
+  (keyfile (:pointer (:struct key-file))))
+
+(export 'key-file-free)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_key_file_ref ()
-;;;
-;;; GKeyFile * g_key_file_ref (GKeyFile *key_file);
-;;;
-;;; Increases the reference count of key_file.
-;;;
-;;; key_file :
-;;;     a GKeyFile
-;;;
-;;; Returns :
-;;;     the same key_file.
-;;;
-;;; Since 2.32
 ;;; ----------------------------------------------------------------------------
+
+(defcfun ("g_key_file_ref" key-file-ref) (:pointer (:struct key-file))
+ #+liber-documentation
+ "@version{2023-1-25}
+  @argument[keyfile]{a @type{g:file-key} instance}
+  @return{The same @type{g:key-file} instance.}
+  @begin{short}
+    Increases the reference count of @arg{keyfile}.
+  @end{short}
+  @see-type{g:key-file}
+  @see-function{g:key-file-unref}"
+  (keyfile (:pointer (:struct key-file))))
+
+(export 'key-file-ref)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_key_file_unref ()
-;;;
-;;; void g_key_file_unref (GKeyFile *key_file);
-;;;
-;;; Decreases the reference count of key_file by 1. If the reference count
-;;; reaches zero, frees the key file and all its allocated memory.
-;;;
-;;; key_file :
-;;;     a GKeyFile
-;;;
-;;; Since 2.32
 ;;; ----------------------------------------------------------------------------
+
+(defcfun ("g_key_file_unref" key-file-unref) :void
+ #+liber-documentation
+ "@version{2023-1-25}
+  @argument[keyfile]{a @type{g:key-file} instance}
+  @begin{short}
+    Decreases the reference count of @arg{keyfile} by 1.
+  @end{short}
+  If the reference count reaches zero, frees the key file and all its allocated
+  memory.
+  @see-type{g:key-file}
+  @see-function{g:key-file-ref}"
+  (keyfile (:pointer (:struct key-file))))
+
+(export 'key-file-unref)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_key_file_set_list_separator ()
@@ -395,7 +431,7 @@ Booleans=true;false;true;true
 
 (defun key-file-set-list-separator (keyfile separator)
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2023-1-25}
   @argument[keyfile]{a @type{g:key-file} instance}
   @argument[separator]{a char with the separator}
   @begin{short}
@@ -418,12 +454,12 @@ Booleans=true;false;true;true
   (flags key-file-flags)
   (err :pointer))
 
-(defun key-file-load-from-file (keyfile filename flags)
+(defun key-file-load-from-file (keyfile path flags)
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2023-1-25}
   @argument[keyfile]{a @type{g:key-file} instance}
-  @argument[filename]{a string with the path of a filename to load}
-  @argument[flags]{flags from the @symbol{g:key-file-flags} flags}
+  @argument[path]{a pathname or namestring with the path of a file to load}
+  @argument[flags]{a @symbol{g:key-file-flags} value}
   @return{@em{True} if a key file could be loaded, @em{false} otherwise.}
   @begin{short}
     Loads a key file into a @type{g:key-file} instance.
@@ -431,8 +467,8 @@ Booleans=true;false;true;true
   If the file could not be loaded then @em{false} is returned.
   @see-type{g:key-file}
   @see-symbol{g:key-file-flags}"
-  (with-g-error (err)
-    (%key-file-load-from-file keyfile filename flags err)))
+  (with-ignore-g-error (err)
+    (%key-file-load-from-file keyfile (namestring path) flags err)))
 
 (export 'key-file-load-from-file)
 
@@ -445,14 +481,14 @@ Booleans=true;false;true;true
   (data :string)
   (len :size)
   (flags key-file-flags)
-  (error :pointer))
+  (err :pointer))
 
 (defun key-file-load-from-data (keyfile data flags)
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2023-1-25}
   @argument[keyfile]{a @type{g:key-file} instance}
   @argument[data]{a string with the key file loaded in memory}
-  @argument[flags]{flags from the @symbol{g:key-file-flags} flags}
+  @argument[flags]{a @symbol{g:key-file-flags} value}
   @return{@em{True} if a key file could be loaded, otherwise @em{false}.}
   @begin{short}
     Loads a key file from memory into a @type{g:key-file} instance.
@@ -491,8 +527,6 @@ Booleans=true;false;true;true
 ;;;
 ;;; Returns :
 ;;;     TRUE if a key file could be loaded, FALSE otherwise
-;;;
-;;; Since 2.50
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -527,8 +561,6 @@ Booleans=true;false;true;true
 ;;;
 ;;; Returns :
 ;;;     TRUE if a key file could be loaded, FALSE othewise
-;;;
-;;; Since 2.6
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -567,8 +599,6 @@ Booleans=true;false;true;true
 ;;;
 ;;; Returns :
 ;;;     TRUE if a key file could be loaded, FALSE otherwise
-;;;
-;;; Since 2.14
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -582,9 +612,11 @@ Booleans=true;false;true;true
 
 (defun key-file-to-data (keyfile)
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2023-1-25}
+  @syntax[]{(g:key-file-to-data keyfile) => data, len}
   @argument[keyfile]{a @type{g:key-file} instance}
-  @return{A string holding the contents of the key file.}
+  @argument[data]{a string holding the contents of the key file}
+  @argument[len]{an integer with the length of @arg{data}}
   @begin{short}
     Outputs the key file as a string.
   @end{short}
@@ -592,7 +624,8 @@ Booleans=true;false;true;true
   @see-function{g:key-file-save-to-file}"
   (with-g-error (err)
     (with-foreign-object (len :size)
-      (%key-file-to-data keyfile len err))))
+      (values (%key-file-to-data keyfile len err)
+              (cffi:mem-ref len :size)))))
 
 (export 'key-file-to-data)
 
@@ -605,11 +638,11 @@ Booleans=true;false;true;true
   (filename :string)
   (err :pointer))
 
-(defun key-file-save-to-file (keyfile filename)
+(defun key-file-save-to-file (keyfile path)
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2023-1-25}
   @argument[keyfile]{a @type{g:key-file} instance}
-  @argument[filename]{a string with the file to write to}
+  @argument[path]{a pathname or namestring with the file to write to}
   @return{@em{True} if successful, else @em{false}.}
   @begin{short}
     Writes the contents of the key file to a file.
@@ -617,7 +650,7 @@ Booleans=true;false;true;true
   @see-type{g:key-file}
   @see-function{g:key-file-load-from-file}"
   (with-g-error (err)
-    (%key-file-save-to-file keyfile filename err)))
+    (%key-file-save-to-file keyfile (namestring path) err)))
 
 (export 'key-file-save-to-file)
 
@@ -627,7 +660,7 @@ Booleans=true;false;true;true
 
 (defcfun ("g_key_file_get_start_group" key-file-start-group) :string
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2023-1-25}
   @argument[keyfile]{a @type{g:key-file} instance}
   @return{A string with the start group of the key file.}
   @begin{short}
@@ -649,7 +682,7 @@ Booleans=true;false;true;true
 
 (defun key-file-groups (keyfile)
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2023-1-25}
   @argument[keyfile]{a @type{g:key-file} instance}
   @return{A list of strings.}
   @begin{short}
@@ -672,7 +705,7 @@ Booleans=true;false;true;true
 
 (defun key-file-keys (keyfile group)
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2023-1-25}
   @argument[keyfile]{a @type{g:key-file} instance}
   @argument[group]{a string with the group name}
   @return{A list of strings.}
@@ -692,7 +725,7 @@ Booleans=true;false;true;true
 
 (defcfun ("g_key_file_has_group" key-file-has-group) :boolean
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2023-1-25}
   @argument[keyfile]{a @type{g:key-file} instance}
   @argument[group]{a string with the group name}
   @return{@em{True} if @arg{group} is a part of @arg{keyfile}, @em{false}
@@ -718,7 +751,7 @@ Booleans=true;false;true;true
 
 (defun key-file-has-key (keyfile group key)
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2023-1-25}
   @argument[keyfile]{a @type{g:key-file} instance}
   @argument[group]{a string with the group name}
   @argument[key]{a string with the key name}
@@ -736,37 +769,51 @@ Booleans=true;false;true;true
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_key_file_get_value ()
-;;;
-;;; gchar * g_key_file_get_value (GKeyFile *key_file,
-;;;                               const gchar *group_name,
-;;;                               const gchar *key,
-;;;                               GError **error);
-;;;
-;;; Returns the raw value associated with key under group_name. Use
-;;; g_key_file_get_string() to retrieve an unescaped UTF-8 string.
-;;;
-;;; In the event the key cannot be found, NULL is returned and error is set to
-;;; G_KEY_FILE_ERROR_KEY_NOT_FOUND. In the event that the group_name cannot be
-;;; found, NULL is returned and error is set to
-;;; G_KEY_FILE_ERROR_GROUP_NOT_FOUND.
-;;;
-;;; key_file :
-;;;     a GKeyFile
-;;;
-;;; group_name :
-;;;     a group name
-;;;
-;;; key :
-;;;     a key
-;;;
-;;; error :
-;;;     return location for a GError, or NULL
-;;;
-;;; Returns :
-;;;     a newly allocated string or NULL if the specified key cannot be found.
-;;;
-;;; Since 2.6
+;;; g_key_file_set_value () -> key-file-value
 ;;; ----------------------------------------------------------------------------
+
+(defun (setf key-file-value) (value keyfile group key)
+  (cffi:foreign-funcall "g_key_file_set_value"
+                        (:pointer (:struct key-file)) keyfile
+                        :string group
+                        :string key
+                        :string value
+                        :void)
+  value)
+
+(defcfun ("g_key_file_get_value" %key-file-value) :string
+  (keyfile (:pointer (:struct key-file)))
+  (group :string)
+  (key :string)
+  (err :pointer))
+
+(defun key-file-value (keyfile group key)
+ #+liber-documentation
+ "@version{2023-1-26}
+  @syntax[]{(g:key-file-value keyfile group key) => value}
+  @syntax[]{(setf (g:key-file-value keyfile group key) value)}
+  @argument[keyfile]{a @type{g:key-file} instance}
+  @argument[group]{a string with the group name}
+  @argument[key]{a string with a key}
+  @argument[value]{a string with the value}
+  @begin{short}
+    The @sym{g:file-key-value} function returns the raw value associated with 
+    @arg{key} under @arg{group}.
+  @end{short}
+  Use the @fun{g:key-file-string} functon to retrieve an unescaped UTF-8 string.
+  In the event the key or group name cannot be found, @code{nil} is returned.
+
+  The @sym{(setf g:key-file-value)} function associates a new value with 
+  @arg{key} under @arg{group}. If @arg{key} cannot be found then it is created. 
+  If @arg{group} cannot be found then it is created. To set an UTF-8 string 
+  which may contain characters that need escaping (such as newlines or spaces), 
+  use the @fun{g:key-file-string} function.
+  @see-type{g:key-file}
+  @see-function{g:key-file-string}"
+  (with-ignore-g-error (err)
+    (%key-file-value keyfile group key err)))
+
+(export 'key-file-value)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_key_file_get_string ()
@@ -790,9 +837,9 @@ Booleans=true;false;true;true
 
 (defun key-file-string (keyfile group key)
  #+liber-documentation
- "@version{#2022-12-30}
-  @syntax[]{(g:key-file-string keyfile) => value}
-  @syntax[]{(setf (g:key-file-string keyfile) value)}
+ "@version{2023-1-25}
+  @syntax[]{(g:key-file-string keyfile group key) => value}
+  @syntax[]{(setf (g:key-file-string keyfile group key) value)}
   @argument[keyfile]{a @type{g:key-file} instance}
   @argument[group]{a string with the group name}
   @argument[key]{a string with the key name}
@@ -808,7 +855,7 @@ Booleans=true;false;true;true
   function handles characters that need escaping, such as newlines.
   @see-type{g:key-file}
   @see-function{g:key-file-value}"
-  (with-g-error (err)
+  (with-ignore-g-error (err)
     (%key-file-string keyfile group key err)))
 
 (export 'key-file-string)
@@ -848,8 +895,6 @@ Booleans=true;false;true;true
 ;;;
 ;;; Returns :
 ;;;     a newly allocated string or NULL if the specified key cannot be found.
-;;;
-;;; Since 2.6
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -884,8 +929,6 @@ Booleans=true;false;true;true
 ;;; Returns :
 ;;;     the locale from the file, or NULL if the key was not found or the entry
 ;;;     in the file was was untranslated.
-;;;
-;;; Since 2.56
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -918,8 +961,6 @@ Booleans=true;false;true;true
 ;;; Returns :
 ;;;     the value associated with the key as a boolean, or FALSE if the key was
 ;;;     not found or could not be parsed.
-;;;
-;;; Since 2.6
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -952,8 +993,6 @@ Booleans=true;false;true;true
 ;;; Returns :
 ;;;     the value associated with the key as an integer, or 0 if the key was not
 ;;;     found or could not be parsed.
-;;;
-;;; Since 2.6
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -983,8 +1022,6 @@ Booleans=true;false;true;true
 ;;; Returns :
 ;;;     the value associated with the key as a signed 64-bit integer, or 0 if
 ;;;     the key was not found or could not be parsed.
-;;;
-;;; Since 2.26
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -1014,8 +1051,6 @@ Booleans=true;false;true;true
 ;;; Returns :
 ;;;     the value associated with the key as an unsigned 64-bit integer, or 0
 ;;;     if the key was not found or could not be parsed.
-;;;
-;;; Since 2.26
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -1049,78 +1084,25 @@ Booleans=true;false;true;true
 ;;; Returns :
 ;;;     the value associated with the key as a double, or 0.0 if the key was not
 ;;;     found or could not be parsed.
-;;;
-;;; Since 2.12
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_key_file_get_string_list ()
-;;;
-;;; gchar ** g_key_file_get_string_list (GKeyFile *key_file,
-;;;                                      const gchar *group_name,
-;;;                                      const gchar *key,
-;;;                                      gsize *length,
-;;;                                      GError **error);
-;;;
-;;;
-;;; key_file :
-;;;     a GKeyFile
-;;;
-;;; group_name :
-;;;     a group name
-;;;
-;;; key :
-;;;     a key
-;;;
-;;; length :
-;;;     return location for the number of returned strings, or NULL
-;;;
-;;; error :
-;;;     return location for a GError, or NULL
-;;;
-;;;
-;;; Since 2.6
+;;; g_key_file_set_string_list () -> key-file-string-list
 ;;; ----------------------------------------------------------------------------
 
-;;; ----------------------------------------------------------------------------
-;;; g_key_file_set_string_list ()
-;;;
-;;; void g_key_file_set_string_list (GKeyFile *key_file,
-;;;                                  const gchar *group_name,
-;;;                                  const gchar *key,
-;;;                                  const gchar * const list[],
-;;;                                  gsize length);
-;;;
-;;;
-;;; key_file :
-;;;     a GKeyFile
-;;;
-;;; group_name :
-;;;     a group name
-;;;
-;;; key :
-;;;     a key
-;;;
-;;; list :
-;;;     an array of string values
-;;;
-;;; length :
-;;;     number of string values in list
-;;;
-;;; Since 2.6
-;;; ----------------------------------------------------------------------------
+(defcfun ("g_key_file_set_string_list" %key-file-set-string-list) :void
+  (keyfile (:pointer (:struct key-file)))
+  (group :string)
+  (key :string)
+  (value strv-t)
+  (len :size))
 
 (defun (setf key-file-string-list) (value keyfile group key)
-  (cffi:foreign-funcall "g_key_file_set_string_list"
-                        (:pointer (:struct key-file)) keyfile
-                        :string group
-                        :string key
-                        strv-t value
-                        :size (length value)
-                        :void)
+  (%key-file-set-string-list keyfile group key value (length value))
   value)
 
-(defcfun ("g_key_file_get_string_list" %key-file-string-list) strv-t
+(defcfun ("g_key_file_get_string_list" %key-file-get-string-list) strv-t
   (keyfile (:pointer (:struct key-file)))
   (group :string)
   (key :string)
@@ -1129,25 +1111,25 @@ Booleans=true;false;true;true
 
 (defun key-file-string-list (keyfile group key)
  #+liber-documentation
- "@version{#2022-12-30}
-  @syntax[]{(g:key-file-string-list keyfile) => value}
-  @syntax[]{(setf (g:key-file-string-list keyfile) value)}
+ "@version{2023-1-25}
+  @syntax[]{(g:key-file-string-list keyfile group key) => value}
+  @syntax[]{(setf (g:key-file-string-list keyfile group key) value)}
   @argument[keyfile]{a @type{g:key-file} instance}
   @argument[group]{a string with the group name}
   @argument[key]{a string with the key name}
   @argument[value]{a list of strings}
   @begin{short}
-    The @sym{g:key-file-string-list} function returns the values associated with
-    @arg{key} under @arg{group}.
+    The @sym{g:key-file-string-list} function returns the values associated 
+    with @arg{key} under @arg{group}.
   @end{short}
   In the event the key or the group name cannot be found, @code{nil} is
   returned. The @sym{(setf g:key-file-string-list)} function associates a list
   of string values for @arg{key} under @arg{group}. If @arg{key} or @arg{group}
   cannot be found then they are created.
   @see-type{g:key-file}"
-  (with-g-error (err)
+  (with-ignore-g-error (err)
     (with-foreign-object (len :size)
-      (%key-file-string-list keyfile group key len err))))
+      (%key-file-get-string-list keyfile group key len err))))
 
 (export 'key-file-string-list)
 
@@ -1192,8 +1174,6 @@ Booleans=true;false;true;true
 ;;; Returns :
 ;;;     a newly allocated NULL-terminated string array or NULL if the key isn't
 ;;;     found. The string array should be freed with g_strfreev().
-;;;
-;;; Since 2.6
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -1231,8 +1211,6 @@ Booleans=true;false;true;true
 ;;;     the values associated with the key as a list of booleans, or NULL if the
 ;;;     key was not found or could not be parsed. The returned list of booleans
 ;;;     should be freed with g_free() when no longer needed.
-;;;
-;;; Since 2.6
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -1270,8 +1248,6 @@ Booleans=true;false;true;true
 ;;;     the values associated with the key as a list of integers, or NULL if the
 ;;;     key was not found or could not be parsed. The returned list of integers
 ;;;     should be freed with g_free() when no longer needed.
-;;;
-;;; Since 2.6
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -1309,8 +1285,6 @@ Booleans=true;false;true;true
 ;;;     the values associated with the key as a list of doubles, or NULL if the
 ;;;     key was not found or could not be parsed. The returned list of doubles
 ;;;     should be freed with g_free() when no longer needed.
-;;;
-;;; Since 2.12
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -1321,9 +1295,6 @@ Booleans=true;false;true;true
 ;;;                                 const gchar *key,
 ;;;                                 GError **error);
 ;;;
-;;; Retrieves a comment above key from group_name. If key is NULL then comment
-;;; will be read from above group_name. If both key and group_name are NULL,
-;;; then comment will be read from above the first group in the file.
 ;;;
 ;;; key_file :
 ;;;     a GKeyFile
@@ -1339,38 +1310,87 @@ Booleans=true;false;true;true
 ;;;
 ;;; Returns :
 ;;;     a comment that should be freed with g_free()
-;;;
-;;; Since 2.6
 ;;; ----------------------------------------------------------------------------
-
 ;;; ----------------------------------------------------------------------------
-;;; g_key_file_set_value ()
+;;; g_key_file_set_comment ()
 ;;;
-;;; void g_key_file_set_value (GKeyFile *key_file,
-;;;                            const gchar *group_name,
-;;;                            const gchar *key,
-;;;                            const gchar *value);
+;;; gboolean g_key_file_set_comment (GKeyFile *key_file,
+;;;                                  const gchar *group_name,
+;;;                                  const gchar *key,
+;;;                                  const gchar *comment,
+;;;                                  GError **error);
 ;;;
-;;; Associates a new value with key under group_name.
-;;;
-;;; If key cannot be found then it is created. If group_name cannot be found
-;;; then it is created. To set an UTF-8 string which may contain characters that
-;;; need escaping (such as newlines or spaces), use g_key_file_set_string().
 ;;;
 ;;; key_file :
 ;;;     a GKeyFile
 ;;;
 ;;; group_name :
-;;;     a group name
+;;;     a group name, or NULL. [allow-none]
 ;;;
 ;;; key :
-;;;     a key
+;;;     a key. [allow-none]
 ;;;
-;;; value :
-;;;     a string
+;;; comment :
+;;;     a comment
 ;;;
-;;; Since 2.6
+;;; error :
+;;;     return location for a GError
+;;;
+;;; Returns :
+;;;     TRUE if the comment was written, FALSE otherwise
 ;;; ----------------------------------------------------------------------------
+
+(defcfun ("g_key_file_set_comment" %key-file-set-comment) :boolean
+  (keyfile (:pointer (:struct key-file)))
+  (group :string)
+  (key :string)
+  (comment :string)
+  (err :pointer))
+
+(defun (setf key-file-comment) (value keyfile group key)
+  (with-ignore-g-error (err)
+    (%key-file-set-comment keyfile
+                           (ensure-pointer group)
+                           (ensure-pointer key)
+                           value
+                           err)
+    value))
+
+(defcfun ("g_key_file_get_comment" %key-file-get-comment) :string
+  (keyfile (:pointer (:struct key-file)))
+  (group :string)
+  (key :string)
+  (err :pointer))
+
+(defun key-file-comment (keyfile group key)
+ #+liber-documentation
+ "@version{2023-1-26}
+  @syntax[]{(g:key-file-comment keyfile group key) => value}
+  @syntax[]{(setf (g:key-file-comment keyfile group key) value)}
+  @argument[keyfile]{a @type{g:key-file} instance}
+  @argument[group]{a string with the group name}
+  @argument[key]{a string with the key name}
+  @argument[value]{a string with the comment}
+  @begin{short}
+    The @sym{g:key-file-comment} retrieves a comment above @arg{key} from 
+    @arg{group}. 
+  @end{short}
+  If @arg{key} is @code{nil} then the comment will be read from above 
+  @arg{group}. If both @arg{key} and @arg{group} are @code{nil}, then the 
+  comment will be read from above the first group in the file.
+
+  The @sym{(setf g:key-file-comment)} function places a comment above @arg{key} 
+  from @arg{group}. If @arg{key} is @code{nil} then the comment will be written 
+  above @arg{group}. If both @arg{key} and @arg{group} are @code{nil}, then the
+  comment will be written above the first group in the file.
+  @see-type{g:key-file}"
+  (with-ignore-g-error (err)
+    (%key-file-get-comment keyfile
+                           (ensure-pointer group)
+                           (ensure-pointer key)
+                           err)))
+
+(export 'key-file-comment)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_key_file_set_locale_string ()
@@ -1398,8 +1418,6 @@ Booleans=true;false;true;true
 ;;;
 ;;; string :
 ;;;     a string
-;;;
-;;; Since 2.6
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -1424,8 +1442,6 @@ Booleans=true;false;true;true
 ;;;
 ;;; value :
 ;;;     TRUE or FALSE
-;;;
-;;; Since 2.6
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -1450,8 +1466,6 @@ Booleans=true;false;true;true
 ;;;
 ;;; value :
 ;;;     an integer value
-;;;
-;;; Since 2.6
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -1476,8 +1490,6 @@ Booleans=true;false;true;true
 ;;;
 ;;; value :
 ;;;     an integer value
-;;;
-;;; Since 2.26
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -1502,8 +1514,6 @@ Booleans=true;false;true;true
 ;;;
 ;;; value :
 ;;;     an integer value
-;;;
-;;; Since 2.26
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -1528,8 +1538,6 @@ Booleans=true;false;true;true
 ;;;
 ;;; value :
 ;;;     an double value
-;;;
-;;; Since 2.12
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -1562,8 +1570,6 @@ Booleans=true;false;true;true
 ;;;
 ;;; length :
 ;;;     the length of list
-;;;
-;;; Since 2.6
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -1592,8 +1598,6 @@ Booleans=true;false;true;true
 ;;;
 ;;; length :
 ;;;     length of list
-;;;
-;;; Since 2.6
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -1622,8 +1626,6 @@ Booleans=true;false;true;true
 ;;;
 ;;; length :
 ;;;     number of integer values in list
-;;;
-;;; Since 2.6
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -1652,125 +1654,89 @@ Booleans=true;false;true;true
 ;;;
 ;;; length :
 ;;;     number of double values in list
-;;;
-;;; Since 2.12
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_key_file_set_comment ()
-;;;
-;;; gboolean g_key_file_set_comment (GKeyFile *key_file,
-;;;                                  const gchar *group_name,
-;;;                                  const gchar *key,
-;;;                                  const gchar *comment,
-;;;                                  GError **error);
-;;;
-;;; Places a comment above key from group_name. If key is NULL then comment will
-;;; be written above group_name. If both key and group_name are NULL, then
-;;; comment will be written above the first group in the file.
-;;;
-;;; key_file :
-;;;     a GKeyFile
-;;;
-;;; group_name :
-;;;     a group name, or NULL. [allow-none]
-;;;
-;;; key :
-;;;     a key. [allow-none]
-;;;
-;;; comment :
-;;;     a comment
-;;;
-;;; error :
-;;;     return location for a GError
-;;;
-;;; Returns :
-;;;     TRUE if the comment was written, FALSE otherwise
-;;;
-;;; Since 2.6
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_key_file_remove_group ()
-;;;
-;;; gboolean g_key_file_remove_group (GKeyFile *key_file,
-;;;                                   const gchar *group_name,
-;;;                                   GError **error);
-;;;
-;;; Removes the specified group, group_name, from the key file.
-;;;
-;;; key_file :
-;;;     a GKeyFile
-;;;
-;;; group_name :
-;;;     a group name
-;;;
-;;; error :
-;;;     return location for a GError or NULL
-;;;
-;;; Returns :
-;;;     TRUE if the group was removed, FALSE otherwise
-;;;
-;;; Since 2.6
 ;;; ----------------------------------------------------------------------------
+
+(defcfun ("g_key_file_remove_group" %key-file-remove-group) :boolean
+  (keyfile (:pointer (:struct key-file)))
+  (group :string)
+  (err :pointer))
+
+(defun key-file-remove-group (keyfile group)
+ #+liber-documentation
+ "@version{#2023-1-26}
+  @argument[keyfile]{a @type{g:key-file} instance}
+  @argument[group]{a string with the group name to remove}
+  @return{@em{True} if the group was removed, @em{false} otherwise.}
+  @begin{short}
+    Removes the specified group from the key file.
+  @end{short}
+  @see-type{g:key-file}"
+  (with-ignore-g-error (err)
+    (%key-file-remove-group keyfile group err)))
+
+(export 'key-file-remove-group)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_key_file_remove_key ()
-;;;
-;;; gboolean g_key_file_remove_key (GKeyFile *key_file,
-;;;                                 const gchar *group_name,
-;;;                                 const gchar *key,
-;;;                                 GError **error);
-;;;
-;;; Removes key in group_name from the key file.
-;;;
-;;; key_file :
-;;;     a GKeyFile
-;;;
-;;; group_name :
-;;;     a group name
-;;;
-;;; key :
-;;;     a key name to remove
-;;;
-;;; error :
-;;;     return location for a GError or NULL
-;;;
-;;; Returns :
-;;;     TRUE if the key was removed, FALSE otherwise
-;;;
-;;; Since 2.6
 ;;; ----------------------------------------------------------------------------
+
+(defcfun ("g_key_file_remove_key" %key-file-remove-key) :boolean
+  (keyfile (:pointer (:struct key-file)))
+  (group :string)
+  (key :string)
+  (err :pointer))
+
+(defun key-file-remove-key (keyfile group key)
+ #+liber-documentation
+ "@version{#2023-1-26}
+  @argument[keyfile]{a @type{g:key-file} instance}
+  @argument[group]{a string with the group name}
+  @argument[key]{a string with the key name to remove}
+  @return{@em{True} if the key was removed, @em{false} otherwise.}
+  @begin{short}
+    Removes the specified key from the key file.
+  @end{short}
+  @see-type{g:key-file}"
+  (with-ignore-g-error (err)
+    (%key-file-remove-key keyfile group key err)))
+
+(export 'key-file-remove-key)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_key_file_remove_comment ()
-;;;
-;;; gboolean g_key_file_remove_comment (GKeyFile *key_file,
-;;;                                     const gchar *group_name,
-;;;                                     const gchar *key,
-;;;                                     GError **error);
-;;;
-;;; Removes a comment above key from group_name. If key is NULL then comment
-;;; will be removed above group_name. If both key and group_name are NULL, then
-;;; comment will be removed above the first group in the file.
-;;;
-;;; key_file :
-;;;     a GKeyFile
-;;;
-;;; group_name :
-;;;     a group name, or NULL. [allow-none]
-;;;
-;;; key :
-;;;     a key. [allow-none]
-;;;
-;;; error :
-;;;     return location for a GError
-;;;
-;;; Returns :
-;;;     TRUE if the comment was removed, FALSE otherwise
-;;;
-;;; Since 2.6
 ;;; ----------------------------------------------------------------------------
+
+(defcfun ("g_key_file_remove_comment" %key-file-remove-comment) :boolean
+  (keyfile (:pointer (:struct key-file)))
+  (group :string)
+  (key :string)
+  (err :pointer))
+
+(defun key-file-remove-comment (keyfile group key)
+ #+liber-documentation
+ "@version{#2023-1-26}
+  @argument[keyfile]{a @type{g:key-file} instance}
+  @argument[group]{a string with the group name}
+  @argument[key]{a string with the key name to remove}
+  @return{@em{True} if the comment was removed, @em{false} otherwise.}
+  @begin{short}
+    Removes a comment above @arg{key} from @arg{group}. 
+  @end{short}
+  If @arg{key} is @code{nil} then the comment will be removed above @arg{group}. 
+  If both @arg{key} and @arg{group} are @code{nil}, then the comment will be 
+  removed above the first group in the file.
+  @see-type{g:key-file}"
+  (with-ignore-g-error (err)
+    (%key-file-remove-comment keyfile
+                              (ensure-pointer group)
+                              (ensure-pointer key)
+                              err)))
+
+(export 'key-file-remove-comment)
 
 ;;; ----------------------------------------------------------------------------
 ;;; G_KEY_FILE_DESKTOP_GROUP
@@ -1780,8 +1746,6 @@ Booleans=true;false;true;true
 ;;; The name of the main group of a desktop entry file, as defined in the
 ;;; Desktop Entry Specification. Consult the specification for more details
 ;;; about the meanings of the keys below.
-;;;
-;;; Since 2.14
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -1792,8 +1756,6 @@ Booleans=true;false;true;true
 ;;; A key under G_KEY_FILE_DESKTOP_GROUP, whose value is a string giving the
 ;;; type of the desktop entry. Usually G_KEY_FILE_DESKTOP_TYPE_APPLICATION,
 ;;; G_KEY_FILE_DESKTOP_TYPE_LINK, or G_KEY_FILE_DESKTOP_TYPE_DIRECTORY.
-;;;
-;;; Since 2.14
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -1803,8 +1765,6 @@ Booleans=true;false;true;true
 ;;;
 ;;; A key under G_KEY_FILE_DESKTOP_GROUP, whose value is a string giving the
 ;;; version of the Desktop Entry Specification used for the desktop entry file.
-;;;
-;;; Since 2.14
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -1814,8 +1774,6 @@ Booleans=true;false;true;true
 ;;;
 ;;; A key under G_KEY_FILE_DESKTOP_GROUP, whose value is a localized string
 ;;; giving the specific name of the desktop entry.
-;;;
-;;; Since 2.14
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -1825,8 +1783,6 @@ Booleans=true;false;true;true
 ;;;
 ;;; A key under G_KEY_FILE_DESKTOP_GROUP, whose value is a localized string
 ;;; giving the generic name of the desktop entry.
-;;;
-;;; Since 2.14
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -1836,8 +1792,6 @@ Booleans=true;false;true;true
 ;;;
 ;;; A key under G_KEY_FILE_DESKTOP_GROUP, whose value is a boolean stating
 ;;; whether the desktop entry should be shown in menus.
-;;;
-;;; Since 2.14
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -1847,8 +1801,6 @@ Booleans=true;false;true;true
 ;;;
 ;;; A key under G_KEY_FILE_DESKTOP_GROUP, whose value is a localized string
 ;;; giving the tooltip for the desktop entry.
-;;;
-;;; Since 2.14
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -1858,8 +1810,6 @@ Booleans=true;false;true;true
 ;;;
 ;;; A key under G_KEY_FILE_DESKTOP_GROUP, whose value is a localized string
 ;;; giving the name of the icon to be displayed for the desktop entry.
-;;;
-;;; Since 2.14
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -1869,8 +1819,6 @@ Booleans=true;false;true;true
 ;;;
 ;;; A key under G_KEY_FILE_DESKTOP_GROUP, whose value is a boolean stating
 ;;; whether the desktop entry has been deleted by the user.
-;;;
-;;; Since 2.14
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -1880,8 +1828,6 @@ Booleans=true;false;true;true
 ;;;
 ;;; A key under G_KEY_FILE_DESKTOP_GROUP, whose value is a list of strings
 ;;; identifying the environments that should display the desktop entry.
-;;;
-;;; Since 2.14
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -1891,8 +1837,6 @@ Booleans=true;false;true;true
 ;;;
 ;;; A key under G_KEY_FILE_DESKTOP_GROUP, whose value is a list of strings
 ;;; identifying the environments that should not display the desktop entry.
-;;;
-;;; Since 2.14
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -1903,8 +1847,6 @@ Booleans=true;false;true;true
 ;;; A key under G_KEY_FILE_DESKTOP_GROUP, whose value is a string giving the
 ;;; file name of a binary on disk used to determine if the program is actually
 ;;; installed. It is only valid for desktop entries with the Application type.
-;;;
-;;; Since 2.14
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -1915,8 +1857,6 @@ Booleans=true;false;true;true
 ;;; A key under G_KEY_FILE_DESKTOP_GROUP, whose value is a string giving the
 ;;; command line to execute. It is only valid for desktop entries with the
 ;;; Application type.
-;;;
-;;; Since 2.14
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -1927,8 +1867,6 @@ Booleans=true;false;true;true
 ;;; A key under G_KEY_FILE_DESKTOP_GROUP, whose value is a string containing
 ;;; the working directory to run the program in. It is only valid for desktop
 ;;; entries with the Application type.
-;;;
-;;; Since 2.14
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -1939,8 +1877,6 @@ Booleans=true;false;true;true
 ;;; A key under G_KEY_FILE_DESKTOP_GROUP, whose value is a boolean stating
 ;;; whether the program should be run in a terminal window. It is only valid
 ;;; for desktop entries with the Application type.
-;;;
-;;; Since 2.14
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -1950,8 +1886,6 @@ Booleans=true;false;true;true
 ;;;
 ;;; A key under G_KEY_FILE_DESKTOP_GROUP, whose value is a list of strings
 ;;; giving the MIME types supported by this desktop entry.
-;;;
-;;; Since 2.14
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -1961,8 +1895,6 @@ Booleans=true;false;true;true
 ;;;
 ;;; A key under G_KEY_FILE_DESKTOP_GROUP, whose value is a list of strings
 ;;; giving the categories in which the desktop entry should be shown in a menu.
-;;;
-;;; Since 2.14
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -1973,8 +1905,6 @@ Booleans=true;false;true;true
 ;;; A key under G_KEY_FILE_DESKTOP_GROUP, whose value is a boolean stating
 ;;; whether the application supports the Startup Notification Protocol
 ;;; Specification.
-;;;
-;;; Since 2.14
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -1985,8 +1915,6 @@ Booleans=true;false;true;true
 ;;; A key under G_KEY_FILE_DESKTOP_GROUP, whose value is string identifying the
 ;;; WM class or name hint of a window that the application will create, which
 ;;; can be used to emulate Startup Notification with older applications.
-;;;
-;;; Since 2.14
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -1996,8 +1924,6 @@ Booleans=true;false;true;true
 ;;;
 ;;; A key under G_KEY_FILE_DESKTOP_GROUP, whose value is a string giving the
 ;;; URL to access. It is only valid for desktop entries with the Link type.
-;;;
-;;; Since 2.14
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -2007,8 +1933,6 @@ Booleans=true;false;true;true
 ;;;
 ;;; The value of the G_KEY_FILE_DESKTOP_KEY_TYPE, key for desktop entries
 ;;; representing applications.
-;;;
-;;; Since 2.14
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -2018,8 +1942,6 @@ Booleans=true;false;true;true
 ;;;
 ;;; The value of the G_KEY_FILE_DESKTOP_KEY_TYPE, key for desktop entries
 ;;; representing links to documents.
-;;;
-;;; Since 2.14
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -2029,8 +1951,6 @@ Booleans=true;false;true;true
 ;;;
 ;;; The value of the G_KEY_FILE_DESKTOP_KEY_TYPE, key for desktop entries
 ;;; representing directories.
-;;;
-;;; Since 2.14
 ;;; ----------------------------------------------------------------------------
 
 ;;; --- End of file glib.key-value.lisp ----------------------------------------
