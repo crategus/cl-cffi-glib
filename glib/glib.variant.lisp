@@ -3860,13 +3860,11 @@ add_to_count (GVariant  *orig,
   (with-g-error (err)
     (cond ((stringp vtype)
            (let ((vtype1 (variant-type-new vtype)))
-             (unwind-protect
                (%variant-parse-2 vtype1
                                  text
                                  (cffi:null-pointer)
                                  (cffi:null-pointer)
-                                 err)
-               (variant-type-free vtype1))))
+                                 err)))
           ((typep vtype 'variant-type)
            (%variant-parse-2 vtype
                              text
