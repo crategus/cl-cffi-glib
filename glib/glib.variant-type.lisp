@@ -255,16 +255,14 @@
 
   Two types may not be compared by value. Use the @fun{g:variant-type-equal} or
   @fun{g:variant-type-is-subtype-of} functions. May be copied using the
-  @fun{g:variant-type-copy} function and freed using the
-  @fun{g:variant-type-free} function.
+  @fun{g:variant-type-copy} function.
   @see-type{g:variant}
   @see-function{g:variant-type}
   @see-function{g:variant-is-of-type}
   @see-function{g:variant-type-is-basic}
   @see-function{g:variant-type-equal}
   @see-function{g:variant-type-is-subtype-of}
-  @see-function{g:variant-type-copy}
-  @see-function{g:variant-type-free}")
+  @see-function{g:variant-type-copy}")
 
 (export (gobject:boxed-related-symbols 'variant-type))
 
@@ -319,16 +317,13 @@
 (defcfun ("g_variant_type_copy" variant-type-copy)
     (gobject:boxed variant-type :return)
  #+liber-documentation
- "@version{2023-1-27}
+ "@version{2023-1-31}
   @argument[vtype]{a @class{g:variant-type} instance}
   @return{A new @class{g:variant-type} instance.}
   @begin{short}
     Makes a copy of a @class{g:variant-type} instance.
   @end{short}
-  It is appropriate to call the @fun{g:variant-type-free} function on the
-  return value.
-  @see-class{g:variant-type}
-  @see-function{g:variant-type-free}"
+  @see-class{g:variant-type}"
   (vtype (gobject:boxed variant-type)))
 
 (export 'variant-type-copy)
@@ -340,7 +335,7 @@
 (defcfun ("g_variant_type_new" variant-type-new)
     (gobject:boxed variant-type :return)
  #+liber-documentation
- "@version{2023-1-27}
+ "@version{2023-1-31}
   @argument[string]{a valid @class{g:variant-type} type string}
   @return{A new @class{g:variant-type} instance.}
   @begin{short}
@@ -358,7 +353,6 @@
     @end{pre}
   @end{dictionary}
   @see-class{g:variant-type}
-  @see-function{g:variant-type-free}
   @see-function{g:variant-type-string-is-valid}"
   (string :string))
 
@@ -461,13 +455,10 @@
 ;;; g_variant_type_dup_string ()
 ;;; ----------------------------------------------------------------------------
 
-;  The returned string is null-terminated. It is appropriate to call the
-;  @fun{g:variant-type-free} function on the return value.
-
 (defcfun ("g_variant_type_dup_string" variant-type-dup-string)
     (:string :free-from-foreign t)
  #+liber-documentation
- "@version{2022-12-30}
+ "@version{2023-1-31}
   @argument[vtype]{a @class{g:variant-type} instance}
   @return{The corresponding type string.}
   @begin{short}
@@ -714,17 +705,14 @@
 (defcfun ("g_variant_type_new_maybe" variant-type-new-maybe)
     (gobject:boxed variant-type :return)
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{#2023-1-31}
   @argument[vtype]{a @class{g:variant-type} instance}
   @return{A new maybe @class{g:variant-type} instance.}
   @begin{short}
     Constructs the type corresponding to a maybe instance containing type
     @arg{vtype} or nothing.
   @end{short}
-  It is appropriate to call the @fun{g:variant-type-free} function on the
-  return value.
-  @see-class{g:variant-type}
-  @see-function{g:variant-type-free}"
+  @see-class{g:variant-type}"
   (vtype (gobject:boxed variant-type)))
 
 (export 'variant-type-new-maybe)
@@ -736,17 +724,14 @@
 (defcfun ("g_variant_type_new_array" variant-type-new-array)
     (gobject:boxed variant-type :return)
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{#2023-1-31}
   @argument[vtype]{a @class{g:variant-type} instance}
   @return{A new array @class{g:variant-type} instance.}
   @begin{short}
     Constructs the type corresponding to an array of elements of the type
     @arg{vtype}.
   @end{short}
-  It is appropriate to call the @fun{g:variant-type-free} function on the
-  return value.
-  @see-class{g:variant-type}
-  @see-function{g:variant-type-free}"
+  @see-class{g:variant-type}"
   (vtype (gobject:boxed variant-type)))
 
 (export 'variant-type-new-array)
@@ -762,16 +747,13 @@
 
 (defun variant-type-new-tuple (&rest items)
  #+liber-documentation
- "@version{2022-12-30}
+ "@version{2023-1-31}
   @argument[items]{a list of @class{g:variant-type} types, one for each item}
   @return{A new tuple @class{g:variant-type} instance.}
   @begin{short}
     Constructs a new tuple type, from @arg{items}.
   @end{short}
-  It is appropriate to call the @fun{g:variant-type-free} function on the
-  return value.
-  @see-class{g:variant-type}
-  @see-function{g:variant-type-free}"
+  @see-class{g:variant-type}"
   (let ((n-items (length items)))
     (with-foreign-object (items-ar :pointer n-items)
       (loop for i from 0 below n-items
@@ -790,7 +772,7 @@
 (defcfun ("g_variant_type_new_dict_entry" variant-type-new-dict-entry)
     (gobject:boxed variant-type :return)
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{#2023-1-31}
   @argument[key]{a basic @class{g:variant-type} instance}
   @argument[value]{a @class{g:variant-type} instance}
   @return{A new dictionary entry @class{g:variant-type} instance.}
@@ -798,10 +780,7 @@
     Constructs the type corresponding to a dictionary entry with a key of type
     @arg{key} and a value of type @arg{value}.
   @end{short}
-  It is appropriate to call the @fun{g:variant-type-free} function on the return
-  value.
-  @see-class{g:variant-type}
-  @see-function{g:variant-type-free}"
+  @see-class{g:variant-type}"
   (key (gobject:boxed variant-type))
   (value (gobject:boxed variant-type)))
 
@@ -812,7 +791,7 @@
 ;;; ----------------------------------------------------------------------------
 
 (defcfun ("g_variant_type_element" variant-type-element)
-    (gobject:boxed variant-type :return)
+    (gobject:boxed variant-type)
  #+liber-documentation
  "@version{#2022-12-30}
   @argument[vtype]{an array or maybe @class{g:variant-type} instance}

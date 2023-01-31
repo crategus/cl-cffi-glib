@@ -179,7 +179,6 @@
 
            ;; Symbols glib.variant-type.lisp
            #:variant-type
-           #:variant-type-free
            #:variant-type-copy
            #:variant-type-new
            #:variant-type-string-is-valid

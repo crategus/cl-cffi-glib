@@ -268,7 +268,6 @@
     Introduction to the GVariant type system.
     @about-class{variant-type}
     @about-function{variant-type-checked}
-    @about-function{variant-type-free}
     @about-function{variant-type-copy}
     @about-function{variant-type-new}
     @about-function{variant-type-string-is-valid}
