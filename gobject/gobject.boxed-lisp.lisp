@@ -37,9 +37,11 @@
   (bt:with-recursive-lock-held (*gboxed-gc-hooks-lock*)
     (when *gboxed-gc-hooks*
       (log-for :gboxed-gc
-               "*%Activating gc hooks for boxed opaque: ~A~%" *gboxed-gc-hooks*)
+               "~%*%Activating gc hooks for boxed opaque: ~A~%" *gboxed-gc-hooks*)
       (loop for (pointer info) in *gboxed-gc-hooks*
-            do (boxed-free-fn info pointer))
+            do (log-for :gboxed-gc
+                        "Free ~a, ~a~%" pointer (boxed-info-name info))
+               (boxed-free-fn info pointer))
       (setf *gboxed-gc-hooks* nil))))
 
 (defun register-gboxed-for-gc (info pointer)
@@ -189,7 +191,7 @@
                   (make-instance (boxed-info-name info) :pointer native))))
     (if (and proxy (boxed-type-returnp type))
         ;; Changed 2023-1-24:
-        ;; Add a finanlizer for return values of type :RETURN
+        ;; Add a finalizer for return values of type :RETURN
         (tg:finalize proxy (make-boxed-free-finalizer info native))
         proxy)))
 
