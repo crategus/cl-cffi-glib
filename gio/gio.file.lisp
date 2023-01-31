@@ -202,57 +202,26 @@
 
 (in-package :gio)
 
-#|
-(define-foreign-type string-type ()
-  ((free-from-foreign :initarg :fff
-                      :reader string-type-fff
-                      :initform nil)
-   (free-to-foreign :initarg :ftf
-                    :reader string-type-ftf
-                    :initform t))
-  (:actual-type :pointer))
+;;; ----------------------------------------------------------------------------
+;;; gio:file-as-namestring
+;;; ----------------------------------------------------------------------------
 
-(define-parse-method string-t (&key (free-from-foreign nil) (free-to-foreign t))
-  (make-instance 'string-type
-                 :fff free-from-foreign
-                 :ftf free-to-foreign))
+(define-foreign-type file-as-namestring-type ()
+  ()
+  (:actual-type :pointer)
+  (:simple-parser file-as-namestring))
 
-(defmethod cffi:translate-to-foreign (value (type string-type))
-  (cffi:foreign-funcall "g_strdup"
-                        (:string :free-to-foreign (strv-type-ftf type)) value
+(defmethod cffi:translate-to-foreign
+    (value (type file-as-namestring-type))
+  (cffi:foreign-funcall "g_file_parse_name"
+                        :string value
                         :pointer))
 
-(defmethod cffi:translate-from-foreign (value (type string-type))
-  (prog1
-    (cffi:convert-from-foreign value '(:string :free-from-foreign nil))
-    (when (string-type-fff type)
-      (free value))))
-|#
-
-
-(define-foreign-type file-type ()
-  ((free-from-foreign :initarg :fff
-                      :reader file-type-fff
-                      :initform nil)
-   (free-to-foreign :initarg :ftf
-                    :reader filt-type-ftf
-                    :initform t))
-  (:actual-type :pointer))
-
-(define-parse-method file-as-namestring
-    (&key (free-from-foreign nil) (free-to-foreign t))
-  (make-instance 'file-type
-                 :fff free-from-foreign
-                 :ftf free-to-foreign))
-
-(defmethod cffi:translate-to-foreign (value (type file-type))
-  (cond ((stringp value)
-         (file-parse-name value))
-        (t
-         (error "TRANSLATE-TO-FOREIGN for FILE-TYPE: Unknown type for value."))))
-
-(defmethod cffi:translate-from-foreign (value (type file-type))
-  (file-get-parse-name value))
+(defmethod cffi:translate-from-foreign
+    (value (type file-as-namestring-type))
+  (cffi:foreign-funcall "g_file_get_parse_name"
+                        :pointer value
+                        (:string :free-from-foreign t)))
 
 (export 'file-as-namestring)
 
@@ -649,7 +618,7 @@
 (defun file-new-for-path (path)
  #+liber-documentation
  "@version{2023-1-27}
-  @argument[path]{a pathname or namestring containing a relative or absolute 
+  @argument[path]{a pathname or namestring containing a relative or absolute
     path, the path must be encoded in the GLib filename encoding}
   @return{A new @class{g:file} object for the given path.}
   @begin{short}
