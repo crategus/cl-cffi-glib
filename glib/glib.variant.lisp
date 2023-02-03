@@ -193,18 +193,18 @@
 (setf (liber:alias-for-type 'variant)
       "CStruct"
       (documentation 'variant 'type)
- "@version{#2022-12-29}
+ "@version{2023-1-31}
   @begin{short}
     The @sym{g:variant} structure is a variant datatype.
   @end{short}
   It stores a value along with information about the type of that value. The
   range of possible values is determined by the type. The type system used by
-  @sym{g:variant} instances is @class{g:variant-type}.
+  @sym{g:variant} instances is the @class{g:variant-type} type.
 
   @sym{g:variant} instances always have a type and a value, which are given at
-  construction time. The type and value of a @sym{g:variant} instance can never
-  change other than by the @sym{g:variant} instance itself being destroyed. A
-  @sym{g:variant} instance cannot contain a pointer.
+  construction time. The variant type and value of a @sym{g:variant} instance
+  can never change other than by the @sym{g:variant} instance itself being
+  destroyed. A @sym{g:variant} instance cannot contain a pointer.
 
   A @sym{g:variant} instance is reference counted using the @fun{g:variant-ref}
   and @fun{g:variant-unref} functions. The @sym{g:variant} instance also has
@@ -254,8 +254,8 @@
   implementation. The information here is subject to change in the future.
 
   The memory allocated by @sym{g:variant} can be grouped into 4 broad purposes:
-  memory for serialised data, memory for the type information cache, buffer
-   management memory and memory for the @sym{g:variant} structure itself.
+  memory for serialised data, memory for the variant type information cache,
+  buffer management memory and memory for the @sym{g:variant} structure itself.
 
   @subheading{Serialised Data Memory}
   This is the memory that is used for storing @sym{g:variant} data in serialised
@@ -285,7 +285,8 @@
   child values.
 
   Variants use the same amount of space as the item inside of the variant, plus
-  1 byte, plus the length of the type string for the item inside the variant.
+  1 byte, plus the length of the variant type string for the item inside the
+  variant.
 
   As an example, consider a dictionary mapping strings to variants. In the
   case that the dictionary is empty, 0 bytes are required for the serialisation.
@@ -313,7 +314,7 @@
   information structure is kept in the type information cache. The type
   information structure is required for rapid deserialisation.
 
-  Continuing with the above example, if a GVariant exists with the type
+  Continuing with the above example, if a GVariant exists with the variant type
   \"a{sv@}\" then a type information struct will exist for \"a{sv@}\",
   \"{sv@}\", \"s\", and \"v\". Multiple uses of the same type will share the
   same type information. Additionally, all single-digit types are stored in
@@ -327,15 +328,15 @@
   dictionary entries.
 
   Array type info structures are 6 * @code{sizeof (void *)}, plus the memory
-  required to store the type string itself. This means that on 32 bit systems,
-  the cache entry for \"a{sv@}\" would require 30 bytes of memory (plus malloc
-  overhead).
+  required to store the variant type string itself. This means that on 32 bit
+  systems, the cache entry for \"a{sv@}\" would require 30 bytes of memory
+  (plus malloc overhead).
 
   Tuple type info structures are 6 * @code{sizeof (void *)}, plus 4 *
   @code{sizeof (void *)} for each item in the tuple, plus the memory required
-  to store the type string itself. A 2-item tuple, for example, would have a
-  type information structure that consumed writable memory in the size of 14
-  * @code{sizeof (void *)} (plus type string) This means that on 32 bit
+  to store the variant type string itself. A 2-item tuple, for example, would
+  have a type information structure that consumed writable memory in the size
+  of 14 * @code{sizeof (void *)} (plus type string) This means that on 32 bit
   systems, the cache entry for \"{sv@}\" would require 61 bytes of memory
   (plus malloc overhead).
 
@@ -427,7 +428,7 @@
 (setf (liber:alias-for-symbol 'variant-class)
       "CEnum"
       (liber:symbol-documentation 'variant-class)
- "@version{#2022-12-29}
+ "@version{2023-1-31}
   @short{The range of possible toplevel types of @type{g:variant} instances.}
   @begin{pre}
 (defcenum variant-class
@@ -451,25 +452,30 @@
   (:dict-entry  #.(char-code #\{)))
   @end{pre}
   @begin[code]{table}
-    @entry[:boolean]{The @type{g:variant} is a boolean.}
-    @entry[:byte]{The @type{g:variant} is a byte.}
-    @entry[:int16]{The @type{g:variant} is a signed 16 bit integer.}
-    @entry[:uint16]{The @type{g:variant} is an unsigned 16 bit integer.}
-    @entry[:int32]{The @type{g:variant} is a signed 32 bit integer.}
-    @entry[:unit32]{The @type{g:variant} is an unsigned 32 bit integer.}
-    @entry[:int64]{The @type{g:variant} is a signed 64 bit integer.}
-    @entry[:uint64]{The @type{g:variant} is an unsigned 64 bit integer.}
-    @entry[:handle]{The @type{g:variant} is a file handle index.}
-    @entry[:double]{The @type{g:variant} is a double precision floating point
-      value.}
-    @entry[:string]{The @type{g:variant} is a normal string.}
-    @entry[:object-path]{The @type{g:variant} is a D-Bus object path string.}
-    @entry[:signature]{The @type{g:variant} is a D-Bus signature string.}
-    @entry[:variant]{The @type{g:variant} is a variant.}
-    @entry[:maybe]{The @type{g:variant} is a maybe-typed value.}
-    @entry[:array]{The @type{g:variant} is an array.}
-    @entry[:tuple]{The @type{g:variant} is a tuple.}
-    @entry[:dict-entry]{The @type{g:variant} is a dictionary entry.}
+    @entry[:boolean]{The @type{g:variant} instance is a boolean.}
+    @entry[:byte]{The @type{g:variant} instance is a byte.}
+    @entry[:int16]{The @type{g:variant} instance is a signed 16 bit integer.}
+    @entry[:uint16]{The @type{g:variant} instance is an unsigned 16 bit
+      integer.}
+    @entry[:int32]{The @type{g:variant} instance is a signed 32 bit integer.}
+    @entry[:unit32]{The @type{g:variant} instance is an unsigned 32 bit
+      integer.}
+    @entry[:int64]{The @type{g:variant} instance is a signed 64 bit integer.}
+    @entry[:uint64]{The @type{g:variant} instance is an unsigned 64 bit
+      integer.}
+    @entry[:handle]{The @type{g:variant} instance is a file handle index.}
+    @entry[:double]{The @type{g:variant} instance is a double precision
+      floating point value.}
+    @entry[:string]{The @type{g:variant} instance is a normal string.}
+    @entry[:object-path]{The @type{g:variant} instance is a D-Bus object path
+      string.}
+    @entry[:signature]{The @type{g:variant} instance is a D-Bus signature
+      string.}
+    @entry[:variant]{The @type{g:variant} instance is a variant.}
+    @entry[:maybe]{The @type{g:variant} instance is a maybe-typed value.}
+    @entry[:array]{The @type{g:variant} instance is an array.}
+    @entry[:tuple]{The @type{g:variant} instance is a tuple.}
+    @entry[:dict-entry]{The @type{g:variant} instance is a dictionary entry.}
   @end{table}
   @see-type{g:variant}")
 
@@ -504,17 +510,15 @@
 ;;; struct GVariantDict
 ;;; ----------------------------------------------------------------------------
 
-(glib-init:at-init ()
-  (cffi:foreign-funcall "g_variant_dict_get_type" :size))
-
 (gobject::define-g-boxed-opaque variant-dict "GVariantDict"
+  :type-initializer "g_variant_dict_get_type"
   :alloc (cl:error "GVariantDict cannot be created from the Lisp side."))
 
 #+liber-documentation
 (setf (liber:alias-for-class 'variant-dict)
       "GBoxed"
       (documentation 'variant-dict 'type)
- "@version{#2022-12-29}
+ "@version{2023-1-31}
   @begin{short}
     The @sym{g:variant-dict} structure is a mutable interface to
     @type{g:variant} dictionaries.
@@ -860,10 +864,9 @@ add_to_count (GVariant  *orig,
   @argument[value]{a @type{g:variant} instance}
   @return{A @class{g:variant-type} instance}
   @begin{short}
-    Determines the type of @arg{value}.
+    Determines the variant type of @arg{value}.
   @end{short}
-  The return value is valid for the lifetime of @arg{value} and must not be
-  freed.
+  The return value is valid for the lifetime of @arg{value}.
   @see-type{g:variant}
   @see-class{g:variant-type}"
   (value (:pointer (:struct variant))))
@@ -878,9 +881,9 @@ add_to_count (GVariant  *orig,
  #+liber-documentation
  "@version{2022-12-29}
   @argument[value]{a @type{g:variant} instance}
-  @return{The type string for the type of @arg{value}.}
+  @return{The variant type string for the variant type of @arg{value}.}
   @begin{short}
-    Returns the type string of @arg{value}.
+    Returns the variant type string of @arg{value}.
   @end{short}
   @begin[Examples]{dictionary}
     @begin{pre}
@@ -902,9 +905,10 @@ add_to_count (GVariant  *orig,
  "@version{2022-12-29}
   @argument[value]{a @type{g:variant} instance}
   @argument[vtype]{a @class{g:variant-type} instance}
-  @return{@em{True} if the type of @arg{value} matches @arg{vtype}.}
+  @return{@em{True} if the variant type of @arg{value} matches @arg{vtype}.}
   @begin{short}
-    Checks if a @arg{value} has a type matching the provided @arg{vtype}.
+    Checks if a @arg{value} has a variant type matching the provided
+    @arg{vtype}.
   @end{short}
   @see-type{g:variant}
   @see-class{g:variant-type}"
@@ -943,8 +947,8 @@ add_to_count (GVariant  *orig,
   @begin{short}
     Compares @arg{value1} and @arg{value2}.
   @end{short}
-  The types of @arg{value1} and @arg{value2} are @code{:pointer} only to
-  allow use of this function with @code{GTree}, @code{GPtrArray}, etc. They
+  The variant types of @arg{value1} and @arg{value2} are @code{:pointer} only
+  to allow use of this function with @code{GTree}, @code{GPtrArray}, etc. They
   must each be a @type{g:variant} instance.
 
   Comparison is only defined for basic types (i.e. booleans, numbers, strings).
@@ -1180,7 +1184,7 @@ add_to_count (GVariant  *orig,
 (defcfun ("g_variant_new_boolean" variant-new-boolean)
     (:pointer (:struct variant))
  #+liber-documentation
- "@version{#2022-12-29}
+ "@version{2022-12-29}
   @argument[value]{a boolean value}
   @return{A floating reference to a new @type{g:variant} instance.}
   @begin{short}
@@ -1205,7 +1209,7 @@ add_to_count (GVariant  *orig,
 
 (defcfun ("g_variant_new_byte" variant-new-byte) (:pointer (:struct variant))
  #+liber-documentation
- "@version{#2022-12-29}
+ "@version{2022-12-29}
   @argument[value]{a @code{:uchar} value}
   @return{A floating reference to a new @type{g:variant} instance.}
   @short{Creates a new @type{g:variant} instance with the @code{:uchar} value.}
@@ -1220,7 +1224,7 @@ add_to_count (GVariant  *orig,
 
 (defcfun ("g_variant_new_int16" variant-new-int16) (:pointer (:struct variant))
  #+liber-documentation
- "@version{#2022-12-29}
+ "@version{2022-12-29}
   @argument[value]{a @code{:int16} value}
   @return{A floating reference to a new @type{g:variant} instance.}
   @short{Creates a new @type{g:variant} instance with the @code{:int16} value.}
@@ -1236,7 +1240,7 @@ add_to_count (GVariant  *orig,
 (defcfun ("g_variant_new_uint16" variant-new-uint16)
     (:pointer (:struct variant))
  #+liber-documentation
- "@version{#2022-12-29}
+ "@version{2022-12-29}
   @argument[value]{a @code{:uint16} value}
   @return{A floating reference to a new @type{g:variant} instance.}
   @short{Creates a new @type{g:variant} instance with the @code{:uint16} value.}
@@ -1267,7 +1271,7 @@ add_to_count (GVariant  *orig,
 (defcfun ("g_variant_new_uint32" variant-new-uint32)
     (:pointer (:struct variant))
  #+liber-documentation
- "@version{#2022-12-29}
+ "@version{2022-12-29}
   @argument[value]{a @code{:uint32} value}
   @return{A floating reference to a new @type{g:variant} instance.}
   @short{Creates a new @type{g:variant} instance with the @code{:uint32} value.}
@@ -1282,7 +1286,7 @@ add_to_count (GVariant  *orig,
 
 (defcfun ("g_variant_new_int64" variant-new-int64) (:pointer (:struct variant))
  #+liber-documentation
- "@version{#2022-12-29}
+ "@version{2022-12-29}
   @argument[value]{a @code{:int64} value}
   @return{A floating reference to a new @type{g:variant} instance.}
   @short{Creates a new @type{g:variant} instance with the @code{:int64} value.}
@@ -1298,7 +1302,7 @@ add_to_count (GVariant  *orig,
 (defcfun ("g_variant_new_uint64" variant-new-uint64)
     (:pointer (:struct variant))
  #+liber-documentation
- "@version{#2022-12-29}
+ "@version{2022-12-29}
   @argument[value]{a @code{:uint64} value}
   @return{A floating reference to a new @type{g:variant} instance.}
   @short{Creates a new @type{g:variant} instance with the @code{:uint64} value.}
@@ -1314,7 +1318,7 @@ add_to_count (GVariant  *orig,
 (defcfun ("g_variant_new_handle" variant-new-handle)
     (:pointer (:struct variant))
  #+liber-documentation
- "@version{#2022-12-29}
+ "@version{2022-12-29}
   @argument[value]{a @code{:int32} value}
   @return{A floating reference to a new @type{g:variant} instance.}
   @short{Creates a new @type{g:variant} instance with a handle.}
@@ -1333,7 +1337,7 @@ add_to_count (GVariant  *orig,
 (defcfun ("g_variant_new_double" variant-new-double)
     (:pointer (:struct variant))
  #+liber-documentation
- "@version{#2022-12-29}
+ "@version{2022-12-29}
   @argument[value]{a @code{:double} floating point value}
   @return{A floating reference to a @type{g:variant} instance.}
   @short{Creates a new @type{g:variant} instance with a double float value.}
@@ -1349,7 +1353,7 @@ add_to_count (GVariant  *orig,
 (defcfun ("g_variant_new_string" variant-new-string)
     (:pointer (:struct variant))
  #+liber-documentation
- "@version{#2022-12-29}
+ "@version{2022-12-29}
   @argument[string]{a normal UTF-8 string}
   @return{A floating reference to a @type{g:variant} instance.}
   @begin{short}
@@ -1629,7 +1633,7 @@ add_to_count (GVariant  *orig,
   @return{The boolean values @em{true} or @em{false}.}
   @short{Returns the boolean value of @arg{value}.}
   It is an error to call this function with a value of any type other than
-  a @class{g:variant-type} type with the type string \"b\".
+  a @class{g:variant-type} type with the variant type string \"b\".
   @begin[Examples]{dictionary}
     @begin{pre}
 (g:variant-boolean (g:variant-new-boolean nil)) => NIL
@@ -1653,7 +1657,7 @@ add_to_count (GVariant  *orig,
   @return{A @code{:uchar} value.}
   @short{Returns the @code{:uchar} value of @arg{value}.}
   It is an error to call this function with a value of any type other than
-  a @class{g:variant-type} type with the type string  \"y\".
+  a @class{g:variant-type} type with the variant type string  \"y\".
   @see-type{g:variant}
   @see-class{g:variant-type}"
   (value (:pointer (:struct variant))))
@@ -1671,7 +1675,7 @@ add_to_count (GVariant  *orig,
   @return{A @code{:int16} value.}
   @short{Returns the 16-bit signed integer value of @arg{value}.}
   It is an error to call this function with a value of any type other than
-  a @class{g:variant-type} type with the type string \"n\".
+  a @class{g:variant-type} type with the variant type string \"n\".
   @see-type{g:variant}
   @see-class{g:variant-type}"
   (value (:pointer (:struct variant))))
@@ -1689,7 +1693,7 @@ add_to_count (GVariant  *orig,
   @return{A @code{:uint16} value.}
   @short{Returns the 16-bit unsigned integer value of @arg{value}.}
   It is an error to call this function with a value of any type other than
-  a @class{g:variant-type} type with the type string \"q\".
+  a @class{g:variant-type} type with the variant type string \"q\".
   @see-type{g:variant}
   @see-class{g:variant-type}"
   (value (:pointer (:struct variant))))
@@ -1707,7 +1711,7 @@ add_to_count (GVariant  *orig,
   @return{A @code{:int32} value.}
   @short{Returns the 32-bit signed integer value of @arg{value}.}
   It is an error to call this function with a value of any type other than
-  a @class{g:variant-type} type with the type string \"i\".
+  a @class{g:variant-type} type with the variant type string \"i\".
   @see-type{g:variant}
   @see-class{g:variant-type}"
   (value (:pointer (:struct variant))))
@@ -1725,7 +1729,7 @@ add_to_count (GVariant  *orig,
   @return{A @code{:uint32} value.}
   @short{Returns the 32-bit unsigned integer value of @arg{value}.}
   It is an error to call this function with a value of any type other than
-  a @class{g:variant-type} type with the type string \"u\".
+  a @class{g:variant-type} type with the variant type string \"u\".
   @see-symbol{g:variant}
   @see-class{g:variant-type}"
   (value (:pointer (:struct variant))))
@@ -1743,7 +1747,7 @@ add_to_count (GVariant  *orig,
   @return{A @code{:int64} value.}
   @short{Returns the 64-bit signed integer value of @arg{value}.}
   It is an error to call this function with a value of any type other than
-  a @class{g:variant-type} type with the type string \"x\".
+  a @class{g:variant-type} type with the variant type string \"x\".
   @see-type{g:variant}
   @see-class{g:variant-type}"
   (value (:pointer (:struct variant))))
@@ -1761,7 +1765,7 @@ add_to_count (GVariant  *orig,
   @return{A @code{:uint64} value.}
   @short{Returns the 64-bit unsigned integer value of @arg{value}.}
   It is an error to call this function with a value of any type other than
-  a @class{g:variant-type} type with the type string \"t\".
+  a @class{g:variant-type} type with the variant type string \"t\".
   @see-type{g:variant}
   @see-class{g:variant-type}"
   (value (:pointer (:struct variant))))
@@ -1779,7 +1783,7 @@ add_to_count (GVariant  *orig,
   @return{A @code{:int32} value.}
   @short{Returns the 32-bit signed integer value of @arg{value}.}
   It is an error to call this function with a value of any type other than
-  a @class{g:variant-type} type with the type string \"h\".
+  a @class{g:variant-type} type with the variant type string \"h\".
 
   By convention, handles are indexes into an array of file descriptors that
   are sent alongside a D-Bus message. If you are not interacting with D-Bus,
@@ -1801,7 +1805,7 @@ add_to_count (GVariant  *orig,
   @return{A double float value.}
   @short{Returns the double precision floating point value of @arg{value}.}
   It is an error to call this function with a value of any type other than
-  a @class{g:variant-type} type with the type string \"d\".
+  a @class{g:variant-type} type with the variant type string \"d\".
   @see-type{g:variant}
   @see-class{g:variant-type}"
   (value (:pointer (:struct variant))))
@@ -3804,16 +3808,14 @@ add_to_count (GVariant  *orig,
 
 ;; FIXME: Does not work for an argument non-nil for VTYPE
 
-(defcfun ("g_variant_parse" %variant-parse-1)
-    (:pointer (:struct variant))
+(defcfun ("g_variant_parse" %variant-parse-1) (:pointer (:struct variant))
   (vtype :pointer) ; must be the type :pointer
   (text :string)
   (limit :pointer)
   (endptr :pointer)
   (err :pointer))
 
-(defcfun ("g_variant_parse" %variant-parse-2)
-    (:pointer (:struct variant))
+(defcfun ("g_variant_parse" %variant-parse-2) (:pointer (:struct variant))
   (vtype (gobject:boxed variant-type))
   (text :string)
   (limit :pointer)
@@ -3831,8 +3833,9 @@ add_to_count (GVariant  *orig,
   @end{short}
   If @arg{vtype} is non-@code{nil} then the value will be parsed to have that
   type. This may result in additional parse errors, in the case that the parsed
-  value does not fit the type, but may also result in fewer errors, in the case
-  that the type would have been ambiguous, such as with empty arrays.
+  value does not fit the variant type, but may also result in fewer errors, in
+  the case that the variant type would have been ambiguous, such as with empty
+  arrays.
 
   In the event that the parsing is successful, the resulting @type{g:variant}
   instance is returned. In case of any error, @code{nil} will be returned.

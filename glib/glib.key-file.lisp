@@ -330,8 +330,8 @@ Booleans=true;false;true;true
 
 (defmacro with-g-key-file ((keyfile) &body body)
  #+liber-documentation
- "@version{2023-1-25}
-  @syntax[]{with-g-key-file (keyfile) body => result}
+ "@version{2023-2-1}
+  @syntax[]{(with-g-key-file (keyfile) body) => result}
   @argument[keyfile]{a newly allocated @type{g:key-file} instance}
   @begin{short}
     The @sym{with-g-file-key} macro allocates a new @type{g:key-file} instance
@@ -797,16 +797,16 @@ Booleans=true;false;true;true
   @argument[key]{a string with a key}
   @argument[value]{a string with the value}
   @begin{short}
-    The @sym{g:file-key-value} function returns the raw value associated with 
+    The @sym{g:file-key-value} function returns the raw value associated with
     @arg{key} under @arg{group}.
   @end{short}
   Use the @fun{g:key-file-string} functon to retrieve an unescaped UTF-8 string.
   In the event the key or group name cannot be found, @code{nil} is returned.
 
-  The @sym{(setf g:key-file-value)} function associates a new value with 
-  @arg{key} under @arg{group}. If @arg{key} cannot be found then it is created. 
-  If @arg{group} cannot be found then it is created. To set an UTF-8 string 
-  which may contain characters that need escaping (such as newlines or spaces), 
+  The @sym{(setf g:key-file-value)} function associates a new value with
+  @arg{key} under @arg{group}. If @arg{key} cannot be found then it is created.
+  If @arg{group} cannot be found then it is created. To set an UTF-8 string
+  which may contain characters that need escaping (such as newlines or spaces),
   use the @fun{g:key-file-string} function.
   @see-type{g:key-file}
   @see-function{g:key-file-string}"
@@ -1119,7 +1119,7 @@ Booleans=true;false;true;true
   @argument[key]{a string with the key name}
   @argument[value]{a list of strings}
   @begin{short}
-    The @sym{g:key-file-string-list} function returns the values associated 
+    The @sym{g:key-file-string-list} function returns the values associated
     with @arg{key} under @arg{group}.
   @end{short}
   In the event the key or the group name cannot be found, @code{nil} is
@@ -1372,15 +1372,15 @@ Booleans=true;false;true;true
   @argument[key]{a string with the key name}
   @argument[value]{a string with the comment}
   @begin{short}
-    The @sym{g:key-file-comment} retrieves a comment above @arg{key} from 
-    @arg{group}. 
+    The @sym{g:key-file-comment} retrieves a comment above @arg{key} from
+    @arg{group}.
   @end{short}
-  If @arg{key} is @code{nil} then the comment will be read from above 
-  @arg{group}. If both @arg{key} and @arg{group} are @code{nil}, then the 
+  If @arg{key} is @code{nil} then the comment will be read from above
+  @arg{group}. If both @arg{key} and @arg{group} are @code{nil}, then the
   comment will be read from above the first group in the file.
 
-  The @sym{(setf g:key-file-comment)} function places a comment above @arg{key} 
-  from @arg{group}. If @arg{key} is @code{nil} then the comment will be written 
+  The @sym{(setf g:key-file-comment)} function places a comment above @arg{key}
+  from @arg{group}. If @arg{key} is @code{nil} then the comment will be written
   above @arg{group}. If both @arg{key} and @arg{group} are @code{nil}, then the
   comment will be written above the first group in the file.
   @see-type{g:key-file}"
@@ -1724,10 +1724,10 @@ Booleans=true;false;true;true
   @argument[key]{a string with the key name to remove}
   @return{@em{True} if the comment was removed, @em{false} otherwise.}
   @begin{short}
-    Removes a comment above @arg{key} from @arg{group}. 
+    Removes a comment above @arg{key} from @arg{group}.
   @end{short}
-  If @arg{key} is @code{nil} then the comment will be removed above @arg{group}. 
-  If both @arg{key} and @arg{group} are @code{nil}, then the comment will be 
+  If @arg{key} is @code{nil} then the comment will be removed above @arg{group}.
+  If both @arg{key} and @arg{group} are @code{nil}, then the comment will be
   removed above the first group in the file.
   @see-type{g:key-file}"
   (with-ignore-g-error (err)

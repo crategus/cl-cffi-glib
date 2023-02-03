@@ -66,7 +66,7 @@
 ;;;
 ;;;     G_VARIANT_TYPE
 ;;;
-;;;     g_variant_type_free
+;;;     g_variant_type_free                                not implemented
 ;;;     g_variant_type_copy
 ;;;     g_variant_type_new
 ;;;
@@ -116,7 +116,7 @@
 (setf (liber:alias-for-class 'variant-type)
       "GBoxed"
       (documentation 'variant-type 'type)
- "@version{2023-1-27}
+ "@version{2023-1-31}
   @begin{short}
     The GVariant type system is based, in large part, on the D-Bus type system,
     with two major changes and some minor lifting of restrictions.
@@ -321,7 +321,7 @@
   @argument[vtype]{a @class{g:variant-type} instance}
   @return{A new @class{g:variant-type} instance.}
   @begin{short}
-    Makes a copy of a @class{g:variant-type} instance.
+    Makes a copy of a variant type.
   @end{short}
   @see-class{g:variant-type}"
   (vtype (gobject:boxed variant-type)))
@@ -339,8 +339,8 @@
   @argument[string]{a valid @class{g:variant-type} type string}
   @return{A new @class{g:variant-type} instance.}
   @begin{short}
-    Creates a new @class{g:variant-type} instance corresponding to the type
-    string given by @arg{string}.
+    Creates a new variant type corresponding to the type string given by
+    @arg{string}.
   @end{short}
   It is a programmer error to call this function with an invalid type string.
   Use the @fun{g:variant-type-string-is-valid} function if you are unsure.
@@ -365,11 +365,11 @@
 (defcfun ("g_variant_type_string_is_valid" variant-type-string-is-valid)
     :boolean
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2023-1-31}
   @argument[string]{a @class{g:variant-type} type string}
   @return{@em{True} if @arg{string} is exactly one valid type string.}
   @begin{short}
-    Checks if @arg{string} is a valid @class{g:variant-type} type string.
+    Checks if @arg{string} is a valid variant type string.
   @end{short}
   @see-class{g:variant-type}"
   (string :string))
@@ -460,9 +460,9 @@
  #+liber-documentation
  "@version{2023-1-31}
   @argument[vtype]{a @class{g:variant-type} instance}
-  @return{The corresponding type string.}
+  @return{The corresponding variant type string.}
   @begin{short}
-    Returns a newly allocated copy of the type string corresponding to
+    Returns a newly allocated copy of the variant type string corresponding to
     @arg{vtype}.
   @end{short}
   @see-class{g:variant-type}"
@@ -476,18 +476,18 @@
 
 (defcfun ("g_variant_type_is_definite" variant-type-is-definite) :boolean
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2023-1-31}
   @argument[vtype]{a @class{g:variant-type} instance}
   @return{@em{True} if @arg{vtype} is definite.}
   @begin{short}
     Determines if the given variant type is definite, i.e. not indefinite.
   @end{short}
-  A type is definite if its type string does not contain any indefinite type
-  characters ('*', '?', or 'r'). A @class{g:variant-type} instance may not have
-  an indefinite type, so calling this function on the result of the
-  @fun{g:variant-type-new} function will always result in @em{true} being
-  returned. Calling this function on an indefinite type like \"a*\", however,
-  will result in @em{false} being returned.
+  A type is definite if its variant type string does not contain any indefinite
+  type characters ('*', '?', or 'r'). A variant type may not have an indefinite
+  type, so calling this function on the result of the @fun{g:variant-type-new}
+  function will always result in @em{true} being returned. Calling this function
+  on an indefinite type like \"a*\", however, will result in @em{false} being
+  returned.
   @see-class{g:variant-type}
   @see-function{g:variant-type-new}"
   (vtype (gobject:boxed variant-type)))
@@ -500,7 +500,7 @@
 
 (defcfun ("g_variant_type_is_container" variant-type-is-container) :boolean
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2023-1-31}
   @argument[type]{a @class{g:variant-type} instance}
   @return{@em{True} if @arg{vtype} is a container type.}
   @begin{short}
@@ -520,15 +520,16 @@
 
 (defcfun ("g_variant_type_is_basic" variant-type-is-basic) :boolean
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2023-1-31}
   @argument[vtype]{a @class{g:variant-type} instance}
   @return{@em{True} if @arg{vtype} is a basic type.}
   @begin{short}
     Determines if the given variant type is a basic type.
   @end{short}
   Basic types are booleans, bytes, integers, doubles, strings, object paths
-  and signatures. Only a basic type may be used as the key of a dictionary
-  entry. This function returns @em{false} for all indefinite types except \"?\".
+  and signatures. Only a basic variant type may be used as the key of a
+  dictionary entry. This function returns @em{false} for all indefinite types
+  except \"?\".
   @see-class{g:variant-type}"
   (vtype (gobject:boxed variant-type)))
 
@@ -540,7 +541,7 @@
 
 (defcfun ("g_variant_type_is_maybe" variant-type-is-maybe) :boolean
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2023-1-31}
   @argument[vtype]{a @class{g:variant-type} instance}
   @return{@em{True} if @arg{vtype} is a maybe type.}
   @begin{short}
@@ -560,7 +561,7 @@
 
 (defcfun ("g_variant_type_is_array" variant-type-is-array) :boolean
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2023-1-31}
   @argument[vtype]{a @class{g:variant-type} instance}
   @return{@em{True} if @arg{vtype} is an array type.}
   @begin{short}
@@ -580,11 +581,11 @@
 
 (defcfun ("g_variant_type_is_tuple" variant-type-is-tuple) :boolean
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2023-1-31}
   @argument[vtype]{a @class{g:variant-type} instance}
   @return{@em{True} if @arg{vtype} is a tuple type.}
   @begin{short}
-    Determines if the given type is a tuple type.
+    Determines if the given variant type is a tuple type.
   @end{short}
   This is @em{true} if the variant type string for type starts with a '(' or if
   type is \"r\". This function returns @em{true} for any indefinite type for
@@ -600,7 +601,7 @@
 
 (defcfun ("g_variant_type_is_dict_entry" variant-type-is-dict-entry) :boolean
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2023-1-31}
   @argument[vtype]{a @class{g:variant-type} instance}
   @return{@em{True} if @arg{vtype} is a dictionary entry type.}
   @begin{short}
@@ -620,7 +621,7 @@
 
 (defcfun ("g_variant_type_is_variant" variant-type-is-variant) :boolean
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2023-1-31}
   @argument[vtype]{a @class{g:variant-type} instance}
   @return{@em{True} if @arg{vtype} is the variant type.}
   @begin{short}
@@ -637,7 +638,7 @@
 
 (defcfun ("g_variant_type_hash" variant-type-hash) :uint
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2023-1-31}
   @argument[vtype]{a @class{g:variant-type} instance}
   @return{An unsigned integer with the hash value.}
   @begin{short}
@@ -655,7 +656,7 @@
 
 (defcfun ("g_variant_type_equal" variant-type-equal) :boolean
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2023-1-31}
   @argument[vtype1]{a @class{g:variant-type} instance}
   @argument[vtype2]{a @class{g:variant-type} instance}
   @begin{return}
@@ -682,7 +683,7 @@
 
 (defcfun ("g_variant_type_is_subtype_of" variant-type-is-subtype-of) :boolean
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2023-1-31}
   @argument[vtype]{a @class{g:variant-type} instance}
   @argument[supertype]{a @class{g:variant-type} instance}
   @return{@em{True} if @arg{vtype} is a subtype of @arg{supertype}.}
@@ -705,11 +706,11 @@
 (defcfun ("g_variant_type_new_maybe" variant-type-new-maybe)
     (gobject:boxed variant-type :return)
  #+liber-documentation
- "@version{#2023-1-31}
+ "@version{2023-1-31}
   @argument[vtype]{a @class{g:variant-type} instance}
   @return{A new maybe @class{g:variant-type} instance.}
   @begin{short}
-    Constructs the type corresponding to a maybe instance containing type
+    Constructs the variant type corresponding to a maybe instance containing
     @arg{vtype} or nothing.
   @end{short}
   @see-class{g:variant-type}"
@@ -724,12 +725,12 @@
 (defcfun ("g_variant_type_new_array" variant-type-new-array)
     (gobject:boxed variant-type :return)
  #+liber-documentation
- "@version{#2023-1-31}
+ "@version{2023-1-31}
   @argument[vtype]{a @class{g:variant-type} instance}
   @return{A new array @class{g:variant-type} instance.}
   @begin{short}
-    Constructs the type corresponding to an array of elements of the type
-    @arg{vtype}.
+    Constructs the variant type corresponding to an array of elements of the
+    @arg{vtype} type.
   @end{short}
   @see-class{g:variant-type}"
   (vtype (gobject:boxed variant-type)))
@@ -772,13 +773,13 @@
 (defcfun ("g_variant_type_new_dict_entry" variant-type-new-dict-entry)
     (gobject:boxed variant-type :return)
  #+liber-documentation
- "@version{#2023-1-31}
+ "@version{2023-1-31}
   @argument[key]{a basic @class{g:variant-type} instance}
   @argument[value]{a @class{g:variant-type} instance}
   @return{A new dictionary entry @class{g:variant-type} instance.}
   @begin{short}
-    Constructs the type corresponding to a dictionary entry with a key of type
-    @arg{key} and a value of type @arg{value}.
+    Constructs the variant type corresponding to a dictionary entry with a key
+    of @arg{key} type and a value of @arg{value} type.
   @end{short}
   @see-class{g:variant-type}"
   (key (gobject:boxed variant-type))
@@ -790,10 +791,12 @@
 ;;; g_variant_type_element ()
 ;;; ----------------------------------------------------------------------------
 
+;; Check the return value, do we have to free it?
+
 (defcfun ("g_variant_type_element" variant-type-element)
     (gobject:boxed variant-type)
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2023-1-31}
   @argument[vtype]{an array or maybe @class{g:variant-type} instance}
   @return{The element type of @arg{vtype}.}
   @begin{short}
@@ -811,7 +814,7 @@
 
 (defcfun ("g_variant_type_n_items" variant-type-n-items) :size
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2023-1-31}
   @argument[vtype]{a tuple or dictionary entry @class{g:variant-type} instance}
   @return{The number of items in @arg{vtype}.}
   @begin{short}
@@ -830,10 +833,12 @@
 ;;; g_variant_type_first ()
 ;;; ----------------------------------------------------------------------------
 
+;; TODO: Check the NIL return value. Is this correct?
+
 (defcfun ("g_variant_type_first" variant-type-first)
     (gobject:boxed variant-type)
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2023-1-31}
   @argument[vtype]{a tuple or dictionary entry @class{g:variant-type} instance}
   @return{The first item type of @arg{vtype}.}
   @begin{short}
@@ -841,7 +846,7 @@
   @end{short}
   This function may only be used with tuple or dictionary entry types, but
   must not be used with the generic tuple type \"r\". In the case of a
-  dictionary entry type, this returns the type of the key. @code{NULL} is
+  dictionary entry type, this returns the type of the key. @code{nil} is
   returned in case of type being \"()\". This call, together with the
   @fun{g:variant-type-next} function provides an iterator interface over tuple
   and dictionary entry types.
@@ -857,9 +862,9 @@
 
 (defcfun ("g_variant_type_next" variant-type-next) (gobject:boxed variant-type)
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2023-1-31}
   @argument[vtype]{a @class{g:variant-type} instance from a previous call}
-  @return{The next @class{g:variant-type} instance after type, or @code{NULL}.}
+  @return{The next @class{g:variant-type} instance after type, or @code{nil}.}
   @begin{short}
     Determines the next item type of a tuple or dictionary entry type.
   @end{short}
@@ -867,7 +872,7 @@
   @fun{g:variant-type-first} or @sym{g:variant-type-next} functions. If called
   on the key type of a dictionary entry then this call returns the value type.
   If called on the value type of a dictionary entry then this call returns
-  @code{NULL}. For tuples, @code{NULL} is returned when @arg{vtype} is the last
+  @code{nil}. For tuples, @code{nil} is returned when @arg{vtype} is the last
   item in a tuple.
   @see-class{g:variant-type}
   @see-function{g:variant-type-first}"
@@ -881,7 +886,7 @@
 
 (defcfun ("g_variant_type_key" variant-type-key) (gobject:boxed variant-type)
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2023-1-31}
   @argument[vtype]{a dictionary entry @class{g:variant-type} instance}
   @return{The key type of the dictionary entry.}
   @begin{short}
@@ -904,7 +909,7 @@
 (defcfun ("g_variant_type_value" variant-type-value)
     (gobject:boxed variant-type)
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2023-1-31}
   @argument[vtype]{a dictionary entry @class{g:variant-type} instance}
   @return{The value type of the dictionary entry.}
   @begin{short}
