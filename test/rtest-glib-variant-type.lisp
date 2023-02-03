@@ -19,38 +19,6 @@
   (is (eq (g:gtype "GVariantType")
           (g:gtype (cffi:foreign-funcall "g_variant_type_get_gtype" :size)))))
 
-;;;     G_VARIANT_TYPE_BOOLEAN
-;;;     G_VARIANT_TYPE_BYTE
-;;;     G_VARIANT_TYPE_INT16
-;;;     G_VARIANT_TYPE_UINT16
-;;;     G_VARIANT_TYPE_INT32
-;;;     G_VARIANT_TYPE_UINT32
-;;;     G_VARIANT_TYPE_INT64
-;;;     G_VARIANT_TYPE_UINT64
-;;;     G_VARIANT_TYPE_HANDLE
-;;;     G_VARIANT_TYPE_DOUBLE
-;;;     G_VARIANT_TYPE_STRING
-;;;     G_VARIANT_TYPE_OBJECT_PATH
-;;;     G_VARIANT_TYPE_SIGNATURE
-;;;     G_VARIANT_TYPE_VARIANT
-;;;     G_VARIANT_TYPE_ANY
-;;;     G_VARIANT_TYPE_BASIC
-;;;     G_VARIANT_TYPE_MAYBE
-;;;     G_VARIANT_TYPE_ARRAY
-;;;     G_VARIANT_TYPE_TUPLE
-;;;     G_VARIANT_TYPE_UNIT
-;;;     G_VARIANT_TYPE_DICT_ENTRY
-;;;     G_VARIANT_TYPE_DICTIONARY
-;;;     G_VARIANT_TYPE_STRING_ARRAY
-;;;     G_VARIANT_TYPE_OBJECT_PATH_ARRAY
-;;;     G_VARIANT_TYPE_BYTESTRING
-;;;     G_VARIANT_TYPE_BYTESTRING_ARRAY
-;;;     G_VARIANT_TYPE_VARDICT
-
-;;;     G_VARIANT_TYPE
-
-;;;     g_variant_type_free
-
 ;;;     g_variant_type_copy
 
 (test variant-type-copy
@@ -60,22 +28,18 @@
     (trace cffi:translate-from-foreign)
     (trace cffi:translate-to-foreign)
     (trace g:variant-type-copy))
-
   (let* ((variant1 (g:variant-type-new "b"))
          (variant2 (g:variant-type-copy variant1)))
 
     (is (typep variant1 'g:variant-type))
     (is (cffi:pointerp (gobject::boxed-opaque-pointer variant1)))
     (is (typep variant2 'g:variant-type))
-    (is (cffi:pointerp (gobject::boxed-opaque-pointer variant2)))
-  )
-
+    (is (cffi:pointerp (gobject::boxed-opaque-pointer variant2))))
   (when *verbose-glib-variant-type*
     (untrace tg:finalize)
     (untrace cffi:translate-from-foreign)
     (untrace cffi:translate-to-foreign)
     (untrace g:variant-type-copy)))
-
 
 ;;;     g_variant_type_new
 
@@ -87,18 +51,14 @@
     (trace cffi:translate-from-foreign)
     (trace cffi:translate-to-foreign)
     (trace g:variant-type-new))
-
   (let ((variant (g:variant-type-new "b")))
     (is (typep variant 'g:variant-type))
-    (is (cffi:pointerp (gobject::boxed-opaque-pointer variant)))
-  )
-
+    (is (cffi:pointerp (gobject::boxed-opaque-pointer variant))))
   (when *verbose-glib-variant-type*
     (untrace tg:finalize)
     (untrace cffi:translate-from-foreign)
     (untrace cffi:translate-to-foreign)
     (untrace g:variant-type-new)))
-
 
 (test variant-type-new.2
   (is (every (lambda (x) (typep x 'g:variant-type))
@@ -298,9 +258,8 @@
     (setf iter (g:variant-type-next iter))
     (is (equal "n" (g:variant-type-dup-string iter)))
     (setf iter (g:variant-type-next iter))
-    ;; At last we get a NULL-POINTER
-;    (is-true (cffi:null-pointer-p iter))
-    ))
+    ;; At last iter is NIL
+    (is-false iter)))
 
 ;;;   g_variant_type_key
 ;;;   g_variant_type_value
@@ -312,4 +271,4 @@
     (is (string= "n" (g:variant-type-dup-string (g:variant-type-key dict))))
     (is (string= "b" (g:variant-type-dup-string (g:variant-type-value dict))))))
 
-;;; --- 2023-1-27 --------------------------------------------------------------
+;;; --- 2023-1-31 --------------------------------------------------------------
