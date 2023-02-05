@@ -89,20 +89,20 @@
 
 (defmacro with-g-option-context ((context &rest args) &body body)
  #+liber-documentation
- "@version{2023-1-6}
-  @syntax[]{with-g-option-context (context) body => result}
-  @syntax[]{with-g-option-context (context parameter) body => result}
-  @argument[context]{a @type{g:option-context} instance to create and 
+ "@version{2023-2-3}
+  @syntax[]{(with-g-option-context (context) body) => result}
+  @syntax[]{(with-g-option-context (context parameter) body) => result}
+  @argument[context]{a @type{g:option-context} instance to create and
     initialize}
-  @argument[parameter]{an optional string which is displayed in the first line 
+  @argument[parameter]{an optional string which is displayed in the first line
     of --help output}
   @begin{short}
-    The @sym{with-g-option-context} macro allocates a new 
-    @type{g:option-context} instance, initializes the option context with the 
+    The @sym{with-g-option-context} macro allocates a new
+    @type{g:option-context} instance, initializes the option context with the
     optional @arg{parameter} value and executes the body that uses the context.
   @end{short}
-  After execution of the body the allocated memory for the optin context is 
-  released. See the documentation of the @fun{g:option-context-new} function 
+  After execution of the body the allocated memory for the option context is
+  released. See the documentation of the @fun{g:option-context-new} function
   for more information about the initialization of the new option context.
   @see-type{g:option-context}
   @see-function{g:option-context-new}"
@@ -125,12 +125,12 @@
   @argument[help-description]{a string with a description for the
     @code{--help-name} option}
   @begin{short}
-    The @sym{with-g-option-group} macro allocates a new 
+    The @sym{with-g-option-group} macro allocates a new
     @type{g:option-group} instance, initializes the option group with the
     given arguments and executes the body that uses the option group.
   @end{short}
-  After execution of the body the allocated memory for the option group is 
-  released. See the documentation of the @fun{g:option-group-new} function for 
+  After execution of the body the allocated memory for the option group is
+  released. See the documentation of the @fun{g:option-group-new} function for
   more information about the initialization of the new option group.
   @see-type{g:option-context}
   @see-function{g:option-group-new}"
