@@ -24,9 +24,17 @@
 
 (in-package :gobject)
 
-(defvar *debug-gboxed-gc* nil)
+(defvar *debug-gboxed-gc* t)
 
 ;; TODO: More work needed to rework the implementation of GBoxed.
+
+;;; ----------------------------------------------------------------------------
+
+(defstruct boxed-info
+  name
+  gtype)
+
+;;; ----------------------------------------------------------------------------
 
 ;;; Garbage Collection for GBoxed opaque objects
 
@@ -37,7 +45,7 @@
   (bt:with-recursive-lock-held (*gboxed-gc-hooks-lock*)
     (when *gboxed-gc-hooks*
       (log-for :gboxed-gc
-               "~%*%Activating gc hooks for boxed opaque: ~A~%" *gboxed-gc-hooks*)
+               "~%*%Activate gc hooks for boxed opaque: ~A~%" *gboxed-gc-hooks*)
       (loop for (pointer info) in *gboxed-gc-hooks*
             do (log-for :gboxed-gc
                         "Free ~a, ~a~%" pointer (boxed-info-name info))
@@ -124,12 +132,6 @@
 
 ;;; ----------------------------------------------------------------------------
 
-(defstruct boxed-info
-  name
-  gtype)
-
-;;; ----------------------------------------------------------------------------
-
 ;; Definition of generic functions to copy and to free a boxed object
 
 (defgeneric boxed-copy-fn (info native)
@@ -209,7 +211,8 @@
 
 (defmacro define-g-boxed-opaque (name
                                  gtype
-                                 &key type-initializer
+                                 &key (export t)
+                                      type-initializer
                                       (alloc (error "Alloc must be specified")))
   (let ((native-copy (gensym "NATIVE-COPY-"))
         (instance (gensym "INSTANCE-")))
@@ -224,18 +227,22 @@
              (tg:finalize ,instance
                           (make-boxed-free-finalizer (get-boxed-info ',name)
                                                      ,native-copy)))))
-       ;; Change 2023-1-24:
-       ;; Add call to the type initializer, when available
-       ,@(when type-initializer
-           (list `(glib-init:at-init ()
-                     ,(type-initializer-call type-initializer))))
        (eval-when (:compile-toplevel :load-toplevel :execute)
          ;; Register the Lisp symbol NAME for GTYPE
          (setf (symbol-for-gtype ,gtype) ',name)
          ;; Store the structure in a hash table
          (setf (get-boxed-info ',name)
                (make-boxed-opaque-info :name ',name
-                                       :gtype ,gtype))))))
+                                       :gtype ,gtype)))
+       ;; Change 2023-1-24:
+       ;; Add call to the type initializer, when available
+       ,@(when type-initializer
+           (list `(glib-init:at-init ()
+                     ,(type-initializer-call type-initializer))))
+       ,@(when export
+           (list `(export ',name
+                          (find-package
+                              ,(package-name (symbol-package name)))))))))
 
 ;;; ----------------------------------------------------------------------------
 ;;;
@@ -325,7 +332,10 @@
 
 ;;; ----------------------------------------------------------------------------
 
-(defmacro define-g-boxed-cstruct (name gtype &body slots)
+(defmacro define-g-boxed-cstruct (name gtype
+                                  (&key (export t)
+                                        type-initializer)
+                                  &body slots)
   (let ((cstruct-description (parse-cstruct-definition name slots)))
     `(progn
        (defstruct ,name
@@ -352,7 +362,15 @@
                                         ,cstruct-description))
          (setf (get ',name 'structure-constructor)
                ',(intern (format nil "MAKE-~A" (symbol-name name))
-                         (symbol-package name)))))))
+                         (symbol-package name))))
+       ;; Change 2023-2-4:
+       ;; Add call to the type initializer, when available,
+       ;; and export the symbol
+       ,@(when type-initializer
+           (list `(glib-init:at-init ()
+                     ,(type-initializer-call type-initializer))))
+       ,@(when export
+           (list `(export (boxed-related-symbols ',name)))))))
 
 ;;; ----------------------------------------------------------------------------
 
@@ -879,19 +897,17 @@
 (defun boxed-related-symbols (name)
   (let ((info (get-boxed-info name)))
     (etypecase info
+      (boxed-opaque-info
+       (list name))
       (boxed-cstruct-info
        (append
-         (list name
-               (intern (format nil "MAKE-~A" (symbol-name name)))
-               (intern (format nil "COPY-~A" (symbol-name name))))
+         (list name)
          (iter (for slot in (cstruct-description-slots
                               (boxed-cstruct-info-cstruct-description info)))
                (for slot-name = (cstruct-slot-description-name slot))
                (collect (intern (format nil "~A-~A"
                                         (symbol-name name)
                                         (symbol-name slot-name)))))))
-      (boxed-opaque-info
-       (list name))
       (boxed-variant-info
        (append
          (list name)
@@ -920,7 +936,7 @@
                           (boxed-cstruct-info-cstruct-description
                                             (get-boxed-info gtype)))))
 
-;; FIXME: We get a compiler warning. Can we improve the code!?
+;; FIXME: We get a compiler warning. Check this more carefully
 ;;
 ;; in: DEFINE-COMPILER-MACRO COPY-BOXED-SLOTS-TO-FOREIGN
 ;;     (WARN "Unknown foreign GBoxed type ~S" GOBJECT::TYPE-R)
@@ -932,14 +948,14 @@
 (define-compiler-macro copy-boxed-slots-to-foreign (&whole whole structure
                                                            native-ptr
                                                     &optional type)
+  ;; Muffles the message about deleting unreachable code.
+  #+sbcl
+  (declare (sb-ext:muffle-conditions sb-ext:code-deletion-note))
   (if (and type (constantp type))
       (let* ((type-r (eval type))
              (f-i (get-boxed-info type-r)))
-        (unless f-i
+        (unless (or f-i (typep f-i 'boxed-cstruct-info))
           (warn "Unknown foreign GBoxed type ~S" type-r)
-          (return-from copy-boxed-slots-to-foreign whole))
-        (unless (typep f-i 'boxed-cstruct-info)
-          (warn "Foreign GBoxed type ~S is not a C structure wrapper" type-r)
           (return-from copy-boxed-slots-to-foreign whole))
         `(when ,structure
            (copy-slots-to-native
