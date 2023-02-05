@@ -24,7 +24,7 @@
 
 (in-package :gobject)
 
-(defvar *debug-gboxed-gc* t)
+(defvar *debug-gboxed-gc* nil)
 
 ;; TODO: More work needed to rework the implementation of GBoxed.
 
