@@ -19,6 +19,7 @@
            #:list-t
            #:slist-t
            #:date-time
+           #:unichar
 
            ;; Symbols from glib.error.lisp
            #:error
