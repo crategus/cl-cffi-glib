@@ -5,7 +5,7 @@
 ;;; See http://common-lisp.net/project/cl-gtk2/
 ;;;
 ;;; Copyright (C) 2009 - 2011 Kalyanov Dmitry
-;;; Copyright (C) 2011 - 2022 Dieter Kaiser
+;;; Copyright (C) 2011 - 2023 Dieter Kaiser
 ;;;
 ;;; This program is free software: you can redistribute it and/or modify
 ;;; it under the terms of the GNU Lesser General Public License for Lisp
@@ -79,11 +79,9 @@
 
 (defmethod initialize-instance :after
            ((class gobject-class) &key &allow-other-keys)
-
   (log-for :subclass
            ":subclass INITIALIZE-INSTANCE :after for class ~a ~a ~a~%"
            class (gobject-class-direct-g-type-name class) (class-name class))
-
   (when (gobject-class-direct-g-type-name class)
     (setf (symbol-for-gtype (gobject-class-direct-g-type-name class))
           (class-name class))
@@ -148,10 +146,6 @@
                 :accessor gobject-fn-effective-slot-definition-g-getter-fn)
    (g-setter-fn :initform nil
                 :accessor gobject-fn-effective-slot-definition-g-setter-fn)))
-
-
-
-
 
 ;;; ----------------------------------------------------------------------------
 

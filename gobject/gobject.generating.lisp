@@ -5,7 +5,7 @@
 ;;; See http://common-lisp.net/project/cl-gtk2/
 ;;;
 ;;; Copyright (C) 2009 - 2011 Kalyanov Dmitry
-;;; Copyright (C) 2011 - 2012 Dieter Kaiser
+;;; Copyright (C) 2011 - 2023 Dieter Kaiser
 ;;;
 ;;; This program is free software: you can redistribute it and/or modify
 ;;; it under the terms of the GNU Lesser General Public License for Lisp
@@ -234,9 +234,6 @@
 
 ;;; ----------------------------------------------------------------------------
 
-;; FIXME: This function generates a standard name for the accesor function and
-;; does not respect the given accessor name in the class defintion.
-
 (defun meta-property->slot (class-name property)
   (declare (ignorable class-name))
   `(,(property-name property)
@@ -246,11 +243,6 @@
      :g-property-type ,(if (gobject-property-p property)
                            (gobject-property-gtype property)
                            (cffi-property-type property))
-     ;; FIXME: The code ignores the field gobject-property-accessor.
-;     :accessor ,(intern (format nil "~A-~A"
-;                                (symbol-name class-name)
-;                                (property-name property))
-;                        (symbol-package class-name))
      :accessor ,(property-accessor property)
      ,@(when (if (gobject-property-p property)
                  t
