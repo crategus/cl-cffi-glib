@@ -64,7 +64,7 @@
 (setf (liber:alias-for-class 'icon)
       "Interface"
       (documentation 'icon 'type)
- "@version{2022-12-27}
+ "@version{2023-3-12}
   @begin{short}
     The @sym{g:icon} interface is a very minimal interface for icons.
   @end{short}
@@ -81,13 +81,13 @@
   function.
 
   For serializing a @sym{g:icon} object, use the @fun{g:icon-serialize} and
-  @fun{g:icon-deserialize} function.
+  @fun{g:icon-deserialize} functions.
 
   If you want to consume the @sym{g:icon} interface, for example, in a
   toolkit, you must be prepared to handle at least the three following cases:
   @class{g:loadable-icon}, @class{g:themed-icon} and @class{g:emblemed-icon}
   classes. It may also make sense to have fast-paths for other cases, like
-  handling the @class{gdk:pixbuf} object directly, for example, but all
+  handling the @class{gdk-pixbuf:pixbuf} object directly, for example, but all
   compliant @sym{g:icon} implementations outside of GIO must implement the
   @class{g:loadable-icon} class.
 
