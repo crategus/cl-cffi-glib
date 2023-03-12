@@ -6,7 +6,7 @@
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
 ;;; available from <http://www.crategus.com/books/cl-cffi-gtk/>.
 ;;;
-;;; Copyright (C) 2012 - 2022 Dieter Kaiser
+;;; Copyright (C) 2012 - 2023 Dieter Kaiser
 ;;;
 ;;; This program is free software: you can redistribute it and/or modify
 ;;; it under the terms of the GNU Lesser General Public License for Lisp
@@ -237,7 +237,7 @@
 
 #+liber-documentation
 (setf (documentation 'application 'type)
- "@version{#2022-12-30}
+ "@version{#2023-3-12}
   @begin{short}
     The @sym{g:application} class is the foundation of an application.
   @end{short}
@@ -365,7 +365,7 @@
                         (format t \"The application is in ACTIVATE~%\")
                         ;; Note: when doing a longer-lasting action here that
                         ;; returns to the main loop, you should use
-                        ;; g-application-hold and g-application-release to
+                        ;; g:application-hold and g:application-release to
                         ;; keep the application alive until the action is
                         ;; completed.
                       ))
@@ -379,63 +379,63 @@
                           ;; The argument FILES is a C pointer to an array of
                           ;; GFile objects. We list the pathnames of the files.
                           (dotimes (i n-files)
-                            (let ((file (mem-aref files '(g:object g-file) i)))
-                              (format t \" ~a~%\" (g-file-path file))))))
+                            (let ((file (mem-aref files '(g:object g:file) i)))
+                              (format t \" ~a~%\" (g:file-path file))))))
     ;; Signal handler \"shutdown\"
     (g:signal-connect app \"shutdown\"
                       (lambda (application)
                         (declare (ignore application))
                         (format t \"The application is in SHUTDOWN~%\")))
     ;; Run the application
-    (g-application-run app argv)))
+    (g:application-run app argv)))
     @end{pre}
     An example to show the implementation of actions for an application.
     @begin{pre}
 (defun activate-action (app name)
-  (let ((ptype (g-action-group-action-parameter-type app name))
-        (state (g-action-group-action-state app name))
-        (enabled (g-action-group-action-enabled app name)))
+  (let ((ptype (g:action-group-action-parameter-type app name))
+        (state (g:action-group-action-state app name))
+        (enabled (g:action-group-action-enabled app name)))
     ;; Print information about the action
     (format t \"     action name : ~A~%\" name)
     (format t \"  parameter type : ~A~%\" ptype)
     (unless (null-pointer-p state)
-      (format t \"      state type : ~A~%\" (g-variant-type-string state)))
+      (format t \"      state type : ~A~%\" (g:variant-type-string state)))
     (format t \"           state : ~A~%\" state)
     (format t \"         enabled : ~A~%\" enabled)
     ;; Activate the action
-    (g-action-group-activate-action app name state)))
+    (g:action-group-activate-action app name state)))
 
 (defun application-action (&rest argv)
-  (let ((app (make-instance 'g-application
+  (let ((app (make-instance 'g:application
                             :application-id \"com.crategus.application-action\"
                             :flags :none)))
     ;; Create the \"simple-action\" action
-    (let ((action (g-simple-action-new \"simple-action\" nil)))
+    (let ((action (g:simple-action-new \"simple-action\" nil)))
       ;; Connect a handler to the \"activate\" signal
       (g:signal-connect action \"activate\"
           (lambda (action parameter)
             (declare (ignore parameter))
-            (format t \"Action ~A is activated.~%\" (g-action-name action))))
+            (format t \"Action ~A is activated.~%\" (g:action-name action))))
       ;; Add the action to the action map of the application
-      (g-action-map-add-action app action))
+      (g:action-map-add-action app action))
     ;; Create the \"toggle-action\" action
-    (let ((action (g-simple-action-new-stateful \"toggle-action\"
+    (let ((action (g:simple-action-new-stateful \"toggle-action\"
                                                 \"b\"
-                                                (g-variant-new-boolean nil))))
+                                                (g:variant-new-boolean nil))))
       ;; Connect a handler to the \"activate\" signal
       (g:signal-connect action \"activate\"
           (lambda (action parameter)
             (declare (ignore parameter))
-            (format t \"Action ~A is activated.~%\" (g-action-name action))
-            (let ((state (g-variant-boolean (g-action-state action))))
+            (format t \"Action ~A is activated.~%\" (g:action-name action))
+            (let ((state (g:variant-boolean (g:action-state action))))
               (if state
-                  (setf (g-action-state action) (g-variant-new-boolean nil))
-                  (setf (g-action-state action) (g-variant-new-boolean t)))
+                  (setf (g:action-state action) (g:variant-new-boolean nil))
+                  (setf (g:action-state action) (g:variant-new-boolean t)))
               (format t \"The state changed from ~A to ~A.~%\"
                         state
                         (not state)))))
       ;; Add the action to the action map of the application
-      (g-action-map-add-action app action))
+      (g:action-map-add-action app action))
     ;; Signal handler \"activate\"
     (g:signal-connect app \"activate\"
                       (lambda (application)
@@ -444,7 +444,7 @@
                         (activate-action application \"simple-action\")
                         (activate-action application \"toggle-action\")))
     ;; Run the application
-    (g-application-run app argv)))
+    (g:application-run app argv)))
     @end{pre}
   @end{dictionary}
   @begin[Signal Details]{dictionary}
@@ -520,7 +520,7 @@ lambda (application options)    :run-last
       @begin[code]{table}
         @entry[application]{The @sym{g:application} instance which received the
           signal.}
-        @entry[options]{The options dictionary of type @class{g:variant-dict}.}
+        @entry[options]{The options dictionary of @class{g:variant-dict} type.}
         @entry[Returns]{An exit code. If you have handled your options and want
           to exit the process, return a non-negative option, 0 for success, and
           a positive value for failure. Return -1 to let the default option
