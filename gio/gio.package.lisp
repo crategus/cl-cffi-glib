@@ -6,24 +6,25 @@
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
 ;;; available from <http://www.crategus.com/books/cl-cffi-gtk/>.
 ;;;
-;;; Copyright (C) 2012 - 2021 Dieter Kaiser
+;;; Copyright (C) 2012 - 2023 Dieter Kaiser
 ;;;
-;;; This program is free software: you can redistribute it and/or modify
-;;; it under the terms of the GNU Lesser General Public License for Lisp
-;;; as published by the Free Software Foundation, either version 3 of the
-;;; License, or (at your option) any later version and with a preamble to
-;;; the GNU Lesser General Public License that clarifies the terms for use
-;;; with Lisp programs and is referred as the LLGPL.
+;;; Permission is hereby granted, free of charge, to any person obtaining a
+;;; copy of this software and associated documentation files (the "Software"),
+;;; to deal in the Software without restriction, including without limitation
+;;; the rights to use, copy, modify, merge, publish, distribute, sublicense,
+;;; and/or sell copies of the Software, and to permit persons to whom the
+;;; Software is furnished to do so, subject to the following conditions:
 ;;;
-;;; This program is distributed in the hope that it will be useful,
-;;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;;; GNU Lesser General Public License for more details.
+;;; The above copyright notice and this permission notice shall be included in
+;;; all copies or substantial portions of the Software.
 ;;;
-;;; You should have received a copy of the GNU Lesser General Public
-;;; License along with this program and the preamble to the Gnu Lesser
-;;; General Public License.  If not, see <http://www.gnu.org/licenses/>
-;;; and <http://opensource.franz.com/preamble.html>.
+;;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+;;; IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+;;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+;;; THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+;;; LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+;;; FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+;;; DEALINGS IN THE SOFTWARE.
 ;;; ----------------------------------------------------------------------------
 
 (defpackage :gio
@@ -251,24 +252,28 @@
       @about-function{app-info-add-supports-type}
       @about-function{app-info-can-remove-supports-type}
       @about-function{app-info-remove-supports-type}
-      @about-function{app-info-get-supported-types}
-      @about-function{app-info-get-all}
-      @about-function{app-info-get-all-for-type}
-      @about-function{app-info-get-default-for-type}
-      @about-function{app-info-get-default-for-uri-scheme}
-      @about-function{app-info-get-fallback-for-type}
-      @about-function{app-info-get-recommended-for-type}
+      @about-function{app-info-supported-types}
+      @about-function{app-info-all}
+      @about-function{app-info-all-for-type}
+      @about-function{app-info-default-for-type}
+      @about-function{app-info-default-for-type-async}
+      @about-function{app-info-default-for-type-finish}
+      @about-function{app-info-default-for-uri-scheme}
+      @about-function{app-info-default-for-uri-scheme-async}
+      @about-function{app-info-default-for-uri-scheme-finish}
+      @about-function{app-info-fallback-for-type}
+      @about-function{app-info-recommended-for-type}
       @about-function{app-info-launch-default-for-uri}
       @about-function{app-info-launch-default-for-uri-async}
       @about-function{app-info-launch-default-for-uri-finish}
       @about-class{app-launch-context}
+      @about-function{app-launch-context-new}
       @about-function{app-launch-context-setenv}
       @about-function{app-launch-context-unsetenv}
-      @about-function{app-launch-context-get-environment}
-      @about-function{app-launch-context-get-display}
-      @about-function{app-launch-context-get-startup-notify-id}
+      @about-function{app-launch-context-environment}
+      @about-function{app-launch-context-display}
+      @about-function{app-launch-context-startup-notify-id}
       @about-function{app-launch-context-launch-failed}
-      @about-function{app-launch-context-new}
     @end{subsection}
   @end{section}
   @begin[Icons]{section}

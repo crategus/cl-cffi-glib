@@ -600,10 +600,57 @@
            #:content-type-guess-for-tree
            #:content-types-registered
 
-           ;; Symbols from gio.app.info.lisp, TODO: Implement more functions
+           ;; Symbols from gio.app.info.lisp
+           #:app-info-create-flags
            #:app-info
-           #:app-launch-context
+           #:app-info-create-from-commandline
+           #:app-info-dup
+           #:app-info-equal
+           #:app-info-id
+           #:app-info-name
+           #:app-info-display-name
+           #:app-info-description
+           #:app-info-executable
+           #:app-info-commandline
+           #:app-info-icon
+           #:app-info-launch
+           #:app-info-supports-files
+           #:app-info-supports-uris
+           #:app-info-launch-uris
+;           #:app-info-launch-uris-async
+;           #:app-info-launch-uris-finish
+           #:app-info-should-show
+           #:app-info-can-delete
+           #:app-info-delete
+           #:app-info-reset-type-associations
+           #:app-info-set-as-default-for-type
+           #:app-info-set-as-default-for-extension
+           #:app-info-set-as-last-used-for-type
+           #:app-info-add-supports-type
+           #:app-info-can-remove-supports-type
+           #:app-info-remove-supports-type
+           #:app-info-supported-types
+           #:app-info-all
+           #:app-info-all-for-type
+           #:app-info-default-for-type
+;           #:app-info-default-for-type-async
+;           #:app-info-default-for-type-finish
+           #:app-info-default-for-uri-scheme
+;           #:app-info-default-for-uri-scheme-async
+;           #:app-info-default-for-uri-scheme-finish
+           #:app-info-fallback-for-type
+           #:app-info-recommended-for-type
            #:app-info-launch-default-for-uri
+           #:app-info-launch-default-for-uri-async
+           #:app-info-launch-default-for-uri-finish
+           #:app-launch-context
+           #:app-launch-context-new
+           #:app-launch-context-setenv
+           #:app-launch-context-unsetenv
+           #:app-launch-context-environment
+           #:app-launch-context-display
+           #:app-launch-context-startup-notify-id
+           #:app-launch-context-launch-failed
 
            ;; Symbols from gio.icon.lisp
            #:icon
