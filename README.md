@@ -40,7 +40,7 @@ Lisp implementation version: 2.1.11.debian
 
 The `cl-cffi-glib` library depends on the following Lisp libraries:
 
-* CFFI
+* `cffi`
 
     The Common Foreign Function Interface, purports to be a portable foreign
     function interface for Common Lisp.
@@ -48,31 +48,31 @@ The `cl-cffi-glib` library depends on the following Lisp libraries:
 
     **Warning:** Yout must use the version 0.22.0 or newer of the CFFI library.
     Older versions of CFFI are not compatible with the implementation of the 
-    `cl-cffi-gtk3` library.
+    `cl-cffi-glib` library.
 
-* Iterate
+* `iterate`
 
     Is a lispy and extensible replacement for the LOOP macro.
     See [common-lisp.net/project/iterate/](http://common-lisp.net/project/iterate/).
 
-* Bordeaux-Threads
+* `bordeaux-threads`
 
     Lets you write multi-threaded applications in a portable way.
     See [common-lisp.net/project/bordeaux-threads/](http://common-lisp.net/project/bordeaux-threads/).
 
-* Closer-MOP
+* `closer-mop`
 
     Closer to MOP is a compatibility layer that rectifies many of the absent or 
     incorrect MOP features as detected by MOP Feature Tests. 
     See [common-lisp.net/project/closer/closer-mop.html](http://common-lisp.net/project/closer/closer-mop.html)
 
-* Trivial-Garbage
+* `trivial-garbage`
 
     Provides a portable API to finalizers, weak hash-tables and weak pointers 
     on all major CL implementations.
     See [common-lisp.net/project/trivial-garbage/](http://common-lisp.net/project/trivial-garbage/).
 
-* Trivial-Features
+* `trivial-features`
 
     Ensures consistent `*features*` across multiple Common Lisp implementations.
     See [cliki.net/trivial-features](https://www.cliki.net/trivial-features).
