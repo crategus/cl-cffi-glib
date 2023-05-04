@@ -119,9 +119,9 @@ GLib Data Types
                                  particular memory locations
 
   glib.variant-type.lisp       - GVariantType                      - Glib 2.36
-  glib.variant.lisp            - GVariant                          - Glib 2.64 &
+  glib.variant.lisp            - GVariant                          - Glib 2.76 &
 
     GVariant Format Strings    - varargs conversion of GVariants
     GVariant Text Format       - textual representation of GVariants
 
-2021-8-13
+2023-5-4
