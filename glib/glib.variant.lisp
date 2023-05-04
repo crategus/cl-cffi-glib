@@ -1,10 +1,10 @@
 ;;; ----------------------------------------------------------------------------
 ;;; glib.variant.lisp
 ;;;
-;;; The documentation of this file is taken from the GLib 2.74 Reference
+;;; The documentation of this file is taken from the GLib 2.76 Reference
 ;;; Manual and modified to document the Lisp binding to the GLib library.
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
-;;; available from <http://www.crategus.com/books/cl-cffi-gtk/>.
+;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
 ;;; Copyright (C) 2012 - 2023 Dieter Kaiser
 ;;;
@@ -216,8 +216,8 @@
   without problems.
 
   The @sym{g:variant} structure is heavily optimised for dealing with data in
-  serialised form. It works particularly well with data located in memory-mapped
-  files. It can perform nearly all deserialisation operations in a small
+  serialised form. It works particularly well with data located in memory 
+  mapped files. It can perform nearly all deserialisation operations in a small
   constant time, usually touching only a single memory page. Serialised
   @sym{g:variant} data can also be sent over the network.
 
@@ -511,15 +511,15 @@
 ;;; struct GVariantDict
 ;;; ----------------------------------------------------------------------------
 
-(gobject::define-g-boxed-opaque variant-dict "GVariantDict"
+(gobject:define-g-boxed-opaque variant-dict "GVariantDict"
   :type-initializer "g_variant_dict_get_type"
-  :alloc (cl:error "GVariantDict cannot be created from the Lisp side."))
+  :alloc (%variant-dict-new (cffi:null-pointer)))
 
 #+liber-documentation
 (setf (liber:alias-for-class 'variant-dict)
       "GBoxed"
       (documentation 'variant-dict 'type)
- "@version{2023-1-31}
+ "@version{2023-4-26}
   @begin{short}
     The @sym{g:variant-dict} structure is a mutable interface to
     @type{g:variant} dictionaries.
@@ -528,83 +528,23 @@
   way on an existing @type{g:variant} dictionary or it can be used to construct
   new dictionaries with a hashtable-like interface. It can also be used for
   taking existing dictionaries and modifying them in order to create new ones.
-
   The @sym{g:variant-dict} structure can only be used with \"a(sv)\"
   dictionaries.
 
-  It is possible to use @sym{g:variant-dict} structures allocated on the stack
-  or on the heap. When using a stack-allocated @sym{g:variant-dict} structure,
-  you begin with a call to the @fun{g:variant-dict-init} function  and free the
-  resources with a call to the @fun{g:variant-dict-clear} function.
+  You allocate a @sym{g:variant-dict} instance with the @fun{g:variant-dict-new} 
+  function. The @fun{g:variant-dict-end} function is used to convert the
+  @sym{g:variant-dict} instance back into a @type{g:variant} dictionary type.
+  This also implicitly frees all associated memory.
 
-  Heap-allocated @sym{g:variant-dict} structures follows normal refcounting
-  rules: you allocate it with the @fun{g:variant-dict-new} function and use
-  the @fun{g:variant-dict-ref} and @fun{g:variant-dict-unref} functions.
-
-  The @fun{g:variant-dict-end} function is used to convert the
-  @sym{g:variant-dict} structure back into a @type{g:variant} dictionary type.
-  When used with stack-allocated instances, this also implicitly frees all
-  associated memory, but for heap-allocated instances, you must still call the
-  @fun{g:variant-dict-unref} function afterwards.
-
-  You will typically want to use a heap-allocated @sym{g:variant-dict} structure
-  when you expose it as part of an API. For most other uses, the stack-allocated
-  form will be more convenient.
-
-  Consider the following two examples that do the same thing in each style:
-  take an existing dictionary and look up the \"count\" @code{:uint32} key,
-  adding 1 to it if it is found, or returning an error if the key is not found.
-  Each returns the new dictionary as a floating @type{g:variant} instance.
-
-  Using a stack-allocated @sym{g:variant-dict} instance:
+  Using a  @sym{g:variant-dict} instance:
   @begin{pre}
-GVariant *
-add_to_count (GVariant  *orig,
-              GError   **error)
-{
-  GVariantDict dict;
-  guint32 count;
-
-  g_variant_dict_init (&dict, orig);
-  if (!g_variant_dict_lookup (&dict, \"count\", \"u\", &count))
-    {
-      g_set_error (...);
-      g_variant_dict_clear (&dict);
-      return NULL;
-    @}
-
-  g_variant_dict_insert (&dict, \"count\", \"u\", count + 1);
-
-  return g_variant_dict_end (&dict);
-@}
-  @end{pre}
-  Using a heap-allocated @sym{g:variant-dict} instance:
-  @begin{pre}
-GVariant *
-add_to_count (GVariant  *orig,
-              GError   **error)
-{
-  GVariantDict *dict;
-  GVariant *result;
-  guint32 count;
-
-  dict = g_variant_dict_new (orig);
-
-  if (g_variant_dict_lookup (dict, \"count\", \"u\", &count))
-    {
-      g_variant_dict_insert (dict, \"count\", \"u\", count + 1);
-      result = g_variant_dict_end (dict);
-    @}
-  else
-    {
-      g_set_error (...);
-      result = NULL;
-    @}
-
-  g_variant_dict_unref (dict);
-
-  return result;
-@}
+(defun add-to-count (orig)
+  (let* ((dict (g:variant-dict-new orig))
+         (variant (g:variant-dict-lookup-value dict \"count\")))
+    (when variant
+      (let ((value (1+ (g:variant-int32 variant))))
+        (g:variant-dict-insert-value dict \"count\" (g:variant-new-int32 value))
+        (g:variant-dict-end dict)))))
   @end{pre}
   @see-type{g:variant}")
 
@@ -3534,31 +3474,29 @@ add_to_count (GVariant  *orig,
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_variant_dict_new ()
-;;;
-;;; GVariantDict *
-;;; g_variant_dict_new (GVariant *from_asv);
-;;;
-;;; Allocates and initialises a new GVariantDict.
-;;;
-;;; You should call g_variant_dict_unref() on the return value when it is no
-;;; longer needed. The memory will not be automatically freed by any other call.
-;;;
-;;; In some cases it may be easier to place a GVariantDict directly on the stack
-;;; of the calling function and initialise it with g_variant_dict_init(). This
-;;; is particularly useful when you are using GVariantDict to construct a
-;;; GVariant.
-;;;
-;;; from_asv :
-;;;     the GVariant with which to initialise the dictionary.
-;;;
-;;; Returns :
-;;;     a GVariantDict.
-;;;
-;;; Since 2.40
 ;;; ----------------------------------------------------------------------------
 
+(defcfun ("g_variant_dict_new" %variant-dict-new) :pointer
+  (from-asv (:pointer (:struct variant))))
+
+(defcfun ("g_variant_dict_new" variant-dict-new)
+    (gobject:boxed variant-dict :return)
+ #+liber-documentation
+ "@version{2023-4-26}
+  @argument[from-asv]{a @type{g:variant} instance with which to initialize the
+    dictionary}
+  @return{The newly created @class{g:variant-dict} instance.}
+  @begin{short}
+    Allocates and initialises a new @class{g:variant-dict} instance.
+  @end{short}
+  @see-class{g:variant-dict}
+  @see-type{g:variant}"
+  (from-asv (:pointer (:struct variant))))
+
+(export 'variant-dict-new)
+
 ;;; ----------------------------------------------------------------------------
-;;; g_variant_dict_init ()
+;;; g_variant_dict_init ()                                 not needed
 ;;;
 ;;; void
 ;;; g_variant_dict_init (GVariantDict *dict,
@@ -3591,7 +3529,7 @@ add_to_count (GVariant  *orig,
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_variant_dict_clear ()
+;;; g_variant_dict_clear ()                                not needed
 ;;;
 ;;; void
 ;;; g_variant_dict_clear (GVariantDict *dict);
@@ -3621,10 +3559,10 @@ add_to_count (GVariant  *orig,
 
 (defcfun ("g_variant_dict_contains" variant-dict-contains) :boolean
  #+liber-documentation
- "@version{#2022-12-29}
+ "@version{2023-4-26}
   @argument[dict]{a @class{g:variant-dict} instance}
   @argument[key]{a string with the key to look up in the dictionary}
-  @return{@em{True} if @arg{key} is in the dictionary}
+  @return{@em{True} if @arg{key} is in the dictionary.}
   @begin{short}
     Checks if the key exists in the dictionary.
   @end{short}
@@ -3674,37 +3612,40 @@ add_to_count (GVariant  *orig,
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_variant_dict_lookup_value ()
-;;;
-;;; GVariant *
-;;; g_variant_dict_lookup_value (GVariantDict *dict,
-;;;                              const gchar *key,
-;;;                              const GVariantType *expected_type);
-;;;
-;;; Looks up a value in a GVariantDict.
-;;;
-;;; If key is not found in dictionary , NULL is returned.
-;;;
-;;; The expected_type string specifies what type of value is expected. If the
-;;; value associated with key has a different type then NULL is returned.
-;;;
-;;; If the key is found and the value has the correct type, it is returned. If
-;;; expected_type was specified then any non-NULL return value will have this
-;;; type.
-;;;
-;;; dict :
-;;;     a GVariantDict
-;;;
-;;; key :
-;;;     the key to look up in the dictionary
-;;;
-;;; expected_type :
-;;;     a GVariantType, or NULL.
-;;;
-;;; Returns :
-;;;     the value of the dictionary key, or NULL.
-;;;
-;;; Since 2.40
 ;;; ----------------------------------------------------------------------------
+
+(defcfun ("g_variant_dict_lookup_value" %variant-dict-lookup-value)
+    (:pointer (:struct variant))
+  (dict (gobject:boxed variant-dict))
+  (key :string)
+  (vtype (gobject:boxed variant-type)))
+
+(defun variant-dict-lookup-value (dict key &optional vtype)
+ #+liber-documentation
+ "@version{2023-4-26}
+  @argument[dict]{a @class{g:variant-dict} instance} 
+  @argument[key]{a string with the key to look up in the dictionary}
+  @argument[vtype]{a @class{g:variant-type} instance with the expected type}
+  @begin{short}
+    Looks up a value in a @class{g:variant-dict} instance.
+  @end{short}
+  If @arg{key} is not found in the dictionary, @code{nil} is returned.
+
+  The @arg{vtype} string specifies what type of value is expected. If the value 
+  associated with @arg{key} has a different type then @code{nil} is returned.
+
+  If the key is found and the value has the correct type, it is returned. If
+  @arg{vtype} was specified then any non-@code{nil} return value will have this
+  type.
+  @see-class{g:variant-dict}
+  @see-class{g:variant-type}"
+  (let ((vtype (if (stringp vtype)
+                   (variant-type-new vtype)
+                   vtype)))
+    (%variant-dict-lookup-value dict key vtype)))
+
+
+(export 'variant-dict-lookup-value)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_variant_dict_insert ()
@@ -3737,71 +3678,66 @@ add_to_count (GVariant  *orig,
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_variant_dict_insert_value ()
-;;;
-;;; void
-;;; g_variant_dict_insert_value (GVariantDict *dict,
-;;;                              const gchar *key,
-;;;                              GVariant *value);
-;;;
-;;; Inserts (or replaces) a key in a GVariantDict.
-;;;
-;;;  value is consumed if it is floating.
-;;;
-;;; dict :
-;;;     a GVariantDict
-;;;
-;;; key :
-;;;     the key to insert a value for
-;;;
-;;; value :
-;;;     the value to insert
-;;;
-;;; Since 2.40
 ;;; ----------------------------------------------------------------------------
+
+(defcfun ("g_variant_dict_insert_value" variant-dict-insert-value) :void
+ #+liber-documentation
+ "@version{2023-4-27}
+  @argument[dict]{a @class{g:variant-dict} instance}
+  @argument[key]{a string with the key to insert a value for}
+  @argument[value]{a @type{g:variant} instance with the value to insert}
+  @begin{short}
+    Inserts, or replaces, a key in a @class{g:variant-dict} instance.
+  @end{short}
+  @see-class{g:variant-dict}
+  @see-type{g:variant}"
+  (dict (gobject:boxed variant-dict))
+  (key :string)
+  (value (:pointer (:struct variant))))
+
+(export 'variant-dict-insert-value)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_variant_dict_remove ()
-;;;
-;;; gboolean
-;;; g_variant_dict_remove (GVariantDict *dict,
-;;;                        const gchar *key);
-;;;
-;;; Removes a key and its associated value from a GVariantDict.
-;;;
-;;; dict :
-;;;     a GVariantDict
-;;;
-;;; key :
-;;;     the key to remove
-;;;
-;;; Returns :
-;;;     TRUE if the key was found and removed
-;;;
-;;; Since 2.40
 ;;; ----------------------------------------------------------------------------
+
+(defcfun ("g_variant_dict_remove" variant-dict-remove) :boolean
+ #+liber-documentation
+ "@version{2023-4-27}
+  @argument[dict]{a @class{g:variant-dict} instance}
+  @argument[key]{a string with the key to remove}
+  @return{@em{True} if the key was found and removed.}
+  @begin{short}
+    Removes a key and its associated value from a @class{g:variant-dict} 
+    instance.
+  @end{short}
+  @see-class{g:variant-dict}"
+  (dict (gobject:boxed variant-dict))
+  (key :string))
+
+(export 'variant-dict-remove)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_variant_dict_end ()
-;;;
-;;; GVariant *
-;;; g_variant_dict_end (GVariantDict *dict);
-;;;
-;;; Returns the current value of dict as a GVariant of type
-;;; G_VARIANT_TYPE_VARDICT, clearing it in the process.
-;;;
-;;; It is not permissible to use dict in any way after this call except for
-;;; reference counting operations (in the case of a heap-allocated GVariantDict)
-;;; or by reinitialising it with g_variant_dict_init() (in the case of
-;;; stack-allocated).
-;;;
-;;; dict :
-;;;     a GVariantDict
-;;;
-;;; Returns :
-;;;     a new, floating, GVariant.
-;;;
-;;; Since 2.40
 ;;; ----------------------------------------------------------------------------
+
+(defcfun ("g_variant_dict_end" variant-dict-end) (:pointer (:struct variant))
+ #+liber-documentation
+ "@version{2023-4-27}
+  @argument[dict]{a @class{g:variant-dict} instance}
+  @return{A new @type{g:variant} instance.}
+  @begin{short}
+    Returns the current value of @arg{dict} as a @type{g:variant} instance,
+    clearing it in the process.
+  @end{short}
+
+  It is not permissible to use @arg{dict} in any way after this call except for
+  reference counting operations.
+  @see-class{g:variant-dict}
+  @see-type{g:variant}"
+  (dict (gobject:boxed variant-dict)))
+
+(export 'variant-dict-end)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_variant_parse ()
