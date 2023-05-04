@@ -7,7 +7,7 @@
 
 ;;;     GResource
 
-(test resource-boxed
+(test g-resource-boxed
   ;; Type check
   (is (g:type-is-a (g:gtype "GResource") +g-type-boxed+))
   ;; Check the type initializer
@@ -16,7 +16,7 @@
 
 ;;;     GResourceFlags
 
-(test resource-flags
+(test g-resource-flags
   ;; Check the type
   (is (g:type-is-flags "GResourceFlags"))
   ;; Check the registered symbol
@@ -44,7 +44,7 @@
 
 ;;;     GResourceLookupFlags
 
-(test resource-lookup-flags
+(test g-resource-lookup-flags
   ;; Check the type
   (is (g:type-is-flags "GResourceLookupFlags"))
   ;; Check the registered symbol
@@ -78,12 +78,12 @@
 
 ;;;     g_resource_load
 
-(test resource-load.1
+(test g-resource-load.1
   (let ((resource (g:resource-load
                       (sys-path "resource/rtest-gio-resource.gresource"))))
     (is (typep resource 'g:resource))))
 
-(test resource-load.2
+(test g-resource-load.2
   (signals (error) (g:resource-load "unknown")))
 
 ;;;     g_resource_new_from_data
@@ -92,14 +92,14 @@
 
 ;;;     g_resource_lookup_data
 
-(test resource-lookup-data
+(test g-resource-lookup-data
   (let ((path (sys-path "resource/rtest-gio-resource.gresource")))
-    (with-g-resource (resource path)
-      (is (cffi:pointerp 
+    (with-g-resources (resource path)
+      (is (cffi:pointerp
               (g:resource-lookup-data resource
                                       "/com/crategus/test/ducky.png"
                                       :none)))
-      (is (cffi:pointerp 
+      (is (cffi:pointerp
           (g:resource-lookup-data resource
                                   "/com/crategus/test/rtest-dialog.ui"
                                   :none))))))
@@ -108,9 +108,9 @@
 
 ;;;     g_resource_enumerate_children
 
-(test resource-enumerate-children
+(test g-resource-enumerate-children
   (let ((path (sys-path "resource/rtest-gio-resource.gresource")))
-    (with-g-resource (resource path)
+    (with-g-resources (resource path)
       (is (equal '("ducky.png" "floppybuddy.gif" "gtk-logo-24.png"
                    "rtest-application.ui" "rtest-dialog.ui" "rtest-dialog2.ui")
                  (sort (g:resource-enumerate-children resource
@@ -120,9 +120,9 @@
 
 ;;;     g_resource_get_info
 
-(test resource-info
+(test g-resource-info
   (let ((path (sys-path "resource/rtest-gio-resource.gresource")))
-    (with-g-resource (resource path)
+    (with-g-resources (resource path)
       (is (equal '(248546 0)
                  (multiple-value-list
                      (g:resource-info resource
@@ -148,13 +148,13 @@
 
 ;;;     g_resources_lookup_data
 
-(test resources-lookup-data
+(test g-resources-lookup-data
   (let ((path (sys-path "resource/rtest-gio-resource.gresource")))
-    (with-g-resource (resource path)
-      (is (cffi:pointerp 
+    (with-g-resources (resource path)
+      (is (cffi:pointerp
               (g:resources-lookup-data "/com/crategus/test/ducky.png"
                                        :none)))
-      (is (cffi:pointerp 
+      (is (cffi:pointerp
               (g:resources-lookup-data "/com/crategus/test/rtest-dialog.ui"
                                        :none))))))
 
@@ -162,9 +162,9 @@
 
 ;;;     g_resources_enumerate_children
 
-(test resources-enumerate-children
+(test g-resources-enumerate-children
   (let ((path (sys-path "resource/rtest-gio-resource.gresource")))
-    (with-g-resource (resource path)
+    (with-g-resources (resource path)
       (is (equal '("ducky.png" "floppybuddy.gif" "gtk-logo-24.png"
                    "rtest-application.ui" "rtest-dialog.ui" "rtest-dialog2.ui")
                  (sort (g:resources-enumerate-children "/com/crategus/test"
@@ -173,9 +173,9 @@
 
 ;;;     g_resources_get_info
 
-(test resources-info
+(test g-resources-info
   (let ((path (sys-path "resource/rtest-gio-resource.gresource")))
-    (with-g-resource (resource path)
+    (with-g-resources (resource path)
       (is (equal '(248546 0)
                  (multiple-value-list
                      (g:resources-info "/com/crategus/test/ducky.png"
@@ -189,4 +189,4 @@
                      (g:resources-info "/com/crategus/test/rtest-application.ui"
                                        :none)))))))
 
-;;; --- 2023-1-27 --------------------------------------------------------------
+;;; --- 2023-4-23 --------------------------------------------------------------
