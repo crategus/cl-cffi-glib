@@ -7,80 +7,90 @@
 
 ;;;   g_variant_unref
 
-(test variant-unref
+(test g-variant-unref
   (let ((bool (g:variant-new-boolean t)))
     (is-true (g:variant-boolean bool))
     (g:variant-unref bool)))
 
 ;;;   g_variant_ref
 
-(test variant-ref
+(test g-variant-ref
   (let ((bool (g:variant-new-boolean t)))
     (is-true (g:variant-boolean bool))
     (setf bool (g:variant-ref bool))
     (is-true (g:variant-boolean bool))
     (g:variant-unref bool)
     (is-true (g:variant-boolean bool))
-    (g:variant-unref bool)))
+    (is-false (g:variant-unref bool))))
 
 ;;;   g_variant_ref_sink
 
-(test variant-ref-sink
+(test g-variant-ref-sink
   (let ((bool (g:variant-new-boolean t)))
     (is-true (g:variant-is-floating bool))
     (setf bool (g:variant-ref-sink bool))
-    (is-false (g:variant-is-floating bool))))
+    (is-false (g:variant-is-floating bool))
+    (is-false (g:variant-unref bool))))
 
 ;;;   g_variant_is_floating
 
-(test variant-is-floating
+(test g-variant-is-floating
   (let ((bool (g:variant-new-boolean t)))
-    (is-true (g:variant-is-floating bool))))
+    (is-true (g:variant-is-floating bool))
+    (is-false (g:variant-unref bool))))
 
 ;;;   g_variant_take_ref
 
 ;;;   g_variant_type
 
-(test variant-type
+(test g-variant-type
   (let ((bool (g:variant-new-boolean t)))
-    (is (equal "b" (g:variant-type-dup-string (g:variant-type bool))))))
+    (is (equal "b" (g:variant-type-dup-string (g:variant-type bool))))
+    (is-false (g:variant-unref bool))))
 
 ;;;   g_variant_type_string
 
-(test variant-type-string
+(test g-variant-type-string
   (let ((bool (g:variant-new-boolean t)))
-    (is (equal "b" (g:variant-type-string bool)))))
+    (is (equal "b" (g:variant-type-string bool)))
+    (is-false (g:variant-unref bool))))
 
 ;;;     g_variant_is_of_type
 
-(test variant-is-of-type
+(test g-variant-is-of-type
   (let ((bool (g:variant-new-boolean t)))
-    (is-true (g:variant-is-of-type bool (g:variant-type-new "b")))))
+    (is-true (g:variant-is-of-type bool (g:variant-type-new "b")))
+    (is-false (g:variant-unref bool))))
 
 ;;;   g_variant_is_container
 
-(test variant-is-container
-  (let* ((bool (g:variant-new-boolean t))
-         (container (g:variant-new-variant bool)))
+(test g-variant-is-container
+  (let* ((bool (g:variant-ref (g:variant-new-boolean t)))
+         (container (g:variant-ref-sink (g:variant-new-variant bool))))
     (is-false (g:variant-is-container bool))
-    (is-true (g:variant-is-container container))))
+    (is-true (g:variant-is-container container))
+    (is-false (g:variant-unref bool))
+    (is-false (g:variant-unref container))))
 
 ;;;   g_variant_compare
 
-(test variant-compare
+(test g-variant-compare
   (let ((int1 (g:variant-new-int16 2))
         (int2 (g:variant-new-int16 4)))
     (is (=  0 (g:variant-compare int1 int1)))
     (is (= -2 (g:variant-compare int1 int2)))
-    (is (=  2 (g:variant-compare int2 int1)))))
+    (is (=  2 (g:variant-compare int2 int1)))
+    (is-false (g:variant-unref int1))
+    (is-false (g:variant-unref int2))))
 
 ;;;   GVariantClass
 
 ;;;   g_variant_classify
 
-(test variant-classify
+(test g-variant-classify
   (let ((bool (g:variant-new-boolean t)))
-    (is (eq :boolean (g:variant-classify bool)))))
+    (is (eq :boolean (g:variant-classify bool)))
+    (is-false (g:variant-unref bool))))
 
 ;;;     g_variant_check_format_string
 ;;;     g_variant_get
@@ -160,19 +170,44 @@
 
 ;;;     g_variant_print
 
-(test variant-print
-  (is (string= "false" (g:variant-print (g:variant-new-boolean nil))))
-  (is (string= "true" (g:variant-print (g:variant-new-boolean t))))
-  (is (string= "0xff" (g:variant-print (g:variant-new-byte #xff))))
-  (is (string= "10.0" (g:variant-print (g:variant-new-double 10.0d0))))
-  (is (string= "16777215" (g:variant-print (g:variant-new-handle #xffffff))))
-  (is (string= "4095" (g:variant-print (g:variant-new-int16 #xfff))))
-  (is (string= "4095" (g:variant-print (g:variant-new-uint16 #xfff))))
-  (is (string= "65535" (g:variant-print (g:variant-new-int32 #xffff))))
-  (is (string= "65535" (g:variant-print (g:variant-new-uint32 #xffff))))
-  (is (string= "1048575" (g:variant-print (g:variant-new-int64 #xfffff))))
-  (is (string= "1048575" (g:variant-print (g:variant-new-uint64 #xfffff))))
-  (is (string= "'test'" (g:variant-print (g:variant-new-string "test")))))
+(test g-variant-print
+  (let (value)
+    (is (string= "false" 
+                 (g:variant-print (setf value (g:variant-new-boolean nil)))))
+    (is-false (g:variant-unref value))
+    (is (string= "true" 
+                 (g:variant-print (setf value (g:variant-new-boolean t)))))
+    (is-false (g:variant-unref value))
+    (is (string= "0xff" 
+                 (g:variant-print (setf value (g:variant-new-byte #xff)))))
+    (is-false (g:variant-unref value))
+    (is (string= "10.0" 
+                 (g:variant-print (setf value (g:variant-new-double 10.0d0)))))
+    (is-false (g:variant-unref value))
+    (is (string= "16777215" 
+                 (g:variant-print (setf value (g:variant-new-handle #xffffff)))))
+    (is-false (g:variant-unref value))
+    (is (string= "4095" 
+                 (g:variant-print (setf value (g:variant-new-int16 #xfff)))))
+    (is-false (g:variant-unref value))
+    (is (string= "4095" 
+                 (g:variant-print (setf value (g:variant-new-uint16 #xfff)))))
+    (is-false (g:variant-unref value))
+    (is (string= "65535" 
+                 (g:variant-print (setf value (g:variant-new-int32 #xffff)))))
+    (is-false (g:variant-unref value))
+    (is (string= "65535" 
+                 (g:variant-print (setf value (g:variant-new-uint32 #xffff)))))
+    (is-false (g:variant-unref value))
+    (is (string= "1048575" 
+                 (g:variant-print (setf value (g:variant-new-int64 #xfffff)))))
+    (is-false (g:variant-unref value))
+    (is (string= "1048575" 
+                 (g:variant-print (setf value (g:variant-new-uint64 #xfffff)))))
+    (is-false (g:variant-unref value))
+    (is (string= "'test'" 
+                 (g:variant-print (setf value (g:variant-new-string "test")))))
+    (is-false (g:variant-unref value))))
 
 ;;;     g_variant_print_string
 ;;;
@@ -200,14 +235,121 @@
 ;;;     g_variant_builder_end
 ;;;     g_variant_builder_open
 ;;;     g_variant_builder_close
-;;;
+
+;;;     g_variant_dict_unref
+;;;     g_variant_dict_ref
+
+;;;     g_variant_dict_new
+
+(test g-variant-dict-new
+  (let* ((vtype (g:variant-type-new "a{sv}"))
+         (asv "[{'first', <1>}, {'second', <2>}]")
+         (variant (g:variant-parse vtype asv)))
+    (is (typep (g:variant-dict-new (cffi:null-pointer)) 'g:variant-dict))
+    (is (typep (g:variant-dict-new variant) 'g:variant-dict))
+    (is-false (g:variant-unref variant))))
+
+;;;     g_variant_dict_init
+;;;     g_variant_dict_clear
+
+;;;     g_variant_dict_contains
+
+(test g-variant-dict-contains
+  (let* ((vtype (g:variant-type-new "a{sv}"))
+         (asv "[{'first', <1>}, {'second', <2>}]")
+         (variant (g:variant-parse vtype asv))
+         (dict (g:variant-dict-new variant)))
+    (is (typep dict 'g:variant-dict))
+    (is-true (g:variant-dict-contains dict "first"))
+    (is-true (g:variant-dict-contains dict "second"))
+    (is-false (g:variant-dict-contains dict "third"))
+    (is-false (g:variant-unref variant))))
+
+;;;     g_variant_dict_lookup
+
+;;;     g_variant_dict_lookup_value
+
+(test g-variant-dict-lookup-value
+  (let* ((vtype (g:variant-type-new "a{sv}"))
+         (asv "[{'first', <int32 1>}, {'second', <int32 2>}]")
+         (variant (g:variant-parse vtype asv))
+         (dict (g:variant-dict-new variant)))
+    (is (typep dict 'g:variant-dict))
+    (is-true (g:variant-dict-contains dict "first"))
+    (is (string= "i"
+                 (g:variant-type-string
+                     (g:variant-dict-lookup-value dict "first"))))
+    (is (= 1 (g:variant-int32 (g:variant-dict-lookup-value dict "first"))))
+    (is (= 1 (g:variant-int32 (g:variant-dict-lookup-value dict "first" nil))))
+    (is (= 1 (g:variant-int32 (g:variant-dict-lookup-value dict "first" "i"))))
+    (is (= 1 (g:variant-int32
+                 (g:variant-dict-lookup-value dict
+                                              "first"
+                                              (g:variant-type-new "i")))))
+    (is-false (g:variant-unref variant))))
+
+;;;     g_variant_dict_insert
+
+;;;     g_variant_dict_insert_value
+;;;     g_variant_dict_remove
+
+(test g-variant-dict-insert-value/remove
+  (let* ((vtype (g:variant-type-new "a{sv}"))
+         (asv "[{'first', <int32 1>}, {'second', <int32 2>}]")
+         (variant (g:variant-parse vtype asv))
+         (dict (g:variant-dict-new variant)))
+    (is (string= "{'first': <1>, 'second': <2>}" (g:variant-print variant)))
+    (is (= 1 (g:variant-int32 (g:variant-dict-lookup-value dict "first"))))
+    (is-false (g:variant-dict-insert-value dict
+                                           "first"
+                                           (g:variant-new-int32 10)))
+    (is (= 10 (g:variant-int32 (g:variant-dict-lookup-value dict "first"))))
+    (is-true (g:variant-dict-contains dict "second"))
+    (is-true (g:variant-dict-remove dict "second"))
+    (is-false (g:variant-dict-contains dict "secton"))
+    (is (string= "{'first': <10>}"
+                 (g:variant-print (g:variant-dict-end dict))))
+    (is-false (g:variant-unref variant))))
+
+;;;     g_variant_dict_end
+
+(test g-variant-dict-end
+  (let* ((vtype (g:variant-type-new "a{sv}"))
+         (asv "[{'first', <1>}, {'second', <2>}]")
+         (variant (g:variant-parse vtype asv))
+         (dict (g:variant-dict-new variant)))
+    (is (string= "{'first': <1>, 'second': <2>}"
+                 (g:variant-print (g:variant-dict-end dict))))
+    (is-false (g:variant-unref variant))))
+
+;;;     Example from the documentation
+
+(defun add-to-count (orig)
+  (let* ((dict (g:variant-dict-new orig))
+         (variant (g:variant-dict-lookup-value dict "count")))
+    (when variant
+      (let ((value (1+ (g:variant-int32 variant))))
+        (g:variant-dict-insert-value dict "count" (g:variant-new-int32 value))
+        (g:variant-dict-end dict)))))
+
+(test g-variant-add-to-count
+  (let* ((vtype (g:variant-type-new "a{sv}"))
+         (asv "[{'count', <int32 1>}, {'second', <int32 2>}]")
+         (variant (g:variant-parse vtype asv)))
+    (is (string= "{'count': <1>, 'second': <2>}" (g:variant-print variant)))
+    (is (string= "{'count': <2>, 'second': <2>}"
+                 (g:variant-print (setf variant (add-to-count variant)))))
+    (is (string= "{'count': <3>, 'second': <2>}"
+                 (g:variant-print (add-to-count variant))))
+    (is-false (g:variant-unref variant))))
+
 ;;;     GVariantParseError
 ;;;
 ;;;     G_VARIANT_PARSE_ERROR
 
 ;;;     g_variant_parse
 
-(test variant-parse
+(test g-variant-parse
   (let ((value nil))
     ;; Parse boolean
     (setf value (g:variant-parse nil "true"))
@@ -318,4 +460,4 @@
 ;;;     g_variant_new_parsed_va
 ;;;     g_variant_new_parsed
 
-;;; --- 2022-12-29 -------------------------------------------------------------
+;;; --- 2023-4-29 --------------------------------------------------------------
