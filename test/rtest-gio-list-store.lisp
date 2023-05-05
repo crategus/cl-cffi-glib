@@ -26,7 +26,7 @@
   (is (equal '("GListModel")
              (list-interfaces "GListStore")))
   ;; Check the class properties
-  (is (equal '("item-type")
+  (is (equal '("item-type" "n-items")
              (list-properties "GListStore")))
   (is (equal '()
              (list-signals "GListStore")))
@@ -35,23 +35,26 @@
                        (:SUPERCLASS G-OBJECT :EXPORT T :INTERFACES
                         ("GListModel"))
                        ((ITEM-TYPE G-LIST-STORE-ITEM-TYPE "item-type" "GType" T
-                         NIL)))
+                         NIL)
+                        (N-ITEMS G-LIST-STORE-N-ITEMS "n-items" "guint" T NIL)))
              (get-g-type-definition "GListStore"))))
 
 ;;; --- Properties -------------------------------------------------------------
 
-(test list-store-properties
+(test g-list-store-properties
   (let ((store (g:list-store-new "GSimpleAction")))
     ;; The accessor returns a pointer to a GType
     (is (cffi:pointerp (g:list-store-item-type store)))
     ;; The inherited accessor returns the GType
-    (is (eq (g:gtype "GSimpleAction") (g:list-model-item-type store)))))
+    (is (eq (g:gtype "GSimpleAction") (g:list-model-item-type store)))
+    ;; Check default value for N-ITEMS
+    (is (= 0 (g:list-store-n-items store)))))
 
 ;;; --- Functions --------------------------------------------------------------
 
 ;;;     g_list_store_new
 
-(test list-store-new
+(test g-list-store-new
   (is (typep (g:list-store-new "GSimpleAction") 'g:list-store)))
 
 ;;;     g_list_store_insert
@@ -64,7 +67,7 @@
 
 ;;;     g_list_store_find
 
-(test list-store-find
+(test g-list-store-find
   (let ((store (g:list-store-new "GObject"))
         (action (make-instance 'g:simple-action)))
     ;; Fill the list store with objects
@@ -72,9 +75,10 @@
     (is-false (g:list-store-append store (make-instance 'g:menu-item)))
     (is-false (g:list-store-append store action))
     (is-false (g:list-store-append store (make-instance 'g:menu-item)))
+    (is (= 4 (g:list-store-n-items store)))
     ;; Find the action in the list store
     (is (= 2 (g:list-store-find store action)))))
 
 ;;;     g_list_store_find_with_equal_func
 
-;;; 2022-11-20
+;;; --- 2023-4-23 --------------------------------------------------------------
