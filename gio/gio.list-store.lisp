@@ -2,28 +2,29 @@
 ;;; gio.list-store.lisp
 ;;;
 ;;; The documentation of this file is taken from the GIO Reference Manual
-;;; Version 2.72 and modified to document the Lisp binding to the GIO library.
+;;; Version 2.76 and modified to document the Lisp binding to the GIO library.
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
-;;; available from <http://www.crategus.com/books/cl-cffi-gtk/>.
+;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2021 - 2022 Dieter Kaiser
+;;; Copyright (C) 2021 - 2023 Dieter Kaiser
 ;;;
-;;; This program is free software: you can redistribute it and/or modify
-;;; it under the terms of the GNU Lesser General Public License for Lisp
-;;; as published by the Free Software Foundation, either version 3 of the
-;;; License, or (at your option) any later version and with a preamble to
-;;; the GNU Lesser General Public License that clarifies the terms for use
-;;; with Lisp programs and is referred as the LLGPL.
+;;; Permission is hereby granted, free of charge, to any person obtaining a
+;;; copy of this software and associated documentation files (the "Software"),
+;;; to deal in the Software without restriction, including without limitation
+;;; the rights to use, copy, modify, merge, publish, distribute, sublicense,
+;;; and/or sell copies of the Software, and to permit persons to whom the
+;;; Software is furnished to do so, subject to the following conditions:
 ;;;
-;;; This program is distributed in the hope that it will be useful,
-;;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;;; GNU Lesser General Public License for more details.
+;;; The above copyright notice and this permission notice shall be included in
+;;; all copies or substantial portions of the Software.
 ;;;
-;;; You should have received a copy of the GNU Lesser General Public
-;;; License along with this program and the preamble to the Gnu Lesser
-;;; General Public License.  If not, see <http://www.gnu.org/licenses/>
-;;; and <http://opensource.franz.com/preamble.html>.
+;;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+;;; IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+;;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+;;; THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+;;; LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+;;; FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+;;; DEALINGS IN THE SOFTWARE.
 ;;; ----------------------------------------------------------------------------
 ;;;
 ;;; GListStore
@@ -49,7 +50,8 @@
 ;;;
 ;;; Properties
 ;;;
-;;;    GType*   item-type
+;;;     item-type
+;;;     n-items                                            Since 2.74
 ;;;
 ;;; Object Hierarchy
 ;;;
@@ -74,18 +76,24 @@
    :type-initializer "g_list_store_get_type")
   ((item-type
     list-store-item-type
-    "item-type" "GType" t t)))
+    "item-type" "GType" t t)
+   #+glib-2-74
+   (n-items
+    list-store-n-items
+    "n-items" "guint" t nil)))
 
 #+liber-documentation
 (setf (documentation 'list-store 'type)
- "@version{#2022-12-31}
+ "@version{2023-4-23}
   @begin{short}
     The @sym{g:list-store} object is an implementation of the
     @class{g:list-model} interface that stores all items in memory.
   @end{short}
-  It provides insertions, deletions, and lookups in logarithmic time with a fast
-  path for the common case of iterating the list linearly.
+  It provides insertions, deletions, and lookups in logarithmic time with a
+  fast path for the common case of iterating the list linearly.
+  @see-constructor{g:list-store-new}
   @see-slot{g:list-store-item-type}
+  @see-slot{g:list-store-n-items}
   @see-class{g:list-model}")
 
 ;;; ----------------------------------------------------------------------------
@@ -105,15 +113,14 @@
 (setf (liber:alias-for-function 'list-store-item-type)
       "Accessor"
       (documentation 'list-store-item-type 'function)
- "@version{#2022-12-31}
-  @syntax[]{(list-store-item-type object) => pointer}
+ "@version{2023-4-23}
+  @syntax[]{(g:list-store-item-type object) => pointer}
   @argument[object]{a @class{g:list-store} object}
   @argument[pointer]{a pointer to a @class{g:type-t} type}
   @begin{short}
     Accessor of the @slot[g:list-store]{item-type} slot of the
     @class{g:list-store} class.
   @end{short}
-
   The type of items contained in the list store. Items must be subclasses of
   the @class{g:object} class.
   @begin[Note]{dictionary}
@@ -124,6 +131,29 @@
   @see-class{g:type-t}
   @see-function{g:list-model-item-type}")
 
+;;; --- list-store-n-items -----------------------------------------------------
+
+#+(and glib-2-74 liber-documentation)
+(setf (documentation (liber:slot-documentation "n-items" 'list-store) t)
+ "The @code{n-items} property of type @code{:uint} (Read) @br{}
+  The number of items contained in the list store. Since 2.74 @br{}
+  Default value: 0")
+
+#+(and glib-2-74 liber-documentation)
+(setf (liber:alias-for-function 'list-store-n-items)
+      "Accessor"
+      (documentation 'list-store-n-items 'function)
+ "@version{2023-4-23}
+  @syntax[]{(g:list-store-n-items object) => n-items}
+  @argument[object]{a @class{g:list-store} object}
+  @argument[n-items]{an unsigned integer with the number of items contained in
+    the list store}
+  @begin{short}
+    Accessor of the @slot[g:list-store]{n-items} slot of the
+    @class{g:list-store} class.
+  @end{short}
+  @see-class{g:list-store}")
+
 ;;; ----------------------------------------------------------------------------
 ;;; g_list_store_new ()
 ;;; ----------------------------------------------------------------------------
@@ -133,11 +163,11 @@
 
 (defcfun ("g_list_store_new" list-store-new) (gobject:object list-store)
  #+liber-documentation
- "@version{#2022-12-31}
+ "@version{2023-5-4}
   @argument[itype]{a @class{g:type-t} type for the items in the list}
   @return{A new @class{g:list-store} object.}
   @begin{short}
-    Creates a new list store with items of @arg{itype} type
+    Creates a new list store with items of @arg{itype} type.
   @end{short}
   The @arg{itype} type must be a subclass of the @class{g:object} class.
   @see-class{g:list-store}
@@ -220,18 +250,15 @@
 
 (defcfun ("g_list_store_append" list-store-append) :void
  #+liber-documentation
- "@version{#2022-12-31}
+ "@version{2023-5-4}
   @argument[list]{a @class{g:list-store} object}
   @argument[item]{a @class{g:object} object with the new item}
   @begin{short}
     Appends the item to the list store.
   @end{short}
-  The item must be of type @slot[list-store]{item-type} type.
-
-  This function takes a ref on @arg{item}.
-
-  Use the @fun{g:list-store-splice} function to append multiple items at the
-  same time efficiently.
+  The item must be of type @slot[list-store]{item-type} type. This function
+  takes a ref on @arg{item}. Use the @fun{g:list-store-splice} function to
+  append multiple items at the same time efficiently.
   @see-class{g:list-store}
   @see-class{g:object}
   @see-function{g:list-store-splice}"
