@@ -43,29 +43,28 @@ Settings
 
 Resources
 
-  gio.resource.lisp            - GResource                         - GIO 2.66 &
+  gio.resource.lisp            - GResource                          - GIO 2.76 &
 
 Permissions
 
-  gio.permission.lisp          - GPermission                       - GIO 2.68 %
-
-  GSimplePermission — A GPermission that does not change value
+  gio.permission.lisp          - GPermission                        - GIO 2.76 &
+  gio.simple-permission.lisp   - GSimplePermission                  - GIO 2.76
 
 Data Models
 
-  gio.list-model.lisp          - GListModel                        - GIO 2.68
-  gio.list-store.lisp          - GListStore                        - GIO 2.68 &
+  gio.list-model.lisp          - GListModel                         - GIO 2.68
+  gio.list-store.lisp          - GListStore                         - GIO 2.74 &
 
 Application support
 
-  gio.application.lisp         - GApplication                      - GIO 2.68 &
-  gio.appliation-command-line  - GApplicationCommandLine           - GIO 2.68 &
-  gio.action-group.lisp        - GActionGroup                      - GIO 2.62 &
-  gio.action-map.lisp          - GActionMap                        - GIO 2.68
-  gio.simple-action-group.lisp - GSimpleActionGroup                - GIO 2.62
-  gio.action.lisp              - GAction                           - GIO 2.62
-  gio.simple-action.lisp       - GSimpleAction                     - GIO 2.62
-  gio.property-action.lisp     - GPropertyAction                   - GIO 2.64 &
+  gio.application.lisp         - GApplication                       - GIO 2.74 &
+  gio.appliation-command-line  - GApplicationCommandLine            - GIO 2.68 &
+  gio.action-group.lisp        - GActionGroup                       - GIO 2.62 &
+  gio.action-map.lisp          - GActionMap                         - GIO 2.68
+  gio.simple-action-group.lisp - GSimpleActionGroup                 - GIO 2.62
+  gio.action.lisp              - GAction                            - GIO 2.62
+  gio.simple-action.lisp       - GSimpleAction                      - GIO 2.62
+  gio.property-action.lisp     - GPropertyAction                    - GIO 2.64 &
 
   not implemented              - GRemoteActionGroup
   not implemented              - GActionGroup exporter
@@ -73,12 +72,12 @@ Application support
 
   not implemented              - GMemoryMonitor
 
-  gio.menu-model.lisp          - GMenuModel                        - GIO 2.36.4%
-  gio.menu.lisp                - GMenu                             - GIO 2.38.1%
+  gio.menu-model.lisp          - GMenuModel                         - GIO 2.36 %
+  gio.menu.lisp                - GMenu                              - GIO 2.38 %
 
   not implemented              - GMenuModel exporter
   not implemented              - GDBusMenuModel
 
-  gio.notification.lisp        - GNotification                     - GIO 2.68
+  gio.notification.lisp        - GNotification                      - GIO 2.68
 
-;;; 2021-10-8
+;;; 2023-5-5

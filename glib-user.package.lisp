@@ -717,6 +717,7 @@
            #:resources-open-stream
            #:resources-enumerate-children
            #:resources-info
+           #:with-g-resources
 
            ;; Symbols from gio.permission.lisp
            #:permission
@@ -731,6 +732,10 @@
            #:permission-release-finish
            #:permission-impl-update
 
+           ;; Symbols from gio.simple-permission.lisp
+           #:simple-permission
+           #:simple-permission-new
+
            ;; Symbols from gio.list-model.lisp
            #:list-model
            #:list-model-item-type
@@ -742,6 +747,7 @@
            ;; Symbols from gio.list-store.lisp
            #:list-store
            #:list-store-item-type
+           #:list-store-n-items
            #:list-store-new
            #:list-store-insert
            #:list-store-insert-sorted

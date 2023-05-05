@@ -92,6 +92,7 @@
      (:file "gio.resource")            ; Resource framework
      ;; Permissions
      (:file "gio.permission")          ; Permission to perform a certain action
+     (:file "gio.simple-permission")   ; Trivial implementation of GPermission
      ;; Data models
      (:file "gio.list-model")          ; Interface for dynamic list of objects
      (:file "gio.list-store")          ; Implementation of GListModel

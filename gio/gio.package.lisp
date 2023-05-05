@@ -2,9 +2,9 @@
 ;;; gio.package.lisp
 ;;;
 ;;; The documentation of this file is taken from the GIO Reference Manual
-;;; Version 2.74 and modified to document the Lisp binding to the GIO library.
+;;; Version 2.76 and modified to document the Lisp binding to the GIO library.
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
-;;; available from <http://www.crategus.com/books/cl-cffi-gtk/>.
+;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
 ;;; Copyright (C) 2012 - 2023 Dieter Kaiser
 ;;;
@@ -337,6 +337,7 @@
     @about-symbol{resource-flags}
     @about-symbol{resource-lookup-flags}
     @about-class{resource}
+    @about-macro{with-g-resources}
     @about-function{resource-load}
     @about-function{resource-new-from-data}
     @about-function{resource-ref}
@@ -366,6 +367,10 @@
       @about-function{permission-release-finish}
       @about-function{permission-impl-update}
     @end{subsection}
+    @begin[GSimplePermission]{subsection}
+      @about-class{simple-permission}
+      @about-function{simple-permission-new}
+    @end{subsection}
   @end{section}
   @begin[Data models]{section}
     @begin[GListModel]{subsection}
@@ -379,6 +384,7 @@
     @begin[GListStore]{subsection}
       @about-class{list-store}
       @about-generic{list-store-item-type}
+      @about-generic{list-store-n-items}
       @about-function{list-store-new}
       @about-function{list-store-insert}
       @about-function{list-store-insert-sorted}

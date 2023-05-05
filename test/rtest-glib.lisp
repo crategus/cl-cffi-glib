@@ -81,7 +81,7 @@
   (:import-from :gio     #:define-g-enum
                          #:define-g-flags
                          #:define-g-object-class
-                         #:with-g-resource)
+                         #:with-g-resources)
   (:export #:run!))
 
 (in-package :glib-test)
@@ -154,4 +154,4 @@
   (mapcar #'gobject:enum-item-value
           (gobject:get-enum-items gtype)))
 
-;;; --- 2023-1-27 --------------------------------------------------------------
+;;; --- 2023-5-4 ---------------------------------------------------------------
