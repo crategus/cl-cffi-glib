@@ -2,28 +2,29 @@
 ;;; gio.application.lisp
 ;;;
 ;;; The documentation of this file is taken from the GIO Reference Manual
-;;; Version 2.74 and modified to document the Lisp binding to the GIO library.
+;;; Version 2.76 and modified to document the Lisp binding to the GIO library.
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
-;;; available from <http://www.crategus.com/books/cl-cffi-gtk/>.
+;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
 ;;; Copyright (C) 2012 - 2023 Dieter Kaiser
 ;;;
-;;; This program is free software: you can redistribute it and/or modify
-;;; it under the terms of the GNU Lesser General Public License for Lisp
-;;; as published by the Free Software Foundation, either version 3 of the
-;;; License, or (at your option) any later version and with a preamble to
-;;; the GNU Lesser General Public License that clarifies the terms for use
-;;; with Lisp programs and is referred as the LLGPL.
+;;; Permission is hereby granted, free of charge, to any person obtaining a
+;;; copy of this software and associated documentation files (the "Software"),
+;;; to deal in the Software without restriction, including without limitation
+;;; the rights to use, copy, modify, merge, publish, distribute, sublicense,
+;;; and/or sell copies of the Software, and to permit persons to whom the
+;;; Software is furnished to do so, subject to the following conditions:
 ;;;
-;;; This program is distributed in the hope that it will be useful,
-;;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;;; GNU Lesser General Public License for more details.
+;;; The above copyright notice and this permission notice shall be included in
+;;; all copies or substantial portions of the Software.
 ;;;
-;;; You should have received a copy of the GNU Lesser General Public
-;;; License along with this program and the preamble to the Gnu Lesser
-;;; General Public License.  If not, see <http://www.gnu.org/licenses/>
-;;; and <http://opensource.franz.com/preamble.html>.
+;;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+;;; IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+;;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+;;; THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+;;; LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+;;; FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+;;; DEALINGS IN THE SOFTWARE.
 ;;; ----------------------------------------------------------------------------
 ;;;
 ;;; GApplication
@@ -125,7 +126,10 @@
 (define-g-flags "GApplicationFlags" application-flags
   (:export t
    :type-initializer "g_application_flags_get_type")
-  (:none 0)
+  #-glib-2-74
+  (:flags-none 0)
+  #+glib-2-74
+  (:default-flags)
   (:is-service 1)
   (:is-launcher 2)
   (:handles-open 4)
@@ -143,7 +147,7 @@
 (setf (liber:alias-for-symbol 'application-flags)
       "GFlags"
       (liber:symbol-documentation 'application-flags)
- "@version{#2022-12-30}
+ "@version{2023-4-23}
   @begin{short}
     Flags used to define the behaviour of a @class{g:application} instance.
   @end{short}
@@ -151,7 +155,8 @@
 (define-g-flags \"GApplicationFlags\" application-flags
   (:export t
    :type-initializer \"g_application_flags_get_type\")
-  (:none 0)
+  (:flags-none 0)
+  (:default-flags 0)
   (:is-service 1)
   (:is-launcher 2)
   (:handles-open 4)
@@ -163,7 +168,8 @@
   (:replace 256))
   @end{pre}
   @begin[code]{table}
-    @entry[:none]{Default.}
+    @entry[:flags-none]{Default flags, deprecated since 2.74.}
+    @entry[:default-flags]{Default flags. Since 2.74}
     @entry[:is-service]{Run as a service. In this mode, registration fails if
       the service is already running, and the application will initially wait
       up to 10 seconds for an initial activation message to arrive.}
@@ -237,7 +243,7 @@
 
 #+liber-documentation
 (setf (documentation 'application 'type)
- "@version{#2023-3-12}
+ "@version{2023-4-23}
   @begin{short}
     The @sym{g:application} class is the foundation of an application.
   @end{short}
@@ -265,17 +271,17 @@
   this is always the current instance. On Linux, the D-Bus session bus is used
   for communication.
 
-  The use of the @sym{g:application} class differs from some other commonly used
-  uniqueness libraries, such as the libunique library, in important ways. The
-  application is not expected to manually register itself and check if it is
-  the primary instance. Instead, the main function of a @sym{g:application}
+  The use of the @sym{g:application} class differs from some other commonly
+  used uniqueness libraries, such as the libunique library, in important ways.
+  The application is not expected to manually register itself and check if it
+  is the primary instance. Instead, the main function of a @sym{g:application}
   instance should do very little more than instantiating the application
   instance, possibly connecting signal handlers, then calling the
-  @fun{g:application-run} function. All checks for uniqueness are done internally.
-  If the application is the primary instance then the startup signal is emitted
-  and the main loop runs. If the application is not the primary instance then a
-  signal is sent to the primary instance and the @fun{g:application-run}
-  function promptly returns.
+  @fun{g:application-run} function. All checks for uniqueness are done
+  internally. If the application is the primary instance then the startup
+  signal is emitted and the main loop runs. If the application is not the
+  primary instance then a signal is sent to the primary instance and the
+  @fun{g:application-run} function promptly returns.
 
   If used, the expected form of an application identifier is the same as that
   of of a D-Bus well-known bus name. Examples include: \"com.example.MyApp\",
@@ -604,7 +610,7 @@ lambda (application)    :run-first
 (setf (liber:alias-for-function 'application-action-group)
       "Accessor"
       (documentation 'application-action-group 'function)
- "@version{#2022-12-30}
+ "@version{2023-4-23}
   @syntax[]{(setf (g:application-action-group object) group)}
   @argument[object]{a @class{g:application} instance}
   @argument[group]{a @class{g:action-group} object, or @code{nil}}
@@ -639,7 +645,7 @@ lambda (application)    :run-first
 (setf (liber:alias-for-function 'application-application-id)
       "Accessor"
       (documentation 'application-application-id 'function)
- "@version{#2022-12-30}
+ "@version{2023-4-23}
   @syntax[]{(g:application-application-id object) => id}
   @syntax[]{(setf (g:application-application-id object) id)}
   @argument[object]{a @class{g:application} instance}
@@ -670,7 +676,7 @@ lambda (application)    :run-first
 (setf (liber:alias-for-function 'application-flags)
       "Accessor"
       (documentation 'application-flags 'function)
- "@version{#2022-12-30}
+ "@version{2023-4-23}
   @syntax[]{(g:application-flags object) => flags}
   @syntax[]{(setf (g:application-flags object) flags)}
   @argument[object]{a @class{g:application} instance}
@@ -701,7 +707,7 @@ lambda (application)    :run-first
 (setf (liber:alias-for-function 'application-inactivity-timeout)
       "Accessor"
       (documentation 'application-inactivity-timeout 'function)
- "@version{#2022-12-30}
+ "@version{2023-4-23}
   @syntax[]{(g:application-inactivity-timeout object) => timeout}
   @syntax[]{(setf (g:application-inactivity-timeout object) timeout)}
   @argument[object]{a @class{g:application} instance}
@@ -735,7 +741,7 @@ lambda (application)    :run-first
 (setf (liber:alias-for-function 'application-is-busy)
       "Accessor"
       (documentation 'application-is-busy 'function)
- "@version{#2022-12-30}
+ "@version{2023-4-23}
   @syntax[]{(g:application-is-busy object) => setting}
   @argument[object]{a @class{g:application} instance}
   @argument[setting]{@em{true} if the application is currenty marked as busy}
@@ -762,7 +768,7 @@ lambda (application)    :run-first
 (setf (liber:alias-for-function 'application-is-registered)
       "Accessor"
       (documentation 'application-is-registered 'function)
- "@version{#2022-12-30}
+ "@version{2023-4-23}
   @syntax[]{(g:application-is-registered object) => setting}
   @argument[object]{a @class{g:application} instance}
   @argument[setting]{@em{true} if the application is registered}
@@ -787,7 +793,7 @@ lambda (application)    :run-first
 (setf (liber:alias-for-function 'application-is-remote)
       "Accessor"
       (documentation 'application-is-remote 'function)
- "@version{#2022-12-30}
+ "@version{2023-4-23}
   @syntax[]{(g:application-is-remote object) => setting}
   @argument[object]{a @class{g:application} instance}
   @argument[setting]{@em{true} if the application is remote}
@@ -819,7 +825,7 @@ lambda (application)    :run-first
 (setf (liber:alias-for-function 'application-resource-base-path)
       "Accessor"
       (documentation 'application-resource-base-path 'function)
- "@version{#2022-12-30}
+ "@version{2023-4-23}
   @syntax[]{(g:application-resource-base-path object) => path}
   @syntax[]{(setf (g:application-resource-base-path object) path)}
   @argument[object]{a @class{g:application} instance}
@@ -835,17 +841,17 @@ lambda (application)    :run-first
   The resource base path is used to automatically load various application
   resources such as menu layouts and action descriptions. The various types of
   resources will be found at fixed names relative to the given resource base
-  path. By default, the resource base path is determined from the application ID
-  by prefixing '/' and replacing each '.' with '/'. This is done at the time
+  path. By default, the resource base path is determined from the application
+  ID by prefixing '/' and replacing each '.' with '/'. This is done at the time
   that the @class{g:application} instance is constructed. Changes to the
   application ID after that point will not have an impact on the resource base
   path.
 
   As an example, if the application has an ID of \"org.example.app\" then the
   default resource base path will be \"/org/example/app\". If this is a
-  @class{gtk-application} instance, and you have not manually changed the
+  @class{gtk:application} instance, and you have not manually changed the
   resource base path, then GTK will then search for the menus of the application
-  at \"/org/example/app/gtk/menus.ui\". See the @class{resource} documentation
+  at \"/org/example/app/gtk/menus.ui\". See the @class{g:resource} documentation
   for more information about adding resources to your application. You can
   disable automatic resource loading functionality by setting the resource base
   path to @code{nil}.

@@ -9,33 +9,34 @@
 
 ;;;     GApplicationFlags
 
-(test application-flags
+(test g-application-flags
   ;; Check the type
   (is (g:type-is-flags "GApplicationFlags"))
   ;; Check the registered symbol
   (is (eq 'g:application-flags
           (gobject:symbol-for-gtype "GApplicationFlags")))
   ;; Check the names
-  (is (equal '("G_APPLICATION_FLAGS_NONE" "G_APPLICATION_IS_SERVICE"
-               "G_APPLICATION_IS_LAUNCHER" "G_APPLICATION_HANDLES_OPEN"
-               "G_APPLICATION_HANDLES_COMMAND_LINE"
+  (is (equal '("G_APPLICATION_FLAGS_NONE" "G_APPLICATION_DEFAULT_FLAGS"
+               "G_APPLICATION_IS_SERVICE" "G_APPLICATION_IS_LAUNCHER"
+               "G_APPLICATION_HANDLES_OPEN" "G_APPLICATION_HANDLES_COMMAND_LINE"
                "G_APPLICATION_SEND_ENVIRONMENT" "G_APPLICATION_NON_UNIQUE"
                "G_APPLICATION_CAN_OVERRIDE_APP_ID"
                "G_APPLICATION_ALLOW_REPLACEMENT" "G_APPLICATION_REPLACE")
              (list-flags-item-name "GApplicationFlags")))
   ;; Check the values
-  (is (equal '(0 1 2 4 8 16 32 64 128 256)
+  (is (equal '(0 0 1 2 4 8 16 32 64 128 256)
              (list-flags-item-value "GApplicationFlags")))
   ;; Check the nick names
-  (is (equal '("flags-none" "is-service" "is-launcher" "handles-open"
-               "handles-command-line" "send-environment" "non-unique"
-               "can-override-app-id" "allow-replacement" "replace")
+  (is (equal '("flags-none" "default-flags" "is-service" "is-launcher"
+               "handles-open" "handles-command-line" "send-environment"
+               "non-unique" "can-override-app-id" "allow-replacement" "replace")
              (list-flags-item-nick "GApplicationFlags")))
   ;; Check the flags definition
   (is (equal '(DEFINE-G-FLAGS "GApplicationFlags"
                               G-APPLICATION-FLAGS
                               (:EXPORT T)
                               (:FLAGS-NONE 0)
+                              (:DEFAULT-FLAGS 0)
                               (:IS-SERVICE 1)
                               (:IS-LAUNCHER 2)
                               (:HANDLES-OPEN 4)
@@ -49,7 +50,7 @@
 
 ;;;     GApplication
 
-(test application-class
+(test g-application-class
   ;; Type check
   (is (g:type-is-object "GApplication"))
   ;; Check the registered symbol
@@ -96,7 +97,7 @@
 
 ;;;     g_application_action_group
 
-(test application-action-group
+(test g-application-action-group-property
   (let ((app (make-instance 'g:application))
         (group (make-instance 'g:simple-action-group)))
     ;; action-group is not readable
@@ -105,7 +106,7 @@
 
 ;;;     g_application_application_id
 
-(test application-application-id
+(test g_application-application-id-property
   (let ((app (make-instance 'g:application)))
     (is-false (g:application-application-id app))
     (is-true (setf (g:application-application-id app) "com.crategus.app"))
@@ -113,22 +114,22 @@
 
 ;;;     g_application_flags
 
-(test application-flags
+(test g-application-flags-property
   (let ((app (make-instance 'g:application)))
-    (is-false (g:application-flags app))
+    (is (equal '() (g:application-flags app)))
     ;; a single flag
     (is-true (setf (g:application-flags app) :handles-open))
     (is (equal '(:handles-open) (g:application-flags app)))
     ;; the flag :none does not set a non-nil value !?
-    (is-true (setf (g:application-flags app) :none))
-    (is-false (g:application-flags app))
+    (is-true (setf (g:application-flags app) :default-flags))
+    (is (equal '(:is-launcher) (g:application-flags app)))
     ;; a list of flags
     (is-true (setf (g:application-flags app) '(:is-service :handles-open)))
     (is (equal '(:is-service :handles-open) (g:application-flags app)))))
 
 ;;;     g_applicaton_inactivity_timeout
 
-(test application-inactivity-timeout
+(test g-application-inactivity-timeout-property
   (let ((app (make-instance 'g:application)))
     (is (= 0 (g:application-inactivity-timeout app)))
     (is (= 10000 (setf (g:application-inactivity-timeout app) 10000)))
@@ -136,7 +137,7 @@
 
 ;;;     g_application_is_busy
 
-(test application-is-busy
+(test g-application-is-busy-property
   (let ((app (make-instance 'g:application)))
     ;; Default value is nil
     (is-false (g:application-is-busy app))
@@ -145,7 +146,7 @@
 
 ;;;     g_application_is_registered
 
-(test application-is-registered
+(test g-application-is-registered-property
   (let ((app (make-instance 'g:application)))
     (is-false (g:application-is-registered app))
     ;; is-registered is not writeable
@@ -153,7 +154,7 @@
 
 ;;;     g_application_is_remote
 
-(test application-is-remote
+(test g-application-is-remote-property
   (let ((app (make-instance 'g:application)))
     ;; is-remote is not readable before registration
 ;   (is-false (g:application-is-remote app))
@@ -162,7 +163,7 @@
 
 ;;;     g_application_resource_base_path
 
-(test application-resource-base-path
+(test g-application-resource-base-path-property
   (let ((app (make-instance 'g:application)))
     (is-false (g:application-resource-base-path app))
     (is (string= "/test" (setf (g:application-resource-base-path app) "/test")))
@@ -312,4 +313,4 @@
 ;;;     g_application_bind_busy_property
 ;;;     g_application_unbind_busy_property
 
-;;; --- 2022-1-2 ---------------------------------------------------------------
+;;; --- 2023-4-23 --------------------------------------------------------------
