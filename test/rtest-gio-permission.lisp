@@ -7,7 +7,7 @@
 
 ;;;     GPermission
 
-(test permission-class
+(test g-permission-class
   ;; Type check
   (is (g:type-is-object "GPermission"))
   ;; Check the registered symbol
@@ -20,7 +20,7 @@
   (is (eq (g:gtype "GObject")
           (g:type-parent "GPermission")))
   ;; Check the children
-  (is (equal '()
+  (is (equal '("GSimplePermission")
              (list-children "GPermission")))
   ;; Check the interfaces
   (is (equal '()
@@ -42,17 +42,57 @@
                          "gboolean" T NIL)))
              (get-g-type-definition "GPermission"))))
 
+;;;     GSimplePermission
+
+(test g-simple-permission-class
+  ;; Type check
+  (is (g:type-is-object "GSimplePermission"))
+  ;; Check the registered symbol
+  (is (eq 'g:simple-permission
+          (gobject:symbol-for-gtype "GSimplePermission")))
+  ;; Check the type initializer
+  (is (eq (g:gtype "GSimplePermission")
+          (g:gtype (cffi:foreign-funcall "g_simple_permission_get_type" :size))))
+  ;; Check the parent
+  (is (eq (g:gtype "GPermission")
+          (g:type-parent "GSimplePermission")))
+  ;; Check the children
+  (is (equal '()
+             (list-children "GSimplePermission")))
+  ;; Check the interfaces
+  (is (equal '()
+             (list-interfaces "GSimplePermission")))
+  ;; Check the class properties
+  (is (equal '()
+             (list-properties "GSimplePermission")))
+  ;; Check the list of signals
+  (is (equal '()
+             (list-signals "GSimplePermission")))
+  ;; Check the class definition
+  (is (equal '(DEFINE-G-OBJECT-CLASS "GSimplePermission" G-SIMPLE-PERMISSION
+                       (:SUPERCLASS G-PERMISSION :EXPORT T :INTERFACES NIL) NIL)
+             (get-g-type-definition "GSimplePermission"))))
+
 ;;; --- Properties -------------------------------------------------------------
 
 ;;;     allowed
 ;;;     can-acquire
 ;;;     can-release
 
+(test g-permission-properties.1
+  (let ((permission (g:simple-permission-new t)))
+    (is-true (g:permission-allowed permission))
+    (is-false (g:permission-can-acquire permission))
+    (is-false (g:permission-can-release permission))))
+
+(test g-permission-properties.2
+  (let ((permission (g:simple-permission-new nil)))
+    (is-false (g:permission-allowed permission))
+    (is-false (g:permission-can-acquire permission))
+    (is-false (g:permission-can-release permission))))
+
 ;;; --- Functions --------------------------------------------------------------
 
-;;;     g_permission_get_allowed
-;;;     g_permission_get_can_acquire
-;;;     g_permission_get_can_release
 ;;;     g_permission_acquire
 ;;;     g_permission_acquire_async
 ;;;     g_permission_acquire_finish
@@ -61,4 +101,4 @@
 ;;;     g_permission_release_finish
 ;;;     g_permission_impl_update
 
-;;; 2022-10-30
+;;; --- 2023-5-5 ---------------------------------------------------------------

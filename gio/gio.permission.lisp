@@ -2,28 +2,29 @@
 ;;; gio.permission.lisp
 ;;;
 ;;; The documentation of this file is taken from the GIO Reference Manual
-;;; Version 2.74 and modified to document the Lisp binding to the GIO library.
+;;; Version 2.76 and modified to document the Lisp binding to the GIO library.
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
-;;; available from <http://www.crategus.com/books/cl-cffi-gtk/>.
+;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2021 - 2022 Dieter Kaiser
+;;; Copyright (C) 2021 - 2023 Dieter Kaiser
 ;;;
-;;; This program is free software: you can redistribute it and/or modify
-;;; it under the terms of the GNU Lesser General Public License for Lisp
-;;; as published by the Free Software Foundation, either version 3 of the
-;;; License, or (at your option) any later version and with a preamble to
-;;; the GNU Lesser General Public License that clarifies the terms for use
-;;; with Lisp programs and is referred as the LLGPL.
+;;; Permission is hereby granted, free of charge, to any person obtaining a
+;;; copy of this software and associated documentation files (the "Software"),
+;;; to deal in the Software without restriction, including without limitation
+;;; the rights to use, copy, modify, merge, publish, distribute, sublicense,
+;;; and/or sell copies of the Software, and to permit persons to whom the
+;;; Software is furnished to do so, subject to the following conditions:
 ;;;
-;;; This program is distributed in the hope that it will be useful,
-;;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;;; GNU Lesser General Public License for more details.
+;;; The above copyright notice and this permission notice shall be included in
+;;; all copies or substantial portions of the Software.
 ;;;
-;;; You should have received a copy of the GNU Lesser General Public
-;;; License along with this program and the preamble to the Gnu Lesser
-;;; General Public License.  If not, see <http://www.gnu.org/licenses/>
-;;; and <http://opensource.franz.com/preamble.html>.
+;;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+;;; IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+;;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+;;; THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+;;; LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+;;; FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+;;; DEALINGS IN THE SOFTWARE.
 ;;; ----------------------------------------------------------------------------
 ;;;
 ;;; GPermission
@@ -83,16 +84,14 @@
 
 #+liber-documentation
 (setf (documentation 'permission 'type)
- "@version{#2022-12-31}
+ "@version{2023-5-5}
   @begin{short}
     A @sym{g:permission} object represents the status of the permission of the
     caller to perform a certain action.
   @end{short}
-
   You can query if the action is currently allowed and if it is possible to
-  acquire the permission so that the action will be allowed in the future.
-
-  There is also an API to actually acquire the permission and one to release it.
+  acquire the permission so that the action will be allowed in the future. There
+  is also an API to actually acquire the permission and one to release it.
 
   As an example, a @sym{g:permission} object might represent the ability for the
   user to write to a @class{gtk:settings} object. This @sym{g:permission} object
@@ -121,7 +120,7 @@
 (setf (liber:alias-for-function 'permission-allowed)
       "Accessor"
       (documentation 'permission-allowed 'function)
- "@version{#2022-12-31}
+ "@version{2023-5-5}
   @syntax[]{(g:permission-allowed object) => allowed}
   @argument[object]{a @class{g:permission} object}
   @argument[allowed]{a boolean whether the caller currently has permission to
@@ -130,7 +129,6 @@
     Accessor of the @slot[permission]{allowed} slot of the
     @class{g:permission} class.
   @end{short}
-
   The @sym{g:permission-allowed} function gets the value of the property. This
   property is @em{true} if the caller currently has permission to perform the
   action that the @class{g:permission} object represents the permission to
@@ -150,7 +148,7 @@
 (setf (liber:alias-for-function 'permission-can-acquire)
       "Accessor"
       (documentation 'permission-can-acquire 'function)
- "@version{#2022-12-31}
+ "@version{2023-5-5}
   @syntax[]{(g:permission-can-acquire object) => can-acquire}
   @argument[object]{a @class{g:permission} object}
   @argument[can-acquire]{a boolean whether it is generally possible to acquire
@@ -159,7 +157,6 @@
     Accessor of the @slot[permission]{can-acquire} slot of the
     @class{g:permission} class.
   @end{short}
-
   The @sym{g:permission-can-acquire} function gets the value of the property.
   This property is @em{true} if it is generally possible to acquire the
   permission by calling the @fun{g:permission-acquire} function.
@@ -179,7 +176,7 @@
 (setf (liber:alias-for-function 'permission-can-release)
       "Accessor"
       (documentation 'permission-can-release 'function)
- "@version{#2022-12-31}
+ "@version{2023-5-5}
   @syntax[]{(g:permission-can-release object) => can-release}
   @argument[object]{a @class{g:permission} object}
   @argument[can-release]{a boolean whether it is generally possible to release
@@ -188,7 +185,6 @@
     Accessor of the @slot[permission]{can-release} slot of the
     @class{g:permission} class.
   @end{short}
-
   The @sym{g:permission-can-release} function gets the value of the property.
   This property is @em{true} if it is generally possible to release the
   permission by calling the @fun{g:permission-release} function.
@@ -197,42 +193,39 @@
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_permission_acquire ()
-;;;
-;;; gboolean
-;;; g_permission_acquire (GPermission *permission,
-;;;                       GCancellable *cancellable,
-;;;                       GError **error);
-;;;
-;;; Attempts to acquire the permission represented by permission .
-;;;
-;;; The precise method by which this happens depends on the permission and the
-;;; underlying authentication mechanism. A simple example is that a dialog may
-;;; appear asking the user to enter their password.
-;;;
-;;; You should check with g_permission_get_can_acquire() before calling this
-;;; function.
-;;;
-;;; If the permission is acquired then TRUE is returned. Otherwise, FALSE is
-;;; returned and error is set appropriately.
-;;;
-;;; This call is blocking, likely for a very long time (in the case that user
-;;; interaction is required). See g_permission_acquire_async() for the
-;;; non-blocking version.
-;;;
-;;; permission :
-;;;     a GPermission instance
-;;;
-;;; cancellable :
-;;;     a GCancellable, or NULL.
-;;;
-;;; error :
-;;;     a pointer to a NULL GError, or NULL
-;;;
-;;; Returns :
-;;;     TRUE if the permission was successfully acquired
-;;;
-;;; Since: 2.26
 ;;; ----------------------------------------------------------------------------
+
+(defcfun ("g_permission_acquire" %permission-acquire) :boolean
+  (permission (gobject:object permission))
+  (cancellable :pointer)
+  (err :pointer))
+
+(defun permission-acquire (permission &optional (cancellable nil))
+ #+liber-documentation
+ "@version{#2023-5-5}
+  @argument[permission]{a @class{g:permission} instance}
+  @argument[cancellable]{a @code{GCanellable} instance, or @code{nil}}
+  @return{@em{True} if the permission was successfully acquired.}
+  @begin{short}
+    Attempts to acquire the permission represented by @arg{permission}.
+  @end{short}
+  The precise method by which this happens depends on the permission and the
+  underlying authentication mechanism. A simple example is that a dialog may
+  appear asking the user to enter their password.
+
+  You should check with the @fun{g:permission-can-acquire} function before
+  calling this function. If the permission is acquired then @em{true} is
+  returned. Otherwise, @em{false} is returned.
+
+  This call is blocking, likely for a very long time, in the case that user
+  interaction is required.
+  @see-class{g:permission}
+  @see-function{g:permission-can-acquire}"
+  (let ((cancellable (if cancellable cancellable (cffi:null-pointer))))
+    (with-g-error (err)
+      (%permission-acquire permission cancellable err))))
+
+(export 'permission-acquire)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_permission_acquire_async ()
@@ -300,22 +293,6 @@
 ;;;                       GCancellable *cancellable,
 ;;;                       GError **error);
 ;;;
-;;; Attempts to release the permission represented by permission .
-;;;
-;;; The precise method by which this happens depends on the permission and the
-;;; underlying authentication mechanism. In most cases the permission will be
-;;; dropped immediately without further action.
-;;;
-;;; You should check with g_permission_get_can_release() before calling this
-;;; function.
-;;;
-;;; If the permission is released then TRUE is returned. Otherwise, FALSE is
-;;; returned and error is set appropriately.
-;;;
-;;; This call is blocking, likely for a very long time (in the case that user
-;;; interaction is required). See g_permission_release_async() for the
-;;; non-blocking version.
-;;;
 ;;;
 ;;; permission :
 ;;;     a GPermission instance
@@ -331,6 +308,38 @@
 ;;;
 ;;; Since: 2.26
 ;;; ----------------------------------------------------------------------------
+
+(defcfun ("g_permission_release" %permission-release) :boolean
+  (permission (gobject:object permission))
+  (cancellable :pointer)
+  (err :pointer))
+
+(defun permission-release (permission &optional (cancellable nil))
+ #+liber-documentation
+ "@version{#2023-5-5}
+  @argument[permission]{a @class{g:permission} instance}
+  @argument[cancellable]{a @code{GCanellable} instance, or @code{nil}}
+  @return{@em{True} if the permission was successfully released.}
+  @begin{short}
+    Attempts to release the permission represented by @arg{permission}.
+  @end{short}
+  The precise method by which this happens depends on the permission and the
+  underlying authentication mechanism. In most cases the permission will be
+  dropped immediately without further action.
+
+  You should check with the @fun{g:permission-can-release} function before
+  calling this function. If the permission is released then @em{true} is
+  returned. Otherwise, @em{false} is returned and error is set appropriately.
+
+  This call is blocking, likely for a very long time, in the case that user
+  interaction is required.
+  @see-class{g:permission}
+  @see-function{g:permission-can-release}"
+  (let ((cancellable (if cancellable cancellable (cffi:null-pointer))))
+    (with-g-error (err)
+      (%permission-release permission cancellable err))))
+
+(export 'permission-release)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_permission_release_async ()
