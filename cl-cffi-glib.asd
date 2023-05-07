@@ -24,9 +24,9 @@
 
 (defsystem :cl-cffi-glib
   :name "cl-cffi-glib"
-  :version "2.56"                      ; Minimum required C library version
+  :version "0.3.0"
   :author "Dieter Kaiser"
-  :license "LLGPL"
+  :license "MIT"
   :serial t
   :components
   ((:module glib
@@ -110,6 +110,10 @@
      (:file "gio.notification")        ; User Notifications, pop up messages
      ;; File Operations
      (:file "gio.file")                ; File and Directory Handling
+     ;; Asynchronous I/O
+     (:file "gio.cancellable")
+     (:file "gio.async-result")
+     (:file "gio.task")
     ))
     (:file "glib-user.package")
     )
@@ -122,7 +126,7 @@
 
 (defsystem :cl-cffi-glib/init
   :name "cl-cffi-glib/init"
-  :version "0.9.0"
+  :version "0.3.0"
   :author "Dieter Kaiser"
   :license "LLGPL"
   :serial t
@@ -188,7 +192,8 @@
      (:file "rtest-gio-menu-model")
      (:file "rtest-gio-menu")
      (:file "rtest-gio-notification")
-     (:file "rtest-gio-file"))))
+     (:file "rtest-gio-file")
+     (:file "rtest-gio-cancellable"))))
   :perform (test-op (o c)
              (uiop:symbol-call :fiveam :run!
                                (uiop:find-symbol* :glib-test :glib-test)))

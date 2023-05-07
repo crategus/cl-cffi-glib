@@ -15,6 +15,15 @@ File Operations
   GIOError — Error helper functions
   GMountOperation — Object used for authentication and user interaction
 
+Asynchronous I/O
+
+  gio.cancellable.lisp         - Thread-safe Cancellation Stack
+  gio.async-result.lisp        - Asynchronous Function Results
+  gio.task.lisp                - Cancellable task and result
+
+  GIOScheduler — I/O Scheduler
+  GSimpleAsyncResult — Simple asynchronous results implementation
+
 File types and applications
 
   gio.content-type.lisp        - Platform-specific content typing  - GIO 2.66
@@ -80,4 +89,4 @@ Application support
 
   gio.notification.lisp        - GNotification                      - GIO 2.68
 
-;;; 2023-5-5
+2023-5-6

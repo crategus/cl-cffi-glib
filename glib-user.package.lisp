@@ -966,6 +966,24 @@
            #:file-path
            #:file-uri
            #:file-get-parse-name
+
+           ;; Symbols from gio.cancellable.lisp
+           #:cancellable
+           #:ancellable-source-func
+           #:cancellable-new
+           #:cancellable-is-cancelled
+           #:cancellable-set-error-if-cancelled
+           #:cancellable-fd
+           #:cancellable-make-pollfd
+           #:cancellable-release-fd
+           #:cancellable-source-new
+           #:cancellable-current
+           #:cancellable-pop-current
+           #:cancellable-push-current
+           #:cancellable-reset
+           #:cancellable-connect
+           #:cancellable-disconnect
+           #:cancellable-cancel
            ))
 
 ;;; --- End of file glib-user.package.lisp -------------------------------------

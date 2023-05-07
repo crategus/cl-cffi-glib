@@ -1,37 +1,43 @@
-﻿;;; ----------------------------------------------------------------------------
+;;; ----------------------------------------------------------------------------
 ;;; gio.cancellable.lisp
 ;;;
-;;; The documentation has been copied from the GIO Reference Manual
-;;; for GIO 2.32.3. The latest version of this documentation can be found
-;;; on-line at http://library.gnome.org/devel/gio/unstable/.
+;;; The documentation of this file is taken from the GIO Reference Manual
+;;; Version 2.76 and modified to document the Lisp binding to the GIO library.
+;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
+;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2012 Dieter Kaiser
+;;; Copyright (C) 2023 Dieter Kaiser
 ;;;
-;;; This program is free software: you can redistribute it and/or modify
-;;; it under the terms of the GNU Lesser General Public License for Lisp
-;;; as published by the Free Software Foundation, either version 3 of the
-;;; License, or (at your option) any later version and with a preamble to
-;;; the GNU Lesser General Public License that clarifies the terms for use
-;;; with Lisp programs and is referred as the LLGPL.
+;;; Permission is hereby granted, free of charge, to any person obtaining a
+;;; copy of this software and associated documentation files (the "Software"),
+;;; to deal in the Software without restriction, including without limitation
+;;; the rights to use, copy, modify, merge, publish, distribute, sublicense,
+;;; and/or sell copies of the Software, and to permit persons to whom the
+;;; Software is furnished to do so, subject to the following conditions:
 ;;;
-;;; This program is distributed in the hope that it will be useful,
-;;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;;; GNU Lesser General Public License for more details.
+;;; The above copyright notice and this permission notice shall be included in
+;;; all copies or substantial portions of the Software.
 ;;;
-;;; You should have received a copy of the GNU Lesser General Public
-;;; License along with this program and the preamble to the Gnu Lesser
-;;; General Public License.  If not, see <http://www.gnu.org/licenses/>
-;;; and <http://opensource.franz.com/preamble.html>.
+;;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+;;; IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+;;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+;;; THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+;;; LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+;;; FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+;;; DEALINGS IN THE SOFTWARE.
 ;;; ----------------------------------------------------------------------------
 ;;;
 ;;; GCancellable
 ;;;
-;;; Thread-safe Operation Cancellation Stack
+;;;     Thread-safe Operation Cancellation Stack
 ;;;
-;;; Synopsis
+;;; Types and Values
 ;;;
 ;;;     GCancellable
+;;;
+;;; Functions
+;;;
+;;;     GCancellableSourceFunc
 ;;;
 ;;;     g_cancellable_new
 ;;;     g_cancellable_is_cancelled
@@ -48,82 +54,14 @@
 ;;;     g_cancellable_disconnect
 ;;;     g_cancellable_cancel
 ;;;
-;;; Object Hierarchy
-;;;
-;;;   GObject
-;;;    +----GCancellable
-;;;
 ;;; Signals
 ;;;
-;;;   "cancelled"                                      : Run Last
+;;;     cancelled
 ;;;
-;;; Description
+;;; Object Hierarchy
 ;;;
-;;; GCancellable is a thread-safe operation cancellation stack used throughout
-;;; GIO to allow for cancellation of synchronous and asynchronous operations.
-;;;
-;;; ----------------------------------------------------------------------------
-;;;
-;;; Signal Details
-;;;
-;;; ----------------------------------------------------------------------------
-;;; The "cancelled" signal
-;;;
-;;; void user_function (GCancellable *cancellable,
-;;;                     gpointer      user_data)        : Run Last
-;;;
-;;; Emitted when the operation has been cancelled.
-;;;
-;;; Can be used by implementations of cancellable operations. If the operation
-;;; is cancelled from another thread, the signal will be emitted in the thread
-;;; that cancelled the operation, not the thread that is running the operation.
-;;;
-;;; Note that disconnecting from this signal (or any signal) in a multi-threaded
-;;; program is prone to race conditions. For instance it is possible that a
-;;; signal handler may be invoked even after a call to
-;;; g_signal_handler_disconnect() for that handler has already returned.
-;;;
-;;; There is also a problem when cancellation happen right before connecting to
-;;; the signal. If this happens the signal will unexpectedly not be emitted, and
-;;; checking before connecting to the signal leaves a race condition where this
-;;; is still happening.
-;;;
-;;; In order to make it safe and easy to connect handlers there are two helper
-;;; functions: g_cancellable_connect() and g_cancellable_disconnect() which
-;;; protect against problems like this.
-;;;
-;;; An example of how to us this:
-;;;
-;;;   /* Make sure we don't do any unnecessary work if already cancelled */
-;;;   if (g_cancellable_set_error_if_cancelled (cancellable))
-;;;     return;
-;;;   /* Set up all the data needed to be able to
-;;;    * handle cancellation of the operation */
-;;;   my_data = my_data_new (...);
-;;;
-;;;   id = 0;
-;;;   if (cancellable)
-;;;     id = g_cancellable_connect (cancellable,
-;;;                     G_CALLBACK (cancelled_handler)
-;;;                     data, NULL);
-;;;
-;;;   /* cancellable operation here... */
-;;;
-;;;   g_cancellable_disconnect (cancellable, id);
-;;;
-;;;   /* cancelled_handler is never called after this, it
-;;;    * is now safe to free the data */
-;;;   my_data_free (my_data);
-;;;
-;;; Note that the cancelled signal is emitted in the thread that the user
-;;; cancelled from, which may be the main thread. So, the cancellable signal
-;;; should not do something that can block.
-;;;
-;;; cancellable :
-;;;     a GCancellable.
-;;;
-;;; user_data :
-;;;     user data set when the signal handler was connected.
+;;;     GObject
+;;;     ╰── GCancellable
 ;;; ----------------------------------------------------------------------------
 
 (in-package :gio)
@@ -131,56 +69,122 @@
 ;;; ----------------------------------------------------------------------------
 ;;; GCancellable
 ;;;
-;;; typedef struct _GCancellable GCancellable;
-;;;
 ;;; Allows actions to be cancelled.
 ;;; ----------------------------------------------------------------------------
 
-(define-g-object-class "GCancellable" g-cancellable
+(define-g-object-class "GCancellable" cancellable
   (:superclass gobject:object
    :export t
    :interfaces nil
    :type-initializer "g_cancellable_get_type")
   nil)
 
+#+liber-documentation
+(setf (documentation 'cancellable 'type)
+ "@version{2023-5-7}
+  @begin{short}
+    The @sym{g:cancellable} object is a thread-safe operation cancellation
+    stack used throughout GIO to allow for cancellation of synchronous and
+    asynchronous operations.
+  @end{short}
+  @begin[Signal Details]{dictionary}
+    @subheading{The \"cancelled\" signal}
+      @begin{pre}
+lambda (cancellable)    :run-last
+      @end{pre}
+      Emitted when the operation has been cancelled. Can be used by
+      implementations of cancellable operations. If the operation is cancelled
+      from another thread, the signal will be emitted in the thread that
+      cancelled the operation, not the thread that is running the operation.
+
+      Note that disconnecting from this signal, or any signal, in a
+      multi-threaded program is prone to race conditions. For instance it is
+      possible that a signal handler may be invoked even after a call to the
+      @fun{g:signal-handler-disconnect} function for that handler has already
+      returned.
+
+      There is also a problem when cancellation happen right before connecting
+      to the signal. If this happens the signal will unexpectedly not be
+      emitted, and checking before connecting to the signal leaves a race
+      condition where this is still happening.
+
+      In order to make it safe and easy to connect handlers there are two helper
+      functions: the @fun{g:cancellable-connect} and
+      @fun{g:cancellable-disconnect} functions which protect against problems
+      like this.
+
+      An example of how to us this:
+      @begin{pre}
+/* Make sure we don't do any unnecessary work if already cancelled */
+if (g_cancellable_set_error_if_cancelled (cancellable))
+  return;
+/* Set up all the data needed to be able to
+ * handle cancellation of the operation */
+my_data = my_data_new (...);
+
+id = 0;
+if (cancellable)
+  id = g_cancellable_connect (cancellable,
+                  G_CALLBACK (cancelled_handler)
+                  data, NULL);
+
+/* cancellable operation here... */
+
+g_cancellable_disconnect (cancellable, id);
+
+/* cancelled_handler is never called after this, it
+ * is now safe to free the data */
+my_data_free (my_data);
+      @end{pre}
+      Note that the cancelled signal is emitted in the thread that the user
+      cancelled from, which may be the main thread. So, the cancellable signal
+      should not do something that can block.
+      @begin[code]{table}
+        @entry[cancellable]{The @sym{g:cancellable} object.}
+      @end{table}
+  @end{dictionary}")
+
 ;;; ----------------------------------------------------------------------------
 ;;; g_cancellable_new ()
-;;;
-;;; GCancellable * g_cancellable_new (void);
-;;;
-;;; Creates a new GCancellable object.
-;;;
-;;; Applications that want to start one or more operations that should be
-;;; cancellable should create a GCancellable and pass it to the operations.
-;;;
-;;; One GCancellable can be used in multiple consecutive operations or in
-;;; multiple concurrent operations.
-;;;
-;;; Returns :
-;;;     a GCancellable.
 ;;; ----------------------------------------------------------------------------
 
-(declaim (inline g-cancellable-new))
+(declaim (inline cancellable-new))
 
-(defun g-cancellable-new ()
-  (make-instance 'g-cancellable))
+(defun cancellable-new ()
+ #+liber-documentation
+ "@version{2023-5-7}
+  @return{A @class{g:cancellable} object.}
+  @begin{short}
+    Creates a new @class{g:cancellable} object.
+  @end{short}
+  Applications that want to start one or more operations that should be
+  cancellable should create a @class{g:cancellable} object and pass it to the
+  operations.
 
-(export 'g-cancellable-new)
+  One @class{g:cancellable} object can be used in multiple consecutive
+  operations or in multiple concurrent operations.
+  @see-class{g:cancellable}"
+  (make-instance 'cancellable))
+
+(export 'cancellable-new)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_cancellable_is_cancelled ()
-;;;
-;;; gboolean g_cancellable_is_cancelled (GCancellable *cancellable);
-;;;
-;;; Checks if a cancellable job has been cancelled.
-;;;
-;;; cancellable :
-;;;     a GCancellable or NULL
-;;;
-;;; Returns :
-;;;     TRUE if cancellable is cancelled, FALSE if called with NULL or if item
-;;;     is not cancelled.
 ;;; ----------------------------------------------------------------------------
+
+(defcfun ("g_cancellable_is_cancelled" cancellable-is-cancelled) :boolean
+ #+liber-documentation
+ "@version{#2023-5-7}
+  @argument[cancellable]{a @class{g:cancellable} object, or @code{nil}}
+  @return{@em{True} if @arg{cancellable} is cancelled, @em{false} if called
+    with @code{nil} of if not cancelled}
+  @begin{short}
+    Checks if a cancellable job has been cancelled.
+  @end{short}
+  @see-class{g:cancellable}"
+  (cancellable (gobject:object cancellable)))
+
+(export 'cancellable-is-cancelled)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_cancellable_set_error_if_cancelled ()
@@ -287,6 +291,40 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
+;;; GCancellableSourceFunc ()
+;;; ----------------------------------------------------------------------------
+
+(cffi:defcallback cancellable-source-func :boolean
+    ((cancellable (gobject:object cancellable))
+     (data :pointer))
+  (let ((fn (glib:get-stable-pointer-value data)))
+    (restart-case
+      (funcall fn cancellable)
+      (return-from-cancellable-source-func () nil))))
+
+#+liber-documentation
+(setf (liber:alias-for-symbol 'cancellable-source-func)
+      "Callback"
+      (liber:symbol-documentation 'cancellable-source-func)
+ "@version{#2023-5-7}
+  @begin{short}
+    This is the function type of the callback used for the @type{g:source}
+    instance returned by the @fun{g:cancellable-source-new} function.
+  @end{short}
+  @begin{pre}
+lambda (cancellable)
+  @end{pre}
+  @begin[code]{table}
+    @entry[cancellable]{The @class{g:cancellable} object.}
+    @entry[Returns]{It should return @em{false} if the source should be
+      removed.}
+  @end{table}
+  @see-class{g:cancellable}
+  @see-function{g:cancellable-source-new}")
+
+(export 'cancellable-source-func)
+
+;;; ----------------------------------------------------------------------------
 ;;; g_cancellable_source_new ()
 ;;;
 ;;; GSource * g_cancellable_source_new (GCancellable *cancellable);
@@ -304,27 +342,6 @@
 ;;;
 ;;; Returns :
 ;;;     the new GSource
-;;;
-;;; Since 2.28
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; GCancellableSourceFunc ()
-;;;
-;;; gboolean (*GCancellableSourceFunc) (GCancellable *cancellable,
-;;;                                     gpointer user_data);
-;;;
-;;; This is the function type of the callback used for the GSource returned by
-;;; g_cancellable_source_new().
-;;;
-;;; cancellable :
-;;;     the GCancellable
-;;;
-;;; user_data :
-;;;     data passed in by the user.
-;;;
-;;; Returns :
-;;;     it should return FALSE if the source should be removed.
 ;;;
 ;;; Since 2.28
 ;;; ----------------------------------------------------------------------------
@@ -472,6 +489,5 @@
 ;;; cancellable :
 ;;;     a GCancellable object.
 ;;; ----------------------------------------------------------------------------
-
 
 ;;; --- End of file gio.cancellable.lisp ---------------------------------------

@@ -198,6 +198,76 @@
       @about-function{file-supports-thread-contexts}
     @end{subsection}
   @end{section}
+  @begin[Asynchronous I/O]{section}
+    @begin[GCancellable]{subsection}
+      Thread-safe Operation Cancellation Stack.
+      @about-class{cancellable}
+      @about-symbol{cancellable-source-func}
+      @about-function{cancellable-new}
+      @about-function{cancellable-is-cancelled}
+      @about-function{cancellable-set-error-if-cancelled}
+      @about-function{cancellable-fd}
+      @about-function{cancellable-make-pollfd}
+      @about-function{cancellable-release-fd}
+      @about-function{cancellable-source-new}
+      @about-function{cancellable-current}
+      @about-function{cancellable-pop-current}
+      @about-function{cancellable-push-current}
+      @about-function{cancellable-reset}
+      @about-function{cancellable-connect}
+      @about-function{cancellable-disconnect}
+      @about-function{cancellable-cancel\}
+    @end{subsection}
+    @begin[GAsyncResult]{subsection}
+      Asynchronous Function Results.
+      @about-class{async-result}
+      @about-symbol{async-ready-callback}
+      @about-function{async-result-user-data}
+      @about-function{async-result-source-object}
+      @about-function{async-result-is-tagged }
+      @about-function{async-result-legacy-propagate-error}
+    @end{subsection}
+    @begin[GTask]{subsection}
+      Cancellable synchronous or asynchronous task and result.
+      @about-class{task}
+      @about-generic{task-completed}
+      @about-function{task-new}
+      @about-function{task-set-task-data}
+      @about-function{task-get-task-data}
+      @about-function{task-set-priority}
+      @about-function{task-get-priority}
+      @about-function{task-set-check-cancellable}
+      @about-function{task-get-check-cancellable}
+      @about-function{task-set-return-on-cancel}
+      @about-function{task-get-return-on-cancel}
+      @about-function{task-set-source-tag}
+      @about-function{task-get-source-tag}
+      @about-function{task-set-name}
+      @about-function{task-get-name}
+      @about-function{task-report-error}
+      @about-function{task-report-new-error}
+      @about-function{task-get-cancellable}
+      @about-function{task-get-context}
+      @about-function{task-get-source-object}
+      @about-function{task-return-boolean}
+      @about-function{task-return-int}
+      @about-function{task-return-pointer}
+      @about-function{task-return-value}
+      @about-function{task-return-error}
+      @about-function{task-return-new-error}
+      @about-function{task-return-error-if-cancelled}
+      @about-function{task-propagate-boolean}
+      @about-function{task-propagate-int}
+      @about-function{task-propagate-pointer}
+      @about-function{task-propagate-value}
+      @about-function{task-had-error}
+      @about-function{task-run-in-thread}
+      @about-function{task-run-in-thread-sync}
+      @about-symbol{task-threadfunc}
+      @about-function{task-attach-source}
+      @about-function{task-task-is-valid}
+    @end{subsection}
+  @end{section}
   @begin[File types and applications]{section}
     @begin[GContentType]{subsection}
       A content type is a platform specific string that defines the type of a
