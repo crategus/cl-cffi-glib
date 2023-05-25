@@ -2481,6 +2481,9 @@ lambda (object pspec)    :no-hooks
 ;;; g_object_set_data () -> object-data
 ;;; ----------------------------------------------------------------------------
 
+;; TODO: Improve the implemenation with the usage of stable pointers.
+;; See the implementation of gobject:type-qdata.
+
 (defun (setf object-data) (data object key)
   (cffi:foreign-funcall "g_object_set_data"
                         object object

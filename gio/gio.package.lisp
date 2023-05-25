@@ -232,23 +232,18 @@
       @about-class{task}
       @about-generic{task-completed}
       @about-function{task-new}
-      @about-function{task-set-task-data}
-      @about-function{task-get-task-data}
-      @about-function{task-set-priority}
-      @about-function{task-get-priority}
-      @about-function{task-set-check-cancellable}
-      @about-function{task-get-check-cancellable}
-      @about-function{task-set-return-on-cancel}
-      @about-function{task-get-return-on-cancel}
-      @about-function{task-set-source-tag}
-      @about-function{task-get-source-tag}
-      @about-function{task-set-name}
-      @about-function{task-get-name}
+      @about-function{task-task-data}
+      @about-function{task-priority}
+      @about-function{task-check-cancellable}
+      @about-function{task-return-on-cancel}
+      @about-function{task-source-tag}
+      @about-function{task-name}
+      @about-function{task-set-static-name}
       @about-function{task-report-error}
       @about-function{task-report-new-error}
-      @about-function{task-get-cancellable}
-      @about-function{task-get-context}
-      @about-function{task-get-source-object}
+      @about-function{task-cancellable}
+      @about-function{task-context}
+      @about-function{task-source-object}
       @about-function{task-return-boolean}
       @about-function{task-return-int}
       @about-function{task-return-pointer}

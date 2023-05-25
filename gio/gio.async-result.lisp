@@ -157,24 +157,50 @@ int main (int argc, void *argv[])
 ;;;                         GAsyncResult *res,
 ;;;                         gpointer user_data);
 ;;;
-;;;Type definition for a function that will be called back when an asynchronous operation within GIO has been completed. GAsyncReadyCallback callbacks from GTask are guaranteed to be invoked in a later iteration of the thread-default main context where the GTask was created. All other users of GAsyncReadyCallback must likewise call it asynchronously in a later iteration of the main context.
-
-;;;Parameters
-;;;source_object
-
-;;;the object the asynchronous operation was started with.
-
-;;;[nullable]
-;;;res
-
-;;;a GAsyncResult.
-
 ;;;
-;;;user_data
-
-;;;user data passed to the callback.
+;;; source_object :
+;;;
+;;;
+;;; res :
+;;;
+;;;
+;;; user_data :
+;;;     user data passed to the callback.
 ;;; ----------------------------------------------------------------------------
 
+(cffi:defcallback async-ready-callback :void
+    ((source gobject:object)
+     (result (gobject:object async-result))
+     (data :pointer))
+  (let ((func (glib:get-stable-pointer-value data)))
+    (format t "in ASYNC-RESULT ~a ~a~%" source result)
+    (funcall func source result)))
+
+#+liber-documentation
+(setf (liber:alias-for-symbol 'async-ready-callback)
+      "Callback"
+      (liber:symbol-documentation 'async-ready-callback)
+ "@version{#2023-5-8}
+  @begin{short}
+    Type definition for a function that will be called back when an asynchronous
+    operation within GIO has been completed.
+  @end{short}
+  The @sym{g:async-ready-callback} callbacks from the @class{g:task} object
+  are guaranteed to be invoked in a later iteration of the thread-default main
+  context where the @class{g:task} object was created. All other users of the
+  @sym{g:async-ready-callback} function must likewise call it asynchronously in
+  a later iteration of the main context.
+  @begin{pre}
+lambda (source result)
+  @end{pre}
+  @begin[code]{table}
+    @entry[source]{The @class{g:object} instance the asynchronous operation was
+      started with.}
+    @entry[result]{A @class{g:async-result} object.}
+  @end{table}
+  @see-class{g:async-result}")
+
+(export 'async-ready-callback)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_async_result_get_user_data ()
@@ -183,17 +209,18 @@ int main (int argc, void *argv[])
 ;;; g_async_result_get_user_data (GAsyncResult *res);
 ;;;
 ;;; Gets the user data from a GAsyncResult.
-
-;;;Parameters
-;;;res
-
-;;;a GAsyncResult.
-
 ;;;
-;;;Returns
-;;;the user data for res .
+;;; result :
+;;;     a GAsyncResult.
+;;;
+;;; Returns :
+;;;     the user data for res .
+;;; ----------------------------------------------------------------------------
 
-;;;[transfer full]
+(defcfun ("g_async_result_get_user_data" async-result-user-data) :pointer
+  (result (gobject:object async-result)))
+
+(export 'async-result-user-data)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_async_result_get_source_object ()
@@ -202,16 +229,20 @@ int main (int argc, void *argv[])
 ;;; g_async_result_get_source_object (GAsyncResult *res);
 ;;;
 ;;; Gets the source object from a GAsyncResult.
-
-;;;Parameters
-;;;res
-
-;;;a GAsyncResult
-
 ;;;
-;;;Returns
-;;;a new reference to the source object for the res , or NULL if there is none.
+;;; result :
+;;;     a GAsyncResult
+;;;
+;;; Returns :
+;;;     a new reference to the source object for the res , or NULL if there is
+;;;     none.
+;;; ----------------------------------------------------------------------------
 
+(defcfun ("g_async_result_get_source_object" async-result-source-object)
+    gobject:object
+  (result (gobject:object async-result)))
+
+(export 'async-result-source-object)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_async_result_is_tagged ()
@@ -220,23 +251,24 @@ int main (int argc, void *argv[])
 ;;; g_async_result_is_tagged (GAsyncResult *res,
 ;;;                           gpointer source_tag);
 ;;;
-;;;Checks if res has the given source_tag (generally a function pointer indicating the function res was created by).
-
-;;;Parameters
-;;;res
-
-;;;a GAsyncResult
-
+;;; Checks if res has the given source_tag (generally a function pointer
+;;; indicating the function res was created by).
 ;;;
-;;;source_tag
-
-;;;an application-defined tag
-
+;;; result :
+;;;     a GAsyncResult
 ;;;
-;;;Returns
-;;;TRUE if res has the indicated source_tag , FALSE if not.
+;;;  source_tag :
+;;;     an application-defined tag
+;;;
+;;;  Returns :
+;;;     TRUE if res has the indicated source_tag , FALSE if not.
+;;; ----------------------------------------------------------------------------
 
-;;;Since: 2.34
+(defcfun ("g_async_result_is_tagged" async-result-is-tagged) :boolean
+  (result (gobject:object async-result))
+  (tag :pointer))
+
+(export 'async-result-is-tagged)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_async_result_legacy_propagate_error ()
@@ -245,25 +277,25 @@ int main (int argc, void *argv[])
 ;;; g_async_result_legacy_propagate_error (GAsyncResult *res,
 ;;;                                        GError **error);
 ;;;
-;;;If res is a GSimpleAsyncResult, this is equivalent to g_simple_async_result_propagate_error(). Otherwise it returns FALSE.
-
-;;;This can be used for legacy error handling in async *_finish() wrapper functions that traditionally handled GSimpleAsyncResult error returns themselves rather than calling into the virtual method. This should not be used in new code; GAsyncResult errors that are set by virtual methods should also be extracted by virtual methods, to enable subclasses to chain up correctly.
-
-;;;Parameters
-;;;res
-
-;;;a GAsyncResult
-
+;;; If res is a GSimpleAsyncResult, this is equivalent to
+;;; g_simple_async_result_propagate_error(). Otherwise it returns FALSE.
 ;;;
-;;;error
-
-;;;a location to propagate the error to.
-
-;;;[out]
-;;;Returns
-;;;TRUE if error is has been filled in with an error from res , FALSE if not.
-
-;;;Since: 2.34
+;;; This can be used for legacy error handling in async *_finish() wrapper
+;;; functions that traditionally handled GSimpleAsyncResult error returns
+;;; themselves rather than calling into the virtual method. This should not be
+;;; used in new code; GAsyncResult errors that are set by virtual methods
+;;; should  also be extracted by virtual methods, to enable subclasses to chain
+;;; up correctly.
+;;;
+;;; result :
+;;;     a GAsyncResult
+;;;
+;;; error :
+;;;     a location to propagate the error to.
+;;;
+;;; Returns :
+;;;     TRUE if error is has been filled in with an error from res , FALSE if
+;;;     not.
 ;;; ----------------------------------------------------------------------------
 
 ;;; --- End of file gio.async-result.lisp --------------------------------------

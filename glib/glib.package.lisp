@@ -28,7 +28,7 @@
 ;;; ----------------------------------------------------------------------------
 
 (defpackage :glib
-  (:use :common-lisp)
+  (:use :iterate :common-lisp)
   (:shadow #:error)
   (:import-from :cffi #:defcfun
                       #:defcvar
@@ -94,16 +94,16 @@
       A 2-way association between a string and a unique integer identifier.
       @about-type{quark-as-string}
     @end{subsection}
+    @begin[GDateTime]{subsection}
+      @about-type{date-time}
+    @end{subsection}
+    @begin[Unicode manipulation]{subsection}
+      @about-class{unichar}
+    @end{subsection}
     @begin[Memory Allocation]{subsection}
       The following functions for general memory handling are implemented:
       @about-function{malloc}
       @about-function{free}
-    @end{subsection}
-    @begin[Character Set Conversion]{subsection}
-      Convert strings between different character sets. Two functions are
-      implemented.
-      @about-function{filename-to-utf8}
-      @about-function{filename-from-utf8}
     @end{subsection}
     @begin[Utility Functions]{subsection}
       A selection of portable utility functions. Two functions are implemened.

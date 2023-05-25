@@ -1,34 +1,31 @@
 ;;; ----------------------------------------------------------------------------
 ;;; glib.bytes.lisp
 ;;;
-;;; The documentation of this file is taken from the GLib 2.72 Reference
+;;; The documentation of this file is taken from the GLib 2.76 Reference
 ;;; Manual and modified to document the Lisp binding to the GLib library.
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
-;;; available from <http://www.crategus.com/books/cl-cffi-gtk/>.
+;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
 ;;; Copyright (C) 2021 -2023 Dieter Kaiser
 ;;;
-;;; This program is free software: you can redistribute it and/or modify
-;;; it under the terms of the GNU Lesser General Public License for Lisp
-;;; as published by the Free Software Foundation, either version 3 of the
-;;; License, or (at your option) any later version and with a preamble to
-;;; the GNU Lesser General Public License that clarifies the terms for use
-;;; with Lisp programs and is referred as the LLGPL.
+;;; Permission is hereby granted, free of charge, to any person obtaining a
+;;; copy of this software and associated documentation files (the "Software"),
+;;; to deal in the Software without restriction, including without limitation
+;;; the rights to use, copy, modify, merge, publish, distribute, sublicense,
+;;; and/or sell copies of the Software, and to permit persons to whom the
+;;; Software is furnished to do so, subject to the following conditions:
 ;;;
-;;; This program is distributed in the hope that it will be useful,
-;;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;;; GNU Lesser General Public License for more details.
+;;; The above copyright notice and this permission notice shall be included in
+;;; all copies or substantial portions of the Software.
 ;;;
-;;; You should have received a copy of the GNU Lesser General Public
-;;; License along with this program and the preamble to the Gnu Lesser
-;;; General Public License.  If not, see <http://www.gnu.org/licenses/>
-;;; and <http://opensource.franz.com/preamble.html>.
+;;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+;;; IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+;;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+;;; THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+;;; LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+;;; FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+;;; DEALINGS IN THE SOFTWARE.
 ;;; ----------------------------------------------------------------------------
-;;;
-;;; Byte Arrays
-;;;
-;;;     Arrays of bytes
 ;;;
 ;;; Types and Values
 ;;;
@@ -58,7 +55,7 @@
 ;;; GBytes
 ;;; ----------------------------------------------------------------------------
 
-(gobject::define-g-boxed-opaque bytes "GBytes"
+(gobject:define-g-boxed-opaque bytes "GBytes"
   :type-initializer "g_bytes_get_type"
   :alloc (%bytes-new (cffi:null-pointer) 0))
 
@@ -440,352 +437,6 @@
 ;;;
 ;;; Returns .
 ;;;     a new mutable GByteArray containing the same byte data.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; struct GByteArray
-;;;
-;;; struct GByteArray {
-;;;   guint8 *data;
-;;;   guint	  len;
-;;; };
-;;;
-;;; Contains the public fields of a GByteArray.
-;;;
-;;; guint8 *data;
-;;;     a pointer to the element data. The data may be moved as elements are
-;;;     added to the GByteArray
-;;;
-;;; guint len;
-;;;     the number of elements in the GByteArray
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_byte_array_new ()
-;;;
-;;; GByteArray *
-;;; g_byte_array_new (void);
-;;;
-;;; Creates a new GByteArray with a reference count of 1.
-;;;
-;;; Returns :
-;;;     the new GByteArray.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_byte_array_steal ()
-;;;
-;;; guint8 *
-;;; g_byte_array_steal (GByteArray *array,
-;;;                     gsize *len);
-;;;
-;;; Frees the data in the array and resets the size to zero, while the
-;;; underlying array is preserved for use elsewhere and returned to the caller.
-;;;
-;;; array :
-;;;     a GByteArray.
-;;;
-;;; len :
-;;;     pointer to retrieve the number of elements of the original array.
-;;;
-;;; Returns :
-;;;     the element data, which should be freed using g_free().
-;;;
-;;; Since: 2.64
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_byte_array_new_take ()
-;;;
-;;; GByteArray *
-;;; g_byte_array_new_take (guint8 *data,
-;;;                        gsize len);
-;;;
-;;; Create byte array containing the data. The data will be owned by the array
-;;; and will be freed with g_free(), i.e. it could be allocated using
-;;; g_strdup().
-;;;
-;;; Do not use it if len is greater than G_MAXUINT. GByteArray stores the length
-;;; of its data in guint, which may be shorter than gsize.
-;;;
-;;; data :
-;;;     byte data for the array.
-;;;
-;;; len :
-;;;     length of data
-;;;
-;;; Returns :
-;;;     a new GByteArray.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_byte_array_sized_new ()
-;;;
-;;; GByteArray *
-;;; g_byte_array_sized_new (guint reserved_size);
-;;;
-;;; Creates a new GByteArray with reserved_size bytes preallocated. This avoids
-;;; frequent reallocation, if you are going to add many bytes to the array. Note
-;;; however that the size of the array is still 0.
-;;;
-;;; reserved_size :
-;;;     number of bytes preallocated
-;;;
-;;; Returns :
-;;;     the new GByteArray
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_byte_array_ref ()
-;;;
-;;; GByteArray *
-;;; g_byte_array_ref (GByteArray *array);
-;;;
-;;; Atomically increments the reference count of array by one. This function is
-;;; thread-safe and may be called from any thread.
-;;;
-;;; array :
-;;;     A GByteArray
-;;;
-;;; Returns :
-;;;     The passed in GByteArray
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_byte_array_unref ()
-;;;
-;;; void
-;;; g_byte_array_unref (GByteArray *array);
-;;;
-;;; Atomically decrements the reference count of array by one. If the reference
-;;; count drops to 0, all memory allocated by the array is released. This
-;;; function is thread-safe and may be called from any thread.
-;;;
-;;; array :
-;;;     A GByteArray
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_byte_array_append ()
-;;;
-;;; GByteArray *
-;;; g_byte_array_append (GByteArray *array,
-;;;                      const guint8 *data,
-;;;                      guint len);
-;;;
-;;; Adds the given bytes to the end of the GByteArray. The array will grow in
-;;; size automatically if necessary.
-;;;
-;;; array :
-;;;     a GByteArray
-;;;
-;;; data :
-;;;     the byte data to be added
-;;;
-;;; len :
-;;;     the number of bytes to add
-;;;
-;;; Returns :
-;;;     the GByteArray
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_byte_array_prepend ()
-;;;
-;;; GByteArray *
-;;; g_byte_array_prepend (GByteArray *array,
-;;;                       const guint8 *data,
-;;;                       guint len);
-;;;
-;;; Adds the given data to the start of the GByteArray. The array will grow in
-;;; size automatically if necessary.
-;;;
-;;; array :
-;;;     a GByteArray
-;;;
-;;; data :
-;;;     the byte data to be added
-;;;
-;;; len :
-;;;     the number of bytes to add
-;;;
-;;; Returns :
-;;;     the GByteArray
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_byte_array_remove_index ()
-;;;
-;;; GByteArray *
-;;; g_byte_array_remove_index (GByteArray *array,
-;;;                            guint index_);
-;;;
-;;; Removes the byte at the given index from a GByteArray. The following bytes
-;;; are moved down one place.
-;;;
-;;; array :
-;;;     a GByteArray
-;;;
-;;; index_:
-;;;     the index of the byte to remove
-;;;
-;;; Returns :
-;;;     the GByteArray
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_byte_array_remove_index_fast ()
-;;;
-;;; GByteArray *
-;;; g_byte_array_remove_index_fast (GByteArray *array,
-;;;                                 guint index_);
-;;;
-;;; Removes the byte at the given index from a GByteArray. The last element in
-;;; the array is used to fill in the space, so this function does not preserve
-;;; the order of the GByteArray. But it is faster than
-;;; g_byte_array_remove_index().
-;;;
-;;; array :
-;;;     a GByteArray
-;;;
-;;; index :_
-;;;     the index of the byte to remove
-;;;
-;;; Returns :
-;;;     the GByteArray
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_byte_array_remove_range ()
-;;;
-;;; GByteArray *
-;;; g_byte_array_remove_range (GByteArray *array,
-;;;                            guint index_,
-;;;                            guint length);
-;;;
-;;; Removes the given number of bytes starting at the given index from a
-;;; GByteArray. The following elements are moved to close the gap.
-;;;
-;;; array :
-;;;     a GByteArray
-;;;
-;;; index_ :
-;;;     the index of the first byte to remove
-;;;
-;;; length :
-;;;     the number of bytes to remove
-;;;
-;;; Returns :
-;;;     the GByteArray
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_byte_array_sort ()
-;;;
-;;; void
-;;; g_byte_array_sort (GByteArray *array,
-;;;                    GCompareFunc compare_func);
-;;;
-;;; Sorts a byte array, using compare_func which should be a qsort()-style
-;;; comparison function (returns less than zero for first arg is less than
-;;; second arg, zero for equal, greater than zero if first arg is greater than
-;;; second arg).
-;;;
-;;; If two array elements compare equal, their order in the sorted array is
-;;; undefined. If you want equal elements to keep their order (i.e. you want a
-;;; stable sort) you can write a comparison function that, if two elements would
-;;; otherwise compare equal, compares them by their addresses.
-;;;
-;;; array :
-;;;     a GByteArray
-;;;
-;;; compare_func :
-;;;     comparison function
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_byte_array_sort_with_data ()
-;;;
-;;; void
-;;; g_byte_array_sort_with_data (GByteArray *array,
-;;;                              GCompareDataFunc compare_func,
-;;;                              gpointer user_data);
-;;;
-;;; Like g_byte_array_sort(), but the comparison function takes an extra user
-;;; data argument.
-;;;
-;;; array :
-;;;     a GByteArray
-;;;
-;;; compare_func :
-;;;     comparison function
-;;;
-;;; user_data :
-;;;     data to pass to compare_func
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_byte_array_set_size ()
-;;;
-;;; GByteArray *
-;;; g_byte_array_set_size (GByteArray *array,
-;;;                        guint length);
-;;;
-;;; Sets the size of the GByteArray, expanding it if necessary.
-;;;
-;;; array :
-;;;     a GByteArray
-;;;
-;;; length :
-;;;     the new size of the GByteArray
-;;;
-;;; Returns ;
-;;;     the GByteArray
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_byte_array_free ()
-;;;
-;;; guint8 *
-;;; g_byte_array_free (GByteArray *array,
-;;;                    gboolean free_segment);
-;;;
-;;; Frees the memory allocated by the GByteArray. If free_segment is TRUE it
-;;; frees the actual byte data. If the reference count of array is greater than
-;;; one, the GByteArray wrapper is preserved but the size of array will be set
-;;; to zero.
-;;;
-;;; array :
-;;;     a GByteArray
-;;;
-;;; free_segment :
-;;;     if TRUE the actual byte data is freed as well
-;;;
-;;; Returns :
-;;;     the element data if free_segment is FALSE, otherwise NULL. The element
-;;;     data should be freed using g_free().
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_byte_array_free_to_bytes ()
-;;;
-;;; GBytes *
-;;; g_byte_array_free_to_bytes (GByteArray *array);
-;;;
-;;; Transfers the data from the GByteArray into a new immutable GBytes.
-;;;
-;;; The GByteArray is freed unless the reference count of array is greater than
-;;; one, the GByteArray wrapper is preserved but the size of array will be set
-;;; to zero.
-;;;
-;;; This is identical to using g_bytes_new_take() and g_byte_array_free()
-;;; together.
-;;;
-;;; array :
-;;;     a GByteArray
-;;;
-;;; Returns :
-;;;     a new immutable GBytes representing same byte data that was in the array
 ;;; ----------------------------------------------------------------------------
 
 ;;; --- End of file glib.bytes.lisp --------------------------------------------

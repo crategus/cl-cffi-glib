@@ -33,17 +33,15 @@
     :serial t
     :components
     ((:file "glib.package")
-     (:file "glib.stable-pointer")     ; Stable Pointers for callbacks
-     (:file "glib.version")            ; Glib Version information
-     (:file "glib.quark")              ; Association between string and id
-     (:file "glib.misc")               ; Various Glib Types and Functions
-     (:file "glib.error")              ; Error Reporting
-     (:file "glib.convert")            ; Convert strings
-     (:file "glib.main-loop")          ; The Main Event Loop
-     (:file "glib.utils")              ; Miscellaneous Utility Functions
-     (:file "glib.option")             ; Parses command line options
-     (:file "glib.key-file")           ; parses .ini-like config files
-     ))
+     (:file "glib.stable-pointer")
+     (:file "glib.version")
+     (:file "glib.quark")
+     (:file "glib.misc")
+     (:file "glib.error")
+     (:file "glib.main-loop")
+     (:file "glib.utils")
+     (:file "glib.option")
+     (:file "glib.key-file")))
    (:module gobject
     :serial t
     :components
@@ -53,15 +51,15 @@
      (:file "gobject.glib-defcallback")
      (:file "gobject.generating")
 
-     (:file "gobject.type-info")       ; Type Information
-     (:file "gobject.gvalue")          ; Generic Values
-     (:file "gobject.enumeration")     ; Enumeration and flag types
+     (:file "gobject.type-info")
+     (:file "gobject.gvalue")
+     (:file "gobject.enumeration")
      (:file "gobject.boxed-lisp")
-     (:file "gobject.boxed")           ; Boxed Types
+     (:file "gobject.boxed")
      ;; TODO: Glib types which need GBoxed, can we improve this
-     (:file "../glib/glib.variant-type") ; GVariant type system
-     (:file "../glib/glib.variant")    ; Strongly typed value datatype
-     (:file "../glib/glib.bytes")      ; Array of bytes
+     (:file "../glib/glib.bytes")
+     (:file "../glib/glib.variant-type")
+     (:file "../glib/glib.variant")
      (:file "gobject.param-spec")      ; GParamSpec
      (:file "gobject.param")           ; Parameters and Values
      (:file "gobject.gobject-class")
@@ -118,21 +116,11 @@
     (:file "glib-user.package")
     )
   :in-order-to ((asdf:test-op (test-op "cl-cffi-glib/test")))
-  :depends-on (:cl-cffi-glib/init
-               :iterate
+  :defsystem-depends-on (:cl-cffi-glib-init)
+  :depends-on (:iterate
                :bordeaux-threads
                :closer-mop
                :trivial-garbage))
-
-(defsystem :cl-cffi-glib/init
-  :name "cl-cffi-glib/init"
-  :version "0.3.0"
-  :author "Dieter Kaiser"
-  :license "LLGPL"
-  :serial t
-  :components ((:file "cl-cffi-glib-init"))         ; Libraray Initialization
-  :depends-on (:cffi
-               :trivial-features))
 
 ;; Definine a test operation for the library
 

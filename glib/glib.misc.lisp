@@ -1,30 +1,30 @@
 ;;; ----------------------------------------------------------------------------
 ;;; glib.misc.lisp
 ;;;
-;;; The documentation of this file is taken from the GLib 2.72 Reference
+;;; The documentation of this file is taken from the GLib 2.76 Reference
 ;;; Manual and modified to document the Lisp binding to the GLib library.
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
-;;; available from <http://www.crategus.com/books/cl-cffi-gtk/>.
+;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2009 - 2011 Kalyanov Dmitry
 ;;; Copyright (C) 2011 - 2023 Dieter Kaiser
 ;;;
-;;; This program is free software: you can redistribute it and/or modify
-;;; it under the terms of the GNU Lesser General Public License for Lisp
-;;; as published by the Free Software Foundation, either version 3 of the
-;;; License, or (at your option) any later version and with a preamble to
-;;; the GNU Lesser General Public License that clarifies the terms for use
-;;; with Lisp programs and is referred as the LLGPL.
+;;; Permission is hereby granted, free of charge, to any person obtaining a
+;;; copy of this software and associated documentation files (the "Software"),
+;;; to deal in the Software without restriction, including without limitation
+;;; the rights to use, copy, modify, merge, publish, distribute, sublicense,
+;;; and/or sell copies of the Software, and to permit persons to whom the
+;;; Software is furnished to do so, subject to the following conditions:
 ;;;
-;;; This program is distributed in the hope that it will be useful,
-;;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;;; GNU Lesser General Public License for more details.
+;;; The above copyright notice and this permission notice shall be included in
+;;; all copies or substantial portions of the Software.
 ;;;
-;;; You should have received a copy of the GNU Lesser General Public
-;;; License along with this program and the preamble to the Gnu Lesser
-;;; General Public License.  If not, see <http://www.gnu.org/licenses/>
-;;; and <http://opensource.franz.com/preamble.html>.
+;;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+;;; IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+;;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+;;; THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+;;; LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+;;; FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+;;; DEALINGS IN THE SOFTWARE.
 ;;; ----------------------------------------------------------------------------
 ;;;
 ;;; This file contains several type definitions and functions, which are
@@ -89,15 +89,6 @@
 ;;;     g_slist_alloc                                      not exported
 ;;;     g_slist_free                                       not exported
 ;;;     g_slist_next                                       not exported
-;;; ----------------------------------------------------------------------------
-;;;
-;;; File Utilities
-;;;
-;;;     Various file-related functions
-;;;
-;;; Implemented is:
-;;;
-;;;     g_chdir
 ;;; ----------------------------------------------------------------------------
 
 (in-package :glib)
@@ -549,10 +540,27 @@
                              :pointer value
                              :int64))))
 
+#+liber-documentation
+(setf (liber:alias-for-class 'date-time)
+      "Type"
+      (documentation 'date-time 'type)
+ "@version{2023-5-22}
+  @begin{short}
+    The @sym{g:date-time} type represents the C @code{GDateTime} type which
+    represents a date and time, including a time one.
+  @end{short}
+  @begin[Examples]{dictionary}
+    @begin{pre}
+(cffi:convert-to-foreign 0 'g:date-time)
+=> #.(SB-SYS:INT-SAP #X558E3298CE40)
+(cffi:convert-from-foreign * 'g:date-time) => 0
+    @end{pre}
+  @end{dictionary}")
+
 (export 'date-time)
 
 ;;; ----------------------------------------------------------------------------
-;;; unichar
+;;; gunichar
 ;;; ----------------------------------------------------------------------------
 
 (define-foreign-type unichar ()
@@ -564,27 +572,42 @@
   (code-char value))
 
 (defmethod cffi:translate-to-foreign (value (type unichar))
-  (char-code value))
+  (if (integerp value) value (char-code value)))
+
+#+liber-documentation
+(setf (liber:alias-for-class 'unichar)
+      "Type"
+      (documentation 'unichar 'type)
+ "@version{2023-5-22}
+  @begin{short}
+    The @sym{g:unichar} type represents the C @code{gunichar} type which can
+    hold any UCS-4 character code.
+  @end{short}
+  The @sym{g:unichar} type performs automatic conversion from the C 
+  @code{gunichar} type to a Lisp character and a Lisp character to the C type.
+  An integer value as argument to the @sym{cffi:convert-to-foreign} function
+  is passed through.
+  @begin[Examples]{dictionary}
+    Convert a Lisp character to a C @code{gunichar} value:
+    @begin{pre}
+(cffi:convert-to-foreign #\A 'g:unichar) => 65
+(cffi:convert-to-foreign #\0 'g:unichar) => 48
+(cffi:convert-to-foreign #\return 'g:unichar) => 13
+(cffi:convert-to-foreign #\space 'g:unichar) => 32
+    @end{pre}
+    Convert a C @code{gunichar} value to a Lisp character:
+    @begin{pre}
+(cffi:convert-from-foreign 65 'g:unichar) => #\A
+(cffi:convert-from-foreign 48 'g:unichar) => #\0
+(cffi:convert-from-foreign 13 'g:unichar) => #\return
+(cffi:convert-from-foreign 32 'g:unichar) => #\space
+    @end{pre}
+    An integer value argument is passed through:
+    @begin{pre}
+(cffi:convert-to-foreign 65 'g:unichar) => 65
+    @end{pre}
+  @end{dictionary}")
 
 (export 'unichar)
-
-;;; ----------------------------------------------------------------------------
-;;; g_chdir                                                not implemented
-;;; ----------------------------------------------------------------------------
-
-;; Not needed, we have the uiop:chdir function.
-
-#+nil
-(defcfun ("g_chdir" g-chdir) :int
- #+liber-documentation
- "@version{#2022-11-4}
-  @argument[path]{a string with a pathname in the GLIB file name encoding}
-  @return{0 on success, -1 if an error occured.}
-  @begin{short}
-    A wrapper for the POSIX @code{chdir()} function.
-  @end{short}
-  The function changes the current directory of the process to @arg{path}.
-  @see-function{g-current-dir}"
-  (path :string))
 
 ;;; --- End of file glib.misc.lisp ---------------------------------------------

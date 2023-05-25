@@ -57,28 +57,28 @@
     (funcall fn)))
 
 #+sbcl
-(pushnew 'run-initializers sb-ext:*init-hooks*)
-#+openmcl
-(pushnew 'run-initializers ccl:*restore-lisp-functions*)
+(progn
+  (pushnew 'run-initializers sb-ext:*init-hooks*)
+  (pushnew 'run-finalizers sb-ext:*save-hooks*))
 
-#+sbcl
-(pushnew 'run-finalizers sb-ext:*save-hooks*)
 #+openmcl
-(pushnew 'run-finalizers ccl:*save-exit-functions*)
+(progn
+  (pushnew 'run-initializers ccl:*restore-lisp-functions*)
+  (pushnew 'run-finalizers ccl:*save-exit-functions*))
 
 ;;; ----------------------------------------------------------------------------
 ;;; at-init (keys body)
 ;;;
 ;;; Runs the code normally but also schedules the code to be run at image load
 ;;; time. It is used to reinitialize the libraries when the dumped image is
-;;; loaded. (Works only on SBCL for now).
+;;; loaded. Works only on SBCL for now.
 ;;;
-;;; At-init form may be called multiple times. The same code from should not be
-;;; run multiple times at initialization time (in best case, this will only
-;;; slow down initialization, in worst case, the code may crash). To ensure
-;;; this, every at-init expression is added to hash-table with the body and
-;;; keys as a composite key. This ensures that the same code is only executed
-;;; once (once on the same set of parameters).
+;;; The AT-INIT form may be called multiple times. The same code should not be
+;;; run multiple times at initialization time. In best case, this will only
+;;; slow down initialization, in worst case, the code may crash. To ensure
+;;; this, every AT-INIT expression is added to a hash-table with the BODY and
+;;; KEYS as a composite key. This ensures that the same code is only executed
+;;; once on the same set of parameters.
 ;;;
 ;;; Example:
 ;;;
@@ -93,8 +93,9 @@
 ;;; ----------------------------------------------------------------------------
 
 (defmacro at-init ((&rest keys) &body body)
-  `(progn (register-initializer (list ,@keys ',body) (lambda () ,@body))
-          ,@body))
+  `(progn
+     (register-initializer (list ,@keys ',body) (lambda () ,@body))
+     ,@body))
 
 (defmacro at-finalize ((&rest keys) &body body)
   `(register-finalizer (list ,@keys ',body) (lambda () ,@body)))
@@ -140,17 +141,16 @@
                                           (find-package :keyword))
                                  *features*)))))
 
-(define-condition foreign-library-minimum-version-mismatch (error)
+(define-condition foreign-library-version-mismatch (error)
   ((library :initarg :library :reader .library)
    (minimum-version :initarg :minimum-version :reader .minimum-version)
    (actual-version :initarg :actual-version :reader .actual-version))
   (:report (lambda (c s)
-             (format s
-                     "Library ~A has too old version: it is ~A but required ~
-                      to be at least ~A"
-                     (.library c)
-                     (.actual-version c)
-                     (.minimum-version c)))))
+             (format s "Library ~A has too old version: it is ~A but required ~
+                        to be at least ~A"
+                       (.library c)
+                       (.actual-version c)
+                       (.minimum-version c)))))
 
 (defun require-library-version (library min-major-version
                                         min-minor-version
@@ -160,12 +160,12 @@
               (and (= major-version min-major-version)
                    (>= minor-version min-minor-version)))
     (restart-case
-        (error 'foreign-library-minimum-version-mismatch
-               :library library
-               :minimum-version (format nil "~A.~A"
-                                        min-major-version min-minor-version)
-               :actual-version (format nil "~A.~A"
-                                       major-version minor-version))
+      (error 'foreign-library-version-mismatch
+             :library library
+             :minimum-version (format nil "~A.~A"
+                                      min-major-version min-minor-version)
+             :actual-version (format nil "~A.~A"
+                                     major-version minor-version))
       (ignore () :report "Ignore version requirement" nil))))
 
 (eval-when (:compile-toplevel :load-toplevel :execute)
@@ -179,7 +179,6 @@
 (push-library-version-features glib
                                +glib-init-major-version+
                                +glib-init-minor-version+
-  2 56    ; Since 12.03.2018
   2 58    ; Since 03.09.2018
   2 60    ; Since 04.03.2019
   2 62    ; Since 05.09.2019
@@ -189,9 +188,10 @@
   2 70    ; Since 17.09.2021
   2 72    ; Since 17.03.2022
   2 74    ; Since 17.09.2022
+  2 76    ; Since 10.03.2023
 )
 
-(require-library-version "GLib" 2 56
+(require-library-version "GLib" 2 58
                          +glib-init-major-version+
                          +glib-init-minor-version+)
 

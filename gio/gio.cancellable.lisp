@@ -326,80 +326,103 @@ lambda (cancellable)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_cancellable_source_new ()
-;;;
-;;; GSource * g_cancellable_source_new (GCancellable *cancellable);
-;;;
-;;; Creates a source that triggers if cancellable is cancelled and calls its
-;;; callback of type GCancellableSourceFunc. This is primarily useful for
-;;; attaching to another (non-cancellable) source with
-;;; g_source_add_child_source() to add cancellability to it.
-;;;
-;;; For convenience, you can call this with a NULL GCancellable, in which case
-;;; the source will never trigger.
-;;;
-;;; cancellable :
-;;;     a GCancellable, or NULL
-;;;
-;;; Returns :
-;;;     the new GSource
-;;;
-;;; Since 2.28
 ;;; ----------------------------------------------------------------------------
+
+(defcfun ("g_cancellable_soure_new" cancellable-source-new)
+    (:pointer (:struct glib:source))
+ #+liber-documentation
+ "@version{#2023-5-9}
+  @argument[cancellable]{a @class{g:cancellable} object}
+  @return{A new @type{g:source} instance.}
+  @begin{short}
+    Creates a source that triggers if @arg{cancellable} is cancelled and calls 
+    its @symbol{g:cancellable-source-func} callback function.
+  @end{short}
+  This is primarily useful for attaching to another (non-cancellable) source 
+  with the @fun{g:source-add-child-source} function to add cancellability to it.
+
+  For convenience, you can call this with a @code{NULL} @class{g:cancellable}
+  object, in which case the source will never trigger.
+  @see-class{g:cancellable}
+  @see-symbol{g:cancellable-source-func}
+  @see-function{g:source-add-child-source}"
+  (cancellable (gobject:object cancellable)))
+
+(export 'cancellable-source-new)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_cancellable_get_current ()
-;;;
-;;; GCancellable * g_cancellable_get_current (void);
-;;;
-;;; Gets the top cancellable from the stack.
-;;;
-;;; Returns :
-;;;     a GCancellable from the top of the stack, or NULL if the stack is empty
 ;;; ----------------------------------------------------------------------------
+
+(defcfun ("g_cancellable_get_current" cancellable-current)
+    (gobject:object cancellable)
+ #+liber-documentation
+ "@version{#2023-5-9}
+  @return{A @class{g:cancellable} object from the top of the stack,
+    or @code{nil} if the stack is empty.}
+  @short{Gets the top cancellable from the stack.}
+  @see-class{g:cancellable}")
+
+(export 'cancellable-current)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_cancellable_pop_current ()
-;;;
-;;; void g_cancellable_pop_current (GCancellable *cancellable);
-;;;
-;;; Pops cancellable off the cancellable stack (verifying that cancellable is on
-;;; the top of the stack).
-;;;
-;;; cancellable :
-;;;     a GCancellable object
 ;;; ----------------------------------------------------------------------------
+
+(defcfun ("g_cancellable_pop_current" cancellable-pop-current) :void
+ #+liber-documentation
+ "@version{#2023-5-9}
+  @argument[cancellable]{a @class{g:cancellable} object}
+  @begin{short}
+    Pops @arg{cancellable} off the cancellable stack (verifying that cancellable 
+    is on the top of the stack).
+  @end{short}
+  @see-class{g:cancellable}"
+  (cancellalbe (gobject:object cancellable)))
+
+(export 'cancellable-pop-current)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_cancellable_push_current ()
-;;;
-;;; void g_cancellable_push_current (GCancellable *cancellable);
-;;;
-;;; Pushes cancellable onto the cancellable stack. The current cancellable can
-;;; then be received using g_cancellable_get_current().
-;;;
-;;; This is useful when implementing cancellable operations in code that does
-;;; not allow you to pass down the cancellable object.
-;;;
-;;; This is typically called automatically by e.g. GFile operations, so you
-;;; rarely have to call this yourself.
-;;;
-;;; cancellable :
-;;;     a GCancellable object
 ;;; ----------------------------------------------------------------------------
+
+(defcfun ("g_cancellable_push_current" cancellable-push-current) :void
+ #+liber-documentation
+ "@version{#2023-5-9}
+  @argument[cancellable]{a @class{g:cancellable} object}
+  @begin{short}
+    Pushes @arg{cancellable} onto the cancellable stack.
+  @end{short}
+   The current cancellable can then be received using the
+   @fun{g:cancellable-current} function.
+
+  This is useful when implementing cancellable operations in code that does not 
+  allow you to pass down the cancellable object.
+
+  This is typically called automatically by e.g. GFile operations, so you rarely 
+  have to call this yourself.
+  @see-class{g:cancellable}"
+  (cancellable (gobject:object cancellable)))
+
+(export 'cancellable-push-current)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_cancellable_reset ()
-;;;
-;;; void g_cancellable_reset (GCancellable *cancellable);
-;;;
-;;; Resets cancellable to its uncancelled state.
-;;;
-;;; If cancellable is currently in use by any cancellable operation then the
-;;; behavior of this function is undefined.
-;;;
-;;; cancellable :
-;;;     a GCancellable object.
 ;;; ----------------------------------------------------------------------------
+
+(defcfun ("g_cancellable_reset" cancellable-reset) :void
+ #+liber-documentation
+ "@version{#2023-5-9}
+  @argument[cancellable]{a @class{g:cancellable} object}
+  @begin{short}
+    Resets @arg{cancellable} to its uncancelled state.
+  @end{short}
+  If @arg{cancellable} is currently in use by any cancellable operation then 
+  the behavior of this function is undefined.
+  @see-class{g:cancellable}"
+  (cancellabel (gobject:object cancellable)))
+
+(export 'cancellable-reset)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_cancellable_connect ()
@@ -441,10 +464,13 @@ lambda (cancellable)
 ;;; Since 2.22
 ;;; ----------------------------------------------------------------------------
 
+;; TODO: This has to be implemented like gobject:signal-connect.
+
 ;;; ----------------------------------------------------------------------------
 ;;; g_cancellable_disconnect ()
 ;;;
-;;; void g_cancellable_disconnect (GCancellable *cancellable, gulong handler_id)
+;;; void
+;;; g_cancellable_disconnect (GCancellable *cancellable, gulong handler_id);
 ;;;
 ;;; Disconnects a handler from a cancellable instance similar to
 ;;; g_signal_handler_disconnect(). Additionally, in the event that a signal
@@ -467,27 +493,36 @@ lambda (cancellable)
 ;;; Since 2.22
 ;;; ----------------------------------------------------------------------------
 
+;; TODO: This has to be implemented like gobject:signal-disconnect.
+
 ;;; ----------------------------------------------------------------------------
 ;;; g_cancellable_cancel ()
-;;;
-;;; void g_cancellable_cancel (GCancellable *cancellable);
-;;;
-;;; Will set cancellable to cancelled, and will emit the "cancelled" signal.
-;;; (However, see the warning about race conditions in the documentation for
-;;; that signal if you are planning to connect to it.)
-;;;
-;;; This function is thread-safe. In other words, you can safely call it from a
-;;; thread other than the one running the operation that was passed the
-;;; cancellable.
-;;;
-;;; The convention within gio is that cancelling an asynchronous operation
-;;; causes it to complete asynchronously. That is, if you cancel the operation
-;;; from the same thread in which it is running, then the operation's
-;;; GAsyncReadyCallback will not be invoked until the application returns to the
-;;; main loop.
-;;;
-;;; cancellable :
-;;;     a GCancellable object.
 ;;; ----------------------------------------------------------------------------
+
+(defcfun ("g_cancellable_cancel" cancellable-cancel) :void
+ #+liber-documentation
+ "@version{#2023-5-9}
+  @argument[cancellable]{a @class{g:cancellable} object}
+  @begin{short}
+    Will set @arg{cancellable} to cancelled, and will emit the \"cancelled\" 
+    signal.
+  @end{short}
+  (However, see the warning about race conditions in the documentation for that 
+  signal if you are planning to connect to it.)
+
+  This function is thread-safe. In other words, you can safely call it from a
+  thread other than the one running the operation that was passed the 
+  cancellable.
+
+  The convention within GIO is that cancelling an asynchronous operation causes 
+  it to complete asynchronously. That is, if you cancel the operation from the 
+  same thread in which it is running, then the operation's 
+  @symbol{g:async-ready-callback} callback function will not be invoked until 
+  the application returns to the main loop.
+  @see-class{g:cancellable}
+  @see-symbol{g:async-ready-callback}"
+  (cancellable (gobject:object cancellable)))
+
+(export 'cancellable-cancel)
 
 ;;; --- End of file gio.cancellable.lisp ---------------------------------------

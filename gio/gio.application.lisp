@@ -126,10 +126,9 @@
 (define-g-flags "GApplicationFlags" application-flags
   (:export t
    :type-initializer "g_application_flags_get_type")
-  #-glib-2-74
   (:flags-none 0)
   #+glib-2-74
-  (:default-flags)
+  (:default-flags 0)
   (:is-service 1)
   (:is-launcher 2)
   (:handles-open 4)
@@ -1559,7 +1558,6 @@ lambda (application)    :run-first
 ;;; g_application_set_option_context_parameter_string ()
 ;;; ----------------------------------------------------------------------------
 
-#+glib-2-56
 (defcfun ("g_application_set_option_context_parameter_string"
            application-set-option-context-parameter-string) :void
  #+liber-documentation
@@ -1577,22 +1575,18 @@ lambda (application)    :run-first
 
   See the @fun{g:option-context-new} function for more information about the
   @arg{parameter} argument.
-
-  Since 2.56
   @see-class{g:application}
   @see-type{g:option-context}
   @see-function{g:option-context-new}"
   (application (gobject:object application))
   (parameter :string))
 
-#+glib-2-56
 (export 'application-set-option-context-parameter-string)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_application_set_option_context_summary ()
 ;;; ----------------------------------------------------------------------------
 
-#+glib-2-56
 (defcfun ("g_application_set_option_context_summary"
            application-set-option-context-summary) :void
  #+liber-documentation
@@ -1604,21 +1598,17 @@ lambda (application)    :run-first
     Adds a summary to the application option context.
   @end{short}
   See the @fun{g:option-context-summary} function for more information.
-
-  Since 2.56
   @see-class{g:application}
   @see-function{g:option-context-summary}"
   (application (gobject:object application))
   (summary :string))
 
-#+glib-2-56
 (export 'application-set-option-context-summary)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_application_set_option_context_description ()
 ;;; ----------------------------------------------------------------------------
 
-#+glib-2-56
 (defcfun ("g_application_set_option_context_description"
            application-set-option-context-description) :void
  #+liber-documentation
@@ -1630,14 +1620,11 @@ lambda (application)    :run-first
     Adds a description to the application option context.
   @end{short}
   See the @fun{g:option-context-description} function for more information.
-
-  Since 2.56
   @see-class{g:application}
   @see-function{g:option-context-description}"
   (application (gobject:object application))
   (description :string))
 
-#+glib-2-56
 (export 'application-set-option-context-description)
 
 ;;; ----------------------------------------------------------------------------

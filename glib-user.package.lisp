@@ -51,10 +51,6 @@
            #:with-ignore-g-error
            #:with-catching-to-g-error
 
-           ;; Symbols from glib.convert.lisp
-           #:filename-to-utf8
-           #:filename-from-utf8
-
            ;; Symbols from glib.main-loop.lisp
            #:+g-priority-high+
            #:+g-priority-default+
@@ -984,6 +980,53 @@
            #:cancellable-connect
            #:cancellable-disconnect
            #:cancellable-cancel
+
+           ;; Symbols from gio.async-result.lisp
+           #:async-result
+           #:async-ready-callback
+           #:async-result-user-data
+           #:async-result-source-object
+           #:async-result-is-tagged
+           #:async-result-legacy-propagate-error
+
+           ;; Symbols from gio.task.lisp
+           #:task
+           #:task-completed
+           #:task-new
+           #:task-set-task-data
+           #:task-get-task-data
+           #:task-set-priority
+           #:task-get-priority
+           #:task-set-check-cancellable
+           #:task-get-check-cancellable
+           #:task-set-return-on-cancel
+           #:task-get-return-on-cancel
+           #:task-set-source-tag
+           #:task-get-source-tag
+           #:task-set-name
+           #:task-get-name
+           #:task-report-error
+           #:task-report-new-error
+           #:task-get-cancellable
+           #:task-get-context
+           #:task-get-source-object
+           #:task-return-boolean
+           #:task-return-int
+           #:task-return-pointer
+           #:task-return-value
+           #:task-return-error
+           #:task-return-new-error
+           #:task-return-error-if-cancelled
+           #:task-propagate-boolean
+           #:task-propagate-int
+           #:task-propagate-pointer
+           #:task-propagate-value
+           #:task-had-error
+           #:task-run-in-thread
+           #:task-run-in-thread-sync
+           #:task-threadfunc
+           #:task-attach-source
+           #:task-task-is-valid
            ))
 
 ;;; --- End of file glib-user.package.lisp -------------------------------------
