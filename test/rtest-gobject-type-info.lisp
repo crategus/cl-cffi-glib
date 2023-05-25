@@ -460,9 +460,6 @@
 ;;;     g-type-qdata
 
 (test type-qdata.1
-  ;; FIXME: The first call of the function type-qdata does not set the value,
-  ;; but the second call. The first line of code is a workaround.
-  (setf (g:type-qdata "gboolean" "mydata") "")
   ;; Attach and read data for a "gboolean" type
   (is (string= "a string" (setf (g:type-qdata "gboolean" "mydata") "a string")))
   (is (string= "a string" (g:type-qdata "gboolean" "mydata")))

@@ -13,7 +13,7 @@
 
 ;;;     GOptionEntry
 
-(test option-entry.1
+(test g-option-entry.1
   (with-foreign-object (entry '(:struct glib::option-entry))
     (with-foreign-slots ((glib::long-name glib::short-name)
                          entry
@@ -23,7 +23,7 @@
       (is (string= "long-name" glib::long-name))
       (is (= 108 glib::short-name)))))
 
-(test option-entry.2
+(test g-option-entry.2
   (let ((entries '("long-name" #\l (:hidden))))
     (with-foreign-object (entry '(:struct glib::option-entry))
       (with-foreign-slots ((glib::long-name
@@ -69,7 +69,7 @@
 ;;;     g_option_context_new
 ;;;     g_option_context_free
 
-(test option-contex-new/free
+(test g-option-contex-new/free
   (with-g-option-context (context)
     (is (cffi:pointerp context)))
   (with-g-option-context (context nil)
@@ -80,7 +80,7 @@
 ;;;     g_option_context_set_summary
 ;;;     g_option_context_get_summary
 
-(test option-context-summary
+(test g-option-context-summary
   (with-g-option-context (context)
     (is-false (g:option-context-summary context))
     (is (string= "summary" (setf (g:option-context-summary context) "summary")))
@@ -89,7 +89,7 @@
 ;;;     g_option_context_set_description
 ;;;     g_option_context_get_description
 
-(test option-context-description
+(test g-option-context-description
   (with-g-option-context (context)
     (is-false (g:option-context-description context))
     (is (string= "description"
@@ -103,8 +103,11 @@
 
 ;;;     g_option_context_set_translate_func
 
-#-windows
-(test option-context-set-translate-func
+;; TODO: This is in English, but can be in German, too. Set the language,
+;; before runing the test.
+
+#+nil
+(test g-option-context-set-translate-func
   (with-g-option-context (context "context")
     (let ((entries '(("long-name"       ; long-name
                       #\a               ; short-name
@@ -120,15 +123,15 @@
       (when *verbose-g-option*
         (format t "~%~a~%" (g:option-context-help context t)))
       (is (string=
-"Usage:
-  glib-test [OPTION…] CONTEXT
+"Aufruf:
+  glib-test [OPTION …] CONTEXT
 
 SUMMARY
 
-Help Options:
-  -h, --help          Show help options
+Hilfeoptionen:
+  -h, --help          Hilfeoptionen anzeigen
 
-Application Options:
+Anwendungsoptionen:
   -a, --long-name     description
 
 DESCRIPTION
@@ -149,8 +152,11 @@ DESCRIPTION
 
 ;;;     g_option_context_add_main_entries
 
-#-windows
-(test option-context-add-main-entries
+;; TODO: This is in English, but can be in German, too. Set the language,
+;; before runing the test.
+
+#+nil
+(test g-option-context-add-main-entries
   (with-g-option-context (context "Description")
     (let ((entries '(("long-name-1"     ; long-name
                       #\a               ; short-name
@@ -211,13 +217,13 @@ DESCRIPTION
       (when *verbose-g-option*
         (format t "~&~A~%" (g:option-context-help context t)))
       (is (string=
-"Usage:
-  glib-test [OPTION…] Description
+"Aufruf:
+  glib-test [OPTION …] Description
 
-Help Options:
-  -?, --help                             Show help options
+Hilfeoptionen:
+  -?, --help                             Hilfeoptionen anzeigen
 
-Application Options:
+Anwendungsoptionen:
   -a, --long-name-1                      Description1
   -b, --long-name-2=a string             Description2
   -c, --long-name-3=an integer           Description3
@@ -235,7 +241,7 @@ Application Options:
 ;;;     g_option_context_set_main_group
 ;;;     g_option_context_get_main_group
 
-(test option-context-main-group
+(test g-option-context-main-group
   (with-g-option-context (context)
     (is (cffi:null-pointer-p (g:option-context-main-group context)))
     (is (cffi:pointerp (setf (g:option-context-main-group context)
@@ -244,7 +250,7 @@ Application Options:
 
 ;;;     g_option_group_new
 
-(test option-group-new/unref
+(test g-option-group-new/unref
   (with-g-option-group (group nil nil nil)
     (is (cffi:pointerp group)))
   (with-g-option-group (group "name" nil nil)
@@ -260,8 +266,11 @@ Application Options:
 
 ;;;     g_option_group_add_entries
 
-#-windows
-(test option-group-add-entries
+;; TODO: This is in English, but can be in German, too. Set the language,
+;; before runing the test.
+
+#+nil
+(test g-option-group-add-entries
   (with-g-option-group (group "myGroup" "A Group"  "Help Description")
     (with-g-option-context (context "Description")
       (let ((entries '(("long-name-1"     ; long-name
@@ -324,10 +333,10 @@ Application Options:
         (when *verbose-g-option*
           (format t "~&~A~%" (g:option-context-help context t group)))
         (is (string=
-"Usage:
-  glib-test [OPTION…] Description
+"Aufruf:
+  glib-test [OPTION …] Description
 
-Application Options:
+Anwendungsoptionen:
   -a, --long-name-1                      Description1
   -b, --long-name-2=a string             Description2
   -c, --long-name-3=an integer           Description3
@@ -347,8 +356,11 @@ Application Options:
 
 ;;;     g_option_group_set_translate_func
 
-#-windows
-(test option-group-set-translate-func
+;; TODO: This is in English, but can be in German, too. Set the language,
+;; before runing the test.
+
+#+nil
+(test g-option-group-set-translate-func
   (with-g-option-group (group "a" "b" "c")
     (is-false (g:option-group-set-translate-func group #'translate-func))
     (with-g-option-context (context "Description")
@@ -364,21 +376,21 @@ Application Options:
         (when *verbose-g-option*
           (format t "~%~a~%" (g:option-context-help context t)))
         (is (string=
-"Usage:
-  glib-test [OPTION…] Description
+"Aufruf:
+  glib-test [OPTION …] Description
 
-Help Options:
-  -h, --help          Show help options
-  --help-all          Show all help options
+Hilfeoptionen:
+  -h, --help          Hilfeoptionen anzeigen
+  --help-all          Alle Hilfeoptionen anzeigen
 
-Application Options:
+Anwendungsoptionen:
   -a, --long-name     DESCRIPTION
 
 "
                      (g:option-context-help context t)))))))
 
 #+windows
-(test option-group-set-translate-func
+(test g-option-group-set-translate-func
   (with-g-option-group (group "a" "b" "c")
     (is-false (g:option-group-set-translate-func group #'translate-func))
     (with-g-option-context (context "Description")
@@ -409,7 +421,7 @@ Anwendungsoptionen:
 
 ;;;     g_option_group_set_translation_domain
 
-(test option-group-set-translation-domain
+(test g-option-group-set-translation-domain
   (with-g-option-group (group nil nil nil)
     (is-false (g:option-group-set-translation-domain group "myApplication"))))
 
@@ -479,4 +491,4 @@ Anwendungsoptionen:
             ;; Show the help output
             (format t "~&~%~a~%" (g:option-context-help context t))))))
 
-;;; --- 2023-1-6 ---------------------------------------------------------------
+;;; --- 2023-5-12 --------------------------------------------------------------

@@ -75,4 +75,12 @@
     (is (every #'g:is-object
                (cffi:convert-from-foreign ptr '(g:slist-t g:object))))))
 
-;;; --- 2023-1-2 ---------------------------------------------------------------
+;;;     gunichar
+
+(test unichar.1
+  (is (= 97 (cffi:convert-to-foreign #\a 'g:unichar))))
+
+(test unichar.2
+  (is (eql #\a (cffi:convert-from-foreign 97 'g:unichar))))
+
+;;; --- 2023-5-25 --------------------------------------------------------------

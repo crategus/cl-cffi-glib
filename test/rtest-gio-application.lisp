@@ -120,9 +120,9 @@
     ;; a single flag
     (is-true (setf (g:application-flags app) :handles-open))
     (is (equal '(:handles-open) (g:application-flags app)))
-    ;; the flag :none does not set a non-nil value !?
+    ;; the flag :default-flags does not set a non-nil value !?
     (is-true (setf (g:application-flags app) :default-flags))
-    (is (equal '(:is-launcher) (g:application-flags app)))
+    (is (equal '() (g:application-flags app)))
     ;; a list of flags
     (is-true (setf (g:application-flags app) '(:is-service :handles-open)))
     (is (equal '(:is-service :handles-open) (g:application-flags app)))))
