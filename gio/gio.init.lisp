@@ -23,6 +23,7 @@
 
 (in-package :gio)
 
+#|
 (glib-init:at-init ()
   (eval-when (:compile-toplevel :load-toplevel :execute)
     (cffi:define-foreign-library gio
@@ -33,5 +34,6 @@
       (t (:default "libgio-2.0"))))
 
   (cffi:use-foreign-library gio))
+|#
 
 ;;; --- End of file gio.init.lisp ----------------------------------------------

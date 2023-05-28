@@ -102,7 +102,7 @@
 
 ;;; ----------------------------------------------------------------------------
 
-;;; Load the foreign libraries Glib and GThread
+;;; Load the foreign libraries Glib, GObject, GIO and GThread
 
 (at-init ()
   (eval-when (:compile-toplevel :load-toplevel :execute)
@@ -113,6 +113,27 @@
       (:windows "libglib-2.0-0.dll")
       (t (:default "libglib-2.0"))))
   (cffi:use-foreign-library glib))
+
+
+(at-init ()
+ (eval-when (:compile-toplevel :load-toplevel :execute)
+   (cffi:define-foreign-library gobject
+     ((:and :unix (:not :darwin))
+      (:or "libgobject-2.0.so.0" "libgobject-2.0.so"))
+     (:darwin (:or "libgobject-2.0.0.dylib" "libgobject-2.0.dylib"))
+     (:windows "libgobject-2.0-0.dll")
+     (t "libgobject-2.0")))
+ (cffi:use-foreign-library gobject))
+
+(glib-init:at-init ()
+  (eval-when (:compile-toplevel :load-toplevel :execute)
+    (cffi:define-foreign-library gio
+      ((:and :unix (:not :darwin))
+       (:or "libgio-2.0.so.0" "libgio-2.0.so"))
+      (:darwin "libgio-2.0.dylib")
+      (:windows "libgio-2.0-0.dll")
+      (t (:default "libgio-2.0"))))
+  (cffi:use-foreign-library gio))
 
 (at-init ()
   (eval-when (:compile-toplevel :load-toplevel :execute)
