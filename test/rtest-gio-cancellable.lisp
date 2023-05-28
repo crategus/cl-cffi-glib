@@ -12,7 +12,7 @@
   (is (g:type-is-object "GCancellable"))
   ;; Check the registered symbol
   (is (eq 'g:cancellable
-          (gobject:symbol-for-gtype "GCancellable")))
+          (glib:symbol-for-gtype "GCancellable")))
   ;; Check the type initializer
   (is (eq (g:gtype "GCancellable")
           (g:gtype (cffi:foreign-funcall "g_cancellable_get_type" :size))))

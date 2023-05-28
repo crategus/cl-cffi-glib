@@ -32,9 +32,9 @@
          (variant2 (g:variant-type-copy variant1)))
 
     (is (typep variant1 'g:variant-type))
-    (is (cffi:pointerp (gobject::boxed-opaque-pointer variant1)))
+    (is (cffi:pointerp (glib::boxed-opaque-pointer variant1)))
     (is (typep variant2 'g:variant-type))
-    (is (cffi:pointerp (gobject::boxed-opaque-pointer variant2))))
+    (is (cffi:pointerp (glib::boxed-opaque-pointer variant2))))
   (when *verbose-glib-variant-type*
     (untrace tg:finalize)
     (untrace cffi:translate-from-foreign)
@@ -53,7 +53,7 @@
     (trace g:variant-type-new))
   (let ((variant (g:variant-type-new "b")))
     (is (typep variant 'g:variant-type))
-    (is (cffi:pointerp (gobject::boxed-opaque-pointer variant))))
+    (is (cffi:pointerp (glib::boxed-opaque-pointer variant))))
   (when *verbose-glib-variant-type*
     (untrace tg:finalize)
     (untrace cffi:translate-from-foreign)

@@ -14,12 +14,12 @@
   (is (eq (g:gtype "GBytes")
           (g:gtype (cffi:foreign-funcall "g_bytes_get_type" :size))))
   ;; Get the boxed info
-  (is (eq 'gobject::boxed-opaque-info
-          (type-of (get-boxed-info "GBytes"))))
-  (is (eq 'glib::bytes (gobject::boxed-info-name (get-boxed-info "GBytes"))))
-  (is (string= "GBytes" (gobject::boxed-info-gtype (get-boxed-info "GBytes"))))
-  (is-false (gobject::boxed-opaque-info-alloc (get-boxed-info "GBytes")))
-  (is-false (gobject::boxed-opaque-info-free (get-boxed-info "GBytes"))))
+  (is (eq 'glib::boxed-opaque-info
+          (type-of (glib::get-boxed-info "GBytes"))))
+  (is (eq 'glib::bytes (glib::boxed-info-name (get-boxed-info "GBytes"))))
+  (is (string= "GBytes" (glib::boxed-info-gtype (get-boxed-info "GBytes"))))
+  (is-false (glib::boxed-opaque-info-alloc (get-boxed-info "GBytes")))
+  (is-false (glib::boxed-opaque-info-free (get-boxed-info "GBytes"))))
 
 ;;; --- Functions --------------------------------------------------------------
 

@@ -147,7 +147,6 @@
 ;;;     g_app_info_create_from_commandline
 
 (test g-app-info-create-from-commandline
-
   (is (g:type-is-a (g:type-from-instance
                        (g:app-info-create-from-commandline "" "gedit" :none))
                    "GAppInfo")))
@@ -182,12 +181,14 @@
 
 ;;;     g_app_info_get_executable
 
+#-windows
 (test g-app-info-executable
   (is (every #'stringp
              (mapcar #'g:app-info-executable (g:app-info-all)))))
 
 ;;;     g_app_info_get_commandline
 
+#-windows
 (test g-app-info-commandline
   (is (every #'stringp
              (mapcar #'g:app-info-commandline (g:app-info-all)))))
@@ -210,6 +211,7 @@
 
 ;;;     g_app_info_supports_uris
 
+#-windows
 (test g-app-info-supports-uris
   (let ((info (g:app-info-default-for-type "text/plain" nil)))
     (is-true (g:app-info-supports-uris info))))
@@ -220,7 +222,8 @@
 
 ;;;     g_app_info_should_show
 
-(test g-app-info-supports-uris
+#-windows
+(test g-app-info-should-show
   (let ((info (g:app-info-default-for-type "text/plain" nil)))
     (is-true (g:app-info-should-show info))))
 
@@ -238,6 +241,7 @@
 
 ;;;     g_app_info_get_supported_types
 
+#-windows
 (test g-app-info-supported-types
   (let ((info (g:app-info-default-for-type "text/plain" nil)))
     (is (member "text/plain"
@@ -259,6 +263,7 @@
 
 ;;;     g_app_info_get_default_for_type
 
+#-windows
 (test g-app-info-default-for-type
   (is (g:type-is-a (g:type-from-instance
                        (g:app-info-default-for-type "text/plain" nil))
