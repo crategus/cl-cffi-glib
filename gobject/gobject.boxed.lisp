@@ -95,6 +95,7 @@
 ;;; g_bytes_ref(), and the GBoxedFreeFunc is g_bytes_unref().
 ;;; ----------------------------------------------------------------------------
 
+#|
 (in-package :glib)
 
 ;; TODO: Improve the implementation of GError
@@ -105,6 +106,7 @@
   :alloc (cl:error "GError cannot be created from the Lisp side."))
 
 (export 'error)
+|#
 
 (in-package :gobject)
 

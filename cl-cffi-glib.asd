@@ -33,15 +33,22 @@
     :serial t
     :components
     ((:file "glib.package")
+     ;; Lisp support for callbacks, GType, and GBoxed
      (:file "glib.stable-pointer")
+     (:file "glib.gtype")
+     (:file "glib.boxed-type")
+     ;; GLIB library
      (:file "glib.version")
      (:file "glib.quark")
      (:file "glib.misc")
      (:file "glib.error")
      (:file "glib.main-loop")
      (:file "glib.utils")
+     (:file "glib.bytes")
      (:file "glib.option")
-     (:file "glib.key-file")))
+     (:file "glib.key-file")
+     (:file "glib.variant-type")
+     (:file "glib.variant")))
    (:module gobject
     :serial t
     :components
@@ -57,9 +64,9 @@
      (:file "gobject.boxed-lisp")
      (:file "gobject.boxed")
      ;; TODO: Glib types which need GBoxed, can we improve this
-     (:file "../glib/glib.bytes")
-     (:file "../glib/glib.variant-type")
-     (:file "../glib/glib.variant")
+;     (:file "../glib/glib.bytes")
+;     (:file "../glib/glib.variant-type")
+;     (:file "../glib/glib.variant")
      (:file "gobject.param-spec")      ; GParamSpec
      (:file "gobject.param")           ; Parameters and Values
      (:file "gobject.gobject-class")
@@ -133,6 +140,7 @@
     (;; glib-suite
      (:file "rtest-glib")
      (:file "rtest-glib-stable-pointer")
+     (:file "rtest-glib-gtype")
      (:file "rtest-glib-version")
      (:file "rtest-glib-quark")
      (:file "rtest-glib-misc")

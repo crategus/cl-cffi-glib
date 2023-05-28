@@ -108,7 +108,7 @@
 ;;; GVariantType
 ;;; ----------------------------------------------------------------------------
 
-(gobject:define-g-boxed-opaque variant-type "GVariantType"
+(define-g-boxed-opaque variant-type "GVariantType"
   :type-initializer "g_variant_type_get_gtype"
   :alloc (cl:error "GVariantType cannot be created from the Lisp side."))
 
@@ -264,7 +264,7 @@
   @see-function{g:variant-type-is-subtype-of}
   @see-function{g:variant-type-copy}")
 
-(export (gobject:boxed-related-symbols 'variant-type))
+(export (boxed-related-symbols 'variant-type))
 
 ;;; ----------------------------------------------------------------------------
 ;;; G_VARIANT_TYPE -> variant-type-checked                 not exported
@@ -274,7 +274,7 @@
 ;; function which returns a GVariantType from a valid type string.
 
 (defcfun ("g_variant_type_checked_" variant-type-checked)
-    (gobject:boxed variant-type)
+    (boxed variant-type)
  #+liber-documentation
  "@version{#2021-7-31}
   @argument[string]{a well-formed @class{variant-type} type string}
@@ -308,14 +308,14 @@
   @see-class{g:variant-type}
   @see-function{g:variant-type-copy}
   @see-function{g:variant-type-new}"
-  (vtype (gobject:boxed variant-type)))
+  (vtype (boxed variant-type)))
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_variant_type_copy ()
 ;;; ----------------------------------------------------------------------------
 
 (defcfun ("g_variant_type_copy" variant-type-copy)
-    (gobject:boxed variant-type :return)
+    (boxed variant-type :return)
  #+liber-documentation
  "@version{2023-1-31}
   @argument[vtype]{a @class{g:variant-type} instance}
@@ -324,7 +324,7 @@
     Makes a copy of a variant type.
   @end{short}
   @see-class{g:variant-type}"
-  (vtype (gobject:boxed variant-type)))
+  (vtype (boxed variant-type)))
 
 (export 'variant-type-copy)
 
@@ -333,7 +333,7 @@
 ;;; ----------------------------------------------------------------------------
 
 (defcfun ("g_variant_type_new" variant-type-new)
-    (gobject:boxed variant-type :return)
+    (boxed variant-type :return)
  #+liber-documentation
  "@version{2023-1-31}
   @argument[string]{a valid @class{g:variant-type} type string}
@@ -429,7 +429,7 @@
   returned by the @fun{variant-type-peek-string} function.
   @see-class{variant-type}
   @see-function{variant-type-peek-string}"
-  (variant-type (gobject:boxed variant-type)))
+  (variant-type (boxed variant-type)))
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_variant_type_peek_string ()                          not exported
@@ -449,7 +449,7 @@
   To get a nul-terminated string, see the @fun{variant-type-dup-string}
   function.
   @see-class{variant-type}"
-  (variant-type (gobject:boxed variant-type)))
+  (variant-type (boxed variant-type)))
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_variant_type_dup_string ()
@@ -466,7 +466,7 @@
     @arg{vtype}.
   @end{short}
   @see-class{g:variant-type}"
-  (vtype (gobject:boxed variant-type)))
+  (vtype (boxed variant-type)))
 
 (export 'variant-type-dup-string)
 
@@ -490,7 +490,7 @@
   returned.
   @see-class{g:variant-type}
   @see-function{g:variant-type-new}"
-  (vtype (gobject:boxed variant-type)))
+  (vtype (boxed variant-type)))
 
 (export 'variant-type-is-definite)
 
@@ -510,7 +510,7 @@
   the variant type. This function returns @em{true} for any indefinite type for
   which every definite subtype is a container - \"a*\", for example.
   @see-class{g:variant-type}"
-  (vtype (gobject:boxed variant-type)))
+  (vtype (boxed variant-type)))
 
 (export 'variant-type-is-container)
 
@@ -531,7 +531,7 @@
   dictionary entry. This function returns @em{false} for all indefinite types
   except \"?\".
   @see-class{g:variant-type}"
-  (vtype (gobject:boxed variant-type)))
+  (vtype (boxed variant-type)))
 
 (export 'variant-type-is-basic)
 
@@ -551,7 +551,7 @@
   function returns @em{true} for any indefinite type for which every definite
   subtype is a maybe type - \"m*\", for example.
   @see-class{g:variant-type}"
-  (vtype (gobject:boxed variant-type)))
+  (vtype (boxed variant-type)))
 
 (export 'variant-type-is-maybe)
 
@@ -571,7 +571,7 @@
   function returns @em{true} for any indefinite type for which every definite
   subtype is an array type - \"a*\", for example.
   @see-class{g:variant-type}"
-  (vtype (gobject:boxed variant-type)))
+  (vtype (boxed variant-type)))
 
 (export 'variant-type-is-array)
 
@@ -591,7 +591,7 @@
   type is \"r\". This function returns @em{true} for any indefinite type for
   which every definite subtype is a tuple type - \"r\", for example.
   @see-class{g:variant-type}"
-  (vtype (gobject:boxed variant-type)))
+  (vtype (boxed variant-type)))
 
 (export 'variant-type-is-tuple)
 
@@ -611,7 +611,7 @@
   returns @em{true} for any indefinite type for which every definite subtype is
   a dictionary entry type - \"{?*@}\", for example.
   @see-class{g:variant-type}"
-  (vtype (gobject:boxed variant-type)))
+  (vtype (boxed variant-type)))
 
 (export 'variant-type-is-dict-entry)
 
@@ -628,7 +628,7 @@
     Determines if the given variant type is the variant type.
   @end{short}
   @see-class{g:variant-type}"
-  (vtype (gobject:boxed variant-type)))
+  (vtype (boxed variant-type)))
 
 (export 'variant-type-is-variant)
 
@@ -646,7 +646,7 @@
   @end{short}
   A valid @class{g:variant-type} instance must be provided.
   @see-class{g:variant-type}"
-  (vtype (gobject:boxed variant-type)))
+  (vtype (boxed variant-type)))
 
 (export 'variant-type-hash)
 
@@ -672,8 +672,8 @@
   @class{g:variant-type} instance must be provided.
   @see-class{g:variant-type}
   @see-function{g:variant-type-is-subtype-of}"
-  (vtype1 (gobject:boxed variant-type))
-  (vtype2 (gobject:boxed variant-type)))
+  (vtype1 (boxed variant-type))
+  (vtype2 (boxed variant-type)))
 
 (export 'variant-type-equal)
 
@@ -694,8 +694,8 @@
   @arg{supertype}. All types are considered to be subtypes of themselves. Aside
   from that, only indefinite types can have subtypes.
   @see-class{g:variant-type}"
-  (vtype (gobject:boxed variant-type))
-  (supertype (gobject:boxed variant-type)))
+  (vtype (boxed variant-type))
+  (supertype (boxed variant-type)))
 
 (export 'variant-type-is-subtype-of)
 
@@ -704,7 +704,7 @@
 ;;; ----------------------------------------------------------------------------
 
 (defcfun ("g_variant_type_new_maybe" variant-type-new-maybe)
-    (gobject:boxed variant-type :return)
+    (boxed variant-type :return)
  #+liber-documentation
  "@version{2023-1-31}
   @argument[vtype]{a @class{g:variant-type} instance}
@@ -714,7 +714,7 @@
     @arg{vtype} or nothing.
   @end{short}
   @see-class{g:variant-type}"
-  (vtype (gobject:boxed variant-type)))
+  (vtype (boxed variant-type)))
 
 (export 'variant-type-new-maybe)
 
@@ -723,7 +723,7 @@
 ;;; ----------------------------------------------------------------------------
 
 (defcfun ("g_variant_type_new_array" variant-type-new-array)
-    (gobject:boxed variant-type :return)
+    (boxed variant-type :return)
  #+liber-documentation
  "@version{2023-1-31}
   @argument[vtype]{a @class{g:variant-type} instance}
@@ -733,7 +733,7 @@
     @arg{vtype} type.
   @end{short}
   @see-class{g:variant-type}"
-  (vtype (gobject:boxed variant-type)))
+  (vtype (boxed variant-type)))
 
 (export 'variant-type-new-array)
 
@@ -742,7 +742,7 @@
 ;;; ----------------------------------------------------------------------------
 
 (defcfun ("g_variant_type_new_tuple" %variant-type-new-tuple)
-    (gobject:boxed variant-type :return)
+    (boxed variant-type :return)
   (items :pointer)
   (length :int))
 
@@ -761,7 +761,7 @@
             for item in items
             do (setf (cffi:mem-aref items-ar :pointer i)
                      (cffi:convert-to-foreign item
-                                              '(gobject:boxed variant-type))))
+                                              '(boxed variant-type))))
       (%variant-type-new-tuple items-ar n-items))))
 
 (export 'variant-type-new-tuple)
@@ -771,7 +771,7 @@
 ;;; ----------------------------------------------------------------------------
 
 (defcfun ("g_variant_type_new_dict_entry" variant-type-new-dict-entry)
-    (gobject:boxed variant-type :return)
+    (boxed variant-type :return)
  #+liber-documentation
  "@version{2023-1-31}
   @argument[key]{a basic @class{g:variant-type} instance}
@@ -782,8 +782,8 @@
     of @arg{key} type and a value of @arg{value} type.
   @end{short}
   @see-class{g:variant-type}"
-  (key (gobject:boxed variant-type))
-  (value (gobject:boxed variant-type)))
+  (key (boxed variant-type))
+  (value (boxed variant-type)))
 
 (export 'variant-type-new-dict-entry)
 
@@ -794,7 +794,7 @@
 ;; Check the return value, do we have to free it?
 
 (defcfun ("g_variant_type_element" variant-type-element)
-    (gobject:boxed variant-type)
+    (boxed variant-type)
  #+liber-documentation
  "@version{2023-1-31}
   @argument[vtype]{an array or maybe @class{g:variant-type} instance}
@@ -804,7 +804,7 @@
   @end{short}
   This function may only be used with array or maybe types.
   @see-class{g:variant-type}"
-  (vtype (gobject:boxed variant-type)))
+  (vtype (boxed variant-type)))
 
 (export 'variant-type-element)
 
@@ -825,7 +825,7 @@
   must not be used with the generic tuple type \"r\". In the case of a
   dictionary entry type, this function will always return 2.
   @see-class{g:variant-type}"
-  (vtype (gobject:boxed variant-type)))
+  (vtype (boxed variant-type)))
 
 (export 'variant-type-n-items)
 
@@ -836,7 +836,7 @@
 ;; TODO: Check the NIL return value. Is this correct?
 
 (defcfun ("g_variant_type_first" variant-type-first)
-    (gobject:boxed variant-type)
+    (boxed variant-type)
  #+liber-documentation
  "@version{2023-1-31}
   @argument[vtype]{a tuple or dictionary entry @class{g:variant-type} instance}
@@ -852,7 +852,7 @@
   and dictionary entry types.
   @see-class{g:variant-type}
   @see-function{g:variant-type-next}"
-  (vtype (gobject:boxed variant-type)))
+  (vtype (boxed variant-type)))
 
 (export 'variant-type-first)
 
@@ -860,7 +860,7 @@
 ;;; g_variant_type_next ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_type_next" variant-type-next) (gobject:boxed variant-type)
+(defcfun ("g_variant_type_next" variant-type-next) (boxed variant-type)
  #+liber-documentation
  "@version{2023-1-31}
   @argument[vtype]{a @class{g:variant-type} instance from a previous call}
@@ -876,7 +876,7 @@
   item in a tuple.
   @see-class{g:variant-type}
   @see-function{g:variant-type-first}"
-  (vtype (gobject:boxed variant-type)))
+  (vtype (boxed variant-type)))
 
 (export 'variant-type-next)
 
@@ -884,7 +884,7 @@
 ;;; g_variant_type_key ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_type_key" variant-type-key) (gobject:boxed variant-type)
+(defcfun ("g_variant_type_key" variant-type-key) (boxed variant-type)
  #+liber-documentation
  "@version{2023-1-31}
   @argument[vtype]{a dictionary entry @class{g:variant-type} instance}
@@ -898,7 +898,7 @@
   @see-class{g:variant-type}
   @see-function{g:variant-type-first}
   @see-function{g:variant-type-value}"
-  (vtype (gobject:boxed variant-type)))
+  (vtype (boxed variant-type)))
 
 (export 'variant-type-key)
 
@@ -907,7 +907,7 @@
 ;;; ----------------------------------------------------------------------------
 
 (defcfun ("g_variant_type_value" variant-type-value)
-    (gobject:boxed variant-type)
+    (boxed variant-type)
  #+liber-documentation
  "@version{2023-1-31}
   @argument[vtype]{a dictionary entry @class{g:variant-type} instance}
@@ -918,7 +918,7 @@
   This function may only be used with a dictionary entry type.
   @see-class{g:variant-type}
   @see-function{g:variant-type-key}"
-  (vtype (gobject:boxed variant-type)))
+  (vtype (boxed variant-type)))
 
 (export 'variant-type-value)
 

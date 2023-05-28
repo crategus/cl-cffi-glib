@@ -438,7 +438,7 @@
 ;;; ----------------------------------------------------------------------------
 
 (defmacro register-object-type-implementation (name class parent interfaces properties)
-  (let ((*warn-unknown-gtype* nil))
+  (let ((glib:*warn-unknown-gtype* nil))
     (unless (stringp parent)
       (setf parent (gtype-name (gtype parent)))))
 

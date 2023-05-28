@@ -369,7 +369,7 @@
 
 (defcfun ("g_application_command_line_get_options_dict"
            application-command-line-options-dict)
-    (gobject:boxed glib:variant-dict)
+    (glib:boxed glib:variant-dict)
  #+liber-documentation
  "@version{#2022-12-29}
   @argument[cmdline]{a @class{g:application-command-line} instance}

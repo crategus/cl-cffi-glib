@@ -55,7 +55,7 @@
 ;;; GBytes
 ;;; ----------------------------------------------------------------------------
 
-(gobject:define-g-boxed-opaque bytes "GBytes"
+(define-g-boxed-opaque bytes "GBytes"
   :type-initializer "g_bytes_get_type"
   :alloc (%bytes-new (cffi:null-pointer) 0))
 
@@ -106,7 +106,7 @@
   (data :pointer)
   (size :size))
 
-(defcfun ("g_bytes_new" bytes-new) (gobject:boxed bytes :return)
+(defcfun ("g_bytes_new" bytes-new) (boxed bytes :return)
  #+liber-documentation
  "@version{2022-11-22}
   @argument[data]{a pointer to the data to be used for the bytes}
@@ -244,7 +244,7 @@
 ;;; ----------------------------------------------------------------------------
 
 (defcfun ("g_bytes_get_data" %bytes-data) :pointer
-  (bytes (gobject:boxed bytes))
+  (bytes (boxed bytes))
   (size (:pointer :size)))
 
 (defun bytes-data (bytes)
@@ -289,7 +289,7 @@
   This function will always return the same value for a given @class{g:bytes}
   instance.
   @see-class{g:bytes}"
-  (bytes (gobject:boxed bytes)))
+  (bytes (boxed bytes)))
 
 (export 'bytes-size)
 

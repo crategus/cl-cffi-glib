@@ -216,7 +216,7 @@
   without problems.
 
   The @sym{g:variant} structure is heavily optimised for dealing with data in
-  serialised form. It works particularly well with data located in memory 
+  serialised form. It works particularly well with data located in memory
   mapped files. It can perform nearly all deserialisation operations in a small
   constant time, usually touching only a single memory page. Serialised
   @sym{g:variant} data can also be sent over the network.
@@ -511,7 +511,7 @@
 ;;; struct GVariantDict
 ;;; ----------------------------------------------------------------------------
 
-(gobject:define-g-boxed-opaque variant-dict "GVariantDict"
+(define-g-boxed-opaque variant-dict "GVariantDict"
   :type-initializer "g_variant_dict_get_type"
   :alloc (%variant-dict-new (cffi:null-pointer)))
 
@@ -531,7 +531,7 @@
   The @sym{g:variant-dict} structure can only be used with \"a(sv)\"
   dictionaries.
 
-  You allocate a @sym{g:variant-dict} instance with the @fun{g:variant-dict-new} 
+  You allocate a @sym{g:variant-dict} instance with the @fun{g:variant-dict-new}
   function. The @fun{g:variant-dict-end} function is used to convert the
   @sym{g:variant-dict} instance back into a @type{g:variant} dictionary type.
   This also implicitly frees all associated memory.
@@ -752,7 +752,7 @@
 ;;; g_variant_take_ref ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_take_ref" variant-take-ref) (gobject:boxed variant-type)
+(defcfun ("g_variant_take_ref" variant-take-ref) (boxed variant-type)
  #+liber-documentation
  "@version{#2022-12-29}
   @argument[value]{a @type{g:variant} instance}
@@ -799,7 +799,7 @@
 ;;; g_variant_get_type () -> variant-type
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_get_type" variant-type) (gobject:boxed variant-type)
+(defcfun ("g_variant_get_type" variant-type) (boxed variant-type)
  #+liber-documentation
  "@version{2022-12-29}
   @argument[value]{a @type{g:variant} instance}
@@ -854,7 +854,7 @@
   @see-type{g:variant}
   @see-class{g:variant-type}"
   (value (:pointer (:struct variant)))
-  (vtype (gobject:boxed variant-type)))
+  (vtype (boxed variant-type)))
 
 (export 'variant-is-of-type)
 
@@ -3480,7 +3480,7 @@
   (from-asv (:pointer (:struct variant))))
 
 (defcfun ("g_variant_dict_new" variant-dict-new)
-    (gobject:boxed variant-dict :return)
+    (boxed variant-dict :return)
  #+liber-documentation
  "@version{2023-4-26}
   @argument[from-asv]{a @type{g:variant} instance with which to initialize the
@@ -3567,7 +3567,7 @@
     Checks if the key exists in the dictionary.
   @end{short}
   @see-class{g:variant-dict}"
-  (dict (gobject:boxed variant-dict))
+  (dict (boxed variant-dict))
   (key :string))
 
 (export 'variant-dict-contains)
@@ -3616,14 +3616,14 @@
 
 (defcfun ("g_variant_dict_lookup_value" %variant-dict-lookup-value)
     (:pointer (:struct variant))
-  (dict (gobject:boxed variant-dict))
+  (dict (boxed variant-dict))
   (key :string)
-  (vtype (gobject:boxed variant-type)))
+  (vtype (boxed variant-type)))
 
 (defun variant-dict-lookup-value (dict key &optional vtype)
  #+liber-documentation
  "@version{2023-4-26}
-  @argument[dict]{a @class{g:variant-dict} instance} 
+  @argument[dict]{a @class{g:variant-dict} instance}
   @argument[key]{a string with the key to look up in the dictionary}
   @argument[vtype]{a @class{g:variant-type} instance with the expected type}
   @begin{short}
@@ -3631,7 +3631,7 @@
   @end{short}
   If @arg{key} is not found in the dictionary, @code{nil} is returned.
 
-  The @arg{vtype} string specifies what type of value is expected. If the value 
+  The @arg{vtype} string specifies what type of value is expected. If the value
   associated with @arg{key} has a different type then @code{nil} is returned.
 
   If the key is found and the value has the correct type, it is returned. If
@@ -3691,7 +3691,7 @@
   @end{short}
   @see-class{g:variant-dict}
   @see-type{g:variant}"
-  (dict (gobject:boxed variant-dict))
+  (dict (boxed variant-dict))
   (key :string)
   (value (:pointer (:struct variant))))
 
@@ -3708,11 +3708,11 @@
   @argument[key]{a string with the key to remove}
   @return{@em{True} if the key was found and removed.}
   @begin{short}
-    Removes a key and its associated value from a @class{g:variant-dict} 
+    Removes a key and its associated value from a @class{g:variant-dict}
     instance.
   @end{short}
   @see-class{g:variant-dict}"
-  (dict (gobject:boxed variant-dict))
+  (dict (boxed variant-dict))
   (key :string))
 
 (export 'variant-dict-remove)
@@ -3735,7 +3735,7 @@
   reference counting operations.
   @see-class{g:variant-dict}
   @see-type{g:variant}"
-  (dict (gobject:boxed variant-dict)))
+  (dict (boxed variant-dict)))
 
 (export 'variant-dict-end)
 
@@ -3753,7 +3753,7 @@
   (err :pointer))
 
 (defcfun ("g_variant_parse" %variant-parse-2) (:pointer (:struct variant))
-  (vtype (gobject:boxed variant-type))
+  (vtype (boxed variant-type))
   (text :string)
   (limit :pointer)
   (endptr :pointer)

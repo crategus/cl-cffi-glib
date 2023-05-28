@@ -29,6 +29,13 @@
 
 (defpackage :gobject
   (:use :closer-common-lisp :iterate) ; :closer-common-lisp includes :cl
+  (:import-from :glib #:gtype
+                      #:gtype-name
+                      #:gtype-id
+                      #:symbol-for-gtype
+                      #:boxed-opaque-info
+                      #:boxed-cstruct-info
+                      #:boxed-variant-info)
   (:import-from :cffi #:defcfun
                       #:defcvar
                       #:defctype
@@ -54,18 +61,13 @@
            #:create-fn-ref
 
            #:define-cb-methods
-           #:define-g-boxed-cstruct
-           #:define-g-boxed-opaque
-           #:define-g-boxed-variant-cstruct
            #:define-g-enum
            #:define-g-flags
            #:define-g-interface
            #:define-g-object-class
-           #:define-boxed-opaque-accessor
            #:define-vtable
 
            #:boxed-related-symbols
-           #:with-foreign-boxed-array
 
            #:get-g-type-definition
 

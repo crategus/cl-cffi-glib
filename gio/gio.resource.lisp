@@ -201,7 +201,7 @@
 ;;; GResource
 ;;; ----------------------------------------------------------------------------
 
-(gobject:define-g-boxed-opaque resource "GResource"
+(glib:define-g-boxed-opaque resource "GResource"
   :type-initializer "g_resource_get_type"
   :alloc (error "GResource cannot be created from the Lisp side."))
 
@@ -364,7 +364,7 @@
 ;;; g_resource_load ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_resource_load" %resource-load) (gobject:boxed resource :return)
+(defcfun ("g_resource_load" %resource-load) (glib:boxed resource :return)
   (filename :string)
   (err :pointer))
 
@@ -423,7 +423,7 @@
 ;;; g_resource_ref ()                                      not needed
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_resource_ref" resource-ref) (gobject:boxed resource)
+(defcfun ("g_resource_ref" resource-ref) (glib:boxed resource)
  #+liber-documentation
  "@version{#2022-12-30}
   @argument[resource]{a @class{g:resource} instance}
@@ -433,7 +433,7 @@
   @end{short}
   This function is MT-safe and may be called from any thread.
   @see-class{g:resource}"
-  (resource (gobject:boxed resource)))
+  (resource (glib:boxed resource)))
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_resource_unref ()                                    not needed
@@ -449,14 +449,14 @@
   If the reference count drops to 0, all memory allocated by the resource is
   released. This function is MT-safe and may be called from any thread.
   @see-class{g:resource}"
-  (resource (gobject:boxed resource)))
+  (resource (glib:boxed resource)))
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_resource_lookup_data ()
 ;;; ----------------------------------------------------------------------------
 
 (defcfun ("g_resource_lookup_data" %resource-lookup-data) :pointer
-  (resource (gobject:boxed resource))
+  (resource (glib:boxed resource))
   (path :string)
   (lookup resource-lookup-flags)
   (err :pointer))
@@ -528,7 +528,7 @@
 
 (defcfun ("g_resource_enumerate_children" %resource-enumerate-children)
     glib:strv-t
-  (resource (gobject:boxed resource))
+  (resource (glib:boxed resource))
   (path :string)
   (lookup resource-lookup-flags)
   (err :pointer))
@@ -557,7 +557,7 @@
 ;;; ----------------------------------------------------------------------------
 
 (defcfun ("g_resource_get_info" %resource-info) :boolean
-  (resource (gobject:boxed resource))
+  (resource (glib:boxed resource))
   (path :string)
   (lookup resource-lookup-flags)
   (size (:pointer :size))
@@ -660,7 +660,7 @@
   @see-class{g:resource}
   @see-function{g:resources-lookup-data}
   @see-function{g:resources-unregister}"
-  (resource (gobject:boxed resource)))
+  (resource (glib:boxed resource)))
 
 (export 'resources-register)
 
@@ -677,7 +677,7 @@
   @end{short}
   @see-class{g:resource}
   @see-function{g:resources-register}"
-  (resource (gobject:boxed resource)))
+  (resource (glib:boxed resource)))
 
 (export 'resources-unregister)
 

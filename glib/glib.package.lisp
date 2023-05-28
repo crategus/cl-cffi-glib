@@ -32,6 +32,7 @@
   (:shadow #:error)
   (:import-from :cffi #:defcfun
                       #:defcvar
+                      #:defctype
                       #:defcenum
                       #:defbitfield
                       #:defcstruct
@@ -48,6 +49,23 @@
            #:set-stable-pointer-value
            #:stable-pointer-destroy-notify
            #:with-stable-pointer
+           ;; Symbols from glib.gtype.lisp
+           #:gtype
+           #:gtype-name
+           #:gtype-id
+           #:symbol-for-gtype
+           #:*warn-unknown-gtype*
+           ;; Symbols from glib.boxed-type.lisp
+           #:boxed-opaque-info
+           #:boxed-cstruct-info
+           #:boxed-variant-info
+           #:define-g-boxed-opaque
+           #:define-g-boxed-cstruct
+           #:define-g-boxed-variant-cstruct
+           #:boxed-copy-fn
+           #:make-boxed-type
+           #:get-boxed-info
+           #:with-foreign-boxed-array
            ;; Symbols from glib.error.lisp
            #:with-g-error
            #:with-ignore-g-error

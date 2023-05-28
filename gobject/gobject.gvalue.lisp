@@ -78,7 +78,7 @@
 
 (defmethod parse-g-value-for-type :around (gvalue gtype kind)
   (declare (ignorable gvalue kind))
-  (assert (typep gtype '(or gtype nil)))
+  (assert (typep gtype '(or glib:gtype nil)))
   (call-next-method))
 
 (defmethod parse-g-value-for-type (gvalue gtype kind)
@@ -163,7 +163,7 @@
 
 (defmethod set-g-value-for-type :around (gvalue gtype value)
   (declare (ignorable gvalue value))
-  (assert (typep gtype '(or gtype null)))
+  (assert (typep gtype '(or glib:gtype null)))
   (call-next-method))
 
 (defmethod set-g-value-for-type (gvalue gtype value)

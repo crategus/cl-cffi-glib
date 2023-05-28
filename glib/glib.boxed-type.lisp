@@ -1,33 +1,89 @@
 ;;; ----------------------------------------------------------------------------
-;;; gobject.boxed-lisp.lisp
+;;; glib.boxed-type.lisp
 ;;;
-;;; Copyright (C) 2009 - 2011 Kalyanov Dmitry
 ;;; Copyright (C) 2011 - 2023 Dieter Kaiser
 ;;;
-;;; This program is free software: you can redistribute it and/or modify
-;;; it under the terms of the GNU Lesser General Public License for Lisp
-;;; as published by the Free Software Foundation, either version 3 of the
-;;; License, or (at your option) any later version and with a preamble to
-;;; the GNU Lesser General Public License that clarifies the terms for use
-;;; with Lisp programs and is referred as the LLGPL.
+;;; Permission is hereby granted, free of charge, to any person obtaining a
+;;; copy of this software and associated documentation files (the "Software"),
+;;; to deal in the Software without restriction, including without limitation
+;;; the rights to use, copy, modify, merge, publish, distribute, sublicense,
+;;; and/or sell copies of the Software, and to permit persons to whom the
+;;; Software is furnished to do so, subject to the following conditions:
 ;;;
-;;; This program is distributed in the hope that it will be useful,
-;;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;;; GNU Lesser General Public License for more details.
+;;; The above copyright notice and this permission notice shall be included in
+;;; all copies or substantial portions of the Software.
 ;;;
-;;; You should have received a copy of the GNU Lesser General Public
-;;; License along with this program and the preamble to the Gnu Lesser
-;;; General Public License.  If not, see <http://www.gnu.org/licenses/>
-;;; and <http://opensource.franz.com/preamble.html>.
+;;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+;;; IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+;;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+;;; THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+;;; LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+;;; FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+;;; DEALINGS IN THE SOFTWARE.
 ;;; ----------------------------------------------------------------------------
 
-(in-package :gobject)
+(in-package :glib)
 
-#|
+(defvar *debug-gc* nil)
 (defvar *debug-gboxed-gc* nil)
+(defvar *debug-stream* t)
+
+(defmacro log-for (categories control-string &rest args)
+  (let ((vars (iter (for sym in (if (listp categories)
+                                    categories
+                                    (list categories)))
+                    (collect (intern (format nil "*DEBUG-~A*"
+                                             (symbol-name sym))
+                                     (find-package :glib))))))
+    `(progn
+       (when (or ,@vars)
+         (format *debug-stream* ,control-string ,@args))
+       nil)))
 
 ;; TODO: More work needed to rework the implementation of GBoxed.
+
+(defun type-initializer-call (type-initializer)
+  (etypecase type-initializer
+    (string `(if (cffi:foreign-symbol-pointer ,type-initializer)
+                 (cffi:foreign-funcall-pointer
+                     (cffi:foreign-symbol-pointer ,type-initializer)
+                     ()
+                     :size)
+                 (warn "Type initializer '~A' is not available"
+                       ,type-initializer)))
+    (symbol `(funcall ',type-initializer))))
+
+
+;;; ----------------------------------------------------------------------------
+;;; g_boxed_copy ()
+;;; ----------------------------------------------------------------------------
+
+;; Used internally for the implementation of a Lisp boxed type. This function
+;; is not exported.
+
+(defcfun ("g_boxed_copy" %boxed-copy) :pointer
+  (gtype :size)
+  (boxed :pointer))
+
+(defun boxed-copy (gtype boxed)
+  (unless (cffi:null-pointer-p boxed)
+    (let ((gtype (if (integerp gtype) gtype (%g-type-from-name gtype))))
+      (%boxed-copy gtype boxed))))
+
+;;; ----------------------------------------------------------------------------
+;;; g_boxed_free ()
+;;; ----------------------------------------------------------------------------
+
+;; Used internally for the implementation of a Lisp boxed type. This function
+;; is not exported.
+
+(defcfun ("g_boxed_free" %boxed-free) :void
+  (gtype :size)
+  (boxed :pointer))
+
+(defun boxed-free (gtype boxed)
+  (let ((gtype (if (integerp gtype) gtype (%g-type-from-name gtype))))
+    (%boxed-free gtype boxed)))
 
 ;;; ----------------------------------------------------------------------------
 
@@ -59,7 +115,7 @@
       (push (list pointer info) *gboxed-gc-hooks*)
       (unless locks-were-present
         (log-for :gboxed-gc "~%Adding gboxed-gc-hook to main loop~%")
-        (glib:idle-add #'activate-gboxed-gc-hooks)))))
+        (idle-add #'activate-gboxed-gc-hooks)))))
 
 ;;; ----------------------------------------------------------------------------
 
@@ -76,8 +132,8 @@
   (or (etypecase key
         (symbol (gethash key *boxed-infos*))
         (string (gethash (symbol-for-gtype key) *boxed-infos*)))
-      (error "GET-BOXED-INFO: Unknown GBoxed type '~A'"
-             (gtype-name (gtype key))))))
+      (cl:error "GET-BOXED-INFO: Unknown GBoxed type '~A'"
+                (gtype-name (gtype key))))))
 
 (defun (setf get-boxed-info) (info symbol-or-gtype)
   (let ((key (if (symbolp symbol-or-gtype)
@@ -99,7 +155,7 @@
 (define-foreign-type boxed-type ()
   ((info :initarg :info
          :accessor boxed-type-info
-         :initform (error "info must be specified"))
+         :initform (cl:error "info must be specified"))
    (returnp :initarg :returnp
              :accessor boxed-type-returnp
              :initform nil))
@@ -214,7 +270,7 @@
                                  gtype
                                  &key (export t)
                                       type-initializer
-                                      (alloc (error "Alloc must be specified")))
+                                      (alloc (cl:error "Alloc must be specified")))
   (let ((native-copy (gensym "NATIVE-COPY-"))
         (instance (gensym "INSTANCE-")))
     `(progn
@@ -344,13 +400,13 @@
                  (for name = (cstruct-slot-description-name slot))
                  (for initform = (cstruct-slot-description-initform slot))
                  (collect (list name initform))))
-       (defcstruct ,(generated-cstruct-name name)
+       (cffi:defcstruct ,(generated-cstruct-name name)
          ,@(iter (for slot in (cstruct-description-slots cstruct-description))
                  (for name = (cstruct-slot-description-name slot))
                  (for type = (cstruct-slot-description-type slot))
                  (for count = (cstruct-slot-description-count slot))
                  (collect `(,name ,type ,@(when count `(:count ,count))))))
-       (defcunion ,(generated-cunion-name name)
+       (cffi:defcunion ,(generated-cunion-name name)
          (,name (:struct ,(generated-cstruct-name name))))
        (eval-when (:compile-toplevel :load-toplevel :execute)
          ;; Register the Lisp symbol NAME for GTYPE
@@ -559,7 +615,7 @@
         (if (eq :variant (first slot))
             (progn
               (when (var-structure-discriminator-slot result)
-                (error "Structure has more than one discriminator slot"))
+                (cl:error "Structure has more than one discriminator slot"))
               (setf (var-structure-discriminator-slot result)
                     (second slot)
                     (var-structure-variants result)
@@ -615,7 +671,7 @@
         (collect (generate-cstruct-1 cstruct))))
 
 (defun generate-variant-union (struct)
-  `(defcunion ,(generated-cunion-name (var-structure-name struct))
+  `(cffi:defcunion ,(generated-cunion-name (var-structure-name struct))
      ,@(iter (for str in (all-structures struct))
              (collect `(,(var-structure-name str)
                          (:struct ,(generated-cstruct-name (var-structure-name str))))))))
@@ -777,7 +833,7 @@
           (decide-proxy-type type native)
         (unless (eq (type-of proxy) actual-struct)
           (restart-case
-              (error "Expected type of boxed variant structure ~A and actual ~
+              (cl:error "Expected type of boxed variant structure ~A and actual ~
                        type ~A do not match"
                      (type-of proxy) actual-struct)
             (skip-parsing-values () (return-from cffi:free-translated-object))))
@@ -802,9 +858,10 @@
     (let ((type (boxed-type-info foreign-type)))
       (let ((cstruct-description (decide-native-type type proxy)))
         (copy-slots-to-native proxy native cstruct-description)))))
-|#
 
 ;;; ----------------------------------------------------------------------------
+
+#|
 
 (defmethod parse-g-value-for-type (gvalue
                                    (gtype (eql (gtype "GBoxed")))
@@ -814,22 +871,22 @@
       ;; Handle the special case for the GStrv type
       (cffi:convert-from-foreign (value-boxed gvalue)
                                  '(glib:strv-t :free-from-foreign nil))
-      (let ((info (glib:get-boxed-info (value-type gvalue))))
+      (let ((info (get-boxed-info (value-type gvalue))))
         (boxed-parse-g-value gvalue info))))
 
 (defgeneric boxed-parse-g-value (gvalue info))
 
 (defmethod boxed-parse-g-value (gvalue (info boxed-opaque-info))
-  (cffi:translate-from-foreign (glib:boxed-copy-fn info (value-boxed gvalue))
-                               (glib:make-boxed-type info :returnp nil)))
+  (cffi:translate-from-foreign (boxed-copy-fn info (value-boxed gvalue))
+                               (make-boxed-type info :returnp nil)))
 
 (defmethod boxed-parse-g-value (gvalue (info boxed-cstruct-info))
   (cffi:translate-from-foreign (value-boxed gvalue)
-                               (glib:make-boxed-type info :returnp nil)))
+                               (make-boxed-type info :returnp nil)))
 
 (defmethod boxed-parse-g-value (gvalue (info boxed-variant-info))
   (cffi:translate-from-foreign (value-boxed gvalue)
-                               (glib:make-boxed-type info :returnp nil)))
+                               (make-boxed-type info :returnp nil)))
 
 ;;; ----------------------------------------------------------------------------
 
@@ -841,7 +898,7 @@
       (setf (value-boxed gvalue)
             (cffi:convert-to-foreign value
                                      '(glib:strv-t :free-from-foreign nil)))
-      (let ((info (glib:get-boxed-info (value-type gvalue))))
+      (let ((info (get-boxed-info (value-type gvalue))))
         (boxed-set-g-value gvalue info value))))
 
 (defgeneric boxed-set-g-value (gvalue info value))
@@ -851,14 +908,14 @@
                               value)
   (setf (value-boxed gvalue) ; must be value-boxed and not value-take-boxed
         (cffi:translate-to-foreign value
-                                   (glib:make-boxed-type info :returnp nil))))
+                                   (make-boxed-type info :returnp nil))))
 
 (defmethod boxed-set-g-value (gvalue
                               (info boxed-cstruct-info)
                               value)
   (value-take-boxed gvalue
                     (cffi:translate-to-foreign value
-                                               (glib:make-boxed-type info
+                                               (make-boxed-type info
                                                                 :returnp nil))))
 
 (defmethod boxed-set-g-value (gvalue
@@ -866,11 +923,13 @@
                               value)
   (value-take-boxed gvalue
                     (cffi:translate-to-foreign value
-                                               (glib:make-boxed-type info
+                                               (make-boxed-type info
                                                                 :returnp nil))))
 
+|#
+
 ;;; ----------------------------------------------------------------------------
-#|
+
 (defmacro define-boxed-opaque-accessor (boxed-name accessor-name
                                         &key type reader writer)
   (let ((var (gensym))
@@ -991,5 +1050,5 @@
                   (incf ,i))
                 ,values-seq-1))
          ,@body))))
-|#
-;;; --- End of file gobject.boxed-lisp.lisp ------------------------------------
+
+;;; --- End of file glib.boxed-type.lisp ---------------------------------------

@@ -320,7 +320,7 @@ lambda (group name parameter)    :detailed
 
 (defcfun ("g_action_group_get_action_parameter_type"
            action-group-action-parameter-type)
-    (gobject:boxed glib:variant-type)
+    (glib:boxed glib:variant-type)
  #+liber-documentation
  "@version{2023-1-24}
   @argument[group]{a @class{g:action-group} object}
@@ -356,7 +356,7 @@ lambda (group name parameter)    :detailed
 ;;; ----------------------------------------------------------------------------
 
 (defcfun ("g_action_group_get_action_state_type"
-           action-group-action-state-type) (gobject:boxed glib:variant-type)
+           action-group-action-state-type) (glib:boxed glib:variant-type)
  #+liber-documentation
  "@version{2023-1-24}
   @argument[group]{a @class{g:action-group} object}

@@ -773,6 +773,7 @@
   An integer constant that represents the number of identifiers reserved for
   types that are assigned at compile time.")
 
+#|
 ;;; ----------------------------------------------------------------------------
 ;;; GType
 ;;; ----------------------------------------------------------------------------
@@ -822,9 +823,11 @@
           do (setf (gtype-%id gtype) nil))))
 
 (glib-init:at-finalize () (invalidate-gtypes))
+|#
 
 ;;; ----------------------------------------------------------------------------
 
+#|
 (defvar *warn-unknown-gtype* t)
 
 (defun warn-unknown-gtype (name)
@@ -852,7 +855,11 @@
                        (gethash id *id-to-gtype*) gtype))
              id)))))
 
+|#
+
 ;;; ----------------------------------------------------------------------------
+
+#|
 
 ;; Make a Lisp representation gtype from a name or an id
 
@@ -942,6 +949,7 @@
                  name-or-gtype
                  (gtype-name (gtype name-or-gtype)))))
   (setf (gethash key *symbol-for-gtypes*) symbol)))
+|#
 
 ;;; ----------------------------------------------------------------------------
 
@@ -989,7 +997,7 @@
      @end{dictionary}
      @see-function{g:type-name}
      @see-function{g:type-from-name}")
-  (:actual-type %type-t)
+  (:actual-type :size)
   (:simple-parser type-t))
 
 (defun g-type-unmangle (type)
@@ -2484,7 +2492,7 @@
     @end{pre}
   @end{dictionary}
   @see-class{g:type-t}"
-  (let ((*warn-unknown-gtype* nil)) ; no warnings for the test function
+  (let ((glib:*warn-unknown-gtype* nil)) ; no warnings for the test function
     (%type-is-a gtype is-a-type)))
 
 (export 'type-is-a)
@@ -2872,7 +2880,7 @@
 ;;; g_type_children ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_type_children" %type-children) (:pointer %type-t)
+(defcfun ("g_type_children" %type-children) (:pointer :size)
   (gtype type-t)
   (n-children (:pointer :uint)))
 
@@ -2905,7 +2913,7 @@
 ;;; g_type_interfaces ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_type_interfaces" %type-interfaces) (:pointer %type-t)
+(defcfun ("g_type_interfaces" %type-interfaces) (:pointer :size)
   (gtype type-t)
   (n-interfaces (:pointer :uint)))
 
@@ -2942,7 +2950,7 @@
 ;;; ----------------------------------------------------------------------------
 
 (defcfun ("g_type_interface_prerequisites" %type-interface-prerequisites)
-    (:pointer %type-t)
+    (:pointer :size)
   (iface-type type-t)
   (n-prerequisites (:pointer :uint)))
 
@@ -3524,7 +3532,7 @@
 ;;; g_type_fundamental_next ()                             not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_type_fundamental_next" type-fundamental-next) %type-t
+(defcfun ("g_type_fundamental_next" type-fundamental-next) :size
  #+liber-documentation
  "@version{#2013-6-17}
   @begin{return}

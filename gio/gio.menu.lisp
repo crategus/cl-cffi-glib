@@ -1003,7 +1003,7 @@
     (:pointer (:struct glib:variant))
   (item (gobject:object menu-item))
   (attribute :string)
-  (vtype (gobject:boxed glib:variant-type)))
+  (vtype (glib:boxed glib:variant-type)))
 
 (defun menu-item-attribute-value (item attribute &optional (vtype nil))
  #+liber-documentation
