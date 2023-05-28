@@ -107,6 +107,11 @@
        (progn ,@body)
        (release ,var))))
 
+(defun ensure-list (thing)
+  (if (listp thing)
+      thing
+      (list thing)))
+
 (defun using-expand (bindings body)
   (if bindings
       (destructuring-bind (var &optional (expr var))
