@@ -10,7 +10,7 @@
   (is (g:type-is-interface "GIcon"))
   ;; Check the registered symbol
   (is (eq 'g:icon
-          (gobject:symbol-for-gtype "GIcon")))
+          (glib:symbol-for-gtype "GIcon")))
   ;; Check the type initializer
   (is (eq (g:gtype "GIcon")
           (g:gtype (cffi:foreign-funcall "g_icon_get_type" :size))))
@@ -20,7 +20,7 @@
   ;; Get the interface definition
   (is (equal '(DEFINE-G-INTERFACE "GIcon" G-ICON
                        (:EXPORT T))
-             (get-g-type-definition "GIcon"))))
+             (gobject:get-g-type-definition "GIcon"))))
 
 ;;;   g_icon_hash
 
@@ -81,4 +81,4 @@
     (is (cffi:pointerp value))
     (is (typep (g:icon-deserialize value) 'g:icon))))
 
-;;; --- 2022-12-27 -------------------------------------------------------------
+;;; --- 2023-5-29 --------------------------------------------------------------

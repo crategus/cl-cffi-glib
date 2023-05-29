@@ -12,7 +12,7 @@
   (is (g:type-is-interface "GListModel"))
   ;; Check the registered symbol
   (is (eq 'g:list-model
-          (gobject:symbol-for-gtype "GListModel")))
+          (glib:symbol-for-gtype "GListModel")))
   ;; Check the type initializer
   (is (eq (g:gtype "GListModel")
           (g:gtype (cffi:foreign-funcall "g_list_model_get_type" :size))))
@@ -24,7 +24,7 @@
   (is (equal '(DEFINE-G-INTERFACE "GListModel"
                                   G-LIST-MODEL
                                   (:EXPORT T))
-             (get-g-type-definition "GListModel"))))
+             (gobject:get-g-type-definition "GListModel"))))
 
 ;;; --- Signals ----------------------------------------------------------------
 
@@ -63,4 +63,4 @@
 
 ;;;     g_list_model_items_changed
 
-;;; --- 2023-1-2 ---------------------------------------------------------------
+;;; --- 2023-5-29 --------------------------------------------------------------

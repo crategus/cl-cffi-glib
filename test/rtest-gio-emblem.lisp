@@ -15,7 +15,7 @@
           (g:gtype (cffi:foreign-funcall "g_emblem_origin_get_type" :size))))
   ;; Check the registered symbol
   (is (eq 'gio:emblem-origin
-          (gobject:symbol-for-gtype "GEmblemOrigin")))
+          (glib:symbol-for-gtype "GEmblemOrigin")))
   ;; Check the names
   (is (equal '("G_EMBLEM_ORIGIN_UNKNOWN" "G_EMBLEM_ORIGIN_DEVICE"
                "G_EMBLEM_ORIGIN_LIVEMETADATA" "G_EMBLEM_ORIGIN_TAG")
@@ -34,7 +34,7 @@
                              (:DEVICE 1)
                              (:LIVEMETADATA 2)
                              (:TAG 3))
-             (get-g-type-definition "GEmblemOrigin"))))
+             (gobject:get-g-type-definition "GEmblemOrigin"))))
 
 ;;;     GEmblem
 
@@ -43,7 +43,7 @@
   (is (g:type-is-object "GEmblem"))
   ;; Check the registered symbol
   (is (eq 'gio:emblem
-          (gobject:symbol-for-gtype "GEmblem")))
+          (glib:symbol-for-gtype "GEmblem")))
   ;; Check the type initializer
   (is (eq (g:gtype "GEmblem")
           (g:gtype (cffi:foreign-funcall "g_emblem_get_type" :size))))
@@ -70,7 +70,7 @@
                        ((ICON G-EMBLEM-ICON "icon" "GObject" T NIL)
                         (ORIGIN G-EMBLEM-ORIGIN "origin" "GEmblemOrigin"
                          T NIL)))
-             (get-g-type-definition "GEmblem"))))
+             (gobject:get-g-type-definition "GEmblem"))))
 
 ;;; --- Functions --------------------------------------------------------------
 
@@ -79,4 +79,4 @@
 ;;;     g_emblem_get_icon
 ;;;     g_emblem_get_origin
 
-;;; 2022-10-27
+;;; --- 2023-5-29 --------------------------------------------------------------

@@ -12,7 +12,7 @@
   (is (g:type-is-object "GPermission"))
   ;; Check the registered symbol
   (is (eq 'g:permission
-          (gobject:symbol-for-gtype "GPermission")))
+          (glib:symbol-for-gtype "GPermission")))
   ;; Check the type initializer
   (is (eq (g:gtype "GPermission")
           (g:gtype (cffi:foreign-funcall "g_permission_get_type" :size))))
@@ -40,7 +40,7 @@
                          "gboolean" T NIL)
                         (CAN-RELEASE G-PERMISSION-CAN-RELEASE "can-release"
                          "gboolean" T NIL)))
-             (get-g-type-definition "GPermission"))))
+             (gobject:get-g-type-definition "GPermission"))))
 
 ;;;     GSimplePermission
 
@@ -49,7 +49,7 @@
   (is (g:type-is-object "GSimplePermission"))
   ;; Check the registered symbol
   (is (eq 'g:simple-permission
-          (gobject:symbol-for-gtype "GSimplePermission")))
+          (glib:symbol-for-gtype "GSimplePermission")))
   ;; Check the type initializer
   (is (eq (g:gtype "GSimplePermission")
           (g:gtype (cffi:foreign-funcall "g_simple_permission_get_type" :size))))
@@ -71,7 +71,7 @@
   ;; Check the class definition
   (is (equal '(DEFINE-G-OBJECT-CLASS "GSimplePermission" G-SIMPLE-PERMISSION
                        (:SUPERCLASS G-PERMISSION :EXPORT T :INTERFACES NIL) NIL)
-             (get-g-type-definition "GSimplePermission"))))
+             (gobject:get-g-type-definition "GSimplePermission"))))
 
 ;;; --- Properties -------------------------------------------------------------
 
@@ -101,4 +101,4 @@
 ;;;     g_permission_release_finish
 ;;;     g_permission_impl_update
 
-;;; --- 2023-5-5 ---------------------------------------------------------------
+;;; --- 2023-5-29 --------------------------------------------------------------

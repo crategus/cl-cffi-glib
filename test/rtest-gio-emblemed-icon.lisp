@@ -12,7 +12,7 @@
   (is (g:type-is-object "GEmblemedIcon"))
   ;; Check the registered symbol
   (is (eq 'gio:emblemed-icon
-          (gobject:symbol-for-gtype "GEmblemedIcon")))
+          (glib:symbol-for-gtype "GEmblemedIcon")))
   ;; Check the type initializer
   (is (eq (g:gtype "GEmblemedIcon")
           (g:gtype (cffi:foreign-funcall "g_emblemed_icon_get_type" :size))))
@@ -41,7 +41,7 @@
                         :EXPORT T
                         :INTERFACES ("GIcon"))
                        ((GICON G-EMBLEMED-ICON-GICON "gicon" "GIcon" T NIL)))
-             (get-g-type-definition "GEmblemedIcon"))))
+             (gobject:get-g-type-definition "GEmblemedIcon"))))
 
 ;;; --- Properties -------------------------------------------------------------
 
@@ -55,4 +55,4 @@
 ;;;     g_emblemed_icon_add_emblem
 ;;;     g_emblemed_icon_clear_emblems
 
-;;; --- 2023-1-2 ---------------------------------------------------------------
+;;; --- 2023-5-29 --------------------------------------------------------------

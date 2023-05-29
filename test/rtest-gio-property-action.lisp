@@ -12,7 +12,7 @@
   (is (g:type-is-object "GPropertyAction"))
   ;; Check the registered symbol
   (is (eq 'g:property-action
-          (gobject:symbol-for-gtype "GPropertyAction")))
+          (glib:symbol-for-gtype "GPropertyAction")))
   ;; Check the type initializer
   (is (eq (g:gtype "GPropertyAction")
           (g:gtype (cffi:foreign-funcall "g_property_action_get_type" :size))))
@@ -49,7 +49,7 @@
                          NIL)
                         (STATE-TYPE G-PROPERTY-ACTION-STATE-TYPE "state-type"
                          "GVariantType" T NIL)))
-             (get-g-type-definition "GPropertyAction"))))
+             (gobject:get-g-type-definition "GPropertyAction"))))
 
 ;;; --- Properties -------------------------------------------------------------
 
@@ -130,4 +130,4 @@
     (is (typep (g:property-action-new "action" icon "name")
                 'g:property-action))))
 
-;;; --- 2023-1-2 ---------------------------------------------------------------
+;;; --- 2023-5-29 --------------------------------------------------------------

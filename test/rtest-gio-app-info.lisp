@@ -12,7 +12,7 @@
   (is (g:type-is-flags "GAppInfoCreateFlags"))
   ;; Check the registered symbol
   (is (eq 'g:app-info-create-flags
-          (gobject:symbol-for-gtype "GAppInfoCreateFlags")))
+          (glib:symbol-for-gtype "GAppInfoCreateFlags")))
   ;; Check the type initializer
   (is (eq (g:gtype "GAppInfoCreateFlags")
           (g:gtype (cffi:foreign-funcall "g_app_info_create_flags_get_type"
@@ -37,7 +37,7 @@
                               (:NEEDS-TERMINAL 1)
                               (:SUPPORTS-URIS 2)
                               (:SUPPORTS-STARTUP-NOTIFICATION 4))
-             (get-g-type-definition "GAppInfoCreateFlags"))))
+             (gobject:get-g-type-definition "GAppInfoCreateFlags"))))
 
 ;;;     GAppInfo
 
@@ -46,7 +46,7 @@
   (is (g:type-is-interface "GAppInfo"))
   ;; Check the registered symbol
   (is (eq 'g:app-info
-          (gobject:symbol-for-gtype "GAppInfo")))
+          (glib:symbol-for-gtype "GAppInfo")))
   ;; Check the type initializer
   (is (eq (g:gtype "GAppInfo")
           (g:gtype (cffi:foreign-funcall "g_app_info_get_type" :size))))
@@ -55,7 +55,7 @@
              (list-interface-properties "GAppInfo")))
   ;; Get the interface definition
   (is (equal '(DEFINE-G-INTERFACE "GAppInfo" G-APP-INFO (:EXPORT T))
-             (get-g-type-definition "GAppInfo"))))
+             (gobject:get-g-type-definition "GAppInfo"))))
 
 ;;;     GAppLaunchContext
 
@@ -64,7 +64,7 @@
   (is (g:type-is-object "GAppLaunchContext"))
   ;; Check the registered symbol
   (is (eq 'gio:app-launch-context
-          (gobject:symbol-for-gtype "GAppLaunchContext")))
+          (glib:symbol-for-gtype "GAppLaunchContext")))
   ;; Check the type initializer
   (is (eq (g:gtype "GAppLaunchContext")
           (g:gtype (cffi:foreign-funcall "g_app_launch_context_get_type" :size))))
@@ -90,7 +90,7 @@
                                       :EXPORT T
                                       :INTERFACES NIL)
                                      NIL)
-             (get-g-type-definition "GAppLaunchContext"))))
+             (gobject:get-g-type-definition "GAppLaunchContext"))))
 
 ;;; --- Signals ----------------------------------------------------------------
 
@@ -301,4 +301,4 @@
 ;;;     g_app_launch_context_get_startup_notify_id
 ;;;     g_app_launch_context_launch_failed
 
-;;; --- 2023-4-7 ---------------------------------------------------------------
+;;; --- 2023-5-29 --------------------------------------------------------------

@@ -14,7 +14,7 @@
   (is (g:type-is-object "GApplicationCommandLine"))
   ;; Check the registered symbol
   (is (eq 'g:application-command-line
-          (gobject:symbol-for-gtype "GApplicationCommandLine")))
+          (glib:symbol-for-gtype "GApplicationCommandLine")))
   ;; Check the parent
   (is (eq (g:gtype "GObject") (g:type-parent "GApplicationCommandLine")))
   ;; Check the children
@@ -42,7 +42,7 @@
                          "GVariant" NIL NIL)
                         (PLATFORM-DATA G-APPLICATION-COMMAND-LINE-PLATFORM-DATA
                          "platform-data" "GVariant" NIL NIL)))
-             (get-g-type-definition "GApplicationCommandLine"))))
+             (gobject:get-g-type-definition "GApplicationCommandLine"))))
 
 ;;; --- Properties and Accessors -----------------------------------------------
 
@@ -96,4 +96,4 @@
 ;;;     g_application_command_line_print
 ;;;     g_application_command_line_printerr
 
-;;; 2021-10-18
+;;; --- 2023-5-29 --------------------------------------------------------------

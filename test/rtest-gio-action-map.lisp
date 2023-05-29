@@ -12,7 +12,7 @@
   (is-true (g:type-is-interface "GActionMap"))
   ;; Check the registered symbol
   (is (eq 'g:action-map
-          (gobject:symbol-for-gtype "GActionMap")))
+          (glib:symbol-for-gtype "GActionMap")))
   ;; Get the names of the interface properties.
   (is (equal '()
              (mapcar #'g:param-spec-name
@@ -21,7 +21,7 @@
   (is (equal '(DEFINE-G-INTERFACE "GActionMap"
                                   G-ACTION-MAP
                                   (:EXPORT T))
-             (get-g-type-definition "GActionMap"))))
+             (gobject:get-g-type-definition "GActionMap"))))
 
 ;;; --- Functions --------------------------------------------------------------
 
@@ -82,4 +82,4 @@
     (g:action-map-remove-action group "quit")
     (is-false (g:action-map-lookup-action group "quit"))))
 
-;;; 2022-10-30
+;;; --- 2023-5-29 --------------------------------------------------------------

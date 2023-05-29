@@ -12,7 +12,7 @@
   (is (g:type-is-flags "GBindingFlags"))
   ;; Check the registered symbol
   (is (eq 'g:binding-flags
-          (gobject:symbol-for-gtype "GBindingFlags")))
+          (glib:symbol-for-gtype "GBindingFlags")))
   ;; Check the type initializer
   (is (eq (g:gtype "GBindingFlags")
           (g:gtype (cffi:foreign-funcall "g_binding_flags_get_type" :size))))
@@ -43,7 +43,7 @@
   (is (g:type-is-object "GBinding"))
   ;; Check the registered symbol
   (is (eq 'g:binding
-          (gobject:symbol-for-gtype "GBinding")))
+          (glib:symbol-for-gtype "GBinding")))
   ;; Check the type initializer
   (is (eq (g:gtype "GBinding")
           (g:gtype (cffi:foreign-funcall "g_binding_get_type" :size))))
@@ -116,4 +116,4 @@
 ;;;     g_object_bind_property_full
 ;;;     g_object_bind_property_with_closures
 
-;;; --- 2023-1-2 ---------------------------------------------------------------
+;;; --- 2023-5-29 --------------------------------------------------------------

@@ -14,7 +14,7 @@
   (is (g:type-is-flags "GApplicationFlags"))
   ;; Check the registered symbol
   (is (eq 'g:application-flags
-          (gobject:symbol-for-gtype "GApplicationFlags")))
+          (glib:symbol-for-gtype "GApplicationFlags")))
   ;; Check the names
   (is (equal '("G_APPLICATION_FLAGS_NONE" "G_APPLICATION_DEFAULT_FLAGS"
                "G_APPLICATION_IS_SERVICE" "G_APPLICATION_IS_LAUNCHER"
@@ -46,7 +46,7 @@
                               (:CAN-OVERRIDE-APP-ID 64)
                               (:ALLOW-REPLACEMENT 128)
                               (:REPLACE 256))
-             (get-g-type-definition "GApplicationFlags"))))
+             (gobject:get-g-type-definition "GApplicationFlags"))))
 
 ;;;     GApplication
 
@@ -55,7 +55,7 @@
   (is (g:type-is-object "GApplication"))
   ;; Check the registered symbol
   (is (eq 'g:application
-          (gobject:symbol-for-gtype "GApplication")))
+          (glib:symbol-for-gtype "GApplication")))
   ;; Check the parent
   (is (eq (g:gtype "GObject") (g:type-parent "GApplication")))
   ;; Check the children
@@ -91,7 +91,7 @@
                          "gboolean" T NIL)
                         (RESOURCE-BASE-PATH G-APPLICATION-RESOURCE-BASE-PATH
                          "resource-base-path" "gchararray" T T)))
-             (get-g-type-definition "GApplication"))))
+             (gobject:get-g-type-definition "GApplication"))))
 
 ;;; --- Properties and Accessors -----------------------------------------------
 
@@ -313,4 +313,4 @@
 ;;;     g_application_bind_busy_property
 ;;;     g_application_unbind_busy_property
 
-;;; --- 2023-4-23 --------------------------------------------------------------
+;;; --- 2023-5-29 --------------------------------------------------------------

@@ -36,7 +36,7 @@
   (is (g:type-is-interface "GActionGroup"))
   ;; Check the registered symbol
   (is (eq 'g:action-group
-          (gobject:symbol-for-gtype "GActionGroup")))
+          (glib:symbol-for-gtype "GActionGroup")))
   ;; Check the type initializer
   (is (eq (g:gtype "GActionGroup")
           (g:gtype (cffi:foreign-funcall "g_action_group_get_type" :size))))
@@ -47,7 +47,7 @@
   (is (equal '(DEFINE-G-INTERFACE "GActionGroup"
                                   G-ACTION-GROUP
                                   (:EXPORT T))
-             (get-g-type-definition "GActionGroup"))))
+             (gobject:get-g-type-definition "GActionGroup"))))
 
 ;;; --- Signals ----------------------------------------------------------------
 
@@ -197,4 +197,4 @@
 ;;;     g_action_group_action_enabled_changed
 ;;;     g_action_group_action_state_changed
 
-;;; --- 2023-1-3 ---------------------------------------------------------------
+;;; --- 2023-5-29 --------------------------------------------------------------

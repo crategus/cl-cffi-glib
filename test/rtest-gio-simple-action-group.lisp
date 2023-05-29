@@ -10,7 +10,7 @@
   (is (g:type-is-object "GSimpleActionGroup"))
   ;; Check the registered symbol
   (is (eq 'g:simple-action-group
-          (gobject:symbol-for-gtype "GSimpleActionGroup")))
+          (glib:symbol-for-gtype "GSimpleActionGroup")))
   ;; Check the parent
   (is (eq (g:gtype "GObject")
           (g:type-parent "GSimpleActionGroup")))
@@ -32,7 +32,7 @@
                        (:SUPERCLASS G-OBJECT :EXPORT T :INTERFACES
                         ("GActionGroup" "GActionMap"))
                        NIL)
-             (get-g-type-definition "GSimpleActionGroup"))))
+             (gobject:get-g-type-definition "GSimpleActionGroup"))))
 
 ;;; --- Functions --------------------------------------------------------------
 
@@ -84,4 +84,4 @@
     (is (typep (g:simple-action-group-lookup group "copy") 'g:simple-action))
     (is (typep (g:simple-action-group-lookup group "paste") 'g:simple-action))))
 
-;;; 2022-10-30
+;;; --- 2023-5-29 --------------------------------------------------------------

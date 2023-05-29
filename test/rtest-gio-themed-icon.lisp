@@ -12,7 +12,7 @@
   (is (g:type-is-object "GThemedIcon"))
   ;; Check the registered symbol
   (is (eq 'g:themed-icon
-          (gobject:symbol-for-gtype "GThemedIcon")))
+          (glib:symbol-for-gtype "GThemedIcon")))
   ;; Check the type initializer
   (is (eq (g:gtype "GThemedIcon")
           (g:gtype (cffi:foreign-funcall "g_themed_icon_get_type" :size))))
@@ -38,7 +38,7 @@
                         (USE-DEFAULT-FALLBACKS
                          G-THEMED-ICON-USE-DEFAULT-FALLBACKS
                          "use-default-fallbacks" "gboolean" T NIL)))
-             (get-g-type-definition "GThemedIcon"))))
+             (gobject:get-g-type-definition "GThemedIcon"))))
 
 ;;; --- Functions --------------------------------------------------------------
 
@@ -88,4 +88,4 @@
 ;;;     g_themed_icon_append_name
 ;;;     g_themed_icon_get_names
 
-;;; 2022-10-27
+;;; --- 2023-5-29 --------------------------------------------------------------

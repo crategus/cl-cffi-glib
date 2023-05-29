@@ -12,7 +12,7 @@
   (is (g:type-is-object "GFileIcon"))
   ;; Check the registered symbol
   (is (eq 'g:file-icon
-          (gobject:symbol-for-gtype "GFileIcon")))
+          (glib:symbol-for-gtype "GFileIcon")))
   ;; Check the type initializer
   (is (eq (g:gtype "GFileIcon")
           (g:gtype (cffi:foreign-funcall "g_file_icon_get_type" :size))))
@@ -37,7 +37,7 @@
                         :EXPORT T
                         :INTERFACES ("GIcon" "GLoadableIcon"))
                        ((FILE G-FILE-ICON-FILE "file" "GFile" T NIL)))
-             (get-g-type-definition "GFileIcon"))))
+             (gobject:get-g-type-definition "GFileIcon"))))
 
 ;;; --- Properties -------------------------------------------------------------
 
@@ -55,4 +55,4 @@
     (is (string= "gtk-logo-24.png"
                  (g:file-basename (g:file-icon-file icon))))))
 
-;;; --- 2023-1-29 --------------------------------------------------------------
+;;; --- 2023-5-29 --------------------------------------------------------------

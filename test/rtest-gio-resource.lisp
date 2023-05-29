@@ -21,7 +21,7 @@
   (is (g:type-is-flags "GResourceFlags"))
   ;; Check the registered symbol
   (is (eq 'g:resource-flags
-          (gobject:symbol-for-gtype "GResourceFlags")))
+          (glib:symbol-for-gtype "GResourceFlags")))
   ;; Check the type initializer
   (is (eq (g:gtype "GResourceFlags")
           (g:gtype (cffi:foreign-funcall "g_resource_flags_get_type" :size))))
@@ -40,7 +40,7 @@
                               (:EXPORT T)
                               (:NONE 0)
                               (:COMPRESSED 1))
-             (get-g-type-definition "GResourceFlags"))))
+             (gobject:get-g-type-definition "GResourceFlags"))))
 
 ;;;     GResourceLookupFlags
 
@@ -49,7 +49,7 @@
   (is (g:type-is-flags "GResourceLookupFlags"))
   ;; Check the registered symbol
   (is (eq 'g:resource-lookup-flags
-          (gobject:symbol-for-gtype "GResourceLookupFlags")))
+          (glib:symbol-for-gtype "GResourceLookupFlags")))
   ;; Check the type initializer
   (is (eq (g:gtype "GResourceLookupFlags")
           (g:gtype (cffi:foreign-funcall "g_resource_lookup_flags_get_type"
@@ -68,7 +68,7 @@
                               G-RESOURCE-LOOKUP-FLAGS
                               (:EXPORT T)
                               (:NONE 0))
-             (get-g-type-definition "GResourceLookupFlags"))))
+             (gobject:get-g-type-definition "GResourceLookupFlags"))))
 
 ;;;     GStaticResource
 ;;;     G_RESOURCE_ERROR
@@ -189,4 +189,4 @@
                      (g:resources-info "/com/crategus/test/rtest-application.ui"
                                        :none)))))))
 
-;;; --- 2023-4-23 --------------------------------------------------------------
+;;; --- 2023-5-29 --------------------------------------------------------------

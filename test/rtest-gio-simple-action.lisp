@@ -14,7 +14,7 @@
   (is (g:type-is-object "GSimpleAction"))
   ;; Check the registered symbol
   (is (eq 'g:simple-action
-          (gobject:symbol-for-gtype "GSimpleAction")))
+          (glib:symbol-for-gtype "GSimpleAction")))
   ;; Check the parent
   (is (eq (g:gtype "GObject")
           (g:type-parent "GSimpleAction")))
@@ -41,7 +41,7 @@
                         (STATE G-SIMPLE-ACTION-STATE "state" "GVariant" T T)
                         (STATE-TYPE G-SIMPLE-ACTION-STATE-TYPE "state-type"
                          "GVariantType" T NIL)))
-             (get-g-type-definition "GSimpleAction"))))
+             (gobject:get-g-type-definition "GSimpleAction"))))
 
 ;;; --- Properties and Accessors -----------------------------------------------
 
@@ -246,4 +246,4 @@
     ;; The state has not changed.
     (is (= 10 (g:variant-int32 (g:action-state action))))))
 
-;;; 2022-12-26
+;;; --- 2023-5-29 --------------------------------------------------------------

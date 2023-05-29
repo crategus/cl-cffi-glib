@@ -34,7 +34,7 @@
   ;; Check the class definition
   (is (equal '(DEFINE-G-OBJECT-CLASS "GCancellable" G-CANCELLABLE
                        (:SUPERCLASS G-OBJECT :EXPORT T :INTERFACES NIL) NIL)
-             (get-g-type-definition "GCancellable"))))
+             (gobject:get-g-type-definition "GCancellable"))))
 
 ;;; Signals
 
@@ -75,4 +75,4 @@
 ;;;     g_cancellable_disconnect
 ;;;     g_cancellable_cancel
 
-;;; --- 2023-5-7 ---------------------------------------------------------------
+;;; --- 2023-5-29 --------------------------------------------------------------

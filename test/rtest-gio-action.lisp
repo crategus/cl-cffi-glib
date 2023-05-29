@@ -14,22 +14,22 @@
   (is-true (g:type-is-interface "GAction"))
   ;; Check the registered symbol
   (is (eq 'g:action
-          (gobject:symbol-for-gtype "GAction")))
+          (glib:symbol-for-gtype "GAction")))
   ;; Get the names of the interface properties.
   (is (equal '("enabled" "name" "parameter-type" "state" "state-type")
              (list-interface-properties "GAction")))
   ;; Get the interface definition
   (is (equal '(DEFINE-G-INTERFACE "GAction" G-ACTION
                                   (:EXPORT T)
-                                  (ENABLED G-ACTION-ENABLED 
+                                  (ENABLED G-ACTION-ENABLED
                                    "enabled" "gboolean" T NIL)
-                                  (NAME G-ACTION-NAME 
+                                  (NAME G-ACTION-NAME
                                    "name" "gchararray" T NIL)
-                                  (PARAMETER-TYPE G-ACTION-PARAMETER-TYPE 
+                                  (PARAMETER-TYPE G-ACTION-PARAMETER-TYPE
                                    "parameter-type" "GVariantType" T NIL)
-                                  (STATE G-ACTION-STATE 
+                                  (STATE G-ACTION-STATE
                                    "state" "GVariant" T NIL)
-                                  (STATE-TYPE G-ACTION-STATE-TYPE 
+                                  (STATE-TYPE G-ACTION-STATE-TYPE
                                    "state-type" "GVariantType" T NIL))
              (gobject:get-g-type-definition "GAction"))))
 
@@ -180,4 +180,4 @@
   (is (string= "test(12)"
                (g:action-print-detailed-name "test" (g:variant-new-int32 12)))))
 
-;;; --- 2023-1-3 ---------------------------------------------------------------
+;;; --- 2023-5-29 --------------------------------------------------------------

@@ -16,7 +16,7 @@
                                          :size))))
   ;; Check the registered symbol
   (is (eq 'gio:filesystem-preview-type
-          (gobject:symbol-for-gtype "GFilesystemPreviewType")))
+          (glib:symbol-for-gtype "GFilesystemPreviewType")))
   ;; Check the names
   (is (equal '("G_FILESYSTEM_PREVIEW_TYPE_IF_ALWAYS"
                "G_FILESYSTEM_PREVIEW_TYPE_IF_LOCAL"
@@ -35,7 +35,7 @@
                              (:IF-ALWAYS 0)
                              (:IF-LOCAL 1)
                              (:NEVER 2))
-             (get-g-type-definition "GFilesystemPreviewType"))))
+             (gobject:get-g-type-definition "GFilesystemPreviewType"))))
 
 ;;;     GFile
 
@@ -44,7 +44,7 @@
   (is (g:type-is-interface "GFile"))
   ;; Check the registered symbol
   (is (eq 'g:file
-          (gobject:symbol-for-gtype "GFile")))
+          (glib:symbol-for-gtype "GFile")))
   ;; Check the type initializer
   (is (eq (g:gtype "GFile")
           (g:gtype (cffi:foreign-funcall "g_file_get_type" :size))))
@@ -53,7 +53,7 @@
              (list-interface-properties "GFile")))
   ;; Get the interface definition
   (is (equal '(DEFINE-G-INTERFACE "GFile" G-FILE (:EXPORT T))
-             (get-g-type-definition "GFile"))))
+             (gobject:get-g-type-definition "GFile"))))
 
 ;;;     GFileQueryInfoFlags
 ;;;     GFileCreateFlags
@@ -332,4 +332,4 @@
 ;;;     g_file_replace_readwrite_finish
 ;;;     g_file_supports_thread_contexts
 
-;;; --- 2023-1-2 ---------------------------------------------------------------
+;;; --- 2023-5-29 --------------------------------------------------------------

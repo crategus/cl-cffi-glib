@@ -12,7 +12,7 @@
   (is (g:type-is-object "GListStore"))
   ;; Check the registered symbol
   (is (eq 'g:list-store
-          (gobject:symbol-for-gtype "GListStore")))
+          (glib:symbol-for-gtype "GListStore")))
   ;; Check the type initializer
   (is (eq (g:gtype "GListStore")
           (g:gtype (cffi:foreign-funcall "g_list_store_get_type" :size))))
@@ -37,7 +37,7 @@
                        ((ITEM-TYPE G-LIST-STORE-ITEM-TYPE "item-type" "GType" T
                          NIL)
                         (N-ITEMS G-LIST-STORE-N-ITEMS "n-items" "guint" T NIL)))
-             (get-g-type-definition "GListStore"))))
+             (gobject:get-g-type-definition "GListStore"))))
 
 ;;; --- Properties -------------------------------------------------------------
 
@@ -81,4 +81,4 @@
 
 ;;;     g_list_store_find_with_equal_func
 
-;;; --- 2023-4-23 --------------------------------------------------------------
+;;; --- 2023-5-29 --------------------------------------------------------------

@@ -12,7 +12,7 @@
   (is (g:type-is-object "GMenu"))
   ;; Check the registered symbol
   (is (eq 'g:menu
-          (gobject:symbol-for-gtype "GMenu")))
+          (glib:symbol-for-gtype "GMenu")))
   ;; Check the type initializer
   (is (eq (g:gtype "GMenu")
           (g:gtype (cffi:foreign-funcall "g_menu_get_type" :size))))
@@ -33,7 +33,7 @@
   (is (equal '(DEFINE-G-OBJECT-CLASS "GMenu" G-MENU
                        (:SUPERCLASS G-MENU-MODEL
                         :EXPORT T :INTERFACES NIL) NIL)
-             (get-g-type-definition "GMenu"))))
+             (gobject:get-g-type-definition "GMenu"))))
 
 ;;;     GMenuItem
 
@@ -42,7 +42,7 @@
   (is (g:type-is-object "GMenuItem"))
   ;; Check the registered symbol
   (is (eq 'g:menu-item
-          (gobject:symbol-for-gtype "GMenuItem")))
+          (glib:symbol-for-gtype "GMenuItem")))
   ;; Check the type initializer
   (is (eq (g:gtype "GMenuItem")
           (g:gtype (cffi:foreign-funcall "g_menu_item_get_type" :size))))
@@ -63,7 +63,7 @@
   (is (equal '(DEFINE-G-OBJECT-CLASS "GMenuItem" G-MENU-ITEM
                        (:SUPERCLASS G-OBJECT
                         :EXPORT T :INTERFACES NIL) NIL)
-             (get-g-type-definition "GMenuItem"))))
+             (gobject:get-g-type-definition "GMenuItem"))))
 
 ;;; --- Functions --------------------------------------------------------------
 
@@ -291,4 +291,4 @@
     (is (typep (setf (g:menu-item-link item "submenu") submenu) 'g:menu-model))
     (is (typep (g:menu-item-link item "submenu") 'g:menu-model))))
 
-;;; 2022-10-30
+;;; --- 2023-5-29 --------------------------------------------------------------

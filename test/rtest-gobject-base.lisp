@@ -12,7 +12,7 @@
   (is (g:type-is-object "GObject"))
   ;; Check the registered symbol
   (is (eq 'g:object
-          (gobject:symbol-for-gtype "GObject")))
+          (glib:symbol-for-gtype "GObject")))
   ;; Check the type initializer
   (is (eq (g:gtype "GObject")
           (g:gtype (cffi:foreign-funcall "g_object_get_type" :size)))))
@@ -461,4 +461,4 @@
 ;;;     g_weak_ref_set
 ;;;     g_assert_finalize_object
 
-;;; --- 2023-1-1 ---------------------------------------------------------------
+;;; --- 2023-5-29 --------------------------------------------------------------
