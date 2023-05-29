@@ -28,17 +28,17 @@
 
 ;; We need two functions from the GObject library. These functions are later
 ;; implemented a second time for the GObject API, but do not use the :size
-;; type, but the Lisp gtype.
+;; type, but the Lisp GTYPE type.
 
-(defcfun ("g_type_name" %g-type-name) :string
+(cffi:defcfun ("g_type_name" %g-type-name) :string
   (gtype :size))
 
-(defcfun ("g_type_from_name" %g-type-from-name) :size
+(cffi:defcfun ("g_type_from_name" %g-type-from-name) :size
   (name :string))
 
 ;;; ----------------------------------------------------------------------------
 
-;; gtype is a Lisp representation of a foreign GType
+;; GTYPE is a Lisp representation of a foreign GType
 
 (defstruct (gtype
              ;; a print function to get nice output
@@ -65,6 +65,14 @@
     (clrhash *id-to-gtype*)
     (iter (for (name gtype) in-hashtable *name-to-gtype*)
           (setf (gtype-%id gtype) nil))))
+
+(defun get-name-to-gtypes ()
+  (iter (for (name gtype) in-hashtable *name-to-gtype*)
+        (collect name)))
+
+(defun get-id-to-gtypes ()
+  (iter (for (id gtype) in-hashtable *id-to-gtype*)
+        (collect (list id (gtype-name gtype)))))
 
 (glib-init:at-finalize () (invalidate-gtypes))
 
@@ -97,7 +105,9 @@
          (bt:with-lock-held (*gtype-lock*)
            (let ((id (%g-type-from-name (gtype-name gtype))))
              (if (zerop id)
+                 ;; No valid ID, print a warning
                  (warn-unknown-gtype (gtype-name gtype))
+                 ;; Store the valid ID
                  (setf (gtype-%id gtype) id
                        (gethash id *id-to-gtype*) gtype))
              id)))))
@@ -105,6 +115,10 @@
 ;;; ----------------------------------------------------------------------------
 
 ;; Make a Lisp GTYPE representation from a NAME or an ID
+
+;; TODO: We have changed the implementation so that we do not store unknown
+;; types in the hash tables. Because we have only valid types in the hash
+;; tables, we migth further simplify the implmentation.
 
 (defun gtype-from-name (name)
   (when name
@@ -114,18 +128,21 @@
           (unless (gtype-%id gtype)
             (let ((id (%g-type-from-name name)))
               (if (zerop id)
+                  ;; No valid ID, print a warning
                   (warn-unknown-gtype name)
+                  ;; Store the valid ID
                   (setf (gtype-%id gtype) id
                         (gethash id *id-to-gtype*) gtype))))
           (return-from gtype-from-name gtype)))
       (let ((id (%g-type-from-name name)))
-        (when (zerop id)
-          (warn-unknown-gtype name)
-          (setf id nil))
-        (let ((gtype (make-gtype :name (copy-seq name) :%id id)))
-          (setf (gethash id *id-to-gtype*) gtype
-                (gethash name *name-to-gtype*) gtype)
-          (return-from gtype-from-name gtype))))))
+        (if (zerop id)
+            ;; No valid ID, print a warning
+            (warn-unknown-gtype name)
+            ;; Generate and store a GTYPE
+            (let ((gtype (make-gtype :name (copy-seq name) :%id id)))
+              (setf (gethash id *id-to-gtype*) gtype
+                    (gethash name *name-to-gtype*) gtype)
+              (return-from gtype-from-name gtype)))))))
 
 (defun gtype-from-id (id)
   (unless (zerop id)
@@ -179,18 +196,18 @@
 ;; Global hash table for storing the corresponding symbol names for GType names
 ;; e.g. "GtkButton" -> 'button
 
-(defvar *symbol-for-gtypes* (make-hash-table :test 'equal))
+(defvar *symbol-for-gtype* (make-hash-table :test 'equal))
 
 (defun symbol-for-gtype (name-or-gtype)
   (let ((key (if (stringp name-or-gtype)
                  name-or-gtype
                  (gtype-name (gtype name-or-gtype)))))
-  (gethash key *symbol-for-gtypes*)))
+  (gethash key *symbol-for-gtype*)))
 
 (defun (setf symbol-for-gtype) (symbol name-or-gtype)
   (let ((key (if (stringp name-or-gtype)
                  name-or-gtype
                  (gtype-name (gtype name-or-gtype)))))
-  (setf (gethash key *symbol-for-gtypes*) symbol)))
+  (setf (gethash key *symbol-for-gtype*) symbol)))
 
 ;;; --- End of file glib.gtype.lisp --------------------------------------------

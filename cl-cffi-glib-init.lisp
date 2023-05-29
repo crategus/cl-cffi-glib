@@ -84,8 +84,8 @@
 ;;;
 ;;; (defmethod initialize-instance :after ((class gobject-class)
 ;;;                                        &key &allow-other-keys)
-;;;   (setf (gobject:symbol-for-gtype (gobject-class-g-type-name class)
-;;;                                   (class-name class))
+;;;   (setf (glib:symbol-for-gtype (gobject-class-g-type-name class)
+;;;                                (class-name class))
 ;;;   (at-init (class) (initialize-gobject-class-g-type class)))
 ;;;
 ;;; In this example, for every class, (initialize-gobject-class-g-type class)

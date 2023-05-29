@@ -4,10 +4,9 @@
 ;;; The documentation of this file is taken from the GObject Reference Manual
 ;;; Version 2.74 and modified to document the Lisp binding to the GObject
 ;;; library. See <http://www.gtk.org>. The API documentation of the Lisp binding
-;;; is available from <http://www.crategus.com/books/cl-cffi-gtk/>.
+;;; is available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2009 - 2011 Kalyanov Dmitry
-;;; Copyright (C) 2011 - 2022 Dieter Kaiser
+;;; Copyright (C) 2011 - 2023 Dieter Kaiser
 ;;;
 ;;; This program is free software: you can redistribute it and/or modify
 ;;; it under the terms of the GNU Lesser General Public License for Lisp
@@ -52,8 +51,7 @@
   (:import-from :closer-mop)
   (:import-from :trivial-garbage)
   (:import-from :bordeaux-threads)
-  (:export #:symbol-for-gtype
-           #:get-lisp-name-exception
+  (:export #:get-lisp-name-exception
 
            #:parse-g-value
            #:set-g-value
@@ -66,8 +64,6 @@
            #:define-g-interface
            #:define-g-object-class
            #:define-vtable
-
-           #:boxed-related-symbols
 
            #:get-g-type-definition
 

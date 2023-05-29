@@ -24,22 +24,6 @@
 
 (in-package :glib)
 
-(defvar *debug-gc* nil)
-(defvar *debug-gboxed-gc* nil)
-(defvar *debug-stream* t)
-
-(defmacro log-for (categories control-string &rest args)
-  (let ((vars (iter (for sym in (if (listp categories)
-                                    categories
-                                    (list categories)))
-                    (collect (intern (format nil "*DEBUG-~A*"
-                                             (symbol-name sym))
-                                     (find-package :glib))))))
-    `(progn
-       (when (or ,@vars)
-         (format *debug-stream* ,control-string ,@args))
-       nil)))
-
 ;; TODO: More work needed to rework the implementation of GBoxed.
 
 (defun type-initializer-call (type-initializer)
@@ -61,7 +45,7 @@
 ;; Used internally for the implementation of a Lisp boxed type. This function
 ;; is not exported.
 
-(defcfun ("g_boxed_copy" %boxed-copy) :pointer
+(cffi:defcfun ("g_boxed_copy" %boxed-copy) :pointer
   (gtype :size)
   (boxed :pointer))
 
@@ -95,26 +79,25 @@
 
 ;;; Garbage Collection for GBoxed opaque objects
 
-(defvar *gboxed-gc-hooks-lock* (bt:make-recursive-lock "gboxed-gc-hooks-lock"))
 (defvar *gboxed-gc-hooks* nil) ; pointers to objects to be freed
+(defvar *gboxed-gc-hooks-lock* (bt:make-recursive-lock "gboxed-gc-hooks-lock"))
+(defvar *gboxed-gc-hooks-counter* 0)
 
 (defun activate-gboxed-gc-hooks ()
   (bt:with-recursive-lock-held (*gboxed-gc-hooks-lock*)
     (when *gboxed-gc-hooks*
-      (log-for :gboxed-gc
-               "~%*%Activate gc hooks for boxed opaque: ~A~%" *gboxed-gc-hooks*)
-      (loop for (pointer info) in *gboxed-gc-hooks*
-            do (log-for :gboxed-gc
-                        "Free ~a, ~a~%" pointer (boxed-info-name info))
-               (boxed-free-fn info pointer))
+      (iter (for (pointer info) in *gboxed-gc-hooks*)
+            (decf *gboxed-gc-hooks-counter*)
+            (boxed-free-fn info pointer))
+      (assert (= 0 *gboxed-gc-hooks-counter*))
       (setf *gboxed-gc-hooks* nil))))
 
-(defun register-gboxed-for-gc (info pointer)
+(defun register-gboxed-for-gc (pointer info)
   (bt:with-recursive-lock-held (*gboxed-gc-hooks-lock*)
     (let ((locks-were-present (not (null *gboxed-gc-hooks*))))
+      (incf *gboxed-gc-hooks-counter*)
       (push (list pointer info) *gboxed-gc-hooks*)
       (unless locks-were-present
-        (log-for :gboxed-gc "~%Adding gboxed-gc-hook to main loop~%")
         (idle-add #'activate-gboxed-gc-hooks)))))
 
 ;;; ----------------------------------------------------------------------------
@@ -251,7 +234,7 @@
     (if (and proxy (boxed-type-returnp type))
         ;; Changed 2023-1-24:
         ;; Add a finalizer for return values of type :RETURN
-        (tg:finalize proxy (make-boxed-free-finalizer info native))
+        (tg:finalize proxy (make-boxed-free-finalizer native info))
         proxy)))
 
 (defmethod cleanup-translated-object-for-callback
@@ -262,9 +245,9 @@
 
 ;;; ----------------------------------------------------------------------------
 
-(defun make-boxed-free-finalizer (info pointer)
+(defun make-boxed-free-finalizer (pointer info)
   (lambda ()
-    (register-gboxed-for-gc info pointer)))
+    (register-gboxed-for-gc pointer info)))
 
 (defmacro define-g-boxed-opaque (name
                                  gtype
@@ -272,18 +255,19 @@
                                       type-initializer
                                       (alloc (cl:error "Alloc must be specified")))
   (let ((native-copy (gensym "NATIVE-COPY-"))
-        (instance (gensym "INSTANCE-")))
+        (instance (gensym "INSTANCE-"))
+        (info (gensym "INFO-")))
     `(progn
        (defclass ,name (boxed-opaque) ())
        (defmethod initialize-instance
                   :after ((,instance ,name) &key &allow-other-keys)
          (unless (boxed-opaque-pointer ,instance)
-           (let ((,native-copy ,alloc))
+           (let ((,native-copy ,alloc)
+                 (,info (get-boxed-info ',name)))
              (assert (cffi:pointerp ,native-copy))
              (setf (boxed-opaque-pointer ,instance) ,native-copy)
              (tg:finalize ,instance
-                          (make-boxed-free-finalizer (get-boxed-info ',name)
-                                                     ,native-copy)))))
+                          (make-boxed-free-finalizer ,native-copy ,info)))))
        (eval-when (:compile-toplevel :load-toplevel :execute)
          ;; Register the Lisp symbol NAME for GTYPE
          (setf (symbol-for-gtype ,gtype) ',name)

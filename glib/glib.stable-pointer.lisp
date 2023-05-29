@@ -66,13 +66,7 @@
       (when (<= 0 ptrid stable-pointers-length)
         (aref stable-pointers ptrid))))
 
-  ;; Replacement for the SET-STABLE-POINTER-VALUE function
   (defun (setf get-stable-pointer-value) (data pointer)
-    (let ((ptrid (cffi:pointer-address pointer)))
-      (when (<= 0 ptrid stable-pointers-length)
-        (setf (aref stable-pointers ptrid) data))))
-
-  (defun set-stable-pointer-value (pointer data)
     (let ((ptrid (cffi:pointer-address pointer)))
       (when (<= 0 ptrid stable-pointers-length)
         (setf (aref stable-pointers ptrid) data))))

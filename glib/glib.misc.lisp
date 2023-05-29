@@ -30,137 +30,28 @@
 ;;; This file contains several type definitions and functions, which are
 ;;; needed for the implemenation of the GTK library.
 ;;;
-;;; ----------------------------------------------------------------------------
-;;;
-;;; Basic Types
-;;;
-;;;     Standard GLib types, defined for ease-of-use and portability
-;;;
-;;; Only the following types are implemented:
-;;;
-;;;     gsize
-;;;     gssize
-;;;     goffset
-;;; ----------------------------------------------------------------------------
-;;;
 ;;; Memory Allocation
-;;;
-;;;  The following functions for general memory handling are implemented:
 ;;;
 ;;;     g_malloc
 ;;;     g_free
-;;; ----------------------------------------------------------------------------
 ;;;
-;;; String Utility Functions
+;;; Various types
 ;;;
-;;;     Various string-related functions
-;;;
-;;; Implemented is:
-;;;
-;;;     GString
 ;;;     GStrv
-;;;
-;;;     g_strdup                                           not exported
-;;; ----------------------------------------------------------------------------
-;;;
-;;; Doubly-Linked Lists
-;;;
-;;;     Linked lists containing integer values or pointers to data, with the
-;;;     ability to iterate over the list in both directions
-;;;
-;;; Implemented is:
-;;;
 ;;;     GList
-;;;
-;;;     g_list_free                                        not exported
-;;;     g_list_next                                        not exported
-;;;     g_list_append                                      not exported
-;;; ----------------------------------------------------------------------------
-;;;
-;;; Singly-Linked Lists
-;;;
-;;;     Linked lists containing integer values or pointers to data, limited to
-;;;     iterating over the list in one direction
-;;;
-;;; Implemented is:
-;;;
 ;;;     GSList
+;;;     GDateTime
+;;;     gunichar
 ;;;
-;;;     g_slist_alloc                                      not exported
-;;;     g_slist_free                                       not exported
-;;;     g_slist_next                                       not exported
+;;; Utility functions
+;;;
+;;;     g_get_application_name
+;;;     g_set_application_name
+;;;     g_get_prgname
+;;;     g_set_prgname
 ;;; ----------------------------------------------------------------------------
 
 (in-package :glib)
-
-;;; ----------------------------------------------------------------------------
-;;; gsize -> size-t                                        not exported
-;;; ----------------------------------------------------------------------------
-
-;; TODO: This type is replaced with the CFFI :SIZE type.
-
-#+nil
-(eval-when (:compile-toplevel :load-toplevel :execute)
-  (cond ((cffi-features:cffi-feature-p :x86-64) (defctype size-t :uint64))
-        ((cffi-features:cffi-feature-p :x86)    (defctype size-t :ulong))
-        ((cffi-features:cffi-feature-p :ppc32)  (defctype size-t :uint32))
-        ((cffi-features:cffi-feature-p :ppc64)  (defctype size-t :uint64))
-        (t
-         (cl:error "Can not define 'size-t', unknown CPU architecture ~
-                   (known are x86 and x86-64)"))))
-
-#+nil
-(setf (documentation 'size-t 'type)
- "@version{#2022-10-25}
-  @begin{short}
-    An unsigned integer type corresponding to the @code{size_t} type defined in
-    C99.
-  @end{short}
-  This type is wide enough to hold the numeric value of a pointer, so it is
-  usually 64 bit wide on a 64 bit platform. Values of this type can range from
-  0 to @code{G_MAXSIZE}.
-  @see-type{ssize-t}
-  @see-type{offset-t}")
-
-;;; ----------------------------------------------------------------------------
-;;; gssize -> ssize-t                                      not exported
-;;; ----------------------------------------------------------------------------
-
-;; TODO: Not needed, use the CFFI :SSIZE type
-
-#+nil
-(defctype ssize-t :long)
-
-#+nil
-(setf (documentation 'ssize-t 'type)
- "@version{#2022-10-25}
-  @begin{short}
-    A signed variant of the @type{size-t} type, corresponding to the
-    @code{ssize_t} type defined on most platforms.
-  @end{short}
-  Values of this type can range from @code{G_MINSSIZE} to @code{G_MAXSSIZE}.
-  @see-type{size-t}
-  @see-type{offset-t}")
-
-;;; ----------------------------------------------------------------------------
-;;; goffset                                                not exported
-;;; ----------------------------------------------------------------------------
-
-;; TODO: Not needed, use the CFFI :OFFSET type
-
-#+nil
-(defctype offset-t :uint64)
-
-#+nil
-(setf (documentation 'offset-t 'type)
- "@version{#2022-10-25}
-  @begin{short}
-    A signed integer type that is used for file offsets, corresponding to the
-    C99 @code{off64_t} type.
-  @end{short}
-  Values of this type can range from @code{G_MINOFFSET} to @code{G_MAXOFFSET}.
-  @see-type{size-t}
-  @see-type{ssize-t}")
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_malloc () -> malloc
@@ -209,57 +100,6 @@
   (mem :pointer))
 
 (export 'free)
-
-;;; ----------------------------------------------------------------------------
-;;; GString -> string-t                                    not exported
-;;; ----------------------------------------------------------------------------
-
-;; TODO: Not needed, use the CFFI :string type
-
-(define-foreign-type string-type ()
-  ((free-from-foreign :initarg :fff
-                      :reader string-type-fff
-                      :initform nil)
-   (free-to-foreign :initarg :ftf
-                    :reader string-type-ftf
-                    :initform t))
-  (:actual-type :pointer))
-
-(define-parse-method string-t (&key (free-from-foreign nil) (free-to-foreign t))
-  (make-instance 'string-type
-                 :fff free-from-foreign
-                 :ftf free-to-foreign))
-
-(defmethod cffi:translate-to-foreign (value (type string-type))
-  (cffi:foreign-funcall "g_strdup"
-                        (:string :free-to-foreign (strv-type-ftf type)) value
-                        :pointer))
-
-(defmethod cffi:translate-from-foreign (value (type string-type))
-  (prog1
-    (cffi:convert-from-foreign value '(:string :free-from-foreign nil))
-    (when (string-type-fff type)
-      (free value))))
-
-#+liber-documentation
-(setf (documentation 'string-t 'type)
- "@version{#2022-10-25}
-  @begin{short}
-    A type that is almost like the foreign CFFI @code{:string} type but uses
-    the GLib @fun{malloc} and @fun{free} functions to allocate and free
-    memory.
-  @end{short}
-
-  The @sym{string-t} type performs automatic conversion between Lisp and C
-  strings. Note that, in the case of functions the converted C string will
-  have dynamic extent, i.e. it will be automatically freed after the foreign
-  function returns.
-
-  In addition to Lisp strings, this type will accept foreign pointers and pass
-  them unmodified.
-  @see-type{strv-t}
-  @see-function{malloc}
-  @see-function{free}")
 
 ;;; ----------------------------------------------------------------------------
 ;;; GStrv
@@ -609,5 +449,72 @@
   @end{dictionary}")
 
 (export 'unichar)
+
+;;; ----------------------------------------------------------------------------
+;;; g_get_application_name ()
+;;; g_set_application_name () -> application-name
+;;; ----------------------------------------------------------------------------
+
+(defun (setf application-name) (name)
+  (cffi:foreign-funcall "g_set_application_name"
+                        :string name
+                        :void)
+  name)
+
+(defcfun ("g_get_application_name" application-name) :string
+ #+liber-documentation
+ "@version{2022-11-23}
+  @syntax[]{(g:application-name) => name}
+  @syntax[]{(setf (g:application-name) name)}
+  @argument[name]{a string with the localized name of the application}
+  @begin{short}
+    Accessor of a human readable name for the application.
+  @end{short}
+  This name should be localized if possible, and is intended for display to the
+  user. Contrast with the @fun{g:prgname} function, which gets a non-localized
+  name. If the @sym{(setf g:application-name)} function has not been called,
+  returns the result of the @fun{g:prgname} function, which may be @code{nil}
+  if the @sym{(setf g:prgname)} function has also not been called.
+
+  The @fun{g:prgname} function will be called automatically by
+  @code{gtk_init()}, but the @sym{g:application-name} function will not. Note
+  that for thread safety reasons, this function can only be called once.
+
+  The application name will be used in contexts such as error messages, or
+  when displaying the name of an application in the task list.
+  @see-function{g:prgname}")
+
+(export 'application-name)
+
+;;; ----------------------------------------------------------------------------
+;;; g_get_prgname ()
+;;; g_set_prgname () -> prgname
+;;; ----------------------------------------------------------------------------
+
+(defun (setf prgname) (prgname)
+  (cffi:foreign-funcall "g_set_prgname"
+                        :string prgname
+                        :void)
+  prgname)
+
+(defcfun ("g_get_prgname" prgname) :string
+ #+liber-documentation
+ "@version{2022-11-23}
+  @syntax[]{(g:prgname) => prgname}
+  @syntax[]{(setf (g:prgname) prgname)}
+  @argument[prgname]{a string with the name of the program}
+  @begin{short}
+    Accessor of the name of the program.
+  @end{short}
+  This name should not be localized, contrast with the @fun{g:application-name}
+  function. If you are using GDK or GTK the program name is set in the
+  @code{gdk_init()} function, which is called by the @code{gtk_init()} function.
+  The program name is found by taking the last component of the first command
+  line argument.
+
+  Note that for thread-safety reasons this function can only be called once.
+  @see-function{g:application-name}")
+
+(export 'prgname)
 
 ;;; --- End of file glib.misc.lisp ---------------------------------------------

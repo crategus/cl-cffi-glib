@@ -33,6 +33,8 @@
     :serial t
     :components
     ((:file "glib.package")
+     ;; Lisp utilities
+     (:file "glib.cl-utils")
      ;; Lisp support for callbacks, GType, and GBoxed
      (:file "glib.stable-pointer")
      (:file "glib.gtype")
@@ -43,7 +45,6 @@
      (:file "glib.misc")
      (:file "glib.error")
      (:file "glib.main-loop")
-     (:file "glib.utils")
      (:file "glib.bytes")
      (:file "glib.option")
      (:file "glib.key-file")
@@ -63,17 +64,13 @@
      (:file "gobject.enumeration")
      (:file "gobject.boxed-lisp")
      (:file "gobject.boxed")
-     ;; TODO: Glib types which need GBoxed, can we improve this
-;     (:file "../glib/glib.bytes")
-;     (:file "../glib/glib.variant-type")
-;     (:file "../glib/glib.variant")
-     (:file "gobject.param-spec")      ; GParamSpec
-     (:file "gobject.param")           ; Parameters and Values
+     (:file "gobject.param-spec")
+     (:file "gobject.param")
      (:file "gobject.gobject-class")
-     (:file "gobject.base")            ; The Base Object Type
-     (:file "gobject.closures")        ; Closures
-     (:file "gobject.signals")         ; Signals
-     (:file "gobject.binding")         ; Bind two object properties
+     (:file "gobject.base")
+     (:file "gobject.closures")
+     (:file "gobject.signals")
+     (:file "gobject.binding")
 
      (:file "gobject.utils")
      (:file "gobject.foreign-gobject-subclassing")
@@ -141,6 +138,7 @@
      (:file "rtest-glib")
      (:file "rtest-glib-stable-pointer")
      (:file "rtest-glib-gtype")
+     (:file "rtest-glib-boxed-type")
      (:file "rtest-glib-version")
      (:file "rtest-glib-quark")
      (:file "rtest-glib-misc")
@@ -189,7 +187,10 @@
      (:file "rtest-gio-menu")
      (:file "rtest-gio-notification")
      (:file "rtest-gio-file")
-     (:file "rtest-gio-cancellable"))))
+     (:file "rtest-gio-cancellable")
+     ;; Some more checks
+     (:file "rtest-glib-memory")
+     )))
   :perform (test-op (o c)
              (uiop:symbol-call :fiveam :run!
                                (uiop:find-symbol* :glib-test :glib-test)))

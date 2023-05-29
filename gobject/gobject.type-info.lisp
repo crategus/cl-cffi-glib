@@ -3002,7 +3002,7 @@
            (setf ptr (glib:allocate-stable-pointer data))
            (%type-set-qdata gtype quark ptr))
           (t
-           (glib:set-stable-pointer-value ptr data)
+           (setf (glib:get-stable-pointer-value ptr) data)
            (%type-set-qdata gtype quark ptr)))
     data))
 

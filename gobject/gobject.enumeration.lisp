@@ -2,29 +2,29 @@
 ;;; gobject.enumeration.lisp
 ;;;
 ;;; The documentation of this file is taken from the GObject Reference Manual
-;;; Version 2.74 and modified to document the Lisp binding to the GObject
+;;; Version 2.76 and modified to document the Lisp binding to the GObject
 ;;; library. See <http://www.gtk.org>. The API documentation of the Lisp
-;;; binding is available from <http://www.crategus.com/books/cl-cffi-gtk/>.
+;;; binding is available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2009 - 2011 Kalyanov Dmitry
-;;; Copyright (C) 2011 - 2022 Dieter Kaiser
+;;; Copyright (C) 2011 - 2023 Dieter Kaiser
 ;;;
-;;; This program is free software: you can redistribute it and/or modify
-;;; it under the terms of the GNU Lesser General Public License for Lisp
-;;; as published by the Free Software Foundation, either version 3 of the
-;;; License, or (at your option) any later version and with a preamble to
-;;; the GNU Lesser General Public License that clarifies the terms for use
-;;; with Lisp programs and is referred as the LLGPL.
+;;; Permission is hereby granted, free of charge, to any person obtaining a
+;;; copy of this software and associated documentation files (the "Software"),
+;;; to deal in the Software without restriction, including without limitation
+;;; the rights to use, copy, modify, merge, publish, distribute, sublicense,
+;;; and/or sell copies of the Software, and to permit persons to whom the
+;;; Software is furnished to do so, subject to the following conditions:
 ;;;
-;;; This program is distributed in the hope that it will be useful,
-;;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;;; GNU Lesser General Public License for more details.
+;;; The above copyright notice and this permission notice shall be included in
+;;; all copies or substantial portions of the Software.
 ;;;
-;;; You should have received a copy of the GNU Lesser General Public
-;;; License along with this program and the preamble to the Gnu Lesser
-;;; General Public License.  If not, see <http://www.gnu.org/licenses/>
-;;; and <http://opensource.franz.com/preamble.html>.
+;;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+;;; IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+;;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+;;; THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+;;; LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+;;; FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+;;; DEALINGS IN THE SOFTWARE.
 ;;; ----------------------------------------------------------------------------
 ;;;
 ;;; Enumeration and Flag Types
@@ -131,7 +131,7 @@
      (defcenum (,name ,base-type
                       :allow-undeclared-values ,allow-undeclared-values)
                ,@values)
-     (setf (symbol-for-gtype ,gtype) ',name)
+     (setf (glib:symbol-for-gtype ,gtype) ',name)
      ,@(when export
          (list `(export ',name
                         (find-package ,(package-name (symbol-package name))))))
@@ -156,7 +156,7 @@
 
 (defun parse-g-value-enum (gvalue)
   (let* ((gtype (value-type gvalue))
-         (enum-type (symbol-for-gtype (gtype-name gtype))))
+         (enum-type (glib:symbol-for-gtype (gtype-name gtype))))
     (unless enum-type
       (error "Enum ~A is not registered" (gtype-name gtype)))
     (cffi:convert-from-foreign (value-enum gvalue) enum-type)))
@@ -165,7 +165,7 @@
 
 (defun set-g-value-enum (gvalue value)
   (let* ((gtype (value-type gvalue))
-         (enum-type (symbol-for-gtype (gtype-name gtype))))
+         (enum-type (glib:symbol-for-gtype (gtype-name gtype))))
     (unless enum-type
       (error "Enum ~A is not registered" (gtype-name gtype)))
     (setf (value-enum gvalue) (cffi:convert-to-foreign value enum-type))))
@@ -450,7 +450,7 @@
                                       &body values)
   `(progn
      (defbitfield ,name ,base-type ,@values)
-     (setf (symbol-for-gtype ,gtype) ',name)
+     (setf (glib:symbol-for-gtype ,gtype) ',name)
      ,@(when export
          (list `(export ',name
                         (find-package ,(package-name (symbol-package name))))))
@@ -464,7 +464,7 @@
 
 (defun parse-g-value-flags (gvalue)
   (let* ((gtype (value-type gvalue))
-         (flags-type (symbol-for-gtype (gtype-name gtype))))
+         (flags-type (glib:symbol-for-gtype (gtype-name gtype))))
     (unless flags-type
       (error "Flags ~A is not registered." (gtype-name gtype)))
     (cffi:convert-from-foreign (value-flags gvalue) flags-type)))
@@ -473,7 +473,7 @@
 
 (defun set-g-value-flags (gvalue value)
   (let* ((gtype (value-type gvalue))
-         (flags-type (symbol-for-gtype (gtype-name gtype))))
+         (flags-type (glib:symbol-for-gtype (gtype-name gtype))))
     (unless flags-type
       (error "Flags ~A is not registered." (gtype-name gtype)))
     (setf (value-flags gvalue) (cffi:convert-to-foreign value flags-type))))
