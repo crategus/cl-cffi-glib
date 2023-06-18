@@ -1,30 +1,30 @@
 ;;; ----------------------------------------------------------------------------
 ;;; glib.main-loop.lisp
 ;;;
-;;; The documentation of this file is taken from the GLib 2.74 Reference
+;;; The documentation of this file is taken from the GLib 2.76 Reference
 ;;; Manual and modified to document the Lisp binding to the GLib library.
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
-;;; available from <http://www.crategus.com/books/cl-cffi-gtk/>.
+;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2009 - 2011 Kalyanov Dmitry
 ;;; Copyright (C) 2011 - 2023 Dieter Kaiser
 ;;;
-;;; This program is free software: you can redistribute it and/or modify
-;;; it under the terms of the GNU Lesser General Public License for Lisp
-;;; as published by the Free Software Foundation, either version 3 of the
-;;; License, or (at your option) any later version and with a preamble to
-;;; the GNU Lesser General Public License that clarifies the terms for use
-;;; with Lisp programs and is referred as the LLGPL.
+;;; Permission is hereby granted, free of charge, to any person obtaining a
+;;; copy of this software and associated documentation files (the "Software"),
+;;; to deal in the Software without restriction, including without limitation
+;;; the rights to use, copy, modify, merge, publish, distribute, sublicense,
+;;; and/or sell copies of the Software, and to permit persons to whom the
+;;; Software is furnished to do so, subject to the following conditions:
 ;;;
-;;; This program is distributed in the hope that it will be useful,
-;;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;;; GNU Lesser General Public License for more details.
+;;; The above copyright notice and this permission notice shall be included in
+;;; all copies or substantial portions of the Software.
 ;;;
-;;; You should have received a copy of the GNU Lesser General Public
-;;; License along with this program and the preamble to the Gnu Lesser
-;;; General Public License.  If not, see <http://www.gnu.org/licenses/>
-;;; and <http://opensource.franz.com/preamble.html>.
+;;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+;;; IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+;;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+;;; THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+;;; LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+;;; FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+;;; DEALINGS IN THE SOFTWARE.
 ;;; ----------------------------------------------------------------------------
 ;;;
 ;;; The Main Event Loop
@@ -32,8 +32,6 @@
 ;;;     Manages all available sources of events
 ;;;
 ;;; Types and Values
-;;;
-;;;     GMainLoop
 ;;;
 ;;;     G_PRIORITY_HIGH
 ;;;     G_PRIORITY_DEFAULT
@@ -43,8 +41,11 @@
 ;;;     G_SOURCE_CONTINUE
 ;;;     G_SOURCE_REMOVE
 ;;;
+;;;     GMainLoop
+;;;
 ;;;     GMainContext
 ;;;     GMainContextPusher
+;;;
 ;;;     GPid
 ;;;     G_PID_FORMAT
 ;;;     GPollFD
@@ -64,20 +65,12 @@
 ;;;     g_main_loop_is_running
 ;;;     g_main_loop_get_context
 ;;;
-;;;     g_main_new                                         deprecated
-;;;     g_main_destroy                                     deprecated
-;;;     g_main_run                                         deprecated
-;;;     g_main_quit                                        deprecated
-;;;     g_main_is_running                                  deprecated
-;;;
 ;;;     g_main_context_new
 ;;;     g_main_context_ref
 ;;;     g_main_context_unref
 ;;;     g_main_context_default
 ;;;     g_main_context_iteration
-;;;     g_main_iteration                                   deprecated
 ;;;     g_main_context_pending
-;;;     g_main_pending                                     deprecated
 ;;;     g_main_context_find_source_by_id
 ;;;     g_main_context_find_source_by_user_data
 ;;;     g_main_context_find_source_by_funcs_user_data
@@ -663,7 +656,7 @@
 ;;; g_main_loop_ref ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_main_loop_ref" main-loop-ref) (:pointer (:struct main-loop))
+(cffi:defcfun ("g_main_loop_ref" main-loop-ref) (:pointer (:struct main-loop))
  #+liber-documentation
  "@version{2022-11-21}
   @argument[loop]{a @type{g:main-loop} instance}
@@ -679,7 +672,7 @@
 ;;; g_main_loop_unref ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_main_loop_unref" main-loop-unref) :void
+(cffi:defcfun ("g_main_loop_unref" main-loop-unref) :void
  #+liber-documentation
  "@version{2022-11-21}
   @argument[loop]{a @type{g:main-loop} instance}
@@ -697,7 +690,7 @@
 ;;; g_main_loop_run ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_main_loop_run" main-loop-run) :void
+(cffi:defcfun ("g_main_loop_run" main-loop-run) :void
  #+liber-documentation
  "@version{2022-11-21}
   @argument[loop]{a @type{g:main-loop} instance}
@@ -717,7 +710,7 @@
 ;;; g_main_loop_quit ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_main_loop_quit" main-loop-quit) :void
+(cffi:defcfun ("g_main_loop_quit" main-loop-quit) :void
  #+liber-documentation
  "@version{2022-11-21}
   @argument[loop]{a @type{g:main-loop} instance}
@@ -737,7 +730,7 @@
 ;;; g_main_loop_is_running ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_main_loop_is_running" main-loop-is-running) :boolean
+(cffi:defcfun ("g_main_loop_is_running" main-loop-is-running) :boolean
  #+liber-documentation
  "@version{2022-11-21}
   @argument[loop]{a @type{g:main-loop} instance}
@@ -756,7 +749,7 @@
 ;;; g_main_loop_get_context () -> main-loop-context
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_main_loop_get_context" main-loop-context)
+(cffi:defcfun ("g_main_loop_get_context" main-loop-context)
     (:pointer (:struct main-context))
  #+liber-documentation
  "@version{2022-11-21}
@@ -770,98 +763,10 @@
 (export 'main-loop-context)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_main_new()
-;;;
-;;; #define g_main_new(is_running)
-;;;
-;;; Warning
-;;;
-;;; g_main_new has been deprecated since version 2.2 and should not be used in
-;;; newly written code. Use g_main_loop_new() instead
-;;;
-;;; Creates a new GMainLoop for th default main context.
-;;;
-;;; is_running :
-;;;     set to TRUE to indicate that the loop is running. This is not very
-;;;     important since calling g_main_run() will set this to TRUE anyway.
-;;;
-;;; Returns :
-;;;     a new GMainLoop
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_main_destroy()
-;;;
-;;; #define g_main_destroy(loop)
-;;;
-;;; Warning
-;;;
-;;; g_main_destroy has been deprecated since version 2.2 and should not be used
-;;; in newly written code. Use g_main_loop_unref() instead
-;;;
-;;; Frees the memory allocated for the GMainLoop.
-;;;
-;;; loop :
-;;;     a GMainLoop
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_main_run()
-;;;
-;;; #define g_main_run(loop)
-;;;
-;;; Warning
-;;;
-;;; g_main_run has been deprecated since version 2.2 and should not be used in
-;;; newly written code. Use g_main_loop_run() instead
-;;;
-;;; Runs a main loop until it stops running.
-;;;
-;;; loop :
-;;;     a GMainLoop
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_main_quit()
-;;;
-;;; #define g_main_quit(loop)
-;;;
-;;; Warning
-;;;
-;;; g_main_quit has been deprecated since version 2.2 and should not be used in
-;;; newly written code. Use g_main_loop_quit() instead
-;;;
-;;; Stops the GMainLoop. If g_main_run() was called to run the GMainLoop, it
-;;; will now return.
-;;;
-;;; loop :
-;;;     a GMainLoop
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_main_is_running()
-;;;
-;;; #define g_main_is_running(loop)
-;;;
-;;; Warning
-;;;
-;;; g_main_is_running has been deprecated since version 2.2 and should not be
-;;; used in newly written code. Use g_main_loop_is_running() instead
-;;;
-;;; Checks if the main loop is running.
-;;;
-;;; loop :
-;;;     a GMainLoop
-;;;
-;;; Returns :
-;;;     TRUE if the main loop is running
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
 ;;; g_main_context_new ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_main_context_new" main-context-new)
+(cffi:defcfun ("g_main_context_new" main-context-new)
     (:pointer (:struct main-context))
  #+liber-documentation
  "@version{2022-11-21}
@@ -875,7 +780,7 @@
 ;;; g_main_context_ref ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_main_context_ref" main-context-ref)
+(cffi:defcfun ("g_main_context_ref" main-context-ref)
     (:pointer (:struct main-context))
  #+liber-documentation
  "@version{2022-11-21}
@@ -892,7 +797,7 @@
 ;;; g_main_context_unref ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_main_context_unref" main-context-unref) :void
+(cffi:defcfun ("g_main_context_unref" main-context-unref) :void
  #+liber-documentation
  "@version{2022-11-21}
   @argument[context]{a @type{g:main-context} instance}
@@ -910,7 +815,7 @@
 ;;; g_main_context_default ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_main_context_default" main-context-default)
+(cffi:defcfun ("g_main_context_default" main-context-default)
     (:pointer (:struct main-context))
  #+liber-documentation
  "@version{2022-11-21}
@@ -960,28 +865,6 @@
 (export 'main-context-iteration)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_main_iteration()
-;;;
-;;; #define g_main_iteration(may_block)
-;;;
-;;; Warning
-;;;
-;;; g_main_iteration has been deprecated since version 2.2 and should not be
-;;; used in newly written code. Use g_main_context_iteration() instead.
-;;;
-;;; Runs a single iteration for the default GMainContext.
-;;;
-;;; may_block :
-;;;     set to TRUE if it should block (i.e. wait) until an event source becomes
-;;;     ready. It will return after an event source has been processed. If set
-;;;     to FALSE it will return immediately if no event source is ready to be
-;;;     processed.
-;;;
-;;; Returns :
-;;;     TRUE if more events are pending.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
 ;;; g_main_context_pending ()
 ;;; ----------------------------------------------------------------------------
 
@@ -999,23 +882,6 @@
                           :boolean)))
 
 (export 'main-context-pending)
-
-;;; ----------------------------------------------------------------------------
-;;; g_main_pending
-;;;
-;;; #define g_main_pending()
-;;;
-;;; Warning
-;;;
-;;; g_main_pending has been deprecated since version 2.2 and should not be used
-;;; in newly written code. Use g_main_context_pending() instead.
-;;;
-;;; Checks if any events are pending for the default GMainContext (i.e. ready
-;;; to be processed).
-;;;
-;;; Returns :
-;;;     TRUE if any events are pending.
-;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_main_context_find_source_by_id ()
@@ -1060,8 +926,8 @@
 ;;; g_main_context_find_source_by_user_data ()             not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_main_context_find_source_by_user_data"
-          main-context-find-source-by-user-data)
+(cffi:defcfun ("g_main_context_find_source_by_user_data"
+                main-context-find-source-by-user-data)
     (:pointer (:struct source))
  #+liber-documentation
  "@version{#2013-4-9}
@@ -1080,8 +946,8 @@
 ;;; g_main_context_find_source_by_funcs_user_data ()       not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_main_context_find_source_by_funcs_user_data"
-          main-context-find-source-by-funcs-user-data)
+(cffi:defcfun ("g_main_context_find_source_by_funcs_user_data"
+                main-context-find-source-by-funcs-user-data)
     (:pointer (:struct source))
  #+liber-documentation
  "@version{#2013-4-4}
@@ -1104,7 +970,7 @@
 ;;; g_main_context_wakeup ()                               not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_main_context_wakeup" main-context-wakeup) :void
+(cffi:defcfun ("g_main_context_wakeup" main-context-wakeup) :void
  #+liber-documentation
  "@version{#2021-12-10}
   @argument[context]{a @type{main-context} instance}
@@ -1145,7 +1011,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 ;;; g_main_context_acquire ()                              not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_main_context_acquire" main-context-acquire) :boolean
+(cffi:defcfun ("g_main_context_acquire" main-context-acquire) :boolean
  #+liber-documentation
  "@version{#2021-12-10}
   @argument[context]{a @type{main-context} instance}
@@ -1166,7 +1032,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 ;;; g_main_context_release ()                              not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_main_context_release" main-context-release) :void
+(cffi:defcfun ("g_main_context_release" main-context-release) :void
  #+liber-documentation
  "@version{#2021-12-10}
   @argument[context]{a @type{main-context} instance}
@@ -1185,7 +1051,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 ;;; g_main_context_is_owner ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_main_context_is_owner" main-context-is-owner) :boolean
+(cffi:defcfun ("g_main_context_is_owner" main-context-is-owner) :boolean
  #+liber-documentation
  "@version{2022-11-22}
   @argument[context]{a @type{g:main-context} instance}
@@ -1239,7 +1105,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 
 ;; TODO: priority is a foreign integer, return this value
 
-(defcfun ("g_main_context_prepare" main-context-prepare) :boolean
+(cffi:defcfun ("g_main_context_prepare" main-context-prepare) :boolean
  #+liber-documentation
  "@version{#2021-4-9}
   @argument[context]{a @type{main-context} instance}
@@ -1262,7 +1128,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 ;;; g_main_context_query ()                                not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_main_context_query" main-context-query) :int
+(cffi:defcfun ("g_main_context_query" main-context-query) :int
  #+liber-documentation
  "@version{#2021-4-9}
   @argument[context]{a @type{main-context} instance}
@@ -1290,7 +1156,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 ;;; g_main_context_check ()                                not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_main_context_check" main-context-check) :int
+(cffi:defcfun ("g_main_context_check" main-context-check) :int
  #+liber-documentation
  "@version{#2021-4-9}
   @argument[context]{a @type{main-context} instance}
@@ -1317,7 +1183,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 ;;; g_main_context_dispatch ()                             not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_main_context_dispatch" main-context-dispatch) :void
+(cffi:defcfun ("g_main_context_dispatch" main-context-dispatch) :void
  #+liber-documentation
  "@version{#2021-12-10}
   @argument[context]{a @type{main-context} instance}
@@ -1334,7 +1200,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 ;;; g_main_context_set_poll_func ()                        not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_main_context_set_poll_func" main-context-set-poll-func) :void
+(cffi:defcfun ("g_main_context_set_poll_func" main-context-set-poll-func) :void
  #+liber-documentation
  "@version{#2021-4-9}
   @argument[context]{a @type{main-context} instance}
@@ -1356,7 +1222,8 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 ;;; g_main_context_get_poll_func ()                        not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_main_context_get_poll_func" main-context-get-poll-func) :pointer
+(cffi:defcfun ("g_main_context_get_poll_func" main-context-get-poll-func)
+    :pointer
  #+liber-documentation
  "@version{#2021-4-9}
   @argument[context]{a @type{main-context} instance}
@@ -1395,7 +1262,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 ;;; g_main_context_add_poll ()                             not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_main_context_add_poll" main-context-add-poll) :void
+(cffi:defcfun ("g_main_context_add_poll" main-context-add-poll) :void
  #+liber-documentation
  "@version{#2021-4-9}
   @argument[context]{a @type{main-context} instance or @code{null-pointer}
@@ -1424,7 +1291,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 ;;; g_main_context_remove_poll ()                          not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_main_context_remove_poll" main-context-remove-poll) :void
+(cffi:defcfun ("g_main_context_remove_poll" main-context-remove-poll) :void
  #+liber-documentation
  "@version{#2021-4-9}
   @argument[context]{a @type{main-context} instance}
@@ -1444,7 +1311,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 ;;; g_main_depth ()                                        not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_main_depth" main-depth) :int
+(cffi:defcfun ("g_main_depth" main-depth) :int
  #+liber-documentation
  "@version{#2021-12-10}
   @return{An integer with the main loop recursion level in the current thread.}
@@ -1486,7 +1353,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 ;;; g_main_current_source ()                               not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_main_current_source" main-current-source)
+(cffi:defcfun ("g_main_current_source" main-current-source)
     (:pointer (:struct source))
  #+liber-documentation
  "@version{#2021-12-10}
@@ -1662,7 +1529,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 ;;; g_main_context_get_thread_default ()                   not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_main_context_get_thread_default" main-context-thread-default)
+(cffi:defcfun ("g_main_context_get_thread_default" main-context-thread-default)
     (:pointer (:struct main-context))
  #+liber-documentation
  "@version{#2021-4-9}
@@ -1690,7 +1557,8 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 ;;; g_main_context_ref_thread_default ()                   not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_main_context_ref_thread_default" main-context-ref-thread-default)
+(cffi:defcfun ("g_main_context_ref_thread_default"
+                main-context-ref-thread-default)
     (:pointer (:struct main-context))
  #+liber-documentation
  "@version{#2021-4-9}
@@ -1766,7 +1634,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 ;;; g_timeout_source_new ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_timeout_source_new" timeout-source-new)
+(cffi:defcfun ("g_timeout_source_new" timeout-source-new)
     (:pointer (:struct source))
  #+liber-documentation
  "@version{2022-11-22}
@@ -1788,7 +1656,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 ;;; g_timeout_source_new_seconds ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_timeout_source_new_seconds" timeout-source-new-seconds)
+(cffi:defcfun ("g_timeout_source_new_seconds" timeout-source-new-seconds)
     (:pointer (:struct source))
  #+liber-documentation
  "@version{2023-1-5}
@@ -1861,7 +1729,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 ;;; g_timeout_add_full ()                                  not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_timeout_add_full" %timeout-add-full) :uint
+(cffi:defcfun ("g_timeout_add_full" %timeout-add-full) :uint
  #+liber-documentation
  "@version{#2013-7-20}
   @argument[priority]{the priority of the timeout source. Typically this will
@@ -1946,7 +1814,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 ;;; g_timeout_add_seconds_full ()                          not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_timeout_add_seconds_full" %timeout-add-seconds-full) :uint
+(cffi:defcfun ("g_timeout_add_seconds_full" %timeout-add-seconds-full) :uint
  #+liber-documentation
  "@version{#2013-01-17}
   @argument[priority]{the priority of the timeout source. Typically this will
@@ -2005,7 +1873,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 ;;; g_idle_source_new ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_idle_source_new" idle-source-new) (:pointer (:struct source))
+(cffi:defcfun ("g_idle_source_new" idle-source-new) (:pointer (:struct source))
  #+liber-documentation
  "@version{2022-11-22}
   @return{The newly created @type{g:source} idle source.}
@@ -2060,7 +1928,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 ;;; g_idle_add_full ()                                     not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_idle_add_full" %idle-add-full) :uint
+(cffi:defcfun ("g_idle_add_full" %idle-add-full) :uint
  #+liber-documentation
  "@version{#2013-1-1}
   @argument[priority]{the priority of the idle source. Typically this will be
@@ -2088,7 +1956,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 ;;; g_idle_remove_by_data ()                               not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_idle_remove_by_data" idle-remove-by-data) :boolean
+(cffi:defcfun ("g_idle_remove_by_data" idle-remove-by-data) :boolean
  #+liber-documentation
  "@version{#2013-1-1}
   @argument[data]{the data for the idle source's callback.}
@@ -2304,7 +2172,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 ;;; g_source_new ()                                        not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_source_new" source-new) (:pointer (:struct source))
+(cffi:defcfun ("g_source_new" source-new) (:pointer (:struct source))
  #+liber-documentation
  "@version{#2021-4-10}
   @argument[source-funcs]{a @type{source-funcs} instance containing functions
@@ -2330,7 +2198,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 ;;; g_source_ref ()                                        not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_source_ref" source-ref) (:pointer (:struct source))
+(cffi:defcfun ("g_source_ref" source-ref) (:pointer (:struct source))
  #+liber-documentation
  "@version{#2021-12-10}
   @argument[source]{a @type{source} instance}
@@ -2344,7 +2212,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 ;;; g_source_unref ()                                      not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_source_unref" source-unref) :void
+(cffi:defcfun ("g_source_unref" source-unref) :void
  #+liber-documentation
  "@version{#2021-12-10}
   @argument[source]{a @type{source} instance}
@@ -2361,7 +2229,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 ;;; g_source_set_funcs ()                                  not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_source_set_funcs" source-set-funcs) :void
+(cffi:defcfun ("g_source_set_funcs" source-set-funcs) :void
  #+liber-documentation
  "@version{#2013-7-21}
   @argument[source]{a @type{source} instance}
@@ -2440,7 +2308,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 ;;; g_source_destroy ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_source_destroy" source-destroy) :void
+(cffi:defcfun ("g_source_destroy" source-destroy) :void
  #+liber-documentation
  "@version{2022-11-22}
   @argument[source]{a @type{g:source} instance}
@@ -2459,7 +2327,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 ;;; g_source_is_destroyed ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_source_is_destroyed" source-is-destroyed) :boolean
+(cffi:defcfun ("g_source_is_destroyed" source-is-destroyed) :boolean
  #+liber-documentation
  "@version{2022-11-22}
   @argument[source]{a @type{g:source} instance}
@@ -2487,7 +2355,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
                         :void)
   priority)
 
-(defcfun ("g_source_get_priority" source-priority) :int
+(cffi:defcfun ("g_source_get_priority" source-priority) :int
  #+liber-documentation
  "@version{2023-1-5}
   @syntax[]{(g:source-priority source) => priority}
@@ -2518,7 +2386,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
                         :void)
   can-recurse)
 
-(defcfun ("g_source_get_can_recurse" source-can-recurse) :boolean
+(cffi:defcfun ("g_source_get_can_recurse" source-can-recurse) :boolean
  #+liber-documentation
  "@version{2023-1-5}
   @syntax[]{(g:source-can-recurse source) => can-recurse}
@@ -2543,7 +2411,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 ;;; g_source_get_id () -> source-id
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_source_get_id" source-id) :uint
+(cffi:defcfun ("g_source_get_id" source-id) :uint
  #+liber-documentation
  "@version{2022-11-22}
   @argument[source]{a @type{g:source} instance}
@@ -2573,7 +2441,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
                           :void))
   name)
 
-(defcfun ("g_source_get_name" source-name) :string
+(cffi:defcfun ("g_source_get_name" source-name) :string
  #+liber-documentation
  "@version{2023-1-5}
   @syntax[]{(g:source-name source) => name}
@@ -2602,7 +2470,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 ;;; g_source_set_name_by_id ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_source_set_name_by_id" source-set-name-by-id) :void
+(cffi:defcfun ("g_source_set_name_by_id" source-set-name-by-id) :void
  #+liber-documentation
  "@version{2022-11-22}
   @argument[source]{an integer with the source ID}
@@ -2652,7 +2520,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 ;;; g_source_set_callback ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_source_set_callback" %source-set-callback) :void
+(cffi:defcfun ("g_source_set_callback" %source-set-callback) :void
   (source (:pointer (:struct source)))
   (func :pointer)
   (data :pointer)
@@ -2682,7 +2550,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 ;;; GSourceFunc ()
 ;;; ----------------------------------------------------------------------------
 
-(defcallback source-func :boolean
+(cffi:defcallback source-func :boolean
     ((data :pointer))
   (funcall (get-stable-pointer-value data)))
 
@@ -2779,7 +2647,7 @@ lambda ()
                         :void)
   time)
 
-(defcfun ("g_source_get_ready_time" source-ready-time) :int64
+(cffi:defcfun ("g_source_get_ready_time" source-ready-time) :int64
  #+liber-documentation
  "@version{2023-1-5}
   @syntax[]{(g:source-ready-time source) => time}
@@ -2924,7 +2792,7 @@ lambda ()
 ;;; g_source_add_poll ()                                   not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_source_add_poll" source-add-poll) :void
+(cffi:defcfun ("g_source_add_poll" source-add-poll) :void
  #+liber-documentation
  "@version{#2021-4-9}
   @argument[source]{a @type{source} instance}
@@ -2948,7 +2816,7 @@ lambda ()
 ;;; g_source_remove_poll ()                                not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_source_remove_poll" source-remove-poll) :void
+(cffi:defcfun ("g_source_remove_poll" source-remove-poll) :void
  #+liber-documentation
  "@version{#2013-5-13}
   @argument[source]{a @type{source} structure}
@@ -3007,7 +2875,7 @@ lambda ()
 ;;; g_source_get_time () -> source-time
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_source_get_time" source-time) :uint64
+(cffi:defcfun ("g_source_get_time" source-time) :uint64
  #+liber-documentation
  "@version{2022-11-22}
   @argument[source]{a @type{g:source} instance}
@@ -3047,7 +2915,7 @@ lambda ()
 ;;; g_source_remove ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_source_remove" source-remove) :boolean
+(cffi:defcfun ("g_source_remove" source-remove) :boolean
  #+liber-documentation
  "@version{2023-1-5}
   @argument[source]{an unsigned integer ID for the source to remove}
@@ -3073,8 +2941,8 @@ lambda ()
 ;;; g_source_remove_by_funcs_user_data ()                  not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_source_remove_by_funcs_user_data"
-          source-remove-by-funcs-user-data) :boolean
+(cffi:defcfun ("g_source_remove_by_funcs_user_data"
+                source-remove-by-funcs-user-data) :boolean
  #+liber-documentation
  "@version{#2013-4-9}
   @argument[funcs]{The @arg{source-funcs} passed to @fun{source-new}}
@@ -3094,7 +2962,8 @@ lambda ()
 ;;; g_source_remove_by_user_data ()                        not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_source_remove_by_user_data" source-remove-by-user-data) :boolean
+(cffi:defcfun ("g_source_remove_by_user_data" source-remove-by-user-data)
+    :boolean
  #+liber-documentation
  "@version{#2013-4-9}
   @argument[user-data]{the @arg{user-data} for the callback}

@@ -56,6 +56,7 @@
            #:*warn-unknown-gtype*
            ;; Symbols from glib.boxed-type.lisp
            #:boxed-opaque-info
+           #:boxed-opaque-pointer
            #:boxed-cstruct-info
            #:boxed-variant-info
            #:define-g-boxed-opaque
@@ -116,6 +117,9 @@
     @end{subsection}
     @begin[Unicode manipulation]{subsection}
       @about-class{unichar}
+    @end{subsection}
+    @begin[GError]{subsection}
+      @about-class{error}
     @end{subsection}
     @begin[Memory Allocation]{subsection}
       The following functions for general memory handling are implemented:

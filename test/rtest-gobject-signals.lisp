@@ -57,7 +57,7 @@
 
 ;;;     g_signal_list_ids
 
-(test signal-list-ids
+(test g-signal-list-ids
   (is (equal '()
              (mapcar #'g:signal-name (g:signal-list-ids "gboolean"))))
   (is (equal '()
@@ -66,7 +66,10 @@
   (is (equal '("activate" "change-state")
              (sort (mapcar #'g:signal-name (g:signal-list-ids "GSimpleAction"))
                    #'string<)))
-  ;; FIXME: We do not get the list of signals.
+  ;; A workaround to get the correct result for the following test
+  (is (typep (make-instance 'g:list-store) 'g:list-store))
+  (is (equal '("items-changed")
+             (mapcar #'g:signal-name (g:signal-list-ids "GListModel"))))
   (is (equal '("activate" "command-line" "handle-local-options" "name-lost"
                "open" "shutdown" "startup")
              (sort (mapcar #'g:signal-name (g:signal-list-ids "GApplication"))
@@ -279,4 +282,4 @@
 ;;;     g_signal_accumulator_true_handled
 ;;;     g_clear_signal_handler
 
-;;; --- 2023-1-2 ---------------------------------------------------------------
+;;; --- 2023-6-11 --------------------------------------------------------------

@@ -31,6 +31,10 @@
 ;;;
 ;;;      A system for reporting errors
 ;;;
+;;; Types and Values
+;;;
+;;;     GError
+;;;
 ;;; Macros
 ;;;
 ;;;     with-g-error
@@ -40,37 +44,45 @@
 
 (in-package :glib)
 
-;; TODO: Improve the implementation of GError
 ;; GError is a boxed type. We export the type for usage in signals handlers,
-;; when getting a GError as argument. Because we need the implemenation if
-;;; GBoxed this code is move to this place.
+;; when getting a GError as argument.
+
 (define-g-boxed-opaque error "GError"
   :alloc (cl:error "GError cannot be created from the Lisp side."))
 
-(export 'error)
+#+liber-documentation
+(setf (liber:alias-for-class 'error)
+      "GBoxed"
+      (documentation 'error 'type)
+ "@version{2023-6-1}
+  @begin{short}
+    The @sym{g:error} structure contains information about an error that has
+    occurred.
+  @end{short}")
 
+(export 'error)
 
 ;;; ----------------------------------------------------------------------------
 ;;; struct GError                                          not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcstruct %g-error
-  (:domain quark-as-string)
-  (:code :int)
-  (:message :string))
+(cffi:defcstruct %g-error
+  (%domain quark-as-string)
+  (%code :int)
+  (%message :string))
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_clear_error                                          not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_clear_error" %g-clear-error) :void
+(cffi:defcfun ("g_clear_error" %g-clear-error) :void
   (err :pointer))
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_set_error_error_literal                              not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_set_error_literal" %g-set-error-literal) :void
+(cffi:defcfun ("g_set_error_literal" %g-set-error-literal) :void
   (err :pointer)
   (domain quark-as-string)
   (code :int)
@@ -79,7 +91,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;; The Lisp implemenation for GError replaces the C implementation. Only the
-;; WITH-G-ERROR, WITH-IGNORE-G-ERROr, and WITH-CATCHING-TO-G-ERROR macros are
+;; WITH-G-ERROR, WITH-IGNORE-G-ERROR, and WITH-CATCHING-TO-G-ERROR macros are
 ;; exported for use.
 
 (define-condition g-error-condition (cl:error)
@@ -101,14 +113,14 @@
 
 (defun maybe-raise-g-error-condition (err)
   (unless (cffi:null-pointer-p err)
-    (cl:error 'g-error-condition
-              :domain (cffi:foreign-slot-value err '(:struct %g-error) :domain)
-              :code (cffi:foreign-slot-value err '(:struct %g-error) :code)
-              :message (cffi:foreign-slot-value err
-                                                '(:struct %g-error) :message))))
+    (cffi:with-foreign-slots ((%domain %code %message) err (:struct %g-error))
+      (cl:error 'g-error-condition
+                :domain %domain
+                :code %code
+                :message %message))))
 
 (defmacro with-g-error ((err) &body body)
-  `(with-foreign-object (,err :pointer)
+  `(cffi:with-foreign-object (,err :pointer)
      (setf (cffi:mem-ref ,err :pointer) (cffi:null-pointer))
      (unwind-protect
        (progn ,@body)
@@ -116,7 +128,7 @@
        (%g-clear-error ,err))))
 
 (defmacro with-ignore-g-error ((err) &body body)
-  `(with-foreign-object (,err :pointer)
+  `(cffi:with-foreign-object (,err :pointer)
      (setf (cffi:mem-ref ,err :pointer) (cffi:null-pointer))
      (unwind-protect
        (progn ,@body)
