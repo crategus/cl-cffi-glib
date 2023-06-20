@@ -188,7 +188,7 @@
 ;;; GVariant
 ;;; ----------------------------------------------------------------------------
 
-(defcstruct variant)
+(cffi:defcstruct variant)
 
 #+liber-documentation
 (setf (liber:alias-for-type 'variant)
@@ -405,7 +405,7 @@
 ;;; enum GVariantClass
 ;;; ----------------------------------------------------------------------------
 
-(defcenum variant-class
+(cffi:defcenum variant-class
   (:boolean     #.(char-code #\b))
   (:byte        #.(char-code #\y))
   (:int16       #.(char-code #\n))
@@ -432,7 +432,7 @@
  "@version{2023-1-31}
   @short{The range of possible toplevel types of @type{g:variant} instances.}
   @begin{pre}
-(defcenum variant-class
+(cffi:defcenum variant-class
   (:boolean     #.(char-code #\b))
   (:byte        #.(char-code #\y))
   (:int16       #.(char-code #\n))
@@ -650,7 +650,7 @@
 ;;; g_variant_unref ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_unref" variant-unref) :void
+(cffi:defcfun ("g_variant_unref" variant-unref) :void
  #+liber-documentation
  "@version{2022-12-29}
   @argument[value]{a @type{g:variant} instance}
@@ -669,7 +669,7 @@
 ;;; g_variant_ref ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_ref" variant-ref) (:pointer (:struct variant))
+(cffi:defcfun ("g_variant_ref" variant-ref) (:pointer (:struct variant))
  #+liber-documentation
  "@version{2022-12-29}
   @argument[value]{a @type{g:variant} instance}
@@ -686,7 +686,8 @@
 ;;; g_variant_ref_sink ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_ref_sink" variant-ref-sink) (:pointer (:struct variant))
+(cffi:defcfun ("g_variant_ref_sink" variant-ref-sink)
+    (:pointer (:struct variant))
  #+liber-documentation
  "@version{2022-12-29}
   @argument[value]{a @type{g:variant} instance}
@@ -726,7 +727,7 @@
 ;;; g_variant_is_floating ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_is_floating" variant-is-floating) :boolean
+(cffi:defcfun ("g_variant_is_floating" variant-is-floating) :boolean
  #+liber-documentation
  "@version{2022-12-29}
   @argument[value]{a @type{g:variant} instance}
@@ -752,7 +753,7 @@
 ;;; g_variant_take_ref ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_take_ref" variant-take-ref) (boxed variant-type)
+(cffi:defcfun ("g_variant_take_ref" variant-take-ref) (boxed variant-type)
  #+liber-documentation
  "@version{#2022-12-29}
   @argument[value]{a @type{g:variant} instance}
@@ -799,7 +800,7 @@
 ;;; g_variant_get_type () -> variant-type
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_get_type" variant-type) (boxed variant-type)
+(cffi:defcfun ("g_variant_get_type" variant-type) (boxed variant-type)
  #+liber-documentation
  "@version{2022-12-29}
   @argument[value]{a @type{g:variant} instance}
@@ -818,7 +819,7 @@
 ;;; g_variant_get_type_string () -> variant-type-string
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_get_type_string" variant-type-string) :string
+(cffi:defcfun ("g_variant_get_type_string" variant-type-string) :string
  #+liber-documentation
  "@version{2022-12-29}
   @argument[value]{a @type{g:variant} instance}
@@ -841,7 +842,7 @@
 ;;; g_variant_is_of_type ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_is_of_type" variant-is-of-type) :boolean
+(cffi:defcfun ("g_variant_is_of_type" variant-is-of-type) :boolean
  #+liber-documentation
  "@version{2022-12-29}
   @argument[value]{a @type{g:variant} instance}
@@ -862,7 +863,7 @@
 ;;; g_variant_is_container ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_is_container" variant-is-container) :boolean
+(cffi:defcfun ("g_variant_is_container" variant-is-container) :boolean
  #+liber-documentation
  "@version{2022-12-29}
   @argument[value]{a @type{g:variant} instance}
@@ -879,7 +880,7 @@
 ;;; g_variant_compare ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_compare" variant-compare) :int
+(cffi:defcfun ("g_variant_compare" variant-compare) :int
  #+liber-documentation
  "@version{2022-12-29}
   @argument[value1]{a basic-typed @type{g:variant} instance}
@@ -916,7 +917,7 @@
 ;;; g_variant_classify ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_classify" variant-classify) variant-class
+(cffi:defcfun ("g_variant_classify" variant-classify) variant-class
  #+liber-documentation
  "@version{2022-12-29}
   @argument[value]{a @type{g:variant} instance}
@@ -1122,7 +1123,7 @@
 ;;; g_variant_new_boolean ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_new_boolean" variant-new-boolean)
+(cffi:defcfun ("g_variant_new_boolean" variant-new-boolean)
     (:pointer (:struct variant))
  #+liber-documentation
  "@version{2022-12-29}
@@ -1148,7 +1149,8 @@
 ;;; g_variant_new_byte ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_new_byte" variant-new-byte) (:pointer (:struct variant))
+(cffi:defcfun ("g_variant_new_byte" variant-new-byte)
+    (:pointer (:struct variant))
  #+liber-documentation
  "@version{2022-12-29}
   @argument[value]{a @code{:uchar} value}
@@ -1163,7 +1165,8 @@
 ;;; g_variant_new_int16 ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_new_int16" variant-new-int16) (:pointer (:struct variant))
+(cffi:defcfun ("g_variant_new_int16" variant-new-int16)
+    (:pointer (:struct variant))
  #+liber-documentation
  "@version{2022-12-29}
   @argument[value]{a @code{:int16} value}
@@ -1178,7 +1181,7 @@
 ;;; g_variant_new_uint16 ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_new_uint16" variant-new-uint16)
+(cffi:defcfun ("g_variant_new_uint16" variant-new-uint16)
     (:pointer (:struct variant))
  #+liber-documentation
  "@version{2022-12-29}
@@ -1194,7 +1197,8 @@
 ;;; g_variant_new_int32 ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_new_int32" variant-new-int32) (:pointer (:struct variant))
+(cffi:defcfun ("g_variant_new_int32" variant-new-int32)
+    (:pointer (:struct variant))
  #+liber-documentation
  "@version{2022-12-29}
   @argument[value]{a @code{:int32} value}
@@ -1209,7 +1213,7 @@
 ;;; g_variant_new_uint32 ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_new_uint32" variant-new-uint32)
+(cffi:defcfun ("g_variant_new_uint32" variant-new-uint32)
     (:pointer (:struct variant))
  #+liber-documentation
  "@version{2022-12-29}
@@ -1225,7 +1229,8 @@
 ;;; g_variant_new_int64 ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_new_int64" variant-new-int64) (:pointer (:struct variant))
+(cffi:defcfun ("g_variant_new_int64" variant-new-int64)
+    (:pointer (:struct variant))
  #+liber-documentation
  "@version{2022-12-29}
   @argument[value]{a @code{:int64} value}
@@ -1240,7 +1245,7 @@
 ;;; g_variant_new_uint64 ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_new_uint64" variant-new-uint64)
+(cffi:defcfun ("g_variant_new_uint64" variant-new-uint64)
     (:pointer (:struct variant))
  #+liber-documentation
  "@version{2022-12-29}
@@ -1256,7 +1261,7 @@
 ;;; g_variant_new_handle ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_new_handle" variant-new-handle)
+(cffi:defcfun ("g_variant_new_handle" variant-new-handle)
     (:pointer (:struct variant))
  #+liber-documentation
  "@version{2022-12-29}
@@ -1275,7 +1280,7 @@
 ;;; g_variant_new_double ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_new_double" variant-new-double)
+(cffi:defcfun ("g_variant_new_double" variant-new-double)
     (:pointer (:struct variant))
  #+liber-documentation
  "@version{2022-12-29}
@@ -1291,7 +1296,7 @@
 ;;; g_variant_new_string ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_new_string" variant-new-string)
+(cffi:defcfun ("g_variant_new_string" variant-new-string)
     (:pointer (:struct variant))
  #+liber-documentation
  "@version{2022-12-29}
@@ -1369,7 +1374,7 @@
 ;;; g_variant_new_object_path ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_new_object_path" variant-new-object-path)
+(cffi:defcfun ("g_variant_new_object_path" variant-new-object-path)
     (:pointer (:struct variant))
  #+liber-documentation
  "@version{#2022-12-29}
@@ -1391,7 +1396,7 @@
 ;;; g_variant_is_object_path ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_is_object_path" variant-is-object-path) :boolean
+(cffi:defcfun ("g_variant_is_object_path" variant-is-object-path) :boolean
  #+liber-documentation
  "@version{#2022-12-29}
   @argument[string]{a string with a D-Bus object path}
@@ -1416,7 +1421,7 @@
 ;;; g_variant_new_signature ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_new_signature" variant-new-signature)
+(cffi:defcfun ("g_variant_new_signature" variant-new-signature)
     (:pointer (:struct variant))
  #+liber-documentation
  "@version{#2022-12-29}
@@ -1438,7 +1443,7 @@
 ;;; g_variant_is_signature ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_is_signature" variant-is-signature) :boolean
+(cffi:defcfun ("g_variant_is_signature" variant-is-signature) :boolean
  #+liber-documentation
  "@version{#2022-12-29}
   @argument[string]{a normal C nul-terminated string}
@@ -1462,7 +1467,7 @@
 ;;; g_variant_new_variant ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_new_variant" variant-new-variant)
+(cffi:defcfun ("g_variant_new_variant" variant-new-variant)
     (:pointer (:struct variant))
  #+liber-documentation
  "@version{#2022-12-29}
@@ -1567,7 +1572,7 @@
 ;;; g_variant_get_boolean () -> variant-boolean
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_get_boolean" variant-boolean) :boolean
+(cffi:defcfun ("g_variant_get_boolean" variant-boolean) :boolean
  #+liber-documentation
  "@version{#2022-12-29}
   @argument[value]{a @type{g:variant} instance with a boolean value}
@@ -1591,7 +1596,7 @@
 ;;; g_variant_get_byte () -> variant-byte
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_get_byte" variant-byte) :uchar
+(cffi:defcfun ("g_variant_get_byte" variant-byte) :uchar
  #+liber-documentation
  "@version{#2022-12-29}
   @argument[value]{a @type{g:variant} instance with a @code{:uchar} value}
@@ -1609,7 +1614,7 @@
 ;;; g_variant_get_int16 () -> variant-int16
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_get_int16" variant-int16) :int16
+(cffi:defcfun ("g_variant_get_int16" variant-int16) :int16
  #+liber-documentation
  "@version{#2022-12-29}
   @argument[value]{a @type{g:variant} instance with a @code{:int16} value}
@@ -1627,7 +1632,7 @@
 ;;; g_variant_get_uint16 () -> variant-uint16
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_get_uint16" variant-uint16) :uint16
+(cffi:defcfun ("g_variant_get_uint16" variant-uint16) :uint16
  #+liber-documentation
  "@version{#2022-12-29}
   @argument[value]{a @type{g:variant} instance with a @code{:uint16} value}
@@ -1645,7 +1650,7 @@
 ;;; g_variant_get_int32 () -> variant-int32
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_get_int32" variant-int32) :int32
+(cffi:defcfun ("g_variant_get_int32" variant-int32) :int32
  #+liber-documentation
  "@version{2022-12-29}
   @argument[value]{a @type{g:variant} instance with a @code{:int32} value}
@@ -1663,7 +1668,7 @@
 ;;; g_variant_get_uint32 () -> variant-uint32
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_get_uint32" variant-uint32) :uint32
+(cffi:defcfun ("g_variant_get_uint32" variant-uint32) :uint32
  #+liber-documentation
  "@version{#2022-12-29}
   @argument[value]{a @type{g:variant} instance with a @code{:uint32} value}
@@ -1681,7 +1686,7 @@
 ;;; g_variant_get_int64 () -> variant-int64
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_get_int64" variant-int64) :int64
+(cffi:defcfun ("g_variant_get_int64" variant-int64) :int64
  #+liber-documentation
  "@version{#2022-12-29}
   @argument[value]{a @type{g:variant} instance with a @code{:int64} value}
@@ -1699,7 +1704,7 @@
 ;;; g_variant_get_uint64 () -> variant-uint64
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_get_uint64" variant-uint64) :uint64
+(cffi:defcfun ("g_variant_get_uint64" variant-uint64) :uint64
  #+liber-documentation
  "@version{#2022-12-29}
   @argument[value]{a @type{g:variant} instance with a @code{:uint64} value}
@@ -1717,7 +1722,7 @@
 ;;; g_variant_get_handle () -> variant-handle
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_get_handle" variant-handle) :int32
+(cffi:defcfun ("g_variant_get_handle" variant-handle) :int32
  #+liber-documentation
  "@version{#2022-12-29}
   @argument[value]{a @type{g:variant} instance with a handle}
@@ -1739,7 +1744,7 @@
 ;;; g_variant_get_double () -> variant-double
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_get_double" variant-double) :double
+(cffi:defcfun ("g_variant_get_double" variant-double) :double
  #+liber-documentation
  "@version{#2022-12-29}
   @argument[value]{a @type{variant} instance with a double float value}
@@ -1757,7 +1762,7 @@
 ;;; g_variant_get_string () -> variant-string
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_get_string" %variant-string) :string
+(cffi:defcfun ("g_variant_get_string" %variant-string) :string
   (value (:pointer (:struct variant)))
   (length :pointer))
 
@@ -2722,7 +2727,7 @@
 ;;; g_variant_equal ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_equal" variant-equal) :boolean
+(cffi:defcfun ("g_variant_equal" variant-equal) :boolean
  #+liber-documentation
  "@version{#2022-12-29}
   @argument[value1]{a @type{g:variant} instance}
@@ -2741,7 +2746,7 @@
 ;;; g_variant_print ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_print" %variant-print) (:string :free-from-foreign t)
+(cffi:defcfun ("g_variant_print" %variant-print) (:string :free-from-foreign t)
   (value (:pointer (:struct variant)))
   (annotate :boolean))
 
@@ -3476,10 +3481,10 @@
 ;;; g_variant_dict_new ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_dict_new" %variant-dict-new) :pointer
+(cffi:defcfun ("g_variant_dict_new" %variant-dict-new) :pointer
   (from-asv (:pointer (:struct variant))))
 
-(defcfun ("g_variant_dict_new" variant-dict-new)
+(cffi:defcfun ("g_variant_dict_new" variant-dict-new)
     (boxed variant-dict :return)
  #+liber-documentation
  "@version{2023-4-26}
@@ -3557,7 +3562,7 @@
 ;;; g_variant_dict_contains ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_dict_contains" variant-dict-contains) :boolean
+(cffi:defcfun ("g_variant_dict_contains" variant-dict-contains) :boolean
  #+liber-documentation
  "@version{2023-4-26}
   @argument[dict]{a @class{g:variant-dict} instance}
@@ -3614,7 +3619,7 @@
 ;;; g_variant_dict_lookup_value ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_dict_lookup_value" %variant-dict-lookup-value)
+(cffi:defcfun ("g_variant_dict_lookup_value" %variant-dict-lookup-value)
     (:pointer (:struct variant))
   (dict (boxed variant-dict))
   (key :string)
@@ -3680,7 +3685,7 @@
 ;;; g_variant_dict_insert_value ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_dict_insert_value" variant-dict-insert-value) :void
+(cffi:defcfun ("g_variant_dict_insert_value" variant-dict-insert-value) :void
  #+liber-documentation
  "@version{2023-4-27}
   @argument[dict]{a @class{g:variant-dict} instance}
@@ -3701,7 +3706,7 @@
 ;;; g_variant_dict_remove ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_dict_remove" variant-dict-remove) :boolean
+(cffi:defcfun ("g_variant_dict_remove" variant-dict-remove) :boolean
  #+liber-documentation
  "@version{2023-4-27}
   @argument[dict]{a @class{g:variant-dict} instance}
@@ -3721,7 +3726,8 @@
 ;;; g_variant_dict_end ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_dict_end" variant-dict-end) (:pointer (:struct variant))
+(cffi:defcfun ("g_variant_dict_end" variant-dict-end)
+    (:pointer (:struct variant))
  #+liber-documentation
  "@version{2023-4-27}
   @argument[dict]{a @class{g:variant-dict} instance}
@@ -3745,14 +3751,14 @@
 
 ;; FIXME: Does not work for an argument non-nil for VTYPE
 
-(defcfun ("g_variant_parse" %variant-parse-1) (:pointer (:struct variant))
+(cffi:defcfun ("g_variant_parse" %variant-parse-1) (:pointer (:struct variant))
   (vtype :pointer) ; must be the type :pointer
   (text :string)
   (limit :pointer)
   (endptr :pointer)
   (err :pointer))
 
-(defcfun ("g_variant_parse" %variant-parse-2) (:pointer (:struct variant))
+(cffi:defcfun ("g_variant_parse" %variant-parse-2) (:pointer (:struct variant))
   (vtype (boxed variant-type))
   (text :string)
   (limit :pointer)

@@ -4,26 +4,27 @@
 ;;; The documentation of this file is taken from the GLib 2.74 Reference
 ;;; Manual and modified to document the Lisp binding to the GLib library.
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
-;;; available from <http://www.crategus.com/books/cl-cffi-gtk/>.
+;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
 ;;; Copyright (C) 2013 - 2023 Dieter Kaiser
 ;;;
-;;; This program is free software: you can redistribute it and/or modify
-;;; it under the terms of the GNU Lesser General Public License for Lisp
-;;; as published by the Free Software Foundation, either version 3 of the
-;;; License, or (at your option) any later version and with a preamble to
-;;; the GNU Lesser General Public License that clarifies the terms for use
-;;; with Lisp programs and is referred as the LLGPL.
+;;; Permission is hereby granted, free of charge, to any person obtaining a
+;;; copy of this software and associated documentation files (the "Software"),
+;;; to deal in the Software without restriction, including without limitation
+;;; the rights to use, copy, modify, merge, publish, distribute, sublicense,
+;;; and/or sell copies of the Software, and to permit persons to whom the
+;;; Software is furnished to do so, subject to the following conditions:
 ;;;
-;;; This program is distributed in the hope that it will be useful,
-;;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;;; GNU Lesser General Public License for more details.
+;;; The above copyright notice and this permission notice shall be included in
+;;; all copies or substantial portions of the Software.
 ;;;
-;;; You should have received a copy of the GNU Lesser General Public
-;;; License along with this program and the preamble to the Gnu Lesser
-;;; General Public License.  If not, see <http://www.gnu.org/licenses/>
-;;; and <http://opensource.franz.com/preamble.html>.
+;;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+;;; IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+;;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+;;; THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+;;; LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+;;; FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+;;; DEALINGS IN THE SOFTWARE.
 ;;; ----------------------------------------------------------------------------
 ;;;
 ;;; Command line option parser
@@ -177,7 +178,7 @@
 ;;; enum GOptionArg
 ;;; ----------------------------------------------------------------------------
 
-(defcenum option-arg
+(cffi:defcenum option-arg
   :none
   :string
   :int
@@ -201,7 +202,7 @@
     @code{--name=arg}.
   @end{short}
   @begin{pre}
-(defcenum option-arg
+(cffi:defcenum option-arg
   :none
   :string
   :int
@@ -237,7 +238,7 @@
 ;;; enum GOptionFlags
 ;;;-----------------------------------------------------------------------------
 
-(defbitfield option-flags
+(cffi:defbitfield option-flags
   (:none 0)
   :hidden
   :in-main
@@ -254,7 +255,7 @@
  "@version{2022-11-23}
   @short{Flags which modify individual options.}
   @begin{pre}
-(defbitfield option-flags
+(cffi:defbitfield option-flags
   :none
   :hidden
   :in-main
@@ -310,7 +311,7 @@
 ;;; struct GOptionEntry                                    not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcstruct option-entry
+(cffi:defcstruct option-entry
   (long-name :string)
   (short-name :char)
   (flags option-flags)
@@ -323,7 +324,7 @@
 ;;; GOptionContext
 ;;; ----------------------------------------------------------------------------
 
-(defcstruct option-context)
+(cffi:defcstruct option-context)
 
 #+liber-documentation
 (setf (liber:alias-for-type 'option-context)
@@ -482,7 +483,7 @@ Application Options:
 ;;; GOptionGroup
 ;;; ----------------------------------------------------------------------------
 
-(defcstruct option-group)
+(cffi:defcstruct option-group)
 
 #+liber-documentation
 (setf (liber:alias-for-type 'option-group)
@@ -539,7 +540,7 @@ Application Options:
 ;;; g_option_context_new ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_option_context_new" %option-context-new)
+(cffi:defcfun ("g_option_context_new" %option-context-new)
     (:pointer (:struct option-context))
   (parameter :string))
 
@@ -604,7 +605,7 @@ Hilfeoptionen:
                         :void)
   summary)
 
-(defcfun ("g_option_context_get_summary" option-context-summary) :string
+(cffi:defcfun ("g_option_context_get_summary" option-context-summary) :string
  #+liber-documentation
  "@version{2022-11-24}
   @syntax[]{(g:option-context-summary context) => summary}
@@ -660,7 +661,8 @@ Hilfeoptionen:
                         :void)
   description)
 
-(defcfun ("g_option_context_get_description" option-context-description) :string
+(cffi:defcfun ("g_option_context_get_description" option-context-description)
+    :string
  #+liber-documentation
  "@version{2022-11-24}
   @syntax[]{(g:option-context-description context) => description}
@@ -705,7 +707,7 @@ More descriptions.
 ;;; GTranslateFunc ()
 ;;; ----------------------------------------------------------------------------
 
-(defcallback translate-func :string
+(cffi:defcallback translate-func :string
     ((str :string)
      (data :pointer))
   (let ((fn (glib:get-stable-pointer-value data)))
@@ -739,8 +741,8 @@ lambda (str)
 ;;; g_option_context_set_translate_func ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_option_context_set_translate_func"
-          %option-context-set-translate-func) :void
+(cffi:defcfun ("g_option_context_set_translate_func"
+                %option-context-set-translate-func) :void
   (context (:pointer (:struct option-context)))
   (func :pointer)
   (data :pointer)
@@ -788,8 +790,8 @@ lambda (str)
 ;;; g_option_context_set_translation_domain ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_option_context_set_translation_domain"
-           option-context-set-translation-domain) :void
+(cffi:defcfun ("g_option_context_set_translation_domain"
+                option-context-set-translation-domain) :void
  #+liber-documentation
  "@version{#2022-11-24}
   @argument[context]{a @type{g:option-context} instance}
@@ -808,7 +810,7 @@ lambda (str)
 ;;; g_option_context_free ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_option_context_free" option-context-free) :void
+(cffi:defcfun ("g_option_context_free" option-context-free) :void
  #+liber-documentation
  "@version{2022-11-24}
   @argument[context]{a @type{g:option-context} instance}
@@ -825,7 +827,7 @@ lambda (str)
 ;;; g_option_context_parse ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_option_context_parse" %option-context-parse) :boolean
+(cffi:defcfun ("g_option_context_parse" %option-context-parse) :boolean
   (context (:pointer (:struct option-context)))
   (argc :pointer)
   (argv :pointer)
@@ -865,7 +867,7 @@ lambda (str)
   @see-function{g:prgname}
   @see-function{g:option-context-help-enabled}"
   (with-g-error (err)
-    (with-foreign-objects ((argc :int) (argv-ptr :pointer))
+    (cffi:with-foreign-objects ((argc :int) (argv-ptr :pointer))
       (setf (cffi:mem-ref argc :int) (length argv))
       (setf (cffi:mem-ref argv-ptr :pointer)
             (cffi:convert-to-foreign argv 'strv-t))
@@ -881,7 +883,7 @@ lambda (str)
 ;; Furthermore see the notes about the documentation.
 ;; Do we need a second implementation???
 
-(defcfun ("g_option_context_parse_strv" %option-context-parse-strv) :boolean
+(cffi:defcfun ("g_option_context_parse_strv" %option-context-parse-strv) :boolean
   (context (:pointer (:struct option-context)))
   (arguments :pointer)
   (err :pointer))
@@ -918,7 +920,7 @@ lambda (str)
   @see-class{g:application}
   @see-function{g:option-context-parse}"
   (with-g-error (err)
-    (with-foreign-object (argv-ptr :pointer)
+    (cffi:with-foreign-object (argv-ptr :pointer)
       (setf (cffi:mem-ref argv-ptr :pointer)
             (if arguments
                 (cffi:convert-to-foreign arguments
@@ -940,7 +942,7 @@ lambda (str)
                         :void)
   enabled)
 
-(defcfun ("g_option_context_get_help_enabled" option-context-help-enabled)
+(cffi:defcfun ("g_option_context_get_help_enabled" option-context-help-enabled)
     :boolean
  #+liber-documentation
  "@version{#2022-11-24}
@@ -974,8 +976,8 @@ lambda (str)
                         :void)
   value)
 
-(defcfun ("g_option_context_get_ignore_unkown_options"
-           option-context-ignore-unknown-options) :boolean
+(cffi:defcfun ("g_option_context_get_ignore_unkown_options"
+                option-context-ignore-unknown-options) :boolean
  #+liber-documentation
  "@version{#2022-11-24}
   @syntax[]{(g:option-context-ignore-unknown-options context) => ignore}
@@ -1005,7 +1007,7 @@ lambda (str)
 ;;; g_option_context_get_help () -> option-context-help
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_option_context_get_help" %option-context-help) :string
+(cffi:defcfun ("g_option_context_get_help" %option-context-help) :string
   (context (:pointer (:struct option-context)))
   (main :boolean)
   (group :pointer))
@@ -1051,7 +1053,7 @@ lambda (str)
                         :void)
   value)
 
-(defcfun ("g_option_context_get_strict_posix" option-context-strict-posix)
+(cffi:defcfun ("g_option_context_get_strict_posix" option-context-strict-posix)
     :boolean
  #+liber-documentation
  "@version{#2022-11-24}
@@ -1092,8 +1094,8 @@ lambda (str)
 ;;; g_option_context_add_main_entries ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_option_context_add_main_entries"
-          %option-context-add-main-entries) :void
+(cffi:defcfun ("g_option_context_add_main_entries"
+                %option-context-add-main-entries) :void
   (context (:pointer (:struct option-context)))
   (entries (:pointer (:pointer (:struct option-entry))))
   (domain :string))
@@ -1174,7 +1176,7 @@ lambda (str)
 ;;; g_option_context_add_group ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_option_context_add_group" option-context-add-group) :void
+(cffi:defcfun ("g_option_context_add_group" option-context-add-group) :void
  #+liber-documentation
  "@version{#2022-11-24}
   @argument[context]{a @type{g:option-context} instance}
@@ -1206,7 +1208,7 @@ lambda (str)
                         :void)
   group)
 
-(defcfun ("g_option_context_get_main_group" option-context-main-group)
+(cffi:defcfun ("g_option_context_get_main_group" option-context-main-group)
     (:pointer (:struct option-group))
  #+liber-documentation
  "@version{2022-11-24}
@@ -1236,7 +1238,7 @@ lambda (str)
 
 ;; TODO: The arguments USER-DATA and DESTROY are not implemented.
 
-(defcfun ("g_option_group_new" %option-group-new)
+(cffi:defcfun ("g_option_group_new" %option-group-new)
     (:pointer (:struct option-group))
   (name :string)
   (description :string)
@@ -1277,7 +1279,7 @@ lambda (str)
 ;;; g_option_group_ref ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_option_group_ref" option-group-ref)
+(cffi:defcfun ("g_option_group_ref" option-group-ref)
     (:pointer (:struct option-group))
  #+liber-documentation
  "@version{#2022-11-25}
@@ -1295,7 +1297,7 @@ lambda (str)
 ;;; g_option_group_unref ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_option_group_unref" option-group-unref) :void
+(cffi:defcfun ("g_option_group_unref" option-group-unref) :void
  #+liber-documentation
  "@version{#2022-11-24}
   @argument[group]{a @type{g:option-group} instance}
@@ -1330,7 +1332,7 @@ lambda (str)
 ;;; g_option_group_add_entries ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_option_group_add_entries" %option-group-add-entries) :void
+(cffi:defcfun ("g_option_group_add_entries" %option-group-add-entries) :void
   (group (:pointer (:struct option-group)))
   (entries (:pointer (:pointer (:struct option-entry)))))
 
@@ -1390,19 +1392,20 @@ lambda (str)
   @see-symbol{g:option-arg}
   @see-function{g:option-group-set-translation-domain}"
   (let ((n-entries (length entries)))
-    (with-foreign-object (entries-ptr '(:struct option-entry) (1+ n-entries))
+    (cffi:with-foreign-object (entries-ptr '(:struct option-entry)
+                                           (1+ n-entries))
       (loop
         for entry in entries
         for i from 0
         for entry-ptr = (cffi:mem-aptr entries-ptr '(:struct option-entry) i)
-        do (with-foreign-slots ((long-name
-                                 short-name
-                                 flags
-                                 arg
-                                 arg-data
-                                 description
-                                 arg-description) entry-ptr
-                                                  (:struct option-entry))
+        do (cffi:with-foreign-slots ((long-name
+                                      short-name
+                                      flags
+                                      arg
+                                      arg-data
+                                      description
+                                      arg-description) entry-ptr
+                                                       (:struct option-entry))
              (setf long-name (first entry)
                    short-name (if (second entry)
                                   (char-code (second entry))
@@ -1425,14 +1428,14 @@ lambda (str)
       (let ((entry-ptr (cffi:mem-aptr entries-ptr
                                       '(:struct option-entry)
                                       n-entries)))
-        (with-foreign-slots ((long-name
-                              short-name
-                              flags
-                              arg
-                              arg-data
-                              description
-                              arg-description) entry-ptr
-                                               (:struct option-entry))
+        (cffi:with-foreign-slots ((long-name
+                                   short-name
+                                   flags
+                                   arg
+                                   arg-data
+                                   description
+                                   arg-description) entry-ptr
+                                                    (:struct option-entry))
           (setf long-name (cffi:null-pointer))
           (setf short-name 0)
           (setf flags 0)
@@ -1543,8 +1546,8 @@ lambda (str)
 ;;; g_option_group_set_translate_func ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_option_group_set_translate_func"
-          %option-group-set-translate-func) :void
+(cffi:defcfun ("g_option_group_set_translate_func"
+                %option-group-set-translate-func) :void
   (group (:pointer (:struct option-group)))
   (func :pointer)
   (data :pointer)
@@ -1585,8 +1588,8 @@ lambda (str)
 ;;; g_option_group_set_translation_domain ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_option_group_set_translation_domain"
-           option-group-set-translation-domain) :void
+(cffi:defcfun ("g_option_group_set_translation_domain"
+                option-group-set-translation-domain) :void
  #+liber-documentation
  "@version{2022-11-25}
   @argument[group]{a @type{g:option-group} instance}

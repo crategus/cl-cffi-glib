@@ -177,7 +177,7 @@
 ;;; enum GKeyFileFlags
 ;;; ----------------------------------------------------------------------------
 
-(defbitfield key-file-flags
+(cffi:defbitfield key-file-flags
   (:none 0)
   (:keep-comments #.(ash 1 0))
   (:keep-translations #.(ash 1 1)))
@@ -191,7 +191,7 @@
     Flags which influence the parsing of key values.
   @end{short}
   @begin{pre}
-(defbitfield key-file-flags
+(cffi:defbitfield key-file-flags
   (:none 0)
   (:keep-comments #.(ash 1 0))
   (:keep-translations #.(ash 1 1)))
@@ -213,7 +213,7 @@
 ;;; GKeyFile
 ;;; ----------------------------------------------------------------------------
 
-(defcstruct key-file)
+(cffi:defcstruct key-file)
 
 #+liber-documentation
 (setf (liber:alias-for-type 'key-file)
@@ -351,7 +351,7 @@ Booleans=true;false;true;true
 ;;; g_key_file_new ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_key_file_new" key-file-new) (:pointer (:struct key-file))
+(cffi:defcfun ("g_key_file_new" key-file-new) (:pointer (:struct key-file))
  #+liber-documentation
  "@version{2023-1-25}
   @return{An empty @type{g:key-file} instance.}
@@ -370,7 +370,7 @@ Booleans=true;false;true;true
 ;;; g_key_file_free ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_key_file_free" key-file-free) :void
+(cffi:defcfun ("g_key_file_free" key-file-free) :void
  #+liber-documentation
  "@version{2023-1-25}
   @argument[keyfile]{a @type{g:key-file} instance}
@@ -389,7 +389,7 @@ Booleans=true;false;true;true
 ;;; g_key_file_ref ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_key_file_ref" key-file-ref) (:pointer (:struct key-file))
+(cffi:defcfun ("g_key_file_ref" key-file-ref) (:pointer (:struct key-file))
  #+liber-documentation
  "@version{2023-1-25}
   @argument[keyfile]{a @type{g:file-key} instance}
@@ -407,7 +407,7 @@ Booleans=true;false;true;true
 ;;; g_key_file_unref ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_key_file_unref" key-file-unref) :void
+(cffi:defcfun ("g_key_file_unref" key-file-unref) :void
  #+liber-documentation
  "@version{2023-1-25}
   @argument[keyfile]{a @type{g:key-file} instance}
@@ -426,7 +426,8 @@ Booleans=true;false;true;true
 ;;; g_key_file_set_list_separator ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_key_file_set_list_separator" %key-file-set-list-separator) :void
+(cffi:defcfun ("g_key_file_set_list_separator" %key-file-set-list-separator) 
+    :void
   (keyfile (:pointer (:struct key-file)))
   (separator :char))
 
@@ -449,7 +450,7 @@ Booleans=true;false;true;true
 ;;; g_key_file_load_from_file ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_key_file_load_from_file" %key-file-load-from-file) :boolean
+(cffi:defcfun ("g_key_file_load_from_file" %key-file-load-from-file) :boolean
   (keyfile (:pointer (:struct key-file)))
   (filename :string)
   (flags key-file-flags)
@@ -477,7 +478,7 @@ Booleans=true;false;true;true
 ;;; g_key_file_load_from_data ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_key_file_load_from_data" %key-file-load-from-data) :boolean
+(cffi:defcfun ("g_key_file_load_from_data" %key-file-load-from-data) :boolean
   (keyfile (:pointer (:struct key-file)))
   (data :string)
   (len :size)
@@ -606,7 +607,7 @@ Booleans=true;false;true;true
 ;;; g_key_file_to_data ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_key_file_to_data" %key-file-to-data) :string
+(cffi:defcfun ("g_key_file_to_data" %key-file-to-data) :string
   (keyfile (:pointer (:struct key-file)))
   (len (:pointer :size))
   (err :pointer))
@@ -624,7 +625,7 @@ Booleans=true;false;true;true
   @see-type{g:key-file}
   @see-function{g:key-file-save-to-file}"
   (with-g-error (err)
-    (with-foreign-object (len :size)
+    (cffi:with-foreign-object (len :size)
       (values (%key-file-to-data keyfile len err)
               (cffi:mem-ref len :size)))))
 
@@ -634,7 +635,7 @@ Booleans=true;false;true;true
 ;;; g_key_file_save_to_file ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_key_file_save_to_file" %key-file-save-to-file) :boolean
+(cffi:defcfun ("g_key_file_save_to_file" %key-file-save-to-file) :boolean
   (keyfile (:pointer (:struct key-file)))
   (filename :string)
   (err :pointer))
@@ -659,7 +660,7 @@ Booleans=true;false;true;true
 ;;; g_key_file_get_start_group () -> key-file-start-group
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_key_file_get_start_group" key-file-start-group) :string
+(cffi:defcfun ("g_key_file_get_start_group" key-file-start-group) :string
  #+liber-documentation
  "@version{2023-1-25}
   @argument[keyfile]{a @type{g:key-file} instance}
@@ -676,7 +677,7 @@ Booleans=true;false;true;true
 ;;; g_key_file_get_groups () -> key-file-groups
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_key_file_get_groups" %key-file-groups)
+(cffi:defcfun ("g_key_file_get_groups" %key-file-groups)
     (strv-t :free-from-foreign t)
   (keyfile (:pointer (:struct key-file)))
   (len (:pointer :size)))
@@ -698,7 +699,8 @@ Booleans=true;false;true;true
 ;;; g_key_file_get_keys () -> key-file-keys
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_key_file_get_keys" %key-file-keys) (strv-t :free-from-foreign t)
+(cffi:defcfun ("g_key_file_get_keys" %key-file-keys) 
+    (strv-t :free-from-foreign t)
   (keyfile (:pointer (:struct key-file)))
   (group :string)
   (len (:pointer :size))
@@ -724,7 +726,7 @@ Booleans=true;false;true;true
 ;;; g_key_file_has_group ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_key_file_has_group" key-file-has-group) :boolean
+(cffi:defcfun ("g_key_file_has_group" key-file-has-group) :boolean
  #+liber-documentation
  "@version{2023-1-25}
   @argument[keyfile]{a @type{g:key-file} instance}
@@ -744,7 +746,7 @@ Booleans=true;false;true;true
 ;;; g_key_file_has_key ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_key_file_has_key" %key-file-has-key) :boolean
+(cffi:defcfun ("g_key_file_has_key" %key-file-has-key) :boolean
   (keyfile (:pointer (:struct key-file)))
   (group :string)
   (key :string)
@@ -782,7 +784,7 @@ Booleans=true;false;true;true
                         :void)
   value)
 
-(defcfun ("g_key_file_get_value" %key-file-value) :string
+(cffi:defcfun ("g_key_file_get_value" %key-file-value) :string
   (keyfile (:pointer (:struct key-file)))
   (group :string)
   (key :string)
@@ -830,7 +832,7 @@ Booleans=true;false;true;true
                         :void)
   value)
 
-(defcfun ("g_key_file_get_string" %key-file-string) :string
+(cffi:defcfun ("g_key_file_get_string" %key-file-string) :string
   (keyfile (:pointer (:struct key-file)))
   (group :string)
   (key :string)
@@ -1092,7 +1094,7 @@ Booleans=true;false;true;true
 ;;; g_key_file_set_string_list () -> key-file-string-list
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_key_file_set_string_list" %key-file-set-string-list) :void
+(cffi:defcfun ("g_key_file_set_string_list" %key-file-set-string-list) :void
   (keyfile (:pointer (:struct key-file)))
   (group :string)
   (key :string)
@@ -1103,7 +1105,7 @@ Booleans=true;false;true;true
   (%key-file-set-string-list keyfile group key value (length value))
   value)
 
-(defcfun ("g_key_file_get_string_list" %key-file-get-string-list) strv-t
+(cffi:defcfun ("g_key_file_get_string_list" %key-file-get-string-list) strv-t
   (keyfile (:pointer (:struct key-file)))
   (group :string)
   (key :string)
@@ -1129,7 +1131,7 @@ Booleans=true;false;true;true
   cannot be found then they are created.
   @see-type{g:key-file}"
   (with-ignore-g-error (err)
-    (with-foreign-object (len :size)
+    (cffi:with-foreign-object (len :size)
       (%key-file-get-string-list keyfile group key len err))))
 
 (export 'key-file-string-list)
@@ -1341,7 +1343,7 @@ Booleans=true;false;true;true
 ;;;     TRUE if the comment was written, FALSE otherwise
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_key_file_set_comment" %key-file-set-comment) :boolean
+(cffi:defcfun ("g_key_file_set_comment" %key-file-set-comment) :boolean
   (keyfile (:pointer (:struct key-file)))
   (group :string)
   (key :string)
@@ -1357,7 +1359,7 @@ Booleans=true;false;true;true
                            err)
     value))
 
-(defcfun ("g_key_file_get_comment" %key-file-get-comment) :string
+(cffi:defcfun ("g_key_file_get_comment" %key-file-get-comment) :string
   (keyfile (:pointer (:struct key-file)))
   (group :string)
   (key :string)
@@ -1661,7 +1663,7 @@ Booleans=true;false;true;true
 ;;; g_key_file_remove_group ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_key_file_remove_group" %key-file-remove-group) :boolean
+(cffi:defcfun ("g_key_file_remove_group" %key-file-remove-group) :boolean
   (keyfile (:pointer (:struct key-file)))
   (group :string)
   (err :pointer))
@@ -1685,7 +1687,7 @@ Booleans=true;false;true;true
 ;;; g_key_file_remove_key ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_key_file_remove_key" %key-file-remove-key) :boolean
+(cffi:defcfun ("g_key_file_remove_key" %key-file-remove-key) :boolean
   (keyfile (:pointer (:struct key-file)))
   (group :string)
   (key :string)
@@ -1711,7 +1713,7 @@ Booleans=true;false;true;true
 ;;; g_key_file_remove_comment ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_key_file_remove_comment" %key-file-remove-comment) :boolean
+(cffi:defcfun ("g_key_file_remove_comment" %key-file-remove-comment) :boolean
   (keyfile (:pointer (:struct key-file)))
   (group :string)
   (key :string)

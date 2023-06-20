@@ -53,7 +53,7 @@
 ;;; glib_major_version
 ;;; ----------------------------------------------------------------------------
 
-(defcvar ("glib_major_version" +glib-major-version+ :read-only t) :uint)
+(cffi:defcvar ("glib_major_version" +glib-major-version+ :read-only t) :uint)
 
 #+liber-documentation
 (setf (liber:alias-for-symbol '+glib-major-version+)
@@ -72,7 +72,7 @@
 ;;; glib_minor_version
 ;;; ----------------------------------------------------------------------------
 
-(defcvar ("glib_minor_version" +glib-minor-version+ :read-only t) :uint)
+(cffi:defcvar ("glib_minor_version" +glib-minor-version+ :read-only t) :uint)
 
 #+liber-documentation
 (setf (liber:alias-for-symbol '+glib-minor-version+)
@@ -91,7 +91,7 @@
 ;;; glib_micro_version
 ;;; ----------------------------------------------------------------------------
 
-(defcvar ("glib_micro_version" +glib-micro-version+ :read-only t) :uint)
+(cffi:defcvar ("glib_micro_version" +glib-micro-version+ :read-only t) :uint)
 
 #+liber-documentation
 (setf (liber:alias-for-symbol '+glib-micro-version+)
@@ -118,7 +118,7 @@
 ;;; glib_check_version ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("glib_check_version" check-version) :string
+(cffi:defcfun ("glib_check_version" check-version) :string
  #+liber-documentation
  "@version{2022-11-21}
   @argument[major]{an unsigned integer with the required major version}

@@ -325,7 +325,7 @@
 ;;; GMainLoop
 ;;; ----------------------------------------------------------------------------
 
-(defcstruct main-loop)
+(cffi:defcstruct main-loop)
 
 #+liber-documentation
 (setf (liber:alias-for-type 'main-loop)
@@ -379,7 +379,7 @@
 ;;; GMainContext
 ;;; ----------------------------------------------------------------------------
 
-(defcstruct main-context)
+(cffi:defcstruct main-context)
 
 #+liber-documentation
 (setf (liber:alias-for-type 'main-context)
@@ -434,7 +434,7 @@
 ;;; struct GPollFD                                         not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcstruct poll-fd
+(cffi:defcstruct poll-fd
   (fd :int) ; TODO: #if defined (G_OS_WIN32) && GLIB_SIZEOF_VOID_P == 8
   (events :ushort)
   (revent :ushort))
@@ -449,7 +449,7 @@
     occurred.
   @end{short}
   @begin{pre}
-(defcstruct poll-fd
+(cffi:defcstruct poll-fd
   (fd :int)
   (events :ushort)
   (revent :ushort))
@@ -478,7 +478,7 @@
 ;;; struct GSource
 ;;; ----------------------------------------------------------------------------
 
-(defcstruct source
+(cffi:defcstruct source
   ;; Private fields of the C structure
   (callback-data :pointer)
   (callback-funcs :pointer)
@@ -511,7 +511,7 @@
 ;;; struct GSourceFuncs                                    not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcstruct source-funcs
+(cffi:defcstruct source-funcs
   (prepare :pointer)           ; lambda (source timeout)
   (check :pointer)             ; lambda (source)
   (dispatch :pointer)          ; lambda (source callback user-data)
@@ -549,7 +549,7 @@
   @code{poll()} call to see if the required condition has been met, and returns
   @em{true} if so.
   @begin{pre}
-(defcstruct source-funcs
+(cffi:defcstruct source-funcs
   (prepare :pointer)
   (check :pointer)
   (dispatch :pointer)
@@ -593,7 +593,7 @@
 ;;; struct GSourceCallbackFuncs                            not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcstruct source-callback-funcs
+(cffi:defcstruct source-callback-funcs
   (ref :pointer)
   (unref :pointer)
   (get :pointer))
@@ -606,7 +606,7 @@
     callback objects.
   @end{short}
   @begin{pre}
-(defcstruct source-callback-funcs
+(cffi:defcstruct source-callback-funcs
   (ref :pointer)
   (unref :pointer)
   (get :pointer))

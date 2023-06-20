@@ -1,7 +1,7 @@
 ;;; ----------------------------------------------------------------------------
 ;;; glib.variant-type.lisp
 ;;;
-;;; The documentation of this file is taken from the GLib 2.74 Reference
+;;; The documentation of this file is taken from the GLib 2.76 Reference
 ;;; Manual and modified to document the Lisp binding to the GLib library.
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
 ;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
@@ -274,7 +274,7 @@
 ;; We call the private C function g_variant_type_checked_ to define a Lisp
 ;; function which returns a GVariantType from a valid type string.
 
-(defcfun ("g_variant_type_checked_" variant-type-checked)
+(cffi:defcfun ("g_variant_type_checked_" variant-type-checked)
     (boxed variant-type)
  #+liber-documentation
  "@version{#2021-7-31}
@@ -297,7 +297,7 @@
 ;;; g_variant_type_free ()                                 not needed
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_type_free" variant-type-free) :void
+(cffi:defcfun ("g_variant_type_free" variant-type-free) :void
  #+liber-documentation
  "@version{#2022-12-30}
   @argument[vtype]{a @class{g:variant-type} instance}
@@ -315,7 +315,7 @@
 ;;; g_variant_type_copy ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_type_copy" variant-type-copy)
+(cffi:defcfun ("g_variant_type_copy" variant-type-copy)
     (boxed variant-type :return)
  #+liber-documentation
  "@version{2023-1-31}
@@ -333,7 +333,7 @@
 ;;; g_variant_type_new ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_type_new" variant-type-new)
+(cffi:defcfun ("g_variant_type_new" variant-type-new)
     (boxed variant-type :return)
  #+liber-documentation
  "@version{2023-1-31}
@@ -363,7 +363,7 @@
 ;;; g_variant_type_string_is_valid ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_type_string_is_valid" variant-type-string-is-valid)
+(cffi:defcfun ("g_variant_type_string_is_valid" variant-type-string-is-valid)
     :boolean
  #+liber-documentation
  "@version{2023-1-31}
@@ -418,7 +418,8 @@
 ;;; -> variant-type-string-length                          not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_type_get_string_length" variant-type-string-length) :size
+(cffi:defcfun ("g_variant_type_get_string_length" variant-type-string-length) 
+    :size
  #+liber-documentation
  "@version{#2020-11-29}
   @argument[variant-type]{a @class{variant-type} instance}
@@ -436,7 +437,7 @@
 ;;; g_variant_type_peek_string ()                          not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_type_peek_string" variant-type-peek-string) :string
+(cffi:defcfun ("g_variant_type_peek_string" variant-type-peek-string) :string
  #+liber-documentation
  "@version{#2020-11-29}
   @argument[variant-type]{a @class{variant-type} instance}
@@ -456,7 +457,7 @@
 ;;; g_variant_type_dup_string ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_type_dup_string" variant-type-dup-string)
+(cffi:defcfun ("g_variant_type_dup_string" variant-type-dup-string)
     (:string :free-from-foreign t)
  #+liber-documentation
  "@version{2023-1-31}
@@ -475,7 +476,7 @@
 ;;; g_variant_type_is_definite ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_type_is_definite" variant-type-is-definite) :boolean
+(cffi:defcfun ("g_variant_type_is_definite" variant-type-is-definite) :boolean
  #+liber-documentation
  "@version{2023-1-31}
   @argument[vtype]{a @class{g:variant-type} instance}
@@ -499,7 +500,7 @@
 ;;; g_variant_type_is_container ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_type_is_container" variant-type-is-container) :boolean
+(cffi:defcfun ("g_variant_type_is_container" variant-type-is-container) :boolean
  #+liber-documentation
  "@version{2023-1-31}
   @argument[type]{a @class{g:variant-type} instance}
@@ -519,7 +520,7 @@
 ;;; g_variant_type_is_basic ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_type_is_basic" variant-type-is-basic) :boolean
+(cffi:defcfun ("g_variant_type_is_basic" variant-type-is-basic) :boolean
  #+liber-documentation
  "@version{2023-1-31}
   @argument[vtype]{a @class{g:variant-type} instance}
@@ -540,7 +541,7 @@
 ;;; g_variant_type_is_maybe ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_type_is_maybe" variant-type-is-maybe) :boolean
+(cffi:defcfun ("g_variant_type_is_maybe" variant-type-is-maybe) :boolean
  #+liber-documentation
  "@version{2023-1-31}
   @argument[vtype]{a @class{g:variant-type} instance}
@@ -560,7 +561,7 @@
 ;;; g_variant_type_is_array ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_type_is_array" variant-type-is-array) :boolean
+(cffi:defcfun ("g_variant_type_is_array" variant-type-is-array) :boolean
  #+liber-documentation
  "@version{2023-1-31}
   @argument[vtype]{a @class{g:variant-type} instance}
@@ -580,7 +581,7 @@
 ;;; g_variant_type_is_tuple ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_type_is_tuple" variant-type-is-tuple) :boolean
+(cffi:defcfun ("g_variant_type_is_tuple" variant-type-is-tuple) :boolean
  #+liber-documentation
  "@version{2023-1-31}
   @argument[vtype]{a @class{g:variant-type} instance}
@@ -600,7 +601,8 @@
 ;;; g_variant_type_is_dict_entry ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_type_is_dict_entry" variant-type-is-dict-entry) :boolean
+(cffi:defcfun ("g_variant_type_is_dict_entry" variant-type-is-dict-entry) 
+    :boolean
  #+liber-documentation
  "@version{2023-1-31}
   @argument[vtype]{a @class{g:variant-type} instance}
@@ -620,7 +622,7 @@
 ;;; g_variant_type_is_variant ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_type_is_variant" variant-type-is-variant) :boolean
+(cffi:defcfun ("g_variant_type_is_variant" variant-type-is-variant) :boolean
  #+liber-documentation
  "@version{2023-1-31}
   @argument[vtype]{a @class{g:variant-type} instance}
@@ -637,7 +639,7 @@
 ;;; g_variant_type_hash ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_type_hash" variant-type-hash) :uint
+(cffi:defcfun ("g_variant_type_hash" variant-type-hash) :uint
  #+liber-documentation
  "@version{2023-1-31}
   @argument[vtype]{a @class{g:variant-type} instance}
@@ -655,7 +657,7 @@
 ;;; g_variant_type_equal ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_type_equal" variant-type-equal) :boolean
+(cffi:defcfun ("g_variant_type_equal" variant-type-equal) :boolean
  #+liber-documentation
  "@version{2023-1-31}
   @argument[vtype1]{a @class{g:variant-type} instance}
@@ -682,7 +684,8 @@
 ;;; g_variant_type_is_subtype_of ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_type_is_subtype_of" variant-type-is-subtype-of) :boolean
+(cffi:defcfun ("g_variant_type_is_subtype_of" variant-type-is-subtype-of) 
+    :boolean
  #+liber-documentation
  "@version{2023-1-31}
   @argument[vtype]{a @class{g:variant-type} instance}
@@ -704,7 +707,7 @@
 ;;; g_variant_type_new_maybe ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_type_new_maybe" variant-type-new-maybe)
+(cffi:defcfun ("g_variant_type_new_maybe" variant-type-new-maybe)
     (boxed variant-type :return)
  #+liber-documentation
  "@version{2023-1-31}
@@ -723,7 +726,7 @@
 ;;; g_variant_type_new_array ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_type_new_array" variant-type-new-array)
+(cffi:defcfun ("g_variant_type_new_array" variant-type-new-array)
     (boxed variant-type :return)
  #+liber-documentation
  "@version{2023-1-31}
@@ -742,7 +745,7 @@
 ;;; g_variant_type_new_tuple ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_type_new_tuple" %variant-type-new-tuple)
+(cffi:defcfun ("g_variant_type_new_tuple" %variant-type-new-tuple)
     (boxed variant-type :return)
   (items :pointer)
   (length :int))
@@ -757,12 +760,12 @@
   @end{short}
   @see-class{g:variant-type}"
   (let ((n-items (length items)))
-    (with-foreign-object (items-ar :pointer n-items)
-      (loop for i from 0 below n-items
-            for item in items
-            do (setf (cffi:mem-aref items-ar :pointer i)
-                     (cffi:convert-to-foreign item
-                                              '(boxed variant-type))))
+    (cffi:with-foreign-object (items-ar :pointer n-items)
+      (iter (for i from 0 below n-items)
+            (for item in items)
+            (setf (cffi:mem-aref items-ar :pointer i)
+                  (cffi:convert-to-foreign item
+                                           '(boxed variant-type))))
       (%variant-type-new-tuple items-ar n-items))))
 
 (export 'variant-type-new-tuple)
@@ -771,7 +774,7 @@
 ;;; g_variant_type_new_dict_entry ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_type_new_dict_entry" variant-type-new-dict-entry)
+(cffi:defcfun ("g_variant_type_new_dict_entry" variant-type-new-dict-entry)
     (boxed variant-type :return)
  #+liber-documentation
  "@version{2023-1-31}
@@ -794,7 +797,7 @@
 
 ;; Check the return value, do we have to free it?
 
-(defcfun ("g_variant_type_element" variant-type-element)
+(cffi:defcfun ("g_variant_type_element" variant-type-element)
     (boxed variant-type)
  #+liber-documentation
  "@version{2023-1-31}
@@ -813,7 +816,7 @@
 ;;; g_variant_type_n_items ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_type_n_items" variant-type-n-items) :size
+(cffi:defcfun ("g_variant_type_n_items" variant-type-n-items) :size
  #+liber-documentation
  "@version{2023-1-31}
   @argument[vtype]{a tuple or dictionary entry @class{g:variant-type} instance}
@@ -836,7 +839,7 @@
 
 ;; TODO: Check the NIL return value. Is this correct?
 
-(defcfun ("g_variant_type_first" variant-type-first)
+(cffi:defcfun ("g_variant_type_first" variant-type-first)
     (boxed variant-type)
  #+liber-documentation
  "@version{2023-1-31}
@@ -861,7 +864,7 @@
 ;;; g_variant_type_next ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_type_next" variant-type-next) (boxed variant-type)
+(cffi:defcfun ("g_variant_type_next" variant-type-next) (boxed variant-type)
  #+liber-documentation
  "@version{2023-1-31}
   @argument[vtype]{a @class{g:variant-type} instance from a previous call}
@@ -885,7 +888,7 @@
 ;;; g_variant_type_key ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_type_key" variant-type-key) (boxed variant-type)
+(cffi:defcfun ("g_variant_type_key" variant-type-key) (boxed variant-type)
  #+liber-documentation
  "@version{2023-1-31}
   @argument[vtype]{a dictionary entry @class{g:variant-type} instance}
@@ -907,7 +910,7 @@
 ;;; g_variant_type_value ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_variant_type_value" variant-type-value)
+(cffi:defcfun ("g_variant_type_value" variant-type-value)
     (boxed variant-type)
  #+liber-documentation
  "@version{2023-1-31}

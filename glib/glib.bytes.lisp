@@ -102,11 +102,11 @@
 ;;; g_bytes_new () -> bytes-new
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_bytes_new" %bytes-new) :pointer
+(cffi:defcfun ("g_bytes_new" %bytes-new) :pointer
   (data :pointer)
   (size :size))
 
-(defcfun ("g_bytes_new" bytes-new) (boxed bytes :return)
+(cffi:defcfun ("g_bytes_new" bytes-new) (boxed bytes :return)
  #+liber-documentation
  "@version{2022-11-22}
   @argument[data]{a pointer to the data to be used for the bytes}
@@ -243,7 +243,7 @@
 ;;; g_bytes_get_data ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_bytes_get_data" %bytes-data) :pointer
+(cffi:defcfun ("g_bytes_get_data" %bytes-data) :pointer
   (bytes (boxed bytes))
   (size (:pointer :size)))
 
@@ -268,7 +268,7 @@
   value as 0. A @code{null-pointer} value will not be returned if the @arg{size}
   value is non-zero.
   @see-class{g:bytes}"
-  (with-foreign-object (size :size)
+  (cffi:with-foreign-object (size :size)
     (let ((ptr (%bytes-data bytes size)))
       (values ptr (cffi:mem-ref size :size)))))
 
@@ -278,7 +278,7 @@
 ;;; g_bytes_get_size () -> bytes-size
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_bytes_get_size" bytes-size) :size
+(cffi:defcfun ("g_bytes_get_size" bytes-size) :size
  #+liber-documentation
  "@version{2022-11-22}
   @argument[bytes]{a @class{g:bytes} instance}

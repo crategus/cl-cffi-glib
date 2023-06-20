@@ -57,7 +57,7 @@
 ;;; g_malloc () -> malloc
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_malloc" malloc) :pointer
+(cffi:defcfun ("g_malloc" malloc) :pointer
  #+liber-documentation
  "@version{2022-11-21}
   @argument[nbytes]{an integer of @code{:size} type with the number of bytes
@@ -87,7 +87,7 @@
 ;;; g_free () -> free
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_free" free) :void
+(cffi:defcfun ("g_free" free) :void
  #+liber-documentation
  "@version{2022-11-21}
   @argument[mem]{a foreign pointer to the memory to free}
@@ -105,7 +105,7 @@
 ;;; GStrv
 ;;; ----------------------------------------------------------------------------
 
-(define-foreign-type strv-type ()
+(cffi:define-foreign-type strv-type ()
   ((free-from-foreign :initarg :free-from-foreign
                       :initform t
                       :reader strv-type-fff)
@@ -114,7 +114,8 @@
                     :reader strv-type-ftf))
   (:actual-type :pointer))
 
-(define-parse-method strv-t (&key (free-from-foreign t) (free-to-foreign t))
+(cffi:define-parse-method strv-t (&key (free-from-foreign t)
+                                       (free-to-foreign t))
   (make-instance 'strv-type
                  :free-from-foreign free-from-foreign
                  :free-to-foreign free-to-foreign))
@@ -122,27 +123,27 @@
 (defmethod cffi:translate-from-foreign (value (type strv-type))
   (unless (cffi:null-pointer-p value)
     (prog1
-      (loop for i from 0
-            for str-ptr = (cffi:mem-aref value :pointer i)
-            until (cffi:null-pointer-p str-ptr)
-            collect
-              (cffi:convert-from-foreign str-ptr
-                                         '(:string :free-from-foreign nil))
-            do (when (strv-type-fff type) (free str-ptr)))
+      (iter (for i from 0)
+            (for str-ptr = (cffi:mem-aref value :pointer i))
+            (until (cffi:null-pointer-p str-ptr))
+            (collect
+                (cffi:convert-from-foreign str-ptr
+                                           '(:string :free-from-foreign nil)))
+            (when (strv-type-fff type) (free str-ptr)))
       (when (strv-type-fff type)
         (free value)))))
 
 (defmethod cffi:translate-to-foreign (values (type strv-type))
   (let* ((n (length values))
          (result (malloc (* (1+ n) (cffi:foreign-type-size :pointer)))))
-    (loop for i from 0
-          for str in values
-          do (setf (cffi:mem-aref result :pointer i)
-                   (cffi:foreign-funcall "g_strdup"
-                                         (:string
-                                          :free-to-foreign (strv-type-ftf type))
-                                         str
-                                         :pointer)))
+    (iter (for i from 0)
+          (for str in values)
+          (setf (cffi:mem-aref result :pointer i)
+                (cffi:foreign-funcall "g_strdup"
+                                      (:string
+                                       :free-to-foreign (strv-type-ftf type))
+                                      str
+                                      :pointer)))
     (setf (cffi:mem-aref result :pointer n) (cffi:null-pointer))
     result))
 
@@ -171,12 +172,12 @@
 
 ;; TODO: Check the memory management in more detail.
 
-(defcstruct %list-t
+(cffi:defcstruct %list-t
   (data :pointer)
   (next :pointer)
   (prev :pointer))
 
-(define-foreign-type list-type ()
+(cffi:define-foreign-type list-type ()
   ((type :reader list-type-type
          :initarg :type
          :initform :pointer)
@@ -188,8 +189,8 @@
                     :initform t))
   (:actual-type :pointer))
 
-(define-parse-method list-t (type &key (free-from-foreign t)
-                                       (free-to-foreign t))
+(cffi:define-parse-method list-t (type &key (free-from-foreign t)
+                                            (free-to-foreign t))
   (make-instance 'list-type
                  :type type
                  :free-from-foreign free-from-foreign
@@ -197,20 +198,20 @@
 
 (defmethod cffi:translate-from-foreign (ptr (type list-type))
   (prog1
-    (loop for data = ptr then (%list-next data)
-          until (cffi:null-pointer-p data)
-          collect (cffi:convert-from-foreign
-                      (cffi:foreign-slot-value data '(:struct %list-t) 'data)
-                      (list-type-type type)))
+    (iter (for data initially ptr then (%list-next data))
+          (until (cffi:null-pointer-p data))
+          (collect (cffi:convert-from-foreign
+                       (cffi:foreign-slot-value data '(:struct %list-t) 'data)
+                       (list-type-type type))))
     (when (list-type-free-from-foreign type)
       (%list-free ptr))))
 
 (defmethod cffi:translate-to-foreign (lst (type list-type))
   (let ((nlst (cffi:null-pointer)))
-    (loop for data in lst
-          do (setf nlst
-                   (%list-append nlst
-                       (cffi:convert-to-foreign data (list-type-type type)))))
+    (iter (for data in lst)
+          (setf nlst
+                (%list-append nlst
+                    (cffi:convert-to-foreign data (list-type-type type)))))
     nlst))
 
 #+liber-documentation
@@ -238,7 +239,7 @@
 ;;; g_list_free ()                                         not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_list_free" %list-free) :void
+(cffi:defcfun ("g_list_free" %list-free) :void
   (lst (:pointer (:struct %list-t))))
 
 ;;; ----------------------------------------------------------------------------
@@ -254,7 +255,7 @@
 ;;; g_list_append ()                                       not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_list_append" %list-append) (:pointer (:struct %list-t))
+(cffi:defcfun ("g_list_append" %list-append) (:pointer (:struct %list-t))
   (lst (:pointer (:struct %list-t)))
   (data :pointer))
 
@@ -264,11 +265,11 @@
 
 ;; TODO: Check the memory management in more detail.
 
-(defcstruct %slist-t
+(cffi:defcstruct %slist-t
   (data :pointer)
   (next :pointer))
 
-(define-foreign-type slist-type ()
+(cffi:define-foreign-type slist-type ()
   ((type :reader slist-type-type :initarg :type :initform :pointer)
    (free-from-foreign :reader slist-type-free-from-foreign
                       :initarg :free-from-foreign
@@ -278,8 +279,8 @@
                     :initform t))
   (:actual-type :pointer))
 
-(define-parse-method slist-t (type &key (free-from-foreign t)
-                                        (free-to-foreign t))
+(cffi:define-parse-method slist-t (type &key (free-from-foreign t)
+                                             (free-to-foreign t))
   (make-instance 'slist-type
                  :type type
                  :free-from-foreign free-from-foreign
@@ -287,11 +288,11 @@
 
 (defmethod cffi:translate-from-foreign (ptr (type slist-type))
   (prog1
-    (loop for item = ptr then (%slist-next item)
-          until (cffi:null-pointer-p item)
-          collect (cffi:convert-from-foreign
-                      (cffi:foreign-slot-value item '(:struct %slist-t) 'data)
-                      (slist-type-type type)))
+    (iter (for item initially ptr then (%slist-next item))
+          (until (cffi:null-pointer-p item))
+          (collect (cffi:convert-from-foreign
+                       (cffi:foreign-slot-value item '(:struct %slist-t) 'data)
+                       (slist-type-type type))))
     (when (slist-type-free-from-foreign type)
       (%slist-free ptr))))
 
@@ -299,19 +300,20 @@
   (let ((result (cffi:null-pointer))
         (first-iteration-p t)
         (last nil))
-    (loop for item in lst
-          for n = (%slist-alloc)
-          for ptr = (cffi:convert-to-foreign item (slist-type-type type))
-          do (setf (cffi:foreign-slot-value n '(:struct %slist-t) 'data) ptr)
-             (setf (cffi:foreign-slot-value n '(:struct %slist-t) 'next)
-                   (cffi:null-pointer))
-             (when last
-               (setf (cffi:foreign-slot-value last '(:struct %slist-t) 'next)
-                     n))
-             (setf last n)
-             (when first-iteration-p
-               (setf first-iteration-p nil)
-               (setf result n)))
+    (iter (for n = (%slist-alloc))
+          (for item in lst)
+          (for ptr = (cffi:convert-to-foreign item (slist-type-type type)))
+          (progn
+            (setf (cffi:foreign-slot-value n '(:struct %slist-t) 'data) ptr)
+            (setf (cffi:foreign-slot-value n '(:struct %slist-t) 'next)
+                  (cffi:null-pointer))
+            (when last
+              (setf (cffi:foreign-slot-value last '(:struct %slist-t) 'next)
+                    n))
+            (setf last n)
+            (when first-iteration-p
+              (setf first-iteration-p nil)
+              (setf result n))))
     result))
 
 #+liber-documentation
@@ -339,13 +341,13 @@
 ;;; g_slist_alloc ()                                       not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_slist_alloc" %slist-alloc) (:pointer (:struct %slist-t)))
+(cffi:defcfun ("g_slist_alloc" %slist-alloc) (:pointer (:struct %slist-t)))
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_slist_free ()                                        not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_slist_free" %slist-free) :void
+(cffi:defcfun ("g_slist_free" %slist-free) :void
   (lst (:pointer (:struct %slist-t))))
 
 ;;; ----------------------------------------------------------------------------
@@ -361,7 +363,7 @@
 ;;; GDateTime
 ;;; ----------------------------------------------------------------------------
 
-(define-foreign-type date-time-type ()
+(cffi:define-foreign-type date-time-type ()
   ()
   (:actual-type :pointer)
   (:simple-parser date-time))
@@ -403,7 +405,7 @@
 ;;; gunichar
 ;;; ----------------------------------------------------------------------------
 
-(define-foreign-type unichar ()
+(cffi:define-foreign-type unichar ()
   ()
   (:actual-type :uint32)
   (:simple-parser unichar))
@@ -423,7 +425,7 @@
     The @sym{g:unichar} type represents the C @code{gunichar} type which can
     hold any UCS-4 character code.
   @end{short}
-  The @sym{g:unichar} type performs automatic conversion from the C 
+  The @sym{g:unichar} type performs automatic conversion from the C
   @code{gunichar} type to a Lisp character and a Lisp character to the C type.
   An integer value as argument to the @sym{cffi:convert-to-foreign} function
   is passed through.
@@ -461,7 +463,7 @@
                         :void)
   name)
 
-(defcfun ("g_get_application_name" application-name) :string
+(cffi:defcfun ("g_get_application_name" application-name) :string
  #+liber-documentation
  "@version{2022-11-23}
   @syntax[]{(g:application-name) => name}
@@ -497,7 +499,7 @@
                         :void)
   prgname)
 
-(defcfun ("g_get_prgname" prgname) :string
+(cffi:defcfun ("g_get_prgname" prgname) :string
  #+liber-documentation
  "@version{2022-11-23}
   @syntax[]{(g:prgname) => prgname}

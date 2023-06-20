@@ -99,7 +99,7 @@
 
 ;; Callback function to free a pointer
 
-(defcallback stable-pointer-destroy-notify :void
+(cffi:defcallback stable-pointer-destroy-notify :void
     ((data :pointer))
   (free-stable-pointer data))
 

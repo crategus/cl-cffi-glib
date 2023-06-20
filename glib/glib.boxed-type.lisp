@@ -61,7 +61,7 @@
 ;; Used internally for the implementation of a Lisp boxed type. This function
 ;; is not exported.
 
-(defcfun ("g_boxed_free" %boxed-free) :void
+(cffi:defcfun ("g_boxed_free" %boxed-free) :void
   (gtype :size)
   (boxed :pointer))
 
@@ -135,7 +135,7 @@
 ;;    boxed-cstruct-type
 ;;    boxed-variant-cstruct-type
 
-(define-foreign-type boxed-type ()
+(cffi:define-foreign-type boxed-type ()
   ((info :initarg :info
          :accessor boxed-type-info
          :initform (cl:error "info must be specified"))
@@ -148,7 +148,7 @@
 
 ;;; ----------------------------------------------------------------------------
 
-(define-parse-method boxed (name &rest options)
+(cffi:define-parse-method boxed (name &rest options)
   (let ((info (get-boxed-info name)))
     (make-boxed-type info
                      :returnp (member :return options))))
@@ -193,7 +193,7 @@
   alloc
   free)
 
-(define-foreign-type boxed-opaque-type (boxed-type) ())
+(cffi:define-foreign-type boxed-opaque-type (boxed-type) ())
 
 (defclass boxed-opaque ()
   ((pointer :initarg :pointer
@@ -517,7 +517,8 @@
       (let* ((info (boxed-type-info type))
              (native-struct-type
                (generated-cstruct-name (boxed-info-name info))))
-        (with-foreign-object (native-struct (list :struct native-struct-type))
+        (cffi:with-foreign-object (native-struct
+                                      (list :struct native-struct-type))
           (copy-slots-to-native
                         proxy
                         native-struct
@@ -642,7 +643,7 @@
         (collect variant)))
 
 (defun generate-cstruct-1 (struct)
-  `(defcstruct ,(generated-cstruct-name (cstruct-description-name struct))
+  `(cffi:defcstruct ,(generated-cstruct-name (cstruct-description-name struct))
      ,@(iter (for slot in (cstruct-description-slots struct))
              (collect `(,(cstruct-slot-description-name slot)
                          ,(cstruct-slot-description-type slot)
@@ -744,7 +745,7 @@
 (defmethod make-load-form ((object boxed-variant-info) &optional env)
   (make-load-form-saving-slots object :environment env))
 
-(define-foreign-type boxed-variant-cstruct-type (boxed-type) ())
+(cffi:define-foreign-type boxed-variant-cstruct-type (boxed-type) ())
 
 (defmethod make-boxed-type ((info boxed-variant-info) &key returnp)
   (make-instance 'boxed-variant-cstruct-type
@@ -797,7 +798,7 @@
       (cffi:null-pointer)
       (let* ((type (boxed-type-info foreign-type))
              (description (decide-native-type type proxy)))
-        (with-foreign-object
+        (cffi:with-foreign-object
           (native-struct (list :union
                                (generated-cunion-name
                                  (var-structure-name
@@ -923,7 +924,7 @@
            (list (etypecase reader
                    (symbol `(defun ,accessor-name (,var)
                               (funcall ,reader ,var)))
-                   (string `(defcfun (,accessor-name ,reader) ,type
+                   (string `(cffi:defcfun (,accessor-name ,reader) ,type
                               (,var (boxed ,boxed-name)))))))
        ,@(when writer
            (list (etypecase reader
@@ -1021,7 +1022,7 @@
         (i (gensym "I-")))
     `(let* ((,values-seq-1 ,values-seq)
             (,n-var (length ,values-seq-1)))
-       (with-foreign-object (,array-var '(:struct ,cstruct) ,n-var)
+       (cffi:with-foreign-object (,array-var '(:struct ,cstruct) ,n-var)
          (let ((,i 0))
            (map nil
                 (lambda (,x)

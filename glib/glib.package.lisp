@@ -30,18 +30,7 @@
 (defpackage :glib
   (:use :iterate :common-lisp)
   (:shadow #:error)
-  (:import-from :cffi #:defcfun
-                      #:defcvar
-                      #:defctype
-                      #:defcenum
-                      #:defbitfield
-                      #:defcstruct
-                      #:defcallback
-                      #:define-foreign-type
-                      #:define-parse-method
-                      #:with-foreign-object
-                      #:with-foreign-objects
-                      #:with-foreign-slots)
+  (:import-from :cffi)
   (:export ;; Symbols from glib.stable-pointer.lisp
            #:allocate-stable-pointer
            #:free-stable-pointer
@@ -74,9 +63,9 @@
 #+liber-documentation
 (setf (documentation (find-package :glib) t)
  "GLib is a general-purpose utility library, which provides many useful data
-  types, macros, type conversions, string utilities, file utilities, a main loop
-  abstraction, and so on. It works on many UNIX-like platforms, as well as
-  Windows and OS X. GLib is released under the GNU Library General Public
+  types, macros, type conversions, string utilities, file utilities, a main 
+  loop abstraction, and so on. It works on many UNIX-like platforms, as well 
+  as Windows and OS X. GLib is released under the GNU Library General Public
   License (GNU LGPL).
 
   This is the API documentation of a Lisp binding to the library GLib. Only a
