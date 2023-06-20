@@ -1,25 +1,25 @@
 ;;; ----------------------------------------------------------------------------
 ;;; gobject.foreign-gobject-subclassing.lisp
 ;;;
-;;; Copyright (C) 2009 - 2011 Kalyanov Dmitry
-;;; Copyright (C) 2011 - 2021 Dieter Kaiser
+;;; Copyright (C) 2011 - 2023 Dieter Kaiser
 ;;;
-;;; This program is free software: you can redistribute it and/or modify
-;;; it under the terms of the GNU Lesser General Public License for Lisp
-;;; as published by the Free Software Foundation, either version 3 of the
-;;; License, or (at your option) any later version and with a preamble to
-;;; the GNU Lesser General Public License that clarifies the terms for use
-;;; with Lisp programs and is referred as the LLGPL.
+;;; Permission is hereby granted, free of charge, to any person obtaining a
+;;; copy of this software and associated documentation files (the "Software"),
+;;; to deal in the Software without restriction, including without limitation
+;;; the rights to use, copy, modify, merge, publish, distribute, sublicense,
+;;; and/or sell copies of the Software, and to permit persons to whom the
+;;; Software is furnished to do so, subject to the following conditions:
 ;;;
-;;; This program is distributed in the hope that it will be useful,
-;;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;;; GNU Lesser General Public License for more details.
+;;; The above copyright notice and this permission notice shall be included in
+;;; all copies or substantial portions of the Software.
 ;;;
-;;; You should have received a copy of the GNU Lesser General Public
-;;; License along with this program and the preamble to the Gnu Lesser
-;;; General Public License.  If not, see <http://www.gnu.org/licenses/>
-;;; and <http://opensource.franz.com/preamble.html>.
+;;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+;;; IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+;;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+;;; THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+;;; LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+;;; FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+;;; DEALINGS IN THE SOFTWARE.
 ;;; ----------------------------------------------------------------------------
 
 (in-package :gobject)
@@ -53,7 +53,7 @@
            (lisp-class (%object-type-class lisp-type-info)))
       (make-instance lisp-class :pointer instance))))
 
-(defcallback instance-init-cb :void ((instance :pointer) (class :pointer))
+(cffi:defcallback instance-init-cb :void ((instance :pointer) (class :pointer))
   (instance-init instance class))
 
 ;;; ----------------------------------------------------------------------------
@@ -66,14 +66,14 @@
   (let* ((type-name (gtype-name (type-from-class class)))
          (lisp-type-info (gethash type-name *registered-types*))
          (lisp-class (%object-type-class lisp-type-info)))
-    (setf (symbol-for-gtype type-name) lisp-class))
+    (setf (glib:symbol-for-gtype type-name) lisp-class))
   (setf (cffi:foreign-slot-value class '(:struct object-class) :get-property)
         (cffi:callback c-object-property-get)
         (cffi:foreign-slot-value class '(:struct object-class) :set-property)
         (cffi:callback c-object-property-set))
   (install-properties class))
 
-(defcallback class-init-cb :void ((class :pointer) (data :pointer))
+(cffi:defcallback class-init-cb :void ((class :pointer) (data :pointer))
   (class-init class data))
 
 ;;; ----------------------------------------------------------------------------
@@ -302,7 +302,8 @@
   (let ((cstruct-name (intern (format nil "~A-VTABLE" (symbol-name name))))
         (methods (vtable-methods name items)))
     `(progn
-       (defcstruct ,cstruct-name ,@(mapcar #'vtable-item->cstruct-item items))
+       (cffi:defcstruct ,cstruct-name 
+                        ,@(mapcar #'vtable-item->cstruct-item items))
        (setf (gethash ,type-name *vtables*)
              (make-vtable-description :type-name ,type-name
                                       :cstruct-name ',cstruct-name
@@ -349,7 +350,7 @@
             (log-for :subclass "->setting method ~A to ~A~%" method cb)
             (setf (cffi:foreign-slot-value iface vtable-cstruct slot-name) cb)))))
 
-(defcallback c-interface-init :void ((iface :pointer) (data :pointer))
+(cffi:defcallback c-interface-init :void ((iface :pointer) (data :pointer))
   (interface-init iface data))
 
 ;;; ----------------------------------------------------------------------------
@@ -357,7 +358,7 @@
 (defun add-interface (name interface)
   (let* ((interface-info (list name interface))
          (interface-info-ptr (glib::allocate-stable-pointer interface-info)))
-    (with-foreign-object (info '(:struct interface-info))
+    (cffi:with-foreign-object (info '(:struct interface-info))
       (setf (cffi:foreign-slot-value info '(:struct interface-info) :interface-init)
             (cffi:callback c-interface-init)
             (cffi:foreign-slot-value info '(:struct interface-info) :interface-data)
@@ -403,7 +404,7 @@
                                                 value))))
       (set-g-value g-value value property-type))))
 
-(defcallback c-object-property-get :void
+(cffi:defcallback c-object-property-get :void
     ((object :pointer) (property-id :uint) (value :pointer) (pspec :pointer))
   (object-property-get object property-id value pspec))
 
@@ -431,7 +432,7 @@
       (funcall (fdefinition (list 'setf property-set-fn)) new-value lisp-object)
       (return-without-error-from-property-setter () nil))))
 
-(defcallback c-object-property-set :void
+(cffi:defcallback c-object-property-set :void
     ((object :pointer) (property-id :uint) (value :pointer) (pspec :pointer))
   (object-property-set object property-id value pspec))
 
@@ -453,7 +454,7 @@
        (log-for :subclass
                 "Registering GObject type implementation ~A for type ~A~%"
                 ',class ,name)
-       (with-foreign-object (query '(:struct type-query))
+       (cffi:with-foreign-object (query '(:struct type-query))
          (type-query (gtype ,parent) query)
          (type-register-static-simple
              (gtype ,parent)
@@ -533,7 +534,7 @@
        (log-for :subclass
                 "Debug sublcass: Registering GObject type ~A for type ~A~%"
                 ',name ,g-type-name)
-       (with-foreign-object (query '(:struct type-query))
+       (cffi:with-foreign-object (query '(:struct type-query))
          (type-query (gtype ,parent) query)
          (type-register-static-simple
              (gtype ,parent)

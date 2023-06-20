@@ -2,12 +2,11 @@
 ;;; gobject.param-spec.lisp
 ;;;
 ;;; The documentation of this file is taken from the GObject Reference Manual
-;;; Version 2.74 and modified to document the Lisp binding to the GObject
+;;; Version 2.76 and modified to document the Lisp binding to the GObject
 ;;; library. See <http://www.gtk.org>. The API documentation of the Lisp
-;;; binding is available from <http://www.crategus.com/books/cl-cffi-gtk/>.
+;;; binding is available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2009 - 2011 Kalyanov Dmitry
-;;; Copyright (C) 2011 - 2022 Dieter Kaiser
+;;; Copyright (C) 2011 - 2023 Dieter Kaiser
 ;;;
 ;;; This program is free software: you can redistribute it and/or modify
 ;;; it under the terms of the GNU Lesser General Public License for Lisp
@@ -93,7 +92,7 @@
 ;;; enum GParamFlags
 ;;; ----------------------------------------------------------------------------
 
-(defbitfield param-flags
+(cffi:defbitfield param-flags
   (:readable #.(ash 1 0))
   (:writable #.(ash 1 1))
   (:construct #.(ash 1 2))
@@ -114,7 +113,7 @@
     can be configured.
   @end{short}
   @begin{pre}
-(defbitfield param-flags
+(cffi:defbitfield param-flags
   (:readable #.(ash 1 0))
   (:writable #.(ash 1 1))
   (:construct #.(ash 1 2))
@@ -154,7 +153,7 @@
 ;;; struct GParamSpec
 ;;; ----------------------------------------------------------------------------
 
-(defcstruct param-spec
+(cffi:defcstruct param-spec
   (:type-instance (:pointer (:struct type-instance)))
   (:name (:string :free-from-foreign nil :free-to-foreign nil))
   (:flags param-flags)
@@ -177,7 +176,7 @@
   replaced by a '-' during construction. The result of this replacement is
   called the canonical name of the parameter.
   @begin{pre}
-(defcstruct param-spec
+(cffi:defcstruct param-spec
   (:type-instance (:pointer (:struct type-instance)))
   (:name (:string :free-from-foreign nil :free-to-foreign nil))
   (:flags param-flags)
@@ -246,7 +245,7 @@
 ;;; struct GParamSpecClass                                 not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcstruct param-spec-class
+(cffi:defcstruct param-spec-class
   (:type-class (:pointer (:struct type-class)))
   (:value-type type-t)
   (:finalize :pointer)
@@ -265,7 +264,7 @@
   Normally, @symbol{g:param-spec} classes are filled by the
   @fun{g:param-type-register-static} function.
   @begin{pre}
-(defcstruct param-spec-class
+(cffi:defcstruct param-spec-class
   (:type-class (:pointer (:struct type-class)))
   (:value-type type-t)
   (:finalize :pointer)
@@ -467,7 +466,7 @@
 ;;; g_param_spec_unref ()                                  not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_param_spec_unref" %param-spec-unref) :void
+(cffi:defcfun ("g_param_spec_unref" %param-spec-unref) :void
  #+liber-documentation
  "@version{#2013-2-7}
   @argument[pspec]{a valid @symbol{g:param-spec}}
@@ -494,7 +493,7 @@
 ;;; g_param_spec_ref_sink ()                               not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_param_spec_ref_sink" %param-spec-ref-sink)
+(cffi:defcfun ("g_param_spec_ref_sink" %param-spec-ref-sink)
     (:pointer (:struct param-spec))
  #+liber-documentation
  "@version{#2013-2-7}
@@ -507,7 +506,7 @@
 ;;; g_param_spec_get_default_value () -> param-spec-default-value
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_param_spec_get_default_value" param-spec-default-value)
+(cffi:defcfun ("g_param_spec_get_default_value" param-spec-default-value)
     (:pointer (:struct value))
  #+liber-documentation
  "@version{2022-12-29}
@@ -527,7 +526,7 @@
 ;;; g_param_value_set_default ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_param_value_set_default" param-value-set-default) :void
+(cffi:defcfun ("g_param_value_set_default" param-value-set-default) :void
  #+liber-documentation
  "@version{2022-12-29}
   @argument[pspec]{a valid @symbol{g:param-spec} instance}
@@ -544,7 +543,7 @@
 ;;; g_param_value_defaults ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_param_value_defaults" param-value-defaults) :boolean
+(cffi:defcfun ("g_param_value_defaults" param-value-defaults) :boolean
  #+liber-documentation
  "@version{2022-12-29}
   @argument[pspec]{a valid @symbol{g:param-spec} instance}
@@ -566,7 +565,7 @@
 ;;; g_param_value_validate ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_param_value_validate" param-value-validate) :boolean
+(cffi:defcfun ("g_param_value_validate" param-value-validate) :boolean
  #+liber-documentation
  "@version{2022-12-29}
   @argument[pspec]{a valid @symbol{g:param-spec} instance}
@@ -627,7 +626,7 @@
 ;;; g_param_values_cmp ()                                  not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_param_values_cmp" %param-values-cmp) :int
+(cffi:defcfun ("g_param_values_cmp" %param-values-cmp) :int
  #+liber-documentation
  "@version{#2013-5-21}
   @argument[pspec]{a valid @symbol{g:param-spec}}
@@ -670,7 +669,7 @@
 ;;; g_param_spec_get_name () -> param-spec-name
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_param_spec_get_name" param-spec-name) :string
+(cffi:defcfun ("g_param_spec_get_name" param-spec-name) :string
  #+liber-documentation
  "@version{2022-12-29}
   @argument[pspec]{a valid @symbol{g:param-spec} instance}
@@ -711,7 +710,7 @@
 ;;; g_param_spec_get_nick () -> param-spec-nick
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_param_spec_get_nick" param-spec-nick) :string
+(cffi:defcfun ("g_param_spec_get_nick" param-spec-nick) :string
  #+liber-documentation
  "@version{2022-12-29}
   @argument[pspec]{a valid @symbol{g:param-spec} instance}
@@ -726,7 +725,7 @@
 ;;; g_param_spec_get_blurb () -> param-spec-blurb
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_param_spec_get_blurb" param-spec-blurb) :string
+(cffi:defcfun ("g_param_spec_get_blurb" param-spec-blurb) :string
  #+liber-documentation
  "@version{2022-12-29}
   @argument[pspec]{a valid @symbol{g:param-spec} instance}
@@ -825,8 +824,8 @@
 ;;; g_param_spec_get_redirect_target ()                    not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_param_spec_get_redirect_target" %param-spec-get-redirect-target)
-    (:pointer (:struct param-spec))
+(cffi:defcfun ("g_param_spec_get_redirect_target"
+               %param-spec-get-redirect-target) (:pointer (:struct param-spec))
  #+liber-documentation
  "@version{#2014-11-13}
   @argument[pspec]{a @symbol{g:param-spec} instance}
@@ -852,7 +851,7 @@
 ;;; g_param_spec_internal ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_param_spec_internal" param-spec-internal) :pointer
+(cffi:defcfun ("g_param_spec_internal" param-spec-internal) :pointer
  #+liber-documentation
  "@version{2022-12-29}
   @argument[param-type]{the @class{g:type-t} for the property, must be derived

@@ -128,8 +128,8 @@
                                           type-initializer)
                                      &body values)
   `(progn
-     (defcenum (,name ,base-type
-                      :allow-undeclared-values ,allow-undeclared-values)
+     (cffi:defcenum (,name ,base-type
+                           :allow-undeclared-values ,allow-undeclared-values)
                ,@values)
      (setf (glib:symbol-for-gtype ,gtype) ',name)
      ,@(when export
@@ -174,7 +174,7 @@
 ;;; struct GEnumValue
 ;;; ----------------------------------------------------------------------------
 
-(defcstruct enum-value
+(cffi:defcstruct enum-value
   (:value :int)
   (:name (:string :free-from-foreign nil :free-to-foreign nil))
   (:nick (:string :free-from-foreign nil :free-to-foreign nil)))
@@ -188,7 +188,7 @@
     A structure which contains a single enum value, its name, and its nickname.
   @end{short}
   @begin{pre}
-(defcstruct enum-value
+(cffi:defcstruct enum-value
   (:value :int)
   (:name (:string :free-from-foreign nil :free-to-foreign nil))
   (:nick (:string :free-from-foreign nil :free-to-foreign nil)))
@@ -206,7 +206,7 @@
 ;;; struct GEnumClass
 ;;; ----------------------------------------------------------------------------
 
-(defcstruct enum-class
+(cffi:defcstruct enum-class
   (:type-class (:pointer (:struct type-class)))
   (:minimum :int)
   (:maximum :int)
@@ -223,7 +223,7 @@
     values.
   @end{short}
   @begin{pre}
-(defcstruct enum-class
+(cffi:defcstruct enum-class
   (:type-class (:pointer (:struct type-class)))
   (:minimum :int)
   (:maximum :int)
@@ -449,7 +449,7 @@
                                            type-initializer)
                                       &body values)
   `(progn
-     (defbitfield ,name ,base-type ,@values)
+     (cffi:defbitfield ,name ,base-type ,@values)
      (setf (glib:symbol-for-gtype ,gtype) ',name)
      ,@(when export
          (list `(export ',name
@@ -482,7 +482,7 @@
 ;;; Struct g-flags-value
 ;;; ----------------------------------------------------------------------------
 
-(defcstruct flags-value
+(cffi:defcstruct flags-value
   (:value :uint)
   (:name (:string :free-from-foreign nil :free-to-foreign nil))
   (:nick (:string :free-from-foreign nil :free-to-foreign nil)))
@@ -496,7 +496,7 @@
     A structure which contains a single flags value, its name, and its nickname.
   @end{short}
   @begin{pre}
-(defcstruct flags-value
+(cffi:defcstruct flags-value
   (:value :uint)
   (:name (:string :free-from-foreign nil :free-to-foreign nil))
   (:nick (:string :free-from-foreign nil :free-to-foreign nil)))
@@ -514,7 +514,7 @@
 ;;; Struct g-flags-class
 ;;; ----------------------------------------------------------------------------
 
-(defcstruct flags-class
+(cffi:defcstruct flags-class
   (:type-class (:pointer (:struct type-class)))
   (:mask :uint)
   (:n-values :uint)
@@ -529,7 +529,7 @@
     The class of a flags type holds information about its possible values.
   @end{short}
   @begin{pre}
-(defcstruct flags-class
+(cffi:defcstruct flags-class
   (:type-class (:pointer (:struct type-class)))
   (:mask :uint)
   (:n-values :uint)
@@ -717,7 +717,7 @@
 ;; TODO: Consider to remove the implementation. This function is not
 ;; exported.
 
-(defcfun ("g_enum_register_static" enum-register-static) type-t
+(cffi:defcfun ("g_enum_register_static" enum-register-static) type-t
  #+liber-documentation
  "@version{#2013-6-10}
   @argument[name]{a string used as the name of the new type}
@@ -743,7 +743,7 @@
 ;; TODO: Consider to remove the implementation. This function is not
 ;; exported.
 
-(defcfun ("g_flags_register_static" flags-register-static) type-t
+(cffi:defcfun ("g_flags_register_static" flags-register-static) type-t
  #+liber-documentation
  "@version{#2013-6-10}
   @argument[name]{a string used as the name of the new type}

@@ -37,15 +37,15 @@
 
 (defgeneric boxed-parse-g-value (gvalue info))
 
-(defmethod boxed-parse-g-value (gvalue (info boxed-opaque-info))
+(defmethod boxed-parse-g-value (gvalue (info glib:boxed-opaque-info))
   (cffi:translate-from-foreign (glib:boxed-copy-fn info (value-boxed gvalue))
                                (glib:make-boxed-type info :returnp nil)))
 
-(defmethod boxed-parse-g-value (gvalue (info boxed-cstruct-info))
+(defmethod boxed-parse-g-value (gvalue (info glib:boxed-cstruct-info))
   (cffi:translate-from-foreign (value-boxed gvalue)
                                (glib:make-boxed-type info :returnp nil)))
 
-(defmethod boxed-parse-g-value (gvalue (info boxed-variant-info))
+(defmethod boxed-parse-g-value (gvalue (info glib:boxed-variant-info))
   (cffi:translate-from-foreign (value-boxed gvalue)
                                (glib:make-boxed-type info :returnp nil)))
 
@@ -65,14 +65,14 @@
 (defgeneric boxed-set-g-value (gvalue info value))
 
 (defmethod boxed-set-g-value (gvalue
-                              (info boxed-opaque-info)
+                              (info glib:boxed-opaque-info)
                               value)
   (setf (value-boxed gvalue) ; must be value-boxed and not value-take-boxed
         (cffi:translate-to-foreign value
                                    (glib:make-boxed-type info :returnp nil))))
 
 (defmethod boxed-set-g-value (gvalue
-                              (info boxed-cstruct-info)
+                              (info glib:boxed-cstruct-info)
                               value)
   (value-take-boxed gvalue
                     (cffi:translate-to-foreign value
@@ -80,7 +80,7 @@
                                                                 :returnp nil))))
 
 (defmethod boxed-set-g-value (gvalue
-                              (info boxed-variant-info)
+                              (info glib:boxed-variant-info)
                               value)
   (value-take-boxed gvalue
                     (cffi:translate-to-foreign value

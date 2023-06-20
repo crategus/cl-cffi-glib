@@ -2,11 +2,11 @@
 ;;; gobject.binding.lisp
 ;;;
 ;;; The documentation of this file is taken from the GObject Reference Manual
-;;; Version 2.74 and modified to document the Lisp binding to the GObject
+;;; Version 2.76 and modified to document the Lisp binding to the GObject
 ;;; library. See <http://www.gtk.org>. The API documentation of the Lisp
-;;; binding is available from <http://www.crategus.com/books/cl-cffi-gtk/>.
+;;; binding is available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2019 - 2022 Dieter Kaiser
+;;; Copyright (C) 2019 - 2023 Dieter Kaiser
 ;;;
 ;;; This program is free software: you can redistribute it and/or modify
 ;;; it under the terms of the GNU Lesser General Public License for Lisp
@@ -346,7 +346,7 @@ object3:propertyC -> object1:propertyA
 ;;; g_binding_unbind ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_binding_unbind" binding-unbind) :void
+(cffi:defcfun ("g_binding_unbind" binding-unbind) :void
  #+liber-documentation
  "@version{#2022-12-29}
   @argument[binding]{a @class{g:binding} object}
@@ -370,7 +370,7 @@ object3:propertyC -> object1:propertyA
 ;; TODO: Consider exporting the g:object-ref and g:object-unref functions
 ;; to handle cases like the one in this function.
 
-(defcfun ("g_object_bind_property" object-bind-property) (object binding)
+(cffi:defcfun ("g_object_bind_property" object-bind-property) (object binding)
  #+liber-documentation
  "@version{#2022-12-29}
   @argument[source]{a @class{g:object} source instance}

@@ -2,29 +2,29 @@
 ;;; gobject.g-value.lisp
 ;;;
 ;;; The documentation of this file is taken from the GObject Reference Manual
-;;; Version 2.74 and modified to document the Lisp binding to the GObject
+;;; Version 2.26 and modified to document the Lisp binding to the GObject
 ;;; library. See <http://www.gtk.org>. The API documentation of the Lisp binding
 ;;; is available from <http://www.crategus.com/books/cl-cffi-gtk/>.
 ;;;
-;;; Copyright (C) 2009 - 2011 Kalyanov Dmitry
-;;; Copyright (C) 2011 - 2022 Dieter Kaiser
+;;; Copyright (C) 2011 - 2023 Dieter Kaiser
 ;;;
-;;; This program is free software: you can redistribute it and/or modify
-;;; it under the terms of the GNU Lesser General Public License for Lisp
-;;; as published by the Free Software Foundation, either version 3 of the
-;;; License, or (at your option) any later version and with a preamble to
-;;; the GNU Lesser General Public License that clarifies the terms for use
-;;; with Lisp programs and is referred as the LLGPL.
+;;; Permission is hereby granted, free of charge, to any person obtaining a
+;;; copy of this software and associated documentation files (the "Software"),
+;;; to deal in the Software without restriction, including without limitation
+;;; the rights to use, copy, modify, merge, publish, distribute, sublicense,
+;;; and/or sell copies of the Software, and to permit persons to whom the
+;;; Software is furnished to do so, subject to the following conditions:
 ;;;
-;;; This program is distributed in the hope that it will be useful,
-;;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;;; GNU Lesser General Public License for more details.
+;;; The above copyright notice and this permission notice shall be included in
+;;; all copies or substantial portions of the Software.
 ;;;
-;;; You should have received a copy of the GNU Lesser General Public
-;;; License along with this program and the preamble to the Gnu Lesser
-;;; General Public License.  If not, see <http://www.gnu.org/licenses/>
-;;; and <http://opensource.franz.com/preamble.html>.
+;;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+;;; IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+;;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+;;; THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+;;; LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+;;; FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+;;; DEALINGS IN THE SOFTWARE.
 ;;; ----------------------------------------------------------------------------
 ;;;
 ;;; Generic values
@@ -260,7 +260,7 @@
 ;;; GValue
 ;;; ----------------------------------------------------------------------------
 
-(defcunion value-data
+(cffi:defcunion value-data
   (:int :int)
   (:uint :uint)
   (:long :long)
@@ -277,17 +277,17 @@
 ;;  a 32-bit Linux. Check this for more system.
 
 #-windows
-(defcstruct (value :size
-                   ;; Generalized caluclation of the size of the structure
-                   #.(+ (cffi:foreign-type-size 'type-t)
-                        (* 2 (cffi:foreign-type-size '(:union value-data)))))
+(cffi:defcstruct (value :size
+                  ;; Generalized caluclation of the size of the structure
+                  #.(+ (cffi:foreign-type-size 'type-t)
+                       (* 2 (cffi:foreign-type-size '(:union value-data)))))
   (:type type-t)
   (:data (:union value-data)
          ;; Generalized calculation of the offset
          :offset #.(cffi:foreign-type-size 'type-t) :count 2))
 
 #+windows
-(defcstruct value
+(cffi:defcstruct value
   (:type type-t)
   (:data (:union value-data) :count 2)) ; Not a pointer. Is this correct?
 
@@ -313,15 +313,15 @@
   The code in the example program below demonstrates @sym{g:value}'s features.
   @begin{pre}
 ;; A transformation from an integer to a string
-(defcallback int2string :void ((src-value (:pointer (:struct g:value)))
-                               (dest-value (:pointer (:struct g:value))))
+(cffi:defcallback int2string :void ((src-value (:pointer (:struct g:value)))
+                                    (dest-value (:pointer (:struct g:value))))
   (if (= (g:value-int src-value) 42)
       (setf (g:value-string dest-value) \"An important number\")
       (setf (g:value-string dest-value) \"What is that?\")))
 
 (defun example-g-value ()
   ;; Declare two variables of type g:value.
-  (with-foreign-objects ((value1 'g:value) (value2 'g:value))
+  (cffi:with-foreign-objects ((value1 'g:value) (value2 'g:value))
 
     ;; Initialization, setting and reading a value of type g:value
     (g:value-init value1 +g-type-string+)
@@ -412,7 +412,7 @@
   @begin[Example]{dictionary}
     @begin{pre}
 (setq value
-      (with-foreign-object (value 'g:value)
+      (cffi:with-foreign-object (value 'g:value)
         (g:value-init value \"gint\")))
 => #.(SB-SYS:INT-SAP #XB7910FE8)
 (g:value-holds value \"gint\") => T
@@ -440,7 +440,7 @@
   @begin[Example]{dictionary}
     @begin{pre}
 (setq value
-      (with-foreign-object (value 'g:value)
+      (cffi:with-foreign-object (value 'g:value)
         (g:value-init value \"gint\")))
 => #.(SB-SYS:INT-SAP #XB7910FE8)
 (g:value-type value) => #S(GTYPE :NAME \"gint\" :%ID 24)
@@ -467,7 +467,7 @@
   @begin[Example]{dictionary}
     @begin{pre}
 (setq value
-      (with-foreign-object (value 'g:value)
+      (cffi:with-foreign-object (value 'g:value)
         (g:value-init value \"gint\")))
 => #.(SB-SYS:INT-SAP #XB7910FE8)
 (g:value-type-name value) => \"gint\"
@@ -588,7 +588,7 @@
   (loop for i from 0 below (cffi:foreign-type-size '(:struct value))
         do (setf (cffi:mem-ref value :uchar i) 0)))
 
-(defcfun ("g_value_init" %value-init) (:pointer (:struct value))
+(cffi:defcfun ("g_value_init" %value-init) (:pointer (:struct value))
   (value (:pointer (:struct value)))
   (gtype type-t))
 
@@ -616,7 +616,7 @@
 ;;; g_value_copy ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_value_copy" value-copy) :void
+(cffi:defcfun ("g_value_copy" value-copy) :void
  #+liber-documentation
  "@version{#2022-12-29}
   @argument[src]{an initialized @symbol{g:value} instance}
@@ -635,7 +635,7 @@
 ;;; g_value_reset ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_value_reset" value-reset) (:pointer (:struct value))
+(cffi:defcfun ("g_value_reset" value-reset) (:pointer (:struct value))
  #+liber-documentation
  "@version{#2022-12-29}
   @argument[value]{an initialized @symbol{g:value} instance}
@@ -653,7 +653,7 @@
 ;;; g_value_unset ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_value_unset" value-unset) :void
+(cffi:defcfun ("g_value_unset" value-unset) :void
  #+liber-documentation
  "@version{#2022-12-29}
   @argument[value]{an initialized @symbol{g:value} instance}
@@ -694,7 +694,7 @@
 ;;; g_value_set_instance ()                                not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_value_set_instance" value-set-instance) :void
+(cffi:defcfun ("g_value_set_instance" value-set-instance) :void
  #+liber-documentation
  "@version{#2021-4-8}
   @argument[value]{an initialized @symbol{value} instance}
@@ -739,7 +739,7 @@
 ;;; g_value_type_compatible ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_value_type_compatible" value-type-compatible) :boolean
+(cffi:defcfun ("g_value_type_compatible" value-type-compatible) :boolean
  #+liber-documentation
  "@version{#2022-12-29}
   @argument[src]{a @class{g:type-t} source type to be copied}
@@ -762,7 +762,7 @@
 ;;; g_value_type_transformable ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_value_type_transformable" value-type-transformable) :boolean
+(cffi:defcfun ("g_value_type_transformable" value-type-transformable) :boolean
  #+liber-documentation
  "@version{#2022-12-29}
   @argument[src]{a @class{g:type-t} source type}
@@ -783,7 +783,7 @@
 ;;; g_value_transform ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_value_transform" value-transform) :boolean
+(cffi:defcfun ("g_value_transform" value-transform) :boolean
  #+liber-documentation
  "@version{#2022-12-29}
   @argument[src]{a @symbol{g:value} source value}
@@ -800,8 +800,8 @@
   @begin[Example]{dictionary}
     @begin{pre}
 ;; A transformation from an integer to a string
-(defcallback int2string :void ((src-value (:pointer (:struct g:value)))
-                               (dest-value (:pointer (:struct g:value))))
+(cffi:defcallback int2string :void ((src-value (:pointer (:struct g:value)))
+                                    (dest-value (:pointer (:struct g:value))))
   (if (= (g:value-int src-value) 42)
       (setf (g:value-string dest-value) \"An important number\")
       (setf (g:value-string dest-value) \"What is that?\")))
@@ -842,7 +842,8 @@
 ;;; g_value_register_transform_func ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_value_register_transform_func" value-register-transform-func) :void
+(cffi:defcfun ("g_value_register_transform_func" value-register-transform-func) 
+    :void
  #+liber-documentation
  "@version{#2022-12-29}
   @argument[src]{a @class{g:type-t} source type}
@@ -867,7 +868,7 @@
 ;;; g_strdup_value_contents ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_strdup_value_contents" strdup-value-contents) :string
+(cffi:defcfun ("g_strdup_value_contents" strdup-value-contents) :string
  #+liber-documentation
  "@version{#2022-12-29}
   @argument[value]{a @symbol{g:value} instance which contents are to be

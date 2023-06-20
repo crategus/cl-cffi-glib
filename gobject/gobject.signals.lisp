@@ -188,7 +188,7 @@
 
 ;; A lisp-closure is a specialization of closure for Lisp function callbacks.
 
-(defcstruct lisp-closure
+(cffi:defcstruct lisp-closure
   (:parent-instance (:struct closure)) ; A structure, not a pointer.
   (:object :pointer)
   (:function-id :int))
@@ -239,7 +239,7 @@
 
 ;; A GClosureMarshal function used when creating a signal handler
 
-(defcallback lisp-closure-marshal :void
+(cffi:defcallback lisp-closure-marshal :void
     ((closure (:pointer (:struct lisp-closure)))
      (return-value (:pointer (:struct value)))
      (count-of-args :uint)
@@ -285,7 +285,7 @@
 
 ;; A finalization notifier function used when creating a signal handler
 
-(defcallback lisp-closure-finalize :void
+(cffi:defcallback lisp-closure-finalize :void
     ((data :pointer)
      (closure (:pointer (:struct lisp-closure))))
   (declare (ignore data))
@@ -365,7 +365,7 @@
 ;;; enum GSignalFlags
 ;;; ----------------------------------------------------------------------------
 
-(defbitfield signal-flags
+(cffi:defbitfield signal-flags
   :run-first
   :run-last
   :run-cleanup
@@ -387,7 +387,7 @@
     the stages of a signal emission.
   @end{short}
   @begin{pre}
-(defbitfield signal-flags
+(cffi:defbitfield signal-flags
   :run-first
   :run-last
   :run-cleanup
@@ -434,7 +434,7 @@
 ;; Only the value :id is used in the function signal-handler-find
 ;; Consider to remove the implementation. We do not export this bitfield.
 
-(defbitfield signal-match-type
+(cffi:defbitfield signal-match-type
   :id
   :detail
   :closure
@@ -454,7 +454,7 @@
     @fun{g:signal-handlers-disconnect-matched} functions match signals by.
   @end{short}
   @begin{pre}
-(defbitfield signal-match-type
+(cffi:defbitfield signal-match-type
   :id
   :detail
   :closure
@@ -478,7 +478,7 @@
 ;;; struct GSignalQuery
 ;;; ----------------------------------------------------------------------------
 
-(defcstruct %signal-query
+(cffi:defcstruct %signal-query
   (:signal-id :uint)
   (:signal-name :string)
   (:owner-type type-t)
@@ -690,7 +690,7 @@
 ;;; enum GConnectFlags
 ;;; ----------------------------------------------------------------------------
 
-(defbitfield connect-flags
+(cffi:defbitfield connect-flags
   :after
   :swapped)
 
@@ -704,7 +704,7 @@
     of the signal.
   @end{short}
   @begin{pre}
-(defbitfield connect-flags
+(cffi:defbitfield connect-flags
   :after
   :swapped)
   @end{pre}
@@ -903,7 +903,7 @@
 ;; This function is not used in the cl-cffi-gtk library. We dot not export
 ;; the function.
 
-(defcfun ("g_signal_newv" %g-signal-newv) :uint
+(cffi:defcfun ("g_signal_newv" %g-signal-newv) :uint
  #+liber-documentation
  "@version{#2013-6-30}
   @argument[signal-name]{the name for the signal}
@@ -1031,7 +1031,7 @@
 ;;; g_signal_query ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_signal_query" %signal-query) :void
+(cffi:defcfun ("g_signal_query" %signal-query) :void
   (signal-id :uint)
   (query (:pointer (:struct %signal-query))))
 
@@ -1089,7 +1089,7 @@
     @end{pre}
   @end{dictionary}
   @see-struct{g:signal-query}"
-  (with-foreign-object (query '(:struct %signal-query))
+  (cffi:with-foreign-object (query '(:struct %signal-query))
     (%signal-query signal-id query)
     (assert (not (zerop (cffi:foreign-slot-value query
                                             '(:struct %signal-query)
@@ -1132,7 +1132,7 @@
 ;;; g_signal_lookup ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_signal_lookup" signal-lookup) :uint
+(cffi:defcfun ("g_signal_lookup" signal-lookup) :uint
  #+liber-documentation
  "@version{#2022-12-31}
   @argument[name]{a string with the signal's name}
@@ -1168,7 +1168,7 @@
 ;;; g_signal_name ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_signal_name" signal-name) :string
+(cffi:defcfun ("g_signal_name" signal-name) :string
  #+liber-documentation
  "@version{2022-11-20}
   @argument[id]{an unsigned integer with the identifying number of the signal}
@@ -1231,7 +1231,7 @@
   @see-function{g:signal-query}"
   (when (or (type-is-object gtype)
             (type-is-interface gtype))
-    (with-foreign-object (n-ids :uint)
+    (cffi:with-foreign-object (n-ids :uint)
     (let ((ids (%signal-list-ids gtype n-ids)))
       (unwind-protect
         (iter (for i from 0 below (cffi:mem-ref n-ids :uint))
@@ -1272,7 +1272,7 @@
       (error "Signal ~A not found on instance ~A" detailed instance))
     (let ((count (length (signal-query-param-types query))))
       (assert (= count (length args)))
-      (with-foreign-object (params '(:struct value) (1+ count))
+      (cffi:with-foreign-object (params '(:struct value) (1+ count))
         (set-g-value (cffi:mem-aptr params '(:struct value) 0)
                      instance
                      itype
@@ -1294,7 +1294,7 @@
                                (if detail detail (cffi:null-pointer))
                                (cffi:null-pointer)))
               ;; Emit a signal which has a return value
-              (with-foreign-object (return-value '(:struct value))
+              (cffi:with-foreign-object (return-value '(:struct value))
                 (value-init return-value
                             (signal-query-return-type query))
                 (let ((detail (signal-query-signal-detail query)))
@@ -1341,7 +1341,7 @@
 
 ;; Called from signal-emit. For internal use and not exported.
 
-(defcfun ("g_signal_emitv" %signal-emitv) :void
+(cffi:defcfun ("g_signal_emitv" %signal-emitv) :void
  #+liber-documentation
  "@version{#2013-8-20}
   @argument[instance-and-params]{argument list for the signal emission. The
@@ -1604,7 +1604,7 @@
 
 ;; Called from signal-connect. For internal use and not exported.
 
-(defcfun ("g_signal_connect_closure" %signal-connect-closure) :ulong
+(cffi:defcfun ("g_signal_connect_closure" %signal-connect-closure) :ulong
  #+liber-documentation
  "@version{#2020-10-1}
   @argument[instance]{a @code{:pointer} to the instance to connect to}
@@ -1660,7 +1660,7 @@
 ;;; g_signal_handler_block ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_signal_handler_block" signal-handler-block) :void
+(cffi:defcfun ("g_signal_handler_block" signal-handler-block) :void
  #+liber-documentation
  "@version{#2022-12-31}
   @argument[instance]{a @class{g:object} instance to block the signal handler
@@ -1688,7 +1688,7 @@
 ;;; g_signal_handler_unblock ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_signal_handler_unblock" signal-handler-unblock) :void
+(cffi:defcfun ("g_signal_handler_unblock" signal-handler-unblock) :void
  #+liber-documentation
  "@version{#2022-12-31}
   @argument[instance]{a @class{g:object} instance to unblock the signal
@@ -1721,7 +1721,7 @@
 ;;; g_signal_handler_disconnect ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_signal_handler_disconnect" %signal-handler-disconnect) :void
+(cffi:defcfun ("g_signal_handler_disconnect" %signal-handler-disconnect) :void
  #+liber-documentation
  "@version{#2022-12-31}
   @argument[instance]{a @class{g:object} instance to remove the signal handler
@@ -1753,7 +1753,7 @@
 ;;; g_signal_handler_find ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_signal_handler_find" %signal-handler-find) :ulong
+(cffi:defcfun ("g_signal_handler_find" %signal-handler-find) :ulong
   (instance object)
   (mask signal-match-type)
   (signal-id :uint)
@@ -1930,7 +1930,7 @@
 ;;; g_signal_handler_is_connected ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_signal_handler_is_connected" signal-handler-is-connected)
+(cffi:defcfun ("g_signal_handler_is_connected" signal-handler-is-connected)
     :boolean
  #+liber-documentation
  "@version{#2022-12-31}
@@ -2031,7 +2031,8 @@
 ;;; g_signal_has_handler_pending ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_signal_has_handler_pending" signal-has-handler-pending) :boolean
+(cffi:defcfun ("g_signal_has_handler_pending" signal-has-handler-pending) 
+    :boolean
  #+liber-documentation
  "@version{#2022-12-31}
   @argument[instance]{a @class{g:object} instance whose signal handlers are
@@ -2072,7 +2073,7 @@
 ;;; g_signal_stop_emission ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_signal_stop_emission" signal-stop-emission) :void
+(cffi:defcfun ("g_signal_stop_emission" signal-stop-emission) :void
  #+liber-documentation
  "@version{#2022-12-31}
   @argument[instance]{a @class{g:object} instance whose signal handlers you
@@ -2102,7 +2103,8 @@
 ;;; g_signal_stop_emission_by_name ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_signal_stop_emission_by_name" signal-stop-emission-by-name) :void
+(cffi:defcfun ("g_signal_stop_emission_by_name" signal-stop-emission-by-name) 
+    :void
  #+liber-documentation
  "@version{#2022-12-31}
   @argument[instance]{a @class{g:object} instance whose signal handlers you
@@ -2378,7 +2380,7 @@
 ;;;     detail_p contain valid return values.
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_signal_parse_name" %signal-parse-name) :boolean
+(cffi:defcfun ("g_signal_parse_name" %signal-parse-name) :boolean
  (detailed-signal :string)
  (itype type-t)
  (signal-id-p (:pointer :uint))
@@ -2389,7 +2391,7 @@
 ;; signal-emit and not exported.
 
 (defun signal-parse-name (owner-type signal-name)
-  (with-foreign-objects ((signal-id :uint) (detail 'glib:quark-as-string))
+  (cffi:with-foreign-objects ((signal-id :uint) (detail 'glib:quark-as-string))
     (when (%signal-parse-name signal-name owner-type signal-id detail t)
       (let ((query (signal-query (cffi:mem-ref signal-id :uint))))
         (setf (signal-query-signal-detail query)

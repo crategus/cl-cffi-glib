@@ -2,29 +2,29 @@
 ;;; gobject.base.lisp
 ;;;
 ;;; The documentation of this file is taken from the GObject Reference Manual
-;;; Version 2.74 and modified to document the Lisp binding to the GObject
+;;; Version 2.76 and modified to document the Lisp binding to the GObject
 ;;; library. See <http://www.gtk.org>. The API documentation of the Lisp
-;;; binding is available from <http://www.crategus.com/books/cl-cffi-gtk/>.
+;;; binding is available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2009 - 2011 Kalyanov Dmitry
-;;; Copyright (C) 2011 - 2022 Dieter Kaiser
+;;; Copyright (C) 2011 - 2023 Dieter Kaiser
 ;;;
-;;; This program is free software: you can redistribute it and/or modify
-;;; it under the terms of the GNU Lesser General Public License for Lisp
-;;; as published by the Free Software Foundation, either version 3 of the
-;;; License, or (at your option) any later version and with a preamble to
-;;; the GNU Lesser General Public License that clarifies the terms for use
-;;; with Lisp programs and is referred as the LLGPL.
+;;; Permission is hereby granted, free of charge, to any person obtaining a
+;;; copy of this software and associated documentation files (the "Software"),
+;;; to deal in the Software without restriction, including without limitation
+;;; the rights to use, copy, modify, merge, publish, distribute, sublicense,
+;;; and/or sell copies of the Software, and to permit persons to whom the
+;;; Software is furnished to do so, subject to the following conditions:
 ;;;
-;;; This program is distributed in the hope that it will be useful,
-;;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;;; GNU Lesser General Public License for more details.
+;;; The above copyright notice and this permission notice shall be included in
+;;; all copies or substantial portions of the Software.
 ;;;
-;;; You should have received a copy of the GNU Lesser General Public
-;;; License along with this program and the preamble to the Gnu Lesser
-;;; General Public License.  If not, see <http://www.gnu.org/licenses/>
-;;; and <http://opensource.franz.com/preamble.html>.
+;;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+;;; IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+;;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+;;; THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+;;; LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+;;; FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+;;; DEALINGS IN THE SOFTWARE.
 ;;; ----------------------------------------------------------------------------
 ;;;
 ;;; GObject
@@ -167,14 +167,15 @@
 ;; a 32-bit Linux. Check this for more system.
 
 #-windows
-(defcstruct (g-parameter :size #.(+ (cffi:foreign-type-size :string)
-                                    (cffi:foreign-type-size '(:struct value))))
+(cffi:defcstruct (g-parameter :size
+                              #.(+ (cffi:foreign-type-size :string)
+                              (cffi:foreign-type-size '(:struct value))))
   (:name (:string :free-from-foreign nil :free-to-foreign nil))
   (:value (:struct value)
           :offset #.(cffi:foreign-type-size :string))) ; A struct, not a pointer.
 
 #+windows
-(defcstruct g-parameter
+(cffi:defcstruct g-parameter
   (:name (:string :free-from-foreign nil :free-to-foreign nil))
   (:value (:struct value))) ; A struct, not a pointer.
 
@@ -188,7 +189,7 @@
     parameter name/value pairs to the function @fun{object-newv}.
   @end{short}
   @begin{pre}
-(defcstruct g-parameter
+(cffi:defcstruct g-parameter
   (:name (:string :free-from-foreign nil :free-to-foreign nil))
   (:value value))
   @end{pre}
@@ -209,7 +210,7 @@
 ;; %object is not needed in the implementation.
 ;; It is defined to access the property ref-count for debugging the code.
 
-(defcstruct %object
+(cffi:defcstruct %object
   (:type-instance (:pointer (:struct type-instance)))
   (:ref-count :uint)
   (:data :pointer))
@@ -247,7 +248,7 @@
 (export 'object-signal-handlers)
 
 ;; Add object to the global Hash table *registered-object-types*
-(setf (symbol-for-gtype "GObject") 'object)
+(setf (glib:symbol-for-gtype "GObject") 'object)
 
 ;;; ----------------------------------------------------------------------------
 
@@ -475,7 +476,7 @@ lambda (object pspec)    :no-hooks
         (log-for :gc "adding idle-gc-hook to main loop~%")
         (glib:idle-add #'activate-gc-hooks)))))
 
-;(defcallback g-idle-gc-hook :boolean ((data :pointer))
+;(cffi:defcallback g-idle-gc-hook :boolean ((data :pointer))
 ;  (declare (ignore data))
 ;  (format t "~%~%IN G-IDLE-GC-HOOKS~%~%")
 ;  (activate-gc-hooks)
@@ -556,7 +557,7 @@ lambda (object pspec)    :no-hooks
 
 ;; TODO: This function is not used.
 
-(defcallback gobject-weak-ref-finalized :void
+(cffi:defcallback gobject-weak-ref-finalized :void
     ((data :pointer) (pointer :pointer))
   (declare (ignore data))
   (log-for :gc "~A is weak-ref-finalized with ~A refs~%"
@@ -575,7 +576,7 @@ lambda (object pspec)    :no-hooks
 
 ;; Define the type foreign-g-object-type and the type transformation rules.
 
-(define-foreign-type foreign-g-object-type ()
+(cffi:define-foreign-type foreign-g-object-type ()
   ((sub-type :reader sub-type
              :initarg :sub-type
              :initform 'object)
@@ -584,7 +585,7 @@ lambda (object pspec)    :no-hooks
                        :initform nil))
   (:actual-type :pointer))
 
-(define-parse-method object (&rest args)
+(cffi:define-parse-method object (&rest args)
   (let* ((sub-type (first (remove-if #'keywordp args)))
          (flags (remove-if-not #'keywordp args))
          (already-referenced (not (null (find :already-referenced flags)))))
@@ -633,7 +634,7 @@ lambda (object pspec)    :no-hooks
   (flet (;; Get the corresponing lisp type for a GType
          (get-gobject-lisp-type (gtype)
             (iter (while (not (null gtype)))
-                  (for lisp-type = (symbol-for-gtype (gtype-name gtype)))
+                  (for lisp-type = (glib:symbol-for-gtype (gtype-name gtype)))
                   (when lisp-type (return lisp-type))
                   (setf gtype (type-parent gtype)))))
     (let* ((gtype (type-from-instance pointer))
@@ -776,7 +777,7 @@ lambda (object pspec)    :no-hooks
                     (class-property-type object-type name))
                   args-names)))
   (let ((args-count (length args-names)))
-    (with-foreign-object (parameters '(:struct g-parameter) args-count)
+    (cffi:with-foreign-object (parameters '(:struct g-parameter) args-count)
       (loop
         for i from 0 below args-count
         for arg-name in args-names
@@ -811,7 +812,7 @@ lambda (object pspec)    :no-hooks
 ;;; struct GObjectClass                                    not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcstruct object-class
+(cffi:defcstruct object-class
   (:type-class (:pointer (:struct type-class)))
   (:construct-properties :pointer)
   (:constructor :pointer)
@@ -831,7 +832,7 @@ lambda (object pspec)    :no-hooks
  "@version{#2021-9-9}
   @short{The class structure for the @class{object} type.}
   @begin{pre}
-(defcstruct object-class
+(cffi:defcstruct object-class
   (:type-class g-type-class)
   (:construct-properties :pointer)
   (:constructor :pointer)
@@ -905,7 +906,7 @@ lambda (object pspec)    :no-hooks
 ;; This structure is not needed in the implementation of the Lisp library
 ;; and is not exported.
 
-(defcstruct object-construct-param
+(cffi:defcstruct object-construct-param
   (:pspec (:pointer (:struct param-spec)))
   (:value (:pointer (:struct value))))
 
@@ -920,7 +921,7 @@ lambda (object pspec)    :no-hooks
     a @symbol{object-class} structure.
   @end{short}
   @begin{pre}
-(defcstruct object-construct-param
+(cffi:defcstruct object-construct-param
   (:pspec (:pointer param-spec))
   (:value (:pointer value)))
   @end{pre}
@@ -1238,7 +1239,7 @@ lambda (object pspec)    :no-hooks
 
 ;; For internal use and not exported.
 
-(defcfun ("g_object_class_install_property" %object-class-install-property)
+(cffi:defcfun ("g_object_class_install_property" %object-class-install-property)
     :void
  #+liber-documentation
  "@version{#2020-2-17}
@@ -1335,7 +1336,7 @@ lambda (object pspec)    :no-hooks
 ;;; g_object_class_find_property ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_object_class_find_property" %object-class-find-property)
+(cffi:defcfun ("g_object_class_find_property" %object-class-find-property)
     (:pointer (:struct param-spec))
   (class (:pointer (:struct object-class)))
   (name :string))
@@ -1384,7 +1385,7 @@ lambda (object pspec)    :no-hooks
 ;;; g_object_class_list_properties ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_object_class_list_properties" %object-class-list-properties)
+(cffi:defcfun ("g_object_class_list_properties" %object-class-list-properties)
     (:pointer (:pointer (:struct param-spec)))
   (class (:pointer (:struct object-class)))
   (n-props (:pointer :uint)))
@@ -1415,7 +1416,7 @@ lambda (object pspec)    :no-hooks
   (assert (type-is-a gtype +g-type-object+))
   (let ((class (type-class-ref gtype)))
     (unwind-protect
-      (with-foreign-object (n-props :uint)
+      (cffi:with-foreign-object (n-props :uint)
         (let ((pspecs (%object-class-list-properties class n-props)))
           (unwind-protect
             (loop for count from 0 below (cffi:mem-ref n-props :uint)
@@ -1430,8 +1431,8 @@ lambda (object pspec)    :no-hooks
 ;;; g_object_class_override_property ()                    not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_object_class_override_property"
-          %object-class-override-property) :void
+(cffi:defcfun ("g_object_class_override_property"
+                %object-class-override-property) :void
  #+liber-documentation
  "@version{#2020-2-17}
   @argument[class]{a @symbol{object-class} structure}
@@ -1469,8 +1470,8 @@ lambda (object pspec)    :no-hooks
 ;;; g_object_interface_install_property ()                 not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_object_interface_install_property"
-          %object-interface-install-property) :void
+(cffi:defcfun ("g_object_interface_install_property"
+               %object-interface-install-property) :void
  #+liber-documentation
  "@version{#2020-2-17}
   @argument[iface]{any interface vtable for the interface, or the default
@@ -1503,8 +1504,8 @@ lambda (object pspec)    :no-hooks
 ;;; g_object_interface_find_property ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_object_interface_find_property" %object-interface-find-property)
-    (:pointer (:struct param-spec))
+(cffi:defcfun ("g_object_interface_find_property"
+               %object-interface-find-property) (:pointer (:struct param-spec))
   (iface (:pointer (:struct type-interface)))
   (property-name :string))
 
@@ -1547,8 +1548,9 @@ lambda (object pspec)    :no-hooks
 ;;; g_object_interface_list_properties ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_object_interface_list_properties"
-          %object-interface-list-properties) (:pointer (:struct param-spec))
+(cffi:defcfun ("g_object_interface_list_properties"
+               %object-interface-list-properties)
+    (:pointer (:struct param-spec))
   (iface (:pointer (:struct type-interface)))
   (n-props (:pointer :uint)))
 
@@ -1574,7 +1576,7 @@ lambda (object pspec)    :no-hooks
   (assert (type-is-a gtype +g-type-interface+))
   (let ((iface (type-default-interface-ref gtype)))
     (unwind-protect
-      (with-foreign-object (n-props :uint)
+      (cffi:with-foreign-object (n-props :uint)
         (let ((pspecs (%object-interface-list-properties iface n-props)))
           (unwind-protect
             (loop for count from 0 below (cffi:mem-ref n-props :uint)
@@ -1618,7 +1620,7 @@ lambda (object pspec)    :no-hooks
   @end{dictionary}
   @see-class{g:object}
   @see-class{g:type-t}"
-  (let ((symbol (symbol-for-gtype gtype)))
+  (let ((symbol (glib:symbol-for-gtype gtype)))
     (apply 'make-instance symbol args)))
 
 (export 'object-new)
@@ -1662,7 +1664,7 @@ lambda (object pspec)    :no-hooks
 ;; This function is called internally in the Lisp library to create an object
 ;; and is not exported.
 
-(defcfun ("g_object_newv" %object-newv) :pointer
+(cffi:defcfun ("g_object_newv" %object-newv) :pointer
  #+liber-documentation
  "@version{#2013-10-27}
   @argument[object-type]{the type ID of the @class{object} subtype to
@@ -1693,7 +1695,7 @@ lambda (object pspec)    :no-hooks
 ;; The memory management is done in the Lisp library. We do not export this
 ;; function.
 
-(defcfun ("g_object_ref" %object-ref) :pointer
+(cffi:defcfun ("g_object_ref" %object-ref) :pointer
  #+liber-documentation
  "@version{#2014-11-13}
   @argument[object]{a @class{object} instance}
@@ -1709,7 +1711,7 @@ lambda (object pspec)    :no-hooks
 ;; The memory management is done in the Lisp library. We do not export this
 ;; function.
 
-(defcfun ("g_object_unref" %object-unref) :void
+(cffi:defcfun ("g_object_unref" %object-unref) :void
  #+liber-documentation
  "@version{#2014-11-13}
   @argument[object]{a @class{object} instance}
@@ -1728,7 +1730,7 @@ lambda (object pspec)    :no-hooks
 ;; The memory management is done in the Lisp library. We do not export this
 ;; function.
 
-(defcfun ("g_object_ref_sink" %object-ref-sink) :pointer
+(cffi:defcfun ("g_object_ref_sink" %object-ref-sink) :pointer
  #+liber-documentation
  "@version{#2020-2-17}
   @argument[object]{a @class{object} instance}
@@ -1824,7 +1826,7 @@ lambda (object pspec)    :no-hooks
 ;; The memory management is done in the Lisp library. We do not export this
 ;; function.
 
-(defcfun ("g_object_is_floating" %object-is-floating) :boolean
+(cffi:defcfun ("g_object_is_floating" %object-is-floating) :boolean
  #+liber-documentation
  "@version{#2020-2-17}
   @argument[object]{a @class{object} instance}
@@ -1842,7 +1844,7 @@ lambda (object pspec)    :no-hooks
 ;; The memory management is done in the Lisp library. We do not export this
 ;; function.
 
-(defcfun ("g_object_force_floating" %object-force-floating) :void
+(cffi:defcfun ("g_object_force_floating" %object-force-floating) :void
  #+liber-documentation
  "@version{#2020-2-17}
   @argument[object]{a @class{g:object} instance}
@@ -1883,7 +1885,7 @@ lambda (object pspec)    :no-hooks
 ;; The memory management is done in the Lisp library. We do not export this
 ;; function.
 
-(defcfun ("g_object_weak_ref" %object-weak-ref) :void
+(cffi:defcfun ("g_object_weak_ref" %object-weak-ref) :void
  #+liber-documentation
  "@version{#2020-2-17}
   @argument[object]{@class{object} instance to reference weakly}
@@ -1915,7 +1917,7 @@ lambda (object pspec)    :no-hooks
 ;; The memory management is done in the Lisp library. We do not export this
 ;; function.
 
-(defcfun ("g_object_weak_unref" %object-weak-unref) :void
+(cffi:defcfun ("g_object_weak_unref" %object-weak-unref) :void
  #+liber-documentation
  "@version{#2020-2-17}
   @argument[object]{@class{object} instance to remove a weak reference from}
@@ -2055,7 +2057,7 @@ lambda (object pspec)    :no-hooks
 ;;;     other references.
 ;;; ----------------------------------------------------------------------------
 
-(defcallback toggle-notify :void
+(cffi:defcallback toggle-notify :void
     ((data :pointer) (object :pointer) (is-last-ref :boolean))
   (declare (ignore data))
   (log-for :gc "~A is now ~A with ~A refs~%"
@@ -2093,7 +2095,7 @@ lambda (object pspec)    :no-hooks
 ;; The memory management is done in the Lisp library. We do not export this
 ;; function.
 
-(defcfun ("g_object_add_toggle_ref" %object-add-toggle-ref) :void
+(cffi:defcfun ("g_object_add_toggle_ref" %object-add-toggle-ref) :void
  #+liber-documentation
  "@version{#2020-2-17}
   @argument[object]{a @class{object} instance}
@@ -2141,7 +2143,7 @@ lambda (object pspec)    :no-hooks
 ;; The memory management is done in the Lisp library. We do not export this
 ;; function.
 
-(defcfun ("g_object_remove_toggle_ref" %object-remove-toggle-ref) :void
+(cffi:defcfun ("g_object_remove_toggle_ref" %object-remove-toggle-ref) :void
  #+liber-documentation
  "@version{#2020-2-17}
   @argument[object]{a @class{object} instance}
@@ -2372,7 +2374,7 @@ lambda (object pspec)    :no-hooks
 ;;; g_object_notify ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_object_notify" object-notify) :void
+(cffi:defcfun ("g_object_notify" object-notify) :void
  #+liber-documentation
  "@version{#2022-12-30}
   @argument[object]{a @class{g:object} instance}
@@ -2438,7 +2440,7 @@ lambda (object pspec)    :no-hooks
 ;;; g_object_freeze_notify ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_object_freeze_notify" object-freeze-notify) :void
+(cffi:defcfun ("g_object_freeze_notify" object-freeze-notify) :void
  #+liber-documentation
  "@version{#2022-12-30}
   @argument[object]{a @class{g:object} instance}
@@ -2459,7 +2461,7 @@ lambda (object pspec)    :no-hooks
 ;;; g_object_thaw_notify ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_object_thaw_notify" object-thaw-notify) :void
+(cffi:defcfun ("g_object_thaw_notify" object-thaw-notify) :void
  #+liber-documentation
  "@version{#2022-12-30}
   @argument[object]{a @class{g:object} instance}
@@ -2492,7 +2494,7 @@ lambda (object pspec)    :no-hooks
                         :void)
   data)
 
-(defcfun ("g_object_get_data" object-data) :pointer
+(cffi:defcfun ("g_object_get_data" object-data) :pointer
  #+liber-documentation
  "@version{#2022-12-30}
   @syntax[]{(g:object-data object key) => data}
@@ -2544,7 +2546,7 @@ lambda (object pspec)    :no-hooks
 ;;; g_object_set_data_full ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_object_set_data_full" object-set-data-full) :void
+(cffi:defcfun ("g_object_set_data_full" object-set-data-full) :void
  #+liber-documentation
  "@version{#2022-12-30}
   @argument[object]{@class{g:object} instance containing the associations}
@@ -2602,7 +2604,7 @@ lambda (object pspec)    :no-hooks
 ;;; g_object_steal_data ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_object_steal_data" object-steal-data) :pointer
+(cffi:defcfun ("g_object_steal_data" object-steal-data) :pointer
  #+liber-documentation
  "@version{#2022-12-30}
   @argument[object]{a @class{g:object} instance containing the associations}
@@ -2904,7 +2906,7 @@ lambda (object pspec)    :no-hooks
 ;;; g_object_get_property () -> object-property
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_object_set_property" %object-set-property) :void
+(cffi:defcfun ("g_object_set_property" %object-set-property) :void
   (object object)
   (name :string)
   (value (:pointer (:struct value))))
@@ -2915,7 +2917,7 @@ lambda (object pspec)    :no-hooks
           (class-property-type (type-from-instance object)
                                name
                                :assert-writable t)))
-  (with-foreign-object (new-value '(:struct value))
+  (cffi:with-foreign-object (new-value '(:struct value))
     (unwind-protect
       (progn
         (set-g-value new-value value gtype :zero-g-value t)
@@ -2923,7 +2925,7 @@ lambda (object pspec)    :no-hooks
       (value-unset new-value)))
   value)
 
-(defcfun ("g_object_get_property" %object-get-property) :void
+(cffi:defcfun ("g_object_get_property" %object-get-property) :void
   (object object)
   (name :string)
   (value (:pointer (:struct value))))
@@ -2959,7 +2961,7 @@ lambda (object pspec)    :no-hooks
                                  name
                                  :assert-readable t)))
     (return-nil () (return-from object-property nil)))
-  (with-foreign-object (value '(:struct value))
+  (cffi:with-foreign-object (value '(:struct value))
     (unwind-protect
       (progn
         (value-init value gtype)

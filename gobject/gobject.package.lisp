@@ -31,23 +31,12 @@
   (:import-from :glib #:gtype
                       #:gtype-name
                       #:gtype-id
-                      #:symbol-for-gtype
-                      #:boxed-opaque-info
-                      #:boxed-cstruct-info
-                      #:boxed-variant-info)
-  (:import-from :cffi #:defcfun
-                      #:defcvar
-                      #:defctype
-                      #:defcenum
-                      #:defcunion
-                      #:defbitfield
-                      #:defcstruct
-                      #:defcallback
-                      #:define-foreign-type
-                      #:define-parse-method
-                      #:with-foreign-object
-                      #:with-foreign-objects
-                      #:with-foreign-slots)
+;                      #:symbol-for-gtype
+;                      #:boxed-opaque-info
+;                      #:boxed-cstruct-info
+;                      #:boxed-variant-info
+                      )
+  (:import-from :cffi)
   (:import-from :closer-mop)
   (:import-from :trivial-garbage)
   (:import-from :bordeaux-threads)

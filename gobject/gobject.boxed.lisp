@@ -144,7 +144,7 @@
 ;; Used internally for the implementation of a Lisp boxed type. This function
 ;; is not exported.
 
-(defcfun ("g_boxed_copy" %boxed-copy) :pointer
+(cffi:defcfun ("g_boxed_copy" %boxed-copy) :pointer
   (gtype type-t)
   (boxed :pointer))
 
@@ -167,7 +167,7 @@
 ;; Used internally for the implementation of a Lisp boxed type. This function
 ;; is not exported.
 
-(defcfun ("g_boxed_free" boxed-free) :void
+(cffi:defcfun ("g_boxed_free" boxed-free) :void
  #+liber-documentation
  "@version{#2013-6-10}
   @argument[boxed-type]{the type of boxed}
@@ -182,7 +182,8 @@
 
 ;; This function is not exported.
 
-(defcfun ("g_boxed_type_register_static" g-boxed-type-register-static) type-t
+(cffi:defcfun ("g_boxed_type_register_static" g-boxed-type-register-static)
+    type-t
  #+liber-documentation
  "@version{#2013-6-10}
   @argument[name]{name of the new boxed type}
@@ -205,7 +206,7 @@
 
 ;; This function is not exported.
 
-(defcfun ("g_pointer_type_register_static" g-pointer-type-register-static)
+(cffi:defcfun ("g_pointer_type_register_static" g-pointer-type-register-static)
     type-t
  #+liber-documentation
  "@version{#2013-6-10}
@@ -245,7 +246,7 @@
 ;;; G_TYPE_STRV
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_strv_get_type" type-strv) type-t
+(cffi:defcfun ("g_strv_get_type" type-strv) type-t
  #+liber-documentation
  "@version{#2022-12-17}
   @begin{short}

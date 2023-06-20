@@ -780,9 +780,9 @@
 
 ;; %type-t represents the foreign type GType
 
-(defctype %type-t :size)
+(cffi:defctype %type-t :size)
 
-(defcfun ("g_type_name" %type-name) :string
+(cffi:defcfun ("g_type_name" %type-name) :string
   (gtype %type-t)) ; Use %type-t and not type-t
 
 ;;; ----------------------------------------------------------------------------
@@ -969,7 +969,7 @@
 ;; type-t converts automatically between the Lisp type gtype,
 ;; an integer or a string and the foreign type GType
 
-(define-foreign-type type-t ()
+(cffi:define-foreign-type type-t ()
   ((mangled-p :initarg :mangled-p
               :reader g-type-mangled-p
               :initform nil
@@ -1017,7 +1017,7 @@
 ;;; struct GTypeInterface
 ;;; ----------------------------------------------------------------------------
 
-(defcstruct type-interface
+(cffi:defcstruct type-interface
   (:type type-t)
   (:instance-type type-t))
 
@@ -1028,7 +1028,7 @@
  "@version{2022-12-29}
   @short{An opaque structure used as the base of all interface types.}
   @begin{pre}
-(defcstruct type-interface
+(cffi:defcstruct type-interface
   (:type type-t)
   (:instance-type type-t))
   @end{pre}
@@ -1043,7 +1043,7 @@
 ;;; struct GTypeClass
 ;;; ----------------------------------------------------------------------------
 
-(defcstruct type-class
+(cffi:defcstruct type-class
   (:type type-t))
 
 #+liber-documentation
@@ -1053,7 +1053,7 @@
  "@version{2022-12-29}
   @short{An opaque structure used as the base of all classes.}
   @begin{pre}
-(defcstruct type-class
+(cffi:defcstruct type-class
   (:type type-t))
   @end{pre}
   @see-class{g:type-t}
@@ -1066,7 +1066,7 @@
 ;;; struct GTypeInstance
 ;;; ----------------------------------------------------------------------------
 
-(defcstruct type-instance
+(cffi:defcstruct type-instance
   (:class (:pointer (:struct type-class))))
 
 #+liber-documentation
@@ -1076,7 +1076,7 @@
  "@version{2022-12-29}
   @short{An opaque structure used as the base of all type instances.}
   @begin{pre}
-(defcstruct type-instance
+(cffi:defcstruct type-instance
   (:class (:pointer (:struct type-class))))
   @end{pre}
   @see-class{g:type-t}
@@ -1089,7 +1089,7 @@
 ;;; struct GTypeInfo                                       not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcstruct type-info
+(cffi:defcstruct type-info
   (:class-size :uint16)
   (:base-init-fn :pointer)
   (:base-finalize-fn :pointer)
@@ -1116,7 +1116,7 @@
   this structure, so its memory does not need to be persistent across
   invocation of the function @fun{type-register-static}.
   @begin{pre}
-(defcstruct type-info
+(cffi:defcstruct type-info
   (:class-size :uint16)
   (:base-init-fn :pointer)
   (:base-finalize-fn :pointer)
@@ -1182,7 +1182,7 @@
 ;;; enum GTypeFundamentalFlags                             not exported
 ;;; ----------------------------------------------------------------------------
 
-(defbitfield type-fundamental-flags
+(cffi:defbitfield type-fundamental-flags
   :classed
   :instantiatable
   :derivable
@@ -1200,7 +1200,7 @@
   See the functions @fun{type-is-classed}, @fun{type-is-instantiatable},
   and @fun{type-is-deep-variable} to check a type for these flags.
   @begin{pre}
-(defbitfield type-fundamental-flags
+(cffi:defbitfield type-fundamental-flags
   :classed
   :instantiatable
   :derivable
@@ -1223,7 +1223,7 @@
 ;;; struct GTypeFundamentalInfo                            not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcstruct type-fundamental-info
+(cffi:defcstruct type-fundamental-info
   (:type-flags type-fundamental-flags))
 
 #+liber-documentation
@@ -1236,7 +1236,7 @@
     specifically for managing fundamental types.
   @end{short}
   @begin{pre}
-(defcstruct type-fundamental-info
+(cffi:defcstruct type-fundamental-info
   (:type-flags type-fundamental-flags))
   @end{pre}
   @begin[code]{table}
@@ -1249,7 +1249,7 @@
 ;;; struct GInterfaceInfo                                  not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcstruct interface-info
+(cffi:defcstruct interface-info
   (:interface-init :pointer)
   (:interface-finalize :pointer)
   (:interface-data :pointer))
@@ -1264,7 +1264,7 @@
     specifically for managing interface types.
   @end{short}
   @begin{pre}
-(defcstruct interface-info
+(cffi:defcstruct interface-info
   (:interface-init :pointer)
   (:interface-finalize :pointer)
   (:interface-data :pointer))
@@ -1282,7 +1282,7 @@
 ;;; struct GTypeValueTable                                 not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcstruct type-value-table
+(cffi:defcstruct type-value-table
   (:value-init :pointer)
   (:value-free :pointer)
   (:value-copy :pointer)
@@ -1303,7 +1303,7 @@
     type.
   @end{short}
   @begin{pre}
-(defcstruct type-value-table
+(cffi:defcstruct type-value-table
   (:value-init :pointer)
   (:value-free :pointer)
   (:value-copy :pointer)
@@ -1526,7 +1526,7 @@
 ;;; struct GTypeQuery                                      not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcstruct type-query
+(cffi:defcstruct type-query
   (:type type-t)
   (:type-name :string)
   (:class-size :uint)
@@ -1542,7 +1542,7 @@
   @end{short}
   It is filled in by the function @fun{type-query}.
   @begin{pre}
-(defcstruct type-query
+(cffi:defcstruct type-query
   (:type type-t)
   (:type-name :string)
   (:class-size :uint)
@@ -1563,7 +1563,7 @@
 ;;; enum GTypeFlags                                        not exported
 ;;; ----------------------------------------------------------------------------
 
-(defbitfield type-flags
+(cffi:defbitfield type-flags
   (:abstract #.(ash 1 4))
   (:value-abstract #.(ash 1 5)))
 
@@ -1577,7 +1577,7 @@
   @code{:abstract} and the function @fun{type-is-value-abstract} to check a
   type for the flag @code{:value-abstract}.
   @begin{pre}
-(defbitfield type-flags
+(cffi:defbitfield type-flags
   (:abstract #.(ash 1 4))
   (:value-abstract #.(ash 1 5)))
   @end{pre}
@@ -1597,7 +1597,7 @@
 ;;; G_TYPE_FUNDAMENTAL()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_type_fundamental" type-fundamental) type-t
+(cffi:defcfun ("g_type_fundamental" type-fundamental) type-t
  #+liber-documentation
  "@version{2022-12-29}
   @argument[gtype]{a valid @class{g:type-t} ID}
@@ -1653,7 +1653,7 @@
 ;;; G_TYPE_IS_ABSTRACT()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_type_test_flags" %type-test-flags) :boolean
+(cffi:defcfun ("g_type_test_flags" %type-test-flags) :boolean
   (gtype type-t)
   (flag type-flags))
 
@@ -1734,7 +1734,7 @@
 ;;; G_TYPE_IS_VALUE_TYPE()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_type_check_is_value_type" %type-check-is-value-type) :boolean
+(cffi:defcfun ("g_type_check_is_value_type" %type-check-is-value-type) :boolean
   (gtype type-t))
 
 (defun type-is-value-type (gtype)
@@ -1787,7 +1787,7 @@
 ;; we can not pass a flag of type type-fundamental-flag to our first version.
 ;; See the implemenation for G_TYPE_IS_ABSTRACT.
 
-(defcfun ("g_type_test_flags" %type-test-fundamental-flags) :boolean
+(cffi:defcfun ("g_type_test_flags" %type-test-fundamental-flags) :boolean
   (gtype type-t)
   (flag type-fundamental-flags))
 
@@ -2327,7 +2327,7 @@
 ;; This function is not exported. In the Lisp binding there is no difference
 ;; to the function type-name.
 
-(defcfun ("g_type_qname" type-qname) glib:quark-as-string
+(cffi:defcfun ("g_type_qname" type-qname) glib:quark-as-string
  #+liber-documentation
  "@version{#2013-4-1}
   @argument[gtype]{type to return quark of @arg{gtype} name for}
@@ -2341,7 +2341,7 @@
 
 ;; TODO: Handle the ID 0 more consistent as an invalid GType.
 
-(defcfun ("g_type_from_name" %type-from-name) :size
+(cffi:defcfun ("g_type_from_name" %type-from-name) :size
   (name :string))
 
 (defun type-from-name (name)
@@ -2373,7 +2373,7 @@
 ;;; g_type_parent ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_type_parent" type-parent) type-t
+(cffi:defcfun ("g_type_parent" type-parent) type-t
  #+liber-documentation
  "@version{2022-12-29}
   @argument[gtype]{a derived @class{g:type-t} ID}
@@ -2403,7 +2403,7 @@
 ;;; g_type_depth ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_type_depth" type-depth) :uint
+(cffi:defcfun ("g_type_depth" type-depth) :uint
  #+liber-documentation
  "@version{#2022-12-29}
   @argument[gtype]{a @class{g:type-t} ID}
@@ -2427,7 +2427,7 @@
 ;;; g_type_next_base ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_type_next_base" type-next-base) type-t
+(cffi:defcfun ("g_type_next_base" type-next-base) type-t
  #+liber-documentation
  "@version{#2022-12-29}
   @argument[leaf]{descendant of @arg{root} and the type to be returned}
@@ -2462,7 +2462,7 @@
 ;;; g_type_is_a ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_type_is_a" %type-is-a) :boolean
+(cffi:defcfun ("g_type_is_a" %type-is-a) :boolean
   (gtype type-t)
   (is-a-type type-t))
 
@@ -2501,7 +2501,8 @@
 ;;; g_type_class_ref ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_type_class_ref" %type-class-ref) (:pointer (:struct type-class))
+(cffi:defcfun ("g_type_class_ref" %type-class-ref)
+    (:pointer (:struct type-class))
   (gtype type-t))
 
 (defun type-class-ref (gtype)
@@ -2535,7 +2536,8 @@
 ;;; g_type_class_peek ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_type_class_peek" %type-class-peek) (:pointer (:struct type-class))
+(cffi:defcfun ("g_type_class_peek" %type-class-peek)
+    (:pointer (:struct type-class))
   (gtype type-t))
 
 (defun type-class-peek (gtype)
@@ -2572,7 +2574,7 @@
 ;;; g_type_class_peek_static ()                            not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_type_class_peek_static" type-class-peek-static)
+(cffi:defcfun ("g_type_class_peek_static" type-class-peek-static)
     (:pointer (:struct type-class))
  #+liber-documentation
  "@version{#2013-4-1}
@@ -2592,7 +2594,7 @@
 ;;; g_type_class_unref ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_type_class_unref" type-class-unref) :void
+(cffi:defcfun ("g_type_class_unref" type-class-unref) :void
  #+liber-documentation
  "@version{2022-12-29}
   @argument[class]{a @symbol{g:type-class} instance to unreference}
@@ -2611,7 +2613,7 @@
 ;;; g_type_class_peek_parent ()                            not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_type_class_peek_parent" type-class-peek-parent)
+(cffi:defcfun ("g_type_class_peek_parent" type-class-peek-parent)
     (:pointer (:struct type-class))
  #+liber-documentation
  "@version{#2022-12-29}
@@ -2640,7 +2642,7 @@
 ;;; G_DEFINE_* family of macros to add instance private data to a type
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_type_class_add_private" type-class-add-private) :void
+(cffi:defcfun ("g_type_class_add_private" type-class-add-private) :void
  #+liber-documentation
  "@version{#2014-4-1}
   @argument[class]{class structure for an instantiatable type}
@@ -2731,7 +2733,7 @@
 ;;; g_type_interface_peek ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_type_interface_peek" %type-interface-peek)
+(cffi:defcfun ("g_type_interface_peek" %type-interface-peek)
     (:pointer (:struct type-interface))
   (instance-class (:pointer (:struct type-class)))
   (iface-type type-t))
@@ -2790,7 +2792,8 @@
 ;;; g_type_default_interface_ref ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_type_default_interface_ref" %type-default-interface-ref) :pointer
+(cffi:defcfun ("g_type_default_interface_ref" %type-default-interface-ref)
+    :pointer
   (gtype type-t))
 
 (defun type-default-interface-ref (gtype)
@@ -2830,7 +2833,7 @@
 ;;; g_type_default_interface_peek ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_type_default_interface_peek" %type-default-interface-peek)
+(cffi:defcfun ("g_type_default_interface_peek" %type-default-interface-peek)
     :pointer
   (gtype type-t))
 
@@ -2858,7 +2861,8 @@
 ;;; g_type_default_interface_unref ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_type_default_interface_unref" type-default-interface-unref) :void
+(cffi:defcfun ("g_type_default_interface_unref" type-default-interface-unref)
+    :void
  #+liber-documentation
  "@version{#2022-12-29}
   @argument[iface]{a default vtable instance for an interface, as returned by
@@ -2880,7 +2884,7 @@
 ;;; g_type_children ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_type_children" %type-children) (:pointer :size)
+(cffi:defcfun ("g_type_children" %type-children) (:pointer :size)
   (gtype type-t)
   (n-children (:pointer :uint)))
 
@@ -2900,7 +2904,7 @@
   @end{dictionary}
   @see-class{g:type-t}
   @see-function{g:type-parent}"
-  (with-foreign-object (n-children :uint)
+  (cffi:with-foreign-object (n-children :uint)
     (let ((ptr (%type-children gtype n-children)))
       (prog1
         (loop for count from 0 below (cffi:mem-ref n-children :uint)
@@ -2913,7 +2917,7 @@
 ;;; g_type_interfaces ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_type_interfaces" %type-interfaces) (:pointer :size)
+(cffi:defcfun ("g_type_interfaces" %type-interfaces) (:pointer :size)
   (gtype type-t)
   (n-interfaces (:pointer :uint)))
 
@@ -2936,7 +2940,7 @@
     @end{pre}
   @end{dictionary}
   @see-class{g:type-t}"
-  (with-foreign-object (n-interfaces :uint)
+  (cffi:with-foreign-object (n-interfaces :uint)
     (let ((ptr (%type-interfaces gtype n-interfaces)))
       (prog1
         (loop for count from 0 below (cffi:mem-ref n-interfaces :uint)
@@ -2949,7 +2953,7 @@
 ;;; g_type_interface_prerequisites ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_type_interface_prerequisites" %type-interface-prerequisites)
+(cffi:defcfun ("g_type_interface_prerequisites" %type-interface-prerequisites)
     (:pointer :size)
   (iface-type type-t)
   (n-prerequisites (:pointer :uint)))
@@ -2972,7 +2976,7 @@
     @end{pre}
   @end{dictionary}
   @see-class{g:type-t}"
-  (with-foreign-object (n-prerequisites :uint)
+  (cffi:with-foreign-object (n-prerequisites :uint)
     (let ((ptr (%type-interface-prerequisites iface-type n-prerequisites)))
       (prog1
         (loop for count from 0 below (cffi:mem-ref n-prerequisites :uint)
@@ -2986,7 +2990,7 @@
 ;;; g_type_set_qdata () -> type-qdata
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_type_set_qdata" %type-set-qdata) :void
+(cffi:defcfun ("g_type_set_qdata" %type-set-qdata) :void
   (gtype type-t)
   (quark glib:quark-as-string)
   (data :pointer))
@@ -3006,7 +3010,7 @@
            (%type-set-qdata gtype quark ptr)))
     data))
 
-(defcfun ("g_type_get_qdata" %type-get-qdata) :pointer
+(cffi:defcfun ("g_type_get_qdata" %type-get-qdata) :pointer
   (gtype type-t)
   (quark glib:quark-as-string))
 
@@ -3047,7 +3051,7 @@
 ;;; g_type_query ()                                        not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_type_query" type-query) :void
+(cffi:defcfun ("g_type_query" type-query) :void
  #+liber-documentation
  "@version{#2020-10-31}
   @argument[gtype]{a @class{g:type-t} value of a static, classed type}
@@ -3297,7 +3301,7 @@
 ;;; g_type_register_static ()                              not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_type_register_static" type-register-static) type-t
+(cffi:defcfun ("g_type_register_static" type-register-static) type-t
  #+liber-documentation
  "@version{#2020-11-1}
   @argument[parent-type]{a @class{g:type-t} from which this type will be
@@ -3326,8 +3330,8 @@
 ;;; g_type_register_static_simple ()                       not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_type_register_static_simple"
-          type-register-static-simple) type-t
+(cffi:defcfun ("g_type_register_static_simple"
+                type-register-static-simple) type-t
  #+liber-documentation
  "@version{#2020-11-1}
   @argument[parent-type]{a @class{g:type-t} from which this type will be derived}
@@ -3430,7 +3434,7 @@
 ;;; g_type_add_interface_static ()                         not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_type_add_interface_static" type-add-interface-static) :void
+(cffi:defcfun ("g_type_add_interface_static" type-add-interface-static) :void
  #+liber-documentation
  "@version{#2020-11-1}
   @argument[instance-type]{a @class{g:type-t} value of an instantiable type}
@@ -3473,8 +3477,8 @@
 ;;; g_type_interface_add_prerequisite ()                   not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_type_interface_add_prerequisite" type-interface-add-prerequisite)
-    :void
+(cffi:defcfun ("g_type_interface_add_prerequisite"
+                type-interface-add-prerequisite) :void
  #+liber-documentation
  "@version{#2013-6-11}
   @argument[interface-type]{a @class{g:type-t} of an interface type}
@@ -3532,7 +3536,7 @@
 ;;; g_type_fundamental_next ()                             not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_type_fundamental_next" type-fundamental-next) :size
+(cffi:defcfun ("g_type_fundamental_next" type-fundamental-next) :size
  #+liber-documentation
  "@version{#2013-6-17}
   @begin{return}
@@ -3697,7 +3701,7 @@
 ;;; g_type_value_table_peek ()                             not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_type_value_table_peek" type-value-table-peek)
+(cffi:defcfun ("g_type_value_table_peek" type-value-table-peek)
     (:pointer (:struct type-value-table))
  #+liber-documentation
  "@version{#2013-6-11}
@@ -3720,7 +3724,7 @@
 ;;; g_type_ensure ()                                       not exported
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_type_ensure" type-ensure) :void
+(cffi:defcfun ("g_type_ensure" type-ensure) :void
  #+liber-documentation
  "@version{#2020-11-13}
   @argument[gtype]{a @class{g:type-t}}

@@ -83,7 +83,7 @@
            ":subclass INITIALIZE-INSTANCE :after for class ~a ~a ~a~%"
            class (gobject-class-direct-g-type-name class) (class-name class))
   (when (gobject-class-direct-g-type-name class)
-    (setf (symbol-for-gtype (gobject-class-direct-g-type-name class))
+    (setf (glib:symbol-for-gtype (gobject-class-direct-g-type-name class))
           (class-name class))
     (glib-init:at-init (class)
         (initialize-gobject-class-g-type class))))

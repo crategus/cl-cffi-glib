@@ -2,29 +2,29 @@
 ;;; gobject.param.lisp
 ;;;
 ;;; The documentation of this file is taken from the GObject Reference Manual
-;;; Version 2.74 and modified to document the Lisp binding to the GObject
+;;; Version 2.76 and modified to document the Lisp binding to the GObject
 ;;; library. See <http://www.gtk.org>. The API documentation of the Lisp
 ;;; binding is available from <http://www.crategus.com/books/cl-cffi-gtk/>.
 ;;;
-;;; Copyright (C) 2009 - 2011 Kalyanov Dmitry
 ;;; Copyright (C) 2011 - 2022 Dieter Kaiser
 ;;;
-;;; This program is free software: you can redistribute it and/or modify
-;;; it under the terms of the GNU Lesser General Public License for Lisp
-;;; as published by the Free Software Foundation, either version 3 of the
-;;; License, or (at your option) any later version and with a preamble to
-;;; the GNU Lesser General Public License that clarifies the terms for use
-;;; with Lisp programs and is referred as the LLGPL.
+;;; Permission is hereby granted, free of charge, to any person obtaining a
+;;; copy of this software and associated documentation files (the "Software"),
+;;; to deal in the Software without restriction, including without limitation
+;;; the rights to use, copy, modify, merge, publish, distribute, sublicense,
+;;; and/or sell copies of the Software, and to permit persons to whom the
+;;; Software is furnished to do so, subject to the following conditions:
 ;;;
-;;; This program is distributed in the hope that it will be useful,
-;;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;;; GNU Lesser General Public License for more details.
+;;; The above copyright notice and this permission notice shall be included in
+;;; all copies or substantial portions of the Software.
 ;;;
-;;; You should have received a copy of the GNU Lesser General Public
-;;; License along with this program and the preamble to the Gnu Lesser
-;;; General Public License.  If not, see <http://www.gnu.org/licenses/>
-;;; and <http://opensource.franz.com/preamble.html>.
+;;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+;;; IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+;;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+;;; THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+;;; LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+;;; FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+;;; DEALINGS IN THE SOFTWARE.
 ;;; ----------------------------------------------------------------------------
 ;;;
 ;;; Parameters and Values
@@ -370,7 +370,7 @@
 ;;; struct GParamSpecBoolean
 ;;; ----------------------------------------------------------------------------
 
-(defcstruct param-spec-boolean
+(cffi:defcstruct param-spec-boolean
   (:parent-instance (:pointer (:struct param-spec)))
   (:default-value :boolean))
 
@@ -384,7 +384,7 @@
     boolean properties.
   @end{short}
   @begin{pre}
-(defcstruct param-spec-boolean
+(cffi:defcstruct param-spec-boolean
   (:parent-instance (:pointer (:struct param-spec)))
   (:default-value :boolean))
   @end{pre}
@@ -401,7 +401,7 @@
 ;;; g_param_spec_boolean ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_param_spec_boolean" param-spec-boolean)
+(cffi:defcfun ("g_param_spec_boolean" param-spec-boolean)
     (:pointer (:struct param-spec-boolean))
  #+liber-documentation
  "@version{#2022-12-31}
@@ -441,7 +441,7 @@
                         :void)
   value)
 
-(defcfun ("g_value_get_boolean" value-boolean) :boolean
+(cffi:defcfun ("g_value_get_boolean" value-boolean) :boolean
  #+liber-documentation
  "@version{#2022-12-31}
   @syntax[]{(g:value-boolean gvalue) => value}
@@ -515,7 +515,7 @@
 ;;; struct GParamSpecChar
 ;;; ----------------------------------------------------------------------------
 
-(defcstruct param-spec-char
+(cffi:defcstruct param-spec-char
   (:parent-instance (:pointer (:struct param-spec)))
   (:minimum :int8)
   (:maximum :int8)
@@ -531,7 +531,7 @@
     character properties.
   @end{short}
   @begin{pre}
-(defcstruct param-spec-char
+(cffi:defcstruct param-spec-char
   (:parent-instance (:pointer (:struct param-spec)))
   (:minimum :int8)
   (:maximum :int8)
@@ -552,7 +552,7 @@
 ;;; g_param_spec_char ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_param_spec_char" param-spec-char)
+(cffi:defcfun ("g_param_spec_char" param-spec-char)
     (:pointer (:struct param-spec-char))
  #+liber-documentation
  "@version{#2022-12-31}
@@ -593,7 +593,7 @@
                         :void)
   value)
 
-(defcfun ("g_value_get_char" value-char) :int8
+(cffi:defcfun ("g_value_get_char" value-char) :int8
  #+liber-documentation
  "@version{#2022-12-31}
   @syntax[]{(g:value-char gvalue) => value}
@@ -630,7 +630,7 @@
                         :void)
   value)
 
-(defcfun ("g_value_get_schar" value-schar) :int8
+(cffi:defcfun ("g_value_get_schar" value-schar) :int8
  #+liber-documentation
  "@version{#2022-12-31}
   @syntax[]{(g:value-schar gvalue) => value}
@@ -706,7 +706,7 @@
 ;;; struct GParamSpecUChar
 ;;; ----------------------------------------------------------------------------
 
-(defcstruct param-spec-uchar
+(cffi:defcstruct param-spec-uchar
   (:parent-instance (:pointer (:struct param-spec)))
   (:minimum :uint8)
   (:maximum :uint8)
@@ -722,7 +722,7 @@
     unsigned character properties.
   @end{short}
   @begin{pre}
-(defcstruct param-spec-uchar
+(cffi:defcstruct param-spec-uchar
   (:parent-instance (:pointer (:struct param-spec)))
   (:minimum :uint8)
   (:maximum :uint8)
@@ -743,7 +743,7 @@
 ;;; g_param_spec_uchar ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_param_spec_uchar" param-spec-uchar)
+(cffi:defcfun ("g_param_spec_uchar" param-spec-uchar)
     (:pointer (:struct param-spec-uchar))
  #+liber-documentation
  "@version{#2022-12-31}
@@ -786,7 +786,7 @@
                         :void)
   value)
 
-(defcfun ("g_value_get_uchar" value-uchar) :uint8
+(cffi:defcfun ("g_value_get_uchar" value-uchar) :uint8
  #+liber-documentation
  "@version{#2022-12-31}
   @syntax[]{(g:value-uchar gvalue) => value}
@@ -860,7 +860,7 @@
 ;;; struct GParamSpecInt
 ;;; ----------------------------------------------------------------------------
 
-(defcstruct param-spec-int
+(cffi:defcstruct param-spec-int
   (:parent-instance (:pointer (:struct param-spec)))
   (:minimum :int)
   (:maximum :int)
@@ -876,7 +876,7 @@
     integer properties.
   @end{short}
   @begin{pre}
-(defcstruct param-spec-int
+(cffi:defcstruct param-spec-int
   (:parent-instance (:pointer (:struct param-spec)))
   (:minimum :int)
   (:maximum :int)
@@ -897,7 +897,7 @@
 ;;; g_param_spec_int ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_param_spec_int" param-spec-int)
+(cffi:defcfun ("g_param_spec_int" param-spec-int)
     (:pointer (:struct param-spec-int))
  #+liber-documentation
  "@version{#2022-12-31}
@@ -940,7 +940,7 @@
                         :void)
   value)
 
-(defcfun ("g_value_get_int" value-int) :int
+(cffi:defcfun ("g_value_get_int" value-int) :int
  #+liber-documentation
  "@version{#2022-12-31}
   @syntax[]{(g:value-int gvalue) => value}
@@ -1011,7 +1011,7 @@
 ;;; struct GParamSpecUInt
 ;;; ----------------------------------------------------------------------------
 
-(defcstruct param-spec-uint
+(cffi:defcstruct param-spec-uint
   (:parent-instance (:pointer (:struct param-spec)))
   (:minimum :uint)
   (:maximum :uint)
@@ -1027,7 +1027,7 @@
     unsigned integer properties.
   @end{short}
   @begin{pre}
-(defcstruct param-spec-uint
+(cffi:defcstruct param-spec-uint
   (:parent-instance (:pointer (:struct param-spec)))
   (:minimum :uint)
   (:maximum :uint)
@@ -1048,7 +1048,7 @@
 ;;; g_param_spec_uint ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_param_spec_uint" param-spec-uint)
+(cffi:defcfun ("g_param_spec_uint" param-spec-uint)
     (:pointer (:struct param-spec-uint))
  #+liber-documentation
  "@version{#2022-12-31}
@@ -1091,7 +1091,7 @@
                         :void)
   value)
 
-(defcfun ("g_value_get_uint" value-uint) :uint
+(cffi:defcfun ("g_value_get_uint" value-uint) :uint
  #+liber-documentation
  "@version{#2022-12-31}
   @syntax[]{(g:value-uint gvalue) => value}
@@ -1165,7 +1165,7 @@
 ;;; struct GParamSpecLong
 ;;; ----------------------------------------------------------------------------
 
-(defcstruct param-spec-long
+(cffi:defcstruct param-spec-long
   (:parent-instance (:pointer (:struct param-spec)))
   (:minimum :long)
   (:maximum :long)
@@ -1181,7 +1181,7 @@
     long integer properties.
   @end{short}
   @begin{pre}
-(defcstruct param-spec-long
+(cffi:defcstruct param-spec-long
   (:parent-instance (:pointer (:struct param-spec)))
   (:minimum :long)
   (:maximum :long)
@@ -1202,7 +1202,7 @@
 ;;; g_param_spec_long ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_param_spec_long" param-spec-long)
+(cffi:defcfun ("g_param_spec_long" param-spec-long)
     (:pointer (:struct param-spec-long))
  #+liber-documentation
  "@version{#2022-12-31}
@@ -1245,7 +1245,7 @@
                         :void)
   value)
 
-(defcfun ("g_value_get_long" value-long) :long
+(cffi:defcfun ("g_value_get_long" value-long) :long
  #+liber-documentation
  "@version{#2022-12-31}
   @syntax[]{(g:value-long gvalue) => value}
@@ -1319,7 +1319,7 @@
 ;;; struct GParamSpecULong
 ;;; ----------------------------------------------------------------------------
 
-(defcstruct param-spec-ulong
+(cffi:defcstruct param-spec-ulong
   (:parent-instance (:pointer (:struct param-spec)))
   (:minimum :ulong)
   (:maximum :ulong)
@@ -1335,7 +1335,7 @@
     unsigned long integer properties.
   @end{short}
   @begin{pre}
-(defcstruct param-spec-ulong
+(cffi:defcstruct param-spec-ulong
   (:parent-instance (:pointer (:struct param-spec)))
   (:minimum :ulong)
   (:maximum :ulong)
@@ -1356,7 +1356,7 @@
 ;;; g_param_spec_ulong ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_param_spec_ulong" param-spec-ulong)
+(cffi:defcfun ("g_param_spec_ulong" param-spec-ulong)
     (:pointer (:struct param-spec-ulong))
  #+liber-documentation
  "@version{#2022-12-31}
@@ -1399,7 +1399,7 @@
                         :void)
   value)
 
-(defcfun ("g_value_get_ulong" value-ulong) :ulong
+(cffi:defcfun ("g_value_get_ulong" value-ulong) :ulong
  #+liber-documentation
  "@version{#2022-12-31}
   @syntax[]{(g:value-ulong gvalue) => value}
@@ -1473,7 +1473,7 @@
 ;;; struct GParamSpecInt64
 ;;; ----------------------------------------------------------------------------
 
-(defcstruct param-spec-int64
+(cffi:defcstruct param-spec-int64
   (:parent-instance (:pointer (:struct param-spec)))
   (:minimum :int64)
   (:maximum :int64)
@@ -1489,7 +1489,7 @@
     64 bit integer properties.
   @end{short}
   @begin{pre}
-(defcstruct param-spec-int64
+(cffi:defcstruct param-spec-int64
   (:parent-instance (:pointer (:struct param-spec)))
   (:minimum :int64)
   (:maximum :int64)
@@ -1510,7 +1510,7 @@
 ;;; g_param_spec_int64 ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_param_spec_int64" param-spec-int64)
+(cffi:defcfun ("g_param_spec_int64" param-spec-int64)
     (:pointer (:struct param-spec-int64))
  #+liber-documentation
  "@version{#2022-12-31}
@@ -1553,7 +1553,7 @@
                         :void)
   value)
 
-(defcfun ("g_value_get_int64" value-int64) :int64
+(cffi:defcfun ("g_value_get_int64" value-int64) :int64
  #+liber-documentation
  "@version{#2022-12-31}
   @syntax[]{(g:value-int64 gvalue) => value}
@@ -1627,7 +1627,7 @@
 ;;; struct GParamSpecUInt64
 ;;; ----------------------------------------------------------------------------
 
-(defcstruct param-spec-uint64
+(cffi:defcstruct param-spec-uint64
   (:parent-instance (:pointer (:struct param-spec)))
   (:minimum :uint64)
   (:maximum :uint64)
@@ -1643,7 +1643,7 @@
     unsigned 64 bit integer properties.
   @end{short}
   @begin{pre}
-(defcstruct param-spec-uint64
+(cffi:defcstruct param-spec-uint64
   (:parent-instance (:pointer (:struct param-spec)))
   (:minimum :uint64)
   (:maximum :uint64)
@@ -1664,7 +1664,7 @@
 ;;; g_param_spec_uint64 ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_param_spec_uint64" param-spec-uint64)
+(cffi:defcfun ("g_param_spec_uint64" param-spec-uint64)
     (:pointer (:struct param-spec-uint64))
  #+liber-documentation
  "@version{#2022-12-31}
@@ -1707,7 +1707,7 @@
                         :void)
   value)
 
-(defcfun ("g_value_get_uint64" value-uint64) :uint64
+(cffi:defcfun ("g_value_get_uint64" value-uint64) :uint64
  #+liber-documentation
  "@version{#2022-12-31}
   @syntax[]{(g:value-uint64 gvalue) => value}
@@ -1781,7 +1781,7 @@
 ;;; struct GParamSpecFloat
 ;;; ----------------------------------------------------------------------------
 
-(defcstruct param-spec-float
+(cffi:defcstruct param-spec-float
   (:parent-instance (:pointer (:struct param-spec)))
   (:minimum :float)
   (:maximum :float)
@@ -1798,7 +1798,7 @@
     float properties.
   @end{short}
   @begin{pre}
-(defcstruct param-spec-float
+(cffi:defcstruct param-spec-float
   (:parent-instance (:pointer (:struct param-spec)))
   (:minimum :float)
   (:maximum :float)
@@ -1822,7 +1822,7 @@
 ;;; g_param_spec_float ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_param_spec_float" param-spec-float)
+(cffi:defcfun ("g_param_spec_float" param-spec-float)
     (:pointer (:struct param-spec-float))
  #+liber-documentation
  "@version{#2022-12-31}
@@ -1865,7 +1865,7 @@
                         :void)
   value)
 
-(defcfun ("g_value_get_float" value-float) :float
+(cffi:defcfun ("g_value_get_float" value-float) :float
  #+liber-documentation
  "@version{#2022-12-31}
   @syntax[]{(g:value-float gvalue) => value}
@@ -1939,7 +1939,7 @@
 ;;; struct GParamSpecDouble
 ;;; ----------------------------------------------------------------------------
 
-(defcstruct param-spec-double
+(cffi:defcstruct param-spec-double
   (:parent-instance (:pointer (:struct param-spec)))
   (:minimum :double)
   (:maximum :double)
@@ -1956,7 +1956,7 @@
     double properties.
   @end{short}
   @begin{pre}
-(defcstruct param-spec-double
+(cffi:defcstruct param-spec-double
   (:parent-instance (:pointer (:struct param-spec)))
   (:minimum :double)
   (:maximum :double)
@@ -1980,7 +1980,7 @@
 ;;; g_param_spec_double ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_param_spec_double" param-spec-double)
+(cffi:defcfun ("g_param_spec_double" param-spec-double)
     (:pointer (:struct param-spec-double))
  #+liber-documentation
  "@version{#2022-12-31}
@@ -2023,7 +2023,7 @@
                         :void)
   value)
 
-(defcfun ("g_value_get_double" value-double) :double
+(cffi:defcfun ("g_value_get_double" value-double) :double
  #+liber-documentation
  "@version{#2022-12-31}
   @syntax[]{(g:value-double gvalue) => value}
@@ -2098,7 +2098,7 @@
 ;;; struct GParamSpecEnum
 ;;; ----------------------------------------------------------------------------
 
-(defcstruct param-spec-enum
+(cffi:defcstruct param-spec-enum
   (:parent-instance (:pointer (:struct param-spec)))
   (:enum-class (:pointer (:struct enum-class)))
   (:default-value :int))
@@ -2113,7 +2113,7 @@
     enum properties.
   @end{short}
   @begin{pre}
-(defcstruct param-spec-enum
+(cffi:defcstruct param-spec-enum
   (:parent-instance (:pointer (:struct param-spec)))
   (:enum-class (:pointer enum-class))
   (:default-value :int))
@@ -2136,7 +2136,7 @@
 ;; This accepts any integer for default-value, but does not check for a valid
 ;; enum parameter. Can this be implemented better?
 
-(defcfun ("g_param_spec_enum" param-spec-enum)
+(cffi:defcfun ("g_param_spec_enum" param-spec-enum)
     (:pointer (:struct param-spec-enum))
  #+liber-documentation
  "@version{#2022-12-31}
@@ -2181,7 +2181,7 @@
                         :void)
   value)
 
-(defcfun ("g_value_get_enum" value-enum) :int
+(cffi:defcfun ("g_value_get_enum" value-enum) :int
  #+liber-documentation
  "@version{#2022-12-31}
   @syntax[]{(g:value-enum gvalue) => value}
@@ -2257,7 +2257,7 @@
 ;;; struct GParamSpecFlags
 ;;; ----------------------------------------------------------------------------
 
-(defcstruct param-spec-flags
+(cffi:defcstruct param-spec-flags
   (:parent-instance (:pointer (:struct param-spec)))
   (:flags-class (:pointer (:struct flags-class)))
   (:default-value :uint))
@@ -2272,7 +2272,7 @@
     flags properties.
   @end{short}
   @begin{pre}
-(defcstruct param-spec-flags
+(cffi:defcstruct param-spec-flags
   (:parent-instance (:pointer (:struct param-spec)))
   (:flags-class (:pointer flags-class))
   (:default-value :uint))
@@ -2291,7 +2291,7 @@
 ;;; g_param_spec_flags ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_param_spec_flags" param-spec-flags)
+(cffi:defcfun ("g_param_spec_flags" param-spec-flags)
     (:pointer (:struct param-spec-flags))
  #+liber-documentation
  "@version{#2022-12-31}
@@ -2332,7 +2332,7 @@
                         :void)
   value)
 
-(defcfun ("g_value_get_flags" value-flags) :uint
+(cffi:defcfun ("g_value_get_flags" value-flags) :uint
  #+liber-documentation
  "@version{#2022-12-31}
   @syntax[]{(g:value-flags gvalue) => value}
@@ -2471,7 +2471,7 @@
 ;;;     replace NULL strings by an empty string
 ;;; ----------------------------------------------------------------------------
 
-(defcstruct param-spec-string
+(cffi:defcstruct param-spec-string
   (:parent-instance (:pointer (:struct param-spec)))
   (:default-value (:string :free-to-foreign nil :free-from-foreign nil))
   (:cset-first (:string :free-to-foreign nil :free-from-foreign nil))
@@ -2492,7 +2492,7 @@
     string properties.
   @end{short}
   @begin{pre}
-(defcstruct param-spec-string
+(cffi:defcstruct param-spec-string
   (:parent-instance (:pointer (:struct param-spec)))
   (:default-value (:string :free-to-foreign nil :free-from-foreign nil))
   (:cset-first (:string :free-to-foreign nil :free-from-foreign nil))
@@ -2529,7 +2529,7 @@
 ;;; g_param_spec_string ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_param_spec_string" param-spec-string)
+(cffi:defcfun ("g_param_spec_string" param-spec-string)
     (:pointer (:struct param-spec-string))
  #+liber-documentation
  "@version{#2022-12-31}
@@ -2568,7 +2568,7 @@
                         :void)
   value)
 
-(defcfun ("g_value_get_string" value-string) :string
+(cffi:defcfun ("g_value_get_string" value-string) :string
  #+liber-documentation
  "@version{#2022-12-31}
   @syntax[]{(g:value-string gvalue) => value}
@@ -2728,7 +2728,7 @@
 ;;; struct GParamSpecParam
 ;;; ----------------------------------------------------------------------------
 
-(defcstruct param-spec-param
+(cffi:defcstruct param-spec-param
   (:parent-instance (:pointer (:struct param-spec))))
 
 #+liber-documentation
@@ -2741,7 +2741,7 @@
     properties of type @var{+g-type-param+}.
   @end{short}
   @begin{pre}
-(defcstruct param-spec-param
+(cffi:defcstruct param-spec-param
   (:parent-instance (:pointer (:struct param-spec))))
   @end{pre}
   @begin[code]{table}
@@ -2756,7 +2756,7 @@
 ;;; g_param_spec_param ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_param_spec_param" param-spec-param)
+(cffi:defcfun ("g_param_spec_param" param-spec-param)
     (:pointer (:struct param-spec-param))
  #+liber-documentation
  "@version{#2022-12-31}
@@ -2795,7 +2795,7 @@
                         :void)
   value)
 
-(defcfun ("g_value_get_param" value-param) (:pointer (:struct param-spec))
+(cffi:defcfun ("g_value_get_param" value-param) (:pointer (:struct param-spec))
  #+liber-documentation
  "@version{#2022-12-31}
   @syntax[]{(g:value-param gvalue) => value}
@@ -2923,7 +2923,7 @@
 ;;; struct GParamSpecBoxed
 ;;; ----------------------------------------------------------------------------
 
-(defcstruct param-spec-boxed
+(cffi:defcstruct param-spec-boxed
   (:parent-instance (:pointer (:struct param-spec))))
 
 #+liber-documentation
@@ -2936,7 +2936,7 @@
     boxed properties.
   @end{short}
   @begin{pre}
-(defcstruct param-spec-boxed
+(cffi:defcstruct param-spec-boxed
   (:parent-instance (:pointer (:struct param-spec))))
   @end{pre}
   @begin[code]{table}
@@ -2951,7 +2951,7 @@
 ;;; g_param_spec_boxed ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_param_spec_boxed" param-spec-boxed)
+(cffi:defcfun ("g_param_spec_boxed" param-spec-boxed)
     (:pointer (:struct param-spec-boxed))
  #+liber-documentation
  "@version{#2022-12-31}
@@ -2990,7 +2990,7 @@
                         :void)
   value)
 
-(defcfun ("g_value_get_boxed" value-boxed) :pointer
+(cffi:defcfun ("g_value_get_boxed" value-boxed) :pointer
  #+liber-documentation
  "@version{2022-12-28}
   @syntax[]{(g:value-boxed gvalue) => value}
@@ -3029,7 +3029,7 @@
 ;;; g_value_take_boxed ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_value_take_boxed" value-take-boxed) :void
+(cffi:defcfun ("g_value_take_boxed" value-take-boxed) :void
  #+liber-documentation
  "@version{2022-12-28}
   @argument[gvalue]{a @symbol{g:value} instance of @code{GBoxed} type}
@@ -3137,7 +3137,7 @@
 ;;; struct GParamSpecPointer
 ;;; ----------------------------------------------------------------------------
 
-(defcstruct param-spec-pointer
+(cffi:defcstruct param-spec-pointer
   (:parent-instance (:pointer (:struct param-spec))))
 
 #+liber-documentation
@@ -3150,7 +3150,7 @@
     pointer properties.
   @end{short}
   @begin{pre}
-(defcstruct param-spec-pointer
+(cffi:defcstruct param-spec-pointer
   (:parent-instance (:pointer (:struct param-spec))))
   @end{pre}
   @begin[code]{table}
@@ -3165,7 +3165,7 @@
 ;;; g_param_spec_pointer ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_param_spec_pointer" param-spec-pointer)
+(cffi:defcfun ("g_param_spec_pointer" param-spec-pointer)
     (:pointer (:struct param-spec-pointer))
  #+liber-documentation
  "@version{#2022-12-31}
@@ -3203,7 +3203,7 @@
                         :void)
   value)
 
-(defcfun ("g_value_get_pointer" value-pointer) :pointer
+(cffi:defcfun ("g_value_get_pointer" value-pointer) :pointer
  #+liber-documentation
  "@version{#2022-12-31}
   @syntax[]{(g:value-pointer gvalue) => value}
@@ -3278,7 +3278,7 @@
 ;;; struct GParamSpecObject
 ;;; ----------------------------------------------------------------------------
 
-(defcstruct param-spec-object
+(cffi:defcstruct param-spec-object
   (:parent-instance (:pointer (:struct param-spec))))
 
 #+liber-documentation
@@ -3291,7 +3291,7 @@
     object properties.
   @end{short}
   @begin{pre}
-(defcstruct param-spec-object
+(cffi:defcstruct param-spec-object
   (:parent-instance (:pointer (:struct param-spec))))
   @end{pre}
   @begin[code]{table}
@@ -3306,7 +3306,7 @@
 ;;; g_param_spec_object ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_param_spec_object" param-spec-object)
+(cffi:defcfun ("g_param_spec_object" param-spec-object)
     (:pointer (:struct param-spec-object))
  #+liber-documentation
  "@version{#2022-12-31}
@@ -3338,7 +3338,7 @@
 ;;; g_value_set_object () -> value-object
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_value_set_object" %value-set-object) :void
+(cffi:defcfun ("g_value_set_object" %value-set-object) :void
   (gvalue (:pointer (:struct value)))
   (value :pointer))
 
@@ -3349,7 +3349,7 @@
                          (cffi:null-pointer)))
   value)
 
-(defcfun ("g_value_get_object" %value-get-object) :pointer
+(cffi:defcfun ("g_value_get_object" %value-get-object) :pointer
   (value (:pointer (:struct value))))
 
 (defun value-object (gvalue)
@@ -3584,7 +3584,7 @@
 
 ;; We do not expot this structure.
 
-(defcstruct param-spec-value-array
+(cffi:defcstruct param-spec-value-array
   (:parent-instance (:pointer (:struct param-spec)))
   (:element-spec (:pointer (:struct param-spec)))
   (:fixed-n-elements :uint))
@@ -3599,7 +3599,7 @@
     @code{GValueArray} properties.
   @end{short}
   @begin{pre}
-(defcstruct param-spec-value-array
+(cffi:defcstruct param-spec-value-array
   (:parent-instance (:pointer (:struct param-spec)))
   (:element-spec (:pointer (:struct param-spec)))
   (:fixed-n-elements :uint))
@@ -3619,7 +3619,7 @@
 
 ;; We dot not export this function.
 
-(defcfun ("g_param_spec_value_array" param-spec-value-array)
+(cffi:defcfun ("g_param_spec_value_array" param-spec-value-array)
     (:pointer (:struct param-spec-value-array))
  #+liber-documentation
  "@version{#2020-8-27}
@@ -3792,7 +3792,7 @@
 ;;; struct GParamSpecGType
 ;;; ----------------------------------------------------------------------------
 
-(defcstruct param-spec-gtype
+(cffi:defcstruct param-spec-gtype
   (:parent-instance (:pointer (:struct param-spec)))
   (:is-a-type type-t))
 
@@ -3806,7 +3806,7 @@
     @class{g:type-t} properties.
   @end{short}
   @begin{pre}
-(defcstruct param-spec-gtype
+(cffi:defcstruct param-spec-gtype
   (:parent-instance (:pointer (:struct param-spec)))
   (:is-a-type type-t))
   @end{pre}
@@ -3824,7 +3824,7 @@
 ;;; g_param_spec_gtype ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_param_spec_gtype" param-spec-gtype)
+(cffi:defcfun ("g_param_spec_gtype" param-spec-gtype)
     (:pointer (:struct param-spec-gtype))
  #+liber-documentation
  "@version{#2022-12-31}
@@ -3864,7 +3864,7 @@
                         :void)
   value)
 
-(defcfun ("g_value_get_gtype" value-gtype) type-t
+(cffi:defcfun ("g_value_get_gtype" value-gtype) type-t
  #+liber-documentation
  "@version{#2022-12-31}
   @syntax[]{(g:value-gtype gvalue) => value}
@@ -4018,7 +4018,7 @@
                         :void)
   value)
 
-(defcfun ("g_value_get_variant" value-variant)
+(cffi:defcfun ("g_value_get_variant" value-variant)
     (:pointer (:struct glib:variant))
  #+liber-documentation
  "@version{#2022-12-31}
