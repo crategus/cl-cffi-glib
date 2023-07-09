@@ -7,7 +7,7 @@
 
 ;;;     GEmblemOrigin
 
-(test emblem-origin-enum
+(test g-emblem-origin-enum
   ;; Check the type
   (is (g:type-is-enum "GEmblemOrigin"))
   ;; Check the type initializer
@@ -38,7 +38,7 @@
 
 ;;;     GEmblem
 
-(test emblem-class
+(test g-emblem-class
   ;; Type check
   (is (g:type-is-object "GEmblem"))
   ;; Check the registered symbol
@@ -79,4 +79,4 @@
 ;;;     g_emblem_get_icon
 ;;;     g_emblem_get_origin
 
-;;; --- 2023-5-29 --------------------------------------------------------------
+;;; --- 2023-7-9 ---------------------------------------------------------------

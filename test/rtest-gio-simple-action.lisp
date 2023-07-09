@@ -9,7 +9,7 @@
 
 ;;;   GSimpleAction
 
-(test simple-action-class
+(test g-simple-action-class
   ;; Type check
   (is (g:type-is-object "GSimpleAction"))
   ;; Check the registered symbol
@@ -45,7 +45,7 @@
 
 ;;; --- Properties and Accessors -----------------------------------------------
 
-(test simple-action-properties.1
+(test g-simple-action-properties.1
   (let ((action (make-instance 'g:simple-action
                                :name "simple"
                                :parameter-type (g:variant-type-new "b"))))
@@ -60,7 +60,7 @@
     ;; Slot STATE-TYPE is initialized with a NULL pointer, we get NIL
     (is-false (g:simple-action-state-type action))))
 
-(test simple-action-properties.2
+(test g-simple-action-properties.2
   (let ((action (make-instance 'g:simple-action
                                :name "simple"
                                :parameter-type (g:variant-type-new "b")
@@ -90,7 +90,7 @@
 
 ;;;   g_simple_action_new
 
-(test simple-action-new.1
+(test g-simple-action-new.1
   (let ((action (g:simple-action-new "action" (g:variant-type-new "b"))))
     (is (typep action 'g:simple-action))
     (is (string= "action" (g:simple-action-name action)))
@@ -99,7 +99,7 @@
                  (g:variant-type-dup-string
                    (g:simple-action-parameter-type action))))))
 
-(test simple-action-new.2
+(test g-simple-action-new.2
   (let ((action (g:simple-action-new "action" "b")))
     (is (typep action 'g:simple-action))
     (is (string= "action" (g:simple-action-name action)))
@@ -108,7 +108,7 @@
                  (g:variant-type-dup-string
                    (g:simple-action-parameter-type action))))))
 
-(test simple-action-new.3
+(test g-simple-action-new.3
   (let ((action (g:simple-action-new "action" nil)))
     (is (typep action 'g:simple-action))
     (is (string= "action" (g:simple-action-name action)))
@@ -116,7 +116,7 @@
 
 ;;;   g_simple_action_new_stateful
 
-(test simple-action-new-stateful
+(test g-simple-action-new-stateful
   (let ((action (g:simple-action-new-stateful "action"
                                               (g:variant-type-new "b")
                                               (g:variant-new-int16 10))))
@@ -133,7 +133,7 @@
 
 ;;; --- Functions from the interface -------------------------------------------
 
-(test simple-action-interface-functions
+(test g-simple-action-interface-functions
   (let ((action (g:simple-action-new-stateful "action"
                                               (g:variant-type-new "b")
                                               (g:variant-new-boolean t))))
@@ -153,7 +153,7 @@
 ;;;   g_action_change_state
 ;;;   g_action_activate
 
-(test simple-action-signals
+(test g-simple-action-signals
   (let ((action (g:simple-action-new-stateful "simple"
                                               (g:variant-type-new "b")
                                               (g:variant-new-boolean t))))
@@ -181,7 +181,7 @@
 
 ;;;   g_simple_action_enabled
 
-(test simple-action-enabled
+(test g-simple-action-enabled
   (let ((action (g:simple-action-new-stateful "simple"
                                               (g:variant-type-new "b")
                                               (g:variant-new-boolean t))))
@@ -212,7 +212,7 @@
 
 ;;;   g_simple_action_set_state
 
-(test simple-action-state
+(test g-simple-action-state
   (let ((action (g:simple-action-new-stateful "simple"
                                               (g:variant-type-new "b")
                                               (g:variant-new-boolean t))))
@@ -246,4 +246,4 @@
     ;; The state has not changed.
     (is (= 10 (g:variant-int32 (g:action-state action))))))
 
-;;; --- 2023-5-29 --------------------------------------------------------------
+;;; --- 2023-7-9 ---------------------------------------------------------------

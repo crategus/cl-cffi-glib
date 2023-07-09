@@ -31,7 +31,7 @@
 
 ;;;     GActionGroup
 
-(test action-group-interface
+(test g-action-group-interface
   ;; Type check
   (is (g:type-is-interface "GActionGroup"))
   ;; Check the registered symbol
@@ -64,7 +64,7 @@
 
 ;;;     g_action_group_list_actions
 
-(test action-group-list-actions
+(test g-action-group-list-actions
   (let ((group (g:simple-action-group-new)))
     (is (equal '() (g:action-group-list-actions group)))
     (is-false (g:action-map-add-action-entries group *action-entries*))
@@ -77,7 +77,7 @@
 
 ;;;     g_action_group_has_action
 
-(test action-group-has-action
+(test g-action-group-has-action
   (let ((group (g:simple-action-group-new)))
     (is-false (g:action-map-add-action-entries group *action-entries*))
     (is-true (g:action-group-has-action group "copy"))
@@ -86,7 +86,7 @@
 
 ;;;     g_action_group_get_action_enabled
 
-(test action-group-action-enabled
+(test g-action-group-action-enabled
   (let ((group (g:simple-action-group-new)))
     (is-false (g:action-map-add-action-entries group *action-entries*))
     (is-true (g:action-group-action-enabled group "copy"))
@@ -97,7 +97,7 @@
 
 ;;;     g_action_group_get_action_parameter_type
 
-(test action-group-action-parameter-type
+(test g-action-group-action-parameter-type
   (let ((group (g:simple-action-group-new)))
     (is-false (g:action-map-add-action-entries group *action-entries*))
     ;; Does not return a g:variant-type, but nil
@@ -114,7 +114,7 @@
 
 ;;;     g_action_group_get_action_state_type
 
-(test action-group-action-state-type
+(test g-action-group-action-state-type
   (let ((group (g:simple-action-group-new)))
     (is-false (g:action-map-add-action-entries group *action-entries*))
     ;; Does not return a g:variant-type instance, but nil
@@ -133,7 +133,7 @@
 
 ;; TODO: Create an example for using a state hint
 
-(test action-group-action-state-hint
+(test g-action-group-action-state-hint
   (let ((group (g:simple-action-group-new)))
     (is-false (g:action-map-add-action-entries group *action-entries*))
     ;; We get a null-pointer
@@ -151,7 +151,7 @@
 
 ;;;     g_action_group_get_action_state
 
-(test action-group-action-state
+(test g-action-group-action-state
   (let ((group (g:simple-action-group-new)))
     (is-false (g:action-map-add-action-entries group *action-entries*))
     (is (cffi:null-pointer-p (g:action-group-action-state group "copy")))
@@ -159,13 +159,15 @@
     (is-true (g:variant-boolean (g:action-group-action-state group "toolbar")))
     (is-false (g:variant-boolean (g:action-group-action-state group "statusbar")))
     (is (string= "vala"
-                 (g:variant-string (g:action-group-action-state group "sources"))))
+                 (g:variant-string (g:action-group-action-state group
+                                                                "sources"))))
     (is (string= "html"
-                 (g:variant-string (g:action-group-action-state group "markup"))))))
+                 (g:variant-string (g:action-group-action-state group
+                                                                "markup"))))))
 
 ;;;     g_action_group_change_action_state
 
-(test action-group-action-change-action-state
+(test g-action-group-action-change-action-state
   (let ((group (g:simple-action-group-new)))
     (is-false (g:action-map-add-action-entries group *action-entries*))
     ;; Change a boolean state
@@ -186,7 +188,7 @@
 
 ;;;     g_action_group_activate_action
 
-(test action-group-activate-action
+(test g-action-group-activate-action
   (let ((group (g:simple-action-group-new)))
     (is-false (g:action-map-add-action-entries group *action-entries*))
 
@@ -201,4 +203,4 @@
 ;;;     g_action_group_action_enabled_changed
 ;;;     g_action_group_action_state_changed
 
-;;; --- 2023-5-29 --------------------------------------------------------------
+;;; --- 2023-7-9 ---------------------------------------------------------------

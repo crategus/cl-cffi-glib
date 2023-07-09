@@ -47,7 +47,7 @@
 
 ;;;     g_file_icon_new
 
-(test file-icon-new
+(test g-file-icon-new
   (let* ((path (sys-path "resource/gtk-logo-24.png"))
          (file (g:file-new-for-path path))
          (icon (g:file-icon-new file)))

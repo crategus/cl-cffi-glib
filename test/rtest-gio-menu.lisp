@@ -7,7 +7,7 @@
 
 ;;;     GMenu
 
-(test menu-class
+(test g-menu-class
   ;; Type check
   (is (g:type-is-object "GMenu"))
   ;; Check the registered symbol
@@ -35,7 +35,7 @@
 
 ;;;     GMenuItem
 
-(test menu-item-class
+(test g-menu-item-class
   ;; Type check
   (is (g:type-is-object "GMenuItem"))
   ;; Check the registered symbol
@@ -65,12 +65,12 @@
 
 ;;;     g_menu_new
 
-(test menu-new
+(test g-menu-new
   (is (typep (g:menu-new) 'g:menu)))
 
 ;;;     g_menu_freeze
 
-(test menu-freeze
+(test g-menu-freeze
   (let ((menu (g:menu-new)))
     (is-true (g:menu-model-is-mutable menu))
     (is-false (g:menu-freeze menu))
@@ -81,7 +81,7 @@
 ;;;     g_menu_prepend
 ;;;     g_menu_append
 
-(test menu-insert
+(test g-menu-insert
   (let ((menu (g:menu-new)))
     (is-false (g:menu-insert menu 0 "insert" "action"))
     (is (= 1 (g:menu-model-n-items menu)))
@@ -94,7 +94,7 @@
 ;;;     g_menu_append_item
 ;;;     g_menu_prepend_item
 
-(test menu-insert-item
+(test g-menu-insert-item
   (let ((menu (g:menu-new)))
     (is-false (g:menu-insert-item menu 0 (g:menu-item-new "insert" nil)))
     (is (= 1 (g:menu-model-n-items menu)))
@@ -107,7 +107,7 @@
 ;;;     g_menu_prepend_section
 ;;;     g_menu_append_section
 
-(test menu-insert-section
+(test g-menu-insert-section
   (let ((menu (g:menu-new))
         (section (g:menu-new)))
     ;; Add threee items to the section
@@ -129,7 +129,7 @@
 ;;;     g_menu_insert_submenu
 ;;;     g_menu_prepend_submenu
 
-(test menu-insert-submenu
+(test g-menu-insert-submenu
   (let ((menu (g:menu-new))
         (submenu (g:menu-new)))
     ;; Add threee items to the submenu
@@ -150,7 +150,7 @@
 ;;;     g_menu_remove
 ;;;     g_menu_remove_all
 
-(test menu-remove
+(test g-menu-remove
   (let ((menu (g:menu-new)))
     (is-false (g:menu-append menu "append1" nil))
     (is-false (g:menu-append menu "append2" nil))
@@ -163,7 +163,7 @@
 
 ;;;     g_menu_item_new
 
-(test menu-item-new
+(test g-menu-item-new
   (is (typep (g:menu-item-new nil nil) 'g:menu-item)))
 
 ;;;     g_menu_item_new_section
@@ -181,7 +181,7 @@
 ;;;     g_menu_item_get_attribute_value
 ;;;     g_menu_item_set_attribute_value
 
-(test menu-item-attribute-value.1
+(test g-menu-item-attribute-value.1
   (let ((item (g:menu-item-new "Label" "Action")))
     (is (string= "Label"
                  (g:variant-string
@@ -194,7 +194,7 @@
                                                   "action"
                                                   (g:variant-type-new "s")))))))
 
-(test menu-item-attribute-value.2
+(test g-menu-item-attribute-value.2
   (let ((item (g:menu-item-new "Label" "Action")))
     (is (string= "Label"
                  (g:variant-string
@@ -227,7 +227,7 @@
                                                   "action"
                                                   (g:variant-type-new "s")))))))
 
-(test menu-item-attribute-value.3
+(test g-menu-item-attribute-value.3
   (let ((item (g:menu-item-new "Label" "Action")))
     (is (string= "Label"
                  (g:variant-string
@@ -251,7 +251,7 @@
                  (g:variant-string
                      (g:menu-item-attribute-value item "action"))))))
 
-(test menu-item-attribute-value.4
+(test g-menu-item-attribute-value.4
   (let ((item (g:menu-item-new "Label" "Action")))
     (is (string= "Label"
                  (g:variant-string
@@ -281,7 +281,7 @@
 ;;;     g_menu_item_get_link
 ;;;     g_menu_item_set_link
 
-(test menu-item-link
+(test g-menu-item-link
   (let ((item (g:menu-item-new "Label" "Action"))
         (submenu (g:menu-new)))
     (is (typep (setf (g:menu-item-link item "submenu") submenu) 'g:menu-model))

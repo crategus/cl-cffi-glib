@@ -45,7 +45,7 @@
 
 ;;;     g_action_map_lookup_action
 
-(test action-map-lookup-action
+(test g-action-map-lookup-action
   (let ((group (create-action-group)))
     (is (typep (g:action-map-lookup-action group "quit") 'g:simple-action))
     (is (typep (g:action-map-lookup-action group "print") 'g:simple-action))
@@ -55,7 +55,7 @@
 
 ;; Example in the documentation of g:action-map-add-action-entries
 
-(test action-map-add-action-entries
+(test g-action-map-add-action-entries
   (let* ((group (create-action-group))
          (action-quit (g:action-map-lookup-action group "quit"))
          (action-print (g:action-map-lookup-action group "print")))
@@ -73,7 +73,7 @@
 ;;;     g_action_map_add_action
 ;;;     g_action_map_remove_action
 
-(test action-map-add-action
+(test g-action-map-add-action
   (let ((group (g:simple-action-group-new)))
     (g:action-map-add-action group (g:simple-action-new "quit" nil))
     (is (string= "quit"
@@ -84,4 +84,4 @@
     (g:action-map-remove-action group "quit")
     (is-false (g:action-map-lookup-action group "quit"))))
 
-;;; --- 2023-5-29 --------------------------------------------------------------
+;;; --- 2023-7-9 ---------------------------------------------------------------

@@ -7,7 +7,7 @@
 
 ;;;     GFilesystemPreviewType
 
-(test filesystem-preview-type
+(test g-filesystem-preview-type
   ;; Check the type
   (is (g:type-is-enum "GFilesystemPreviewType"))
   ;; Check the type initializer
@@ -39,7 +39,7 @@
 
 ;;;     GFile
 
-(test file-interface
+(test g-file-interface
   ;; Type check
   (is (g:type-is-interface "GFile"))
   ;; Check the registered symbol
@@ -70,14 +70,14 @@
 ;;;     g_file_new_for_path
 
 #-windows
-(test file-new-for-path
+(test g-file-new-for-path
   (let ((file (g:file-new-for-path "/home/dieter/path.lisp")))
     (is (typep file 'g:object))
     (is (string= "path.lisp" (g:file-basename file)))
     (is (string= "/home/dieter/path.lisp" (g:file-path file)))))
 
 #+windows
-(test file-new-for-path
+(test g-file-new-for-path
   (let ((file (g:file-new-for-path "/home/dieter/path.lisp")))
     (is (typep file 'g:object))
     (is (string= "path.lisp" (g:file-basename file)))
@@ -93,7 +93,7 @@
     (is (string= "http://crategus.com" (g:file-uri file)))))
 
 #+windows
-(test file-new-for-uri
+(test g-file-new-for-uri
   (let ((file (g:file-new-for-uri "http://crategus.com")))
     (is (typep file 'g:object))
     (is-false (g:file-path file))
@@ -101,12 +101,12 @@
 
 ;;;     g_file_new_for_commandline_arg
 
-(test file-new-for-commandline-arg
+(test g-file-new-for-commandline-arg
   (is (typep (g:file-new-for-commandline-arg "commandline") 'g:object)))
 
 ;;;     g_file_new_for_commandline_arg_and_cwd
 
-(test file-new-for-commandline-arg-and-cwd
+(test g-file-new-for-commandline-arg-and-cwd
   (is (typep (g:file-new-for-commandline-arg-and-cwd "commandline"
                                                      "directory") 'g:object)))
 
@@ -115,25 +115,25 @@
 ;;;     g_file_parse_name
 
 #-windows
-(test file-parse-name.1
+(test g-file-parse-name.1
   (let ((file (g:file-parse-name "/home/dieter/path.lisp")))
     (is (string= "/home/dieter/path.lisp" (g:file-path file)))
     (is (string= "file:///home/dieter/path.lisp" (g:file-uri file)))))
 
 #+windows
-(test file-parse-name.1
+(test g-file-parse-name.1
   (let ((file (g:file-parse-name "/home/dieter/path.lisp")))
     (is (string= "\\home\\dieter\\path.lisp" (g:file-path file)))
     (is (string= "file:///home/dieter/path.lisp" (g:file-uri file)))))
 
 #-windows
-(test file-parse-name.2
+(test g-file-parse-name.2
   (let ((file (g:file-parse-name "http://crategus.com")))
     (is-false (g:file-path file))
     (is (string= "http://crategus.com" (g:file-uri file)))))
 
 #+windows
-(test file-parse-name.2
+(test g-file-parse-name.2
   (let ((file (g:file-parse-name "http://crategus.com")))
     (is-false (g:file-path file))
     (is (string= "http://crategus.com/" (g:file-uri file)))))
@@ -145,33 +145,33 @@
 
 ;;;     g_file_get_basename
 
-(test file-basename.1
+(test g-file-basename.1
   (let ((file (g:file-parse-name "/home/dieter/path.lisp")))
     (is (string= "path.lisp" (g:file-basename file)))))
 
 #-windows
-(test file-basename.2
+(test g-file-basename.2
   (let ((file (g:file-parse-name "http://crategus.com")))
     (is (string= "/" (g:file-basename file)))))
 
 #+windows
-(test file-basename.2
+(test g-file-basename.2
   (let ((file (g:file-parse-name "http://crategus.com")))
     (is (string= "" (g:file-basename file)))))
 
 ;;;     g_file_get_path
 
 #-windows
-(test file-path.1
+(test g-file-path.1
   (let ((file (g:file-parse-name "/home/dieter/path.lisp")))
     (is (string= "/home/dieter/path.lisp" (g:file-path file)))))
 
 #+windows
-(test file-path.1
+(test g-file-path.1
   (let ((file (g:file-parse-name "/home/dieter/path.lisp")))
     (is (string= "\\home\\dieter\\path.lisp" (g:file-path file)))))
 
-(test file-path.2
+(test g-file-path.2
   (let ((file (g:file-parse-name "http://crategus.com")))
     (is-false (g:file-path file))))
 
@@ -179,39 +179,39 @@
 
 ;;;     g_file_get_uri
 
-(test file-uri.1
+(test g-file-uri.1
   (let ((file (g:file-parse-name "/home/dieter/path.lisp")))
     (is (string= "file:///home/dieter/path.lisp" (g:file-uri file)))))
 
 #-windows
-(test file-uri.2
+(test g-file-uri.2
   (let ((file (g:file-parse-name "http://crategus.com")))
     (is (string= "http://crategus.com" (g:file-uri file)))))
 
 #+windows
-(test file-uri.2
+(test g-file-uri.2
   (let ((file (g:file-parse-name "http://crategus.com")))
     (is (string= "http://crategus.com/" (g:file-uri file)))))
 
 ;;;     g_file_get_parse_name
 
 #-windows
-(test file-get-parse.name.1
+(test g-file-get-parse.name.1
   (let ((file (g:file-parse-name "/home/dieter/path.lisp")))
     (is (string= "/home/dieter/path.lisp" (g:file-get-parse-name file)))))
 
 #+windows
-(test file-get-parse.name.1
+(test g-file-get-parse.name.1
   (let ((file (g:file-parse-name "/home/dieter/path.lisp")))
     (is (string= "\\home\\dieter\\path.lisp" (g:file-get-parse-name file)))))
 
 #-windows
-(test file-get-parse-name.2
+(test g-file-get-parse-name.2
   (let ((file (g:file-parse-name "http://crategus.com")))
     (is (string= "http://crategus.com" (g:file-get-parse-name file)))))
 
 #+windows
-(test file-get-parse-name.2
+(test g-file-get-parse-name.2
   (let ((file (g:file-parse-name "http://crategus.com")))
     (is (string= "http://crategus.com/" (g:file-get-parse-name file)))))
 
@@ -332,4 +332,4 @@
 ;;;     g_file_replace_readwrite_finish
 ;;;     g_file_supports_thread_contexts
 
-;;; --- 2023-5-29 --------------------------------------------------------------
+;;; --- 2023-7-9 ---------------------------------------------------------------

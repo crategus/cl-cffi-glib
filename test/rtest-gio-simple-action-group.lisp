@@ -5,7 +5,7 @@
 
 ;;;   GSimpleActionGroup
 
-(test simple-action-group-class
+(test g-simple-action-group-class
   ;; Type check
   (is (g:type-is-object "GSimpleActionGroup"))
   ;; Check the registered symbol
@@ -39,18 +39,18 @@
 
 ;;;   g_simple_action_group_new
 
-(test simple-action-group-new
+(test g-simple-action-group-new
   (is (eq 'g:simple-action-group (type-of (g:simple-action-group-new)))))
 
 ;;;   g_simple_action_group_lookup
 
-(test simple-action-group-lookup
+(test g-simple-action-group-lookup
   (let ((action-group (g:simple-action-group-new)))
     (is-false (g:simple-action-group-lookup action-group "action"))))
 
 ;;;   g_simple_action_group_insert
 
-(test simple-action-group-insert
+(test g-simple-action-group-insert
   (let ((group (g:simple-action-group-new)))
     (g:simple-action-group-insert group
                                   (g:simple-action-new "simple"
@@ -60,7 +60,7 @@
 
 ;;;   g_simple_action_group_remove
 
-(test simple-action-group-insert
+(test g-simple-action-group-insert
   (let ((group (g:simple-action-group-new)))
     (g:simple-action-group-insert group
                                   (g:simple-action-new "simple"
@@ -72,7 +72,7 @@
 
 ;;;   g_simple_action_group_add_entries
 
-(test simple-action-group-add-entries
+(test g-simple-action-group-add-entries
   (let ((group (g:simple-action-group-new))
         (entries '(("copy"       ; name
                     nil          ; activate callback
@@ -85,4 +85,4 @@
     (is (typep (g:simple-action-group-lookup group "copy") 'g:simple-action))
     (is (typep (g:simple-action-group-lookup group "paste") 'g:simple-action))))
 
-;;; --- 2023-5-29 --------------------------------------------------------------
+;;; --- 2023-7-9 ---------------------------------------------------------------
