@@ -418,7 +418,7 @@
 ;;; -> variant-type-string-length                          not exported
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcfun ("g_variant_type_get_string_length" variant-type-string-length) 
+(cffi:defcfun ("g_variant_type_get_string_length" variant-type-string-length)
     :size
  #+liber-documentation
  "@version{#2020-11-29}
@@ -601,7 +601,7 @@
 ;;; g_variant_type_is_dict_entry ()
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcfun ("g_variant_type_is_dict_entry" variant-type-is-dict-entry) 
+(cffi:defcfun ("g_variant_type_is_dict_entry" variant-type-is-dict-entry)
     :boolean
  #+liber-documentation
  "@version{2023-1-31}
@@ -684,7 +684,7 @@
 ;;; g_variant_type_is_subtype_of ()
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcfun ("g_variant_type_is_subtype_of" variant-type-is-subtype-of) 
+(cffi:defcfun ("g_variant_type_is_subtype_of" variant-type-is-subtype-of)
     :boolean
  #+liber-documentation
  "@version{2023-1-31}

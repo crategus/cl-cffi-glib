@@ -30,18 +30,20 @@
 ;;; This file contains several type definitions and functions, which are
 ;;; needed for the implemenation of the GTK library.
 ;;;
-;;; Memory Allocation
-;;;
-;;;     g_malloc
-;;;     g_free
-;;;
 ;;; Various types
 ;;;
 ;;;     GStrv
 ;;;     GList
 ;;;     GSList
+;;;     GQuark
 ;;;     GDateTime
 ;;;     gunichar
+;;;     GError
+;;;
+;;; Memory Allocation
+;;;
+;;;     g_malloc
+;;;     g_free
 ;;;
 ;;; Utility functions
 ;;;
@@ -52,54 +54,6 @@
 ;;; ----------------------------------------------------------------------------
 
 (in-package :glib)
-
-;;; ----------------------------------------------------------------------------
-;;; g_malloc () -> malloc
-;;; ----------------------------------------------------------------------------
-
-(cffi:defcfun ("g_malloc" malloc) :pointer
- #+liber-documentation
- "@version{2022-11-21}
-  @argument[nbytes]{an integer of @code{:size} type with the number of bytes
-  to allocate}
-  @return{A foreign pointer to the allocated memory.}
-  @begin{short}
-    Allocates @arg{nbytes} bytes of memory.
-  @end{short}
-  If the @arg{nbytes} argument is 0 the @sym{malloc} function returns a foreign
-  @code{null-pointer} value.
-  @begin[Examples]{dictionary}
-    @begin{pre}
-(glib:malloc 100)
-=> #.(SB-SYS:INT-SAP #X559FB7283340)
-(glib:malloc 0)
-=> #.(SB-SYS:INT-SAP #X00000000)
-(cffi:null-pointer-p (glib:malloc 0))
-=> T
-    @end{pre}
-  @end{dictionary}
-  @see-function{glib:free}"
-  (nbytes :size))
-
-(export 'malloc)
-
-;;; ----------------------------------------------------------------------------
-;;; g_free () -> free
-;;; ----------------------------------------------------------------------------
-
-(cffi:defcfun ("g_free" free) :void
- #+liber-documentation
- "@version{2022-11-21}
-  @argument[mem]{a foreign pointer to the memory to free}
-  @begin{short}
-    Frees the memory pointed to by the @arg{mem} foreign pointer.
-  @end{short}
-  If the @arg{mem} argument is a foreign @code{null-pointer} the
-  @sym{glib:free} function simply returns.
-  @see-function{glib:malloc}"
-  (mem :pointer))
-
-(export 'free)
 
 ;;; ----------------------------------------------------------------------------
 ;;; GStrv
@@ -360,6 +314,67 @@
       (cffi:foreign-slot-value lst '(:struct %slist-t) 'next)))
 
 ;;; ----------------------------------------------------------------------------
+;;; GQuark
+;;; ----------------------------------------------------------------------------
+
+;; A GQuark is implemented in the C Library as guint32.
+
+(cffi:define-foreign-type quark-type ()
+  ()
+  (:actual-type :uint32)
+  (:simple-parser quark-as-string))
+
+(defmethod cffi:translate-to-foreign (value (type quark-type))
+  (cffi:foreign-funcall "g_quark_from_string"
+                        :string (if value value (cffi:null-pointer))
+                        :uint32))
+
+(defmethod cffi:translate-from-foreign (value (type quark-type))
+  (cffi:foreign-funcall "g_quark_to_string"
+                        :uint32 value
+                        :string))
+
+#+liber-documentation
+(setf (documentation 'quark-as-string 'type)
+ "@version{2022-11-21}
+  @begin{short}
+    Quarks are associations between strings and integer identifiers.
+  @end{short}
+  Given either the string or the @code{GQuark} identifier it is possible to
+  retrieve the other.
+  @begin[Lisp binding]{dictionary}
+    In the Lisp binding the @sym{g:quark-as-string} type translates a string
+    argument to the corresponding @code{GQuark} identifier and a @code{GQuark}
+    return value is translated to the corresponding Lisp string. No further
+    functions are implemented for the @sym{g:quark-as-string} type.
+
+    If the Lisp string does not currently have an associated @code{GQuark}, a
+    new @code{GQuark} is created. A @code{GQuark} value of zero is associated
+    to @code{nil} in Lisp.
+
+    See the @fun{g:type-qdata} function for attaching a @code{GQuark}
+    identifier to a @class{g:type-t} type.
+  @end{dictionary}
+  @begin[Examples]{dictionary}
+    Translate a Lisp String to a @code{GQuark} identifier:
+    @begin{pre}
+(cff:convert-to-foreign \"GtkWidget\" 'g:quark-as-string) => 91
+(cffi:convert-to-foreign \"gboolean\" 'g:quark-as-string) => 9
+(cffi:convert-to-foreign nil 'g:quark-as-string) => 0
+     @end{pre}
+     Translate a @code{GQuark} identifier to a Lisp string:
+     @begin{pre}
+(cffi:convert-from-foreign 91 'g:quark-as-string) => \"GtkWidget\"
+(cffi:convert-from-foreign 9 'g:quark-as-string) => \"gboolean\"
+(cffi:convert-from-foreign 0 'g:quark-as-string) => NIL
+     @end{pre}
+  @end{dictionary}
+  @see-class{g:type-t}
+  @see-function{g:type-qdata}")
+
+(export 'quark-as-string)
+
+;;; ----------------------------------------------------------------------------
 ;;; GDateTime
 ;;; ----------------------------------------------------------------------------
 
@@ -451,6 +466,55 @@
   @end{dictionary}")
 
 (export 'unichar)
+
+;;; ----------------------------------------------------------------------------
+;;; g_malloc () -> malloc
+;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("g_malloc" malloc) :pointer
+ #+liber-documentation
+ "@version{2022-11-21}
+  @argument[nbytes]{an integer of @code{:size} type with the number of bytes
+  to allocate}
+  @return{A foreign pointer to the allocated memory.}
+  @begin{short}
+    Allocates @arg{nbytes} bytes of memory.
+  @end{short}
+  If the @arg{nbytes} argument is 0 the @sym{malloc} function returns a foreign
+  @code{null-pointer} value.
+  @begin[Examples]{dictionary}
+    @begin{pre}
+(glib:malloc 100)
+=> #.(SB-SYS:INT-SAP #X559FB7283340)
+(glib:malloc 0)
+=> #.(SB-SYS:INT-SAP #X00000000)
+(cffi:null-pointer-p (glib:malloc 0))
+=> T
+    @end{pre}
+  @end{dictionary}
+  @see-function{glib:free}"
+  (nbytes :size))
+
+(export 'malloc)
+
+;;; ----------------------------------------------------------------------------
+;;; g_free () -> free
+;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("g_free" free) :void
+ #+liber-documentation
+ "@version{2022-11-21}
+  @argument[mem]{a foreign pointer to the memory to free}
+  @begin{short}
+    Frees the memory pointed to by the @arg{mem} foreign pointer.
+  @end{short}
+  If the @arg{mem} argument is a foreign @code{null-pointer} the
+  @sym{glib:free} function simply returns.
+  @see-function{glib:malloc}"
+  (mem :pointer))
+
+(export 'free)
+
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_get_application_name ()

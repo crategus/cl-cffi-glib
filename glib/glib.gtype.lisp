@@ -40,17 +40,17 @@
 
 ;; GTYPE is a Lisp representation of a foreign GType
 
-(defstruct (gtype
-             ;; a print function to get nice output
-             (:print-function
-               (lambda (struct stream depth)
-                 (declare (ignore depth))
-                 (print-unreadable-object (struct stream)
-                   (format stream "GTYPE :name \"~A\" :id ~D"
-                                  (gtype-name struct)
-                                  (gtype-%id struct))))))
+(defstruct gtype
   name
   %id)
+
+(defmethod print-object ((instance gtype) stream)
+  (if *print-readably*
+      (call-next-method)
+      (print-unreadable-object (instance stream)
+        (format stream "GTYPE :name \"~A\" :id ~D"
+                       (gtype-name instance)
+                       (gtype-%id instance)))))
 
 ;;; ----------------------------------------------------------------------------
 

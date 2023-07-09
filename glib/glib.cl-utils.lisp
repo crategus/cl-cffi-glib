@@ -40,7 +40,7 @@
 ;;; information.
 ;;;
 ;;;     (log-for :debug-gboxed-gc
-;;;              "Activate gc hooks for boxed opaque: ~A~%" 
+;;;              "Activate gc hooks for boxed opaque: ~A~%"
 ;;;              *gboxed-gc-hooks*)
 ;;; ----------------------------------------------------------------------------
 

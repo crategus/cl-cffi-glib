@@ -2,7 +2,7 @@
 ;;; glib.package.lisp
 ;;;
 ;;; The documentation of this file is taken from the GLIB Reference Manual
-;;; Version 2.74 and modified to document the Lisp binding to the GLIB library.
+;;; Version 2.76 and modified to document the Lisp binding to the GLIB library.
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
 ;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
@@ -63,8 +63,8 @@
 #+liber-documentation
 (setf (documentation (find-package :glib) t)
  "GLib is a general-purpose utility library, which provides many useful data
-  types, macros, type conversions, string utilities, file utilities, a main 
-  loop abstraction, and so on. It works on many UNIX-like platforms, as well 
+  types, macros, type conversions, string utilities, file utilities, a main
+  loop abstraction, and so on. It works on many UNIX-like platforms, as well
   as Windows and OS X. GLib is released under the GNU Library General Public
   License (GNU LGPL).
 

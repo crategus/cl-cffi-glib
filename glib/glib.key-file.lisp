@@ -347,6 +347,28 @@ Booleans=true;false;true;true
 
 (export 'with-g-key-file)
 
+
+(defmacro with-g-key-file-from-file ((keyfile path &optional (flags :none))
+                                     &body body)
+ #+liber-documentation
+ "@version{2023-6-22}
+  @syntax[]{(with-g-key-file-from-file (keyfile path flags) body) => result}
+  @argument[keyfile]{a newly allocated @type{g:key-file} instance}
+  @argument[path]{a pathname or namestring with the path of a file to load}
+  @argument[flags]{an optional @symbol{g:key-file-flags} value, the default
+    value is @code{:none}}
+  @begin{short}
+    The @sym{with-g-file-key} macro allocates a new @type{g:key-file} instance
+    and executes the body that uses the key file.
+  @end{short}
+  After execution of the body the allocated memory for the key file is released.
+  @see-type{g:key-file}"
+  `(let ((,keyfile (key-file-new)))
+     (key-file-load-from-file ,keyfile (namestring ,path) ,flags)
+     (unwind-protect
+       (progn ,@body)
+       (key-file-free ,keyfile))))
+
 ;;; ----------------------------------------------------------------------------
 ;;; g_key_file_new ()
 ;;; ----------------------------------------------------------------------------
@@ -426,7 +448,7 @@ Booleans=true;false;true;true
 ;;; g_key_file_set_list_separator ()
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcfun ("g_key_file_set_list_separator" %key-file-set-list-separator) 
+(cffi:defcfun ("g_key_file_set_list_separator" %key-file-set-list-separator)
     :void
   (keyfile (:pointer (:struct key-file)))
   (separator :char))
@@ -530,6 +552,31 @@ Booleans=true;false;true;true
 ;;; Returns :
 ;;;     TRUE if a key file could be loaded, FALSE otherwise
 ;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("g_key_file_load_from_bytes" %key-file-load-from-bytes) :boolean
+  (keyfile (:pointer (:struct key-file)))
+  (bytes (boxed bytes))
+  (flags key-file-flags)
+  (err :pointer))
+
+(defun key-file-load-from-bytes (keyfile bytes flags)
+ #+liber-documentation
+ "@version{2023-6-24}
+  @argument[keyfile]{a @type{g:key-file} instance}
+  @argument[bytes]{a @class{g:bytes} instance}
+  @argument[flags]{a @symbol{g:key-file-flags} value}
+  @return{@em{True} if a key file could be loaded, otherwise @em{false}.}
+  @begin{short}
+    Loads a key file from the data in the @class{g:bytes} instance.
+  @end{short}
+  If the data cannot be loaded then @em{false} is returned.
+  @see-type{g:key-file}
+  @see-class{g:bytes}
+  @see-symbol{g:key-file-flags}"
+  (with-g-error (err)
+    (%key-file-load-from-bytes keyfile bytes flags err)))
+
+(export 'key-file-load-from-bytes)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_key_file_load_from_data_dirs ()
@@ -699,7 +746,7 @@ Booleans=true;false;true;true
 ;;; g_key_file_get_keys () -> key-file-keys
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcfun ("g_key_file_get_keys" %key-file-keys) 
+(cffi:defcfun ("g_key_file_get_keys" %key-file-keys)
     (strv-t :free-from-foreign t)
   (keyfile (:pointer (:struct key-file)))
   (group :string)
