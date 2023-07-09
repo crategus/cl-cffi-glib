@@ -2,28 +2,29 @@
 ;;; gio.notification.lisp
 ;;;
 ;;; The documentation of this file is taken from the GIO Reference Manual
-;;; Version 2.74 and modified to document the Lisp binding to the GIO library.
+;;; Version 2.76 and modified to document the Lisp binding to the GIO library.
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
-;;; available from <http://www.crategus.com/books/cl-cffi-gtk/>.
+;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2021- 2022 Dieter Kaiser
+;;; Copyright (C) 2021- 2023 Dieter Kaiser
 ;;;
-;;; This program is free software: you can redistribute it and/or modify
-;;; it under the terms of the GNU Lesser General Public License for Lisp
-;;; as published by the Free Software Foundation, either version 3 of the
-;;; License, or (at your option) any later version and with a preamble to
-;;; the GNU Lesser General Public License that clarifies the terms for use
-;;; with Lisp programs and is referred as the LLGPL.
+;;; Permission is hereby granted, free of charge, to any person obtaining a
+;;; copy of this software and associated documentation files (the "Software"),
+;;; to deal in the Software without restriction, including without limitation
+;;; the rights to use, copy, modify, merge, publish, distribute, sublicense,
+;;; and/or sell copies of the Software, and to permit persons to whom the
+;;; Software is furnished to do so, subject to the following conditions:
 ;;;
-;;; This program is distributed in the hope that it will be useful,
-;;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;;; GNU Lesser General Public License for more details.
+;;; The above copyright notice and this permission notice shall be included in
+;;; all copies or substantial portions of the Software.
 ;;;
-;;; You should have received a copy of the GNU Lesser General Public
-;;; License along with this program and the preamble to the Gnu Lesser
-;;; General Public License.  If not, see <http://www.gnu.org/licenses/>
-;;; and <http://opensource.franz.com/preamble.html>.
+;;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+;;; IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+;;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+;;; THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+;;; LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+;;; FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+;;; DEALINGS IN THE SOFTWARE.
 ;;; ----------------------------------------------------------------------------
 ;;;
 ;;; GNotification
@@ -65,7 +66,7 @@
 ;;; enum GNotificationPriority
 ;;; ----------------------------------------------------------------------------
 
-(define-g-enum "GNotificationPriority" notification-priority
+(gobject:define-g-enum "GNotificationPriority" notification-priority
   (:export t
    :type-initializer "g_notification_priority_get_type")
   (:normal 0)
@@ -82,7 +83,7 @@
     Priority levels for @class{g:notification} objects.
   @end{short}
   @begin{pre}
-(define-g-enum \"GNotificationPriority\" notification-priority
+(gobject:define-g-enum \"GNotificationPriority\" notification-priority
   (:export t
    :type-initializer \"g_notification_priority_get_type\")
   (:normal 0)
@@ -110,7 +111,7 @@
 ;;; GNotification
 ;;; ----------------------------------------------------------------------------
 
-(define-g-object-class "GNotification" notification
+(gobject:define-g-object-class "GNotification" notification
   (:superclass gobject:object
    :export t
    :interfaces nil
@@ -149,7 +150,8 @@
 ;;; g_notification_new ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_notification_new" notification-new) (gobject:object notification)
+(cffi:defcfun ("g_notification_new" notification-new)
+    (gobject:object notification)
  #+liber-documentation
  "@version{#2022-12-30}
   @argument[title]{a string with the title of the notification}
@@ -171,7 +173,7 @@
 ;;; g_notification_set_title ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_notification_set_title" notification-set-title) :void
+(cffi:defcfun ("g_notification_set_title" notification-set-title) :void
  #+liber-documentation
  "@version{#2022-12-30}
   @argument[notification]{a @class{g:notification} instance}
@@ -189,7 +191,7 @@
 ;;; g_notification_set_body ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_notification_set_body" notification-set-body) :void
+(cffi:defcfun ("g_notification_set_body" notification-set-body) :void
  #+liber-documentation
  "@version{#2022-12-30}
   @argument[notification]{a @class{g:notification} instance}
@@ -207,7 +209,7 @@
 ;;; g_notification_set_icon ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_notification_set_icon" notification-set-icon) :void
+(cffi:defcfun ("g_notification_set_icon" notification-set-icon) :void
  #+liber-documentation
  "@version{#2022-12-30}
   @argument[notification]{a @class{g:notification} instance}
@@ -226,7 +228,7 @@
 ;;; g_notification_set_priority ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_notification_set_priority" notification-set-priority) :void
+(cffi:defcfun ("g_notification_set_priority" notification-set-priority) :void
  #+liber-documentation
  "@version{#2022-12-30}
   @argument[notification]{a @class{g:notification} instance}
@@ -246,7 +248,7 @@
 ;;; g_notification_set_urgent ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_notification_set_urgent" notification-set-urgent) :void
+(cffi:defcfun ("g_notification_set_urgent" notification-set-urgent) :void
  #+liber-documentation
  "@version{#2022-12-30}
   @argument[notification]{a @class{g:notification} instance}
@@ -269,8 +271,8 @@
 ;;; g_notification_set_default_action ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_notification_set_default_action" notification-set-default-action)
-    :void
+(cffi:defcfun ("g_notification_set_default_action"
+                notification-set-default-action) :void
  #+liber-documentation
  "@version{#2022-12-30}
   @argument[notifiaction]{a @class{g:notification} instance}
@@ -368,7 +370,7 @@
 ;;;g_notification_add_button ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_notification_add_button" notification-add-button) :void
+(cffi:defcfun ("g_notification_add_button" notification-add-button) :void
  #+liber-documentation
  "@version{#2022-12-30}
   @argument[notification]{a @class{g:notification} instance}

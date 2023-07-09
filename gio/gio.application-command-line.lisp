@@ -2,28 +2,29 @@
 ;;; gio.application-command-line.lisp
 ;;;
 ;;; The documentation of this file is taken from the GIO Reference Manual
-;;; Version 2.74 and modified to document the Lisp binding to the GIO library.
+;;; Version 2.76 and modified to document the Lisp binding to the GIO library.
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
-;;; available from <http://www.crategus.com/books/cl-cffi-gtk/>.
+;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2020 - 2022 Dieter Kaiser
+;;; Copyright (C) 2020 - 2023 Dieter Kaiser
 ;;;
-;;; This program is free software: you can redistribute it and/or modify
-;;; it under the terms of the GNU Lesser General Public License for Lisp
-;;; as published by the Free Software Foundation, either version 3 of the
-;;; License, or (at your option) any later version and with a preamble to
-;;; the GNU Lesser General Public License that clarifies the terms for use
-;;; with Lisp programs and is referred as the LLGPL.
+;;; Permission is hereby granted, free of charge, to any person obtaining a
+;;; copy of this software and associated documentation files (the "Software"),
+;;; to deal in the Software without restriction, including without limitation
+;;; the rights to use, copy, modify, merge, publish, distribute, sublicense,
+;;; and/or sell copies of the Software, and to permit persons to whom the
+;;; Software is furnished to do so, subject to the following conditions:
 ;;;
-;;; This program is distributed in the hope that it will be useful,
-;;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;;; GNU Lesser General Public License for more details.
+;;; The above copyright notice and this permission notice shall be included in
+;;; all copies or substantial portions of the Software.
 ;;;
-;;; You should have received a copy of the GNU Lesser General Public
-;;; License along with this program and the preamble to the Gnu Lesser
-;;; General Public License.  If not, see <http://www.gnu.org/licenses/>
-;;; and <http://opensource.franz.com/preamble.html>.
+;;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+;;; IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+;;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+;;; THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+;;; LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+;;; FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+;;; DEALINGS IN THE SOFTWARE.
 ;;; ----------------------------------------------------------------------------
 ;;;
 ;;; GApplicationCommandLine
@@ -34,6 +35,10 @@
 ;;;
 ;;;     GApplicationCommandLine
 ;;;
+;;; Accessors
+;;;
+;;;     g_application_command_line_get_is_remote
+;;;
 ;;; Functions
 ;;;
 ;;;     g_application_command_line_get_arguments
@@ -43,7 +48,6 @@
 ;;;     g_application_command_line_get_stdin
 ;;;     g_application_command_line_create_file_for_arg
 ;;;     g_application_command_line_getenv
-;;;     g_application_command_line_get_is_remote           Accessor
 ;;;     g_application_command_line_get_platform_data
 ;;;     g_application_command_line_set_exit_status
 ;;;     g_application_command_line_get_exit_status
@@ -69,7 +73,8 @@
 ;;; GApplicationCommandLine
 ;;; ----------------------------------------------------------------------------
 
-(define-g-object-class "GApplicationCommandLine" application-command-line
+(gobject:define-g-object-class "GApplicationCommandLine"
+                               application-command-line
   (:superclass gobject:object
    :export t
    :interfaces ()
@@ -89,7 +94,7 @@
 
 #+liber-documentation
 (setf (documentation 'application-command-line 'type)
- "@version{#2022-12-29}
+ "@version{2023-7-8}
   @begin{short}
     The @sym{g:application-command-line} class represents a command line
     invocation of an application.
@@ -277,14 +282,14 @@
 ;;; g_application_command_line_get_arguments ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_application_command_line_get_arguments"
-           %application-command-line-get-arguments) glib:strv-t
+(cffi:defcfun ("g_application_command_line_get_arguments"
+                %application-command-line-get-arguments) glib:strv-t
   (cmdline (gobject:object application-command-line))
   (argc (:pointer :int)))
 
 (defun application-command-line-get-arguments (cmdline)
  #+liber-documentation
- "@version{#2022-12-29}
+ "@version{2023-7-8}
   @argument[cmdline]{a @class{g:application-command-line} instance}
   @return{The list of strings containing the command line arguments.}
   @begin{short}
@@ -299,7 +304,7 @@
   @see-class{g:application-command-line}
   @see-type{g:option-context}
   @see-function{g:option-context-parse-strv}"
-  (with-foreign-object (argc :int)
+  (cffi:with-foreign-object (argc :int)
     (%application-command-line-get-arguments cmdline argc)))
 
 (export 'application-command-line-get-arguments)
@@ -308,9 +313,9 @@
 ;;; g_application_command_line_get_cwd ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_application_command_line_get_cwd" application-command-line-cwd)
-    :string
- "@version{#2022-12-29}
+(cffi:defcfun ("g_application_command_line_get_cwd"
+                application-command-line-cwd) :string
+ "@version{2023-7-8}
   @argument[cmdline]{a @class{g:application-command-line} object}
   @return{A string with the current directory, or @code{nil}.}
   @begin{short}
@@ -335,10 +340,10 @@
 ;;; g_application_command_line_get_environ ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_application_command_line_get_environ"
-           application-command-line-environ)
+(cffi:defcfun ("g_application_command_line_get_environ"
+                application-command-line-environ)
     (glib:strv-t :free-from-foreign nil)
- "@version{#2022-12-29}
+ "@version{2023-7-8}
   @argument[cmdline]{a @class{g:application-command-line} object}
   @return{A list of strings with the environment strings, or @code{nil} if they
     were not sent.}
@@ -367,8 +372,8 @@
 ;;; -> application-command-line-optons-dict
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_application_command_line_get_options_dict"
-           application-command-line-options-dict)
+(cffi:defcfun ("g_application_command_line_get_options_dict"
+                application-command-line-options-dict)
     (glib:boxed glib:variant-dict)
  #+liber-documentation
  "@version{#2022-12-29}
@@ -422,8 +427,9 @@
 ;;; g_application_command_line_create_file_for_arg ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_application_command_line_create_file_for_arg"
-           application-command-line-create-file-for-arg) (gobject:object g-file)
+(cffi:defcfun ("g_application_command_line_create_file_for_arg"
+                application-command-line-create-file-for-arg)
+    (gobject:object file)
  #+liber-documentation
  "@version{#2022-12-29}
   @argument[cmdline]{a @class{g:application-command-line} object}
@@ -448,8 +454,8 @@
 ;;; g_application_command_line_getenv ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_application_command_line_getenv" application-command-line-getenv)
-    :string
+(cffi:defcfun ("g_application_command_line_getenv"
+                application-command-line-getenv) :string
  "@version{#2022-12-29}
   @argument[cmdline]{a @class{g:application-command-line} object}
   @argument[name]{a string with the environment variable to get}
@@ -482,10 +488,10 @@
 ;;; g_application_command_line_get_platform_data ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_application_command_line_get_platform_data"
-           application-command-line-get-platform-data)
+(cffi:defcfun ("g_application_command_line_get_platform_data"
+                application-command-line-get-platform-data)
     (:pointer (:struct glib:variant))
- "@version{#2022-12-29}
+ "@version{2023-7-8}
   @argument[cmdline]{a @class{g:application-command-line} object}
   @return{A @type{g:variant} dictionary with the platform data, or a @code{NULL}
     pointer.}
@@ -516,8 +522,8 @@
                         :void)
   exit-status)
 
-(defcfun ("g_application_command_line_get_exit_status"
-           application-command-line-exit-status) :int
+(cffi:defcfun ("g_application_command_line_get_exit_status"
+                application-command-line-exit-status) :int
  #+liber-documentation
  "@version{#2020-12-10}
   @syntax[]{(application-command-line-exit-status cmdline) => exit-status}

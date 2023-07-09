@@ -52,7 +52,7 @@
 ;;; GSimplePermission
 ;;; ----------------------------------------------------------------------------
 
-(define-g-object-class "GSimplePermission" simple-permission
+(gobject:define-g-object-class "GSimplePermission" simple-permission
   (:superclass permission
    :export t
    :interfaces ()
@@ -76,7 +76,7 @@
 ;;; g_simple_permission_new
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_simple_permission_new" simple-permission-new)
+(cffi:defcfun ("g_simple_permission_new" simple-permission-new)
     (gobject:object permission)
  #+liber-documentation
  "@version{2023-5-5}

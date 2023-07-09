@@ -2,7 +2,7 @@
 ;;; gio.app-info.lisp
 ;;;
 ;;; The documentation of this file is taken from the GIO Reference Manual
-;;; Version 2.74 and modified to document the Lisp binding to the GIO library.
+;;; Version 2.76 and modified to document the Lisp binding to the GIO library.
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
 ;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
@@ -195,7 +195,7 @@
 ;;;     Application supports startup notification. Since 2.26
 ;;; ----------------------------------------------------------------------------
 
-(define-g-flags "GAppInfoCreateFlags" app-info-create-flags
+(gobject:define-g-flags "GAppInfoCreateFlags" app-info-create-flags
   (:export t
    :type-initializer "g_app_info_create_flags_get_type")
   (:none 0)
@@ -207,7 +207,7 @@
 ;;; GAppInfo
 ;;; ----------------------------------------------------------------------------
 
-(define-g-interface "GAppInfo" app-info
+(gobject:define-g-interface "GAppInfo" app-info
   (:export t
    :type-initializer "g_app_info_get_type")
   nil)
@@ -227,7 +227,7 @@
 ;;; GAppLaunchContext
 ;;; ----------------------------------------------------------------------------
 
-(define-g-object-class "GAppLaunchContext" app-launch-context
+(gobject:define-g-object-class "GAppLaunchContext" app-launch-context
   (:superclass gobject:object
    :export t
    :interfaces nil
@@ -344,15 +344,15 @@ lambda (context info platform-data)    :run-last
 ;;;     new GAppInfo for given command
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_app_info_create_from_commandline"
-           %app-info-create-from-commandline) (gobject:object app-info)
+(cffi:defcfun ("g_app_info_create_from_commandline"
+                %app-info-create-from-commandline) (gobject:object app-info)
   (commandline :string)
   (application :string)
   (flags app-info-create-flags)
   (err :pointer))
 
 (defun app-info-create-from-commandline (commandline application flags)
-  (with-g-error (err)
+  (glib:with-g-error (err)
     (%app-info-create-from-commandline commandline application flags err)))
 
 (export 'app-info-create-from-commandline)
@@ -371,7 +371,7 @@ lambda (context info platform-data)    :run-last
 ;;;     a duplicate of appinfo
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_app_info_dup" app-info-dup) (gobject:object app-info)
+(cffi:defcfun ("g_app_info_dup" app-info-dup) (gobject:object app-info)
   (info (gobject:object app-info)))
 
 (export 'app-info-dup)
@@ -393,7 +393,7 @@ lambda (context info platform-data)    :run-last
 ;;;     TRUE if appinfo1 is equal to appinfo2. FALSE otherwise.
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_app_info_equal" app-info-equal) :boolean
+(cffi:defcfun ("g_app_info_equal" app-info-equal) :boolean
   (info1 (gobject:object app-info))
   (info2 (gobject:object app-info)))
 
@@ -418,7 +418,7 @@ lambda (context info platform-data)    :run-last
 ;;;     a string containing the application's ID.
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_app_info_get_id" app-info-id) :string
+(cffi:defcfun ("g_app_info_get_id" app-info-id) :string
   (appinfo gobject:object))
 
 (export 'app-info-id)
@@ -437,7 +437,7 @@ lambda (context info platform-data)    :run-last
 ;;;     the name of the application for appinfo.
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_app_info_get_name" app-info-name) :string
+(cffi:defcfun ("g_app_info_get_name" app-info-name) :string
   (appinfo gobject:object))
 
 (export 'app-info-name)
@@ -460,7 +460,7 @@ lambda (context info platform-data)    :run-last
 ;;; Since 2.24
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_app_info_get_display_name" app-info-display-name) :string
+(cffi:defcfun ("g_app_info_get_display_name" app-info-display-name) :string
   (appinfo gobject:object))
 
 (export 'app-info-display-name)
@@ -480,7 +480,7 @@ lambda (context info platform-data)    :run-last
 ;;;     if none.
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_app_info_get_description" app-info-description) :string
+(cffi:defcfun ("g_app_info_get_description" app-info-description) :string
   (appinfo gobject:object))
 
 (export 'app-info-description)
@@ -499,7 +499,7 @@ lambda (context info platform-data)    :run-last
 ;;;     a string containing the appinfo's application binaries name
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_app_info_get_executable" app-info-executable) :string
+(cffi:defcfun ("g_app_info_get_executable" app-info-executable) :string
   (appinfo gobject:object))
 
 (export 'app-info-executable)
@@ -521,7 +521,7 @@ lambda (context info platform-data)    :run-last
 ;;; Since 2.20
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_app_info_get_commandline" app-info-commandline) :string
+(cffi:defcfun ("g_app_info_get_commandline" app-info-commandline) :string
   (appinfo gobject:object))
 
 (export 'app-info-commandline)
@@ -540,7 +540,7 @@ lambda (context info platform-data)    :run-last
 ;;;     the default GIcon for appinfo or NULL if there is no default icon
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_app_info_get_icon" app-info-icon) (gobject:object icon)
+(cffi:defcfun ("g_app_info_get_icon" app-info-icon) (gobject:object icon)
   (appinfo gobject:object))
 
 (export 'app-info-icon)
@@ -596,14 +596,14 @@ lambda (context info platform-data)    :run-last
 ;;;     TRUE on successful launch, FALSE otherwise.
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_app_info_launch" %app-info-launch) :boolean
+(cffi:defcfun ("g_app_info_launch" %app-info-launch) :boolean
   (info gobject:object)
   (files (glib:list-t gobject:object))
   (context (gobject:object app-launch-context))
   (err :pointer))
 
 (defun app-info-launch (info files context)
-  (with-g-error (err)
+  (glib:with-g-error (err)
     (%app-info-launch info files context err)))
 
 (export 'app-info-launch)
@@ -622,7 +622,7 @@ lambda (context info platform-data)    :run-last
 ;;;     TRUE if the appinfo supports files.
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_app_info_supports_files" app-info-supports-files) :boolean
+(cffi:defcfun ("g_app_info_supports_files" app-info-supports-files) :boolean
   (info gobject:object))
 
 (export 'app-info-supports-files)
@@ -641,7 +641,7 @@ lambda (context info platform-data)    :run-last
 ;;;     TRUE if the appinfo supports URIs.
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_app_info_supports_uris" app-info-supports-uris) :boolean
+(cffi:defcfun ("g_app_info_supports_uris" app-info-supports-uris) :boolean
   (info gobject:object))
 
 (export 'app-info-supports-uris)
@@ -681,14 +681,14 @@ lambda (context info platform-data)    :run-last
 ;;;     TRUE on successful launch, FALSE otherwise.
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_app_info_launch_uris" %app-info-launch-uris) :boolean
+(cffi:defcfun ("g_app_info_launch_uris" %app-info-launch-uris) :boolean
   (info gobject:object)
   (uris (glib:list-t :string))
   (context (gobject:object app-launch-context))
   (err :pointer))
 
 (defun app-info-launch-uris (info uris context)
-  (with-g-error (err)
+  (glib:with-g-error (err)
     (%app-info-launch-uris info uris context err)))
 
 (export 'app-info-launch-uris)
@@ -772,7 +772,7 @@ lambda (context info platform-data)    :run-last
 ;;;     TRUE if the appinfo should be shown, FALSE otherwise.
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_app_info_should_show" app-info-should-show) :boolean
+(cffi:defcfun ("g_app_info_should_show" app-info-should-show) :boolean
   (info gobject:object))
 
 (export 'app-info-should-show)
@@ -794,7 +794,7 @@ lambda (context info platform-data)    :run-last
 ;;; Since 2.20
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_app_info_can_delete" app-info-can-delete) :boolean
+(cffi:defcfun ("g_app_info_can_delete" app-info-can-delete) :boolean
   (info gobject:object))
 
 (export 'app-info-can-delete)
@@ -821,7 +821,7 @@ lambda (context info platform-data)    :run-last
 ;;; Since 2.20
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_app_info_delete" app-info-delete) :boolean
+(cffi:defcfun ("g_app_info_delete" app-info-delete) :boolean
   (info gobject:object))
 
 (export 'app-info-delete)
@@ -842,8 +842,8 @@ lambda (context info platform-data)    :run-last
 ;;; Since 2.20
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_app_info_reset_type_associations" app-info-reset-type-associations)
-    :void
+(cffi:defcfun ("g_app_info_reset_type_associations"
+                app-info-reset-type-associations) :void
   (content-type :string))
 
 (export 'app-info-reset-type-associations)
@@ -870,14 +870,14 @@ lambda (context info platform-data)    :run-last
 ;;;     TRUE on success, FALSE on error.
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_app_info_set_as_default_for_type"
-           %app-info-set-as-default-for-type) :boolean
+(cffi:defcfun ("g_app_info_set_as_default_for_type"
+                %app-info-set-as-default-for-type) :boolean
   (info gobject:object)
   (content-type :string)
   (err :pointer))
 
 (defun app-info-set-as-default-for-type (info content-type)
-  (with-g-error (err)
+  (glib:with-g-error (err)
     (%app-info-set-as-default-for-type info content-type err)))
 
 (export 'app-info-set-as-default-for-type)
@@ -904,14 +904,14 @@ lambda (context info platform-data)    :run-last
 ;;;     TRUE on success, FALSE on error.
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_app_info_set_as_default_for_extension"
-           %app-info-set-as-default-for-extension) :boolean
+(cffi:defcfun ("g_app_info_set_as_default_for_extension"
+                %app-info-set-as-default-for-extension) :boolean
   (info gobject:object)
   (extension :string)
   (err :pointer))
 
 (defun app-info-set-as-default-for-extension (info extension)
-  (with-g-error (err)
+  (glib:with-g-error (err)
     (%app-info-set-as-default-for-extension info extension err)))
 
 (export 'app-info-set-as-default-for-extension)
@@ -941,14 +941,14 @@ lambda (context info platform-data)    :run-last
 ;;;     TRUE on success, FALSE on error.
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_app_info_set_as_last_used_for_type"
-           %app-info-set-as-last-used-for-type) :boolean
+(cffi:defcfun ("g_app_info_set_as_last_used_for_type"
+                %app-info-set-as-last-used-for-type) :boolean
   (info gobject:object)
   (content-type :string)
   (err :pointer))
 
 (defun app-info-set-as-last-used-for-type (info content-type)
-  (with-g-error (err)
+  (glib:with-g-error (err)
     (%app-info-set-as-last-used-for-type info content-type err)))
 
 (export 'app-info-set-last-used-for-type)
@@ -976,13 +976,14 @@ lambda (context info platform-data)    :run-last
 ;;;     TRUE on success, FALSE on error.
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_app_info_add_supports_type" %app-info-add-supports-type) :boolean
+(cffi:defcfun ("g_app_info_add_supports_type" %app-info-add-supports-type)
+    :boolean
   (info gobject:object)
   (content-type :string)
   (err :pointer))
 
 (defun app-info-add-supports-type (info content-type)
-  (with-g-error (err)
+  (glib:with-g-error (err)
     (%app-info-add-supports-type info content-type err)))
 
 (export 'app-info-add-supports-type)
@@ -1002,8 +1003,8 @@ lambda (context info platform-data)    :run-last
 ;;;     appinfo, FALSE if not.
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_app_info_can_remove_supports_type"
-           app-info-can-remove-supports-type) :boolean
+(cffi:defcfun ("g_app_info_can_remove_supports_type"
+                app-info-can-remove-supports-type) :boolean
   (info gobject:object))
 
 (export 'app-info-can-remove-supports-type)
@@ -1030,14 +1031,14 @@ lambda (context info platform-data)    :run-last
 ;;;     TRUE on success, FALSE on error.
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_app_info_remove_supports_type" %app-info-remove-supports-type)
+(cffi:defcfun ("g_app_info_remove_supports_type" %app-info-remove-supports-type)
     :boolean
   (info gobject:object)
   (content-type :string)
   (err :pointer))
 
 (defun app-info-remove-supports-type (info content-type)
-  (with-g-error (err)
+  (glib:with-g-error (err)
     (%app-info-remove-supports-type info content-type err)))
 
 (export 'app-info-remove-supports-type)
@@ -1062,7 +1063,8 @@ lambda (context info platform-data)    :run-last
 ;;; Since 2.34
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_app_info_get_supported_types" app-info-supported-types) glib:strv-t
+(cffi:defcfun ("g_app_info_get_supported_types" app-info-supported-types)
+    glib:strv-t
   (info gobject:object))
 
 (export 'app-info-supported-types)
@@ -1083,7 +1085,7 @@ lambda (context info platform-data)    :run-last
 ;;;     a newly allocated GList of references to GAppInfos
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_app_info_get_all" app-info-all) (glib:list-t gobject:object))
+(cffi:defcfun ("g_app_info_get_all" app-info-all) (glib:list-t gobject:object))
 
 (export 'app-info-all)
 
@@ -1103,7 +1105,7 @@ lambda (context info platform-data)    :run-last
 ;;;     GList of GAppInfos for given content_type or NULL on error
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_app_info_get_all_for_type" app-info-all-for-type)
+(cffi:defcfun ("g_app_info_get_all_for_type" app-info-all-for-type)
     (glib:list-t gobject:object)
   (content-type :string))
 
@@ -1127,7 +1129,7 @@ lambda (context info platform-data)    :run-last
 ;;;     GAppInfo for given content_type or NULL on error
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_app_info_get_default_for_type" app-info-default-for-type)
+(cffi:defcfun ("g_app_info_get_default_for_type" app-info-default-for-type)
     (gobject:object app-info)
   (content-type :string)
   (must-support-uris :boolean))
@@ -1158,8 +1160,8 @@ lambda (context info platform-data)    :run-last
 ;;;     GAppInfo for given uri_scheme or NULL on error
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_app_info_get_default_for_uri_scheme"
-           app-info-default-for-uri-scheme) (gobject:object app-info)
+(cffi:defcfun ("g_app_info_get_default_for_uri_scheme"
+                app-info-default-for-uri-scheme) (gobject:object app-info)
   (uri-scheme :string))
 
 (export 'app-info-default-for-uri-scheme)
@@ -1190,7 +1192,7 @@ lambda (context info platform-data)    :run-last
 ;;; Since 2.28
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_app_info_get_fallback_for_type" app-info-fallback-for-type)
+(cffi:defcfun ("g_app_info_get_fallback_for_type" app-info-fallback-for-type)
     (glib:list-t gobject:object)
   (content-type :string))
 
@@ -1216,8 +1218,8 @@ lambda (context info platform-data)    :run-last
 ;;; Since 2.28
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_app_info_get_recommended_for_type" app-info-recommended-for-type)
-    (glib:list-t gobject:object)
+(cffi:defcfun ("g_app_info_get_recommended_for_type"
+                app-info-recommended-for-type) (glib:list-t gobject:object)
   (content-type :string))
 
 (export 'app-info-recommended-for-type)
@@ -1226,8 +1228,8 @@ lambda (context info platform-data)    :run-last
 ;;; g_app_info_launch_default_for_uri ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_app_info_launch_default_for_uri"
-          %app-info-launch-default-for-uri) :boolean
+(cffi:defcfun ("g_app_info_launch_default_for_uri"
+                %app-info-launch-default-for-uri) :boolean
   (uri :string)
   (context (gobject:object app-launch-context))
   (err :pointer))
@@ -1245,7 +1247,7 @@ lambda (context info platform-data)    :run-last
   Synchronous I/O is done on the URI to detect the type of the file if required.
   @see-class{g:app-info}
   @see-class{g:app-launch-context}"
-  (with-ignore-g-error (err)
+  (glib:with-ignore-g-error (err)
     (%app-info-launch-default-for-uri uri context err)))
 
 (export 'app-info-launch-default-for-uri)
@@ -1350,7 +1352,7 @@ lambda (context info platform-data)    :run-last
 ;;; Since 2.32
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_app_launch_context_setenv" app-launch-context-setenv) :void
+(cffi:defcfun ("g_app_launch_context_setenv" app-launch-context-setenv) :void
   (context (gobject:object app-launch-context))
   (variable :string)
   (value :string))
@@ -1375,7 +1377,8 @@ lambda (context info platform-data)    :run-last
 ;;; Since 2.32
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_app_launch_context_unsetenv" app-launch-context-unsetenv) :void
+(cffi:defcfun ("g_app_launch_context_unsetenv" app-launch-context-unsetenv)
+    :void
   (context (gobject:object app-launch-context))
   (variable :string))
 
@@ -1399,8 +1402,8 @@ lambda (context info platform-data)    :run-last
 ;;; Since 2.32
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_app_launch_context_get_environment" app-launch-context-environment)
-  glib:strv-t
+(cffi:defcfun ("g_app_launch_context_get_environment"
+                app-launch-context-environment) glib:strv-t
   (context (gobject:object app-launch-context)))
 
 (export 'app-launch-context-environment)
@@ -1429,7 +1432,8 @@ lambda (context info platform-data)    :run-last
 ;;;     a display string for the display.
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_app_launch_context_get_display" app-launch-context-display) :string
+(cffi:defcfun ("g_app_launch_context_get_display" app-launch-context-display)
+    :string
   (context (gobject:object app-launch-context))
   (info gobject:object)
   (files (glib:list-t gobject:object)))
@@ -1463,8 +1467,8 @@ lambda (context info platform-data)    :run-last
 ;;;     a startup notification ID for the application, or NULL if not supported.
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_app_launch_context_get_startup_notify_id"
-           app-launch-context-startup-notify-id) :string
+(cffi:defcfun ("g_app_launch_context_get_startup_notify_id"
+                app-launch-context-startup-notify-id) :string
   (context (gobject:object app-launch-context))
   (info gobject:object)
   (files (glib:list-t gobject:object)))
@@ -1490,7 +1494,7 @@ lambda (context info platform-data)    :run-last
 ;;;     g_app_launch_context_get_startup_notify_id().
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_app_launch_context_failed" app-launch-context-failed) :void
+(cffi:defcfun ("g_app_launch_context_failed" app-launch-context-failed) :void
   (context (gobject:object app-launch-context))
   (startup-notify-id :string))
 

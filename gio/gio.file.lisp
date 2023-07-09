@@ -2,28 +2,29 @@
 ;;; gio.file.lisp
 ;;;
 ;;; The documentation of this file is taken from the GIO Reference Manual
-;;; Version 2.74 and modified to document the Lisp binding to the GIO library.
+;;; Version 2.76 and modified to document the Lisp binding to the GIO library.
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
-;;; available from <http://www.crategus.com/books/cl-cffi-gtk/>.
+;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
 ;;; Copyright (C) 2020 - 2023 Dieter Kaiser
 ;;;
-;;; This program is free software: you can redistribute it and/or modify
-;;; it under the terms of the GNU Lesser General Public License for Lisp
-;;; as published by the Free Software Foundation, either version 3 of the
-;;; License, or (at your option) any later version and with a preamble to
-;;; the GNU Lesser General Public License that clarifies the terms for use
-;;; with Lisp programs and is referred as the LLGPL.
+;;; Permission is hereby granted, free of charge, to any person obtaining a
+;;; copy of this software and associated documentation files (the "Software"),
+;;; to deal in the Software without restriction, including without limitation
+;;; the rights to use, copy, modify, merge, publish, distribute, sublicense,
+;;; and/or sell copies of the Software, and to permit persons to whom the
+;;; Software is furnished to do so, subject to the following conditions:
 ;;;
-;;; This program is distributed in the hope that it will be useful,
-;;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;;; GNU Lesser General Public License for more details.
+;;; The above copyright notice and this permission notice shall be included in
+;;; all copies or substantial portions of the Software.
 ;;;
-;;; You should have received a copy of the GNU Lesser General Public
-;;; License along with this program and the preamble to the Gnu Lesser
-;;; General Public License.  If not, see <http://www.gnu.org/licenses/>
-;;; and <http://opensource.franz.com/preamble.html>.
+;;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+;;; IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+;;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+;;; THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+;;; LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+;;; FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+;;; DEALINGS IN THE SOFTWARE.
 ;;; ----------------------------------------------------------------------------
 ;;;
 ;;; GFile
@@ -206,7 +207,7 @@
 ;;; gio:file-as-namestring
 ;;; ----------------------------------------------------------------------------
 
-(define-foreign-type file-as-namestring-type ()
+(cffi:define-foreign-type file-as-namestring-type ()
   ()
   (:actual-type :pointer)
   (:simple-parser file-as-namestring))
@@ -371,7 +372,7 @@
 ;;; enum GFilesystemPreviewType
 ;;; ----------------------------------------------------------------------------
 
-(define-g-enum "GFilesystemPreviewType" filesystem-preview-type
+(gobject:define-g-enum "GFilesystemPreviewType" filesystem-preview-type
   (:export t
    :type-initializer "g_filesystem_preview_type_get_type")
   (:if-always 0)
@@ -389,7 +390,7 @@
   @end{short}
   Returned as the value of the \"filesystem::use-preview\" key.
   @begin{pre}
-(define-g-enum \"GFilesystemPreviewType\" filesystem-preview-type
+(gobject:define-g-enum \"GFilesystemPreviewType\" filesystem-preview-type
   (:export t
    :type-initializer \"g_filesystem_preview_type_get_type\")
   (:if-always 0)
@@ -411,7 +412,7 @@
 ;; TODO: Implement a conversion of GFile objects to Lisp pathnames or
 ;; namestrings.
 
-(define-g-interface "GFile" file
+(gobject:define-g-interface "GFile" file
   (:export t
    :type-initializer "g_file_get_type")
   nil)
@@ -612,7 +613,7 @@
 ;;; g_file_new_for_path ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_file_new_for_path" %file-new-for-path) (gobject:object file)
+(cffi:defcfun ("g_file_new_for_path" %file-new-for-path) (gobject:object file)
   (path :string))
 
 (defun file-new-for-path (path)
@@ -635,7 +636,7 @@
 ;;; g_file_new_for_uri ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_file_new_for_uri" file-new-for-uri) (gobject:object file)
+(cffi:defcfun ("g_file_new_for_uri" file-new-for-uri) (gobject:object file)
  #+liber-documentation
  "@version{2022-12-27}
   @argument[uri]{a UTF-8 string containing a URI}
@@ -655,7 +656,7 @@
 ;;; g_file_new_for_commandline_arg ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_file_new_for_commandline_arg" file-new-for-commandline-arg)
+(cffi:defcfun ("g_file_new_for_commandline_arg" file-new-for-commandline-arg)
     (gobject:object file)
  #+liber-documentation
  "@version{2022-12-27}
@@ -690,8 +691,8 @@
 ;;; g_file_new_for_commandline_arg_and_cwd ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_file_new_for_commandline_arg_and_cwd"
-           file-new-for-commandline-arg-and-cwd) (gobject:object file)
+(cffi:defcfun ("g_file_new_for_commandline_arg_and_cwd"
+                file-new-for-commandline-arg-and-cwd) (gobject:object file)
  #+liber-documentation
  "@version{2022-12-27}
   @argument[arg]{a command line string}
@@ -755,7 +756,7 @@
 ;;; g_file_parse_name ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_file_parse_name" file-parse-name) (gobject:object file)
+(cffi:defcfun ("g_file_parse_name" file-parse-name) (gobject:object file)
  #+liber-documentation
  "@version{2022-12-27}
   @argument[parsename]{a string with a file name or path to be parsed}
@@ -870,7 +871,7 @@
 ;;; g_file_get_basename ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_file_get_basename" file-basename) :string
+(cffi:defcfun ("g_file_get_basename" file-basename) :string
  #+liber-documentation
  "@version{2022-12-27}
   @argument[file]{a input @class{g:file} object}
@@ -901,7 +902,7 @@
 ;;; g_file_get_path () -> file-path
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_file_get_path" file-path) (:string :free-from-foreign t)
+(cffi:defcfun ("g_file_get_path" file-path) (:string :free-from-foreign t)
  #+liber-documentation
  "@version{2022-12-27}
   @argument[file]{an input @class{g:file} object}
@@ -946,7 +947,7 @@
 ;;; g_file_get_uri ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_file_get_uri" file-uri) (:string :free-from-foreign t)
+(cffi:defcfun ("g_file_get_uri" file-uri) (:string :free-from-foreign t)
  #+liber-documentation
  "@version{2022-12-27}
   @argument[file]{an input @class{g:file} object}
@@ -968,7 +969,7 @@
 ;;; g_file_get_parse_name ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_file_get_parse_name" file-get-parse-name) :string
+(cffi:defcfun ("g_file_get_parse_name" file-get-parse-name) :string
  #+liber-documentation
  "@version{2022-12-27}
   @argument[file]{a input @class{g:file} object}

@@ -69,7 +69,7 @@
 ;;; GListStore
 ;;; ----------------------------------------------------------------------------
 
-(define-g-object-class "GListStore" list-store
+(gobject:define-g-object-class "GListStore" list-store
   (:superclass gobject:object
    :export t
    :interfaces ("GListModel")
@@ -161,7 +161,7 @@
 ;; Use the C implementation and not MAKE-INSTANCE because we have to pass
 ;; a pointer of a GType for the ITEM-TYPE property.
 
-(defcfun ("g_list_store_new" list-store-new) (gobject:object list-store)
+(cffi:defcfun ("g_list_store_new" list-store-new) (gobject:object list-store)
  #+liber-documentation
  "@version{2023-5-4}
   @argument[itype]{a @class{g:type-t} type for the items in the list}
@@ -181,7 +181,7 @@
 ;;; g_list_store_insert ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_list_store_insert" list-store-insert) :void
+(cffi:defcfun ("g_list_store_insert" list-store-insert) :void
  #+liber-documentation
  "@version{#2022-12-31}
   @argument[store]{a @class{g:list-store} object}
@@ -248,7 +248,7 @@
 ;;; g_list_store_append ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_list_store_append" list-store-append) :void
+(cffi:defcfun ("g_list_store_append" list-store-append) :void
  #+liber-documentation
  "@version{2023-5-4}
   @argument[list]{a @class{g:list-store} object}
@@ -271,7 +271,7 @@
 ;;; g_list_store_remove ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_list_store_remove" list-store-remove) :void
+(cffi:defcfun ("g_list_store_remove" list-store-remove) :void
  #+liber-documentation
  "@version{#2022-12-31}
   @argument[list]{a @class{g:list-store} object}
@@ -296,7 +296,7 @@
 ;;; g_list_store_remove_all ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_list_store_remove_all" list-store-remove-all) :void
+(cffi:defcfun ("g_list_store_remove_all" list-store-remove-all) :void
  #+liber-documentation
  "@version{#2022-12-31}
   @argument[list]{a @class{g:list-store} object}
@@ -374,7 +374,7 @@
 ;;; g_list_store_find ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_list_store_find" %list-store-find) :boolean
+(cffi:defcfun ("g_list_store_find" %list-store-find) :boolean
   (list (gobject:object list-store))
   (item gobject:object)
   (position (:pointer :uint)))
@@ -398,7 +398,7 @@
   @code{GEqualFunc} instead.
   @see-class{g:list-store}
   @see-function{g:list-store-find-with-equal-func}"
-  (with-foreign-object (position :uint)
+  (cffi:with-foreign-object (position :uint)
     (when (%list-store-find list item position)
       (cffi:mem-ref position :uint))))
 

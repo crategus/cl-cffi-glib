@@ -2,28 +2,29 @@
 ;;; gio.menu.lisp
 ;;;
 ;;; The documentation of this file is taken from the GIO Reference Manual
-;;; Version 2.74 and modified to document the Lisp binding to the GIO library.
+;;; Version 2.76 and modified to document the Lisp binding to the GIO library.
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
-;;; available from <http://www.crategus.com/books/cl-cffi-gtk/>.
+;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
 ;;; Copyright (C) 2013 - 2023 Dieter Kaiser
 ;;;
-;;; This program is free software: you can redistribute it and/or modify
-;;; it under the terms of the GNU Lesser General Public License for Lisp
-;;; as published by the Free Software Foundation, either version 3 of the
-;;; License, or (at your option) any later version and with a preamble to
-;;; the GNU Lesser General Public License that clarifies the terms for use
-;;; with Lisp programs and is referred as the LLGPL.
+;;; Permission is hereby granted, free of charge, to any person obtaining a
+;;; copy of this software and associated documentation files (the "Software"),
+;;; to deal in the Software without restriction, including without limitation
+;;; the rights to use, copy, modify, merge, publish, distribute, sublicense,
+;;; and/or sell copies of the Software, and to permit persons to whom the
+;;; Software is furnished to do so, subject to the following conditions:
 ;;;
-;;; This program is distributed in the hope that it will be useful,
-;;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;;; GNU Lesser General Public License for more details.
+;;; The above copyright notice and this permission notice shall be included in
+;;; all copies or substantial portions of the Software.
 ;;;
-;;; You should have received a copy of the GNU Lesser General Public
-;;; License along with this program and the preamble to the Gnu Lesser
-;;; General Public License.  If not, see <http://www.gnu.org/licenses/>
-;;; and <http://opensource.franz.com/preamble.html>.
+;;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+;;; IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+;;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+;;; THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+;;; LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+;;; FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+;;; DEALINGS IN THE SOFTWARE.
 ;;; ----------------------------------------------------------------------------
 ;;;
 ;;; GMenu
@@ -87,7 +88,7 @@
 ;;; GMenu
 ;;; ----------------------------------------------------------------------------
 
-(define-g-object-class "GMenu" menu
+(gobject:define-g-object-class "GMenu" menu
   (:superclass menu-model
    :export t
    :interfaces nil
@@ -134,7 +135,7 @@
 ;;; g_menu_freeze ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_menu_freeze" menu-freeze) :void
+(cffi:defcfun ("g_menu_freeze" menu-freeze) :void
  #+liber-documentation
  "@version{#2022-12-29}
   @argument[menu]{a @class{g:menu} object}
@@ -156,7 +157,7 @@
 ;;; g_menu_insert ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_menu_insert" %menu-insert) :void
+(cffi:defcfun ("g_menu_insert" %menu-insert) :void
   (menu (gobject:object menu))
   (position :int)
   (label :string)
@@ -188,7 +189,7 @@
 ;;; g_menu_prepend ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_menu_prepend" %menu-prepend) :void
+(cffi:defcfun ("g_menu_prepend" %menu-prepend) :void
   (menu (gobject:object menu))
   (label :string)
   (action :string))
@@ -218,7 +219,7 @@
 ;;; g_menu_append ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_menu_append" %menu-append) :void
+(cffi:defcfun ("g_menu_append" %menu-append) :void
   (menu (gobject:object menu))
   (label :string)
   (action :string))
@@ -248,7 +249,7 @@
 ;;; g_menu_insert_item ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_menu_insert_item" menu-insert-item) :void
+(cffi:defcfun ("g_menu_insert_item" menu-insert-item) :void
  #+liber-documentation
  "@version{#2022-12-29}
   @argument[menu]{a @class{g:menu} object}
@@ -286,7 +287,7 @@
 ;;; g_menu_append_item ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_menu_append_item" menu-append-item) :void
+(cffi:defcfun ("g_menu_append_item" menu-append-item) :void
  #+liber-documentation
  "@version{#2022-12-29}
   @argument[menu]{a @class{g:menu} object}
@@ -307,7 +308,7 @@
 ;;; g_menu_prepend_item ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_menu_prepend_item" menu-prepend-item) :void
+(cffi:defcfun ("g_menu_prepend_item" menu-prepend-item) :void
  #+liber-documentation
  "@version{#2022-12-29}
   @argument[menu]{a @class{g:menu} object}
@@ -328,7 +329,7 @@
 ;;; g_menu_insert_section ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_menu_insert_section" %menu-insert-section) :void
+(cffi:defcfun ("g_menu_insert_section" %menu-insert-section) :void
   (menu (gobject:object menu))
   (position :int)
   (label :string)
@@ -362,7 +363,7 @@
 ;;; g_menu_prepend_section ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_menu_prepend_section" %menu-prepend-section) :void
+(cffi:defcfun ("g_menu_prepend_section" %menu-prepend-section) :void
   (menu (gobject:object menu))
   (label :string)
   (section (gobject:object menu-model)))
@@ -394,7 +395,7 @@
 ;;; g_menu_append_section ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_menu_append_section" %menu-append-section) :void
+(cffi:defcfun ("g_menu_append_section" %menu-append-section) :void
   (menu (gobject:object menu))
   (label :string)
   (section (gobject:object menu-model)))
@@ -426,7 +427,7 @@
 ;;; g_menu_append_submenu ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_menu_append_submenu" %menu-append-submenu) :void
+(cffi:defcfun ("g_menu_append_submenu" %menu-append-submenu) :void
   (menu (gobject:object menu))
   (label :string)
   (submenu (gobject:object menu-model)))
@@ -456,7 +457,7 @@
 ;;; g_menu_insert_submenu ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_menu_insert_submenu" %menu-insert-submenu) :void
+(cffi:defcfun ("g_menu_insert_submenu" %menu-insert-submenu) :void
   (menu (gobject:object menu))
   (position :int)
   (label :string)
@@ -490,7 +491,7 @@
 ;;; g_menu_prepend_submenu ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_menu_prepend_submenu" %menu-prepend-submenu) :void
+(cffi:defcfun ("g_menu_prepend_submenu" %menu-prepend-submenu) :void
   (menu (gobject:object menu))
   (label :string)
   (submenu (gobject:object menu-model)))
@@ -522,7 +523,7 @@
 ;;; g_menu_remove ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_menu_remove" menu-remove) :void
+(cffi:defcfun ("g_menu_remove" menu-remove) :void
  #+liber-documentation
  "@version{#2022-12-29}
   @argument[menu]{a @class{g:menu} object}
@@ -548,7 +549,7 @@
 ;;; g_menu_remove_all ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_menu_remove_all" menu-remove-all) :void
+(cffi:defcfun ("g_menu_remove_all" menu-remove-all) :void
  #+liber-documentation
  "@version{#2022-12-29}
   @begin{short}
@@ -563,7 +564,7 @@
 ;;; GMenuItem
 ;;; ----------------------------------------------------------------------------
 
-(define-g-object-class "GMenuItem" menu-item
+(gobject:define-g-object-class "GMenuItem" menu-item
   (:superclass gobject:object
    :export t
    :interfaces nil
@@ -584,7 +585,7 @@
 ;;; g_menu_item_new ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_menu_item_new" %menu-item-new) (gobject:object menu-item)
+(cffi:defcfun ("g_menu_item_new" %menu-item-new) (gobject:object menu-item)
   (label :string)
   (action :string))
 
@@ -614,7 +615,7 @@
 ;;; g_menu_item_new_section ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_menu_item_new_section" %menu-item-new-section)
+(cffi:defcfun ("g_menu_item_new_section" %menu-item-new-section)
     (gobject:object menu-item)
   (label :string)
   (section (gobject:object menu-model)))
@@ -696,7 +697,7 @@
 ;;; g_menu_item_new_submenu ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_menu_item_new_submenu" %menu-item-new-submenu)
+(cffi:defcfun ("g_menu_item_new_submenu" %menu-item-new-submenu)
     (gobject:object menu-item)
   (label :string)
   (submenu (gobject:object menu-model)))
@@ -725,7 +726,7 @@
 ;;; g_menu_item_new_from_model ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_menu_item_new_from_model" menu-item-new-from-model)
+(cffi:defcfun ("g_menu_item_new_from_model" menu-item-new-from-model)
     (gobject:object menu-item)
  #+liber-documentation
  "@version{#2022-12-29}
@@ -750,7 +751,7 @@
 ;;; g_menu_item_set_label ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_menu-item_set_label" %menu-item-set-label) :void
+(cffi:defcfun ("g_menu-item_set_label" %menu-item-set-label) :void
   (item (gobject:object menu-item))
   (label :string))
 
@@ -773,7 +774,7 @@
 ;;; g_menu_item_set_icon ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_menu_item_set_icon" menu-item-set-icon) :void
+(cffi:defcfun ("g_menu_item_set_icon" menu-item-set-icon) :void
  #+liber-documentation
  "@version{#2022-12-29}
   @argument[item]{a @class{g:menu-item} object}
@@ -802,8 +803,8 @@
 ;;; g_menu_item_set_action_and_target_value ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_menu_item_set_action_and_target_value"
-          %menu-item-set-action-and-target-value) :void
+(cffi:defcfun ("g_menu_item_set_action_and_target_value"
+               %menu-item-set-action-and-target-value) :void
   (item (gobject:object menu-item))
   (action :string)
   (value (:pointer (:struct glib:variant))))
@@ -906,7 +907,8 @@
 ;;; g_menu_item_set_detailed_action ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_menu_item_set_detailed_action" menu-item-set-detailed-action) :void
+(cffi:defcfun ("g_menu_item_set_detailed_action" menu-item-set-detailed-action)
+    :void
  #+liber-documentation
  "@version{#2022-12-29}
   @argument[item]{a @class{g:menu-item} object}
@@ -936,7 +938,7 @@
 ;;; g_menu_item_set_section ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_menu_item_set_section" %menu-item-set-section) :void
+(cffi:defcfun ("g_menu_item_set_section" %menu-item-set-section) :void
   (item (gobject:object menu-item))
   (section (gobject:object menu-model)))
 
@@ -963,7 +965,7 @@
 ;;; g_menu_item_set_submenu ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_menu_item_set_submenu" %menu-item-set-submenu) :void
+(cffi:defcfun ("g_menu_item_set_submenu" %menu-item-set-submenu) :void
   (item (gobject:object menu-item))
   (submenu (gobject:object menu-model)))
 
@@ -999,7 +1001,7 @@
                         :void)
   value)
 
-(defcfun ("g_menu_item_get_attribute_value" %menu-item-attribute-value)
+(cffi:defcfun ("g_menu_item_get_attribute_value" %menu-item-attribute-value)
     (:pointer (:struct glib:variant))
   (item (gobject:object menu-item))
   (attribute :string)
@@ -1136,7 +1138,8 @@
                         :void)
   value)
 
-(defcfun ("g_menu_item_get_link" menu-item-link) (gobject:object menu-model)
+(cffi:defcfun ("g_menu_item_get_link" menu-item-link)
+    (gobject:object menu-model)
  #+liber-documentation
  "@version{#2022-12-29}
   @syntax[]{(g:menu-item-link item link) => model}

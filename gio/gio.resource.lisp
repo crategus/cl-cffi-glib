@@ -108,7 +108,7 @@
 ;;; enum GResourceFlags
 ;;; ----------------------------------------------------------------------------
 
-(define-g-flags "GResourceFlags" resource-flags
+(gobject:define-g-flags "GResourceFlags" resource-flags
   (:export t
    :type-initializer "g_resource_flags_get_type")
   (:none 0)
@@ -124,7 +124,7 @@
     inside a resource bundle.
   @end{short}
   @begin{pre}
-(define-g-flags \"GResourceFlags\" resource-flags
+(gobject:define-g-flags \"GResourceFlags\" resource-flags
   (:export t
    :type-initializer \"g_resource_flags_get_type\")
   (:none 0)
@@ -140,7 +140,7 @@
 ;;; enum GResourceLookupFlags
 ;;; ----------------------------------------------------------------------------
 
-(define-g-flags "GResourceLookupFlags" resource-lookup-flags
+(gobject:define-g-flags "GResourceLookupFlags" resource-lookup-flags
   (:export t
    :type-initializer "g_resource_lookup_flags_get_type")
   (:none 0))
@@ -155,7 +155,7 @@
     are handled.
   @end{short}
   @begin{pre}
-(define-g-flags \"GResourceLookupFlags\" resource-lookup-flags
+(gobject:define-g-flags \"GResourceLookupFlags\" resource-lookup-flags
   (:export t
    :type-initializer \"g_resource_lookup_flags_get_type\")
   (:none 0))
@@ -364,7 +364,7 @@
 ;;; g_resource_load ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_resource_load" %resource-load) (glib:boxed resource :return)
+(cffi:defcfun ("g_resource_load" %resource-load) (glib:boxed resource :return)
   (filename :string)
   (err :pointer))
 
@@ -383,7 +383,7 @@
   signals an error if the resource file does not exist.
   @see-class{g:resource}
   @see-function{g:resources-register}"
-  (with-g-error (err)
+  (glib:with-g-error (err)
     (%resource-load (namestring path) err)))
 
 (export 'resource-load)
@@ -423,7 +423,7 @@
 ;;; g_resource_ref ()                                      not needed
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_resource_ref" resource-ref) (glib:boxed resource)
+(cffi:defcfun ("g_resource_ref" resource-ref) (glib:boxed resource)
  #+liber-documentation
  "@version{#2022-12-30}
   @argument[resource]{a @class{g:resource} instance}
@@ -439,7 +439,7 @@
 ;;; g_resource_unref ()                                    not needed
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_resource_unref" resource-unref) :void
+(cffi:defcfun ("g_resource_unref" resource-unref) :void
  #+liber-documentation
  "@version{#2022-12-30}
   @argument[resource]{a @class{g:resource} instance}
@@ -455,7 +455,7 @@
 ;;; g_resource_lookup_data ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_resource_lookup_data" %resource-lookup-data) :pointer
+(cffi:defcfun ("g_resource_lookup_data" %resource-lookup-data) :pointer
   (resource (glib:boxed resource))
   (path :string)
   (lookup resource-lookup-flags)
@@ -484,7 +484,7 @@
   The @arg{lookup} argument controls the behaviour of the lookup.
   @see-class{g:resource}
   @see-symbol{g:resource-lookup-flags}"
-  (with-g-error (err)
+  (glib:with-g-error (err)
     (%resource-lookup-data resource path lookup err)))
 
 (export 'resource-lookup-data)
@@ -526,7 +526,7 @@
 ;;; g_resource_enumerate_children ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_resource_enumerate_children" %resource-enumerate-children)
+(cffi:defcfun ("g_resource_enumerate_children" %resource-enumerate-children)
     glib:strv-t
   (resource (glib:boxed resource))
   (path :string)
@@ -547,7 +547,7 @@
   the behaviour of the lookup.
   @see-class{g:resource}
   @see-symbol{g:resource-lookup-flags}"
-  (with-g-error (err)
+  (glib:with-g-error (err)
     (%resource-enumerate-children resource path lookup err)))
 
 (export 'resource-enumerate-children)
@@ -556,7 +556,7 @@
 ;;; g_resource_get_info () -> resource-info
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_resource_get_info" %resource-info) :boolean
+(cffi:defcfun ("g_resource_get_info" %resource-info) :boolean
   (resource (glib:boxed resource))
   (path :string)
   (lookup resource-lookup-flags)
@@ -581,8 +581,8 @@
   The @arg{lookup} argument controls the behaviour of the lookup.
   @see-class{g:resource}
   @see-symbol{g:resource-lookup-flags}"
-  (with-g-error (err)
-    (with-foreign-objects ((size :size) (flags :uint32))
+  (glib:with-g-error (err)
+    (cffi:with-foreign-objects ((size :size) (flags :uint32))
       (when (%resource-info resource path lookup size flags err)
         (values (cffi:mem-ref size :size)
                 (cffi:mem-ref flags :uint32))))))
@@ -648,7 +648,7 @@
 ;;; g_resources_register ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_resources_register" resources-register) :void
+(cffi:defcfun ("g_resources_register" resources-register) :void
  #+liber-documentation
  "@version{2022-12-30}
   @argument[resource]{a @class{g:resource} instance}
@@ -668,7 +668,7 @@
 ;;; g_resources_unregister ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_resources_unregister" resources-unregister) :void
+(cffi:defcfun ("g_resources_unregister" resources-unregister) :void
  #+liber-documentation
  "@version{2022-12-30}
   @argument[resource]{a @class{g:resource} instance}
@@ -685,7 +685,7 @@
 ;;; g_resources_lookup_data
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_resources_lookup_data" %resources-lookup-data) :pointer
+(cffi:defcfun ("g_resources_lookup_data" %resources-lookup-data) :pointer
   (path :string)
   (lookup resource-lookup-flags)
   (err :pointer))
@@ -713,7 +713,7 @@
   The @arg{lookup} argument controls the behaviour of the lookup.
   @see-class{g:resource}
   @see-symbol{g:resource-lookup-flags}"
-  (with-g-error (err)
+  (glib:with-g-error (err)
     (%resources-lookup-data path lookup err)))
 
 (export 'resources-lookup-data)
@@ -751,7 +751,7 @@
 ;;; g_resources_enumerate_children ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_resources_enumerate_children" %resources-enumerate-children)
+(cffi:defcfun ("g_resources_enumerate_children" %resources-enumerate-children)
     glib:strv-t
   (path :string)
   (lookup resource-lookup-flags)
@@ -770,7 +770,7 @@
   The @arg{lookup} argument controls the behaviour of the lookup.
   @see-class{g:resource}
   @see-symbol{g:resource-lookup-flags}"
-  (with-g-error (err)
+  (glib:with-g-error (err)
     (%resources-enumerate-children path lookup err)))
 
 (export 'resources-enumerate-children)
@@ -779,7 +779,7 @@
 ;;; g_resources_get_info () -> resources-info
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_resources_get_info" %resources-info) :boolean
+(cffi:defcfun ("g_resources_get_info" %resources-info) :boolean
   (path :string)
   (lookup resource-lookup-flags)
   (size (:pointer :size))
@@ -802,8 +802,8 @@
   The @arg{lookup} argument controls the behaviour of the lookup.
   @see-class{g:resource}
   @see-symbol{g:resource-lookup-flags}"
-  (with-g-error (err)
-    (with-foreign-objects ((size :size) (flags :uint32))
+  (glib:with-g-error (err)
+    (cffi:with-foreign-objects ((size :size) (flags :uint32))
       (when (%resources-info path lookup size flags err)
         (values (cffi:mem-ref size :size)
                 (cffi:mem-ref flags :uint32))))))

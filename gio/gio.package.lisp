@@ -28,19 +28,10 @@
 ;;; ----------------------------------------------------------------------------
 
 (defpackage :gio
-  (:use :common-lisp)
-  (:import-from #:cffi    #:with-foreign-object
-                          #:with-foreign-objects
-                          #:with-foreign-slots
-                          #:define-foreign-type
-                          #:define-parse-method
-                          #:defcfun)
-  (:import-from #:glib    #:with-g-error
-                          #:with-ignore-g-error)
-  (:import-from #:gobject #:define-g-interface
-                          #:define-g-object-class
-                          #:define-g-enum
-                          #:define-g-flags))
+  (:use :iterate :common-lisp)
+  (:import-from #:cffi)
+  (:import-from #:glib)
+  (:import-from #:gobject))
 
 #+liber-documentation
 (setf (documentation (find-package :gio) t)

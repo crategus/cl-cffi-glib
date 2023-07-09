@@ -2,9 +2,9 @@
 ;;; gio.action-map.lisp
 ;;;
 ;;; The documentation of this file is taken from the GIO Reference Manual
-;;; Version 2.68 and modified to document the Lisp binding to the GIO library.
+;;; Version 2.76 and modified to document the Lisp binding to the GIO library.
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
-;;; available from <http://www.crategus.com/books/cl-cffi-gtk/>.
+;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
 ;;; Copyright (C) 2012 - 2023 Dieter Kaiser
 ;;;
@@ -63,7 +63,7 @@
 ;;; GActionMap
 ;;; ----------------------------------------------------------------------------
 
-(define-g-interface "GActionMap" action-map
+(gobject:define-g-interface "GActionMap" action-map
   (:export t
    :type-initializer "g_action_map_get_type")
   nil)
@@ -90,7 +90,7 @@
 ;;; g_action_map_lookup_action ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_action_map_lookup_action" action-map-lookup-action)
+(cffi:defcfun ("g_action_map_lookup_action" action-map-lookup-action)
     (gobject:object action)
  #+liber-documentation
  "@version{2023-3-19}
@@ -199,7 +199,7 @@
 ;;; g_action_map_add_action ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_action_map_add_action" %action-map-add-action) :void
+(cffi:defcfun ("g_action_map_add_action" %action-map-add-action) :void
   (map :pointer)
   (action :pointer))
 
@@ -225,7 +225,7 @@
 ;;; g_action_map_remove_action ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_action_map_remove_action" action-map-remove-action) :void
+(cffi:defcfun ("g_action_map_remove_action" action-map-remove-action) :void
  #+liber-documentation
  "@version{#2022-12-30}
   @argument[map]{a @class{g:action-map} object}

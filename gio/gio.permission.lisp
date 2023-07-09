@@ -67,7 +67,7 @@
 ;;; GPermission
 ;;; ----------------------------------------------------------------------------
 
-(define-g-object-class "GPermission" permission
+(gobject:define-g-object-class "GPermission" permission
   (:superclass gobject:object
    :export t
    :interfaces ()
@@ -195,7 +195,7 @@
 ;;; g_permission_acquire ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_permission_acquire" %permission-acquire) :boolean
+(cffi:defcfun ("g_permission_acquire" %permission-acquire) :boolean
   (permission (gobject:object permission))
   (cancellable :pointer)
   (err :pointer))
@@ -222,7 +222,7 @@
   @see-class{g:permission}
   @see-function{g:permission-can-acquire}"
   (let ((cancellable (if cancellable cancellable (cffi:null-pointer))))
-    (with-g-error (err)
+    (glib:with-g-error (err)
       (%permission-acquire permission cancellable err))))
 
 (export 'permission-acquire)
@@ -309,7 +309,7 @@
 ;;; Since: 2.26
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_permission_release" %permission-release) :boolean
+(cffi:defcfun ("g_permission_release" %permission-release) :boolean
   (permission (gobject:object permission))
   (cancellable :pointer)
   (err :pointer))
@@ -336,7 +336,7 @@
   @see-class{g:permission}
   @see-function{g:permission-can-release}"
   (let ((cancellable (if cancellable cancellable (cffi:null-pointer))))
-    (with-g-error (err)
+    (glib:with-g-error (err)
       (%permission-release permission cancellable err))))
 
 (export 'permission-release)

@@ -56,7 +56,7 @@
 ;;; GAsyncResult
 ;;; ----------------------------------------------------------------------------
 
-(define-g-interface "GAsyncResult" async-result
+(gobject:define-g-interface "GAsyncResult" async-result
   (:export t
    :type-initializer "g_async_result_get_type")
   nil)
@@ -217,7 +217,7 @@ lambda (source result)
 ;;;     the user data for res .
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_async_result_get_user_data" async-result-user-data) :pointer
+(cffi:defcfun ("g_async_result_get_user_data" async-result-user-data) :pointer
   (result (gobject:object async-result)))
 
 (export 'async-result-user-data)
@@ -238,7 +238,7 @@ lambda (source result)
 ;;;     none.
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_async_result_get_source_object" async-result-source-object)
+(cffi:defcfun ("g_async_result_get_source_object" async-result-source-object)
     gobject:object
   (result (gobject:object async-result)))
 
@@ -264,7 +264,7 @@ lambda (source result)
 ;;;     TRUE if res has the indicated source_tag , FALSE if not.
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_async_result_is_tagged" async-result-is-tagged) :boolean
+(cffi:defcfun ("g_async_result_is_tagged" async-result-is-tagged) :boolean
   (result (gobject:object async-result))
   (tag :pointer))
 

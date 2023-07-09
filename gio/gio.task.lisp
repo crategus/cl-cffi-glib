@@ -98,7 +98,7 @@
 ;;; GTask
 ;;; ----------------------------------------------------------------------------
 
-(define-g-object-class "GTask" task
+(gobject:define-g-object-class "GTask" task
   (:superclass gobject:object
    :export t
    :interfaces ("GAsyncResult")
@@ -677,10 +677,10 @@ baker_bake_cake_sync (Baker               *self,
 ;;;     a GTask.
 ;;; ----------------------------------------------------------------------------
 
-;; TODO: We allocate a stable pointer, but we do not free the pointer. 
+;; TODO: We allocate a stable pointer, but we do not free the pointer.
 ;; Improve this!?
 
-(defcfun ("g_task_new" %task-new) (gobject:object task)
+(cffi:defcfun ("g_task_new" %task-new) (gobject:object task)
   (source :pointer)
   (cancellable (gobject:object cancellable))
   (callback :pointer)
@@ -771,7 +771,7 @@ baker_bake_cake_sync (Baker               *self,
 ;;;     task 's priority
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_task_get_priority" task-priority) :int
+(cffi:defcfun ("g_task_get_priority" task-priority) :int
   (task (gobject:object task)))
 
 (export 'task-priority)
@@ -823,7 +823,7 @@ baker_bake_cake_sync (Baker               *self,
 ;;;     the GTask
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_task_get_check_cancellable" task-check-cancellable) :boolean
+(cffi:defcfun ("g_task_get_check_cancellable" task-check-cancellable) :boolean
   (task (gobject:object task)))
 
 (export 'task-check-cancellable)
@@ -1091,7 +1091,8 @@ The value is a NUL terminated UTF-8 string.
 ;;;     task 's GCancellable.
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_tast_get_cancellable" task-canellable) (gobject:object cancellable)
+(cffi:defcfun ("g_tast_get_cancellable" task-canellable)
+    (gobject:object cancellable)
   (task (gobject:object task)))
 
 (export 'task-cancellable)
@@ -1116,7 +1117,7 @@ The value is a NUL terminated UTF-8 string.
 ;;;     task 's GMainContext.
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_task_get_context" task-context)
+(cffi:defcfun ("g_task_get_context" task-context)
     (:pointer (:struct glib:main-context))
   (task (gobject:object task)))
 
@@ -1138,7 +1139,7 @@ The value is a NUL terminated UTF-8 string.
 ;;;     task 's source object, or NULL.
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_task_get_source_object" task-source-object) :pointer
+(cffi:defcfun ("g_task_get_source_object" task-source-object) :pointer
   (task (gobject:object task)))
 
 (export 'task-source-object)
@@ -1160,7 +1161,7 @@ The value is a NUL terminated UTF-8 string.
 ;;;     the gboolean result of a task function.
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_task_return_boolean" task-return-boolean) :void
+(cffi:defcfun ("g_task_return_boolean" task-return-boolean) :void
   (task (gobject:object task))
   (result :boolean))
 

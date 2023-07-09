@@ -36,25 +36,27 @@
 ;;;     GApplication
 ;;;     GApplicationFlags
 ;;;
-;;; Functions
+;;; Accessors
 ;;;
-;;;     g_application_id_is_valid
-;;;     g_application_new
 ;;;     g_application_get_application_id                   Accessor
 ;;;     g_application_set_application_id                   Accessor
 ;;;     g_application_get_inactivity_timeout               Accessor
 ;;;     g_application_set_inactivity_timeout               Accessor
 ;;;     g_application_get_flags                            Accessor
 ;;;     g_application_set_flags                            Accessor
-;;;
 ;;;     g_application_get_resource_base_path               Accessor
 ;;;     g_application_set_resource_base_path               Accessor
+;;;     g_application_get_is_registered                    Accessor
+;;;     g_application_get_is_remote                        Accessor
+;;;
+;;; Functions
+;;;
+;;;     g_application_id_is_valid
+;;;     g_application_new
 ;;;
 ;;;     g_application_get_dbus_connection
 ;;;     g_application_get_dbus_object_path
 ;;;     g_application_set_action_group                     deprecated
-;;;     g_application_get_is_registered                    Accessor
-;;;     g_application_get_is_remote                        Accessor
 ;;;     g_application_register
 ;;;     g_application_hold
 ;;;     g_application_release
@@ -123,9 +125,10 @@
 ;;; enum GApplicationFlags
 ;;; ----------------------------------------------------------------------------
 
-(define-g-flags "GApplicationFlags" application-flags
+(gobject:define-g-flags "GApplicationFlags" application-flags
   (:export t
    :type-initializer "g_application_flags_get_type")
+  #-glib-2-74
   (:flags-none 0)
   #+glib-2-74
   (:default-flags 0)
@@ -151,7 +154,7 @@
     Flags used to define the behaviour of a @class{g:application} instance.
   @end{short}
   @begin{pre}
-(define-g-flags \"GApplicationFlags\" application-flags
+(gobject:define-g-flags \"GApplicationFlags\" application-flags
   (:export t
    :type-initializer \"g_application_flags_get_type\")
   (:flags-none 0)
@@ -209,7 +212,7 @@
 ;;; GApplication
 ;;; ----------------------------------------------------------------------------
 
-(define-g-object-class "GApplication" application
+(gobject:define-g-object-class "GApplication" application
   (:superclass gobject:object
    :export t
    :interfaces ("GActionGroup"
@@ -868,9 +871,9 @@ lambda (application)    :run-first
 ;;; g_application_id_is_valid ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_application_id_is_valid" application-id-is-valid) :boolean
+(cffi:defcfun ("g_application_id_is_valid" application-id-is-valid) :boolean
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2023-7-8}
   @argument[id]{a string with a potential application identifier}
   @return{@em{True} if @arg{id} is a valid application ID.}
   @begin{short}
@@ -992,7 +995,7 @@ lambda (application)    :run-first
 ;;; g_application_register ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_application_register" %application-register) :boolean
+(cffi:defcfun ("g_application_register" %application-register) :boolean
   (application (gobject:object application))
   (cancellable :pointer)
   (err :pointer))
@@ -1026,7 +1029,7 @@ lambda (application)    :run-first
   @end{dictionary}
   @see-class{g:application}
   @see-function{g:application-is-remote}"
-  (with-g-error (err)
+  (glib:with-g-error (err)
     (%application-register application (cffi:null-pointer) err)))
 
 (export 'application-register)
@@ -1035,7 +1038,7 @@ lambda (application)    :run-first
 ;;; g_application_hold ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_application_hold" application-hold) :void
+(cffi:defcfun ("g_application_hold" application-hold) :void
  #+liber-documentation
  "@version{#2022-12-30}
   @argument[application]{a @class{g:application} instance}
@@ -1056,7 +1059,7 @@ lambda (application)    :run-first
 ;;; g_application_release ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_application_release" application-release) :void
+(cffi:defcfun ("g_application_release" application-release) :void
  #+liber-documentation
  "@version{#2022-12-30}
   @argument[application]{a @class{g:application} instance}
@@ -1076,7 +1079,7 @@ lambda (application)    :run-first
 ;;; g_application_quit ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_application_quit" application-quit) :void
+(cffi:defcfun ("g_application_quit" application-quit) :void
  #+liber-documentation
  "@version{#2022-12-30}
   @argument[application]{a @class{g:application} instance}
@@ -1097,9 +1100,9 @@ lambda (application)    :run-first
 ;;; g_application_activate ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_application_activate" application-activate) :void
+(cffi:defcfun ("g_application_activate" application-activate) :void
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2023-7-8}
   @argument[application]{a @class{g:application} instance}
   @begin{short}
     Activates the application.
@@ -1116,7 +1119,7 @@ lambda (application)    :run-first
 ;;; g_application_open ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_application_open" %application-open) :void
+(cffi:defcfun ("g_application_open" %application-open) :void
   (application (gobject:object application))
   (files :pointer)
   (n-files :int)
@@ -1124,7 +1127,7 @@ lambda (application)    :run-first
 
 (defun application-open (application files hint)
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2023-7-8}
   @argument[application]{a @class{g:application} instance}
   @argument[files]{a list of strings with the file names}
   @argument[hint]{a string with a hint or an empty string \"\"}
@@ -1147,11 +1150,11 @@ lambda (application)    :run-first
   @see-class{g:file}
   @see-function{g:file-new-for-path}"
   (let ((n-files (length files)))
-    (with-foreign-object (files-ptr :pointer n-files)
-      (loop for i from 0 below n-files
-            for file in files
-            for file-ptr = (gobject:object-pointer (file-new-for-path file))
-            do (setf (cffi:mem-aref files-ptr :pointer i) file-ptr))
+    (cffi:with-foreign-object (files-ptr :pointer n-files)
+      (iter (for i from 0 below n-files)
+            (for file in files)
+            (for file-ptr = (gobject:object-pointer (file-new-for-path file)))
+            (setf (cffi:mem-aref files-ptr :pointer i) file-ptr))
       (%application-open application files-ptr n-files hint))))
 
 (export 'application-open)
@@ -1160,7 +1163,8 @@ lambda (application)    :run-first
 ;;; g_application_send_notification ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_application_send_notification" application-send-notification) :void
+(cffi:defcfun ("g_application_send_notification" application-send-notification)
+    :void
  #+liber-documentation
  "@version{#2022-12-30}
   @argument[application]{a @class{g:application} instance}
@@ -1199,8 +1203,8 @@ lambda (application)    :run-first
 ;;; g_application_withdraw_notification ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_application_withdraw_notification"
-           application-withdraw-notification) :void
+(cffi:defcfun ("g_application_withdraw_notification"
+                application-withdraw-notification) :void
  #+liber-documentation
  "@version{#2022-12-30}
   @argument[application]{a @class{g:application} instance}
@@ -1229,7 +1233,7 @@ lambda (application)    :run-first
 ;;; g_application_run ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_application_run" %application-run) :int
+(cffi:defcfun ("g_application_run" %application-run) :int
   (application (gobject:object application))
   (argc :int)
   (argv glib:strv-t))
@@ -1326,8 +1330,8 @@ lambda (application)    :run-first
 ;;; g_application_add_main_option_entries ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_application_add_main_option_entries"
-          %application-add-main-option-entries) :void
+(cffi:defcfun ("g_application_add_main_option_entries"
+                %application-add-main-option-entries) :void
   (application (gobject:object application))
   (entries :pointer (:pointer (:struct glib::option-entry))))
 
@@ -1335,7 +1339,7 @@ lambda (application)    :run-first
 
 (defun application-add-main-option-entries (application entries)
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2023-7-8}
   @argument[application]{a @class{g:application} instance}
   @argument[entries]{a list of option entries}
   @begin{short}
@@ -1358,9 +1362,9 @@ lambda (application)    :run-first
   dictionary is sent to the primary instance, where the
   @fun{g:application-command-line-options-dict} function will return it. This
   \"packing\" is done according to the type of the argument - booleans for
-  normal flags, strings for strings, bytestrings for filenames, etc. The packing
-  only occurs if the flag is given, i.e. we do not pack a @type{variant}
-  parameter in the case that a flag is missing.
+  normal flags, strings for strings, bytestrings for filenames, etc. The
+  packing only occurs if the flag is given, i.e. we do not pack a
+  @type{g:variant} parameter in the case that a flag is missing.
 
   In general, it is recommended that all command line arguments are parsed
   locally. The options dictionary should then be used to transmit the result
@@ -1404,51 +1408,51 @@ lambda (application)    :run-first
   @see-function{g:application-command-line-options-dict}
   @see-function{g:variant-dict-lookup}"
   (let ((n-entries (length entries)))
-    (with-foreign-object (entries-ptr '(:struct glib::option-entry)
-                                      (1+ n-entries))
-      (loop
-        for entry in entries
-        for i from 0
-        for entry-ptr = (cffi:mem-aptr entries-ptr
-                                       '(:struct glib::option-entry) i)
-        do (with-foreign-slots ((glib::long-name
-                                 glib::short-name
-                                 glib::flags
-                                 glib::arg
-                                 glib::arg-data
-                                 glib::description
-                                 glib::arg-description)
-                                entry-ptr (:struct glib::option-entry))
-             (setf glib::long-name (first entry)
-                   glib::short-name (if (second entry)
-                                        (char-code (second entry))
-                                        0)
-                   glib::flags (third entry)
-                   glib::arg (fourth entry)
-                   ;; TODO: Check this. It is not correct?
-                   glib::arg-data (if (and (fifth entry)
-                                           (member (fourth entry)
-                                                   '(:none :int :double :string
-                                                     :filename :string-array
-                                                     :filename-array :int64)))
-                                (symbol-value (fifth entry))
-                                (cffi:null-pointer))
-                   glib::description (sixth entry)
-                   glib::arg-description (if (seventh entry)
-                                             (seventh entry)
-                                             (cffi:null-pointer)))))
+    (cffi:with-foreign-object (entries-ptr '(:struct glib::option-entry)
+                                           (1+ n-entries))
+      (iter (for entry in entries)
+            (for i from 0)
+            (for entry-ptr = (cffi:mem-aptr entries-ptr
+                                            '(:struct glib::option-entry) i))
+            (cffi:with-foreign-slots ((glib::long-name
+                                       glib::short-name
+                                       glib::flags
+                                       glib::arg
+                                       glib::arg-data
+                                       glib::description
+                                       glib::arg-description)
+                                       entry-ptr (:struct glib::option-entry))
+              (setf glib::long-name (first entry)
+                    glib::short-name (if (second entry)
+                                         (char-code (second entry))
+                                         0)
+                    glib::flags (third entry)
+                    glib::arg (fourth entry)
+                    ;; TODO: Check this. It is not correct?
+                    glib::arg-data (if (and (fifth entry)
+                                            (member (fourth entry)
+                                                    '(:none :int :int64 :double
+                                                      :string :filename
+                                                      :string-array
+                                                      :filename-array)))
+                                 (symbol-value (fifth entry))
+                                 (cffi:null-pointer))
+                    glib::description (sixth entry)
+                    glib::arg-description (if (seventh entry)
+                                              (seventh entry)
+                                              (cffi:null-pointer)))))
       ;; Set the fields of the last entry to NULL pointer or 0
       (let ((entry-ptr (cffi:mem-aptr entries-ptr
                                       '(:struct glib::option-entry)
                                       n-entries)))
-        (with-foreign-slots ((glib::long-name
-                              glib::short-name
-                              glib::flags
-                              glib::arg
-                              glib::arg-data
-                              glib::description
-                              glib::arg-description)
-                             entry-ptr (:struct glib::option-entry))
+        (cffi:with-foreign-slots ((glib::long-name
+                                   glib::short-name
+                                   glib::flags
+                                   glib::arg
+                                   glib::arg-data
+                                   glib::description
+                                   glib::arg-description)
+                                   entry-ptr (:struct glib::option-entry))
           (setf glib::long-name (cffi:null-pointer))
           (setf glib::short-name 0)
           (setf glib::flags 0)
@@ -1464,7 +1468,8 @@ lambda (application)    :run-first
 ;;; g_application_add_main_option ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_application_add_main_option" application-add-main-option) :void
+(cffi:defcfun ("g_application_add_main_option" application-add-main-option)
+    :void
  #+liber-documentation
  "@version{#2022-12-30}
   @argument[application]{a @class{g:application} instance}
@@ -1512,7 +1517,8 @@ lambda (application)    :run-first
 ;;; g_application_add_option_group ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_application_add_option_group" application-add-option-group) :void
+(cffi:defcfun ("g_application_add_option_group" application-add-option-group)
+    :void
  #+liber-documentation
  "@version{#2022-12-30}
   @argument[application]{a @class{g:application} instance}
@@ -1558,8 +1564,8 @@ lambda (application)    :run-first
 ;;; g_application_set_option_context_parameter_string ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_application_set_option_context_parameter_string"
-           application-set-option-context-parameter-string) :void
+(cffi:defcfun ("g_application_set_option_context_parameter_string"
+                application-set-option-context-parameter-string) :void
  #+liber-documentation
  "@version{#2022-12-30}
   @argument[application]{a @class{g:application} instance}
@@ -1587,8 +1593,8 @@ lambda (application)    :run-first
 ;;; g_application_set_option_context_summary ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_application_set_option_context_summary"
-           application-set-option-context-summary) :void
+(cffi:defcfun ("g_application_set_option_context_summary"
+                application-set-option-context-summary) :void
  #+liber-documentation
  "@version{#2022-12-30}
   @argument[application]{a @class{g:application} instance}
@@ -1609,8 +1615,8 @@ lambda (application)    :run-first
 ;;; g_application_set_option_context_description ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_application_set_option_context_description"
-           application-set-option-context-description) :void
+(cffi:defcfun ("g_application_set_option_context_description"
+                application-set-option-context-description) :void
  #+liber-documentation
  "@version{#2022-12-30}
   @argument[application]{a @class{g:application} instance}
@@ -1638,7 +1644,7 @@ lambda (application)    :run-first
                         :void)
   application)
 
-(defcfun ("g_application_get_default" application-default)
+(cffi:defcfun ("g_application_get_default" application-default)
     (gobject:object application)
  #+liber-documentation
  "@version{#2022-12-30}
@@ -1666,7 +1672,7 @@ lambda (application)    :run-first
 ;;; g_application_mark_busy ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_application_mark_busy" application-mark-busy) :void
+(cffi:defcfun ("g_application_mark_busy" application-mark-busy) :void
  #+liber-documentation
  "@version{#2022-12-30}
   @argument[application]{a @class{g:application} instance}
@@ -1688,7 +1694,7 @@ lambda (application)    :run-first
 ;;; g_application_unmark_busy ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_application_unmark_busy" application-unmark-busy) :void
+(cffi:defcfun ("g_application_unmark_busy" application-unmark-busy) :void
  #+liber-documentation
  "@version{#2022-12-30}
   @argument[application]{a @class{g:application} instance}
@@ -1708,8 +1714,8 @@ lambda (application)    :run-first
 ;;; g_application_bind_busy_property ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_application_bind_busy_property" application-bind-busy-property)
-    :void
+(cffi:defcfun ("g_application_bind_busy_property"
+                application-bind-busy-property) :void
  #+liber-documentation
  "@version{#2022-12-30}
   @argument[application]{a @class{g:application} instance}
@@ -1735,8 +1741,8 @@ lambda (application)    :run-first
 ;;; g_application_unbind_busy_property ()
 ;;; ----------------------------------------------------------------------------
 
-(defcfun ("g_application_unbind_busy_property"
-           application-unbind-busy-property) :void
+(cffi:defcfun ("g_application_unbind_busy_property"
+                application-unbind-busy-property) :void
  #+liber-documentation
  "@version{#2022-12-30}
   @argument[application]{a @class{g:application} instance}
