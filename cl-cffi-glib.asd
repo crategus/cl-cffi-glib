@@ -41,7 +41,6 @@
      (:file "glib.boxed-type")
      ;; GLIB library
      (:file "glib.version")
-     (:file "glib.quark")
      (:file "glib.misc")
      (:file "glib.error")
      (:file "glib.main-loop")
@@ -79,7 +78,6 @@
     :serial t
     :components
     ((:file "gio.package")
-     (:file "gio.init")
      ;; Application information and launch contexts
      (:file "gio.content-type")        ; Platform-specific content typing
      (:file "gio.app-info")            ; Application information, launch context
@@ -140,16 +138,15 @@
      (:file "rtest-glib-gtype")
      (:file "rtest-glib-boxed-type")
      (:file "rtest-glib-version")
-     (:file "rtest-glib-quark")
      (:file "rtest-glib-misc")
      (:file "rtest-glib-error")
      (:file "rtest-glib-main-loop")
-     (:file "rtest-glib-utils")
+     (:file "rtest-glib-bytes")
      (:file "rtest-glib-option")
      (:file "rtest-glib-key-file")
      (:file "rtest-glib-variant-type")
      (:file "rtest-glib-variant")
-     (:file "rtest-glib-bytes")
+
      ;; gobject-suite
      (:file "rtest-gobject-generating")
      (:file "rtest-gobject-type-info")
@@ -158,24 +155,33 @@
      (:file "rtest-gobject-boxed-lisp")
      (:file "rtest-gobject-param-spec")
      (:file "rtest-gobject-param")
-;      (:file "rtest-gobject-class")
+     (:file "rtest-gobject-gobject-class")
      (:file "rtest-gobject-base")
      (:file "rtest-gobject-signals")
      (:file "rtest-gobject-binding")
      (:file "rtest-gobject-utils")
+
      ;; gio-suite
+
+     ;; Application information and launch contexts
      (:file "rtest-gio-content-type")
      (:file "rtest-gio-app-info")
+     ;; Icons
      (:file "rtest-gio-icon")
      (:file "rtest-gio-loadable-icon")
      (:file "rtest-gio-file-icon")
      (:file "rtest-gio-themed-icon")
      (:file "rtest-gio-emblemed-icon")
      (:file "rtest-gio-emblem")
+     ;; Resources
      (:file "rtest-gio-resource")
+     ;; Permissions
      (:file "rtest-gio-permission")
+;    (:file "gio.simple-permission")
+     ;; Data models
      (:file "rtest-gio-list-model")
      (:file "rtest-gio-list-store")
+     ;; Application support
      (:file "rtest-gio-action")
      (:file "rtest-gio-action-group")
      (:file "rtest-gio-action-map")
@@ -183,13 +189,16 @@
      (:file "rtest-gio-property-action")
      (:file "rtest-gio-simple-action-group")
      (:file "rtest-gio-application")
+     (:file "rtest-gio-application-command-line")
      (:file "rtest-gio-menu-model")
      (:file "rtest-gio-menu")
      (:file "rtest-gio-notification")
+     ;; File Operations
      (:file "rtest-gio-file")
+     ;; Asynchronous I/O
      (:file "rtest-gio-cancellable")
-     ;; Some more checks
-     (:file "rtest-glib-memory")
+;    (:file "gio.async-result")
+;    (:file "gio.task")
      )))
   :perform (test-op (o c)
              (uiop:symbol-call :fiveam :run!

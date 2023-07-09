@@ -374,6 +374,8 @@
            #:value-copy
            #:value-reset
            #:value-unset
+           #:value-get
+           #:value-set
            #:value-init-from-instance
            #:value-set-instance
            #:value-type-compatible
