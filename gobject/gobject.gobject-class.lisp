@@ -1,28 +1,25 @@
 ;;; ----------------------------------------------------------------------------
 ;;; gobject.gobject-class.lisp
 ;;;
-;;; This file contains code from a fork of cl-gtk2.
-;;; See http://common-lisp.net/project/cl-gtk2/
-;;;
-;;; Copyright (C) 2009 - 2011 Kalyanov Dmitry
 ;;; Copyright (C) 2011 - 2023 Dieter Kaiser
 ;;;
-;;; This program is free software: you can redistribute it and/or modify
-;;; it under the terms of the GNU Lesser General Public License for Lisp
-;;; as published by the Free Software Foundation, either version 3 of the
-;;; License, or (at your option) any later version and with a preamble to
-;;; the GNU Lesser General Public License that clarifies the terms for use
-;;; with Lisp programs and is referred as the LLGPL.
+;;; Permission is hereby granted, free of charge, to any person obtaining a
+;;; copy of this software and associated documentation files (the "Software"),
+;;; to deal in the Software without restriction, including without limitation
+;;; the rights to use, copy, modify, merge, publish, distribute, sublicense,
+;;; and/or sell copies of the Software, and to permit persons to whom the
+;;; Software is furnished to do so, subject to the following conditions:
 ;;;
-;;; This program is distributed in the hope that it will be useful,
-;;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;;; GNU Lesser General Public License for more details.
+;;; The above copyright notice and this permission notice shall be included in
+;;; all copies or substantial portions of the Software.
 ;;;
-;;; You should have received a copy of the GNU Lesser General Public
-;;; License along with this program and the preamble to the Gnu Lesser
-;;; General Public License.  If not, see <http://www.gnu.org/licenses/>
-;;; and <http://opensource.franz.com/preamble.html>.
+;;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+;;; IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+;;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+;;; THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+;;; LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+;;; FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+;;; DEALINGS IN THE SOFTWARE.
 ;;; ----------------------------------------------------------------------------
 
 (in-package :gobject)
@@ -52,23 +49,23 @@
 ;;; ----------------------------------------------------------------------------
 
 (defclass gobject-class (standard-class)
-  ((g-type-name :initform nil
-                :accessor gobject-class-g-type-name)
-   (direct-g-type-name :initform nil
-                       :initarg :g-type-name
-                       :accessor gobject-class-direct-g-type-name)
-   (g-type-initializer :initform nil
-                       :initarg :g-type-initializer
-                       :reader gobject-class-g-type-initializer)
+  ((gname :initform nil
+          :accessor gobject-class-gname)
+   (direct-gname :initform nil
+                 :initarg :gname
+                 :accessor gobject-class-direct-gname)
+   (initializer :initform nil
+                :initarg :initializer
+                :reader gobject-class-initializer)
    (interface-p :initform nil
-                :initarg :g-interface-p
+                :initarg :interface-p
                 :reader gobject-class-interface-p))
   (:documentation "Metaclass for GObject based classes."))
 
 (export 'gobject-class)
-(export 'gobject-class-g-type-name)
-(export 'gobject-class-direct-g-type-name)
-(export 'gobject-class-g-type-initializer)
+(export 'gobject-class-gname)
+(export 'gobject-class-direct-gname)
+(export 'gobject-class-initializer)
 (export 'gobject-class-interface-p)
 
 ;;; ----------------------------------------------------------------------------
@@ -81,9 +78,9 @@
            ((class gobject-class) &key &allow-other-keys)
   (log-for :subclass
            ":subclass INITIALIZE-INSTANCE :after for class ~a ~a ~a~%"
-           class (gobject-class-direct-g-type-name class) (class-name class))
-  (when (gobject-class-direct-g-type-name class)
-    (setf (glib:symbol-for-gtype (gobject-class-direct-g-type-name class))
+           class (gobject-class-direct-gname class) (class-name class))
+  (when (gobject-class-direct-gname class)
+    (setf (glib:symbol-for-gtype (gobject-class-direct-gname class))
           (class-name class))
     (glib-init:at-init (class)
         (initialize-gobject-class-g-type class))))
@@ -100,6 +97,11 @@
       (call-next-method)))
 
 ;;; ----------------------------------------------------------------------------
+
+;;      standard-direct-slot-definition
+;;      ╰── gobject-direct-slot-definition
+;;          ├── gobject-property-direct-slot-definition
+;;          ╰── gobject-fn-direct-slot-definition
 
 (defclass gobject-direct-slot-definition (standard-direct-slot-definition)
   ((g-property-type :initform nil
@@ -120,6 +122,11 @@
    (g-setter-name :initform nil
                   :initarg :g-setter
                   :reader gobject-fn-direct-slot-definition-g-setter-name)))
+
+;;      standard-effective-slot-definition
+;;      ╰── gobject-effective-slot-definition
+;;          ├── gobject-property-effective-slot-definition
+;;          ╰── gobject-fn-effective-slot-definition
 
 (defclass gobject-effective-slot-definition (standard-effective-slot-definition)
   ((g-property-type :initform nil
@@ -193,11 +200,11 @@
     (log-for :subclass
              ":subclass INITIALIZE-GOBJECT-CLASS-G-TYPE for class ~a ~a~%"
              class
-             (gtype (gobject-class-direct-g-type-name class)))
-    (if (gobject-class-g-type-initializer class)
+             (glib:gtype (gobject-class-direct-gname class)))
+    (if (gobject-class-initializer class)
         ;; We have a g-type-initializer function
         (let* ((initializer-fn-ptr (cffi:foreign-symbol-pointer
-                                     (gobject-class-g-type-initializer class)))
+                                     (gobject-class-initializer class)))
                (gtype (when initializer-fn-ptr
                         (cffi:foreign-funcall-pointer initializer-fn-ptr
                                                       nil
@@ -205,33 +212,33 @@
           (if (null initializer-fn-ptr)
               (warn "Type initializer for class '~A' (GType '~A') is invalid: ~
                      foreign symbol '~A'"
-                    (gobject-class-direct-g-type-name class)
+                    (gobject-class-direct-gname class)
                     (class-name class)
-                    (gobject-class-g-type-initializer class))
+                    (gobject-class-initializer class))
               (progn
-                (when (eq (gtype +g-type-invalid+) gtype)
+                (when (eq (glib:gtype +g-type-invalid+) gtype)
                   (warn "Declared GType name '~A' for class '~A' is invalid ~
                         ('~A' returned 0)"
-                        (gobject-class-direct-g-type-name class)
+                        (gobject-class-direct-gname class)
                         (class-name class)
-                        (gobject-class-g-type-initializer class)))
+                        (gobject-class-initializer class)))
                 (unless (eq gtype
-                            (gtype (gobject-class-direct-g-type-name class)))
+                            (glib:gtype (gobject-class-direct-gname class)))
                   (warn "Declared GType name '~A' for class '~A' does not ~
                          match actual GType name '~A'"
-                        (gobject-class-direct-g-type-name class)
+                        (gobject-class-direct-gname class)
                         (class-name class)
-                        (gtype-name gtype))))))
+                        (glib:gtype-name gtype))))))
         ;; We have no g-type-initializer function. This code prints warnings
         ;; for subclasses. Consider to remove the code.
-        (when (zerop (gtype-id
-                         (gtype (gobject-class-direct-g-type-name class))))
+        (when (zerop (glib:gtype-id
+                         (glib:gtype (gobject-class-direct-gname class))))
           ;; This is a hack to avoid a warning when loading the library.
           (when (and glib:*warn-unknown-gtype* ; a hack we never get a warning
                      (not (string= "AtkImplementorIface"
-                                   (gobject-class-direct-g-type-name class))))
+                                   (gobject-class-direct-gname class))))
             (warn "Declared GType name '~A' for class '~A' is invalid."
-                  (gobject-class-direct-g-type-name class)
+                  (gobject-class-direct-gname class)
                   (class-name class)))))))
 
 ;;; ----------------------------------------------------------------------------
@@ -240,65 +247,15 @@
   (iter (for superclass in (class-direct-superclasses class))
         (unless (class-finalized-p superclass)
           (finalize-inheritance superclass)))
-  (setf (gobject-class-g-type-name class)
-        (or (gobject-class-direct-g-type-name class)
+  (setf (gobject-class-gname class)
+        (or (gobject-class-direct-gname class)
             (let ((gobject-superclass
                    (iter (for superclass in (class-direct-superclasses class))
                          (finding superclass
                                   such-that (typep superclass
                                                     'gobject-class)))))
               (assert gobject-superclass)
-              (gobject-class-g-type-name gobject-superclass)))))
-
-;;; ----------------------------------------------------------------------------
-
-#|
-(defclass gobject-direct-slot-definition (standard-direct-slot-definition)
-  ((g-property-type :initform nil
-                    :initarg :g-property-type
-                    :reader gobject-direct-slot-definition-g-property-type)))
-
-(defclass gobject-property-direct-slot-definition
-          (gobject-direct-slot-definition)
-  ((g-property-name :initform nil
-                    :initarg :g-property-name
-                    :reader
-                    gobject-property-direct-slot-definition-g-property-name)))
-
-(defclass gobject-fn-direct-slot-definition (gobject-direct-slot-definition)
-  ((g-getter-name :initform nil
-                  :initarg :g-getter
-                  :reader gobject-fn-direct-slot-definition-g-getter-name)
-   (g-setter-name :initform nil
-                  :initarg :g-setter
-                  :reader gobject-fn-direct-slot-definition-g-setter-name)))
-
-(defclass gobject-effective-slot-definition (standard-effective-slot-definition)
-  ((g-property-type :initform nil
-                    :initarg :g-property-type
-                    :accessor
-                    gobject-effective-slot-definition-g-property-type)))
-
-(defclass gobject-property-effective-slot-definition
-          (gobject-effective-slot-definition)
-  ((g-property-name :initform nil
-                    :initarg :g-property-name
-                    :accessor
-                    gobject-property-effective-slot-definition-g-property-name)))
-
-(defclass gobject-fn-effective-slot-definition
-          (gobject-effective-slot-definition)
-  ((g-getter-name :initform nil
-                  :initarg :g-getter
-                  :accessor gobject-fn-effective-slot-definition-g-getter-name)
-   (g-setter-name :initform nil
-                  :initarg :g-setter
-                  :accessor gobject-fn-effective-slot-definition-g-setter-name)
-   (g-getter-fn :initform nil
-                :accessor gobject-fn-effective-slot-definition-g-getter-fn)
-   (g-setter-fn :initform nil
-                :accessor gobject-fn-effective-slot-definition-g-setter-fn)))
-|#
+              (gobject-class-gname gobject-superclass)))))
 
 ;;; ----------------------------------------------------------------------------
 
@@ -467,10 +424,10 @@
 (defmethod (setf slot-value-using-class)
            (new-value (class gobject-class)
             object (slot gobject-property-effective-slot-definition))
-
-  (setf (object-property (pointer object)
-                           (gobject-property-effective-slot-definition-g-property-name slot)
-                           (gobject-effective-slot-definition-g-property-type slot))
+  (setf (object-property
+            (pointer object)
+            (gobject-property-effective-slot-definition-g-property-name slot)
+            (gobject-effective-slot-definition-g-property-type slot))
         new-value))
 
 (defmethod slot-value-using-class ((class gobject-class) object

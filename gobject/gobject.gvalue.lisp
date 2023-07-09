@@ -2,7 +2,7 @@
 ;;; gobject.g-value.lisp
 ;;;
 ;;; The documentation of this file is taken from the GObject Reference Manual
-;;; Version 2.26 and modified to document the Lisp binding to the GObject
+;;; Version 2.76 and modified to document the Lisp binding to the GObject
 ;;; library. See <http://www.gtk.org>. The API documentation of the Lisp binding
 ;;; is available from <http://www.crategus.com/books/cl-cffi-gtk/>.
 ;;;
@@ -70,9 +70,11 @@
 
 (in-package :gobject)
 
+;; TODO: Consider to implement GValue as a boxed type.
+
 ;;; ----------------------------------------------------------------------------
 
-;; A generic function for getting the value of a g-value structure.
+;; A generic function for getting the value of a g-value instance
 
 (defgeneric parse-g-value-for-type (gvalue gtype kind))
 
@@ -88,27 +90,23 @@
                               (type-fundamental gtype)
                               kind)))
 
-(defmethod parse-g-value-for-type (gvalue
-                                   (gtype (eql (gtype +g-type-pointer+)))
-                                   kind)
+(defmethod parse-g-value-for-type
+    (gvalue(glib:gtype (eql (glib:gtype "gpointer"))) kind)
   (declare (ignore kind))
   (value-pointer gvalue))
 
-(defmethod parse-g-value-for-type (gvalue
-                                   (gtype (eql (gtype +g-type-param+)))
-                                   kind)
+(defmethod parse-g-value-for-type
+    (gvalue (glib:gtype (eql (glib:gtype "GParam"))) kind)
   (declare (ignore kind))
   (value-param gvalue))
 
-(defmethod parse-g-value-for-type (gvalue
-                                   (gtype (eql (gtype +g-type-object+)))
-                                   kind)
+(defmethod parse-g-value-for-type
+    (gvalue (glib:gtype (eql (glib:gtype "GObject"))) kind)
   (declare (ignore kind))
   (value-object gvalue))
 
-(defmethod parse-g-value-for-type (gvalue
-                                   (gtype (eql (gtype +g-type-interface+)))
-                                   kind)
+(defmethod parse-g-value-for-type
+    (gvalue (glib:gtype (eql (glib:gtype "GInterface"))) kind)
   (declare (ignore kind))
   (value-object gvalue))
 
@@ -135,25 +133,30 @@
   (let* ((gtype (value-type gvalue))
          (fundamental-type (type-fundamental gtype)))
     (ev-case fundamental-type
-      ((gtype +g-type-invalid+)
-       (error "GValue is of invalid type (~A)" (gtype-name gtype)))
-      ((gtype +g-type-none+) nil)
-      ((gtype +g-type-char+) (value-char gvalue))
-      ((gtype +g-type-uchar+) (value-uchar gvalue))
-      ((gtype +g-type-boolean+) (value-boolean gvalue))
-      ((gtype +g-type-int+) (value-int gvalue))
-      ((gtype +g-type-uint+) (value-uint gvalue))
-      ((gtype +g-type-long+) (value-long gvalue))
-      ((gtype +g-type-ulong+) (value-ulong gvalue))
-      ((gtype +g-type-int64+) (value-int64 gvalue))
-      ((gtype +g-type-uint64+) (value-uint64 gvalue))
-      ((gtype +g-type-enum+) (parse-g-value-enum gvalue))
-      ((gtype +g-type-flags+) (parse-g-value-flags gvalue))
-      ((gtype +g-type-float+) (value-float gvalue))
-      ((gtype +g-type-double+) (value-double gvalue))
-      ((gtype +g-type-string+) (value-string gvalue))
-      ((gtype +g-type-variant+) (value-variant gvalue))
+      ((glib:gtype +g-type-invalid+)
+       (error "GValue is of invalid type (~A)" (glib:gtype-name gtype)))
+      ((glib:gtype "void") nil)
+      ((glib:gtype "gchar") (value-char gvalue))
+      ((glib:gtype "guchar") (value-uchar gvalue))
+      ((glib:gtype "gboolean") (value-boolean gvalue))
+      ((glib:gtype "gint") (value-int gvalue))
+      ((glib:gtype "guint") (value-uint gvalue))
+      ((glib:gtype "glong") (value-long gvalue))
+      ((glib:gtype "gulong") (value-ulong gvalue))
+      ((glib:gtype "gint64") (value-int64 gvalue))
+      ((glib:gtype "guint64") (value-uint64 gvalue))
+      ((glib:gtype "GEnum") (parse-g-value-enum gvalue))
+      ((glib:gtype "GFlags") (parse-g-value-flags gvalue))
+      ((glib:gtype "gfloat") (value-float gvalue))
+      ((glib:gtype "gdouble") (value-double gvalue))
+      ((glib:gtype "gchararray") (value-string gvalue))
+      ((glib:gtype "GVariant") (value-variant gvalue))
       (t (parse-g-value-for-type gvalue gtype parse-kind)))))
+
+(defun value-get (gvalue)
+  (parse-g-value gvalue))
+
+(export 'value-get)
 
 ;;; ----------------------------------------------------------------------------
 
@@ -171,28 +174,24 @@
       (call-next-method)
       (set-g-value-for-type gvalue (type-fundamental gtype) value)))
 
-(defmethod set-g-value-for-type (gvalue
-                                 (gtype (eql (gtype +g-type-pointer+)))
-                                 value)
+(defmethod set-g-value-for-type
+    (gvalue (glib:gtype (eql (glib:gtype "gpointer"))) value)
   (setf (value-pointer gvalue) value))
 
-(defmethod set-g-value-for-type (gvalue
-                                 (gtype (eql (gtype +g-type-param+)))
-                                 value)
+(defmethod set-g-value-for-type
+    (gvalue (glib:gtype (eql (glib:gtype "GParam"))) value)
   (setf (value-param gvalue) value))
 
-(defmethod set-g-value-for-type (gvalue
-                                 (gtype (eql (gtype +g-type-object+)))
-                                 value)
+(defmethod set-g-value-for-type
+    (gvalue (glib:gtype (eql (glib:gtype "GObject"))) value)
   (setf (value-object gvalue) value))
 
-(defmethod set-g-value-for-type (gvalue
-                                 (gtype (eql (gtype +g-type-interface+)))
-                                 value)
+(defmethod set-g-value-for-type
+    (gvalue (glib:gtype (eql (glib:gtype "GInterface"))) value)
   (setf (value-object gvalue) value))
 
 ;;; ----------------------------------------------------------------------------
-;;; set-g-value (gvalue value type zero-g-value unset-g-value g-value-init)
+;;; set-g-value (gvalue value type zero-gvalue unset-gvalue init-gvalue)
 ;;;
 ;;; Assigns the GValue structure gvalue the value value of GType type. This is
 ;;; a more general function which replaces the functions (setf g-value-...)
@@ -211,50 +210,55 @@
 ;;; type :
 ;;;     a GType that is to be assigned
 ;;;
-;;; zero-g-value :
+;;; zero-gvalue :
 ;;;     a boolean specifying whether GValue should be zero-initialized before
 ;;;     assigning. See g-value-zero.
 ;;;
-;;; unset-g-value :
+;;; unset-gvalue :
 ;;;     a boolean specifying whether GValue should be 'unset' before assigning.
 ;;;     See g-value-unset. The 'true' value should not be passed to both
-;;;     zero-g-value and unset-g-value arguments
+;;;     zero-gvalue and unset-gvalue arguments
 ;;;
-;;; g-value-init :
+;;; init :
 ;;;     a boolean specifying where GValue should be initialized
 ;;; ----------------------------------------------------------------------------
 
-(defun set-g-value (gvalue value type &key zero-g-value
-                                           unset-g-value
-                                           (g-value-init t))
-  (setf type (gtype type))
-  (cond (zero-g-value (%value-zero gvalue))
-        (unset-g-value (value-unset gvalue)))
-  (when g-value-init (value-init gvalue type))
-  (let ((fundamental-type (type-fundamental type)))
+(defun set-g-value (gvalue value gtype &key zero-gvalue
+                                            unset-gvalue
+                                            (init-gvalue t))
+  (setf gtype (glib:gtype gtype))
+  (cond (zero-gvalue (%value-zero gvalue))
+        (unset-gvalue (value-unset gvalue)))
+  (when init-gvalue (value-init gvalue gtype))
+  (let ((fundamental-type (type-fundamental gtype)))
     (ev-case fundamental-type
-      ((gtype +g-type-invalid+) (error "Invalid type (~A)" type))
-      ((gtype +g-type-none+) nil)
-      ((gtype +g-type-char+) (setf (value-char gvalue) value))
-      ((gtype +g-type-uchar+) (setf (value-uchar gvalue) value))
-      ((gtype +g-type-boolean+) (setf (value-boolean gvalue) value))
-      ((gtype +g-type-int+) (setf (value-int gvalue) value))
-      ((gtype +g-type-uint+) (setf (value-uint gvalue) value))
-      ((gtype +g-type-long+) (setf (value-long gvalue) value))
-      ((gtype +g-type-ulong+) (setf (value-ulong gvalue) value))
-      ((gtype +g-type-int64+) (setf (value-int64 gvalue) value))
-      ((gtype +g-type-uint64+) (setf (value-uint64 gvalue) value))
-      ((gtype +g-type-enum+) (set-g-value-enum gvalue value))
-      ((gtype +g-type-flags+) (set-g-value-flags gvalue value))
-      ((gtype +g-type-float+)
+      ((glib:gtype +g-type-invalid+) (error "Invalid type (~A)" gtype))
+      ((glib:gtype "void") nil)
+      ((glib:gtype "gchar") (setf (value-char gvalue) value))
+      ((glib:gtype "guchar") (setf (value-uchar gvalue) value))
+      ((glib:gtype "gboolean") (setf (value-boolean gvalue) value))
+      ((glib:gtype "gint") (setf (value-int gvalue) value))
+      ((glib:gtype "guint") (setf (value-uint gvalue) value))
+      ((glib:gtype "glong") (setf (value-long gvalue) value))
+      ((glib:gtype "gulong") (setf (value-ulong gvalue) value))
+      ((glib:gtype "gint64") (setf (value-int64 gvalue) value))
+      ((glib:gtype "guint64") (setf (value-uint64 gvalue) value))
+      ((glib:gtype "GEnum") (set-g-value-enum gvalue value))
+      ((glib:gtype "GFlags") (set-g-value-flags gvalue value))
+      ((glib:gtype "gfloat")
        (unless (realp value) (error "~A is not a real number" value))
        (setf (value-float gvalue) (coerce value 'single-float)))
-      ((gtype +g-type-double+)
+      ((glib:gtype "gdouble")
        (unless (realp value) (error "~A is not a real number" value))
        (setf (value-double gvalue) (coerce value 'double-float)))
-      ((gtype +g-type-string+) (setf (value-string gvalue) value))
-      ((gtype +g-type-variant+) (setf (value-variant gvalue) value))
-      (t (set-g-value-for-type gvalue type value)))))
+      ((glib:gtype "gchararray") (setf (value-string gvalue) value))
+      ((glib:gtype "GVariant") (setf (value-variant gvalue) value))
+      (t (set-g-value-for-type gvalue gtype value)))))
+
+(defun value-set (gvalue value gtype)
+  (set-g-value gvalue value gtype))
+
+(export 'value-set)
 
 ;;; ----------------------------------------------------------------------------
 ;;; GValue
@@ -281,14 +285,14 @@
                   ;; Generalized caluclation of the size of the structure
                   #.(+ (cffi:foreign-type-size 'type-t)
                        (* 2 (cffi:foreign-type-size '(:union value-data)))))
-  (:type type-t)
+  (:gtype type-t)
   (:data (:union value-data)
          ;; Generalized calculation of the offset
          :offset #.(cffi:foreign-type-size 'type-t) :count 2))
 
 #+windows
 (cffi:defcstruct value
-  (:type type-t)
+  (:gtype type-t)
   (:data (:union value-data) :count 2)) ; Not a pointer. Is this correct?
 
 #+liber-documentation
@@ -313,55 +317,56 @@
   The code in the example program below demonstrates @sym{g:value}'s features.
   @begin{pre}
 ;; A transformation from an integer to a string
-(cffi:defcallback int2string :void ((src-value (:pointer (:struct g:value)))
-                                    (dest-value (:pointer (:struct g:value))))
-  (if (= (g:value-int src-value) 42)
-      (setf (g:value-string dest-value) \"An important number\")
-      (setf (g:value-string dest-value) \"What is that?\")))
+(cffi:defcallback int2string :void ((src (:pointer (:struct g:value)))
+                                    (dest (:pointer (:struct g:value))))
+  (if (= (g:value-int src) 42)
+      (setf (g:value-string dest) \"An important number\")
+      (setf (g:value-string dest) \"What is that?\")))
 
 (defun example-g-value ()
   ;; Declare two variables of type g:value.
-  (cffi:with-foreign-objects ((value1 'g:value) (value2 'g:value))
+  (cffi:with-foreign-objects ((value1 '(:struct g:value))
+                              (value2 '(:struct g:value)))
 
     ;; Initialization, setting and reading a value of type g:value
-    (g:value-init value1 +g-type-string+)
+    (g:value-init value1 \"gchararray\")
     (setf (g:value-string value1) \"string\")
     (format t \"value1 = ~A~%\" (g:value-string value1))
-    (format t \"type   = ~A~%\" (g:value-type value1))
+    (format t \"gtype  = ~A~%\" (g:value-type value1))
     (format t \"name   = ~A~%~%\" (g:value-type-name value1))
 
-    ;; The same in one step with the Lisp extension set-g:value
-    (set-g-value value2 \"a second string\" +g-type-string+ :zero-g-value t)
+    ;; The same in one step with the G:VALUE-SET function
+    (g:value-set value2 \"a second string\" \"gchararray\")
     (format t \"value2 = ~A~%\" (parse-g-value value2))
-    (format t \"type   = ~A~%\" (g:value-type value2))
+    (format t \"gtype  = ~A~%\" (g:value-type value2))
     (format t \"name   = ~A~%~%\" (g:value-type-name value2))
 
     ;; Reuse value1 for an integer value.
     (g:value-unset value1)
-    (g:value-init value1 +g-type-int+)
+    (g:value-init value1 \"gint\")
     (setf (g:value-int value1) 42)
-    (format t \"value1 = ~A~%\" (parse-g-value value1))
-    (format t \"type   = ~A~%\" (g:value-type value1))
+    (format t \"value1 = ~A~%\" (g:value-get value1))
+    (format t \"gtype  = ~A~%\" (g:value-type value1))
     (format t \"name   = ~A~%~%\" (g:value-type-name value1))
 
     ;; The types integer and string are transformable.
-    (assert (g:value-type-transformable +g-type-int+ +g-type-string+))
+    (assert (g:value-type-transformable \"gint\" \"gchararray\"))
 
     ;; Transform value1 of type integer into value2 which is a string
     (g:value-transform value1 value2)
-    (format t \"value1 = ~A~%\" (parse-g-value value1))
-    (format t \"value2 = ~A~%~%\" (parse-g-value value2))
+    (format t \"value1 = ~A~%\" (g:value-get value1))
+    (format t \"value2 = ~A~%~%\" (g:value-get value2))
 
     ;; Some test functions.
-    (assert (g:value-holds value1 +g-type-int+))
-    (format t \"value-holds is ~A~%\" (g:value-holds value1 +g-type-int+))
-    (format t \"is-value is ~A~%~%\" (g:type-is-value +g-type-int+))
+    (assert (g:value-holds value1 \"gint\"))
+    (format t \"value-holds is ~A~%\" (g:value-holds value1 \"gint\"))
+    (format t \"is-value is ~A~%~%\" (g:type-is-value \"gint\"))
 
     ;; Reuse value2 again for a string.
     (g:value-unset value2)
-    (g:value-init value2 +g-type-string+)
+    (g:value-init value2 \"gchararray\")
     (setf (g:value-string value2) \"string\")
-    (format t \"value2 = ~A~%\" (parse-g-value value2))
+    (format t \"value2 = ~A~%\" (g:value-get value2))
 
     ;; Register the transformation int2string
     (g:value-register-transform-func \"gint\"
@@ -369,7 +374,7 @@
                                      (cffi:callback int2string))
     ;; Try the transformation
     (g:value-transform value1 value2)
-    (format t \"value2 = ~A~%~%\" (parse-g-value value2))))
+    (format t \"value2 = ~A~%~%\" (g:value-get value2))))
   @end{pre}
   The data within the @sym{g:value} instance has protected scope: it is
   accessible only to functions within a @code{GTypeValueTable} structure, or
@@ -402,26 +407,24 @@
 
 (defun value-holds (value gtype)
  #+liber-documentation
- "@version{#2022-12-29}
+ "@version{2023-6-25}
   @argument[value]{a @symbol{g:value} instance}
-  @argument[gtype]{a @class{g:type-t} value}
-  @return{@em{True} if @arg{value} holds the @arg{gtype}.}
+  @argument[gtype]{a @class{g:type-t} type}
+  @return{@em{True} if @arg{value} holds a value of @arg{gtype} type.}
   @begin{short}
-    Checks if @arg{value} holds or contains a value of @arg{gtype}.
+    Checks if @arg{value} holds or contains a value of @arg{gtype} type.
   @end{short}
   @begin[Example]{dictionary}
     @begin{pre}
-(setq value
-      (cffi:with-foreign-object (value 'g:value)
-        (g:value-init value \"gint\")))
-=> #.(SB-SYS:INT-SAP #XB7910FE8)
-(g:value-holds value \"gint\") => T
-(g:value-holds value \"gboolean\") => NIL
+(cffi:with-foreign-object (value '(:struct g:value))
+  (g:value-init value \"gint\")
+  (g:value-holds value \"gint\"))
+=> t
     @end{pre}
   @end{dictionary}
   @see-symbol{g:value}
   @see-class{g:type-t}"
-  (g-type= gtype (value-type value)))
+  (eq (glib:gtype gtype) (value-type value)))
 
 (export 'value-holds)
 
@@ -431,24 +434,23 @@
 
 (defun value-type (value)
  #+liber-documentation
- "@version{#2022-12-29}
+ "@version{2023-6-25}
   @argument[value]{a @symbol{g:value} instance}
-  @return{The @class{g:type-t} of @arg{value}.}
+  @return{The @class{g:type-t} type of @arg{value}.}
   @begin{short}
     Get the type identifier of @arg{value}.
   @end{short}
   @begin[Example]{dictionary}
     @begin{pre}
-(setq value
-      (cffi:with-foreign-object (value 'g:value)
-        (g:value-init value \"gint\")))
-=> #.(SB-SYS:INT-SAP #XB7910FE8)
-(g:value-type value) => #S(GTYPE :NAME \"gint\" :%ID 24)
+(cffi:with-foreign-object (value '(:struct g:value))
+  (g:value-init value \"gint\")
+  (g:value-type value))
+=> #<GTYPE :name \"gint\" :id 24>
     @end{pre}
   @end{dictionary}
   @see-symbol{g:value}
   @see-class{g:type-t}"
-  (cffi:foreign-slot-value value '(:struct value) :type))
+  (cffi:foreign-slot-value value '(:struct value) :gtype))
 
 (export 'value-type)
 
@@ -458,7 +460,7 @@
 
 (defun value-type-name (value)
  #+liber-documentation
- "@version{#2022-12-29}
+ "@version{2023-6-25}
   @argument[value]{a @symbol{g:value} instance}
   @return{The type name of @arg{value}.}
   @begin{short}
@@ -466,11 +468,10 @@
   @end{short}
   @begin[Example]{dictionary}
     @begin{pre}
-(setq value
-      (cffi:with-foreign-object (value 'g:value)
-        (g:value-init value \"gint\")))
-=> #.(SB-SYS:INT-SAP #XB7910FE8)
-(g:value-type-name value) => \"gint\"
+(cffi:with-foreign-object (value '(:struct g:value))
+  (g:value-init value \"gint\")
+  (g:value-type-name value))
+=> \"gint\"
     @end{pre}
   @end{dictionary}
   @see-symbol{g:value}"
@@ -551,7 +552,7 @@
   @end{short}
   @see-class{g:type-t}
   @see-symbol{g:value}"
-  (gtype (cffi:foreign-funcall "g_value_get_type" :size)))
+  (glib:gtype (cffi:foreign-funcall "g_value_get_type" :size)))
 
 (glib-init:at-init () (type-value))
 
@@ -578,28 +579,23 @@
 ;; Called from value-init to initialize a GValue to zero
 
 (defun %value-zero (value)
- #+liber-documentation
- "@version{#2013-7-21}
-  This function is called from the @fun{value-init} function to initialize
-  the @symbol{value} instance with zeros. @arg{value} is a C pointer to the
-  @symbol{value} instance.
-  @see-symbol{value}
-  @see-function{value-init}"
-  (loop for i from 0 below (cffi:foreign-type-size '(:struct value))
-        do (setf (cffi:mem-ref value :uchar i) 0)))
+  (iter (for i from 0 below (cffi:foreign-type-size '(:struct value)))
+        (setf (cffi:mem-ref value :uchar i) 0)))
 
 (cffi:defcfun ("g_value_init" %value-init) (:pointer (:struct value))
   (value (:pointer (:struct value)))
   (gtype type-t))
 
+;; TODO: The documentation is not complet.
+
 (defun value-init (value &optional (gtype nil))
  #+liber-documentation
- "@version{#2022-12-29}
+ "@version{2023-6-25}
   @argument[value]{an uninitialized @symbol{g:value} instance}
-  @argument[gtype]{a @class{g:type-t} @arg{value} should hold values of}
+  @argument[gtype]{a @class{g:type-t} type @arg{value} should hold values of}
   @return{The @symbol{g:value} instance that has been passed in.}
   @begin{short}
-    Initializes @arg{value} with the default value of @arg{gtype}.
+    Initializes @arg{value} with the @arg{gtype} type.
   @end{short}
   @see-symbol{g:value}
   @see-class{g:type-t}"
@@ -618,7 +614,7 @@
 
 (cffi:defcfun ("g_value_copy" value-copy) :void
  #+liber-documentation
- "@version{#2022-12-29}
+ "@version{2023-6-25}
   @argument[src]{an initialized @symbol{g:value} instance}
   @argument[dest]{an initialized @symbol{g:value} instance of the same
     type as @arg{src}}
@@ -842,7 +838,7 @@
 ;;; g_value_register_transform_func ()
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcfun ("g_value_register_transform_func" value-register-transform-func) 
+(cffi:defcfun ("g_value_register_transform_func" value-register-transform-func)
     :void
  #+liber-documentation
  "@version{#2022-12-29}

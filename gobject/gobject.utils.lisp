@@ -1,7 +1,7 @@
 ;;; ----------------------------------------------------------------------------
 ;;; gobject.utils.lisp
 ;;;
-;;; Copyright (C) 2011 - 2012 Dieter Kaiser
+;;; Copyright (C) 2011 - 2023 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -25,31 +25,32 @@
 (in-package :gobject)
 
 (defvar *generation-exclusions* nil)
+(defvar *additional-properties* nil)
 
 ;; Get the definition of a GType
 
-(defun get-g-type-definition (type &optional lisp-name-package)
-  (maybe-call-type-init type)
-  (cond ((type-is-a type (gtype +g-type-enum+))
-         (get-g-enum-definition type lisp-name-package))
-        ((type-is-a type (gtype +g-type-flags+))
-         (get-g-flags-definition type lisp-name-package))
-        ((type-is-a type (gtype +g-type-interface+))
-         (get-g-interface-definition type lisp-name-package))
-        ((type-is-a type (gtype +g-type-object+))
-         (get-g-class-definition type lisp-name-package))
+(defun get-g-type-definition (gtype &optional lisp-name-package)
+  (maybe-call-type-init gtype)
+  (cond ((type-is-a gtype (glib:gtype +g-type-enum+))
+         (get-g-enum-definition gtype lisp-name-package))
+        ((type-is-a gtype (glib:gtype +g-type-flags+))
+         (get-g-flags-definition gtype lisp-name-package))
+        ((type-is-a gtype (glib:gtype +g-type-interface+))
+         (get-g-interface-definition gtype lisp-name-package))
+        ((type-is-a gtype (glib:gtype +g-type-object+))
+         (get-g-class-definition gtype lisp-name-package))
         (t
          (error "Do not know how to generate type definition for ~A type ~A"
-                (gtype-name (type-fundamental type))
-                (or (ignore-errors (gtype-name (gtype type)))
-                    type)))))
+                (glib:gtype-name (type-fundamental gtype))
+                (or (ignore-errors (glib:gtype-name (glib:gtype gtype)))
+                    gtype)))))
 
 ;;; ----------------------------------------------------------------------------
 
-(defun maybe-call-type-init (type)
-  (when (and (stringp type)
-             (null (gtype type)))
-    (let ((type-init-name (probable-type-init-name type)))
+(defun maybe-call-type-init (gtype)
+  (when (and (stringp gtype)
+             (null (glib:gtype gtype)))
+    (let ((type-init-name (probable-type-init-name gtype)))
       (when (cffi:foreign-symbol-pointer type-init-name)
         (cffi:foreign-funcall-pointer
             (cffi:foreign-symbol-pointer type-init-name)
@@ -94,8 +95,10 @@
   (let ((gclass (type-class-ref gtype)))
     (unwind-protect
       (loop
-        with n = (cffi:foreign-slot-value gclass '(:struct enum-class) :n-values)
-        with values = (cffi:foreign-slot-value gclass '(:struct enum-class) :values)
+        with n = (cffi:foreign-slot-value gclass
+                                          '(:struct enum-class) :n-values)
+        with values = (cffi:foreign-slot-value gclass
+                                               '(:struct enum-class) :values)
         for i from 0 below n
         for value = (cffi:mem-aptr values '(:struct enum-value) i)
         collect
@@ -107,30 +110,29 @@
 
 ;; Get the definition of a GEnum type
 
-(defun get-g-enum-definition (type &optional lisp-name-package)
-  (when (and (stringp type)
-             (null (gtype type)))
-    (let ((type-init-name (probable-type-init-name type)))
+(defun get-g-enum-definition (gtype &optional lisp-name-package)
+  (when (and (stringp gtype)
+             (null (glib:gtype gtype)))
+    (let ((type-init-name (probable-type-init-name gtype)))
       (when (cffi:foreign-symbol-pointer type-init-name)
         (cffi:foreign-funcall-pointer
             (cffi:foreign-symbol-pointer type-init-name)
                                          ()
                                          :int))))
   (when *generated-types*
-    (setf (gethash (gtype-name (gtype type)) *generated-types*) t))
+    (setf (gethash (glib:gtype-name (glib:gtype gtype)) *generated-types*) t))
   (let* ((*lisp-name-package* (or lisp-name-package
                                   *lisp-name-package* *package*))
-         (type (gtype type))
-         (g-name (gtype-name type))
-         (name (g-name->name g-name))
-         (items (get-enum-items type))
-         (probable-type-initializer (probable-type-init-name g-name)))
-    `(define-g-enum ,g-name ,name
+         (gtype (glib:gtype gtype))
+         (gname (glib:gtype-name gtype))
+         (name (g-name->name gname))
+         (items (get-enum-items gtype))
+         (probable-type-initializer (probable-type-init-name gname)))
+    `(define-g-enum ,gname ,name
          (:export t
-                  ,@(when (cffi:foreign-symbol-pointer probable-type-initializer)
-                          (list :type-initializer
-                                probable-type-initializer)))
-       ,@(mapcar #'enum-value->definition items))))
+          ,@(when (cffi:foreign-symbol-pointer probable-type-initializer)
+              (list :type-initializer probable-type-initializer)))
+         ,@(mapcar #'enum-value->definition items))))
 
 (defun enum-value->definition (enum-value)
   (let ((value-name (intern (lispify-name (enum-item-nick enum-value))
@@ -156,8 +158,10 @@
   (let ((gclass (type-class-ref gtype)))
     (unwind-protect
       (loop
-        with n = (cffi:foreign-slot-value gclass '(:struct flags-class) :n-values)
-        with values = (cffi:foreign-slot-value gclass '(:struct flags-class) :values)
+        with n = (cffi:foreign-slot-value gclass
+                                          '(:struct flags-class) :n-values)
+        with values = (cffi:foreign-slot-value gclass
+                                               '(:struct flags-class) :values)
         for i from 0 below n
         for value = (cffi:mem-aptr values '(:struct flags-value) i)
         collect
@@ -169,24 +173,24 @@
 
 ;; Get the definition of a GFlags type
 
-(defun get-g-flags-definition (type &optional lisp-name-package)
-  (when (and (stringp type) (null (gtype type)))
-    (let ((type-init-name (probable-type-init-name type)))
+(defun get-g-flags-definition (gtype &optional lisp-name-package)
+  (when (and (stringp gtype) (null (glib:gtype gtype)))
+    (let ((type-init-name (probable-type-init-name gtype)))
       (when (cffi:foreign-symbol-pointer type-init-name)
         (cffi:foreign-funcall-pointer
             (cffi:foreign-symbol-pointer type-init-name)
                                          ()
                                          :int))))
   (when *generated-types*
-    (setf (gethash (gtype-name (gtype type)) *generated-types*) t))
+    (setf (gethash (glib:gtype-name (glib:gtype gtype)) *generated-types*) t))
   (let* ((*lisp-name-package* (or lisp-name-package
                                   *lisp-name-package* *package*))
-         (type (gtype type))
-         (g-name (gtype-name type))
-         (name (g-name->name g-name))
-         (items (get-flags-items type))
-         (probable-type-initializer (probable-type-init-name g-name)))
-    `(define-g-flags ,g-name ,name
+         (gtype (glib:gtype gtype))
+         (gname (glib:gtype-name gtype))
+         (name (g-name->name gname))
+         (items (get-flags-items gtype))
+         (probable-type-initializer (probable-type-init-name gname)))
+    `(define-g-flags ,gname ,name
          (:export t
                   ,@(when (cffi:foreign-symbol-pointer probable-type-initializer)
                           (list :type-initializer
@@ -206,12 +210,12 @@
 (defun property->property-definition (class-name property)
   (let ((name (g-name->name (%param-spec-name property)))
         (accessor-name (accessor-name class-name (%param-spec-name property)))
-        (g-name (%param-spec-name property))
-        (type (gtype-name (%param-spec-type property)))
+        (gname (%param-spec-name property))
+        (gtype (glib:gtype-name (%param-spec-type property)))
         (readable (%param-spec-readable property))
         (writable (and (%param-spec-writable property)
                        (not (%param-spec-constructor-only property)))))
-    `(,name ,accessor-name ,g-name ,type ,readable ,writable)))
+    `(,name ,accessor-name ,gname ,gtype ,readable ,writable)))
 
 (defun g-name->name (name)
   (or (get-lisp-name-exception name)
@@ -232,7 +236,7 @@
 ;;; ----------------------------------------------------------------------------
 
 (defun get-g-interface-definition (interface &optional lisp-name-package)
-  (when (and (stringp interface) (null (ignore-errors (gtype interface))))
+  (when (and (stringp interface) (null (ignore-errors (glib:gtype interface))))
     (let ((type-init-name (probable-type-init-name interface)))
       (when (cffi:foreign-symbol-pointer type-init-name)
         (cffi:foreign-funcall-pointer
@@ -240,16 +244,17 @@
                                          ()
                                         :int))))
   (when *generated-types*
-    (setf (gethash (gtype-name (gtype interface)) *generated-types*) t))
+    (setf (gethash (glib:gtype-name (glib:gtype interface)) *generated-types*)
+          t))
   (let* ((*lisp-name-package* (or lisp-name-package
                                   *lisp-name-package* *package*))
-         (type (gtype interface))
-         (g-name (gtype-name type))
-         (name (g-name->name g-name))
-         (properties (sort (copy-list (interface-properties type))
+         (gtype (glib:gtype interface))
+         (gname (glib:gtype-name gtype))
+         (name (g-name->name gname))
+         (properties (sort (copy-list (interface-properties gtype))
                            #'string< :key #'%param-spec-name))
-         (probable-type-initializer (probable-type-init-name g-name)))
-    `(define-g-interface ,g-name ,name
+         (probable-type-initializer (probable-type-init-name gname)))
+    `(define-g-interface ,gname ,name
          (:export t
                   ,@(when (cffi:foreign-symbol-pointer probable-type-initializer)
                           `(:type-initializer ,probable-type-initializer)))
@@ -263,7 +268,7 @@
                                                     (cadr property-definition))
                                      (cddr property-definition))
                                (list property-definition)))
-                         (cdr (find g-name *additional-properties*
+                         (cdr (find gname *additional-properties*
                                     :key 'car
                                     :test 'string=)))))))
 
@@ -290,7 +295,7 @@
 
 (defun get-g-class-definition (gtype &optional lisp-name-package)
   (when (and (stringp gtype)
-             (null (ignore-errors (gtype gtype))))
+             (null (ignore-errors (glib:gtype gtype))))
     (let ((type-init-name (probable-type-init-name gtype)))
       (when (cffi:foreign-symbol-pointer type-init-name)
         (cffi:foreign-funcall-pointer
@@ -298,29 +303,29 @@
                                          ()
                                          :int))))
   (when *generated-types*
-    (setf (gethash (gtype-name (gtype gtype)) *generated-types*) t))
+    (setf (gethash (glib:gtype-name (glib:gtype gtype)) *generated-types*) t))
   (let* ((*lisp-name-package* (or lisp-name-package
                                   *lisp-name-package*
                                   *package*))
-         (gtype (gtype gtype))
-         (g-name (gtype-name gtype))
-         (name (g-name->name g-name))
+         (gtype (glib:gtype gtype))
+         (gname (glib:gtype-name gtype))
+         (name (g-name->name gname))
          (superclass-g-type (type-parent gtype))
-         (superclass-name (g-name->name (gtype-name superclass-g-type)))
+         (superclass-name (g-name->name (glib:gtype-name superclass-g-type)))
          (interfaces (type-interfaces gtype))
          (properties (class-properties gtype))
-         (type-init-name (probable-type-init-name g-name))
+         (type-init-name (probable-type-init-name gname))
          (own-properties
           (sort (copy-list (remove gtype
                                    properties
                                    :key #'%param-spec-owner-type
-                                   :test-not #'g-type=))
+                                   :test-not #'gtype=))
                 #'string< :key #'%param-spec-name)))
-    `(define-g-object-class ,g-name ,name
+    `(define-g-object-class ,gname ,name
          (:superclass ,superclass-name
           :export t
           :interfaces
-          (,@(sort (mapcar #'gtype-name interfaces) 'string<))
+          (,@(sort (mapcar #'glib:gtype-name interfaces) 'string<))
           ,@(when (and (cffi:foreign-symbol-pointer type-init-name)
                        (not (cffi:null-pointer-p
                                 (cffi:foreign-symbol-pointer type-init-name))))
@@ -335,8 +340,8 @@
                                                (cadr property-definition))
                                 (cddr property-definition))
                           (list property-definition)))
-                    (cdr (find g-name *additional-properties*
-                                      :key 'car :test 'string=)))))))
+                    (cdr (find gname *additional-properties*
+                                     :key 'car :test 'string=)))))))
 
 ;; Returns a list of properties of GObject class g-type. Each property
 ;; is described by an object of type param-spec. type is an
@@ -380,7 +385,7 @@
                                           :exclusions exclusions
                                           :additional-properties
                                           additional-properties))
-      (let* ((*generation-exclusions* (mapcar #'gtype exclusions))
+      (let* ((*generation-exclusions* (mapcar #'glib:gtype exclusions))
              (*lisp-name-package* (or package *package*))
              (*package* *lisp-name-package*)
              (*strip-prefix* (or prefix ""))
@@ -392,7 +397,7 @@
                                     (filter-types-by-prefix
                                      (get-referenced-types root-type)
                                      prefix))))
-        (setf exclusions (mapcar #'gtype exclusions))
+        (setf exclusions (mapcar #'glib:gtype exclusions))
         (when prologue
           (write-string prologue file)
           (terpri file))
@@ -402,25 +407,25 @@
             do
             (loop
               for referenced-type in (get-shallow-referenced-types interface)
-              do (pushnew referenced-type referenced-types :test 'g-type=)))
+              do (pushnew referenced-type referenced-types :test 'gtype=)))
           (loop
             for object in objects
             do
             (loop
               for referenced-type in (get-shallow-referenced-types object)
-              do (pushnew referenced-type referenced-types :test 'g-type=)))
+              do (pushnew referenced-type referenced-types :test 'gtype=)))
           (loop
              for enum-type in (filter-types-by-fund-type
                                referenced-types "GEnum")
              for def = (get-g-enum-definition enum-type)
-             unless (member enum-type exclusions :test 'g-type=)
+             unless (member enum-type exclusions :test 'gtype=)
              do (format file "~S~%~%" def))
 
           (loop
              for flags-type in (filter-types-by-fund-type
                                 referenced-types "GFlags")
              for def = (get-g-flags-definition flags-type)
-             unless (member flags-type exclusions :test 'g-type=)
+             unless (member flags-type exclusions :test 'gtype=)
              do (format file "~S~%~%" def)))
         (loop
            with auto-enums = (and include-referenced
@@ -428,7 +433,7 @@
                                    referenced-types "GEnum"))
            for enum in enums
            for def = (get-g-enum-definition enum)
-           unless (find enum auto-enums :test 'g-type=)
+           unless (find enum auto-enums :test 'gtype=)
            do (format file "~S~%~%" def))
         (loop
            with auto-flags = (and include-referenced
@@ -436,7 +441,7 @@
                                    referenced-types "GFlags"))
            for flags-type in flags
            for def = (get-g-flags-definition flags-type)
-           unless (find flags-type auto-flags :test 'g-type=)
+           unless (find flags-type auto-flags :test 'gtype=)
            do (format file "~S~%~%" def))
         (loop
            for interface in interfaces
@@ -446,7 +451,8 @@
            for def in (get-g-class-definitions-for-root root-type)
            do (format file "~S~%~%" def))
         (iter (for object in objects)
-              (unless (gethash (gtype-name (gtype object)) *generated-types*)
+              (unless (gethash (glib:gtype-name (glib:gtype object))
+                               *generated-types*)
                 (for def = (get-g-class-definition object))
                 (format file "~S~%~%" def))))))
 
@@ -454,71 +460,73 @@
 
 ;; Helper functions for generate-types-hierarchy-to-file
 
-(defun get-g-class-definitions-for-root (type)
-  (setf type (gtype type))
-  (get-g-class-definitions-for-root-1 type))
+(defun get-g-class-definitions-for-root (gtype)
+  (setf gtype (glib:gtype gtype))
+  (get-g-class-definitions-for-root-1 gtype))
 
 (defun get-g-class-definitions-for-root-1 (gtype)
-  (unless (member (gtype gtype) *generation-exclusions* :test 'g-type=)
+  (unless (member (glib:gtype gtype) *generation-exclusions* :test 'gtype=)
     (iter (when (first-iteration-p)
             (unless (and *generated-types*
-                         (gethash (gtype-name (gtype gtype)) *generated-types*))
+                         (gethash (glib:gtype-name (glib:gtype gtype))
+                                  *generated-types*))
               (appending (list (get-g-class-definition gtype)))))
           (for child-type in (sort (copy-list (type-children gtype))
-                                   #'string< :key #'gtype-name))
+                                   #'string< :key #'glib:gtype-name))
           (appending (get-g-class-definitions-for-root-1 child-type)))))
 
 ;;; ----------------------------------------------------------------------------
 
-(defun get-referenced-types-1 (type)
-  (setf type (gtype type))
+(defun get-referenced-types-1 (gtype)
+  (setf gtype (glib:gtype gtype))
   (loop
-     for property-type in (sort (copy-list (get-shallow-referenced-types type))
-                                #'string> :key #'gtype-name)
-     do (pushnew property-type *referenced-types* :test 'g-type=))
+     for property-type in (sort (copy-list (get-shallow-referenced-types gtype))
+                                #'string> :key #'glib:gtype-name)
+     do (pushnew property-type *referenced-types* :test 'gtype=))
   (loop
-     for type in (sort (copy-list (type-children type))
-                       #'string< :key #'gtype-name)
-     do (get-referenced-types-1 type)))
+     for gtype in (sort (copy-list (type-children gtype))
+                       #'string< :key #'glib:gtype-name)
+     do (get-referenced-types-1 gtype)))
 
 (defun get-referenced-types (root-type)
   (let (*referenced-types*)
-    (get-referenced-types-1 (gtype root-type))
+    (get-referenced-types-1 (glib:gtype root-type))
     *referenced-types*))
 
 ;;; ----------------------------------------------------------------------------
 
 (defun filter-types-by-prefix (types prefix)
   (remove-if-not
-   (lambda (type)
-     (starts-with (gtype-name (gtype type)) prefix))
+   (lambda (gtype)
+     (starts-with (glib:gtype-name (glib:gtype gtype)) prefix))
    types))
 
 (defun filter-types-by-fund-type (types fund-type)
-  (setf fund-type (gtype fund-type))
+  (setf fund-type (glib:gtype fund-type))
   (remove-if-not
-   (lambda (type)
-     (equal (type-fundamental (gtype type)) fund-type))
+   (lambda (gtype)
+     (equal (type-fundamental (glib:gtype gtype)) fund-type))
    types))
 
 ;;; ----------------------------------------------------------------------------
 
-(defun get-shallow-referenced-types (type)
-  (setf type (gtype type))
+(defun get-shallow-referenced-types (gtype)
+  (setf gtype (glib:gtype gtype))
   (remove-duplicates (sort (loop
-                             for property in (class-or-interface-properties type)
-                             when (g-type= type (%param-spec-owner-type property))
+                             for property in (class-or-interface-properties gtype)
+                             when (gtype= gtype
+                                           (%param-spec-owner-type property))
                              collect (%param-spec-type property))
                            #'string<
-                           :key #'gtype-name)
+                           :key #'glib:gtype-name)
                      :test 'equal))
 
-(defun class-or-interface-properties (type)
-  (setf type (gtype type))
+(defun class-or-interface-properties (gtype)
+  (setf gtype (glib:gtype gtype))
   (cond
-    ((g-type= (type-fundamental type) (gtype +g-type-object+))
-     (class-properties type))
-    ((g-type= (type-fundamental type) (gtype +g-type-interface+))
-     (interface-properties type))))
+    ((gtype= (type-fundamental gtype) (glib:gtype +g-type-object+))
+     (class-properties gtype))
+    ((gtype= (type-fundamental gtype) (glib:gtype +g-type-interface+))
+     (interface-properties gtype))))
 
 ;;; --- End of file gobject.utils.lisp -----------------------------------------

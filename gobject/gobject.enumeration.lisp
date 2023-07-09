@@ -156,18 +156,18 @@
 
 (defun parse-g-value-enum (gvalue)
   (let* ((gtype (value-type gvalue))
-         (enum-type (glib:symbol-for-gtype (gtype-name gtype))))
+         (enum-type (glib:symbol-for-gtype (glib:gtype-name gtype))))
     (unless enum-type
-      (error "Enum ~A is not registered" (gtype-name gtype)))
+      (error "Enum ~A is not registered" (glib:gtype-name gtype)))
     (cffi:convert-from-foreign (value-enum gvalue) enum-type)))
 
 ;; This function is called from set-g-value to set a GEnum Value.
 
 (defun set-g-value-enum (gvalue value)
   (let* ((gtype (value-type gvalue))
-         (enum-type (glib:symbol-for-gtype (gtype-name gtype))))
+         (enum-type (glib:symbol-for-gtype (glib:gtype-name gtype))))
     (unless enum-type
-      (error "Enum ~A is not registered" (gtype-name gtype)))
+      (error "Enum ~A is not registered" (glib:gtype-name gtype)))
     (setf (value-enum gvalue) (cffi:convert-to-foreign value enum-type))))
 
 ;;; ----------------------------------------------------------------------------
@@ -294,7 +294,7 @@
     Checks whether @arg{gtype} is a \"GEnum\" type.
   @end{short}
   @see-class{g:type-t}"
-  (eq (type-fundamental gtype) (gtype "GEnum")))
+  (eq (type-fundamental gtype) (glib:gtype "GEnum")))
 
 (export 'type-is-enum)
 
@@ -464,18 +464,18 @@
 
 (defun parse-g-value-flags (gvalue)
   (let* ((gtype (value-type gvalue))
-         (flags-type (glib:symbol-for-gtype (gtype-name gtype))))
+         (flags-type (glib:symbol-for-gtype (glib:gtype-name gtype))))
     (unless flags-type
-      (error "Flags ~A is not registered." (gtype-name gtype)))
+      (error "Flags ~A is not registered." (glib:gtype-name gtype)))
     (cffi:convert-from-foreign (value-flags gvalue) flags-type)))
 
 ;; This function is called from set-g-value to set a GFlag value.
 
 (defun set-g-value-flags (gvalue value)
   (let* ((gtype (value-type gvalue))
-         (flags-type (glib:symbol-for-gtype (gtype-name gtype))))
+         (flags-type (glib:symbol-for-gtype (glib:gtype-name gtype))))
     (unless flags-type
-      (error "Flags ~A is not registered." (gtype-name gtype)))
+      (error "Flags ~A is not registered." (glib:gtype-name gtype)))
     (setf (value-flags gvalue) (cffi:convert-to-foreign value flags-type))))
 
 ;;; ----------------------------------------------------------------------------
@@ -561,7 +561,7 @@
     Checks whether @arg{type} is a \"GFlags\" type.
   @end{short}
   @see-class{g:type-t}"
-  (eq (type-fundamental gtype) (gtype "GFlags")))
+  (eq (type-fundamental gtype) (glib:gtype "GFlags")))
 
 (export 'type-is-flags)
 

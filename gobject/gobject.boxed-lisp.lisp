@@ -25,10 +25,10 @@
 (in-package :gobject)
 
 (defmethod parse-g-value-for-type (gvalue
-                                   (gtype (eql (gtype "GBoxed")))
+                                   (gtype (eql (glib:gtype "GBoxed")))
                                    kind)
   (declare (ignore kind))
-  (if (g-type= (value-type gvalue) (type-strv))
+  (if (gtype= (value-type gvalue) (type-strv))
       ;; Handle the special case for the GStrv type
       (cffi:convert-from-foreign (value-boxed gvalue)
                                  '(glib:strv-t :free-from-foreign nil))
@@ -52,9 +52,9 @@
 ;;; ----------------------------------------------------------------------------
 
 (defmethod set-g-value-for-type (gvalue
-                                 (gtype (eql (gtype "GBoxed")))
+                                 (gtype (eql (glib:gtype "GBoxed")))
                                  value)
-  (if (g-type= (value-type gvalue) (type-strv))
+  (if (gtype= (value-type gvalue) (type-strv))
       ;; Handle the special case for the GStrv type
       (setf (value-boxed gvalue)
             (cffi:convert-to-foreign value

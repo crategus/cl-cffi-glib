@@ -773,184 +773,6 @@
   An integer constant that represents the number of identifiers reserved for
   types that are assigned at compile time.")
 
-#|
-;;; ----------------------------------------------------------------------------
-;;; GType
-;;; ----------------------------------------------------------------------------
-
-;; %type-t represents the foreign type GType
-
-(cffi:defctype %type-t :size)
-
-(cffi:defcfun ("g_type_name" %type-name) :string
-  (gtype %type-t)) ; Use %type-t and not type-t
-
-;;; ----------------------------------------------------------------------------
-
-;; gtype is a Lisp representation of a foreign GType
-
-(defstruct (gtype
-             ;; a print function to get nice output
-             (:print-function
-               (lambda (struct stream depth)
-                 (declare (ignore depth))
-                 (print-unreadable-object (struct stream)
-                   (format stream "GTYPE :name \"~A\" :id ~D"
-                                  (gtype-name struct)
-                                  (gtype-%id struct))))))
-  name
-  %id)
-
-;;; ----------------------------------------------------------------------------
-
-;; Global hash tables to store names and ids of foreign GTypes
-
-(defvar *name-to-gtype* (make-hash-table :test 'equal))
-(defvar *id-to-gtype* (make-hash-table))
-(defvar *gtype-lock* (bt:make-lock "gtype lock"))
-
-#+nil
-(defun invalidate-gtypes ()
-  (bt:with-lock-held (*gtype-lock*)
-    (clrhash *id-to-gtype*)
-    (iter (for (name gtype) in-hashtable *name-to-gtype*)
-          (setf (gtype-%id gtype) nil))))
-
-(defun invalidate-gtypes ()
-  (bt:with-lock-held (*gtype-lock*)
-    (clrhash *id-to-gtype*)
-    (loop for gtype being the hash-value of *name-to-gtype*
-          do (setf (gtype-%id gtype) nil))))
-
-(glib-init:at-finalize () (invalidate-gtypes))
-|#
-
-;;; ----------------------------------------------------------------------------
-
-#|
-(defvar *warn-unknown-gtype* t)
-
-(defun warn-unknown-gtype (name)
-  ;; Do not print a warning for types which are not derived from GObject
-  ;; FIXME: This is a hack.
-  (when (and *warn-unknown-gtype*
-             (or (numberp name)
-                 (not (member name '("AtkImplementorIface"
-                                     "LispArrayListStore"
-                                     "LispTreeStore")
-                              :test #'string=))))
-    (warn "GType ~A is not known to GObject." name)))
-
-;; gtype-id replaces the accessor gtype-%id
-
-(defun gtype-id (gtype)
-  (cond ((null gtype) +g-type-invalid+)
-        ((gtype-%id gtype) (gtype-%id gtype))
-        (t
-         (bt:with-lock-held (*gtype-lock*)
-           (let ((id (%type-from-name (gtype-name gtype))))
-             (if (zerop id)
-                 (warn-unknown-gtype (gtype-name gtype))
-                 (setf (gtype-%id gtype) id
-                       (gethash id *id-to-gtype*) gtype))
-             id)))))
-
-|#
-
-;;; ----------------------------------------------------------------------------
-
-#|
-
-;; Make a Lisp representation gtype from a name or an id
-
-(defun gtype-from-name (name)
-  (when name
-    (bt:with-lock-held (*gtype-lock*)
-      (let ((gtype (gethash name *name-to-gtype*)))
-        (when gtype
-          (unless (gtype-%id gtype)
-            (let ((id (%type-from-name name)))
-              (if (zerop id)
-                  (warn-unknown-gtype name)
-                  (setf (gtype-%id gtype) id
-                        (gethash id *id-to-gtype*) gtype))))
-          (return-from gtype-from-name gtype)))
-      (let ((id (%type-from-name name)))
-        (when (zerop id)
-          (warn-unknown-gtype name)
-          (setf id nil))
-        (let ((gtype (make-gtype :name (copy-seq name) :%id id)))
-          (setf (gethash id *id-to-gtype*) gtype
-                (gethash name *name-to-gtype*) gtype)
-          (return-from gtype-from-name gtype))))))
-
-(defun gtype-from-id (id)
-  (unless (zerop id)
-    (bt:with-lock-held (*gtype-lock*)
-      (let ((gtype (gethash id *id-to-gtype*)))
-        (if gtype
-            gtype
-            (let (;; FIXME: This might cause a bug, because %type-name expects
-                  ;; a valid ID. If the ID is not a valid ID the programm might
-                  ;; crash. See the documentation of %type-name. Can we expect
-                  ;; that the ID will always be a valid ID? In this case the
-                  ;; check for the return value is unnecessary.
-                  (name (%type-name id)))
-              (unless name
-                (warn-unknown-gtype id)
-                (return-from gtype-from-id nil))
-              (let ((gtype (gethash name *name-to-gtype*)))
-                (when gtype
-                  (setf (gtype-%id gtype) id
-                        (gethash id *id-to-gtype*) gtype)
-                  (return-from gtype-from-id gtype))
-                (let ((gtype (make-gtype :name name :%id id)))
-                  (setf (gethash id *id-to-gtype*) gtype
-                        (gethash name *name-to-gtype*) gtype)
-                  (return-from gtype-from-id gtype)))))))))
-
-;;; ----------------------------------------------------------------------------
-
-;; The function gtype converts an integer or a string representation of
-;; a foreign GType to a Lisp gtype
-
-(defun gtype (thing)
-  (gtype1 thing))
-
-(define-compiler-macro gtype (&whole whole thing)
-  (if (constantp thing)
-      `(load-time-value (gtype1 ,thing))
-      whole))
-
-(defun gtype1 (thing)
-  (etypecase thing
-    (null nil)
-    (gtype thing)
-    (string (gtype-from-name thing))
-    (integer (gtype-from-id thing))))
-
-(export 'gtype)
-
-;; -----------------------------------------------------------------------------
-
-;; Global hash table for storing the corresponding symbol names for GType names
-;; e. g. "GtkButton" -> 'button
-
-(defvar *symbol-for-gtypes* (make-hash-table :test 'equal))
-
-(defun symbol-for-gtype (name-or-gtype)
-  (let ((key (if (stringp name-or-gtype)
-                 name-or-gtype
-                 (gtype-name (gtype name-or-gtype)))))
-  (gethash key *symbol-for-gtypes*)))
-
-(defun (setf symbol-for-gtype) (symbol name-or-gtype)
-  (let ((key (if (stringp name-or-gtype)
-                 name-or-gtype
-                 (gtype-name (gtype name-or-gtype)))))
-  (setf (gethash key *symbol-for-gtypes*) symbol)))
-|#
-
 ;;; ----------------------------------------------------------------------------
 
 ;; Check for equality of types. This is faster than the function type-is-a.
@@ -958,11 +780,11 @@
 ;; TODO: There is a bug. The function type-t= is used to check against the type
 ;;       +g-type-invalid+. But this does not work.
 
-(defun g-type= (type-1 type-2)
-  (eq (gtype type-1) (gtype type-2)))
+(defun gtype= (gtype1 gtype2)
+  (eq (glib:gtype gtype1) (glib:gtype gtype2)))
 
-(defun g-type/= (type-1 type-2)
-  (not (eq (gtype type-1) (gtype type-2))))
+(defun gtype/= (gtype1 gtype2)
+  (not (eq (glib:gtype gtype1) (glib:gtype gtype2))))
 
 ;;; ----------------------------------------------------------------------------
 
@@ -971,7 +793,7 @@
 
 (cffi:define-foreign-type type-t ()
   ((mangled-p :initarg :mangled-p
-              :reader g-type-mangled-p
+              :reader gtype-mangled-p
               :initform nil
               :documentation
               "Whether the type designator is mangled with
@@ -1000,16 +822,16 @@
   (:actual-type :size)
   (:simple-parser type-t))
 
-(defun g-type-unmangle (type)
-  (logxor type (ldb (byte 1 0) type)))
+(defun gtype-unmangle (gtype)
+  (logxor gtype (ldb (byte 1 0) gtype)))
 
-(defmethod cffi:translate-from-foreign (value (type type-t))
-  (gtype (if (g-type-mangled-p type)
-             (g-type-unmangle value)
-             value)))
+(defmethod cffi:translate-from-foreign (value (gtype type-t))
+  (glib:gtype (if (gtype-mangled-p gtype)
+                  (gtype-unmangle value)
+                  value)))
 
-(defmethod cffi:translate-to-foreign (value (type type-t))
-  (gtype-id (gtype value)))
+(defmethod cffi:translate-to-foreign (value (gtype type-t))
+  (glib:gtype-id (glib:gtype value)))
 
 (export 'type-t)
 
@@ -1701,7 +1523,7 @@
   @end{dictionary}
   @see-class{g:type-t}
   @see-function{g:type-is-fundamental}"
-  (> (gtype-id (gtype gtype)) +g-type-fundamental-max+))
+  (> (glib:gtype-id (glib:gtype gtype)) +g-type-fundamental-max+))
 
 (export 'type-is-derived)
 
@@ -1726,7 +1548,7 @@
   @end{dictionary}
   @see-class{g:type-t}
   @see-function{g:type-is-derived}"
-  (<= (gtype-id (gtype gtype)) +g-type-fundamental-max+))
+  (<= (glib:gtype-id (glib:gtype gtype)) +g-type-fundamental-max+))
 
 (export 'type-is-fundamental)
 
@@ -1881,7 +1703,7 @@
   @end{dictionary}
   @see-class{g:type-t}
   @see-symbol{g:type-interface}"
-  (eq (gtype +g-type-interface+) (type-fundamental gtype)))
+  (eq (glib:gtype +g-type-interface+) (type-fundamental gtype)))
 
 (export 'type-is-interface)
 
@@ -2316,7 +2138,7 @@
   @end{dictionary}
   @see-class{g:type-t}
   @see-function{g:type-from-name}"
-  (gtype-name (gtype gtype)))
+  (glib:gtype-name (glib:gtype gtype)))
 
 (export 'type-name)
 
@@ -2365,7 +2187,7 @@
   @end{dictionary}
   @see-class{g:type-t}
   @see-function{g:type-name}"
-  (gtype name))
+  (glib:gtype name))
 
 (export 'type-from-name)
 

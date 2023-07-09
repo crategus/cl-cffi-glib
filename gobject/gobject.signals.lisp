@@ -2,7 +2,7 @@
 ;;; gobject.signals.lisp
 ;;;
 ;;; The documentation of this file is taken from the GObject Reference Manual
-;;; Version 2.74 and modified to document the Lisp binding to the GObject
+;;; Version 2.76 and modified to document the Lisp binding to the GObject
 ;;; library. See <http://www.gtk.org>. The API documentation of the Lisp
 ;;; binding is available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
@@ -262,7 +262,7 @@
          (fn (retrieve-handler-from-object object function-id))
          (fn-result (call-with-restarts fn args)))
     (when return-type
-      (set-g-value return-value fn-result return-type :g-value-init nil))))
+      (set-g-value return-value fn-result return-type :init-gvalue nil))))
 
 ;;; ----------------------------------------------------------------------------
 
@@ -535,11 +535,11 @@
          (format stream
                  "Signal [#~A] ~A ~A.~A~@[::~A~] (~{~A~^, ~})~@[ [~{~A~^, ~}]~]"
                  (signal-query-signal-id instance)
-                 (gtype-name (signal-query-return-type instance))
-                 (gtype-name (signal-query-owner-type instance))
+                 (glib:gtype-name (signal-query-return-type instance))
+                 (glib:gtype-name (signal-query-owner-type instance))
                  (signal-query-signal-name instance)
                  (signal-query-signal-detail instance)
-                 (mapcar #'gtype-name (signal-query-param-types instance))
+                 (mapcar #'glib:gtype-name (signal-query-param-types instance))
                  (signal-query-signal-flags instance)))))
 
 (export 'signal-query)
@@ -1276,17 +1276,17 @@
         (set-g-value (cffi:mem-aptr params '(:struct value) 0)
                      instance
                      itype
-                     :zero-g-value t)
+                     :zero-gvalue t)
         (iter (for i from 0 below count)
               (for arg in args)
               (for gtype in (signal-query-param-types query))
               (set-g-value (cffi:mem-aptr params '(:struct value) (1+ i))
                            arg
                            gtype
-                           :zero-g-value t))
+                           :zero-gvalue t))
         (prog1
           (if (equal (signal-query-return-type query)
-                     (gtype +g-type-none+))
+                     (glib:gtype +g-type-none+))
               ;; Emit a signal which has no return value
               (let ((detail (signal-query-signal-detail query)))
                 (%signal-emitv params
@@ -2031,7 +2031,7 @@
 ;;; g_signal_has_handler_pending ()
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcfun ("g_signal_has_handler_pending" signal-has-handler-pending) 
+(cffi:defcfun ("g_signal_has_handler_pending" signal-has-handler-pending)
     :boolean
  #+liber-documentation
  "@version{#2022-12-31}
@@ -2103,7 +2103,7 @@
 ;;; g_signal_stop_emission_by_name ()
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcfun ("g_signal_stop_emission_by_name" signal-stop-emission-by-name) 
+(cffi:defcfun ("g_signal_stop_emission_by_name" signal-stop-emission-by-name)
     :void
  #+liber-documentation
  "@version{#2022-12-31}

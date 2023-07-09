@@ -39,16 +39,16 @@
   (log-for :subclass
            ":subclass INSTANCE-INIT for ~A for type ~A (creating ~A)~%"
            instance
-           (gtype-name (cffi:foreign-slot-value class
-                                                '(:struct type-class) :type))
+           (glib:gtype-name (cffi:foreign-slot-value class
+                                                     '(:struct type-class) :type))
            *current-creating-object*)
   (unless (or *current-creating-object*
               *currently-making-object-p*
               (gethash (cffi:pointer-address instance) *foreign-gobjects-strong*)
               (gethash (cffi:pointer-address instance) *foreign-gobjects-weak*))
     (log-for :subclass "Proceeding with initialization...~%")
-    (let* ((type (cffi:foreign-slot-value class '(:struct type-class) :type))
-           (type-name (gtype-name type))
+    (let* ((gtype (cffi:foreign-slot-value class '(:struct type-class) :type))
+           (type-name (glib:gtype-name gtype))
            (lisp-type-info (gethash type-name *registered-types*))
            (lisp-class (%object-type-class lisp-type-info)))
       (make-instance lisp-class :pointer instance))))
@@ -62,8 +62,8 @@
   (declare (ignore data))
   (log-for :subclass
            ":subclass CLASS-INIT for ~A~%"
-           (gtype-name (type-from-class class)))
-  (let* ((type-name (gtype-name (type-from-class class)))
+           (glib:gtype-name (type-from-class class)))
+  (let* ((type-name (glib:gtype-name (type-from-class class)))
          (lisp-type-info (gethash type-name *registered-types*))
          (lisp-class (%object-type-class lisp-type-info)))
     (setf (glib:symbol-for-gtype type-name) lisp-class))
@@ -79,8 +79,9 @@
 ;;; ----------------------------------------------------------------------------
 
 (defun install-properties (class)
-  (let* ((name (gtype-name (cffi:foreign-slot-value class
-                                                    '(:struct type-class) :type)))
+  (let* ((name (glib:gtype-name (cffi:foreign-slot-value class
+                                                         '(:struct type-class)
+                                                         :type)))
          (lisp-type-info (gethash name *registered-types*)))
     (iter (for property in (%object-type-properties lisp-type-info))
           (for param-spec = (property->param-spec property))
@@ -112,15 +113,15 @@
                        property-set-fn)
       property
     (declare (ignore accessor))
-    (let ((property-g-type (gtype property-type))
+    (let ((property-g-type (glib:gtype property-type))
           (flags (append (when property-get-fn (list :readable))
                          (when property-set-fn (list :writable)))))
       (ev-case (type-fundamental property-g-type)
-        ((gtype +g-type-invalid+)
+        ((glib:gtype +g-type-invalid+)
          (error "GValue is of invalid type ~A (~A)"
-                property-g-type (gtype-name property-g-type)))
-        ((gtype +g-type-none+) nil)
-        ((gtype +g-type-char+)
+                property-g-type (glib:gtype-name property-g-type)))
+        ((glib:gtype +g-type-none+) nil)
+        ((glib:gtype +g-type-char+)
          (param-spec-char property-name
                           property-name
                           property-name
@@ -128,7 +129,7 @@
                           (maximum-foreign-integer :char)
                           0
                           flags))
-        ((gtype +g-type-uchar+)
+        ((glib:gtype +g-type-uchar+)
          (param-spec-uchar property-name
                            property-name
                            property-name
@@ -136,13 +137,13 @@
                            (maximum-foreign-integer :uchar nil)
                            0
                            flags))
-        ((gtype +g-type-boolean+)
+        ((glib:gtype +g-type-boolean+)
          (param-spec-boolean property-name
                              property-name
                              property-name
                              nil
                              flags))
-        ((gtype +g-type-int+)
+        ((glib:gtype +g-type-int+)
          (param-spec-int property-name
                          property-name
                          property-name
@@ -150,7 +151,7 @@
                          (maximum-foreign-integer :int)
                          0
                          flags))
-        ((gtype +g-type-uint+)
+        ((glib:gtype +g-type-uint+)
          (param-spec-uint property-name
                           property-name
                           property-name
@@ -158,7 +159,7 @@
                           (maximum-foreign-integer :uint nil)
                           0
                           flags))
-        ((gtype +g-type-long+)
+        ((glib:gtype +g-type-long+)
          (param-spec-long property-name
                           property-name
                           property-name
@@ -166,7 +167,7 @@
                           (maximum-foreign-integer :long)
                           0
                           flags))
-        ((gtype +g-type-ulong+)
+        ((glib:gtype +g-type-ulong+)
          (param-spec-ulong property-name
                            property-name
                            property-name
@@ -174,7 +175,7 @@
                            (maximum-foreign-integer :ulong nil)
                            0
                            flags))
-        ((gtype +g-type-int64+)
+        ((glib:gtype +g-type-int64+)
          (param-spec-int64 property-name
                            property-name
                            property-name
@@ -182,7 +183,7 @@
                            (maximum-foreign-integer :int64)
                            0
                            flags))
-        ((gtype +g-type-uint64+)
+        ((glib:gtype +g-type-uint64+)
          (param-spec-uint64 property-name
                             property-name
                             property-name
@@ -190,7 +191,7 @@
                             (maximum-foreign-integer :uint64 t)
                             0
                             flags))
-        ((gtype +g-type-enum+)
+        ((glib:gtype +g-type-enum+)
          (param-spec-enum property-name
                           property-name
                           property-name
@@ -198,7 +199,7 @@
                           (enum-item-value
                             (first (get-enum-items property-g-type)))
                           flags))
-        ((gtype +g-type-flags+)
+        ((glib:gtype +g-type-flags+)
          (param-spec-enum property-name
                           property-name
                           property-name
@@ -206,7 +207,7 @@
                           (flags-item-value
                             (first (get-flags-items property-g-type)))
                           flags))
-        ((gtype +g-type-float+)
+        ((glib:gtype +g-type-float+)
          (param-spec-float property-name
                            property-name
                            property-name
@@ -214,7 +215,7 @@
                            most-positive-single-float
                            0.0
                            flags))
-        ((gtype +g-type-double+)
+        ((glib:gtype +g-type-double+)
          (param-spec-double property-name
                             property-name
                             property-name
@@ -222,24 +223,24 @@
                             most-positive-double-float
                             0.0d0
                             flags))
-        ((gtype +g-type-string+)
+        ((glib:gtype +g-type-string+)
          (param-spec-string property-name
                             property-name
                             property-name
                             ""
                             flags))
-        ((gtype +g-type-pointer+)
+        ((glib:gtype +g-type-pointer+)
          (param-spec-pointer property-name
                              property-name
                              property-name
                              flags))
-        ((gtype +g-type-boxed+)
+        ((glib:gtype +g-type-boxed+)
          (param-spec-boxed property-name
                            property-name
                            property-name
                            property-g-type
                            flags))
-        ((gtype +g-type-object+)
+        ((glib:gtype +g-type-object+)
          (param-spec-object property-name
                             property-name
                             property-name
@@ -247,7 +248,7 @@
                             flags))
         (t
          (error "Unknown type: ~A (~A)"
-                property-g-type (gtype-name property-g-type)))))))
+                property-g-type (glib:gtype-name property-g-type)))))))
 
 ;;; ----------------------------------------------------------------------------
 
@@ -302,7 +303,7 @@
   (let ((cstruct-name (intern (format nil "~A-VTABLE" (symbol-name name))))
         (methods (vtable-methods name items)))
     `(progn
-       (cffi:defcstruct ,cstruct-name 
+       (cffi:defcstruct ,cstruct-name
                         ,@(mapcar #'vtable-item->cstruct-item items))
        (setf (gethash ,type-name *vtables*)
              (make-vtable-description :type-name ,type-name
@@ -359,11 +360,14 @@
   (let* ((interface-info (list name interface))
          (interface-info-ptr (glib::allocate-stable-pointer interface-info)))
     (cffi:with-foreign-object (info '(:struct interface-info))
-      (setf (cffi:foreign-slot-value info '(:struct interface-info) :interface-init)
+      (setf (cffi:foreign-slot-value info
+                                     '(:struct interface-info) :interface-init)
             (cffi:callback c-interface-init)
-            (cffi:foreign-slot-value info '(:struct interface-info) :interface-data)
+            (cffi:foreign-slot-value info
+                                     '(:struct interface-info) :interface-data)
             interface-info-ptr)
-      (type-add-interface-static (gtype name) (gtype interface) info))))
+      (type-add-interface-static (glib:gtype name)
+                                 (glib:gtype interface) info))))
 
 (defun add-interfaces (name)
   (let* ((lisp-type-info (gethash name *registered-types*))
@@ -385,9 +389,10 @@
          (property-type (cffi:foreign-slot-value pspec
                                                  '(:struct param-spec)
                                                  :value-type))
-         (type-name (gtype-name (cffi:foreign-slot-value pspec
-                                                         '(:struct param-spec)
-                                                         :owner-type)))
+         (type-name (glib:gtype-name
+                        (cffi:foreign-slot-value pspec
+                                                 '(:struct param-spec)
+                                                 :owner-type)))
          (lisp-type-info (gethash type-name *registered-types*))
          (property-info (find property-name
                               (%object-type-properties lisp-type-info)
@@ -418,9 +423,10 @@
                                    *foreign-gobjects-weak*)))
          (property-name (cffi:foreign-slot-value pspec
                                                  '(:struct param-spec) :name))
-         (type-name (gtype-name (cffi:foreign-slot-value pspec
-                                                         '(:struct param-spec)
-                                                         :owner-type)))
+         (type-name (glib:gtype-name
+                        (cffi:foreign-slot-value pspec
+                                                 '(:struct param-spec)
+                                                 :owner-type)))
          (lisp-type-info (gethash type-name *registered-types*))
          (property-info (find property-name
                               (%object-type-properties lisp-type-info)
@@ -441,7 +447,7 @@
 (defmacro register-object-type-implementation (name class parent interfaces properties)
   (let ((glib:*warn-unknown-gtype* nil))
     (unless (stringp parent)
-      (setf parent (gtype-name (gtype parent)))))
+      (setf parent (glib:gtype-name (glib:gtype parent)))))
 
   `(progn
      (setf (gethash ,name *registered-types*)
@@ -455,9 +461,9 @@
                 "Registering GObject type implementation ~A for type ~A~%"
                 ',class ,name)
        (cffi:with-foreign-object (query '(:struct type-query))
-         (type-query (gtype ,parent) query)
+         (type-query (glib:gtype ,parent) query)
          (type-register-static-simple
-             (gtype ,parent)
+             (glib:gtype ,parent)
              ,name
              (cffi:foreign-slot-value query '(:struct type-query) :class-size)
              (cffi:callback class-init-cb)
@@ -517,7 +523,7 @@
   (let ((props (mapcar #'parse-property properties))
         (parent (if (stringp superclass)
                     superclass
-                    (gobject-class-g-type-name (find-class superclass)))))
+                    (gobject-class-gname (find-class superclass)))))
 
     (setf properties (properties-to-new-list properties))
 
@@ -535,9 +541,9 @@
                 "Debug sublcass: Registering GObject type ~A for type ~A~%"
                 ',name ,g-type-name)
        (cffi:with-foreign-object (query '(:struct type-query))
-         (type-query (gtype ,parent) query)
+         (type-query (glib:gtype ,parent) query)
          (type-register-static-simple
-             (gtype ,parent)
+             (glib:gtype ,parent)
              ,g-type-name
              (cffi:foreign-slot-value query '(:struct type-query):class-size)
              (cffi:callback class-init-cb)

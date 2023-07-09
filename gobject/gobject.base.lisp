@@ -407,8 +407,8 @@ lambda (object pspec)    :no-hooks
 (defclass initially-unowned (object)
   ()
   (:metaclass gobject-class)
-  (:g-type-name . "GInitiallyUnowned")
-  (:g-type-initializer . "g_initially_unowned_get_type")
+  (:gname . "GInitiallyUnowned")
+  (:initializer . "g_initially_unowned_get_type")
   (:documentation "Base class that has initial 'floating' reference."))
 
 #+liber-documentation
@@ -634,14 +634,15 @@ lambda (object pspec)    :no-hooks
   (flet (;; Get the corresponing lisp type for a GType
          (get-gobject-lisp-type (gtype)
             (iter (while (not (null gtype)))
-                  (for lisp-type = (glib:symbol-for-gtype (gtype-name gtype)))
+                  (for lisp-type = (glib:symbol-for-gtype
+                                       (glib:gtype-name gtype)))
                   (when lisp-type (return lisp-type))
                   (setf gtype (type-parent gtype)))))
     (let* ((gtype (type-from-instance pointer))
            (lisp-type (get-gobject-lisp-type gtype)))
       (unless lisp-type
         (error "Type ~A is not registered with REGISTER-OBJECT-TYPE"
-               (gtype-name gtype)))
+               (glib:gtype-name gtype)))
       (let ((*current-object-from-pointer* pointer))
         (make-instance lisp-type :pointer pointer)))))
 
@@ -680,12 +681,12 @@ lambda (object pspec)    :no-hooks
                (not (%param-spec-readable property)))
       (error 'property-unreadable-error
              :property-name property-name
-             :class-name (gtype-name (gtype object-type))))
+             :class-name (glib:gtype-name (glib:gtype object-type))))
     (when (and assert-writable
                (not (%param-spec-writable property)))
       (error 'property-unwritable-error
              :property-name property-name
-             :class-name (gtype-name (gtype object-type))))
+             :class-name (glib:gtype-name (glib:gtype object-type))))
     (%param-spec-type property)))
 
 ;; Get the definition of a property for the GObject type. Both arguments are of
@@ -735,7 +736,7 @@ lambda (object pspec)    :no-hooks
 (defun create-gobject-from-class (class initargs)
   (when (gobject-class-interface-p class)
     (error "Trying to create instance of GInterface '~A' (class '~A')"
-           (gobject-class-g-type-name class)
+           (gobject-class-gname class)
            (class-name class)))
   (let (arg-names arg-values arg-types nc-setters nc-arg-values)
     (declare (dynamic-extent arg-names arg-values arg-types
@@ -757,7 +758,7 @@ lambda (object pspec)    :no-hooks
             (push (gobject-fn-effective-slot-definition-g-setter-fn slot)
                   nc-setters)
             (push arg-value nc-arg-values))))
-    (let ((object (call-gobject-constructor (gobject-class-g-type-name class)
+    (let ((object (call-gobject-constructor (gobject-class-gname class)
                                             arg-names
                                             arg-values
                                             arg-types)))
@@ -793,7 +794,7 @@ lambda (object pspec)    :no-hooks
                                               '(:struct g-parameter) :value)
                         arg-value
                         arg-g-type
-                        :zero-g-value t))
+                        :zero-gvalue t))
       (unwind-protect
         (%object-newv object-type args-count parameters)
         (loop
@@ -1029,8 +1030,8 @@ lambda (object pspec)    :no-hooks
   @see-class{g:type-t}
   @see-class{g:object}
   @see-variable{+g-type-object+}"
-  (and (not (type-is-a gtype (gtype +g-type-interface+)))
-       (type-is-a gtype (gtype +g-type-object+))))
+  (and (not (type-is-a gtype (glib:gtype +g-type-interface+)))
+       (type-is-a gtype (glib:gtype +g-type-object+))))
 
 (export 'type-is-object)
 
@@ -2920,7 +2921,7 @@ lambda (object pspec)    :no-hooks
   (cffi:with-foreign-object (new-value '(:struct value))
     (unwind-protect
       (progn
-        (set-g-value new-value value gtype :zero-g-value t)
+        (set-g-value new-value value gtype :zero-gvalue t)
         (%object-set-property object name new-value))
       (value-unset new-value)))
   value)
