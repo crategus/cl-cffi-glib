@@ -28,11 +28,11 @@
   (flet ((func () 888))
     (let ((length (glib::get-stable-pointers-length))
           (counter (glib::get-stable-pointers-counter)))
-      (with-stable-pointer (ptr #'func)
+      (glib:with-stable-pointer (ptr #'func)
         (is (<= counter length))
         (is (= (1+ counter) (glib::get-stable-pointers-counter)))
         (is (= 888 (funcall (glib:get-stable-pointer-value ptr)))))
       (is (<= counter length))
       (is (= counter (glib::get-stable-pointers-counter))))))
 
-;;; --- 2023-5-29 --------------------------------------------------------------
+;;; --- 2023-7-9 ---------------------------------------------------------------

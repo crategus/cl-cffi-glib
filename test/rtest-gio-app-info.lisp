@@ -30,7 +30,7 @@
                "supports-startup-notification")
              (list-flags-item-nick "GAppInfoCreateFlags")))
   ;; Check the flags definition
-  (is (equal '(DEFINE-G-FLAGS "GAppInfoCreateFlags"
+  (is (equal '(GOBJECT:DEFINE-G-FLAGS "GAppInfoCreateFlags"
                               G-APP-INFO-CREATE-FLAGS
                               (:EXPORT T)
                               (:NONE 0)
@@ -53,8 +53,11 @@
   ;; Get the names of the interface properties.
   (is (equal '()
              (list-interface-properties "GAppInfo")))
+  ;; Check the list of signals
+  (is (equal '()
+             (list-signals "GAppInfo")))
   ;; Get the interface definition
-  (is (equal '(DEFINE-G-INTERFACE "GAppInfo" G-APP-INFO (:EXPORT T))
+  (is (equal '(GOBJECT:DEFINE-G-INTERFACE "GAppInfo" G-APP-INFO (:EXPORT T))
              (gobject:get-g-type-definition "GAppInfo"))))
 
 ;;;     GAppLaunchContext
@@ -84,7 +87,7 @@
   (is (equal '("launch-failed" "launch-started" "launched")
              (list-signals "GAppLaunchContext")))
   ;; Check the class definition
-  (is (equal '(DEFINE-G-OBJECT-CLASS "GAppLaunchContext"
+  (is (equal '(GOBJECT:DEFINE-G-OBJECT-CLASS "GAppLaunchContext"
                                      G-APP-LAUNCH-CONTEXT
                                      (:SUPERCLASS G-OBJECT
                                       :EXPORT T

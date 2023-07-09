@@ -19,9 +19,9 @@
           ;; Stop the main loop from running
           (g:main-loop-quit loop)
           ;; Stop the source
-          +g-source-remove+)
+          glib:+g-source-remove+)
         ;; Continue the source
-        +g-source-continue+)))
+        glib:+g-source-continue+)))
 
 ;;;     G_PRIORITY_HIGH
 ;;;     G_PRIORITY_DEFAULT
@@ -30,18 +30,18 @@
 ;;;     G_PRIORITY_LOW
 
 (test g-priority-constants
-  (is (= -100 +g-priority-high+))
-  (is (=    0 +g-priority-default+))
-  (is (=  100 +g-priority-high-idle+))
-  (is (=  200 +g-priority-default-idle+))
-  (is (=  300 +g-priority-low+)))
+  (is (= -100 glib:+g-priority-high+))
+  (is (=    0 glib:+g-priority-default+))
+  (is (=  100 glib:+g-priority-high-idle+))
+  (is (=  200 glib:+g-priority-default-idle+))
+  (is (=  300 glib:+g-priority-low+)))
 
 ;;;     G_SOURCE_CONST
 ;;;     G_SOURCE_REMOVE
 
 (test g-source-constants
-  (is-true +g-source-continue+)
-  (is-false +g-source-remove+))
+  (is-true glib:+g-source-continue+)
+  (is-false glib:+g-source-remove+))
 
 ;;;     GMainLoop
 
@@ -196,7 +196,7 @@
                                        (timeout-callback mainloop))))
     ;; Do tests for some functions
     (is-false (g:source-is-destroyed source))
-    (is (eq +g-priority-default+
+    (is (eq glib:+g-priority-default+
             (g:source-priority source)))
     (is-false (g:source-can-recurse source))
     (is (string= "timeout"
@@ -295,9 +295,9 @@
 
 (test g-source-priority
   (let ((source (g:timeout-source-new 10)))
-    (is (eq +g-priority-high+
-            (setf (g:source-priority source ) +g-priority-high+)))
-    (is (eq +g-priority-high+ (g:source-priority source)))
+    (is (eq glib:+g-priority-high+
+            (setf (g:source-priority source ) glib:+g-priority-high+)))
+    (is (eq glib:+g-priority-high+ (g:source-priority source)))
     (is-false (g:source-destroy source))))
 
 ;;;     g_source_set_can_recurse
@@ -350,14 +350,18 @@
 ;;;     g_source_remove
 
 (test g-source-set-name-by-id.1
-  (let* ((id (g:timeout-add 10 #'(lambda ()) :priority +g-priority-default+))
+  (let* ((id (g:timeout-add 10
+                            #'(lambda ())
+                            :priority glib:+g-priority-default+))
          (source (g:main-context-find-source-by-id nil id)))
     (is-false (g:source-set-name-by-id id "timeout"))
     (is (string= "timeout" (g:source-name source)))
     (is-true (g:source-remove id))))
 
 (test g-source-set-name-by-id.2
-  (let* ((id (g:timeout-add 10 #'(lambda ()) :priority +g-priority-default+))
+  (let* ((id (g:timeout-add 10
+                            #'(lambda ())
+                            :priority glib:+g-priority-default+))
          (source (g:main-context-find-source-by-id (cffi:null-pointer) id)))
     (is-false (g:source-set-name-by-id id "timeout"))
     (is (string= "timeout" (g:source-name source)))
@@ -385,4 +389,4 @@
     (is (= 100 (g:source-ready-time source)))
     (is-false (g:source-destroy source))))
 
-;;; --- 2023-6-22 --------------------------------------------------------------
+;;; --- 2023-7-9 ---------------------------------------------------------------

@@ -70,18 +70,18 @@
 ;;;     g_option_context_free
 
 (test g-option-contex-new/free
-  (with-g-option-context (context)
+  (glib:with-g-option-context (context)
     (is (cffi:pointerp context)))
-  (with-g-option-context (context nil)
+  (glib:with-g-option-context (context nil)
     (is (cffi:pointerp context)))
-  (with-g-option-context (context "Description")
+  (glib:with-g-option-context (context "Description")
     (is (cffi:pointerp context))))
 
 ;;;     g_option_context_set_summary
 ;;;     g_option_context_get_summary
 
 (test g-option-context-summary
-  (with-g-option-context (context)
+  (glib:with-g-option-context (context)
     (is-false (g:option-context-summary context))
     (is (string= "summary" (setf (g:option-context-summary context) "summary")))
     (is (string= "summary" (g:option-context-summary context)))))
@@ -90,7 +90,7 @@
 ;;;     g_option_context_get_description
 
 (test g-option-context-description
-  (with-g-option-context (context)
+  (glib:with-g-option-context (context)
     (is-false (g:option-context-description context))
     (is (string= "description"
                  (setf (g:option-context-description context) "description")))
@@ -108,7 +108,7 @@
 
 #+nil
 (test g-option-context-set-translate-func
-  (with-g-option-context (context "context")
+  (glib:with-g-option-context (context "context")
     (let ((entries '(("long-name"       ; long-name
                       #\a               ; short-name
                       (:in-main)        ; flags
@@ -157,7 +157,7 @@ DESCRIPTION
 
 #+nil
 (test g-option-context-add-main-entries
-  (with-g-option-context (context "Description")
+  (glib:with-g-option-context (context "Description")
     (let ((entries '(("long-name-1"     ; long-name
                       #\a               ; short-name
                       (:in-main)        ; flags
@@ -242,7 +242,7 @@ Anwendungsoptionen:
 ;;;     g_option_context_get_main_group
 
 (test g-option-context-main-group
-  (with-g-option-context (context)
+  (glib:with-g-option-context (context)
     (is (cffi:null-pointer-p (g:option-context-main-group context)))
     (is (cffi:pointerp (setf (g:option-context-main-group context)
                              (g:option-group-new nil nil nil))))
@@ -251,13 +251,13 @@ Anwendungsoptionen:
 ;;;     g_option_group_new
 
 (test g-option-group-new/unref
-  (with-g-option-group (group nil nil nil)
+  (glib:with-g-option-group (group nil nil nil)
     (is (cffi:pointerp group)))
-  (with-g-option-group (group "name" nil nil)
+  (glib:with-g-option-group (group "name" nil nil)
     (is (cffi:pointerp group)))
-  (with-g-option-group (group "name" "description" nil)
+  (glib:with-g-option-group (group "name" "description" nil)
     (is (cffi:pointerp group)))
-  (with-g-option-group (group "name" "description" "help-description")
+  (glib:with-g-option-group (group "name" "description" "help-description")
     (is (cffi:pointerp group))))
 
 ;;;     g_option_group_ref
@@ -271,8 +271,8 @@ Anwendungsoptionen:
 
 #+nil
 (test g-option-group-add-entries
-  (with-g-option-group (group "myGroup" "A Group"  "Help Description")
-    (with-g-option-context (context "Description")
+  (glib:with-g-option-group (group "myGroup" "A Group"  "Help Description")
+    (glib:with-g-option-context (context "Description")
       (let ((entries '(("long-name-1"     ; long-name
                         #\a               ; short-name
                         (:in-main)        ; flags
@@ -361,9 +361,9 @@ Anwendungsoptionen:
 
 #+nil
 (test g-option-group-set-translate-func
-  (with-g-option-group (group "a" "b" "c")
+  (glib:with-g-option-group (group "a" "b" "c")
     (is-false (g:option-group-set-translate-func group #'translate-func))
-    (with-g-option-context (context "Description")
+    (glib:with-g-option-context (context "Description")
       (let ((entries '(("long-name"       ; long-name
                         #\a               ; short-name
                         (:in-main)        ; flags
@@ -391,9 +391,9 @@ Anwendungsoptionen:
 
 #+windows
 (test g-option-group-set-translate-func
-  (with-g-option-group (group "a" "b" "c")
+  (glib:with-g-option-group (group "a" "b" "c")
     (is-false (g:option-group-set-translate-func group #'translate-func))
-    (with-g-option-context (context "Description")
+    (glib:with-g-option-context (context "Description")
       (let ((entries '(("long-name"       ; long-name
                         #\a               ; short-name
                         (:in-main)        ; flags
@@ -422,7 +422,7 @@ Anwendungsoptionen:
 ;;;     g_option_group_set_translation_domain
 
 (test g-option-group-set-translation-domain
-  (with-g-option-group (group nil nil nil)
+  (glib:with-g-option-group (group nil nil nil)
     (is-false (g:option-group-set-translation-domain group "myApplication"))))
 
 ;;; Example from the GOptionContext documentation
@@ -440,7 +440,7 @@ Anwendungsoptionen:
 (defvar randomize (cffi:foreign-alloc :boolean :initial-element nil))
 
 (defun example-option-context (&rest argv)
-  (with-g-option-context (context "- test tree model performance")
+  (glib:with-g-option-context (context "- test tree model performance")
     (let ((entries '(("repeats"
                       #\r
                       0
@@ -491,4 +491,4 @@ Anwendungsoptionen:
             ;; Show the help output
             (format t "~&~%~a~%" (g:option-context-help context t))))))
 
-;;; --- 2023-5-12 --------------------------------------------------------------
+;;; --- 2023-7-9 ---------------------------------------------------------------

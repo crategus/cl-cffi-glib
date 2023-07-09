@@ -15,10 +15,12 @@
           (glib:symbol-for-gtype "GActionMap")))
   ;; Get the names of the interface properties.
   (is (equal '()
-             (mapcar #'g:param-spec-name
-                     (g:object-interface-list-properties "GActionMap"))))
+             (list-interface-properties "GActionMap")))
+  ;; Check the list of signals
+  (is (equal '()
+             (list-signals "GActionMap")))
   ;; Get the interface definition
-  (is (equal '(DEFINE-G-INTERFACE "GActionMap"
+  (is (equal '(GOBJECT:DEFINE-G-INTERFACE "GActionMap"
                                   G-ACTION-MAP
                                   (:EXPORT T))
              (gobject:get-g-type-definition "GActionMap"))))

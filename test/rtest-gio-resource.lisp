@@ -9,7 +9,7 @@
 
 (test g-resource-boxed
   ;; Type check
-  (is (g:type-is-a (g:gtype "GResource") +g-type-boxed+))
+  (is (g:type-is-a (g:gtype "GResource") gobject:+g-type-boxed+))
   ;; Check the type initializer
   (is (eq (g:gtype "GResource")
           (g:gtype (cffi:foreign-funcall "g_resource_get_type" :size)))))
@@ -35,7 +35,7 @@
   (is (equal '("none" "compressed")
              (list-flags-item-nick "GResourceFlags")))
   ;; Check the flags definition
-  (is (equal '(DEFINE-G-FLAGS "GResourceFlags"
+  (is (equal '(GOBJECT:DEFINE-G-FLAGS "GResourceFlags"
                               G-RESOURCE-FLAGS
                               (:EXPORT T)
                               (:NONE 0)
@@ -64,7 +64,7 @@
   (is (equal '("none")
              (list-flags-item-nick "GResourceLookupFlags")))
   ;; Check the flags definition
-  (is (equal '(DEFINE-G-FLAGS "GResourceLookupFlags"
+  (is (equal '(GOBJECT:DEFINE-G-FLAGS "GResourceLookupFlags"
                               G-RESOURCE-LOOKUP-FLAGS
                               (:EXPORT T)
                               (:NONE 0))
@@ -94,7 +94,7 @@
 
 (test g-resource-lookup-data
   (let ((path (sys-path "resource/rtest-gio-resource.gresource")))
-    (with-g-resources (resource path)
+    (gio:with-g-resources (resource path)
       (is (cffi:pointerp
               (g:resource-lookup-data resource
                                       "/com/crategus/test/ducky.png"
@@ -110,7 +110,7 @@
 
 (test g-resource-enumerate-children
   (let ((path (sys-path "resource/rtest-gio-resource.gresource")))
-    (with-g-resources (resource path)
+    (gio:with-g-resources (resource path)
       (is (equal '("ducky.png" "floppybuddy.gif" "gtk-logo-24.png"
                    "rtest-application.ui" "rtest-dialog.ui" "rtest-dialog2.ui")
                  (sort (g:resource-enumerate-children resource
@@ -122,7 +122,7 @@
 
 (test g-resource-info
   (let ((path (sys-path "resource/rtest-gio-resource.gresource")))
-    (with-g-resources (resource path)
+    (gio:with-g-resources (resource path)
       (is (equal '(248546 0)
                  (multiple-value-list
                      (g:resource-info resource
@@ -150,7 +150,7 @@
 
 (test g-resources-lookup-data
   (let ((path (sys-path "resource/rtest-gio-resource.gresource")))
-    (with-g-resources (resource path)
+    (gio:with-g-resources (resource path)
       (is (cffi:pointerp
               (g:resources-lookup-data "/com/crategus/test/ducky.png"
                                        :none)))
@@ -164,7 +164,7 @@
 
 (test g-resources-enumerate-children
   (let ((path (sys-path "resource/rtest-gio-resource.gresource")))
-    (with-g-resources (resource path)
+    (gio:with-g-resources (resource path)
       (is (equal '("ducky.png" "floppybuddy.gif" "gtk-logo-24.png"
                    "rtest-application.ui" "rtest-dialog.ui" "rtest-dialog2.ui")
                  (sort (g:resources-enumerate-children "/com/crategus/test"
@@ -175,7 +175,7 @@
 
 (test g-resources-info
   (let ((path (sys-path "resource/rtest-gio-resource.gresource")))
-    (with-g-resources (resource path)
+    (gio:with-g-resources (resource path)
       (is (equal '(248546 0)
                  (multiple-value-list
                      (g:resources-info "/com/crategus/test/ducky.png"
@@ -189,4 +189,4 @@
                      (g:resources-info "/com/crategus/test/rtest-application.ui"
                                        :none)))))))
 
-;;; --- 2023-5-29 --------------------------------------------------------------
+;;; --- 2023-7-9 ---------------------------------------------------------------

@@ -29,7 +29,7 @@
   (is (equal '("if-always" "if-local" "never")
              (list-enum-item-nick "GFilesystemPreviewType")))
   ;; Check the enum definition
-  (is (equal '(DEFINE-G-ENUM "GFilesystemPreviewType"
+  (is (equal '(GOBJECT:DEFINE-G-ENUM "GFilesystemPreviewType"
                              G-FILESYSTEM-PREVIEW-TYPE
                              (:EXPORT T)
                              (:IF-ALWAYS 0)
@@ -52,7 +52,7 @@
   (is (equal '()
              (list-interface-properties "GFile")))
   ;; Get the interface definition
-  (is (equal '(DEFINE-G-INTERFACE "GFile" G-FILE (:EXPORT T))
+  (is (equal '(GOBJECT:DEFINE-G-INTERFACE "GFile" G-FILE (:EXPORT T))
              (gobject:get-g-type-definition "GFile"))))
 
 ;;;     GFileQueryInfoFlags

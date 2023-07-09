@@ -7,7 +7,7 @@
 
 ;;;     GFileIcon
 
-(test file-icon-class
+(test g-file-icon-class
   ;; Type check
   (is (g:type-is-object "GFileIcon"))
   ;; Check the registered symbol
@@ -32,7 +32,7 @@
   (is (equal '()
              (list-signals "GFileIcon")))
   ;; Check the class definition
-  (is (equal '(DEFINE-G-OBJECT-CLASS "GFileIcon" G-FILE-ICON
+  (is (equal '(GOBJECT:DEFINE-G-OBJECT-CLASS "GFileIcon" G-FILE-ICON
                        (:SUPERCLASS G-OBJECT
                         :EXPORT T
                         :INTERFACES ("GIcon" "GLoadableIcon"))
@@ -55,4 +55,4 @@
     (is (string= "gtk-logo-24.png"
                  (g:file-basename (g:file-icon-file icon))))))
 
-;;; --- 2023-5-29 --------------------------------------------------------------
+;;; --- 2023-7-9 ---------------------------------------------------------------

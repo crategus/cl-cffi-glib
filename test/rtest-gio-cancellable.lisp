@@ -32,7 +32,7 @@
   (is (equal '("cancelled")
              (list-signals "GCancellable")))
   ;; Check the class definition
-  (is (equal '(DEFINE-G-OBJECT-CLASS "GCancellable" G-CANCELLABLE
+  (is (equal '(GOBJECT:DEFINE-G-OBJECT-CLASS "GCancellable" G-CANCELLABLE
                        (:SUPERCLASS G-OBJECT :EXPORT T :INTERFACES NIL) NIL)
              (gobject:get-g-type-definition "GCancellable"))))
 

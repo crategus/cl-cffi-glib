@@ -5,7 +5,7 @@
 
 ;;;     GIcon
 
-(test icon-interface
+(test g-icon-interface
   ;; Type check
   (is (g:type-is-interface "GIcon"))
   ;; Check the registered symbol
@@ -17,14 +17,17 @@
   ;; Get the names of the interface properties.
   (is (equal '()
              (list-interface-properties "GIcon")))
+  ;; Check the list of signals
+  (is (equal '()
+             (list-signals "GIcon")))
   ;; Get the interface definition
-  (is (equal '(DEFINE-G-INTERFACE "GIcon" G-ICON
+  (is (equal '(GOBJECT:DEFINE-G-INTERFACE "GIcon" G-ICON
                        (:EXPORT T))
              (gobject:get-g-type-definition "GIcon"))))
 
 ;;;   g_icon_hash
 
-(test icon-hash
+(test g-icon-hash
   (let* ((names (list "gnome-dev-cdrom-audio"))
          (icon1 (g:themed-icon-new-from-names names))
          (icon2 (g:themed-icon-new-with-default-fallbacks "gnome-dev-cdrom-audio")))
@@ -33,7 +36,7 @@
 
 ;;;   g_icon_equal
 
-(test icon-equal
+(test g-icon-equal
   (let* ((names (list "gnome-dev-cdrom-audio" "gnome-dev-cdrom" "gnome-dev" "gnome"))
          (icon1 (g:themed-icon-new-from-names names))
          (icon2 (g:themed-icon-new-with-default-fallbacks "gnome-dev-cdrom-audio")))
@@ -41,7 +44,7 @@
 
 ;;;   g_icon_to_string
 
-(test icon-to-string
+(test g-icon-to-string
   (let* ((names (list "gnome-dev-cdrom-audio" "gnome-dev-cdrom" "gnome-dev" "gnome"))
          (icon1 (g:themed-icon-new "gnome-dev-cdrom-audio"))
          (icon2 (g:themed-icon-new-from-names names))
@@ -54,7 +57,7 @@
 
 ;;;   g_icon_new_for_string
 
-(test icon-new-for-string
+(test g-icon-new-for-string
   (let ((icon1 (g:icon-new-for-string "gnome-dev-cdrom-audio"))
         (icon2 (g:icon-new-for-string ". GThemedIcon gnome-dev-cdrom-audio
                                        gnome-dev-cdrom gnome-dev gnome"))
@@ -67,7 +70,7 @@
 
 ;;;     g_icon_serialize
 
-(test icon-serialize
+(test g-icon-serialize
   (let ((icon (g:icon-new-for-string "gnome-dev-cdrom-audio")))
     (is (cffi:pointerp (g:icon-serialize icon)))
     (is (string= "('themed', <['gnome-dev-cdrom-audio', 'gnome-dev-cdrom-audio-symbolic']>)"
@@ -75,10 +78,10 @@
 
 ;;;     g_icon_deserialize
 
-(test icon-deserialize
+(test g-icon-deserialize
   (let* ((icon (g:icon-new-for-string "gnome-dev-cdrom-audio"))
          (value (g:icon-serialize icon)))
     (is (cffi:pointerp value))
     (is (typep (g:icon-deserialize value) 'g:icon))))
 
-;;; --- 2023-5-29 --------------------------------------------------------------
+;;; --- 2023-7-9 ---------------------------------------------------------------

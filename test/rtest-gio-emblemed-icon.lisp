@@ -7,7 +7,7 @@
 
 ;;;     GEmblemedIcon
 
-(test emblemed-icon-class
+(test g-emblemed-icon-class
   ;; Type check
   (is (g:type-is-object "GEmblemedIcon"))
   ;; Check the registered symbol
@@ -36,7 +36,7 @@
   (is (equal '()
              (list-signals "GEmblemedIcon")))
   ;; Check the class definition
-  (is (equal '(DEFINE-G-OBJECT-CLASS "GEmblemedIcon" G-EMBLEMED-ICON
+  (is (equal '(GOBJECT:DEFINE-G-OBJECT-CLASS "GEmblemedIcon" G-EMBLEMED-ICON
                        (:SUPERCLASS G-OBJECT
                         :EXPORT T
                         :INTERFACES ("GIcon"))
@@ -55,4 +55,4 @@
 ;;;     g_emblemed_icon_add_emblem
 ;;;     g_emblemed_icon_clear_emblems
 
-;;; --- 2023-5-29 --------------------------------------------------------------
+;;; --- 2023-7-9 ---------------------------------------------------------------

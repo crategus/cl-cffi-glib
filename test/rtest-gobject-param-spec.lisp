@@ -80,13 +80,13 @@
 ;;;     g_param_spec_default_value
 
 (test g-param-spec-default-value
-  (is-true (parse-g-value
+  (is-true (gobject:parse-g-value
              (g:param-spec-default-value
                (g:param-spec-boolean "Boolean" "Bool" "Doku" t '()))))
-  (is-false (parse-g-value
+  (is-false (gobject:parse-g-value
               (g:param-spec-default-value
                 (g:param-spec-boolean "Boolean" "Bool" "Doku" nil '()))))
-  (is (= 25 (parse-g-value
+  (is (= 25 (gobject:parse-g-value
               (g:param-spec-default-value
                 (g:param-spec-int "Integer" "int" "Doku" 10 50 25 '()))))))
 
@@ -95,16 +95,16 @@
 (test g-param-value-set-default
   (let ((param (g:param-spec-int "Integer" "int" "Doku" 10 50 25 '())))
     (cffi:with-foreign-object (value '(:struct g:value))
-      (g:value-init value +g-type-int+)
+      (g:value-init value gobject:+g-type-int+)
       (is-false (g:param-value-set-default param value))
-      (is (= 25 (parse-g-value value))))))
+      (is (= 25 (gobject:parse-g-value value))))))
 
 ;;;     g_param_value_defaults
 
 (test g-param-value-defaults
   (let ((param (g:param-spec-int "Integer" "int" "Doku" 10 50 25 '())))
     (cffi:with-foreign-object (value '(:struct g:value))
-      (g:value-init value +g-type-int+)
+      (g:value-init value gobject:+g-type-int+)
       (is-false (g:param-value-defaults param value))
       (is-false (g:param-value-set-default param value))
       (is-true  (g:param-value-defaults param value)))))
@@ -114,15 +114,15 @@
 (test g-param-value-validate
   (let ((param (g:param-spec-int "Integer" "int" "Doku" 10 50 25 '())))
     (cffi:with-foreign-object (value '(:struct g:value))
-      (g:value-init value +g-type-int+)
+      (g:value-init value gobject:+g-type-int+)
       (is-true (g:param-value-validate param value))
-      (is (= 10 (parse-g-value value)))
-      (set-g-value value 100 +g-type-int+)
+      (is (= 10 (gobject:parse-g-value value)))
+      (gobject:set-g-value value 100 gobject:+g-type-int+)
       (is-true (g:param-value-validate param value))
-      (is (= 50 (parse-g-value value)))
-      (set-g-value value 25 +g-type-int+)
+      (is (= 50 (gobject:parse-g-value value)))
+      (gobject:set-g-value value 25 gobject:+g-type-int+)
       (is-false (g:param-value-validate param value))
-      (is (= 25 (parse-g-value value))))))
+      (is (= 25 (gobject:parse-g-value value))))))
 
 ;;;     g_param_value_convert
 ;;;     g_param_values_cmp

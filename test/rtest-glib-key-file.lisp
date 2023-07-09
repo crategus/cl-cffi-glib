@@ -70,7 +70,7 @@
 ;;;     g_key_file_set_list_separator
 
 (test g-key-file-set-list-separator
-  (with-g-key-file (keyfile)
+  (glib:with-g-key-file (keyfile)
     (is-false (g:key-file-set-list-separator keyfile #\$))
     (is (equal '("string1" "string2" "string3")
                (setf (g:key-file-string-list keyfile "Group" "strings")
@@ -81,7 +81,7 @@
 ;;;     g_key_file_load_from_file
 
 (test g-key-file-load-from-file
-  (with-g-key-file (keyfile)
+  (glib:with-g-key-file (keyfile)
     (let ((path (sys-path "resource/rtest-glib-key-file.ini")))
       (is-true (g:key-file-load-from-file keyfile path :none))
       (is (= 161 (length (g:key-file-to-data keyfile)))))))
@@ -89,7 +89,7 @@
 ;;;     g_key_file_load_from_data
 
 (test g-key-file-load-from-data
-  (with-g-key-file (keyfile)
+  (glib:with-g-key-file (keyfile)
     (is-false (g:key-file-load-from-data keyfile "test" :none))
     (is-true (g:key-file-load-from-data keyfile *key-values* :none))
     (is (= 186 (length (g:key-file-to-data keyfile))))))
@@ -97,7 +97,7 @@
 ;;;     g_key_file_load_from_bytes
 
 (test g-key-file-load-from-bytes
-  (with-g-key-file (keyfile)
+  (glib:with-g-key-file (keyfile)
     (multiple-value-bind (data len)
         (cffi:foreign-string-alloc *key-values*)
       (let ((bytes (g:bytes-new data len)))
@@ -110,12 +110,12 @@
 ;;;     g_key_file_to_data
 
 (test g-key-file-to-data.1
-  (with-g-key-file (keyfile)
+  (glib:with-g-key-file (keyfile)
     (is (string= "" (g:key-file-to-data keyfile)))
     (is (= 0 (second (multiple-value-list (g:key-file-to-data keyfile)))))))
 
 (test g-key-file-to-data.2
-  (with-g-key-file (keyfile)
+  (glib:with-g-key-file (keyfile)
     (let ((path (sys-path "resource/rtest-glib-key-file.ini")))
       (is-true (g:key-file-load-from-file keyfile path :none))
       (is (= 161 (second (multiple-value-list (g:key-file-to-data keyfile))))))))
@@ -124,24 +124,24 @@
 
 (test g-key-file-to-file
   (let ((path (sys-path "out/rtest-glib-key-file.tmp")))
-    (with-g-key-file (keyfile)
+    (glib:with-g-key-file (keyfile)
       (is-true (g:key-file-load-from-data keyfile *key-values* :none))
       (is-true (g:key-file-save-to-file keyfile path)))
-    (with-g-key-file (keyfile)
+    (glib:with-g-key-file (keyfile)
       (is-true (g:key-file-load-from-file keyfile path :none))
       (is (= 186 (second (multiple-value-list (g:key-file-to-data keyfile))))))))
 
 ;;;     g_key_file_get_start_group
 
 (test g-key-file-start-group
-  (with-g-key-file (keyfile)
+  (glib:with-g-key-file (keyfile)
     (is-true (g:key-file-load-from-data keyfile *key-values* :none))
     (is (string= "First Group" (g:key-file-start-group keyfile)))))
 
 ;;;     g_key_file_get_groups
 
 (test g-key-file-groups
-  (with-g-key-file (keyfile)
+  (glib:with-g-key-file (keyfile)
     (is-true (g:key-file-load-from-data keyfile *key-values* :none))
     (is (equal '("First Group" "Another Group")
                (g:key-file-groups keyfile)))))
@@ -149,7 +149,7 @@
 ;;;     g_key_file_get_keys
 
 (test g-key-file-keys
-  (with-g-key-file (keyfile)
+  (glib:with-g-key-file (keyfile)
     (is-true (g:key-file-load-from-data keyfile *key-values* :none))
     (is (equal '("Boolean" "Integer" "Numbers" "Booleans")
                (g:key-file-keys keyfile "Another Group")))))
@@ -157,7 +157,7 @@
 ;;;     g_key_file_has_group
 
 (test g-key-file-has-group
-  (with-g-key-file (keyfile)
+  (glib:with-g-key-file (keyfile)
     (is-true (g:key-file-load-from-data keyfile *key-values* :none))
     (is-false (g:key-file-has-group keyfile "unknown"))
     (is-true (g:key-file-has-group keyfile "First Group"))
@@ -166,7 +166,7 @@
 ;;;     g_key_file_has_key
 
 (test g-key-file-has-key
-  (with-g-key-file (keyfile)
+  (glib:with-g-key-file (keyfile)
     (is-true (g:key-file-load-from-data keyfile *key-values* :none))
     (is-false (g:key-file-has-key keyfile "Another Group" "unknown"))
     (is-true (g:key-file-has-key keyfile "Another Group" "Numbers"))
@@ -176,7 +176,7 @@
 ;;;     g_key_file_set_value
 
 (test g-key-file-value
-  (with-g-key-file (keyfile)
+  (glib:with-g-key-file (keyfile)
     (is-true (g:key-file-load-from-data keyfile *key-values* :none))
     (is (string= "true" (g:key-file-value keyfile "Another Group" "Boolean")))
     (is (string= "false"
@@ -192,7 +192,7 @@
 ;;;     g_key_file_set_string
 
 (test g-key-file-string.1
-  (with-g-key-file (keyfile)
+  (glib:with-g-key-file (keyfile)
     (is-true (g:key-file-load-from-data keyfile *key-values* :none))
     (is (string= "Hello" (g:key-file-string keyfile "First Group" "Welcome")))
     (is (string= "Hello Dieter"
@@ -202,7 +202,7 @@
                  (g:key-file-string keyfile "First Group" "Welcome")))))
 
 (test g-key-file-string.2
-  (with-g-key-file (keyfile)
+  (glib:with-g-key-file (keyfile)
     (is-true (g:key-file-load-from-data keyfile *key-values* :none))
     (is (string= "Hello" (g:key-file-string keyfile "First Group" "Welcome")))
     (is-false (g:key-file-string keyfile "First Group" "unknown"))
@@ -220,14 +220,14 @@
 ;;;     g_key_file_set_string_list
 
 (test g-key-file-string-list.1
-  (with-g-key-file (keyfile)
+  (glib:with-g-key-file (keyfile)
     (let ((path (sys-path "resource/rtest-glib-key-file.ini")))
       (is-true (g:key-file-load-from-file keyfile path :none))
       (is (equal '("2" "20" "-200" "0")
                  (g:key-file-string-list keyfile "Another Group" "Numbers"))))))
 
 (test g-key-file-string-list.2
-  (with-g-key-file (keyfile)
+  (glib:with-g-key-file (keyfile)
     (is (equal '("string1" "string2" "string3")
                (setf (g:key-file-string-list keyfile "New Group" "strings")
                      '("string1" "string2" "string3"))))
@@ -243,14 +243,14 @@
 ;;;     g_key_file_set_comment
 
 (test g-key-file-comment.1
-  (with-g-key-file (keyfile)
+  (glib:with-g-key-file (keyfile)
     (is-true (g:key-file-load-from-data keyfile *key-values* :keep-comments))
     (is (stringp (g:key-file-comment keyfile "First Group" "Welcome")))
     (is (stringp (g:key-file-comment keyfile "First Group" nil)))
     (is (stringp (g:key-file-comment keyfile nil nil)))))
 
 (test g-key-file-comment.2
-  (with-g-key-file (keyfile)
+  (glib:with-g-key-file (keyfile)
     (is-true (g:key-file-load-from-data keyfile *key-values* :keep-comments))
 
     (is (string= "Comment"
@@ -284,7 +284,7 @@
 ;;; Examples from the GKeyFile documentation
 
 (test g-key-file-example.1
-  (with-g-key-file (keyfile)
+  (glib:with-g-key-file (keyfile)
     ;; Load a key file
     (unless (g:key-file-load-from-file keyfile
                                        (sys-path "resource/rtest-glib-key-file.ini")
@@ -297,7 +297,7 @@
       (is (string= "Hello" value)))))
 
 (test g-key-file-example.2
-  (with-g-key-file (keyfile)
+  (glib:with-g-key-file (keyfile)
     ;; Load existing key file
     (g:key-file-load-from-file keyfile
                                (sys-path "resource/rtest-glib-key-file.ini")
@@ -314,4 +314,4 @@
         (error "Error saving key file."))
       (is (stringp data)))))
 
-;;; --- 2023-6-22 --------------------------------------------------------------
+;;; --- 2023-7-9 ---------------------------------------------------------------

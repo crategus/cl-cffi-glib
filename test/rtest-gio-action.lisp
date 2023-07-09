@@ -9,7 +9,7 @@
 
 ;;;     GAction
 
-(test action-interface
+(test g-action-interface
   ;; Type check
   (is-true (g:type-is-interface "GAction"))
   ;; Check the registered symbol
@@ -18,8 +18,11 @@
   ;; Get the names of the interface properties.
   (is (equal '("enabled" "name" "parameter-type" "state" "state-type")
              (list-interface-properties "GAction")))
+  ;; Check the list of signals
+  (is (equal '()
+             (list-signals "GAction")))
   ;; Get the interface definition
-  (is (equal '(DEFINE-G-INTERFACE "GAction" G-ACTION
+  (is (equal '(GOBJECT:DEFINE-G-INTERFACE "GAction" G-ACTION
                                   (:EXPORT T)
                                   (ENABLED G-ACTION-ENABLED
                                    "enabled" "gboolean" T NIL)
@@ -37,7 +40,7 @@
 
 ;;;     action-enabled
 
-(test action-enabled
+(test g-action-enabled
   (let ((action (g:simple-action-new "simple" nil)))
     ;; Default value is true
     (is-true (g:action-enabled action))
@@ -47,7 +50,7 @@
 
 ;;;     action-name
 
-(test action-name
+(test g-action-name
   (let ((action (g:simple-action-new "simple" nil)))
     (is (string= "simple" (g:action-name action)))
     ;; TODO: Property name is not writeable, Lisp signals no error
@@ -56,12 +59,12 @@
 
 ;;;     action-parameter-type
 
-(test action-parameter-type.1
+(test g-action-parameter-type.1
   ;; Initialize parameter-type with nil
   (let ((action (g:simple-action-new "simple" nil)))
     (is-false (g:action-parameter-type action))))
 
-(test action-parameter-type.2
+(test g-action-parameter-type.2
   ;; Initialize parameter-type with type boolean
   (let ((action (g:simple-action-new "simple" (g:variant-type-new "b"))))
     (is (eq 'g:variant-type (type-of (g:action-parameter-type action))))
@@ -69,7 +72,7 @@
                  (g:variant-type-dup-string
                      (g:action-parameter-type action))))))
 
-(test action-parameter-type.3
+(test g-action-parameter-type.3
   ;; Initialize parameter-type with type boolean as string
   (let ((action (g:simple-action-new "simple" "b")))
     (is (eq 'g:variant-type (type-of (g:action-parameter-type action))))
@@ -79,7 +82,7 @@
 
 ;;;     action-state
 
-(test action-state.1
+(test g-action-state.1
   ;; It is an error to pass nil for the initialisation of state
   (signals (error) (g:simple-action-new-stateful "stateful" nil nil))
   ;; Initialize state with an integer
@@ -93,13 +96,13 @@
 ;    (signals (error) (setf (g:action-state action) (g:variant-new-int64 123)))
   ))
 
-(test action-state.2
+(test g-action-state.2
   (let ((action (g:simple-action-new "simple" nil)))
     (is (cffi:null-pointer-p (g:action-state action)))))
 
 ;;;     action-state-type
 
-(test action-state-type.1
+(test g-action-state-type.1
   (let ((action (g:simple-action-new-stateful "stateful"
                                               nil
                                               (g:variant-new-int32 123))))
@@ -107,7 +110,7 @@
     (is (string= "i" (g:variant-type-dup-string (g:action-state-type action))))
     (is (= 123 (g:variant-int32 (g:action-state action))))))
 
-(test action-state-type.2
+(test g-action-state-type.2
   (let ((action (g:simple-action-new-stateful "stateful"
                                               nil
                                               (g:variant-new-string "test"))))
@@ -119,7 +122,7 @@
 
 ;;;     g_action_name_is_valid
 
-(test action-name-is-valid
+(test g-action-name-is-valid
   (is-true (g:action-name-is-valid "simple"))
   (is-true (g:action-name-is-valid "simple.1"))
   (is-false (g:action-name-is-valid "simple:test"))
@@ -133,7 +136,7 @@
 ;;;     g_action_change_state
 ;;;     g_action_activate
 
-(test action-change-state/activate
+(test g-action-change-state/activate
   (let ((param nil)
         (action (g:simple-action-new-stateful "simple"
                                               (g:variant-type-new "i")
@@ -169,15 +172,15 @@
 
 ;;;     g_action_parse_detailed_name
 
-(test action-parse-detaild-name
+(test g-action-parse-detaild-name
   (is-true (g:action-parse-detailed-name "test"))
   (is-true (g:action-parse-detailed-name "test(123)"))
   (is-true (g:action-parse-detailed-name "app.action::target")))
 
 ;;;     g_action_print_detailed_name
 
-(test action-print-detaild-name
+(test g-action-print-detaild-name
   (is (string= "test(12)"
                (g:action-print-detailed-name "test" (g:variant-new-int32 12)))))
 
-;;; --- 2023-5-29 --------------------------------------------------------------
+;;; --- 2023-7-9 ---------------------------------------------------------------

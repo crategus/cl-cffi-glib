@@ -27,7 +27,7 @@
   (is (equal '("default" "bidirectional" "sync-create" "invert-boolean")
              (list-flags-item-nick "GBindingFlags")))
   ;; Check the flags definition
-  (is (equal '(DEFINE-G-FLAGS "GBindingFlags"
+  (is (equal '(GOBJECT:DEFINE-G-FLAGS "GBindingFlags"
                               G-BINDING-FLAGS
                               (:EXPORT T)
                               (:DEFAULT 0)
@@ -51,17 +51,18 @@
   (is (eq (g:gtype "GObject") (g:type-parent "GBinding")))
   ;; Check the children
   (is (equal '()
-             (mapcar #'g:type-name (g:type-children "GBinding"))))
+             (list-children "GBinding")))
   ;; Check the interfaces
   (is (equal '()
-             (mapcar #'g:type-name (g:type-interfaces "GBinding"))))
+             (list-interfaces "GBinding")))
   ;; Check the class properties
   (is (equal '("flags" "source" "source-property" "target" "target-property")
-             (stable-sort (mapcar #'g:param-spec-name
-                                  (g:object-class-list-properties "GBinding"))
-                          #'string-lessp)))
+             (list-properties "GBinding")))
+  ;; Check the list of signals
+  (is (equal '()
+             (list-signals "GBinding")))
   ;; Check the class definition
-  (is (equal '(DEFINE-G-OBJECT-CLASS "GBinding" G-BINDING
+  (is (equal '(GOBJECT:DEFINE-G-OBJECT-CLASS "GBinding" G-BINDING
                        (:SUPERCLASS G-OBJECT :EXPORT T :INTERFACES NIL)
                        ((FLAGS G-BINDING-FLAGS "flags" "GBindingFlags" T NIL)
                         (SOURCE G-BINDING-SOURCE "source" "GObject" T NIL)
@@ -116,4 +117,4 @@
 ;;;     g_object_bind_property_full
 ;;;     g_object_bind_property_with_closures
 
-;;; --- 2023-6-24 --------------------------------------------------------------
+;;; --- 2023-7-9 ---------------------------------------------------------------

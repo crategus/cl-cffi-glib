@@ -173,7 +173,7 @@
 
     ;; The same in one step with the G:VALUE-SET function
     (g:value-set value2 "a second string" "gchararray")
-    (format t "value2 = ~A~%" (parse-g-value value2))
+    (format t "value2 = ~A~%" (gobject:parse-g-value value2))
     (format t "gtype  = ~A~%" (g:value-type value2))
     (format t "name   = ~A~%~%" (g:value-type-name value2))
 

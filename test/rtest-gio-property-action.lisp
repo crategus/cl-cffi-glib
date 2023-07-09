@@ -32,7 +32,7 @@
   (is (equal '()
              (list-signals "GPropertyAction")))
   ;; Check the class definition
-  (is (equal '(DEFINE-G-OBJECT-CLASS "GPropertyAction" G-PROPERTY-ACTION
+  (is (equal '(GOBJECT:DEFINE-G-OBJECT-CLASS "GPropertyAction" G-PROPERTY-ACTION
                        (:SUPERCLASS G-OBJECT :EXPORT T :INTERFACES ("GAction"))
                        ((ENABLED G-PROPERTY-ACTION-ENABLED "enabled" "gboolean"
                          T NIL)

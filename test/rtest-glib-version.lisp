@@ -17,9 +17,9 @@
   (is (member :glib-2-76 *features*)))
   
 (test g-check-version
-  (is-true (integerp +glib-major-version+))
-  (is-true (integerp +glib-minor-version+))
-  (is-true (integerp +glib-micro-version+))
+  (is-true (integerp glib:+glib-major-version+))
+  (is-true (integerp glib:+glib-minor-version+))
+  (is-true (integerp glib:+glib-micro-version+))
   (is-false (glib:check-version 2 72 0))
   (is (string= "GLib version too old (micro mismatch)"
                (glib:check-version 2 99 0))))
@@ -29,7 +29,7 @@
                                  :fill-pointer 0
                                  :adjustable t)))
     (with-output-to-string (s result)
-      (is-false (cl-cffi-glib-build-info s))
+      (is-false (glib:cl-cffi-glib-build-info s))
       (is (stringp result)))))
 
-;;; --- 2023-6-22 --------------------------------------------------------------
+;;; --- 2023-7-9 ---------------------------------------------------------------

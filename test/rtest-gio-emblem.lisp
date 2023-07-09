@@ -27,7 +27,7 @@
   (is (equal '("unknown" "device" "livemetadata" "tag")
              (list-enum-item-nick "GEmblemOrigin")))
   ;; Check the enum definition
-  (is (equal '(DEFINE-G-ENUM "GEmblemOrigin"
+  (is (equal '(GOBJECT:DEFINE-G-ENUM "GEmblemOrigin"
                              G-EMBLEM-ORIGIN
                              (:EXPORT T)
                              (:UNKNOWN 0)
@@ -63,7 +63,7 @@
   (is (equal '()
              (list-signals "GEmblem")))
   ;; Check the class definition
-  (is (equal '(DEFINE-G-OBJECT-CLASS "GEmblem" G-EMBLEM
+  (is (equal '(GOBJECT:DEFINE-G-OBJECT-CLASS "GEmblem" G-EMBLEM
                        (:SUPERCLASS G-OBJECT
                         :EXPORT T
                         :INTERFACES ("GIcon"))

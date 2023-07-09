@@ -43,8 +43,12 @@
   ;; Get the names of the interface properties.
   (is (equal '()
              (list-interface-properties "GActionGroup")))
+  ;; Check the list of signals
+  (is (equal '("action-added" "action-enabled-changed" "action-removed"
+               "action-state-changed")
+             (list-signals "GActionGroup")))
   ;; Get the interface definition
-  (is (equal '(DEFINE-G-INTERFACE "GActionGroup"
+  (is (equal '(GOBJECT:DEFINE-G-INTERFACE "GActionGroup"
                                   G-ACTION-GROUP
                                   (:EXPORT T))
              (gobject:get-g-type-definition "GActionGroup"))))

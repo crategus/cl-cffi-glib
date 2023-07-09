@@ -31,7 +31,7 @@
   (is (equal '("activate" "change-state")
              (list-signals "GSimpleAction")))
   ;; Check the class definition
-  (is (equal '(DEFINE-G-OBJECT-CLASS "GSimpleAction" G-SIMPLE-ACTION
+  (is (equal '(GOBJECT:DEFINE-G-OBJECT-CLASS "GSimpleAction" G-SIMPLE-ACTION
                        (:SUPERCLASS G-OBJECT :EXPORT T :INTERFACES ("GAction"))
                        ((ENABLED G-SIMPLE-ACTION-ENABLED "enabled" "gboolean" T
                          T)

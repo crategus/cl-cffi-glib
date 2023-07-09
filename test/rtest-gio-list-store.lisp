@@ -28,10 +28,11 @@
   ;; Check the class properties
   (is (equal '("item-type" "n-items")
              (list-properties "GListStore")))
+  ;; Check the signals
   (is (equal '()
              (list-signals "GListStore")))
   ;; Check the class definition
-  (is (equal '(DEFINE-G-OBJECT-CLASS "GListStore" G-LIST-STORE
+  (is (equal '(GOBJECT:DEFINE-G-OBJECT-CLASS "GListStore" G-LIST-STORE
                        (:SUPERCLASS G-OBJECT :EXPORT T :INTERFACES
                         ("GListModel"))
                        ((ITEM-TYPE G-LIST-STORE-ITEM-TYPE "item-type" "GType" T

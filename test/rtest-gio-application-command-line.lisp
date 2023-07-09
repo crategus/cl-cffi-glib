@@ -16,7 +16,7 @@
   (is (eq 'g:application-command-line
           (glib:symbol-for-gtype "GApplicationCommandLine")))
   ;; Check the parent
-  (is (eq (g:gtype "GObject") 
+  (is (eq (g:gtype "GObject")
           (g:type-parent "GApplicationCommandLine")))
   ;; Check the children
   (is (equal '()
@@ -28,7 +28,7 @@
   (is (equal '("arguments" "is-remote" "options" "platform-data")
              (list-properties "GApplicationCommandLine")))
   ;; Check the class definition
-  (is (equal '(DEFINE-G-OBJECT-CLASS "GApplicationCommandLine"
+  (is (equal '(GOBJECT:DEFINE-G-OBJECT-CLASS "GApplicationCommandLine"
                                       G-APPLICATION-COMMAND-LINE
                        (:SUPERCLASS G-OBJECT :EXPORT T :INTERFACES NIL)
                        ((ARGUMENTS G-APPLICATION-COMMAND-LINE-ARGUMENTS
@@ -93,4 +93,4 @@
 ;;;     g_application_command_line_print
 ;;;     g_application_command_line_printerr
 
-;;; --- 2023-7-8 ---------------------------------------------------------------
+;;; --- 2023-7-9 ---------------------------------------------------------------

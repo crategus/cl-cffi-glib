@@ -7,7 +7,7 @@
 
 ;;;     GLoadableIcon
 
-(test loadable-icon-interface
+(test g-loadable-icon-interface
   ;; Type check
   (is (g:type-is-interface "GLoadableIcon"))
   ;; Check the registered symbol
@@ -18,10 +18,12 @@
           (g:gtype (cffi:foreign-funcall "g_loadable_icon_get_type" :size))))
   ;; Get the names of the interface properties.
   (is (equal '()
-             (mapcar #'g:param-spec-name
-                     (g:object-interface-list-properties "GLoadableIcon"))))
+             (list-interface-properties "GLoadableIcon")))
+  ;; Check the list of signals
+  (is (equal '()
+             (list-signals "GLoadableIcon")))
   ;; Get the interface definition
-  (is (equal '(DEFINE-G-INTERFACE "GLoadableIcon" G-LOADABLE-ICON
+  (is (equal '(GOBJECT:DEFINE-G-INTERFACE "GLoadableIcon" G-LOADABLE-ICON
                                   (:EXPORT T))
              (gobject:get-g-type-definition "GLoadableIcon"))))
 
@@ -31,4 +33,4 @@
 ;;;     g_loadable_icon_load_async
 ;;;     g_loadable_icon_load_finish
 
-;;; --- 2023-5-29 --------------------------------------------------------------
+;;; --- 2023-7-9 ---------------------------------------------------------------

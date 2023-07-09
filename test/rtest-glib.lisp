@@ -1,84 +1,9 @@
 (defpackage :glib-test
   (:use :fiveam :iterate :common-lisp)
   (:import-from :cffi)
-  (:import-from :glib    ;; Symbols from glib.stable-pointer.lisp
-                         #:with-stable-pointer
-                         ;; Symbols from glib.boxed-type.lisp
-                         #:define-g-boxed-opaque
-                         #:get-boxed-info
-
-                         ;; Import from glib.version.lisp
-                         #:+glib-major-version+
-                         #:+glib-minor-version+
-                         #:+glib-micro-version+
-                         #:cl-cffi-glib-build-info
-
-                         ;; Import from glib.error.lisp
-                         #:with-g-error
-                         #:with-ignore-g-error
-                         #:with-catching-to-g-error
-
-                         ;; Symbols from glib.main-loop.lisp
-                         #:+g-priority-high+
-                         #:+g-priority-default+
-                         #:+g-priority-high-idle+
-                         #:+g-priority-default-idle+
-                         #:+g-priority-low+
-                         #:+g-source-continue+
-                         #:+g-source-remove+
-
-                         ;; Import from glib.option.lisp
-                         #:with-g-option-context
-                         #:with-g-option-group
-
-                         ;; Import from glib.key-file.lisp
-                         #:with-g-key-file)
-  (:import-from :gobject #:+g-type-invalid+
-                         #:+g-type-none+
-                         #:+g-type-interface+
-                         #:+g-type-char+
-                         #:+g-type-uchar+
-                         #:+g-type-boolean+
-                         #:+g-type-int+
-                         #:+g-type-uint+
-                         #:+g-type-long+
-                         #:+g-type-ulong+
-                         #:+g-type-int64+
-                         #:+g-type-uint64+
-                         #:+g-type-enum+
-                         #:+g-type-flags+
-                         #:+g-type-float+
-                         #:+g-type-double+
-                         #:+g-type-string+
-                         #:+g-type-pointer+
-                         #:+g-type-boxed+
-                         #:+g-type-param+
-                         #:+g-type-object+
-                         #:+g-type-gtype+
-                         #:+g-type-variant+
-                         #:+g-type-checksum+
-
-                         #:parse-g-value
-                         #:set-g-value
-
-;                         #:define-g-boxed-opaque
-
-                         #:define-g-enum
-                         #:define-g-flags
-                         #:define-g-object-class
-                         #:define-g-interface
-                         #:get-enum-items
-                         #:get-flags-items
-                         #:enum-item-name
-                         #:enum-item-nick
-                         #:enum-item-value
-                         #:flags-item-name
-                         #:flags-item-nick
-                         #:flags-item-value
-                         #:get-g-type-definition
-;                         #:get-boxed-info
-                         )
-  (:import-from :gio     #:with-g-resources)
+  (:import-from :glib)
+  (:import-from :gobject)
+  (:import-from :gio)
   (:export #:run!))
 
 (in-package :glib-test)

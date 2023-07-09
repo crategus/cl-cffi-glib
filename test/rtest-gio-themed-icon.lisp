@@ -7,7 +7,7 @@
 
 ;;;     GThemedIcon
 
-(test themed-icon-class
+(test g-themed-icon-class
   ;; Type check
   (is (g:type-is-object "GThemedIcon"))
   ;; Check the registered symbol
@@ -31,7 +31,7 @@
   (is (equal '()
              (list-signals "GThemedIcon")))
   ;; Check the class definition
-  (is (equal '(DEFINE-G-OBJECT-CLASS "GThemedIcon" G-THEMED-ICON
+  (is (equal '(GOBJECT:DEFINE-G-OBJECT-CLASS "GThemedIcon" G-THEMED-ICON
                        (:SUPERCLASS G-OBJECT :EXPORT T :INTERFACES ("GIcon"))
                        ((NAME G-THEMED-ICON-NAME "name" "gchararray" NIL NIL)
                         (NAMES G-THEMED-ICON-NAMES "names" "GStrv" T NIL)
@@ -47,7 +47,7 @@
 ;;;   g_themed_icon_prepend_name
 ;;;   g_themed_icon_get_names
 
-(test themed-icon-new
+(test g-themed-icon-new
   (let ((icon (g:themed-icon-new "gnome-dev-cdrom")))
     (is (equal '("gnome-dev-cdrom")
                (g:themed-icon-names icon)))
@@ -61,7 +61,7 @@
 ;;;   g_themed_icon_new_from_names
 ;;;   g_themed_icon_get_names
 
-(test themed-icon-new-from-names
+(test g-themed-icon-new-from-names
   (let ((icon (g:themed-icon-new-from-names "gnome-dev-cdrom-audio"
                                             "gnome-dev-cdrom"
                                             "gnome-dev"
@@ -72,8 +72,9 @@
 
 ;;;   g_themed_icon_new_with_default_fallbacks
 
-(test themed-icon-new-with-default-fallbacks
-  (let* ((names (list "gnome-dev-cdrom-audio" "gnome-dev-cdrom" "gnome-dev" "gnome"))
+(test g-themed-icon-new-with-default-fallbacks
+  (let* ((names (list "gnome-dev-cdrom-audio" "gnome-dev-cdrom" "gnome-dev"
+                      "gnome"))
          (icon1 (g:themed-icon-new-from-names names))
          (icon2 (g:themed-icon-new-with-default-fallbacks "gnome-dev-cdrom-audio")))
 ;    (is (equal (g:themed-icon-names icon1)
@@ -88,4 +89,4 @@
 ;;;     g_themed_icon_append_name
 ;;;     g_themed_icon_get_names
 
-;;; --- 2023-5-29 --------------------------------------------------------------
+;;; --- 2023-7-9 ---------------------------------------------------------------

@@ -32,7 +32,7 @@
   (is (equal '()
              (list-signals "GPermission")))
   ;; Check the class definition
-  (is (equal '(DEFINE-G-OBJECT-CLASS "GPermission" G-PERMISSION
+  (is (equal '(GOBJECT:DEFINE-G-OBJECT-CLASS "GPermission" G-PERMISSION
                        (:SUPERCLASS G-OBJECT :EXPORT T :INTERFACES NIL)
                        ((ALLOWED G-PERMISSION-ALLOWED "allowed" "gboolean" T
                          NIL)
@@ -69,7 +69,8 @@
   (is (equal '()
              (list-signals "GSimplePermission")))
   ;; Check the class definition
-  (is (equal '(DEFINE-G-OBJECT-CLASS "GSimplePermission" G-SIMPLE-PERMISSION
+  (is (equal '(GOBJECT:DEFINE-G-OBJECT-CLASS "GSimplePermission"
+                                             G-SIMPLE-PERMISSION
                        (:SUPERCLASS G-PERMISSION :EXPORT T :INTERFACES NIL) NIL)
              (gobject:get-g-type-definition "GSimplePermission"))))
 
@@ -101,4 +102,4 @@
 ;;;     g_permission_release_finish
 ;;;     g_permission_impl_update
 
-;;; --- 2023-5-29 --------------------------------------------------------------
+;;; --- 2023-7-9 ---------------------------------------------------------------

@@ -38,9 +38,9 @@
     ;; Check the default value
     (is (eq (g:gtype "gboolean")
             (g:value-type (g:param-spec-default-value pspec))))
-    (is-true (parse-g-value (g:param-spec-default-value pspec)))
+    (is-true (gobject:parse-g-value (g:param-spec-default-value pspec)))
     (is-false (g:param-value-set-default pspec value))
-    (is-true (parse-g-value value)) ; the default value is t
+    (is-true (gobject:parse-g-value value)) ; the default value is t
     ;; Check the infos about the parameter
     (is (string= "myBoolean" (g:param-spec-name pspec)))
     (is (string= "myBool" (g:param-spec-nick pspec)))
@@ -97,16 +97,17 @@
     ;; Check the default value
     (is (eq (g:gtype "gchar")
             (g:value-type (g:param-spec-default-value pspec))))
-    (is-true (parse-g-value (g:param-spec-default-value pspec)))
+    (is-true (gobject:parse-g-value (g:param-spec-default-value pspec)))
     (is-false (g:param-value-set-default pspec value))
-    (is (= (char-code #\D) (parse-g-value value))) ; the default value is #\D
+    (is (= (char-code #\D)
+           (gobject:parse-g-value value))) ; the default value is #\D
     ;; Validate a value
     (is (= 0 (setf (g:value-char value) 0)))
     (is-true (g:param-value-validate pspec value))
-    (is (= (char-code #\A) (parse-g-value value)))
+    (is (= (char-code #\A) (gobject:parse-g-value value)))
     (is (= (char-code #\a) (setf (g:value-char value) (char-code #\a))))
     (is-true (g:param-value-validate pspec value))
-    (is (= (char-code #\Z) (parse-g-value value)))
+    (is (= (char-code #\Z) (gobject:parse-g-value value)))
     ;; More checks for a default value
     (is-false (g:param-value-defaults pspec value))
     (is-false (g:param-value-set-default pspec value))
@@ -175,16 +176,17 @@
     ;; Check the default value
     (is (eq (g:gtype "guchar")
             (g:value-type (g:param-spec-default-value pspec))))
-    (is-true (parse-g-value (g:param-spec-default-value pspec)))
+    (is-true (gobject:parse-g-value (g:param-spec-default-value pspec)))
     (is-false (g:param-value-set-default pspec value))
-    (is (= (char-code #\D) (parse-g-value value))) ; the default value is #\D
+    (is (= (char-code #\D)
+           (gobject:parse-g-value value))) ; the default value is #\D
     ;; Validate a value
     (is (= 48 (setf (g:value-uchar value) (char-code #\0))))
     (is-true (g:param-value-validate pspec value))
-    (is (= (char-code #\A) (parse-g-value value)))
+    (is (= (char-code #\A) (gobject:parse-g-value value)))
     (is (= (char-code #\a) (setf (g:value-uchar value) (char-code #\a))))
     (is-true (g:param-value-validate pspec value))
-    (is (= (char-code #\Z) (parse-g-value value)))
+    (is (= (char-code #\Z) (gobject:parse-g-value value)))
     ;; More checks for a default value
     (is-false (g:param-value-defaults pspec value))
     (is-false (g:param-value-set-default pspec value))
@@ -243,16 +245,16 @@
     ;; Check the default value
     (is (eq (g:gtype "gint")
             (g:value-type (g:param-spec-default-value pspec))))
-    (is-true (parse-g-value (g:param-spec-default-value pspec)))
+    (is-true (gobject:parse-g-value (g:param-spec-default-value pspec)))
     (is-false (g:param-value-set-default pspec value))
-    (is (= 100 (parse-g-value value))) ; the default value is 100
+    (is (= 100 (gobject:parse-g-value value))) ; the default value is 100
     ;; Validate a value
     (is (= 0 (setf (g:value-int value) 0)))
     (is-true (g:param-value-validate pspec value))
-    (is (= 50 (parse-g-value value)))
+    (is (= 50 (gobject:parse-g-value value)))
     (is (= 200 (setf (g:value-int value) 200)))
     (is-true (g:param-value-validate pspec value))
-    (is (= 150 (parse-g-value value)))
+    (is (= 150 (gobject:parse-g-value value)))
     ;; More checks for a default value
     (is-false (g:param-value-defaults pspec value))
     (is-false (g:param-value-set-default pspec value))
@@ -311,16 +313,16 @@
     ;; Check the default value
     (is (eq (g:gtype "guint")
             (g:value-type (g:param-spec-default-value pspec))))
-    (is-true (parse-g-value (g:param-spec-default-value pspec)))
+    (is-true (gobject:parse-g-value (g:param-spec-default-value pspec)))
     (is-false (g:param-value-set-default pspec value))
-    (is (= 100 (parse-g-value value))) ; the default value is 100
+    (is (= 100 (gobject:parse-g-value value))) ; the default value is 100
     ;; Validate a value
     (is (= 0 (setf (g:value-uint value) 0)))
     (is-true (g:param-value-validate pspec value))
-    (is (= 50 (parse-g-value value)))
+    (is (= 50 (gobject:parse-g-value value)))
     (is (= 200 (setf (g:value-uint value) 200)))
     (is-true (g:param-value-validate pspec value))
-    (is (= 150 (parse-g-value value)))
+    (is (= 150 (gobject:parse-g-value value)))
     ;; More checks for a default value
     (is-false (g:param-value-defaults pspec value))
     (is-false (g:param-value-set-default pspec value))
@@ -382,16 +384,16 @@
     ;; Check the default value
     (is (eq (g:gtype "glong")
             (g:value-type (g:param-spec-default-value pspec))))
-    (is-true (parse-g-value (g:param-spec-default-value pspec)))
+    (is-true (gobject:parse-g-value (g:param-spec-default-value pspec)))
     (is-false (g:param-value-set-default pspec value))
-    (is (= 100 (parse-g-value value))) ; the default value is 100
+    (is (= 100 (gobject:parse-g-value value))) ; the default value is 100
     ;; Validate a value
     (is (= 0 (setf (g:value-long value) 0)))
     (is-true (g:param-value-validate pspec value))
-    (is (= 50 (parse-g-value value)))
+    (is (= 50 (gobject:parse-g-value value)))
     (is (= 200 (setf (g:value-long value) 200)))
     (is-true (g:param-value-validate pspec value))
-    (is (= 150 (parse-g-value value)))
+    (is (= 150 (gobject:parse-g-value value)))
     ;; More checks for a default value
     (is-false (g:param-value-defaults pspec value))
     (is-false (g:param-value-set-default pspec value))
@@ -453,16 +455,16 @@
     ;; Check the default value
     (is (eq (g:gtype "gulong")
             (g:value-type (g:param-spec-default-value pspec))))
-    (is-true (parse-g-value (g:param-spec-default-value pspec)))
+    (is-true (gobject:parse-g-value (g:param-spec-default-value pspec)))
     (is-false (g:param-value-set-default pspec value))
-    (is (= 100 (parse-g-value value))) ; the default value is 100
+    (is (= 100 (gobject:parse-g-value value))) ; the default value is 100
     ;; Validate a value
     (is (= 0 (setf (g:value-ulong value) 0)))
     (is-true (g:param-value-validate pspec value))
-    (is (= 50 (parse-g-value value)))
+    (is (= 50 (gobject:parse-g-value value)))
     (is (= 200 (setf (g:value-ulong value) 200)))
     (is-true (g:param-value-validate pspec value))
-    (is (= 150 (parse-g-value value)))
+    (is (= 150 (gobject:parse-g-value value)))
     ;; More checks for a default value
     (is-false (g:param-value-defaults pspec value))
     (is-false (g:param-value-set-default pspec value))
@@ -521,16 +523,16 @@
     ;; Check the default value
     (is (eq (g:gtype "gint64")
             (g:value-type (g:param-spec-default-value pspec))))
-    (is-true (parse-g-value (g:param-spec-default-value pspec)))
+    (is-true (gobject:parse-g-value (g:param-spec-default-value pspec)))
     (is-false (g:param-value-set-default pspec value))
-    (is (= 100 (parse-g-value value))) ; the default value is 100
+    (is (= 100 (gobject:parse-g-value value))) ; the default value is 100
     ;; Validate a value
     (is (= 0 (setf (g:value-int64 value) 0)))
     (is-true (g:param-value-validate pspec value))
-    (is (= 50 (parse-g-value value)))
+    (is (= 50 (gobject:parse-g-value value)))
     (is (= 200 (setf (g:value-int64 value) 200)))
     (is-true (g:param-value-validate pspec value))
-    (is (= 150 (parse-g-value value)))
+    (is (= 150 (gobject:parse-g-value value)))
     ;; More checks for a default value
     (is-false (g:param-value-defaults pspec value))
     (is-false (g:param-value-set-default pspec value))
@@ -589,16 +591,16 @@
     ;; Check the default value
     (is (eq (g:gtype "guint64")
             (g:value-type (g:param-spec-default-value pspec))))
-    (is-true (parse-g-value (g:param-spec-default-value pspec)))
+    (is-true (gobject:parse-g-value (g:param-spec-default-value pspec)))
     (is-false (g:param-value-set-default pspec value))
-    (is (= 100 (parse-g-value value))) ; the default value is 100
+    (is (= 100 (gobject:parse-g-value value))) ; the default value is 100
     ;; Validate a value
     (is (= 0 (setf (g:value-uint64 value) 0)))
     (is-true (g:param-value-validate pspec value))
-    (is (= 50 (parse-g-value value)))
+    (is (= 50 (gobject:parse-g-value value)))
     (is (= 200 (setf (g:value-uint64 value) 200)))
     (is-true (g:param-value-validate pspec value))
-    (is (= 150 (parse-g-value value)))
+    (is (= 150 (gobject:parse-g-value value)))
     ;; More checks for a default value
     (is-false (g:param-value-defaults pspec value))
     (is-false (g:param-value-set-default pspec value))
@@ -657,16 +659,16 @@
     ;; Check the default value
     (is (eq (g:gtype "gfloat")
             (g:value-type (g:param-spec-default-value pspec))))
-    (is-true (parse-g-value (g:param-spec-default-value pspec)))
+    (is-true (gobject:parse-g-value (g:param-spec-default-value pspec)))
     (is-false (g:param-value-set-default pspec value))
-    (is (= 100 (parse-g-value value))) ; the default value is 100
+    (is (= 100 (gobject:parse-g-value value))) ; the default value is 100
     ;; Validate a value
     (is (= 0 (setf (g:value-float value) 0.0)))
     (is-true (g:param-value-validate pspec value))
-    (is (= 50 (parse-g-value value)))
+    (is (= 50 (gobject:parse-g-value value)))
     (is (= 200 (setf (g:value-float value) 200.0)))
     (is-true (g:param-value-validate pspec value))
-    (is (= 150 (parse-g-value value)))
+    (is (= 150 (gobject:parse-g-value value)))
     ;; More checks for a default value
     (is-false (g:param-value-defaults pspec value))
     (is-false (g:param-value-set-default pspec value))
@@ -725,16 +727,16 @@
     ;; Check the default value
     (is (eq (g:gtype "gdouble")
             (g:value-type (g:param-spec-default-value pspec))))
-    (is-true (parse-g-value (g:param-spec-default-value pspec)))
+    (is-true (gobject:parse-g-value (g:param-spec-default-value pspec)))
     (is-false (g:param-value-set-default pspec value))
-    (is (= 100 (parse-g-value value))) ; the default value is 100
+    (is (= 100 (gobject:parse-g-value value))) ; the default value is 100
     ;; Validate a value
     (is (= 0 (setf (g:value-double value) 0.0d0)))
     (is-true (g:param-value-validate pspec value))
-    (is (= 50 (parse-g-value value)))
+    (is (= 50 (gobject:parse-g-value value)))
     (is (= 200 (setf (g:value-double value) 200.0d0)))
     (is-true (g:param-value-validate pspec value))
-    (is (= 150 (parse-g-value value)))
+    (is (= 150 (gobject:parse-g-value value)))
     ;; More checks for a default value
     (is-false (g:param-value-defaults pspec value))
     (is-false (g:param-value-set-default pspec value))
@@ -792,9 +794,10 @@
     ;; Check the default value
     (is (eq (g:gtype "GEmblemOrigin")
             (g:value-type (g:param-spec-default-value pspec))))
-    (is-true (parse-g-value (g:param-spec-default-value pspec)))
+    (is-true (gobject:parse-g-value (g:param-spec-default-value pspec)))
     (is-false (g:param-value-set-default pspec value))
-    (is (eq :unknown (parse-g-value value))) ; the default value is :empty
+    (is (eq :unknown
+            (gobject:parse-g-value value))) ; the default value is :empty
     ;; More checks for a default value
     (is-true (g:param-value-defaults pspec value))
     (is-false (g:param-value-set-default pspec value))
@@ -855,10 +858,10 @@
     ;; Check the default value
     (is (eq (g:gtype "GApplicationFlags")
             (g:value-type (g:param-spec-default-value pspec))))
-    (is (equal '(:is-service) 
-               (parse-g-value (g:param-spec-default-value pspec))))
+    (is (equal '(:is-service)
+               (gobject:parse-g-value (g:param-spec-default-value pspec))))
     (is-false (g:param-value-set-default pspec value))
-    (is (equal '(:is-service) (parse-g-value value))) ; default value
+    (is (equal '(:is-service) (gobject:parse-g-value value))) ; default value
     ;; More checks for a default value
     (is-true (g:param-value-defaults pspec value))
     (is-false (g:param-value-set-default pspec value))
@@ -920,9 +923,10 @@
     ;; Check the default value
     (is (eq (g:gtype "gchararray")
             (g:value-type (g:param-spec-default-value pspec))))
-    (is (string= "string" (parse-g-value (g:param-spec-default-value pspec))))
+    (is (string= "string"
+                 (gobject:parse-g-value (g:param-spec-default-value pspec))))
     (is-false (g:param-value-set-default pspec value))
-    (is (string= "string" (parse-g-value value)))
+    (is (string= "string" (gobject:parse-g-value value)))
     ;; More checks for a default value
     (is-true (g:param-value-defaults pspec value))
     (is-false (g:param-value-set-default pspec value))
@@ -983,9 +987,9 @@
     ;; Check the default value
     (is (eq (g:gtype "GParamBoolean")
             (g:value-type (g:param-spec-default-value pspec))))
-;    (is-false (parse-g-value (g-param-spec-default-value pspec)))
+;    (is-false (gobject:parse-g-value (g-param-spec-default-value pspec)))
 ;    (is-false (g-param-value-set-default pspec value))
-;    (is (string= "string" (parse-g-value value)))
+;    (is (string= "string" (gobject:parse-g-value value)))
     ;; More checks for a default value
 ;    (is-true (g-param-value-defaults pspec value))
 ;    (is-false (g-param-value-set-default pspec value))
@@ -1008,8 +1012,8 @@
     (g:value-init value "GParamBoolean")
     (is (eq (g:gtype "GParamBoolean")
             (g:param-spec-type (setf (g:value-param value)
-                                     (g:param-spec-boolean "myBool" 
-                                                           "myBool" 
+                                     (g:param-spec-boolean "myBool"
+                                                           "myBool"
                                                            "Doku" t '())))))
     (is (eq (g:gtype "GParamBoolean") (g:param-spec-type (g:value-param value))))
     (g:value-unset value)))
@@ -1146,4 +1150,4 @@
 ;;;     g_value_set_variant
 ;;;     g_value_take_variant
 
-;;; --- 2023-7-8 ---------------------------------------------------------------
+;;; --- 2023-7-9 ---------------------------------------------------------------

@@ -20,17 +20,15 @@
   (is (eq (g:gtype "GMenuModel") (g:type-parent "GMenu")))
   ;; Check the children
   (is (equal '()
-             (mapcar #'g:type-name (g:type-children "GMenu"))))
+             (list-children "GMenu")))
   ;; Check the interfaces
   (is (equal '()
-             (mapcar #'g:type-name (g:type-interfaces "GMenu"))))
+             (list-interfaces "GMenu")))
   ;; Check the class properties
   (is (equal '()
-             (sort (mapcar #'g:param-spec-name
-                           (g:object-class-list-properties "GMenu"))
-                   #'string-lessp)))
+             (list-properties "GMenu")))
   ;; Check the class definition
-  (is (equal '(DEFINE-G-OBJECT-CLASS "GMenu" G-MENU
+  (is (equal '(GOBJECT:DEFINE-G-OBJECT-CLASS "GMenu" G-MENU
                        (:SUPERCLASS G-MENU-MODEL
                         :EXPORT T :INTERFACES NIL) NIL)
              (gobject:get-g-type-definition "GMenu"))))
@@ -50,17 +48,15 @@
   (is (eq (g:gtype "GObject") (g:type-parent "GMenuItem")))
   ;; Check the children
   (is (equal '()
-             (mapcar #'g:type-name (g:type-children "GMenuItem"))))
+             (list-children "GMenuItem")))
   ;; Check the interfaces
   (is (equal '()
-             (mapcar #'g:type-name (g:type-interfaces "GMenuItem"))))
+             (list-interfaces "GMenuItem")))
   ;; Check the class properties
   (is (equal '()
-             (sort (mapcar #'g:param-spec-name
-                           (g:object-class-list-properties "GMenuItem"))
-                   #'string-lessp)))
+             (list-properties "GMenuItem")))
   ;; Check the class definition
-  (is (equal '(DEFINE-G-OBJECT-CLASS "GMenuItem" G-MENU-ITEM
+  (is (equal '(GOBJECT:DEFINE-G-OBJECT-CLASS "GMenuItem" G-MENU-ITEM
                        (:SUPERCLASS G-OBJECT
                         :EXPORT T :INTERFACES NIL) NIL)
              (gobject:get-g-type-definition "GMenuItem"))))
@@ -291,4 +287,4 @@
     (is (typep (setf (g:menu-item-link item "submenu") submenu) 'g:menu-model))
     (is (typep (g:menu-item-link item "submenu") 'g:menu-model))))
 
-;;; --- 2023-5-29 --------------------------------------------------------------
+;;; --- 2023-7-9 ---------------------------------------------------------------

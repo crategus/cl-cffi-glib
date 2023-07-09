@@ -99,7 +99,7 @@
  (EXPORT 'SIMPLE-ACTION-STATE (FIND-PACKAGE "GLIB-TEST"))
  (EXPORT 'SIMPLE-ACTION-STATE-TYPE (FIND-PACKAGE "GLIB-TEST")))
              (macroexpand
-               '(define-g-object-class "GSimpleAction" simple-action
+               '(gobject:define-g-object-class "GSimpleAction" simple-action
                                        (:superclass gobject:object
                                         :export t
                                         :interfaces ("GAction")
@@ -154,7 +154,7 @@
  (EXPORT 'SIMPLE-ACTION-STATE-TYPE (FIND-PACKAGE "GLIB-TEST"))
  (EXPORT 'SIMPLE-ACTION-STATE-HINT (FIND-PACKAGE "GLIB-TEST")))
              (macroexpand
-               '(define-g-object-class "GSimpleAction" simple-action
+               '(gobject:define-g-object-class "GSimpleAction" simple-action
                                        (:superclass gobject:object
                                         :export t
                                         :interfaces ("GAction")
@@ -221,7 +221,7 @@
                 (EXPORT 'ACTION-STATE-TYPE (FIND-PACKAGE "GLIB-TEST"))
                 (EVAL-WHEN (:COMPILE-TOPLEVEL :LOAD-TOPLEVEL :EXECUTE)
                   (SETF (GETHASH "GAction" GOBJECT::*KNOWN-INTERFACES*) 'ACTION)))
-             (macroexpand '(define-g-interface "GAction" action
+             (macroexpand '(gobject:define-g-interface "GAction" action
                                                (:export t
                                                 :type-initializer
                                                 "g_action_get_type")
@@ -243,4 +243,4 @@
                                                  "state-type" "GVariantType"
                                                  t nil)))))))
 
-;;; --- 2023-1-2 ---------------------------------------------------------------
+;;; --- 2023-7-9 ---------------------------------------------------------------

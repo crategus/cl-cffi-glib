@@ -32,7 +32,7 @@
                "non-unique" "can-override-app-id" "allow-replacement" "replace")
              (list-flags-item-nick "GApplicationFlags")))
   ;; Check the flags definition
-  (is (equal '(DEFINE-G-FLAGS "GApplicationFlags"
+  (is (equal '(GOBJECT:DEFINE-G-FLAGS "GApplicationFlags"
                               G-APPLICATION-FLAGS
                               (:EXPORT T)
                               (:FLAGS-NONE 0)
@@ -72,7 +72,7 @@
                "open" "shutdown" "startup")
              (list-signals "GApplication")))
   ;; Check the class definition
-  (is (equal '(DEFINE-G-OBJECT-CLASS "GApplication" G-APPLICATION
+  (is (equal '(GOBJECT:DEFINE-G-OBJECT-CLASS "GApplication" G-APPLICATION
                        (:SUPERCLASS G-OBJECT :EXPORT T :INTERFACES
                         ("GActionGroup" "GActionMap"))
                        ((ACTION-GROUP G-APPLICATION-ACTION-GROUP "action-group"

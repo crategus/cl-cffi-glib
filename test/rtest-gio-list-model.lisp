@@ -7,7 +7,7 @@
 
 ;;;     GListModel
 
-(test list-model-interface
+(test g-list-model-interface
   ;; Type check
   (is (g:type-is-interface "GListModel"))
   ;; Check the registered symbol
@@ -18,10 +18,12 @@
           (g:gtype (cffi:foreign-funcall "g_list_model_get_type" :size))))
   ;; Get the names of the interface properties.
   (is (equal '()
-             (mapcar #'g:param-spec-name
-                     (g:object-interface-list-properties "GListModel"))))
+             (list-interface-properties "GListModel")))
+  ;; Check the list of signals
+  (is (equal '("items-changed")
+             (list-signals "GListModel")))
   ;; Get the interface definition
-  (is (equal '(DEFINE-G-INTERFACE "GListModel"
+  (is (equal '(GOBJECT:DEFINE-G-INTERFACE "GListModel"
                                   G-LIST-MODEL
                                   (:EXPORT T))
              (gobject:get-g-type-definition "GListModel"))))
@@ -37,7 +39,7 @@
 ;;;     g_list_model_get_item
 ;;;     g_list_model_get_object
 
-(test list-model-get.1
+(test g-list-model-get.1
   (let ((store (g:list-store-new "GObject")))
     ;; Append some objects
     (is-false (g:list-store-append store (make-instance 'g:simple-action)))
@@ -49,7 +51,7 @@
     (is (typep (g:list-model-object store 0) 'g:simple-action))
     (is (typep (g:list-model-object store 1) 'g:menu-item))))
 
-(test list-model-get.2
+(test g-list-model-get.2
   (let ((store (g:list-store-new "GAction")))
     ;; Append some objects
     (is-false (g:list-store-append store (make-instance 'g:simple-action)))
@@ -63,4 +65,4 @@
 
 ;;;     g_list_model_items_changed
 
-;;; --- 2023-5-29 --------------------------------------------------------------
+;;; --- 2023-7-9 ---------------------------------------------------------------

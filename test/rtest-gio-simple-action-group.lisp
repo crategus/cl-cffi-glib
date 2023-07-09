@@ -28,7 +28,8 @@
   (is (equal '()
              (list-signals "GSimpleActionGroup")))
   ;; Check the class definition
-  (is (equal '(DEFINE-G-OBJECT-CLASS "GSimpleActionGroup" G-SIMPLE-ACTION-GROUP
+  (is (equal '(GOBJECT:DEFINE-G-OBJECT-CLASS "GSimpleActionGroup"
+                                             G-SIMPLE-ACTION-GROUP
                        (:SUPERCLASS G-OBJECT :EXPORT T :INTERFACES
                         ("GActionGroup" "GActionMap"))
                        NIL)
