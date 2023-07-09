@@ -19,14 +19,14 @@
 
 ;;; --- Properties -------------------------------------------------------------
 
-(test object-properties
+(test g-object-properties
   (let ((object (make-instance 'g:simple-action)))
     (is (cffi:pointerp (g:object-pointer object)))
     (is (cffi:pointerp (g:object-pointer object)))
     (is-true (g:object-has-reference object))
     (is (typep (g:object-signal-handlers object) 'array))))
 
-(test object-pointer.1
+(test g-object-pointer.1
   (let* ((object (make-instance 'g:simple-action))
          (ptr (g:object-pointer object)))
     (is (cffi:pointerp ptr))
@@ -36,7 +36,7 @@
     (is (cffi:pointerp (g:object-pointer object)))))
 
 ;; Use the abbreviation POINTER for G:OBJECT-POINTER
-(test object-pointer.2
+(test g-object-pointer.2
   (let* ((object (make-instance 'g:simple-action))
          (ptr (gobject:pointer object)))
     (is (cffi:pointerp ptr))
@@ -47,7 +47,7 @@
 
 ;;; --- Signals ----------------------------------------------------------------
 
-(test object-signals
+(test g-object-signals
   ;; Check the list of signals
   (is (equal '("notify")
              (mapcar #'g:signal-name
@@ -68,7 +68,7 @@
 
 ;;;     g_type_is_object
 
-(test type-is-object
+(test g-type-is-object
   ;; Check for the fundamental types
   (is-false (g:type-is-object "gboolean"))
   (is-false (g:type-is-object "GResource"))
@@ -101,7 +101,7 @@
 
 ;;;     g_is_object
 
-(test is-object
+(test g-is-object
   (is-true  (g:is-object (make-instance 'g:simple-action)))
   (is-true  (g:is-object (g:object-pointer (make-instance 'g:simple-action))))
   (is-false (g:is-object (g:param-spec-boolean "new" "nick" "blurb" nil nil))))
@@ -111,7 +111,7 @@
 
 ;;;     g_object_type
 
-(test object-type
+(test g-object-type
   (is-false (g:object-type nil))
   (is (eq (g:gtype "GSimpleAction")
           (g:object-type (make-instance 'g:simple-action))))
@@ -120,7 +120,7 @@
 
 ;;;     g_object_type_name
 
-(test object-type-name
+(test g-object-type-name
   (is-false (g:object-type-name nil))
   (is (string= "GSimpleAction"
                (g:object-type-name (make-instance 'g:simple-action))))
@@ -135,7 +135,7 @@
 
 ;;;     g-object-class-find-property
 
-(test object-class-find-property
+(test g-object-class-find-property
   (is (g:is-param-spec (g:object-class-find-property "GSimpleAction" "name")))
   (is (g:is-param-spec
           (g:object-class-find-property (g:gtype "GSimpleAction") "name")))
@@ -146,7 +146,7 @@
 
 ;;;     g_object_class_list_properties
 
-(test object-class-list-properties
+(test g-object-class-list-properties
   (is (equal '("name" "parameter-type" "enabled" "state-type" "state")
              (mapcar #'g:param-spec-name
                      (g:object-class-list-properties "GSimpleAction"))))
@@ -158,7 +158,7 @@
 
 ;;;     g-object-interface-find-property
 
-(test object-interface-find-property
+(test g-object-interface-find-property
   (is (g:is-param-spec (g:object-interface-find-property "GAction" "enabled")))
   (is (g:is-param-spec
           (g:object-interface-find-property (g:gtype "GAction") "enabled")))
@@ -167,7 +167,7 @@
 
 ;;;     g_object_interface_list_properties
 
-(test object-interface-list-properties
+(test g-object-interface-list-properties
   (is (equal '("enabled" "name" "parameter-type" "state" "state-type")
              (mapcar #'g:param-spec-name
                      (g:object-interface-list-properties "GAction"))))
@@ -179,7 +179,7 @@
 ;;;     g-object-new
 
 #+nil
-(test object-new
+(test g-object-new
   (is (eq (gtype "GtkButton")
           (g:object-type (g:object-new "GtkButton"))))
   (is (eq (gtype "GtkButton")
@@ -461,4 +461,4 @@
 ;;;     g_weak_ref_set
 ;;;     g_assert_finalize_object
 
-;;; --- 2023-5-29 --------------------------------------------------------------
+;;; --- 2023-6-24 --------------------------------------------------------------

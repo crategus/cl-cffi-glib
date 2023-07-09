@@ -106,7 +106,7 @@
 
 ;;;     g_application_application_id
 
-(test g_application-application-id-property
+(test g-application-application-id-property
   (let ((app (make-instance 'g:application)))
     (is-false (g:application-application-id app))
     (is-true (setf (g:application-application-id app) "com.crategus.app"))
@@ -185,15 +185,13 @@
                               :application-id "com.crategus.application-open"
                               :inactivity-timeout 2000
                               :flags :handles-open)))
-
       ;; Signal handler "startup"
       (g:signal-connect app "startup"
                         (lambda (application)
                           (declare (ignore application))
                           (setf in-startup t)
                           (when *verbose-g-application*
-                            (format t "The application is in startup.~%"))))
-
+                            (format t "~&The application is in startup.~%"))))
       ;; Signal handler "activate"
       (g:signal-connect app "activate"
                         (lambda (application)
@@ -208,7 +206,6 @@
                           ;; keep the application alive until the action is
                           ;; completed.
                           (g:application-release app)))
-
       ;; Signal handler "open"
       (g:signal-connect app "open"
                         (lambda (application files n-files hint)
@@ -223,7 +220,6 @@
                           ;; does not work. Search a better implementation to
                           ;; get a list of GFiles.
                         ))
-
       ;; Signal handler "shutdown"
       (g:signal-connect app "shutdown"
                         (lambda (application)
@@ -231,30 +227,25 @@
                           (setf in-shutdown t)
                           (when *verbose-g-application*
                             (format t "The application is in shutdown.~%"))))
-
       ;; Start the application
       (g:application-run app argv))
       ;; Return the results
       (list in-startup in-activate in-open in-shutdown)))
 
-;; Error when running the complete testsuite
-; G-APPLICATION-SIGNALS []:
-;      Unexpected Error: #<TYPE-ERROR expected-type: SB-SYS:SYSTEM-AREA-POINTER
-;                               datum: #<PANGO-TAB-ARRAY {10126E16E3}>>
-;The value
-;  #<PANGO-TAB-ARRAY {10126E16E3}>
-;is not of type
-;  SB-SYS:SYSTEM-AREA-POINTER
-;when binding SB-ALIEN::VALUE..
-
-#+nil
 (test g-application-signals
-  (is (equal '(t t nil t) (example-application-open)))
-  (is (equal '(t nil t t) (example-application-open '("demo" "file1" "file2")))))
+  (is (equal '(t t nil t)
+             (example-application-open)))
+  (is (equal '(t nil t t)
+             (example-application-open '("demo" "file1" "file2")))))
 
 ;;; --- Functions --------------------------------------------------------------
 
 ;;;     g_application_id_is_valid
+
+(test g-application-id-is-valid
+  (is-true (g:application-id-is-valid "com.crategus.application"))
+  (is-false (g:application-id-is-valid "application")))
+
 ;;;     g_application_new
 ;;;     g_application_get_dbus_connection
 ;;;     g_application_get_dbus_object_path
@@ -267,35 +258,38 @@
 
 ;;;     g_application_open
 
-;; TODO: This example gives an error:
-;; GLib-GIO-CRITICAL **: 20:48:15.580: g_application_open:
-;; assertion 'application->priv->is_registered' failed
-
-#+nil
 (test g-application-open
-  (let* ((app (make-instance 'g-application
-                             :flags :handles-open))
-         (files (list "file1" "file2" "file3"))
-         (n-files (length files))
-         (hint "hint"))
-
+  (let ((app (make-instance 'g:application
+                            :application-id "com.crategus.application-open"
+                            :flags :handles-open))
+        (files (list "file1" "file2" "file3"))
+        (hint "hint"))
+    ;; Signal handler "startup"
+    (g:signal-connect app "startup"
+        (lambda (application)
+          (when *verbose-g-application*
+            (format t "~&The application is in startup.~%"))
+          (g:application-open application files hint)))
+    ;; Signal handler "activate"
+    (g:signal-connect app "activate"
+        (lambda (application)
+          (declare (ignore application))
+          (g:application-hold app)
+          (when *verbose-g-application*
+            (format t "The application is in activate.~%"))
+            (g:application-release app)))
+    ;; Signal handler "open"
     (g:signal-connect app "open"
         (lambda (application files n-files hint)
           (declare (ignore application hint))
-          (format t "in OPEN signal handler~%")
+          (when *verbose-g-application*
+            (format t "in OPEN signal handler~%"))
           (dotimes (i n-files)
-            (let ((file (mem-aref files '(g-object g-file) i)))
-              (format t "~a~%" (g-file-path file))))))
-
-    (with-foreign-object (files-ptr :pointer n-files)
-      (loop for i from 0 below n-files
-            for file in files
-            for file-ptr = (g:object-pointer (g:file-new-for-path file))
-            do (format t "  i : ~a  ~a  ~a~%" i file files)
-               (setf (mem-aref files-ptr :pointer i) file-ptr))
-      (gio::%g-application-open app files-ptr n-files hint)
-
-)))
+            (let ((file (cffi:mem-aref files '(g:object g:file) i)))
+              (when *verbose-g-application*
+                (format t "~a~%" (g:file-path file)))))))
+    ;; Start the application
+    (g:application-run app nil)))
 
 ;;;     g_application_send_notification
 ;;;     g_application_withdraw_notification
@@ -313,4 +307,4 @@
 ;;;     g_application_bind_busy_property
 ;;;     g_application_unbind_busy_property
 
-;;; --- 2023-5-29 --------------------------------------------------------------
+;;; --- 2023-7-8 ---------------------------------------------------------------

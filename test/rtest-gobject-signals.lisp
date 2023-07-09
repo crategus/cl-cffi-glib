@@ -28,7 +28,7 @@
 
 ;;;     g-signal-query
 
-(test signal-query
+(test g-signal-query
   (let* ((signal-id (g:signal-lookup "activate" "GSimpleAction"))
          (query (g:signal-query signal-id)))
       (is (= signal-id (g:signal-query-signal-id query)))
@@ -44,12 +44,12 @@
 
 ;;;     g_signal_lookup
 
-(test signal-lookup
+(test g-signal-lookup
   (is (integerp (g:signal-lookup "activate" "GSimpleAction"))))
 
 ;;;     g_signal_name
 
-(test signal-name
+(test g-signal-name
   (is (string= "activate"
                (g:signal-name (g:signal-lookup "activate" "GSimpleAction"))))
   (is (string= "change-state"
@@ -282,4 +282,4 @@
 ;;;     g_signal_accumulator_true_handled
 ;;;     g_clear_signal_handler
 
-;;; --- 2023-6-11 --------------------------------------------------------------
+;;; --- 2023-6-24 --------------------------------------------------------------

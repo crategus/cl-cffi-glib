@@ -9,27 +9,24 @@
 
 ;;;     GApplicationCommandLine
 
-(test application-command-line-class
+(test g-application-command-line-class
   ;; Type check
   (is (g:type-is-object "GApplicationCommandLine"))
   ;; Check the registered symbol
   (is (eq 'g:application-command-line
           (glib:symbol-for-gtype "GApplicationCommandLine")))
   ;; Check the parent
-  (is (eq (g:gtype "GObject") (g:type-parent "GApplicationCommandLine")))
+  (is (eq (g:gtype "GObject") 
+          (g:type-parent "GApplicationCommandLine")))
   ;; Check the children
   (is (equal '()
-             (mapcar #'g:type-name
-                     (g:type-children "GApplicationCommandLine"))))
+             (list-children "GApplicationCommandLine")))
   ;; Check the interfaces
   (is (equal '()
-             (mapcar #'g:type-name
-                     (g:type-interfaces "GApplicationCommandLine"))))
+             (list-interfaces "GApplicationCommandLine")))
   ;; Check the class properties
   (is (equal '("arguments" "is-remote" "options" "platform-data")
-             (sort (mapcar #'g:param-spec-name
-                           (g:object-class-list-properties "GApplicationCommandLine"))
-                   #'string-lessp)))
+             (list-properties "GApplicationCommandLine")))
   ;; Check the class definition
   (is (equal '(DEFINE-G-OBJECT-CLASS "GApplicationCommandLine"
                                       G-APPLICATION-COMMAND-LINE
@@ -46,12 +43,12 @@
 
 ;;; --- Properties and Accessors -----------------------------------------------
 
-;;;     GVariant*   arguments        Write / Construct Only
-;;;     gboolean    is-remote        Read
-;;;     GVariant*   options          Write / Construct Only
-;;;     GVariant*   platform-data    Write / Construct Only
+;;;     arguments
+;;;     is-remote
+;;;     options
+;;;     platform-data
 
-(test application-command-line-properties
+(test g-application-command-line-properties
   (let ((cmdline (make-instance 'g:application-command-line)))
     ;; Property arguments is not readable
     (signals (error) (g:application-command-line-arguments cmdline))
@@ -66,10 +63,10 @@
 
 ;;;     g_application_command_line_get_arguments
 
-#+nil
-(test application-command-line-functions
-  (let ((app (make-instance 'g:application :flags :handles-command-line
-                                           :inactivity-timeout 1000)))
+(test g-application-command-line-get-arguments
+  (let ((app (make-instance 'g:application
+                            :flags :handles-command-line
+                            :inactivity-timeout 1000)))
     ;; Signal handler "command-line"
     (g:signal-connect app "command-line"
         (lambda (application cmdline)
@@ -96,4 +93,4 @@
 ;;;     g_application_command_line_print
 ;;;     g_application_command_line_printerr
 
-;;; --- 2023-5-29 --------------------------------------------------------------
+;;; --- 2023-7-8 ---------------------------------------------------------------

@@ -1,10 +1,6 @@
 (defpackage :glib-test
   (:use :fiveam :iterate :common-lisp)
-  (:import-from :cffi    #:with-foreign-object
-                         #:with-foreign-objects
-                         #:with-foreign-slots
-                         #:defcenum
-                         #:defbitfield)
+  (:import-from :cffi)
   (:import-from :glib    ;; Symbols from glib.stable-pointer.lisp
                          #:with-stable-pointer
                          ;; Symbols from glib.boxed-type.lisp
@@ -82,10 +78,7 @@
                          #:get-g-type-definition
 ;                         #:get-boxed-info
                          )
-  (:import-from :gio     #:define-g-enum
-                         #:define-g-flags
-                         #:define-g-object-class
-                         #:with-g-resources)
+  (:import-from :gio     #:with-g-resources)
   (:export #:run!))
 
 (in-package :glib-test)

@@ -7,7 +7,7 @@
 
 ;;;     GBytes
 
-(test bytes-structure
+(test g-bytes-structure
   ;; Type check
   (is (g:type-is-a (g:gtype "GBytes") (g:gtype "GBoxed")))
   ;; Check the type initializer
@@ -25,10 +25,10 @@
 
 ;;;     g_bytes_new
 
-(test bytes-new.1
+(test g-bytes-new.1
   (is (typep (g:bytes-new (cffi:null-pointer) 0) 'g:bytes)))
 
-(test bytes-new.2
+(test g-bytes-new.2
   (multiple-value-bind (data len)
       (cffi:foreign-string-alloc "a test string")
     (is (typep (g:bytes-new data len) 'g:bytes))
@@ -42,7 +42,7 @@
 ;;;     g_bytes_get_data
 ;;;     g_bytes_get_size
 
-(test bytes-data.1
+(test g-bytes-data.1
   (multiple-value-bind (data len)
       (cffi:foreign-string-alloc "a test string")
     (let ((bytes (g:bytes-new data len)))
@@ -51,7 +51,7 @@
       (is (= 14 (g:bytes-size bytes)))
       (cffi:foreign-string-free data))))
 
-(test bytes-data.2
+(test g-bytes-data.2
   (multiple-value-bind (data len)
       (cffi:foreign-string-alloc "a o u")
     (let ((bytes (g:bytes-new data len)))
@@ -60,7 +60,7 @@
       (is (= 6 (g:bytes-size bytes)))
       (cffi:foreign-string-free data))))
 
-(test bytes-data.3
+(test g-bytes-data.3
   (multiple-value-bind (data len)
       (cffi:foreign-string-alloc "ä ö ü")
     (let ((bytes (g:bytes-new data len)))
@@ -77,4 +77,4 @@
 ;;;     g_bytes_unref_to_data
 ;;;     g_bytes_unref_to_array
 
-;;; --- 2023-1-1 ---------------------------------------------------------------
+;;; --- 2023-6-22 --------------------------------------------------------------

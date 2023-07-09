@@ -14,10 +14,10 @@
 ;;;     GOptionEntry
 
 (test g-option-entry.1
-  (with-foreign-object (entry '(:struct glib::option-entry))
-    (with-foreign-slots ((glib::long-name glib::short-name)
-                         entry
-                         (:struct glib::option-entry))
+  (cffi:with-foreign-object (entry '(:struct glib::option-entry))
+    (cffi:with-foreign-slots ((glib::long-name glib::short-name)
+                              entry
+                              (:struct glib::option-entry))
       (setf glib::long-name "long-name")
       (setf glib::short-name (char-code #\l))
       (is (string= "long-name" glib::long-name))
@@ -25,16 +25,16 @@
 
 (test g-option-entry.2
   (let ((entries '("long-name" #\l (:hidden))))
-    (with-foreign-object (entry '(:struct glib::option-entry))
-      (with-foreign-slots ((glib::long-name
-                            glib::short-name
-                            glib::flags
-                            glib::arg
-                            glib::arg-data
-                            glib::description
-                            glib::arg-description)
-                           entry
-                           (:struct glib::option-entry))
+    (cffi:with-foreign-object (entry '(:struct glib::option-entry))
+      (cffi:with-foreign-slots ((glib::long-name
+                                 glib::short-name
+                                 glib::flags
+                                 glib::arg
+                                 glib::arg-data
+                                 glib::description
+                                 glib::arg-description)
+                                 entry
+                                 (:struct glib::option-entry))
         ;; Set the fields of the GOptionEntry structure
         (setf glib::long-name (pop entries))
         (setf glib::short-name (char-code (pop entries)))

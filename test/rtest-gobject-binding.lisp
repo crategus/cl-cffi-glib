@@ -7,7 +7,7 @@
 
 ;;;     GBindingFlags
 
-(test binding-flags
+(test g-binding-flags
   ;; Check the type
   (is (g:type-is-flags "GBindingFlags"))
   ;; Check the registered symbol
@@ -38,7 +38,7 @@
 
 ;;;     GBinding
 
-(test binding-class
+(test g-binding-class
   ;; Type check
   (is (g:type-is-object "GBinding"))
   ;; Check the registered symbol
@@ -75,7 +75,7 @@
 ;;; --- Properties -------------------------------------------------------------
 
 #+nil
-(test binding-properties
+(test g-binding-properties
   (let* ((toggle (make-instance 'gtk:toggle-button))
          (revealer (make-instance 'gtk:revealer))
          (binding (g:object-bind-property toggle "active"
@@ -94,7 +94,7 @@
 ;;;     g-object-bind-property
 
 #+nil
-(test object-bind-property
+(test g-object-bind-property
   (let* ((toggle (make-instance 'gtk:toggle-button))
          (revealer (make-instance 'gtk:revealer))
          (binding (g:object-bind-property toggle "active"
@@ -116,4 +116,4 @@
 ;;;     g_object_bind_property_full
 ;;;     g_object_bind_property_with_closures
 
-;;; --- 2023-5-29 --------------------------------------------------------------
+;;; --- 2023-6-24 --------------------------------------------------------------

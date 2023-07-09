@@ -29,7 +29,7 @@
 ;;;     G_PRIORITY_DEFAULT_IDLE
 ;;;     G_PRIORITY_LOW
 
-(test priority-constants
+(test g-priority-constants
   (is (= -100 +g-priority-high+))
   (is (=    0 +g-priority-default+))
   (is (=  100 +g-priority-high-idle+))
@@ -39,18 +39,18 @@
 ;;;     G_SOURCE_CONST
 ;;;     G_SOURCE_REMOVE
 
-(test source-constants
+(test g-source-constants
   (is-true +g-source-continue+)
   (is-false +g-source-remove+))
 
-;;;   GMainLoop
+;;;     GMainLoop
 
 (defvar *main-loop* nil)
 (defvar *main-thread* nil)
 (defvar *main-thread-level* nil)
 (defvar *main-thread-lock* (bt:make-lock "main-thread lock"))
 
-(test main-loop
+(test g-main-loop
   ;; Start a main loop
   (bt:with-lock-held (*main-thread-lock*)
     (when (and *main-thread* (not (bt:thread-alive-p *main-thread*)))
@@ -91,23 +91,23 @@
   (is-true (cffi:pointerp *main-loop*))
   (is-false (g:main-loop-is-running *main-loop*)))
 
-;;;   GMainContext
+;;;     GMainContext
 
-(test main-context
+(test g-main-context
   (let ((context (g:main-context-new)))
     (is-true (cffi:pointerp context))
     (is-true (cffi:pointer-eq context (g:main-context-ref context)))
     (g:main-context-unref context)
     (g:main-context-unref context)))
 
-;;;   g_main_loop_new
-;;;   g_main_loop_ref
-;;;   g_main_loop_unref
-;;;   g_main_loop_quit
-;;;   g_main_loop_is_running
-;;;   g_main_loop_get_context
+;;;     g_main_loop_new
+;;;     g_main_loop_ref
+;;;     g_main_loop_unref
+;;;     g_main_loop_quit
+;;;     g_main_loop_is_running
+;;;     g_main_loop_get_context
 
-(test main-loop-new.1
+(test g-main-loop-new.1
   (let ((loop (g:main-loop-new nil t)))
     (is-true (cffi:pointerp loop))
     (is-true (not (cffi:null-pointer-p loop)))
@@ -120,7 +120,7 @@
     (is-false (g:main-loop-is-running loop))
     (g:main-loop-unref loop)))
 
-(test main-loop-new.2
+(test g-main-loop-new.2
   (let ((loop (g:main-loop-new (cffi:null-pointer) t)))
     (is-true (cffi:pointerp loop))
     (is-true (not (cffi:null-pointer-p loop)))
@@ -133,12 +133,12 @@
     (is-false (g:main-loop-is-running loop))
     (g:main-loop-unref loop)))
 
-;;;   g_main_context_new
-;;;   g_main_context_ref
-;;;   g_main_context_unref
-;;;   g_main_context_default
+;;;     g_main_context_new
+;;;     g_main_context_ref
+;;;     g_main_context_unref
+;;;     g_main_context_default
 
-(test main-context-new
+(test g-main-context-new
   (let ((context (g:main-context-new)))
     (is-true (cffi:pointerp context))
     (is-true (cffi:pointer-eq context (g:main-context-ref context)))
@@ -149,9 +149,9 @@
 ;;;     g_main_context_iteration
 ;;;     g_main_context_pending
 
-;;;   g_main_context_find_source_by_id
+;;;     g_main_context_find_source_by_id
 
-(test main-context-find-source-by-id
+(test g-main-context-find-source-by-id
   (let* ((source (g:timeout-source-new 500))
          (context (g:main-context-new))
          (id (g:source-attach source context)))
@@ -167,7 +167,7 @@
 ;;;     g_source_get_context
 
 ;; Run a timeout callback
-(test timeout-source-new.1
+(test g-timeout-source-new.1
   (let* ((context (g:main-context-new))
          (mainloop (g:main-loop-new context nil))
          ;; Create a new timeout source
@@ -183,7 +183,7 @@
     (g:main-loop-unref mainloop)))
 
 ;; Do some more tests
-(test timeout-source-new.2
+(test g-timeout-source-new.2
   (let* ((context (g:main-context-new))
          (mainloop (g:main-loop-new context nil))
          ;; Create a new timeout source
@@ -210,7 +210,7 @@
 
 ;;;     g_timeout_source_new_seconds
 
-(test timeout-source-new-seconds
+(test g-timeout-source-new-seconds
   (let* ((context (g:main-context-new))
          (mainloop (g:main-loop-new context nil))
          ;; Create a new timeout source
@@ -227,7 +227,7 @@
 
 ;;;     g_timeout_add
 
-(test timeout-add
+(test g-timeout-add
   (let* ((context (g:main-context-default))
          (mainloop (g:main-loop-new context nil)))
     ;; Create a new timeout source
@@ -240,7 +240,7 @@
 
 ;;;     g_timeout_add_seconds
 
-(test timeout-add-seconds
+(test g-timeout-add-seconds
   (let* ((context (g:main-context-default))
          (mainloop (g:main-loop-new context nil)))
          ;; Create a new timeout source
@@ -253,7 +253,7 @@
 
 ;;;     g_idle_source_new
 
-(test idle-source-new
+(test g-idle-source-new
   (let* ((context (g:main-context-new))
          (mainloop (g:main-loop-new context nil))
          ;; Create a new timeout source
@@ -270,7 +270,7 @@
 
 ;;;     g_idle_add
 
-(test idle-add
+(test g-idle-add
   (let* ((context (g:main-context-default))
          (mainloop (g:main-loop-new context nil)))
     ;; Create a new timeout source
@@ -283,7 +283,7 @@
 ;;;     g_source_destroy
 ;;;     g_source_is_destroyed
 
-(test source-destroy
+(test g-source-destroy
   (let ((source (g:timeout-source-new 10)))
     (is-false (g:source-is-destroyed source))
     (is-false (g:source-destroy source))
@@ -293,7 +293,7 @@
 ;;;     g_source_set_priority
 ;;;     g_source_get_priority
 
-(test source-priority
+(test g-source-priority
   (let ((source (g:timeout-source-new 10)))
     (is (eq +g-priority-high+
             (setf (g:source-priority source ) +g-priority-high+)))
@@ -303,7 +303,7 @@
 ;;;     g_source_set_can_recurse
 ;;;     g_source_get_can_recurse
 
-(test source-can-recurse
+(test g-source-can-recurse
   (let ((source (g:timeout-source-new 10)))
     (is-true (setf (g:source-can-recurse source) t))
     (is-true (g:source-can-recurse source))
@@ -311,13 +311,13 @@
 
 ;;;     g_source_get_id
 
-(test source-id.1
+(test g-source-id.1
   (let ((source (g:timeout-source-new 10)))
     (is (integerp (g:source-attach source (g:main-context-default))))
     (is (integerp (g:source-id source)))
     (is-false (g:source-destroy source))))
 
-(test source-id.2
+(test g-source-id.2
   (let ((source (g:timeout-source-new 10)))
     (is (integerp (g:source-attach source nil)))
     (is (integerp (g:source-id source)))
@@ -326,21 +326,21 @@
 ;;;     g_source_get_name
 ;;;     g_source_set_name
 
-(test source-name.1
+(test g-source-name.1
   (let ((source (g:timeout-source-new 10)))
     (is (string= "timeout"
                  (setf (g:source-name source) "timeout")))
     (is (string= "timeout" (g:source-name source)))
     (is-false (g:source-destroy source))))
 
-(test source-name.2
+(test g-source-name.2
   (let ((source (g:timeout-source-new 10)))
     (is (cffi:pointer-eq (cffi:null-pointer)
                          (setf (g:source-name source) (cffi:null-pointer))))
     (is-false (g:source-name source))
     (is-false (g:source-destroy source))))
 
-(test source-name.3
+(test g-source-name.3
   (let ((source (g:timeout-source-new 10)))
     (is-false (setf (g:source-name source) nil))
     (is-false (g:source-name source))
@@ -349,14 +349,14 @@
 ;;;     g_source_set_name_by_id
 ;;;     g_source_remove
 
-(test source-set-name-by-id.1
+(test g-source-set-name-by-id.1
   (let* ((id (g:timeout-add 10 #'(lambda ()) :priority +g-priority-default+))
          (source (g:main-context-find-source-by-id nil id)))
     (is-false (g:source-set-name-by-id id "timeout"))
     (is (string= "timeout" (g:source-name source)))
     (is-true (g:source-remove id))))
 
-(test source-set-name-by-id.2
+(test g-source-set-name-by-id.2
   (let* ((id (g:timeout-add 10 #'(lambda ()) :priority +g-priority-default+))
          (source (g:main-context-find-source-by-id (cffi:null-pointer) id)))
     (is-false (g:source-set-name-by-id id "timeout"))
@@ -365,7 +365,7 @@
 
 ;;;     g_source_get_context
 
-(test source-context
+(test g-source-context
   (let ((source (g:timeout-source-new 10))
         (context (g:main-context-new)))
     (is-false (g:source-context source))
@@ -377,7 +377,7 @@
 ;;;     g_source_get_ready_time
 ;;;     g_source_get_time
 
-(test source-ready-time
+(test g-source-ready-time
   (let ((source (g:timeout-source-new 10)))
     (is (integerp (g:source-attach source (g:main-context-default))))
     (is (integerp (g:source-time source)))
@@ -385,4 +385,4 @@
     (is (= 100 (g:source-ready-time source)))
     (is-false (g:source-destroy source))))
 
-;;; --- 2023-1-5 ---------------------------------------------------------------
+;;; --- 2023-6-22 --------------------------------------------------------------

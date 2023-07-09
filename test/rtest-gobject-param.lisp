@@ -10,16 +10,16 @@
 
 ;;;     GParamSpecBoolean
 
-(test param-spec-boolean-struct
+(test g-param-spec-boolean-struct
   (is (= 16 (cffi:foreign-type-size '(:struct g:param-spec-boolean))))
   (is (equal '(:parent-instance :default-value)
              (cffi:foreign-slot-names '(:struct g:param-spec-boolean)))))
 
 ;;;     g_param_spec_boolean
 
-(test param-spec-boolean
-  (with-foreign-objects ((pspec '(:struct g:param-spec-boolean))
-                         (value '(:struct g:value)))
+(test g-param-spec-boolean
+  (cffi:with-foreign-objects ((pspec '(:struct g:param-spec-boolean))
+                              (value '(:struct g:value)))
     ;; Initialize a GValue for further checks
     (is (cffi:pointerp (g:value-init value "gboolean")))
     ;; Create a GParamSpecBoolean
@@ -51,8 +51,8 @@
 ;;;     g_value_set_boolean
 ;;;     g_value_get_boolean
 
-(test value-boolean
-  (with-foreign-object (value '(:struct g:value))
+(test g-value-boolean
+  (cffi:with-foreign-object (value '(:struct g:value))
     (g:value-init value "gboolean")
     (is-true (setf (g:value-boolean value) t))
     (is-true (g:value-boolean value))
@@ -67,16 +67,16 @@
 
 ;;;     GParamSpecChar
 
-(test param-spec-char-struct
+(test g-param-spec-char-struct
   (is (= 16 (cffi:foreign-type-size '(:struct g:param-spec-char))))
   (is (equal '(:PARENT-INSTANCE :MINIMUM :MAXIMUM :DEFAULT-VALUE)
              (cffi:foreign-slot-names '(:struct g:param-spec-char)))))
 
 ;;;     g_param_spec_char
 
-(test param-spec-char
-  (with-foreign-objects ((pspec '(:struct g:param-spec-char))
-                         (value '(:struct g:value)))
+(test g-param-spec-char
+  (cffi:with-foreign-objects ((pspec '(:struct g:param-spec-char))
+                              (value '(:struct g:value)))
     ;; Initialize a GValue for further checks
     (is (cffi:pointerp (g:value-init value "gchar")))
     ;; Create a GParamSpecChar
@@ -121,8 +121,8 @@
 ;;;     g_value_set_char
 ;;;     g_value_get_char
 
-(test value-char
-  (with-foreign-object (value '(:struct g:value))
+(test g-value-char
+  (cffi:with-foreign-object (value '(:struct g:value))
     (g:value-init value "gchar")
     (is (= (char-code #\A) (setf (g:value-char value) (char-code #\A))))
     (is (= (char-code #\A) (g:value-char value)))
@@ -131,8 +131,8 @@
 ;;;     g_value_get_schar
 ;;;     g_value_set_schar
 
-(test value-schar
-  (with-foreign-object (value '(:struct g:value))
+(test g-value-schar
+  (cffi:with-foreign-object (value '(:struct g:value))
     (g:value-init value "gchar")
     (is (= (char-code #\A) (setf (g:value-schar value) (char-code #\A))))
     (is (= (char-code #\A) (g:value-schar value)))
@@ -145,16 +145,16 @@
 
 ;;;     GParamSpecUChar
 
-(test param-spec-uchar-struct
+(test g-param-spec-uchar-struct
   (is (= 16 (cffi:foreign-type-size '(:struct g:param-spec-uchar))))
   (is (equal '(:PARENT-INSTANCE :MINIMUM :MAXIMUM :DEFAULT-VALUE)
              (cffi:foreign-slot-names '(:struct g:param-spec-uchar)))))
 
 ;;;     g_param_spec_uchar
 
-(test param-spec-uchar
-  (with-foreign-objects ((pspec '(:struct g:param-spec-uchar))
-                         (value '(:struct g:value)))
+(test g-param-spec-uchar
+  (cffi:with-foreign-objects ((pspec '(:struct g:param-spec-uchar))
+                              (value '(:struct g:value)))
     ;; Initialize a GValue for further checks
     (is (cffi:pointerp (g:value-init value "guchar")))
     ;; Create a GParamSpecUChar
@@ -199,8 +199,8 @@
 ;;;     g_value_set_uchar
 ;;;     g_value_get_uchar
 
-(test value-uchar
-  (with-foreign-object (value '(:struct g:value))
+(test g-value-uchar
+  (cffi:with-foreign-object (value '(:struct g:value))
     (g:value-init value "guchar")
     (is (= (char-code #\A) (setf (g:value-uchar value) (char-code #\A))))
     (is (= (char-code #\A) (g:value-uchar value)))
@@ -213,16 +213,16 @@
 
 ;;;     GParamSpecInt
 
-(test param-spec-int-struct
+(test g-param-spec-int-struct
   (is (= 24 (cffi:foreign-type-size '(:struct g:param-spec-int))))
   (is (equal '(:PARENT-INSTANCE :MINIMUM :MAXIMUM :DEFAULT-VALUE)
              (cffi:foreign-slot-names '(:struct g:param-spec-int)))))
 
 ;;;   g_param_spec_int
 
-(test param-spec-int
-  (with-foreign-objects ((pspec '(:struct g:param-spec-int))
-                         (value '(:struct g:value)))
+(test g-param-spec-int
+  (cffi:with-foreign-objects ((pspec '(:struct g:param-spec-int))
+                              (value '(:struct g:value)))
     ;; Initialize a GValue for further checks
     (is (cffi:pointerp (g:value-init value "gint")))
     ;; Create a GParamSpecInt
@@ -267,8 +267,8 @@
 ;;;     g_value_set_int
 ;;;     g_value_get_int
 
-(test value-int
-  (with-foreign-object (value '(:struct g:value))
+(test g-value-int
+  (cffi:with-foreign-object (value '(:struct g:value))
     (g:value-init value "gint")
     (is (= 65000 (setf (g:value-int value) 65000)))
     (is (= 65000 (g:value-int value)))
@@ -281,16 +281,16 @@
 
 ;;;     GParamSpecUInt
 
-(test param-spec-uint-struct
+(test g-param-spec-uint-struct
   (is (= 24 (cffi:foreign-type-size '(:struct g:param-spec-uint))))
   (is (equal '(:PARENT-INSTANCE :MINIMUM :MAXIMUM :DEFAULT-VALUE)
              (cffi:foreign-slot-names '(:struct g:param-spec-uint)))))
 
 ;;;     g_param_spec_uint
 
-(test param-spec-uint
-  (with-foreign-objects ((pspec '(:struct g:param-spec-uint))
-                         (value '(:struct g:value)))
+(test g-param-spec-uint
+  (cffi:with-foreign-objects ((pspec '(:struct g:param-spec-uint))
+                              (value '(:struct g:value)))
     ;; Initialize a GValue for further checks
     (is (cffi:pointerp (g:value-init value "guint")))
     ;; Create a GParamSpecInt
@@ -335,8 +335,8 @@
 ;;;     g_value_set_uint
 ;;;     g_value_get_uint
 
-(test value-uint
-  (with-foreign-object (value '(:struct g:value))
+(test g-value-uint
+  (cffi:with-foreign-object (value '(:struct g:value))
     (g:value-init value "guint")
     (is (= 65000 (setf (g:value-uint value) 65000)))
     (is (= 65000 (g:value-uint value)))
@@ -349,7 +349,7 @@
 
 ;;;     GParamSpecLong
 
-(test param-spec-long-struct
+(test g-param-spec-long-struct
   #-windows
   (is (= 32 (cffi:foreign-type-size '(:struct g:param-spec-long))))
   #+windows
@@ -359,9 +359,9 @@
 
 ;;;     g_param_spec_long
 
-(test param-spec-long
-  (with-foreign-objects ((pspec '(:struct g:param-spec-long))
-                         (value '(:struct g:value)))
+(test g-param-spec-long
+  (cffi:with-foreign-objects ((pspec '(:struct g:param-spec-long))
+                              (value '(:struct g:value)))
     ;; Initialize a GValue for further checks
     (is (cffi:pointerp (g:value-init value "glong")))
     ;; Create a GParamSpecInt
@@ -406,8 +406,8 @@
 ;;;     g_value_set_long
 ;;;     g_value_get_long
 
-(test value-long
-  (with-foreign-object (value '(:struct g:value))
+(test g-value-long
+  (cffi:with-foreign-object (value '(:struct g:value))
     (g:value-init value "glong")
     (is (= 65000 (setf (g:value-long value) 65000)))
     (is (= 65000 (g:value-long value)))
@@ -420,7 +420,7 @@
 ;;;
 ;;;     GParamSpecULong
 
-(test param-spec-ulong-struct
+(test g-param-spec-ulong-struct
   #-windows
   (is (= 32 (cffi:foreign-type-size '(:struct g:param-spec-ulong))))
   #+windows
@@ -430,9 +430,9 @@
 
 ;;;     g_param_spec_ulong
 
-(test param-spec-ulong
-  (with-foreign-objects ((pspec '(:struct g:param-spec-ulong))
-                         (value '(:struct g:value)))
+(test g-param-spec-ulong
+  (cffi:with-foreign-objects ((pspec '(:struct g:param-spec-ulong))
+                              (value '(:struct g:value)))
     ;; Initialize a GValue for further checks
     (is (cffi:pointerp (g:value-init value "gulong")))
     ;; Create a GParamSpecInt
@@ -477,8 +477,8 @@
 ;;;     g_value_set_ulong
 ;;;     g_value_get_ulong
 
-(test value-ulong
-  (with-foreign-object (value '(:struct g:value))
+(test g-value-ulong
+  (cffi:with-foreign-object (value '(:struct g:value))
     (g:value-init value "gulong")
     (is (= 65000 (setf (g:value-ulong value) 65000)))
     (is (= 65000 (g:value-ulong value)))
@@ -491,16 +491,16 @@
 
 ;;;     GParamSpecInt64
 
-(test param-spec-int64-struct
+(test g-param-spec-int64-struct
   (is (= 32 (cffi:foreign-type-size '(:struct g:param-spec-int64))))
   (is (equal '(:PARENT-INSTANCE :MINIMUM :MAXIMUM :DEFAULT-VALUE)
              (cffi:foreign-slot-names '(:struct g:param-spec-int64)))))
 
 ;;;     g_param_spec_int64
 
-(test param-spec-int64
-  (with-foreign-objects ((pspec '(:struct g:param-spec-int64))
-                         (value '(:struct g:value)))
+(test g-param-spec-int64
+  (cffi:with-foreign-objects ((pspec '(:struct g:param-spec-int64))
+                              (value '(:struct g:value)))
     ;; Initialize a GValue for further checks
     (is (cffi:pointerp (g:value-init value "gint64")))
     ;; Create a GParamSpecInt
@@ -545,8 +545,8 @@
 ;;;     g_value_set_int64
 ;;;     g_value_get_int64
 
-(test value-int64
-  (with-foreign-object (value '(:struct g:value))
+(test g-value-int64
+  (cffi:with-foreign-object (value '(:struct g:value))
     (g:value-init value "gint64")
     (is (= 65000 (setf (g:value-int64 value) 65000)))
     (is (= 65000 (g:value-int64 value)))
@@ -559,16 +559,16 @@
 
 ;;;     GParamSpecUInt64
 
-(test param-spec-uint64-struct
+(test g-param-spec-uint64-struct
   (is (= 32 (cffi:foreign-type-size '(:struct g:param-spec-uint64))))
   (is (equal '(:PARENT-INSTANCE :MINIMUM :MAXIMUM :DEFAULT-VALUE)
              (cffi:foreign-slot-names '(:struct g:param-spec-uint64)))))
 
 ;;;     g_param_spec_uint64
 
-(test param-spec-uint64
-  (with-foreign-objects ((pspec '(:struct g:param-spec-uint64))
-                         (value '(:struct g:value)))
+(test g-param-spec-uint64
+  (cffi:with-foreign-objects ((pspec '(:struct g:param-spec-uint64))
+                              (value '(:struct g:value)))
     ;; Initialize a GValue for further checks
     (is (cffi:pointerp (g:value-init value "guint64")))
     ;; Create a GParamSpecInt
@@ -613,8 +613,8 @@
 ;;;     g_value_set_uint64
 ;;;     g_value_get_uint64
 
-(test value-uint64
-  (with-foreign-object (value '(:struct g:value))
+(test g-value-uint64
+  (cffi:with-foreign-object (value '(:struct g:value))
     (g:value-init value "guint64")
     (is (= 65000 (setf (g:value-uint64 value) 65000)))
     (is (= 65000 (g:value-uint64 value)))
@@ -627,16 +627,16 @@
 
 ;;;     GParamSpecFloat
 
-(test param-spec-float-struct
+(test g-param-spec-float-struct
   (is (= 24 (cffi:foreign-type-size '(:struct g:param-spec-float))))
   (is (equal '(:PARENT-INSTANCE :MINIMUM :MAXIMUM :DEFAULT-VALUE :EPSILON)
              (cffi:foreign-slot-names '(:struct g:param-spec-float)))))
 
 ;;;     g_param_spec_float
 
-(test param-spec-float
-  (with-foreign-objects ((pspec '(:struct g:param-spec-float))
-                         (value '(:struct g:value)))
+(test g-param-spec-float
+  (cffi:with-foreign-objects ((pspec '(:struct g:param-spec-float))
+                              (value '(:struct g:value)))
     ;; Initialize a GValue for further checks
     (is (cffi:pointerp (g:value-init value "gfloat")))
     ;; Create a GParamSpecInt
@@ -681,8 +681,8 @@
 ;;;     g_value_set_float
 ;;;     g_value_get_float
 
-(test value-float
-  (with-foreign-object (value '(:struct g:value))
+(test g-value-float
+  (cffi:with-foreign-object (value '(:struct g:value))
     (g:value-init value "gfloat")
     (is (= 65000 (setf (g:value-float value) 65000.0)))
     (is (= 65000 (g:value-float value)))
@@ -695,16 +695,16 @@
 
 ;;;     GParamSpecDouble
 
-(test param-spec-double-struct
+(test g-param-spec-double-struct
   (is (= 40 (cffi:foreign-type-size '(:struct g:param-spec-double))))
   (is (equal '(:PARENT-INSTANCE :MINIMUM :MAXIMUM :DEFAULT-VALUE :EPSILON)
              (cffi:foreign-slot-names '(:struct g:param-spec-double)))))
 
 ;;;     g_param_spec_double
 
-(test param-spec-double
-  (with-foreign-objects ((pspec '(:struct g:param-spec-double))
-                         (value '(:struct g:value)))
+(test g-param-spec-double
+  (cffi:with-foreign-objects ((pspec '(:struct g:param-spec-double))
+                              (value '(:struct g:value)))
     ;; Initialize a GValue for further checks
     (is (cffi:pointerp (g:value-init value "gdouble")))
     ;; Create a GParamSpecDouble
@@ -749,8 +749,8 @@
 ;;;     g_value_set_double
 ;;;     g_value_get_double
 
-(test value-double
-  (with-foreign-object (value '(:struct g:value))
+(test g-value-double
+  (cffi:with-foreign-object (value '(:struct g:value))
     (g:value-init value "gdouble")
     (is (= 65000 (setf (g:value-double value) 65000.0d0)))
     (is (= 65000 (g:value-double value)))
@@ -763,16 +763,16 @@
 
 ;;;     GParamSpecEnum
 
-(test param-spec-enum-struct
+(test g-param-spec-enum-struct
   (is (= 24 (cffi:foreign-type-size '(:struct g:param-spec-enum))))
   (is (equal '(:PARENT-INSTANCE :ENUM-CLASS :DEFAULT-VALUE)
              (cffi:foreign-slot-names '(:struct g:param-spec-enum)))))
 
 ;;;     g_param_spec_enum
 
-(test param-spec-enum
-  (with-foreign-objects ((pspec '(:struct g:param-spec-enum))
-                         (value '(:struct g:value)))
+(test g-param-spec-enum
+  (cffi:with-foreign-objects ((pspec '(:struct g:param-spec-enum))
+                              (value '(:struct g:value)))
     ;; Initialize a GValue for further checks
     (is (cffi:pointerp (g:value-init value "GEmblemOrigin")))
     ;; Create a GParamSpec
@@ -809,8 +809,8 @@
 ;;;     g_value_set_enum
 ;;;     g_value_get_enum
 
-(test value-enum
-  (with-foreign-object (value '(:struct g:value))
+(test g-value-enum
+  (cffi:with-foreign-object (value '(:struct g:value))
     (g:value-init value "GEmblemOrigin")
     (is (= 0 (setf (g:value-enum value) 0)))
     (is (= 0 (g:value-enum value)))
@@ -826,16 +826,16 @@
 
 ;;;     GParamSpecFlags
 
-(test param-spec-flags-struct
+(test g-param-spec-flags-struct
   (is (= 24 (cffi:foreign-type-size '(:struct g:param-spec-flags))))
   (is (equal '(:PARENT-INSTANCE :FLAGS-CLASS :DEFAULT-VALUE)
              (cffi:foreign-slot-names '(:struct g:param-spec-flags)))))
 
 ;;;     g_param_spec_flags
 
-(test param-spec-flags
-  (with-foreign-objects ((pspec '(:struct g:param-spec-flags))
-                         (value '(:struct g:value)))
+(test g-param-spec-flags
+  (cffi:with-foreign-objects ((pspec '(:struct g:param-spec-flags))
+                              (value '(:struct g:value)))
     ;; Initialize a GValue for further checks
     (is (cffi:pointerp (g:value-init value "GApplicationFlags")))
     ;; Create a GParamSpec
@@ -855,7 +855,8 @@
     ;; Check the default value
     (is (eq (g:gtype "GApplicationFlags")
             (g:value-type (g:param-spec-default-value pspec))))
-    (is (equal '(:is-service) (parse-g-value (g:param-spec-default-value pspec))))
+    (is (equal '(:is-service) 
+               (parse-g-value (g:param-spec-default-value pspec))))
     (is-false (g:param-value-set-default pspec value))
     (is (equal '(:is-service) (parse-g-value value))) ; default value
     ;; More checks for a default value
@@ -872,8 +873,8 @@
 ;;;     g_value_set_flags
 ;;;     g_value_get_flags
 
-(test value-flags
-  (with-foreign-object (value '(:struct g:value))
+(test g-value-flags
+  (cffi:with-foreign-object (value '(:struct g:value))
     (g:value-init value "GApplicationFlags")
     (is (= 0 (setf (g:value-flags value) 0)))
     (is (= 0 (g:value-flags value)))
@@ -890,7 +891,7 @@
 ;;;     GParamSpecString
 ;;;     gchararray
 
-(test param-spec-string-struct
+(test g-param-spec-string-struct
   (is (= 40 (cffi:foreign-type-size '(:struct g:param-spec-string))))
   (is (equal '(:PARENT-INSTANCE :DEFAULT-VALUE :CSET-FIRST :CSET-NTH :SUBSTITUTOR
                :FLAGS-FOR-NULL)
@@ -898,9 +899,9 @@
 
 ;;;     g_param_spec_string
 
-(test param-spec-string
-  (with-foreign-objects ((pspec '(:struct g:param-spec-string))
-                         (value '(:struct g:value)))
+(test g-param-spec-string
+  (cffi:with-foreign-objects ((pspec '(:struct g:param-spec-string))
+                              (value '(:struct g:value)))
     ;; Initialize a GValue for further checks
     (is (cffi:pointerp (g:value-init value "gchararray")))
     ;; Create a GParamSpec
@@ -940,8 +941,8 @@
 ;;;     g_value_get_string
 ;;;     g_value_dup_string
 
-(test value-string
-  (with-foreign-object (value '(:struct g:value))
+(test g-value-string
+  (cffi:with-foreign-object (value '(:struct g:value))
     (g:value-init value "gchararray")
     (is (string= "string" (setf (g:value-string value) "string")))
     (is (string= "string" (g:value-string value)))
@@ -954,16 +955,16 @@
 
 ;;;     GParamSpecParam
 
-(test param-spec-param-struct
+(test g-param-spec-param-struct
   (is (= 8 (cffi:foreign-type-size '(:struct g:param-spec-param))))
   (is (equal '(:parent-instance)
              (cffi:foreign-slot-names '(:struct g:param-spec-param)))))
 
 ;;;     g_param_spec_param
 
-(test param-spec-param
-  (with-foreign-objects ((pspec '(:struct g:param-spec-param))
-                         (value '(:struct g:value)))
+(test g-param-spec-param
+  (cffi:with-foreign-objects ((pspec '(:struct g:param-spec-param))
+                              (value '(:struct g:value)))
     ;; Initialize a GValue for further checks
     (is (cffi:pointerp (g:value-init value "GParamParam")))
     ;; Create a GParamSpec
@@ -1002,12 +1003,14 @@
 ;;;     g_value_get_param
 ;;;     g_value_dup_param
 
-(test value-param
-  (with-foreign-object (value '(:struct g:value))
+(test g-value-param
+  (cffi:with-foreign-object (value '(:struct g:value))
     (g:value-init value "GParamBoolean")
     (is (eq (g:gtype "GParamBoolean")
             (g:param-spec-type (setf (g:value-param value)
-                                     (g:param-spec-boolean "myBool" "myBool" "Doku" t '())))))
+                                     (g:param-spec-boolean "myBool" 
+                                                           "myBool" 
+                                                           "Doku" t '())))))
     (is (eq (g:gtype "GParamBoolean") (g:param-spec-type (g:value-param value))))
     (g:value-unset value)))
 
@@ -1018,16 +1021,16 @@
 
 ;;;     GParamSpecBoxed
 
-(test param-spec-boxed-struct
+(test g-param-spec-boxed-struct
   (is (= 8 (cffi:foreign-type-size '(:struct g:param-spec-boxed))))
   (is (equal '(:parent-instance)
              (cffi:foreign-slot-names '(:struct g:param-spec-boxed)))))
 
 ;;;     g_param_spec_boxed
 
-(test param-spec-boxed
-  (with-foreign-objects ((pspec '(:struct g:param-spec-boxed))
-                         (value '(:struct g:value)))
+(test g-param-spec-boxed
+  (cffi:with-foreign-objects ((pspec '(:struct g:param-spec-boxed))
+                              (value '(:struct g:value)))
     ;; Initialize a GValue for further checks
     (is (cffi:pointerp (g:value-init value "GParamBoxed")))
     ;; Create a GParamSpec
@@ -1062,11 +1065,11 @@
 ;; TODO: Improve the implementation of g:value-boxed.
 
 #+nil
-(test value-boxed
-  (with-foreign-object (value '(:struct g:value))
+(test g-value-boxed
+  (cffi:with-foreign-object (value '(:struct g:value))
     (g:value-init value "GdkRectangle")
-    (is (eq 'gdk-rectangle
-            (type-of (setf (g:value-boxed value) (gdk-rectangle-new)))))
+    (is (eq 'gdk:rectangle
+            (type-of (setf (g:value-boxed value) (gdk:rectangle-new)))))
 ;    (is-false (g:param-spec-type (g:value-boxed value)))
     (g:value-unset value)))
 
@@ -1143,4 +1146,4 @@
 ;;;     g_value_set_variant
 ;;;     g_value_take_variant
 
-;;; --- 2023-1-1 ---------------------------------------------------------------
+;;; --- 2023-7-8 ---------------------------------------------------------------

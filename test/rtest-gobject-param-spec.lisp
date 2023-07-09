@@ -20,7 +20,7 @@
 
 ;;;     g_type_is_param
 
-(test type-is-param
+(test g-type-is-param
   (is-true (g:type-is-param
              (g:type-from-instance
                (g:param-spec-boolean "Boolean" "Bool" "Doku" t '()))))
@@ -32,7 +32,7 @@
 
 ;;;     g_is_param_spec
 
-(test is-param-spec
+(test g-is-param-spec
   (is-true (g:is-param-spec
              (g:param-spec-boolean "Boolean" "Bool" "Doku" t '())))
   (is-true (g:is-param-spec
@@ -44,7 +44,7 @@
 
 ;;;     g-param-spec-type
 
-(test param-spec-type
+(test g-param-spec-type
   (is (eq (g:gtype "GParamBoolean")
           (g:param-spec-type
             (g:param-spec-boolean "Boolean" "Bool" "Doku" t '()))))
@@ -54,7 +54,7 @@
 
 ;;;     g_param_spec_type_name
 
-(test param-spec-type-name
+(test g-param-spec-type-name
   (is (string= "GParamBoolean"
                (g:param-spec-type-name
                  (g:param-spec-boolean "Boolean" "Bool" "Doku" t '()))))
@@ -64,7 +64,7 @@
 
 ;;;     g_param_spec_value_type
 
-(test param-spec-value-type
+(test g-param-spec-value-type
   (is (eq (g:gtype "gboolean")
           (g:param-spec-value-type
             (g:param-spec-boolean "Boolean" "Bool" "Doku" t '()))))
@@ -79,7 +79,7 @@
 
 ;;;     g_param_spec_default_value
 
-(test param-spec-default-value
+(test g-param-spec-default-value
   (is-true (parse-g-value
              (g:param-spec-default-value
                (g:param-spec-boolean "Boolean" "Bool" "Doku" t '()))))
@@ -92,18 +92,18 @@
 
 ;;;     g_param_value_set_default
 
-(test param-value-set-default
+(test g-param-value-set-default
   (let ((param (g:param-spec-int "Integer" "int" "Doku" 10 50 25 '())))
-    (with-foreign-object (value '(:struct g:value))
+    (cffi:with-foreign-object (value '(:struct g:value))
       (g:value-init value +g-type-int+)
       (is-false (g:param-value-set-default param value))
       (is (= 25 (parse-g-value value))))))
 
 ;;;     g_param_value_defaults
 
-(test param-value-defaults
+(test g-param-value-defaults
   (let ((param (g:param-spec-int "Integer" "int" "Doku" 10 50 25 '())))
-    (with-foreign-object (value '(:struct g:value))
+    (cffi:with-foreign-object (value '(:struct g:value))
       (g:value-init value +g-type-int+)
       (is-false (g:param-value-defaults param value))
       (is-false (g:param-value-set-default param value))
@@ -111,9 +111,9 @@
 
 ;;;     g_param_value_validate
 
-(test param-value-validate
+(test g-param-value-validate
   (let ((param (g:param-spec-int "Integer" "int" "Doku" 10 50 25 '())))
-    (with-foreign-object (value '(:struct g:value))
+    (cffi:with-foreign-object (value '(:struct g:value))
       (g:value-init value +g-type-int+)
       (is-true (g:param-value-validate param value))
       (is (= 10 (parse-g-value value)))
@@ -130,7 +130,7 @@
 
 ;;;     g_param_spec_name
 
-(test param-spec-name
+(test g-param-spec-name
   (let ((pspec (g:param-spec-internal "GParamBoolean"
                                       "Boolean"
                                       "Bool"
@@ -142,7 +142,7 @@
 
 ;;;     g_param_spec_nick
 
-(test param-spec-nick
+(test g-param-spec-nick
   (let ((pspec (g:param-spec-internal "GParamBoolean"
                                       "Boolean"
                                       "Bool"
@@ -152,7 +152,7 @@
 
 ;;;     g_param_spec_blurb
 
-(test param-spec-blurb
+(test g-param-spec-blurb
   (let ((pspec (g:param-spec-internal "GParamBoolean"
                                       "Boolean"
                                       "Bool"
@@ -168,7 +168,7 @@
 
 ;;;     g_param_spec_internal
 
-(test param-spec-internal
+(test g-param-spec-internal
   (let ((pspec (g:param-spec-internal "GParamBoolean"
                                       "Boolean"
                                       "Bool"
@@ -188,4 +188,4 @@
 ;;;     g_param_spec_pool_list
 ;;;     g_param_spec_pool_list_owned
 
-;;; 2022-11-5
+;;; --- 2023-6-24 --------------------------------------------------------------

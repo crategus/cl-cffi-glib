@@ -58,7 +58,7 @@
 
 ;;;     GTypeInterface
 
-(test type-interface-structure
+(test g-type-interface-structure
   (let ((interface (g:type-default-interface-ref "GAction")))
     (is (= 16 (cffi:foreign-type-size '(:struct g:type-interface))))
     (is (equal '(:instance-type :type)
@@ -73,7 +73,7 @@
 
 ;;;     GTypeInstance
 
-(test type-instance-structure
+(test g-type-instance-structure
   (let* ((button (make-instance 'g:simple-action))
          (class (cffi:foreign-slot-value (gobject::pointer button)
                                          '(:struct g:type-instance) :class)))
@@ -83,7 +83,7 @@
 
 ;;;     GTypeClass
 
-(test type-class-structure
+(test g-type-class-structure
   (let ((class (g:type-class-ref "GSimpleAction")))
     (is (= 8 (cffi:foreign-type-size '(:struct g:type-class))))
     (is (equal '(:type) (cffi:foreign-slot-names '(:struct g:type-class))))
@@ -103,7 +103,7 @@
 
 ;;;   g_type_fundamental
 
-(test type-fundamental
+(test g-type-fundamental
   (is (eq (g:gtype "GObject") (g:type-fundamental "GApplication")))
   (is (eq (g:gtype "GObject") (g:type-fundamental "GSimpleAction")))
   (is (eq (g:gtype "GInterface") (g:type-fundamental "GAction")))
@@ -115,7 +115,7 @@
 
 ;;;   g_type_is_abstract
 
-(test type-is-abstract
+(test g-type-is-abstract
   (is-false (g:type-is-abstract +g-type-invalid+))
   (is-false (g:type-is-abstract +g-type-none+))
   (is-false (g:type-is-abstract +g-type-interface+))
@@ -149,7 +149,7 @@
 
 ;;;   g_type_is_dervied
 
-(test type-is-derived
+(test g-type-is-derived
   (is-false (g:type-is-derived +g-type-invalid+))
   (is-false (g:type-is-derived +g-type-none+))
   (is-false (g:type-is-derived +g-type-interface+))
@@ -183,7 +183,7 @@
 
 ;;;   g_type_is_fundamental
 
-(test type-is-fundamental
+(test g-type-is-fundamental
   (is-true  (g:type-is-fundamental +g-type-invalid+))
   (is-true  (g:type-is-fundamental +g-type-none+))
   (is-true  (g:type-is-fundamental +g-type-interface+))
@@ -217,7 +217,7 @@
 
 ;;;   g_type_is_value_type
 
-(test type-is-value-type
+(test g-type-is-value-type
   (is-false (g:type-is-value-type +g-type-invalid+))
   (is-false (g:type-is-value-type +g-type-none+))
   (is-false (g:type-is-value-type +g-type-interface+))
@@ -253,7 +253,7 @@
 
 ;;;   g_type_is_classed
 
-(test type-is-classed
+(test g-type-is-classed
   (is-false (g:type-is-classed +g-type-invalid+))
   (is-false (g:type-is-classed +g-type-none+))
   (is-false (g:type-is-classed +g-type-interface+))
@@ -289,7 +289,7 @@
 
 ;;; g_type_is_interface
 
-(test type-is-interface
+(test g-type-is-interface
   (is-false (g:type-is-interface +g-type-invalid+))
   (is-false (g:type-is-interface +g-type-none+))
   (is-true  (g:type-is-interface +g-type-interface+))
@@ -321,14 +321,14 @@
 
 ;;; G_TYPE_FROM_INSTANCE
 
-(test type-from-instance
+(test g-type-from-instance
   (signals (error) (g:type-from-instance nil))
   (is (eq (g:gtype "GSimpleAction")
           (g:type-from-instance (make-instance 'g:simple-action)))))
 
 ;;;   G_TYPE_FROM_CLASS
 
-(test type-from-class
+(test g-type-from-class
   (is (eq (g:gtype "GApplication")
           (g:type-from-class (g:type-class-ref "GApplication"))))
   (is (eq (g:gtype "GSimpleAction")
@@ -336,14 +336,14 @@
 
 ;;;   G_TYPE_FROM_INTERFACE
 
-(test type-from-interface
+(test g-type-from-interface
   (is (eq (g:gtype "GAction")
           (g:type-from-interface
               (g:type-default-interface-ref "GAction")))))
 
 ;;;     g-type-instance-class
 
-(test type-instance-class
+(test g-type-instance-class
   (is (eq (g:gtype "GSimpleAction")
           (g:type-from-class
               (g:type-instance-class (make-instance 'g:simple-action))))))
@@ -356,7 +356,7 @@
 
 ;;;     G_TYPE_CHECK_INSTANCE_TYPE
 
-(test type-check-instance-type
+(test g-type-check-instance-type
   (let ((action (make-instance 'g:simple-action)))
     (is-true (g:type-check-instance-type action "GObject"))
     (is-true (g:type-check-instance-type action "GAction"))))
@@ -365,7 +365,7 @@
 
 ;;;   G_TYPE_CHECK_CLASS_TYPE
 
-(test type-check-class-type
+(test g-type-check-class-type
   (is-true  (g:type-check-class-type (g:type-class-ref "GSimpleAction")
                                      "GObject")))
 
@@ -377,7 +377,7 @@
 
 ;;;   g_type_name
 
-(test type-name
+(test g-type-name
   (is (equal "gdouble" (g:type-name +g-type-double+)))
   (is (equal "GBoxed" (g:type-name +g-type-boxed+)))
   (is (equal "GApplication" (g:type-name (g:gtype "GApplication")))))
@@ -386,7 +386,7 @@
 
 ;;;   g_type_from_name
 
-(test type-from-name
+(test g-type-from-name
   (is (eq (g:gtype "gdouble") (g:type-from-name "gdouble")))
   (is (eq (g:gtype "GBoxed") (g:type-from-name "GBoxed")))
   (is (eq (g:gtype "GApplication") (g:type-from-name "GApplication"))))
@@ -397,7 +397,7 @@
 
 ;;;     g_type_is_a
 
-(test type-is-a
+(test g-type-is-a
   (is-true (g:type-is-a "gboolean" +g-type-boolean+))
   (is-true (g:type-is-a "GResource" +g-type-boxed+))
   (is-true (g:type-is-a "gchar" +g-type-char+))
@@ -425,7 +425,7 @@
 ;;;     g_type_class_ref
 ;;;     g_type_class_unref
 
-(test type-class-ref
+(test g-type-class-ref
   (let ((class nil))
     ;; gtype is a string
     (is (cffi:pointerp (setf class (g:type-class-ref "GSimpleAction"))))
@@ -434,7 +434,7 @@
     ;; gtype is a ID
     (is (cffi:pointerp (setf class
                              (g:type-class-ref
-                               (gobject::gtype-id (g:gtype "GSimpleAction"))))))
+                               (glib::gtype-id (g:gtype "GSimpleAction"))))))
     (is (eq (g:gtype "GSimpleAction") (g:type-from-class class)))
     (is-false (g:type-class-unref class))
     ;; gtype is a g-type
@@ -459,7 +459,7 @@
 
 ;;;     g-type-qdata
 
-(test type-qdata.1
+(test g-type-qdata.1
   ;; Attach and read data for a "gboolean" type
   (is (string= "a string" (setf (g:type-qdata "gboolean" "mydata") "a string")))
   (is (string= "a string" (g:type-qdata "gboolean" "mydata")))
@@ -468,7 +468,7 @@
   (is-false (setf (g:type-qdata "gboolean" "mydata") nil))
   (is-false (g:type-qdata "gboolean" "mydata")))
 
-(test type-qdata.2
+(test g-type-qdata.2
   ;; Attach and read data for a "GSimpleAction" type
   (is (string= "a string"
                (setf (g:type-qdata "GSimpleAction" "mydata") "a string")))
@@ -512,4 +512,4 @@
 ;;;     G_DEFINE_POINTER_TYPE                              not implemented
 ;;;     G_DEFINE_POINTER_TYPE_WITH_CODE                    not implemented
 
-;;; --- 2023-1-2 ---------------------------------------------------------------
+;;; --- 2023-6-24 --------------------------------------------------------------

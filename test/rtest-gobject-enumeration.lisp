@@ -7,7 +7,7 @@
 
 (test define-g-enum-macro
   (is (equal '(PROGN
- (DEFCENUM (GTK-RESPONSE-TYPE :INT :ALLOW-UNDECLARED-VALUES NIL)
+ (CFFI:DEFCENUM (GTK-RESPONSE-TYPE :INT :ALLOW-UNDECLARED-VALUES NIL)
    (:NONE -1)
    (:REJECT -2)
    (:ACCEPT -3)
@@ -27,7 +27,8 @@
         (CFFI:FOREIGN-SYMBOL-POINTER "gtk_response_type_get_type") NIL :SIZE)
        (WARN "Type initializer '~A' is not available"
              "gtk_response_type_get_type"))))
-              (macroexpand '(define-g-enum "GtkResponseType" gtk-response-type
+              (macroexpand '(gobject:define-g-enum "GtkResponseType" 
+                                                   gtk-response-type
                              (:export t
                               :type-initializer "gtk_response_type_get_type")
                              (:none -1)
@@ -44,7 +45,7 @@
 
 (test define-g-flags-macro
   (is (equal '(PROGN
- (DEFBITFIELD GDK-DRAG-ACTION :INT
+ (CFFI:DEFBITFIELD GDK-DRAG-ACTION :INT
    (:DEFAULT 1)
    (:COPY 2)
    (:MOVE 4)
@@ -59,7 +60,8 @@
         (CFFI:FOREIGN-SYMBOL-POINTER "gdk_drag_action_get_type") NIL :SIZE)
        (WARN "Type initializer '~A' is not available"
              "gdk_drag_action_get_type"))))
-             (macroexpand '(define-g-flags "GdkDragAction" gdk-drag-action
+             (macroexpand '(gobject:define-g-flags "GdkDragAction" 
+                                                   gdk-drag-action
                             (:export t
                              :type-initializer "gdk_drag_action_get_type")
                             (:default 1)
@@ -71,7 +73,7 @@
 
 ;;;   g-enum-class
 
-(test enum-class
+(test g-enum-class
   (is (= 32 (cffi:foreign-type-size '(:struct g:enum-class))))
   (is (equal '(:maximum :minimum :n-values :type-class :values)
              (sort (cffi:foreign-slot-names '(:struct g:enum-class))
@@ -79,7 +81,7 @@
 
 ;;;   g-enum-value
 
-(test enum-value
+(test g-enum-value
   (is (= 24 (cffi:foreign-type-size '(:struct g:enum-value))))
   (is (equal '(:name :nick :value)
              (sort (cffi:foreign-slot-names '(:struct g:enum-value))
@@ -87,7 +89,7 @@
 
 ;;;   g-flags-class
 
-(test flags-class
+(test g-flags-class
   (is (= 24 (cffi:foreign-type-size '(:struct g:flags-class))))
   (is (equal '(:mask :n-values :type-class :values)
              (sort (cffi:foreign-slot-names '(:struct g:flags-class))
@@ -95,7 +97,7 @@
 
 ;;;   g-flags-value
 
-(test flags-value
+(test g-flags-value
   (is (= 24 (cffi:foreign-type-size '(:struct g:flags-value))))
   (is (equal '(:name :nick :value)
              (sort (cffi:foreign-slot-names '(:struct g:flags-value))
@@ -108,7 +110,7 @@
 
 ;;;     g-type-is-enum
 
-(test type-is-enum
+(test g-type-is-enum
   (is-false (g:type-is-enum "GApplicationFlags"))
   (is-true  (g:type-is-enum "GEmblemOrigin")))
 
@@ -117,7 +119,7 @@
 
 ;;;     G_TYPE_IS_FLAGS
 
-(test type-is-flags
+(test g-type-is-flags
   (is-true  (g:type-is-flags "GApplicationFlags"))
   (is-false (g:type-is-flags "GEmblemOrigin")))
 
@@ -138,4 +140,4 @@
 ;;;     g_enum_complete_type_info
 ;;;     g_flags_complete_type_info
 
-;;; --- 2023-1-2 ---------------------------------------------------------------
+;;; --- 2023-6-24 --------------------------------------------------------------

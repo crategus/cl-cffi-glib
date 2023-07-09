@@ -13,10 +13,10 @@
   (is (member :glib-2-68 *features*))
   (is (member :glib-2-70 *features*))
   (is (member :glib-2-72 *features*))
-  (is (member :glib-2-72 *features*))
-  (is (member :glib-2-72 *features*)))
+  (is (member :glib-2-74 *features*))
+  (is (member :glib-2-76 *features*)))
   
-(test check-version
+(test g-check-version
   (is-true (integerp +glib-major-version+))
   (is-true (integerp +glib-minor-version+))
   (is-true (integerp +glib-micro-version+))
@@ -32,4 +32,4 @@
       (is-false (cl-cffi-glib-build-info s))
       (is (stringp result)))))
 
-;;; --- 2023-5-8 ---------------------------------------------------------------
+;;; --- 2023-6-22 --------------------------------------------------------------
