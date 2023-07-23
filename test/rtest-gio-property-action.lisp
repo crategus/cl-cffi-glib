@@ -7,7 +7,7 @@
 
 ;;;     GPropertyAction
 
-(test property-action-class
+(test g-property-action-class
   ;; Type check
   (is (g:type-is-object "GPropertyAction"))
   ;; Check the registered symbol
@@ -53,7 +53,7 @@
 
 ;;; --- Properties -------------------------------------------------------------
 
-;; FIXME: The examples do not work with GThemedICon. The properties must be
+;; FIXME: The examples does not work with GThemedIcon. The properties must be
 ;; readable and writable.
 
 #+nil
@@ -130,4 +130,4 @@
     (is (typep (g:property-action-new "action" icon "name")
                 'g:property-action))))
 
-;;; --- 2023-5-29 --------------------------------------------------------------
+;;; --- 2023-7-9 ---------------------------------------------------------------

@@ -4,8 +4,26 @@
 (in-suite gio-content-type)
 
 ;;;     g_content_type_equals
+
+(test g-content-type-equals
+;  (is-true (g:content-type-equals "text/plain" "text/plain"))
+;  (is-true (g:content-type-equals "text" "text/plain"))
+;  (is-true (g:content-type-equals "text/plain" "text"))
+)
+
 ;;;     g_content_type_is_a
+
+(test g-content-type-is-a
+  (is-true (g:content-type-is-a "text/plain" "text/plain"))
+  (is-true (g:content-type-is-a "text/plain" "text"))
+)
+
 ;;;     g_content_type_is_mime_type
+
+(test g-content-type-is-mime-type
+;  (is-true (g:content-type-is-mime-type "text/plain" "text/plain"))
+)
+
 ;;;     g_content_type_is_unknown
 
 ;;;     g_content_type_get_description

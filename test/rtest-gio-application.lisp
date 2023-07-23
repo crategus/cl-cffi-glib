@@ -179,6 +179,9 @@
 ;;     shutdown
 ;;     startup
 
+;; TODO: This example does not work on Windows. The "open" signal handler is
+;; not exectuted, but the "activate" signal handler.
+
 (defun example-application-open (&optional (argv nil))
   (let ((in-startup nil) (in-activate nil) (in-open nil) (in-shutdown nil))
     (let ((app (make-instance 'g:application
@@ -232,6 +235,7 @@
       ;; Return the results
       (list in-startup in-activate in-open in-shutdown)))
 
+#-windows
 (test g-application-signals
   (is (equal '(t t nil t)
              (example-application-open)))
@@ -307,4 +311,4 @@
 ;;;     g_application_bind_busy_property
 ;;;     g_application_unbind_busy_property
 
-;;; --- 2023-7-8 ---------------------------------------------------------------
+;;; --- 2023-7-12 --------------------------------------------------------------

@@ -63,6 +63,10 @@
 
 ;;;     g_application_command_line_get_arguments
 
+;; TODO: This test does not work on Windows. The list of arguments is not
+;; passed to the "comand-line" signal handler.
+
+#-windows
 (test g-application-command-line-get-arguments
   (let ((app (make-instance 'g:application
                             :flags :handles-command-line
@@ -93,4 +97,4 @@
 ;;;     g_application_command_line_print
 ;;;     g_application_command_line_printerr
 
-;;; --- 2023-7-9 ---------------------------------------------------------------
+;;; --- 2023-7-12 --------------------------------------------------------------

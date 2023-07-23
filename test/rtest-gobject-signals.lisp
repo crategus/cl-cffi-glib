@@ -3,7 +3,10 @@
 (def-suite gobject-signals :in gobject-suite)
 (in-suite gobject-signals)
 
-(defvar *verbose-gobject-signals* t)
+(defvar *verbose-gobject-signals* nil)
+
+;; TODO: These tests only works after performing the tests for GApplication
+;; and GSimpleAction.
 
 ;;; --- Types and Values -------------------------------------------------------
 
@@ -53,7 +56,8 @@
   (is (string= "activate"
                (g:signal-name (g:signal-lookup "activate" "GSimpleAction"))))
   (is (string= "change-state"
-               (g:signal-name (g:signal-lookup "change-state" "GSimpleAction")))))
+               (g:signal-name (g:signal-lookup "change-state"
+                                               "GSimpleAction")))))
 
 ;;;     g_signal_list_ids
 
@@ -77,89 +81,85 @@
 
 ;;;     g_signal_emit
 
-#+nil
 (test g-signal-emit.1
   (let* ((message nil)
-         (button (make-instance 'gtk:button))
+         (action (make-instance 'g:simple-action))
          ;; Connect a signal handler
-         (handler-id (g:signal-connect button "clicked"
-                       (lambda (widget)
-                         (declare (ignore widget))
+         (handler-id (g:signal-connect action "activate"
+                       (lambda (action parameter)
                          (when *verbose-gobject-signals*
-                           (format t "~&Signal 'clicked' for button.~%"))
-                         (setf message "Signal 'clicked' for button")
+                           (format t "~&Signal activate for action.~%")
+                           (format t "      action: ~a~%" action)
+                           (format t "   parameter: ~a~%" parameter))
+                         (setf message "Signal activate for action")
                          t))))
     ;; The signal handler writes a message in the variable MESSAGE.
     ;; We emit the signal and check the value of MESSAGE.
     (is-true (integerp handler-id))
     (is-false (setf message nil))
-    (is-false (g-signal-emit button "clicked"))
-    (is (string= "Signal 'clicked' for button" message))
-    (is-false (g-signal-handler-disconnect button handler-id))))
+    (is-false (g:signal-emit action "activate" (g:variant-new-boolean t)))
+    (is (string= "Signal activate for action" message))))
 
-#+nil
 (test g-signal-emit.2
   (let* ((message nil)
-         (button (make-instance 'gtk:button))
+         (action (make-instance 'g:simple-action))
          ;; Connect a signal handler
-         (handler-id (g:signal-connect button "notify::can-default"
+         (handler-id (g:signal-connect action "notify::enabled"
                        (lambda (widget pspec)
                          (declare (ignore widget))
                          (when *verbose-gobject-signals*
-                           (format t "~&Signal 'notify::can-default' for button.~%"))
-                         (setf message "Signal 'notify::can-default' for button")
-                         (is (g-is-param-spec pspec))
-                         (is (eq (gtype "GParamBoolean") (g-param-spec-type pspec)))
-                         (is (eq (gtype "gboolean")
-                                 (g-param-spec-value-type pspec)))
+                           (format t "~&Signal notify::enabled for action~%"))
+                         (setf message "Signal notify::enabled for action")
+                         (is (g:is-param-spec pspec))
+                         (is (eq (g:gtype "GParamBoolean")
+                                 (g:param-spec-type pspec)))
+                         (is (eq (g:gtype "gboolean")
+                                 (g:param-spec-value-type pspec)))
                          (is (string= "myBoolean" (g:param-spec-name pspec)))
                          (is (string= "GParamBoolean"
-                                      (g-param-spec-type-name pspec)))
-                         (is-true (g-param-spec-default-value pspec))
+                                      (g:param-spec-type-name pspec)))
+                         (is-true (g:param-spec-default-value pspec))
                          t))))
     ;; The signal handler writes a message in the variable MESSAGE.
     ;; We emit the signal and check the value of MESSAGE.
     (is-true (integerp handler-id))
     (is-false (setf message nil))
-    (is-false (g-signal-emit button "notify::can-default"
+    (is-false (g:signal-emit action "notify::enabled"
                              (g:param-spec-boolean "myBoolean"
                                                    "myBool"
                                                    "Doku"
                                                    t
                                                    '(:readable :writable))))
-    (is (string= "Signal 'notify::can-default' for button" message))
-    (is-false (g-signal-handler-disconnect button handler-id))))
+    (is (string= "Signal notify::enabled for action" message))))
 
 ;; This test does not emit the signal, but sets the property "can-default".
 
-#+nil
 (test g-signal-emit.3
   (let* ((message nil)
-         (button (make-instance 'gtk:button))
+         (action (make-instance 'g:simple-action))
          ;; Connect a signal handler
-         (handler-id (g:signal-connect button "notify::can-default"
+         (handler-id (g:signal-connect action "notify::enabled"
                        (lambda (widget pspec)
                          (declare (ignore widget))
                          (when *verbose-gobject-signals*
-                           (format t "~&Signal 'notify::can-default' for button.~%"))
-                         (setf message "Signal 'notify::can-default' for button")
-                         (is (g-is-param-spec pspec))
-                         (is (eq (gtype "GParamBoolean")
-                                 (g-param-spec-type pspec)))
-                         (is (eq (gtype "gboolean")
-                                 (g-param-spec-value-type pspec)))
-                         (is (string= "can-default" (g:param-spec-name pspec)))
+                           (format t "~&Signal notify::enabled for action~%"))
+                         (setf message "Signal notify::enabled for action")
+                         (is (g:is-param-spec pspec))
+                         (is (eq (g:gtype "GParamBoolean")
+                                 (g:param-spec-type pspec)))
+                         (is (eq (g:gtype "gboolean")
+                                 (g:param-spec-value-type pspec)))
+                         (is (string= "enabled" (g:param-spec-name pspec)))
                          (is (string= "GParamBoolean"
-                                      (g-param-spec-type-name pspec)))
-                         (is-true (g-param-spec-default-value pspec))
+                                      (g:param-spec-type-name pspec)))
+                         (is-true (g:param-spec-default-value pspec))
                          t))))
     ;; The signal handler writes a message in the variable MESSAGE.
     ;; We emit the signal and check the value of MESSAGE.
     (is-true (integerp handler-id))
     (is-false (setf message nil))
-    (is-true (setf (gtk-widget-can-default button) t))
-    (is (string= "Signal 'notify::can-default' for button" message))
-    (is-false (g-signal-handler-disconnect button handler-id))))
+    (is-true (setf (g:simple-action-enabled action) t))
+    (is (string= "Signal notify::enabled for action" message))))
 
 ;;;     g_signal_emit_by_name
 ;;;     g_signal_emitv
@@ -176,24 +176,37 @@
 ;;;     g-signal-handler-block
 ;;;     g-signal-handler-unblock
 
-#+nil
 (test g-signal-handler-block
-  (let* ((button (make-instance 'gtk:button))
-         (signal-id (g-signal-lookup "clicked" "GtkButton"))
-         (handler-id (g:signal-connect button "clicked"
-                       (lambda (widget)
-                         (declare (ignore widget))
-                         t))))
+  (let* ((action (make-instance 'g:simple-action))
+         (signal-id (g:signal-lookup "activate" "GSimpleAction"))
+         (handler-id (g:signal-connect action "activate"
+                         (lambda (widget)
+                           (declare (ignore widget))
+                           t))))
     ;; Block the handler
-    (g-signal-handler-block button handler-id)
-    (is-false (g-signal-has-handler-pending button signal-id (cffi:null-pointer) nil))
-    (is-true (g-signal-has-handler-pending button signal-id (cffi:null-pointer) t))
+    (g:signal-handler-block action handler-id)
+    (is-false (g:signal-has-handler-pending action
+                                            signal-id
+                                            (cffi:null-pointer)
+                                            nil))
+    (is-true (g:signal-has-handler-pending action
+                                           signal-id
+                                           (cffi:null-pointer)
+                                           t))
     ;; Unblock the handler
-    (g-signal-handler-unblock button handler-id)
-    (is-true (g-signal-has-handler-pending button signal-id (cffi:null-pointer) nil))
-    (is-true (g-signal-has-handler-pending button signal-id (cffi:null-pointer) t))))
+    (g:signal-handler-unblock action handler-id)
+    (is-true (g:signal-has-handler-pending action
+                                           signal-id
+                                           (cffi:null-pointer)
+                                           nil))
+    (is-true (g:signal-has-handler-pending action
+                                           signal-id
+                                           (cffi:null-pointer)
+                                           t))))
 
 ;;;     g-signal-handler-disconnect
+
+;; TODO: Implement the g:signal-handler-disconnect function
 
 #+nil
 (test g-signal-handler-disconnect
@@ -204,20 +217,18 @@
                          t))))
     (is-true (g-signal-handler-is-connected button handler-id))
     (is-false (g-signal-handler-disconnect button handler-id))
-    ;; FIXME: The expected value is false.
     (is-true (g-signal-handler-is-connected button handler-id))))
 
 ;;;     g-signal-handler-find
 
-#+nil
 (test g-signal-handler-find
-  (let* ((button (make-instance 'gtk:button))
-         (signal-id (g-signal-lookup "clicked" "GtkButton"))
-         (handler-id (g:signal-connect button "clicked"
+  (let* ((action (make-instance 'g:simple-action))
+         (signal-id (g:signal-lookup "activate" "GSimpleAction"))
+         (handler-id (g:signal-connect action "activate"
                        (lambda (widget)
                          (declare (ignore widget))
                          t))))
-    (is (= handler-id (g-signal-handler-find button signal-id)))))
+    (is (= handler-id (g:signal-handler-find action signal-id)))))
 
 ;;;     g_signal_handlers_block_matched
 ;;;     g_signal_handlers_unblock_matched
@@ -225,16 +236,14 @@
 
 ;;;     g-signal-handler-is-connected
 
-#+nil
 (test g-signal-handler-is-connected
-  (let* ((button (make-instance 'gtk:button))
-;         (signal-id (g-signal-lookup "clicked" "GtkButton"))
+  (let* ((action (make-instance 'g:simple-action))
          ;; Connect a signal handler
-         (handler-id (g:signal-connect button "clicked"
+         (handler-id (g:signal-connect action "activate"
                        (lambda (widget)
                          (declare (ignore widget))
                          t))))
-    (is-true (g-signal-handler-is-connected button handler-id))))
+    (is-true (g:signal-handler-is-connected action handler-id))))
 
 ;;;     g_signal_handlers_block_by_func
 ;;;     g_signal_handlers_unblock_by_func
@@ -243,25 +252,32 @@
 
 ;;;     g-signal-has-handler-pending
 
-#+nil
 (test g-signal-has-handler-pending
-  (let* ((button (make-instance 'gtk:button))
-         (signal-id (g-signal-lookup "clicked" "GtkButton"))
-         (handler-id (g:signal-connect button "clicked"
+  (let* ((action (make-instance 'g:simple-action))
+         (signal-id (g:signal-lookup "activate" "GSimpleAction"))
+         (handler-id (g:signal-connect action "activate"
                        (lambda (widget)
                          (declare (ignore widget))
                          t))))
     (is (integerp handler-id))
-    ;; We have a signal handler for the signal "clicked"
-    (is-true (g-signal-has-handler-pending button signal-id (cffi:null-pointer) t))
-    (is-true (g-signal-has-handler-pending button signal-id (cffi:null-pointer) nil))
-    ;; We have no signal handler for the signal "pressed"
-    (is-false (g-signal-has-handler-pending button
-                                            (g-signal-lookup "pressed" "GtkButton")
+    ;; We have a signal handler for the signal "activate"
+    (is-true (g:signal-has-handler-pending action
+                                           signal-id
+                                           (cffi:null-pointer)
+                                           t))
+    (is-true (g:signal-has-handler-pending action
+                                           signal-id
+                                           (cffi:null-pointer)
+                                           nil))
+    ;; We have no signal handler for the signal "change-state"
+    (is-false (g:signal-has-handler-pending action
+                                            (g:signal-lookup "change-state"
+                                                             "GSimpleAction")
                                             (cffi:null-pointer)
                                             t))
-    (is-false (g-signal-has-handler-pending button
-                                            (g-signal-lookup "pressed" "GtkButton")
+    (is-false (g:signal-has-handler-pending action
+                                            (g:signal-lookup "change-state"
+                                            "GSimpleAction")
                                             (cffi:null-pointer)
                                             nil))))
 
@@ -282,4 +298,4 @@
 ;;;     g_signal_accumulator_true_handled
 ;;;     g_clear_signal_handler
 
-;;; --- 2023-6-24 --------------------------------------------------------------
+;;; --- 2023-7-9 ---------------------------------------------------------------

@@ -15,6 +15,9 @@
   ;; Check the registered symbol
   (is (eq 'g:simple-action
           (glib:symbol-for-gtype "GSimpleAction")))
+  ;; Check the type initializer
+  (is (eq (g:gtype "GSimpleAction")
+          (g:gtype (cffi:foreign-funcall "g_simple_action_get_type" :size))))
   ;; Check the parent
   (is (eq (g:gtype "GObject")
           (g:type-parent "GSimpleAction")))

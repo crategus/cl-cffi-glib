@@ -297,6 +297,10 @@
 ;;;     g_app_info_launch_default_for_uri_finish
 
 ;;;     g_app_launch_context_new
+
+(test g-app-launch-context-new
+  (is (typep (g:app-launch-context-new) 'g:app-launch-context)))
+
 ;;;     g_app_launch_context_setenv
 ;;;     g_app_launch_context_unsetenv
 ;;;     g_app_launch_context_get_environment

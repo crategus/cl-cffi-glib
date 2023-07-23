@@ -139,6 +139,18 @@
     (is-false (g:value-unset value))
     (is-false (cffi:foreign-slot-value value '(:struct g:value) :gtype))))
 
+;;;     g-value-get
+;;;     g-value-set
+
+(test g-value-get/set
+  (cffi:with-foreign-object (value '(:struct g:value))
+    (is (= 99 (g:value-set value 99 "gint")))
+    (is (= 99 (g:value-get value)))
+    (is (= 99 (g:value-set value 99 "guint")))
+    (is (= 99 (g:value-get value)))
+    (is (= 99.0d0 (g:value-set value 99.0d0 "gdouble")))
+    (is (= 99.0d0 (g:value-get value)))))
+
 ;;;     g_value_set_instance
 ;;;     g_value_fits_pointer                     * not implemented *
 ;;;     g_value_peek_pointer                     * not implemented *
@@ -212,4 +224,4 @@
     (g:value-transform value1 value2)
     (format t "value2 = ~A~%~%" (g:value-get value2))))
 
-;;; --- 2023-6-25 --------------------------------------------------------------
+;;; --- 2023-7-10 --------------------------------------------------------------
