@@ -1,4 +1,4 @@
-;;;; Example Application Open - 2023-5-1
+;;;; Example Application Open - 2023-7-9
 
 (in-package :gio-example)
 
@@ -6,7 +6,8 @@
   (let ((app (make-instance 'g:application
                             :application-id "com.crategus.application-open"
                             :flags :handles-open))
-        (argv (if argv argv (uiop:command-line-arguments))))
+        (argv (cons "application-open" 
+                    (if argv argv (uiop:command-line-arguments)))))
     ;; Print information about the application
     (format t "Start application~%")
     (format t "      arg : ~a~%" argv)
@@ -19,14 +20,14 @@
     ;; Signal handler "activate"
     (g:signal-connect app "activate"
                       (lambda (application)
-                        (declare (ignore application))
+                        (g:application-hold application)
                         (format t "The application is in ACTIVATE~%")
                         ;; Note: when doing a longer-lasting action here that
                         ;; returns to the main loop, you should use
                         ;; g:application-hold and g:application-release to
                         ;; keep the application alive until the action is
                         ;; completed.
-                      ))
+                        (g:application-release application)))
     ;; Signal handler "open"
     (g:signal-connect app "open"
         (lambda (application files n-files hint)

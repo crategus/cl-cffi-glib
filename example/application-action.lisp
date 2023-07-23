@@ -1,4 +1,4 @@
-;;;; Example Application Action - 2023-5-1
+;;;; Example Application Action - 2023-7-9
 
 (in-package :gio-example)
 
@@ -19,11 +19,7 @@
 (defun application-action (&rest argv)
   (let ((app (make-instance 'g:application
                             :application-id "com.crategus.application-action"
-;; FIXME: We get an error with the :DEFAULT-FLAGS value:
-;;   Failed to register: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown:
-;;   The name com.crategus.application was not provided by any .service files
-;                            :flags :default-flags
-                            )))
+                            :flags :default-flags)))
     ;; Create the "simple-action" action
     (let ((action (g:simple-action-new "simple-action" nil)))
       ;; Connect a handler to the "activate" signal
