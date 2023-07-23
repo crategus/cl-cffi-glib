@@ -32,6 +32,18 @@
   (:import-from #:cffi)
   (:import-from #:glib)
   (:import-from #:gobject))
+  
+(in-package :gio)
+
+;;; ----------------------------------------------------------------------------
+
+#+sbcl
+(when (and (find-package "SB-EXT")
+           (find-symbol "SET-FLOATING-POINT-MODES" (find-package "SB-EXT")))
+  (funcall (find-symbol "SET-FLOATING-POINT-MODES" (find-package "SB-EXT"))
+           :traps nil))
+
+;;; ----------------------------------------------------------------------------
 
 #+liber-documentation
 (setf (documentation (find-package :gio) t)
@@ -52,6 +64,7 @@
       @about-symbol{file-monitor-flags}
       @about-symbol{file-measure-flags}
       @about-symbol{filesystem-preview-type}
+      @about-type{file-as-namestring}
       @about-class{file}
       @about-function{GFileProgressCallback}
       @about-function{GFileReadMoreCallback}
@@ -268,6 +281,7 @@
       @about-function{content-type-is-unknown}
       @about-function{content-type-description}
       @about-function{content-type-mime-type}
+      @about-function{content-type-mime-dirs}
       @about-function{content-type-icon}
       @about-function{content-type-symbolic-icon}
       @about-function{content-type-generic-icon-name}

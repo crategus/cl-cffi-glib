@@ -644,37 +644,6 @@ baker_bake_cake_sync (Baker               *self,
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_task_new ()
-;;;
-;;;
-;;; Creates a GTask acting on source_object , which will eventually be used to
-;;; invoke callback in the current thread-default main context.
-;;;
-;;; Call this in the "start" method of your asynchronous method, and pass the
-;;; GTask around throughout the asynchronous operation. You can use
-;;; g_task_set_task_data() to attach task-specific data to the object, which you
-;;; can retrieve later via g_task_get_task_data().
-;;;
-;;; By default, if cancellable is cancelled, then the return value of the task
-;;; will always be G_IO_ERROR_CANCELLED, even if the task had already completed
-;;; before the cancellation. This allows for simplified handling in cases where
-;;; cancellation may imply that other objects that the task depends on have been
-;;; destroyed. If you do not want this behavior, you can use
-;;; g_task_set_check_cancellable() to change it.
-;;;
-;;; source_object :
-;;;     the GObject that owns this task, or NULL.
-;;;
-;;; cancellable :
-;;;     optional GCancellable object, NULL to ignore.
-;;;
-;;; callback :
-;;;     a GAsyncReadyCallback.
-;;;
-;;; callback_data :
-;;;     user data passed to callback .
-;;;
-;;; Returns :
-;;;     a GTask.
 ;;; ----------------------------------------------------------------------------
 
 ;; TODO: We allocate a stable pointer, but we do not free the pointer.
@@ -687,6 +656,33 @@ baker_bake_cake_sync (Baker               *self,
   (data :pointer))
 
 (defun task-new (source cancellable func)
+ #+liber-documentation
+ "@version{#2023-7-13}
+  @argument[source]{a @class{g:object} instance that owns this task, or
+    @code{nil}}
+  @argument[canellable]{an optional @class{g:cancellable} instance, @code{nil}
+    to ignore}
+  @argument[func]{a @symbol{g:async-ready-callback} callback function}
+  @return{A @class{g:task} instance.}
+  @begin{short}
+    Creates a @class{g:task} instance acting on @arg{source}, which will
+    eventually be used to invoke callback in the current thread-default main
+    context.
+  @end{short}
+
+  Call this in the \"start\" method of your asynchronous method, and pass the
+  @class{g:task} instance around throughout the asynchronous operation. You can
+  use the @fun{g:task-set-task-data} function to attach task-specific data to
+  the object, which you can retrieve later via the @fun{g:task-get-task-data}
+  function.
+
+  By default, if @arg{cancellable} is cancelled, then the return value of the
+  task will always be @code{G_IO_ERROR_CANCELLED}, even if the task had already
+  completed before the cancellation. This allows for simplified handling in
+  cases where cancellation may imply that other objects that the task depends
+  on have been destroyed. If you do not want this behavior, you can use the
+  @fun{g:task-set-check-cancellable} function to change it.
+  @see-class{g:task}"
   (%task-new (gobject:object-pointer source)
              cancellable
              (cffi:callback asyn-ready-callback)
@@ -731,23 +727,7 @@ baker_bake_cake_sync (Baker               *self,
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_task_set_priority ()
-;;;
-;;; void
-;;; g_task_set_priority (GTask *task,
-;;;                      gint priority);
-;;;
-;;; Sets task 's priority. If you do not call this, it will default to
-;;; G_PRIORITY_DEFAULT.
-;;;
-;;; This will affect the priority of GSources created with
-;;; g_task_attach_source() and the scheduling of tasks run in threads, and can
-;;; also be explicitly retrieved later via g_task_get_priority().
-;;;
-;;; task :
-;;;     the GTask
-;;;
-;;; priority :
-;;;     the priority of the request
+;;; g_task_get_priority ()
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf task-priority) (priority task)
@@ -756,52 +736,31 @@ baker_bake_cake_sync (Baker               *self,
                         :int priority)
   priority)
 
-;;; ----------------------------------------------------------------------------
-;;; g_task_get_priority ()
-;;;
-;;; gint
-;;; g_task_get_priority (GTask *task);
-;;;
-;;; Gets task 's priority
-;;;
-;;; task :
-;;;     a GTask
-;;;
-;;; Returns :
-;;;     task 's priority
-;;; ----------------------------------------------------------------------------
-
 (cffi:defcfun ("g_task_get_priority" task-priority) :int
+ #+liber-documentation
+ "@version{#2023-7-13}
+  @syntax[]{(g:task-priority task) => priority}
+  @syntax[]{(setf (g:task-priority task) priority)}
+  @argument[task]{a @class{g:task} instance}
+  @argument[priority]{an integer with the priority of the request}
+  @begin{short}
+    The @sym{g:task-priority} function gets the priority of the task.
+  @end{short}
+  The @sym{(setf g:task-priority} function sets the priority. If you do not
+  call this, it will default to @code{G_PRIORITY_DEFAULT}.
+
+  This will affect the priority of @class{g:source} instances created with the
+  @fun{g:task-attach-source} function and the scheduling of tasks run in
+  threads, and can also be explicitly retrieved later via the
+  @sym{g:task-priority} function.
+  @see-class{g:task}"
   (task (gobject:object task)))
 
 (export 'task-priority)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_task_set_check_cancellable ()
-;;;
-;;; void
-;;; g_task_set_check_cancellable (GTask *task,
-;;;                               gboolean check_cancellable);
-;;;
-;;; Sets or clears task 's check-cancellable flag. If this is TRUE (the
-;;; default), then g_task_propagate_pointer(), etc, and g_task_had_error() will
-;;; check the task's GCancellable first, and if it has been cancelled, then they
-;;; will consider the task to have returned an "Operation was cancelled" error
-;;; (G_IO_ERROR_CANCELLED), regardless of any other error or return value the
-;;; task may have had.
-;;;
-;;; If check_cancellable is FALSE, then the GTask will not check the cancellable
-;;; itself, and it is up to task 's owner to do this (eg, via
-;;; g_task_return_error_if_cancelled()).
-;;;
-;;; If you are using g_task_set_return_on_cancel() as well, then you must leave
-;;; check-cancellable set TRUE.
-;;;
-;;; task :
-;;;     the GTask
-;;;
-;;; check_cancellable :
-;;;     whether GTask will check the state of its GCancellable for you.
+;;; g_task_get_check_cancellable ()
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf task-check-cancellable) (check task)
@@ -810,20 +769,34 @@ baker_bake_cake_sync (Baker               *self,
                         :boolean check)
   check)
 
-;;; ----------------------------------------------------------------------------
-;;; g_task_get_check_cancellable ()
-;;;
-;;; gboolean
-;;; g_task_get_check_cancellable (GTask *task);
-;;;
-;;; Gets task 's check-cancellable flag. See g_task_set_check_cancellable() for
-;;; more details.
-;;;
-;;; task :
-;;;     the GTask
-;;; ----------------------------------------------------------------------------
-
 (cffi:defcfun ("g_task_get_check_cancellable" task-check-cancellable) :boolean
+ #+liber-documentation
+ "@version{#2023-7-13}
+  @syntax[]{(g:task-check-cancellable task) => cancellable}
+  @syntax[]{(setf (g:task-cancellable task) cancellable)}
+  @argument[task]{a @class{g:task} instance}
+  @argument[cancellable]{a boolean whether @arg{task} will check the state of
+    its @class{g:cancellable} instance for you}
+  @begin{short}
+    The @sym{g:task-check-cancellable} function gets the check-cancellable flag
+    of @arg{task}.
+  @end{short}
+  The @sym{(setf g:task-check-cancellable)} function sets or clears the
+  check-cancellable flag. If this is @em{true}, the default, then the
+  @fun{g:task-propagate-pointer} function, etc, and the @fun{g:task-had-error}
+  function will check the @class{g:cancellable} instance of @arg{task} first,
+  and if it has been cancelled, then they will consider the task to have
+  returned an \"Operation was cancelled\" error, regardless of any other error
+  or return value the task may have had.
+
+  If @arg{cancellable} is @em{false}, then @arg{task} will not check the
+  cancellable itself, and it is up to owner of @arg{task} to do this, e.g., via
+  the   @fun{g:task-return-error-if-cancelled} function.
+
+  If you are using the @fun{g:task-set-return-on-cancel} function as well, then
+  you must leave @arg{cancellable} set @em{true}.
+  @see-class{g:task}
+  @see-class{g:cancellable}"
   (task (gobject:object task)))
 
 (export 'task-check-cancellable)
@@ -1078,90 +1051,86 @@ The value is a NUL terminated UTF-8 string.
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_task_get_cancellable ()
-;;;
-;;; GCancellable *
-;;; g_task_get_cancellable (GTask *task);
-;;;
-;;; Gets task 's GCancellable
-;;;
-;;; task :
-;;;     a GTask
-;;;
-;;; Returns :
-;;;     task 's GCancellable.
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcfun ("g_tast_get_cancellable" task-canellable)
+(cffi:defcfun ("g_tast_get_cancellable" task-cancellable)
     (gobject:object cancellable)
+ #+liber-documentation
+ "@version{#2023-7-13}
+  @argument[task]{a @class{g:task} instance}
+  @return{The @class{g:cancellable} instance of @arg{task}.}
+  @begin{short}
+    Gets the @class{g:cancellable} instance of the task.
+  @end{short}
+  @see-class{g:task}
+  @see-class{g:cancellable}"
   (task (gobject:object task)))
 
 (export 'task-cancellable)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_task_get_context ()
-;;;
-;;; GMainContext *
-;;; g_task_get_context (GTask *task);
-;;;
-;;; Gets the GMainContext that task will return its result in (that is, the
-;;; context that was the thread-default main context at the point when task was
-;;; created).
-;;;
-;;; This will always return a non-NULL value, even if the task's context is the
-;;; default GMainContext.
-;;;
-;;; task :
-;;;     a GTask
-;;;
-;;; Returns :
-;;;     task 's GMainContext.
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_task_get_context" task-context)
     (:pointer (:struct glib:main-context))
+ #+liber-documentation
+ "@version{#2023-7-13}
+  @argument[task]{a @class{g:task} instance}
+  @return{The @type{g:main-context} instance of @arg{task}.}
+  @begin{short}
+    Gets the @type{g:main-context} instance that @arg{task} will return its
+    result in
+  @end{short}
+  That is, the context that was the thread-default main context at the point
+  when task was created.
+
+  This will always return a non-NULL value, even if the context of the task is
+  the default @type{g:main-context} instance.
+  @see-class{g:task}
+  @see-type{g:main-context}"
   (task (gobject:object task)))
 
 (export 'task-context)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_task_get_source_object ()
-;;;
-;;; gpointer
-;;; g_task_get_source_object (GTask *task);
-;;;
-;;; Gets the source object from task . Like g_async_result_get_source_object(),
-;;; but does not ref the object.
-;;;
-;;; task :
-;;;     a GTask
-;;;
-;;; Returns :
-;;;     task 's source object, or NULL.
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_task_get_source_object" task-source-object) :pointer
+ #+liber-documentation
+ "@version{#2023-7-13}
+  @argument[task]{a @class{g:task} instance}
+  @return{A pointer to the source object of the @class{g:task} instance, or
+    @code{nil}.}
+  @begin{short}
+    Gets the source object from @arg{task}.
+  @end{short}
+  Like the @fun{g:async-result-source-object} function, but does not ref the
+  object.
+  @see-class{g:task}
+  @see-function{g:async-result-source-object}"
   (task (gobject:object task)))
 
 (export 'task-source-object)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_task_return_boolean ()
-;;;
-;;; void
-;;; g_task_return_boolean (GTask *task,
-;;;                        gboolean result);
-;;;
-;;; Sets task 's result to result and completes the task (see
-;;; g_task_return_pointer() for more discussion of exactly what this means).
-;;;
-;;; task :
-;;;     a GTask.
-;;;
-;;; result :
-;;;     the gboolean result of a task function.
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_task_return_boolean" task-return-boolean) :void
+ #+liber-documentation
+ "@version{#2023-7-13}
+  @argument[task]{a @class{g:task} instance}
+  @argument[result]{a boolean result of a task function}
+  @begin{short}
+    Sets the result of the @class{g:task} instance to @arg{result} and
+    completes the task.
+  @end{short}
+  See the @fun{g:task-return-pointer} function for more discussion of exactly
+  what this means.
+  @see-class{g:task}
+  @see-function{g:task-return-pointer}"
   (task (gobject:object task))
   (result :boolean))
 

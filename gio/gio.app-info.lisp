@@ -117,82 +117,12 @@
 ;;; Known Implementations
 ;;;
 ;;;     GAppInfo is implemented by GDesktopAppInfo.
-;;;
-;;; Description
-;;;
-;;; GAppInfo and GAppLaunchContext are used for describing and launching
-;;; applications installed on the system.
-;;;
-;;; As of GLib 2.20, URIs will always be converted to POSIX paths (using
-;;; g_file_get_path()) when using g_app_info_launch() even if the application
-;;; requested an URI and not a POSIX path. For example for an desktop-file based
-;;; application with Exec key totem %U and a single URI, sftp://foo/file.avi,
-;;; then /home/user/.gvfs/sftp on foo/file.avi will be passed. This will only
-;;; work if a set of suitable GIO extensions (such as gvfs 2.26 compiled with
-;;; FUSE support), is available and operational; if this is not the case, the
-;;; URI will be passed unmodified to the application. Some URIs, such as
-;;; mailto:, of course cannot be mapped to a POSIX path (in gvfs there's no
-;;; FUSE mount for it); such URIs will be passed unmodified to the application.
-;;;
-;;; Specifically for gvfs 2.26 and later, the POSIX URI will be mapped back to
-;;; the GIO URI in the GFile constructors (since gvfs implements the GVfs
-;;; extension point). As such, if the application needs to examine the URI, it
-;;; needs to use g_file_get_uri() or similar on GFile. In other words, an
-;;; application cannot assume that the URI passed to e.g.
-;;; g_file_new_for_commandline_arg() is equal to the result of g_file_get_uri().
-;;; The following snippet illustrates this:
-;;;
-;;;   GFile *f;
-;;;   char *uri;
-;;;
-;;;   file = g_file_new_for_commandline_arg (uri_from_commandline);
-;;;
-;;;   uri = g_file_get_uri (file);
-;;;   strcmp (uri, uri_from_commandline) == 0; // FALSE
-;;;   g_free (uri);
-;;;
-;;;   if (g_file_has_uri_scheme (file, "cdda"))
-;;;     {
-;;;       // do something special with uri
-;;;     }
-;;;   g_object_unref (file);
-;;;
-;;; This code will work when both cdda://sr0/Track 1.wav and
-;;; /home/user/.gvfs/cdda on sr0/Track 1.wav is passed to the application. It
-;;; should be noted that it's generally not safe for applications to rely on
-;;; the format of a particular URIs. Different launcher applications (e.g. file
-;;; managers) may have different ideas of what a given URI means.
 ;;; ----------------------------------------------------------------------------
 
 (in-package :gio)
 
 ;;; ----------------------------------------------------------------------------
 ;;; enum GAppInfoCreateFlags
-;;;
-;;; typedef enum {
-;;;   /*< nick=none >*/
-;;;   G_APP_INFO_CREATE_NONE                           = 0,
-;;;   /*< nick=needs-terminal >*/
-;;;   G_APP_INFO_CREATE_NEEDS_TERMINAL                 = (1 << 0),
-;;;   /*< nick=supports-uris >*/
-;;;   G_APP_INFO_CREATE_SUPPORTS_URIS                  = (1 << 1),
-;;;   /*< nick=supports-startup-notification >*/
-;;;   G_APP_INFO_CREATE_SUPPORTS_STARTUP_NOTIFICATION  = (1 << 2)
-;;; } GAppInfoCreateFlags;
-;;;
-;;; Flags used when creating a GAppInfo.
-;;;
-;;; G_APP_INFO_CREATE_NONE
-;;;     No flags.
-;;;
-;;; G_APP_INFO_CREATE_NEEDS_TERMINAL
-;;;     Application opens in a terminal window.
-;;;
-;;; G_APP_INFO_CREATE_SUPPORTS_URIS
-;;;     Application supports URI arguments.
-;;;
-;;; G_APP_INFO_CREATE_SUPPORTS_STARTUP_NOTIFICATION
-;;;     Application supports startup notification. Since 2.26
 ;;; ----------------------------------------------------------------------------
 
 (gobject:define-g-flags "GAppInfoCreateFlags" app-info-create-flags
@@ -202,6 +132,32 @@
   (:needs-terminal #.(ash 1 0))
   (:supports-uris #.(ash 1 1))
   (:supports-startup-notification #.(ash 1 2)))
+
+#+liber-documentation
+(setf (liber:alias-for-symbol 'app-info-create-flags)
+      "GFlags"
+      (liber:symbol-documentation 'app-info-create-flags)
+ "@version{2023-7-11}
+  @begin{short}
+    Flags used when creating a @class{g:app-info} instance.
+  @end{short}
+  @begin{pre}
+(gobject:define-g-flags \"GAppInfoCreateFlags\" app-info-create-flags
+  (:export t
+   :type-initializer \"g_app_info_create_flags_get_type\")
+  (:none 0)
+  (:needs-terminal #.(ash 1 0))
+  (:supports-uris #.(ash 1 1))
+  (:supports-startup-notification #.(ash 1 2)))
+  @end{pre}
+  @begin[code]{table}
+    @entry[:none]{No flags set.}
+    @entry[:needs-terminal]{Application opens in a terminal window.}
+    @entry[:supports-uris]{Application supports URI arguments.}
+    @entry[:supports-startup-notification]{Application supports startup
+      notification.}
+  @end{table}
+  @see-class{g:app-info}")
 
 ;;; ----------------------------------------------------------------------------
 ;;; GAppInfo
@@ -260,8 +216,8 @@ lambda (context startup-notify-id)    :run-last
      The signal is emitted when a @class{g:app-info} instance is about to be
      launched. If non-@code{null} the @arg{platform-data} is a @type{g:variant}
      dictionary mapping strings to variants, i.e. @code{a{sv@}}, which contains
-     additional, platform specific data about this launch. On UNIX, at least the
-     startup-notification-id keys will be present.
+     additional, platform specific data about this launch. On UNIX, at least
+     the startup-notification-id keys will be present.
 
      The value of the startup-notification-id key (type @code{s}) is a startup
      notification ID corresponding to the format from the startup-notification
@@ -314,34 +270,6 @@ lambda (context info platform-data)    :run-last
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_app_info_create_from_commandline ()
-;;;
-;;; GAppInfo * g_app_info_create_from_commandline (const char *commandline,
-;;;                                                const char *application_name,
-;;;                                                GAppInfoCreateFlags flags,
-;;;                                                GError **error);
-;;;
-;;; Creates a new GAppInfo from the given information.
-;;;
-;;; Note that for commandline, the quoting rules of the Exec key of the
-;;; freedesktop.org Desktop Entry Specification are applied. For example, if
-;;; the commandline contains percent-encoded URIs, the percent-character must
-;;; be doubled in order to prevent it from being swallowed by Exec key
-;;; unquoting. See the specification for exact quoting rules.
-;;;
-;;; commandline :
-;;;     the commandline to use
-;;;
-;;; application_name :
-;;;     the application name, or NULL to use commandline
-;;;
-;;; flags :
-;;;     flags that can specify details of the created GAppInfo
-;;;
-;;; error :
-;;;     a GError location to store the error occurring, NULL to ignore.
-;;;
-;;; Returns :
-;;;     new GAppInfo for given command
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_create_from_commandline"
@@ -352,6 +280,24 @@ lambda (context info platform-data)    :run-last
   (err :pointer))
 
 (defun app-info-create-from-commandline (commandline application flags)
+ #+liber-documentation
+ "@version{#2023-7-11}
+  @argument[commandline]{a string with the the commandline to use}
+  @argument[application]{a string the application name, or @code{nil} to use
+    @arg{commandline}}
+  @argument[flags]{a @symbol{g:app-info-create-flags} value with the flags that
+    can specify details of the created @class{g:app-info} instance}
+  @return{The new @class{g:app-info} instance.}
+  @begin{short}
+    Creates a new @class{g:app-info} instance from the given information.
+  @end{short}
+  Note that for the @arg{commandline} argument, the quoting rules of the Exec
+  key of the freedesktop.org Desktop Entry Specification are applied. For
+  example, if the @arg{commandline} argument contains percent-encoded URIs, the
+  percent-character must be doubled in order to prevent it from being swallowed
+  by Exec key unquoting. See the specification for exact quoting rules.
+  @see-class{g:app-info}
+  @see-symbol{g:app-info-create-flags}"
   (glib:with-g-error (err)
     (%app-info-create-from-commandline commandline application flags err)))
 
@@ -359,41 +305,36 @@ lambda (context info platform-data)    :run-last
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_app_info_dup ()
-;;;
-;;; GAppInfo * g_app_info_dup (GAppInfo *appinfo);
-;;;
-;;; Creates a duplicate of a GAppInfo.
-;;;
-;;; appinfo :
-;;;     a GAppInfo.
-;;;
-;;; Returns :
-;;;     a duplicate of appinfo
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_dup" app-info-dup) (gobject:object app-info)
+ #+liber-documentation
+ "@version{#2023-7-11}
+  @argument[info]{a @class{g:app-info} instance}
+  @return{A duplicate of @arg{info}.}
+  @begin{short}
+    Creates a duplicate of an application info.
+  @end{short}
+  @see-class{g:app-info}"
   (info (gobject:object app-info)))
 
 (export 'app-info-dup)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_app_info_equal ()
-;;;
-;;; gboolean g_app_info_equal (GAppInfo *appinfo1, GAppInfo *appinfo2);
-;;;
-;;; Checks if two GAppInfos are equal.
-;;;
-;;; appinfo1 :
-;;;     the first GAppInfo.
-;;;
-;;; appinfo2 :
-;;;     the second GAppInfo.
-;;;
-;;; Returns :
-;;;     TRUE if appinfo1 is equal to appinfo2. FALSE otherwise.
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_equal" app-info-equal) :boolean
+ #+liber-documentation
+ "@version{#2023-7-11}
+  @argument[info1]{a first @class{g:app-info} instance}
+  @argument[info2]{a second @class{g:app-info} instance}
+  @return{@em{True} if @arg{info1} is equal to @arg{info2}, @em{false}
+    otherwise.}
+  @begin{short}
+    Checks if two application infos are equal.
+  @end{short}
+  @see-class{g:app-info}"
   (info1 (gobject:object app-info))
   (info2 (gobject:object app-info)))
 
@@ -401,199 +342,139 @@ lambda (context info platform-data)    :run-last
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_app_info_get_id ()
-;;;
-;;; const char * g_app_info_get_id (GAppInfo *appinfo);
-;;;
-;;; Gets the ID of an application. An id is a string that identifies the
-;;; application. The exact format of the id is platform dependent. For instance,
-;;; on Unix this is the desktop file id from the xdg menu specification.
-;;;
-;;; Note that the returned ID may be NULL, depending on how the appinfo has
-;;; been constructed.
-;;;
-;;; appinfo :
-;;;     a GAppInfo.
-;;;
-;;; Returns :
-;;;     a string containing the application's ID.
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_get_id" app-info-id) :string
-  (appinfo gobject:object))
+ #+liber-documentation
+ "@version{#2023-7-11}
+  @argument[info]{a @class{g:app-info} instance}
+  @return{A string containing the ID of the application.}
+  @begin{short}
+    Gets the ID of an application.
+  @end{short}
+  An ID is a string that identifies the application. The exact format of the ID
+  is platform dependent. For instance, on Unix this is the desktop file ID from
+  the xdg menu specification.
+
+  Note that the returned ID may be @code{nil}, depending on how @arg{info}
+  has been constructed.
+  @see-class{g:app-info}"
+  (info gobject:object))
 
 (export 'app-info-id)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_app_info_get_name ()
-;;;
-;;; const char * g_app_info_get_name (GAppInfo *appinfo);
-;;;
-;;; Gets the installed name of the application.
-;;;
-;;; appinfo :
-;;;     a GAppInfo.
-;;;
-;;; Returns :
-;;;     the name of the application for appinfo.
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_get_name" app-info-name) :string
-  (appinfo gobject:object))
+ #+liber-documentation
+ "@version{#2023-7-11}
+  @argument[info]{a @class{g:app-info} instance}
+  @return{A string with the the name of the application for @arg{info}.}
+  @begin{short}
+    Gets the installed name of the application.
+  @end{short}
+  @see-class{g:app-info}
+  @see-function{g:app-info-display-name}"
+  (info gobject:object))
 
 (export 'app-info-name)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_app_info_get_display_name ()
-;;;
-;;; const char * g_app_info_get_display_name (GAppInfo *appinfo);
-;;;
-;;; Gets the display name of the application. The display name is often more
-;;; descriptive to the user than the name itself.
-;;;
-;;; appinfo :
-;;;     a GAppInfo.
-;;;
-;;; Returns :
-;;;     the display name of the application for appinfo, or the name if no
-;;;     display name is available.
-;;;
-;;; Since 2.24
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_get_display_name" app-info-display-name) :string
-  (appinfo gobject:object))
+ #+liber-documentation
+ "@version{#2023-7-11}
+  @argument[info]{a @class{g:app-info} instance}
+  @return{A string with the the display name of the application for @arg{info},
+    or the name if no display name is available.}
+  @begin{short}
+    Gets the display name of the application.
+  @end{short}
+  The display name is often more descriptive to the user than the name itself.
+  @see-class{g:app-info}
+  @see-function{g:app-info-name}"
+  (info gobject:object))
 
 (export 'app-info-display-name)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_app_info_get_description ()
-;;;
-;;; const char * g_app_info_get_description (GAppInfo *appinfo);
-;;;
-;;; Gets a human readable description of an installed application.
-;;;
-;;; appinfo :
-;;;     a GAppInfo.
-;;;
-;;; Returns :
-;;;     a string containing a description of the application appinfo, or NULL
-;;;     if none.
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_get_description" app-info-description) :string
-  (appinfo gobject:object))
+ #+liber-documentation
+ "@version{#2023-7-11}
+  @argument[info]{a @class{g:app-info} instance}
+  @return{A string containing a description of the application @arg{info},
+    or @code{nil} if none.}
+  @begin{short}
+    Gets a human readable description of an installed application.
+  @end{short}
+  @see-class{g:app-info}"
+  (info gobject:object))
 
 (export 'app-info-description)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_app_info_get_executable ()
-;;;
-;;; const char * g_app_info_get_executable (GAppInfo *appinfo);
-;;;
-;;; Gets the executable's name for the installed application.
-;;;
-;;; appinfo :
-;;;     a GAppInfo
-;;;
-;;; Returns :
-;;;     a string containing the appinfo's application binaries name
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_get_executable" app-info-executable) :string
-  (appinfo gobject:object))
+ #+liber-documentation
+ "@version{#2023-7-11}
+  @argument[info]{a @class{g:app-info} instance}
+  @return{A string containing the application binaries name of @arg{info}.}
+  @begin{short}
+    Gets the name of the executable for the installed application.
+  @end{short}
+  @see-class{g:app-info}"
+  (info gobject:object))
 
 (export 'app-info-executable)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_app_info_get_commandline ()
-;;;
-;;; const char * g_app_info_get_commandline (GAppInfo *appinfo);
-;;;
-;;; Gets the commandline with which the application will be started.
-;;;
-;;; appinfo :
-;;;     a GAppInfo
-;;;
-;;; Returns :
-;;;     a string containing the appinfo's commandline, or NULL if this
-;;;     information is not available
-;;;
-;;; Since 2.20
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_get_commandline" app-info-commandline) :string
-  (appinfo gobject:object))
+ #+liber-documentation
+ "@version{#2023-7-11}
+  @argument[info]{a @class{g:app-info} instance}
+  @return{A string containing the commandline of @arg{info}, or @code{nil}
+    if this information is not available.}
+  @begin{short}
+    Gets the commandline with which the application will be started.
+  @end{short}
+  @see-class{g:app-info}"
+  (info gobject:object))
 
 (export 'app-info-commandline)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_app_info_get_icon ()
-;;;
-;;; GIcon * g_app_info_get_icon (GAppInfo *appinfo);
-;;;
-;;; Gets the icon for the application.
-;;;
-;;; appinfo :
-;;;     a GAppInfo.
-;;;
-;;; Returns :
-;;;     the default GIcon for appinfo or NULL if there is no default icon
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_get_icon" app-info-icon) (gobject:object icon)
-  (appinfo gobject:object))
+ #+liber-documentation
+ "@version{#2023-7-11}
+  @argument[info]{a @class{g:app-info} instance}
+  @return{The default @class{g:icon} object for @arg{info} or @code{nil} if
+    there is no default icon.}
+  @begin{short}
+    Gets the icon for the application.
+  @end{short}
+  @see-class{g:app-info}
+  @see-class{g:icon}"
+  (info gobject:object))
 
 (export 'app-info-icon)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_app_info_launch ()
-;;;
-;;; gboolean g_app_info_launch (GAppInfo *appinfo,
-;;;                             GList *files,
-;;;                             GAppLaunchContext *launch_context,
-;;;                             GError **error);
-;;;
-;;; Launches the application. Passes files to the launched application as
-;;; arguments, using the optional launch_context to get information about the
-;;; details of the launcher (like what screen it is on). On error, error will
-;;; be set accordingly.
-;;;
-;;; To launch the application without arguments pass a NULL files list.
-;;;
-;;; Note that even if the launch is successful the application launched can
-;;; fail to start if it runs into problems during startup. There is no way to
-;;; detect this.
-;;;
-;;; Some URIs can be changed when passed through a GFile (for instance
-;;; unsupported URIs with strange formats like mailto:), so if you have a
-;;; textual URI you want to pass in as argument, consider using
-;;; g_app_info_launch_uris() instead.
-;;;
-;;; The launched application inherits the environment of the launching process,
-;;; but it can be modified with g_app_launch_context_setenv() and
-;;; g_app_launch_context_unsetenv().
-;;;
-;;; On UNIX, this function sets the GIO_LAUNCHED_DESKTOP_FILE environment
-;;; variable with the path of the launched desktop file and
-;;; GIO_LAUNCHED_DESKTOP_FILE_PID to the process id of the launched process.
-;;; This can be used to ignore GIO_LAUNCHED_DESKTOP_FILE, should it be inherited
-;;; by further processes. The DISPLAY and DESKTOP_STARTUP_ID environment
-;;; variables are also set, based on information provided in launch_context.
-;;;
-;;; appinfo :
-;;;     a GAppInfo
-;;;
-;;; files :
-;;;     a GList of GFile objects
-;;;
-;;; launch_context :
-;;;     a GAppLaunchContext or NULL
-;;;
-;;; error :
-;;;     a GError
-;;;
-;;; Returns :
-;;;     TRUE on successful launch, FALSE otherwise.
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_launch" %app-info-launch) :boolean
@@ -603,6 +484,46 @@ lambda (context info platform-data)    :run-last
   (err :pointer))
 
 (defun app-info-launch (info files context)
+ #+liber-documentation
+ "@version{#2023-7-11}
+  @argument[info]{a @class{g:app-info} instance}
+  @argument[files]{a list of @class{g:files} objects}
+  @argument[context]{a @class{g:app-launch-context} instance or @code{nil}}
+  @return{@em{True} on successful launch, @em{false} otherwise.}
+  @begin{short}
+    Launches the application.
+  @end{short}
+  Passes @arg{files} to the launched application as arguments, using the
+  optional @arg{context} argument to get information about the details of the
+  launcher, like what screen it is on.
+
+  To launch the application without arguments pass a @code{nil} files list.
+
+  Note that even if the launch is successful the application launched can fail
+  to start if it runs into problems during startup. There is no way to detect
+  this.
+
+  Some URIs can be changed when passed through a @class{g:file} object, for
+  instance unsupported URIs with strange formats like mailto:, so if you have a
+  textual URI you want to pass in as argument, consider using the
+  @fun{g:app-info-launch-uris} function instead.
+
+  The launched application inherits the environment of the launching process,
+  but it can be modified with the @fun{g:app-launch-context-setenv} function
+  and the @fun{g:app-launch-context-unsetenv} function.
+
+  On UNIX, this function sets the @code{GIO_LAUNCHED_DESKTOP_FILE} environment
+  variable with the path of the launched desktop file and
+  @code{GIO_LAUNCHED_DESKTOP_FILE_PID} to the process ID of the launched
+  process. This can be used to ignore @code{GIO_LAUNCHED_DESKTOP_FILE}, should
+  it be inherited by further processes. The @code{DISPLAY} and
+  @code{DESKTOP_STARTUP_ID} environment variables are also set, based on
+  information provided in @arg{context}.
+  @see-class{g:app-info}
+  @see-class{g:app-launch-context}
+  @see-function{g:app-info-launch-uris}
+  @see-function{g:app-launch-context-setenv}
+  @see-function{g:app-launch-context-unsetenv}"
   (glib:with-g-error (err)
     (%app-info-launch info files context err)))
 
@@ -610,75 +531,40 @@ lambda (context info platform-data)    :run-last
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_app_info_supports_files ()
-;;;
-;;; gboolean g_app_info_supports_files (GAppInfo *appinfo);
-;;;
-;;; Checks if the application accepts files as arguments.
-;;;
-;;; appinfo :
-;;;     a GAppInfo.
-;;;
-;;; Returns :
-;;;     TRUE if the appinfo supports files.
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_supports_files" app-info-supports-files) :boolean
+ #+liber-documentation
+ "@version{#2023-7-11}
+  @argument[info]{a @class{g:app-info} instance}
+  @return{@em{True} if @arg{info} supports files.}
+  @begin{short}
+    Checks if the application accepts files as arguments.
+  @end{short}
+  @see-class{g:app-info}"
   (info gobject:object))
 
 (export 'app-info-supports-files)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_app_info_supports_uris ()
-;;;
-;;; gboolean g_app_info_supports_uris (GAppInfo *appinfo);
-;;;
-;;; Checks if the application supports reading files and directories from URIs.
-;;;
-;;; appinfo :
-;;;     a GAppInfo.
-;;;
-;;; Returns :
-;;;     TRUE if the appinfo supports URIs.
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_supports_uris" app-info-supports-uris) :boolean
+ #+liber-documentation
+ "@version{#2023-7-11}
+  @argument[info]{a @class{g:app-info} instance}
+  @return{@em{True} if @arg{info} supports URIs.}
+  @begin{short}
+    Checks if the application supports reading files and directories from URIs.
+  @end{short}
+  @see-class{g:app-info}"
   (info gobject:object))
 
 (export 'app-info-supports-uris)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_app_info_launch_uris ()
-;;;
-;;; gboolean g_app_info_launch_uris (GAppInfo *appinfo,
-;;;                                  GList *uris,
-;;;                                  GAppLaunchContext *launch_context,
-;;;                                  GError **error);
-;;;
-;;; Launches the application. This passes the uris to the launched application
-;;; as arguments, using the optional launch_context to get information about
-;;; the details of the launcher (like what screen it is on). On error, error
-;;; will be set accordingly.
-;;;
-;;; To launch the application without arguments pass a NULL uris list.
-;;;
-;;; Note that even if the launch is successful the application launched can
-;;; fail to start if it runs into problems during startup. There is no way to
-;;; detect this.
-;;;
-;;; appinfo :
-;;;     a GAppInfo
-;;;
-;;; uris :
-;;;     a GList containing URIs to launch
-;;;
-;;; launch_context :
-;;;     a GAppLaunchContext or NULL
-;;;
-;;; error :
-;;;     a GError
-;;;
-;;; Returns :
-;;;     TRUE on successful launch, FALSE otherwise.
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_launch_uris" %app-info-launch-uris) :boolean
@@ -688,6 +574,26 @@ lambda (context info platform-data)    :run-last
   (err :pointer))
 
 (defun app-info-launch-uris (info uris context)
+ #+liber-documentation
+ "@version{#2023-7-11}
+  @argument[info]{a @class{g:app-info} instance}
+  @argument[uris]{a list of strings with the containing URIs to launch}
+  @argument[context]{a @class{g:app-launch-context} instance or @code{nil}}
+  @return{@em{True} on successful launch, @em{false} otherwise.}
+  @begin{short}
+    Launches the application.
+  @end{short}
+  This passes the URIs to the launched application as arguments, using the
+  optional @arg{context} to get information about the details of the launcher,
+  like what screen it is on.
+
+  To launch the application without arguments pass a @code{nil} URIs list.
+
+  Note that even if the launch is successful the application launched can fail
+  to start if it runs into problems during startup. There is no way to detect
+  this.
+  @see-class{g:app-info}
+  @see-class{g:app-launch-context}"
   (glib:with-g-error (err)
     (%app-info-launch-uris info uris context err)))
 
@@ -759,115 +665,90 @@ lambda (context info platform-data)    :run-last
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_app_info_should_show ()
-;;;
-;;; gboolean g_app_info_should_show (GAppInfo *appinfo);
-;;;
-;;; Checks if the application info should be shown in menus that list available
-;;; applications.
-;;;
-;;; appinfo :
-;;;     a GAppInfo.
-;;;
-;;; Returns :
-;;;     TRUE if the appinfo should be shown, FALSE otherwise.
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_should_show" app-info-should-show) :boolean
+ #+liber-documentation
+ "@version{#2023-7-11}
+  @argument[info]{a @class{g:app-info} instance}
+  @return{@em{True} if @arg{info} should be shown, @em{false} otherwise.}
+  @begin{short}
+    Checks if the application info should be shown in menus that list available
+    applications.
+  @end{short}
+  @see-class{g:app-info}"
   (info gobject:object))
 
 (export 'app-info-should-show)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_app_info_can_delete ()
-;;;
-;;; gboolean g_app_info_can_delete (GAppInfo *appinfo);
-;;;
-;;; Obtains the information whether the GAppInfo can be deleted. See
-;;; g_app_info_delete().
-;;;
-;;; appinfo :
-;;;     a GAppInfo
-;;;
-;;; Returns :
-;;;     TRUE if appinfo can be deleted
-;;;
-;;; Since 2.20
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_can_delete" app-info-can-delete) :boolean
+ #+liber-documentation
+ "@version{#2023-7-11}
+  @argument[info]{a @class{g:app-info} instance}
+  @return{@em{True} if @arg{info} can be deleted.}
+  @begin{short}
+    Obtains the information whether the application info can be deleted.
+  @end{short}
+  See the @fun{g:app-info-delete} function.
+  @see-class{g:app-info}
+  @see-function{g:app-info-delete}"
   (info gobject:object))
 
 (export 'app-info-can-delete)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_app_info_delete ()
-;;;
-;;; gboolean g_app_info_delete (GAppInfo *appinfo);
-;;;
-;;; Tries to delete a GAppInfo.
-;;;
-;;; On some platforms, there may be a difference between user-defined GAppInfos
-;;; which can be deleted, and system-wide ones which cannot. See
-;;; g_app_info_can_delete().
-;;;
-;;; Virtual: do_delete
-;;;
-;;; appinfo :
-;;;     a GAppInfo
-;;;
-;;; Returns :
-;;;     TRUE if appinfo has been deleted
-;;;
-;;; Since 2.20
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_delete" app-info-delete) :boolean
+ #+liber-documentation
+ "@version{#2023-7-11}
+  @argument[info]{a @class{g:app-info} instance}
+  @return{@em{True} if @arg{info} has been deleted.}
+  @begin{short}
+    Tries to delete an application info.
+  @end{short}
+
+  On some platforms, there may be a difference between user-defined application
+  infos which can be deleted, and system-wide ones which cannot. See the
+  @fun{g:app-info-can-delete} function.
+  @see-class{g:app-info}
+  @see-function{g:app-info-can-delete}"
   (info gobject:object))
 
 (export 'app-info-delete)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_app_info_reset_type_associations ()
-;;;
-;;; void g_app_info_reset_type_associations (const char *content_type);
-;;;
-;;; Removes all changes to the type associations done by
-;;; g_app_info_set_as_default_for_type(),
-;;; g_app_info_set_as_default_for_extension(), g_app_info_add_supports_type()
-;;; or g_app_info_remove_supports_type().
-;;;
-;;; content_type :
-;;;     a content type
-;;;
-;;; Since 2.20
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_reset_type_associations"
                 app-info-reset-type-associations) :void
+ #+liber-documentation
+ "@version{#2023-7-11}
+  @argument[content-type]{a string with the content type}
+  @begin{short}
+    Removes all changes to the type associations done by the
+    @fun{g:app-info-set-as-default-for-type},
+    @fun{g:app-info-set-as-default-for-extension},
+    @fun{g:app-info-add-supports-type} or @fun{g:app-info-remove-supports-type}
+    function.
+  @end{short}
+  @see-class{g:app-info}
+  @see-function{g:app-info-set-as-default-for-type}
+  @see-function{g:app-info-set-as-default-for-extension}
+  @see-function{g:app-info-add-supports-type}
+  @see-function{g:app-info-remove-supports-type}"
   (content-type :string))
 
 (export 'app-info-reset-type-associations)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_app_info_set_as_default_for_type ()
-;;;
-;;; gboolean g_app_info_set_as_default_for_type (GAppInfo *appinfo,
-;;;                                              const char *content_type,
-;;;                                              GError **error);
-;;;
-;;; Sets the application as the default handler for a given type.
-;;;
-;;; appinfo :
-;;;     a GAppInfo.
-;;;
-;;; content_type :
-;;;     the content type.
-;;;
-;;; error :
-;;;     a GError.
-;;;
-;;; Returns :
-;;;     TRUE on success, FALSE on error.
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_set_as_default_for_type"
@@ -877,6 +758,15 @@ lambda (context info platform-data)    :run-last
   (err :pointer))
 
 (defun app-info-set-as-default-for-type (info content-type)
+ #+liber-documentation
+ "@version{#2023-7-11}
+  @argument[info]{a @class{g:app-info} instance}
+  @argument[content-type]{a string with the content type}
+  @return{@em{True} on success, @em{false} on error.}
+  @begin{short}
+    Sets the application as the default handler for a given type.
+  @end{short}
+  @see-class{g:app-info}"
   (glib:with-g-error (err)
     (%app-info-set-as-default-for-type info content-type err)))
 
@@ -884,24 +774,6 @@ lambda (context info platform-data)    :run-last
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_app_info_set_as_default_for_extension ()
-;;;
-;;; gboolean g_app_info_set_as_default_for_extension (GAppInfo *appinfo,
-;;;                                                   const char *extension,
-;;;                                                   GError **error);
-;;;
-;;; Sets the application as the default handler for the given file extension.
-;;;
-;;; appinfo :
-;;;     a GAppInfo.
-;;;
-;;; extension :
-;;;     a string containing the file extension (without the dot).
-;;;
-;;; error :
-;;;     a GError.
-;;;
-;;; Returns :
-;;;     TRUE on success, FALSE on error.
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_set_as_default_for_extension"
@@ -911,6 +783,15 @@ lambda (context info platform-data)    :run-last
   (err :pointer))
 
 (defun app-info-set-as-default-for-extension (info extension)
+ #+liber-documentation
+ "@version{#2023-7-11}
+  @argument[info]{a @class{g:app-info} instance}
+  @argument[extension]{a string containing the file extension, without the dot}
+  @return{@em{True} on success, @em{false} on error.}
+  @begin{short}
+    Sets the application as the default handler for the given file extension.
+  @end{short}
+  @see-class{g:app-info}"
   (glib:with-g-error (err)
     (%app-info-set-as-default-for-extension info extension err)))
 
@@ -918,27 +799,6 @@ lambda (context info platform-data)    :run-last
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_app_info_set_as_last_used_for_type ()
-;;;
-;;; gboolean g_app_info_set_as_last_used_for_type (GAppInfo *appinfo,
-;;;                                                const char *content_type,
-;;;                                                GError **error);
-;;;
-;;; Sets the application as the last used application for a given type. This
-;;; will make the application appear as first in the list returned by
-;;; g_app_info_get_recommended_for_type(), regardless of the default
-;;; application for that content type.
-;;;
-;;; appinfo :
-;;;     a GAppInfo.
-;;;
-;;; content_type :
-;;;     the content type.
-;;;
-;;; error :
-;;;     a GError.
-;;;
-;;; Returns :
-;;;     TRUE on success, FALSE on error.
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_set_as_last_used_for_type"
@@ -948,32 +808,26 @@ lambda (context info platform-data)    :run-last
   (err :pointer))
 
 (defun app-info-set-as-last-used-for-type (info content-type)
+ #+liber-documentation
+ "@version{#2023-7-11}
+  @argument[info]{a @class{g:app-info} instance}
+  @argument[content-type]{a string with the content type}
+  @return{@em{True} on success, @em{false} on error.}
+  @begin{short}
+    Sets the application as the last used application for a given type.
+  @end{short}
+  This will make the application appear as first in the list returned by the
+  @fun{g:app-info-get-recommended-for-type} function, regardless of the default
+  application for that content type.
+  @see-class{g:app-info}
+  @see-function{g:app-info-get-recommended-for-type}"
   (glib:with-g-error (err)
     (%app-info-set-as-last-used-for-type info content-type err)))
 
-(export 'app-info-set-last-used-for-type)
+(export 'app-info-set-as-last-used-for-type)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_app_info_add_supports_type ()
-;;;
-;;; gboolean g_app_info_add_supports_type (GAppInfo *appinfo,
-;;;                                        const char *content_type,
-;;;                                        GError **error);
-;;;
-;;; Adds a content type to the application information to indicate the
-;;; application is capable of opening files with the given content type.
-;;;
-;;; appinfo :
-;;;     a GAppInfo.
-;;;
-;;; content_type :
-;;;     a string.
-;;;
-;;; error :
-;;;     a GError.
-;;;
-;;; Returns :
-;;;     TRUE on success, FALSE on error.
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_add_supports_type" %app-info-add-supports-type)
@@ -983,6 +837,16 @@ lambda (context info platform-data)    :run-last
   (err :pointer))
 
 (defun app-info-add-supports-type (info content-type)
+ #+liber-documentation
+ "@version{#2023-7-11}
+  @argument[info]{a @class{g:app-info} instance}
+  @argument[content-type]{a string with the content type}
+  @return{@em{True} on success, @em{false} on error.}
+  @begin{short}
+    Adds a content type to the application information to indicate the
+    application is capable of opening files with the given content type.
+  @end{short}
+  @see-class{g:app-info}"
   (glib:with-g-error (err)
     (%app-info-add-supports-type info content-type err)))
 
@@ -990,45 +854,25 @@ lambda (context info platform-data)    :run-last
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_app_info_can_remove_supports_type ()
-;;;
-;;; gboolean g_app_info_can_remove_supports_type (GAppInfo *appinfo);
-;;;
-;;; Checks if a supported content type can be removed from an application.
-;;;
-;;; appinfo :
-;;;     a GAppInfo.
-;;;
-;;; Returns :
-;;;     TRUE if it is possible to remove supported content types from a given
-;;;     appinfo, FALSE if not.
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_can_remove_supports_type"
                 app-info-can-remove-supports-type) :boolean
+ #+liber-documentation
+ "@version{#2023-7-11}
+  @argument[info]{a @class{g:app-info} instance}
+  @return{@em{True} if it is possible to remove supported content types from a
+    given @arg{info}, @em{false} if not.}
+  @begin{short}
+    Checks if a supported content type can be removed from an application.
+  @end{short}
+  @see-class{g:app-info}"
   (info gobject:object))
 
 (export 'app-info-can-remove-supports-type)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_app_info_remove_supports_type ()
-;;;
-;;; gboolean g_app_info_remove_supports_type (GAppInfo *appinfo,
-;;;                                           const char *content_type,
-;;;                                           GError **error);
-;;;
-;;; Removes a supported type from an application, if possible.
-;;;
-;;; appinfo :
-;;;     a GAppInfo.
-;;;
-;;; content_type :
-;;;     a string.
-;;;
-;;; error :
-;;;     a GError.
-;;;
-;;; Returns :
-;;;     TRUE on success, FALSE on error.
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_remove_supports_type" %app-info-remove-supports-type)
@@ -1038,6 +882,15 @@ lambda (context info platform-data)    :run-last
   (err :pointer))
 
 (defun app-info-remove-supports-type (info content-type)
+ #+liber-documentation
+ "@version{#2023-7-11}
+  @argument[info]{a @class{g:app-info} instance}
+  @argument[content-type]{a string with the content type}
+  @return{@em{True} on success, @em{false} on error.}
+  @begin{short}
+    Removes a supported type from an application, if possible.
+  @end{short}
+  @see-class{g:app-info}"
   (glib:with-g-error (err)
     (%app-info-remove-supports-type info content-type err)))
 
@@ -1045,92 +898,89 @@ lambda (context info platform-data)    :run-last
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_app_info_get_supported_types ()
-;;;
-;;; const char ** g_app_info_get_supported_types (GAppInfo *appinfo);
-;;;
-;;; Retrieves the list of content types that app_info claims to support. If
-;;; this information is not provided by the environment, this function will
-;;; return NULL. This function does not take in consideration associations
-;;; added with g_app_info_add_supports_type(), but only those exported directly
-;;; by the application.
-;;;
-;;; appinfo :
-;;;     a GAppInfo that can handle files
-;;;
-;;; Returns :
-;;;     a list of content types.
-;;;
-;;; Since 2.34
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_get_supported_types" app-info-supported-types)
     glib:strv-t
+ #+liber-documentation
+ "@version{#2023-7-11}
+  @argument[info]{a @class{g:app-info} instance}
+  @return{A list of strings with the content types.}
+  @begin{short}
+    Retrieves the list of content types that @arg{info} claims to support.
+  @end{short}
+  If this information is not provided by the environment, this function will
+  return @code{nil}. This function does not take in consideration associations
+  added with the @fun{g:app-info-add-supports-type} function, but only those
+  exported directly by the application.
+  @see-class{g:app-info}
+  @see-function{g:app-info-add-supports-type}"
   (info gobject:object))
 
 (export 'app-info-supported-types)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_app_info_get_all ()
-;;;
-;;; GList * g_app_info_get_all (void);
-;;;
-;;; Gets a list of all of the applications currently registered on this system.
-;;;
-;;; For desktop files, this includes applications that have NoDisplay=true set
-;;; or are excluded from display by means of OnlyShowIn or NotShowIn. See
-;;; g_app_info_should_show(). The returned list does not include applications
-;;; which have the Hidden key set.
-;;;
-;;; Returns :
-;;;     a newly allocated GList of references to GAppInfos
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcfun ("g_app_info_get_all" app-info-all) (glib:list-t gobject:object))
+(cffi:defcfun ("g_app_info_get_all" app-info-all) (glib:list-t gobject:object)
+ #+liber-documentation
+ "@version{#2023-7-11}
+  @return{A list of references to @class{g:app-info} instances.}
+  @begin{short}
+    Gets a list of all of the applications currently registered on this system.
+  @end{short}
+
+  For desktop files, this includes applications that have @code{NoDisplay=true}
+  set or are excluded from display by means of @code{OnlyShowIn} or
+  @code{NotShowIn}. See the @fun{g:app-info-should-show} function. The returned
+  list does not include applications which have the @code{Hidden} key set.
+  @see-class{g:app-info}
+  @see-function{g:app-info-should-show}")
 
 (export 'app-info-all)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_app_info_get_all_for_type ()
-;;;
-;;; GList * g_app_info_get_all_for_type (const char *content_type);
-;;;
-;;; Gets a list of all GAppInfos for a given content type, including the
-;;; recommended and fallback GAppInfos. See
-;;; g_app_info_get_recommended_for_type() and g_app_info_get_fallback_for_type().
-;;;
-;;; content_type :
-;;;     the content type to find a GAppInfo for
-;;;
-;;; Returns :
-;;;     GList of GAppInfos for given content_type or NULL on error
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_get_all_for_type" app-info-all-for-type)
     (glib:list-t gobject:object)
+ #+liber-documentation
+ "@version{#2023-7-11}
+  @argument[content-type]{a string with the content type}
+  @return{A list of @class{g:app-info} instances for given @arg{content-type}
+    or @code{nil} on error.}
+  @begin{short}
+    Gets a list of all application infos for a given content type, including
+    the recommended and fallback application infos.
+  @end{short}
+  See the @fun{g:app-info-recommended-for-type} and
+  @fun{g:app-info-fallback-for-type} functions.
+  @see-class{g:app-info}
+  @see-function{g:app-info-recommended-for-type}
+  @see-function{g:app-info-fallback-for-type}"
   (content-type :string))
 
 (export 'app-info-all-for-type)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_app_info_get_default_for_type ()
-;;;
-;;; GAppInfo * g_app_info_get_default_for_type (const char *content_type,
-;;;                                             gboolean must_support_uris);
-;;;
-;;; Gets the default GAppInfo for a given content type.
-;;;
-;;; content_type :
-;;;     the content type to find a GAppInfo for
-;;;
-;;; must_support_uris :
-;;;     if TRUE, the GAppInfo is expected to support URIs
-;;;
-;;; Returns :
-;;;     GAppInfo for given content_type or NULL on error
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_get_default_for_type" app-info-default-for-type)
     (gobject:object app-info)
+ #+liber-documentation
+ "@version{#2023-7-11}
+  @argument[content-type]{a string with the content type}
+  @argument[must-support-uris]{if @em{true}, the application info is expected
+    to support URIs}
+  @return{The @class{g:app-info} instance for given @arg{content-type} or
+    @code{nil} on error.}
+  @begin{short}
+    Gets the default application info for a given content type.
+  @end{short}
+  @see-class{g:app-info}"
   (content-type :string)
   (must-support-uris :boolean))
 
@@ -1146,22 +996,21 @@ lambda (context info platform-data)    :run-last
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_app_info_get_default_for_uri_scheme ()
-;;;
-;;; GAppInfo * g_app_info_get_default_for_uri_scheme (const char *uri_scheme);
-;;;
-;;; Gets the default application for handling URIs with the given URI scheme. A
-;;; URI scheme is the initial part of the URI, up to but not including the ':',
-;;; e.g. "http", "ftp" or "sip".
-;;;
-;;; uri_scheme :
-;;;     a string containing a URI scheme.
-;;;
-;;; Returns :
-;;;     GAppInfo for given uri_scheme or NULL on error
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_get_default_for_uri_scheme"
                 app-info-default-for-uri-scheme) (gobject:object app-info)
+ #+liber-documentation
+ "@version{#2023-7-11}
+  @argument[uri-scheme]{a string containing a URI scheme}
+  @return{The @class{g:app-info} instance for given @arg{uri-scheme} or
+    @code{nil} on error.}
+  @begin{short}
+    Gets the default application for handling URIs with the given URI scheme.
+  @end{short}
+  A URI scheme is the initial part of the URI, up to but not including the ':',
+  e.g. \"http\", \"ftp\" or \"sip\".
+  @see-class{g:app-info}"
   (uri-scheme :string))
 
 (export 'app-info-default-for-uri-scheme)
@@ -1176,50 +1025,46 @@ lambda (context info platform-data)    :run-last
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_app_info_get_fallback_for_type ()
-;;;
-;;; GList * g_app_info_get_fallback_for_type (const gchar *content_type);
-;;;
-;;; Gets a list of fallback GAppInfos for a given content type, i.e. those
-;;; applications which claim to support the given content type by MIME type
-;;; subclassing and not directly.
-;;;
-;;; content_type :
-;;;     the content type to find a GAppInfo for
-;;;
-;;; Returns :
-;;;     GList of GAppInfos for given content_type or NULL on error
-;;;
-;;; Since 2.28
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_get_fallback_for_type" app-info-fallback-for-type)
     (glib:list-t gobject:object)
+ #+liber-documentation
+ "@version{#2023-7-11}
+  @argument[content-type]{a string with the content type}
+  @return{A list of @class{g:app-info} instances for given @arg{content-type}
+    or @code{nil} on error.}
+  @begin{short}
+    Gets a list of fallback application infos for a given content type, i.e.
+    those applications which claim to support the given content type by MIME
+    type subclassing and not directly.
+  @end{short}
+  @see-class{g:app-info}"
   (content-type :string))
 
 (export 'app-info-fallback-for-type)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_app_info_get_recommended_for_type ()
-;;;
-;;; GList * g_app_info_get_recommended_for_type (const gchar *content_type);
-;;;
-;;; Gets a list of recommended GAppInfos for a given content type, i.e. those
-;;; applications which claim to support the given content type exactly, and not
-;;; by MIME type subclassing. Note that the first application of the list is the
-;;; last used one, i.e. the last one for which
-;;; g_app_info_set_as_last_used_for_type() has been called.
-;;;
-;;; content_type :
-;;;     the content type to find a GAppInfo for
-;;;
-;;; Returns :
-;;;     GList of GAppInfos for given content_type or NULL on error
-;;;
-;;; Since 2.28
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_get_recommended_for_type"
                 app-info-recommended-for-type) (glib:list-t gobject:object)
+ #+liber-documentation
+ "@version{#2023-7-11}
+  @argument[content-type]{a string with the content type}
+  @return{A list of @class{g:app-info} instances for given @arg{content-type}
+    or @code{nil} on error.}
+  @begin{short}
+    Gets a list of recommended application infos for a given content type, i.e.
+    those applications which claim to support the given content type exactly,
+    and not by MIME type subclassing.
+  @end{short}
+  Note that the first application of the list is the last used one, i.e. the
+  last one for which the @fun{g:app-info-set-as-last-used-for-type} function
+  has been called.
+  @see-class{g:app-info}
+  @see-function{g:app-info-set-as-last-used-for-type}"
   (content-type :string))
 
 (export 'app-info-recommended-for-type)
@@ -1313,46 +1158,40 @@ lambda (context info platform-data)    :run-last
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_app_launch_context_new ()
-;;;
-;;; GAppLaunchContext * g_app_launch_context_new (void);
-;;;
-;;; Creates a new application launch context. This is not normally used,
-;;; instead you instantiate a subclass of this, such as GdkAppLaunchContext.
-;;;
-;;; Returns :
-;;;     a GAppLaunchContext.
 ;;; ----------------------------------------------------------------------------
 
 (declaim (inline app-launch-context-new))
 
 (defun app-launch-context-new ()
+ #+liber-documentation
+ "@version{#2023-7-14}
+  @return{A @class{g:app-launch-context} instance}
+  @begin{short}
+    Creates a new application launch context.
+  @end{short}
+  This is not normally used, instead you instantiate a subclass of this, such
+  as a @class{gdk:app-launch-context} object.
+  @see-class{g:app-launch-context}
+  @see-class{gdk:app-launch-context}"
   (make-instance 'app-launch-context))
 
 (export 'app-launch-context-new)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_app_launch_context_setenv ()
-;;;
-;;; void g_app_launch_context_setenv (GAppLaunchContext *context,
-;;;                                   const char *variable,
-;;;                                   const char *value);
-;;;
-;;; Arranges for variable to be set to value in the child's environment when
-;;; context is used to launch an application.
-;;;
-;;; context :
-;;;     a GAppLaunchContext
-;;;
-;;; variable :
-;;;     the environment variable to set
-;;;
-;;; value :
-;;;     the value for to set the variable to.
-;;;
-;;; Since 2.32
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_launch_context_setenv" app-launch-context-setenv) :void
+ #+liber-documentation
+ "@version{#2023-7-14}
+  @argument[context]{a @class{g:app-launch-context} instance}
+  @argument[variable]{a string with the enviroment variable to set}
+  @argument[value]{a string with the value for to set the variabel to}
+  @begin{short}
+    Arranges for variable to be set to value in the child's environment when
+    @arg{context} is used to launch an application.
+  @end{short}
+  @see-class{g:app-launch-context}"
   (context (gobject:object app-launch-context))
   (variable :string)
   (value :string))
@@ -1361,24 +1200,19 @@ lambda (context info platform-data)    :run-last
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_app_launch_context_unsetenv ()
-;;;
-;;; void g_app_launch_context_unsetenv (GAppLaunchContext *context,
-;;;                                     const char *variable);
-;;;
-;;; Arranges for variable to be unset in the child's environment when context
-;;; is used to launch an application.
-;;;
-;;; context :
-;;;     a GAppLaunchContext
-;;;
-;;; variable :
-;;;     the environment variable to remove
-;;;
-;;; Since 2.32
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_launch_context_unsetenv" app-launch-context-unsetenv)
     :void
+ #+liber-documentation
+ "@version{#2023-7-14}
+  @argument[context]{a @class{g:app-launch-context} instance}
+  @argument[variable]{a string with the enviroment variable to remove}
+  @begin{short}
+    Arranges for @arg{variable} to be unset in the child's environment when
+    @arg{context} is used to launch an application.
+  @end{short}
+  @see-class{g:app-launch-context}"
   (context (gobject:object app-launch-context))
   (variable :string))
 
@@ -1386,54 +1220,43 @@ lambda (context info platform-data)    :run-last
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_app_launch_context_get_environment ()
-;;;
-;;; char ** g_app_launch_context_get_environment (GAppLaunchContext *context);
-;;;
-;;; Gets the complete environment variable list to be passed to the child
-;;; process when context is used to launch an application. This is a
-;;; NULL-terminated array of strings, where each string has the form KEY=VALUE.
-;;;
-;;; context :
-;;;     a GAppLaunchContext
-;;;
-;;; Returns :
-;;;     the child's environment
-;;;
-;;; Since 2.32
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_launch_context_get_environment"
                 app-launch-context-environment) glib:strv-t
+ #+liber-documentation
+ "@version{#2023-7-14}
+  @argument[context]{a @class{g:app-launch-context} instance}
+  @return{A list of strings with the child's enviroment.}
+  @begin{short}
+    Gets the complete environment variable list to be passed to the child
+    process when @arg{context} is used to launch an application.
+  @end{short}
+  This is a list of strings, where each string has the form @code{KEY=VALUE}.
+  @see-class{g:app-launch-context}"
   (context (gobject:object app-launch-context)))
 
 (export 'app-launch-context-environment)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_app_launch_context_get_display ()
-;;;
-;;; char * g_app_launch_context_get_display (GAppLaunchContext *context,
-;;;                                          GAppInfo *info,
-;;;                                          GList *files);
-;;;
-;;; Gets the display string for the context. This is used to ensure new
-;;; applications are started on the same display as the launching application,
-;;; by setting the DISPLAY environment variable.
-;;;
-;;; context :
-;;;     a GAppLaunchContext
-;;;
-;;; info :
-;;;     a GAppInfo
-;;;
-;;; files :
-;;;     a GList of GFile objects
-;;;
-;;; Returns :
-;;;     a display string for the display.
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_launch_context_get_display" app-launch-context-display)
     :string
+ #+liber-documentation
+ "@version{#2023-7-14}
+  @argument[context]{a @class{g:app-launch-context} instance}
+  @argument[info]{a @class{g:app-info} instance}
+  @argument[files]{a list of @class{g:file} objects}
+  @return{A display string for the display.}
+  @begin{short}
+    Gets the display string for the context.
+  @end{short}
+  This is used to ensure new applications are started on the same display as
+  the launching application, by setting the @code{DISPLAY} environment variable.
+  @see-class{g:app-launch-context}
+  @see-class{g:app-info}"
   (context (gobject:object app-launch-context))
   (info gobject:object)
   (files (glib:list-t gobject:object)))
@@ -1442,33 +1265,28 @@ lambda (context info platform-data)    :run-last
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_app_launch_context_get_startup_notify_id ()
-;;;
-;;; char *
-;;; g_app_launch_context_get_startup_notify_id (GAppLaunchContext *context,
-;;;                                             GAppInfo *info,
-;;;                                             GList *files);
-;;;
-;;; Initiates startup notification for the application and returns the
-;;; DESKTOP_STARTUP_ID for the launched operation, if supported.
-;;;
-;;; Startup notification IDs are defined in the FreeDesktop.Org Startup
-;;; Notifications standard.
-;;;
-;;; context :
-;;;     a GAppLaunchContext
-;;;
-;;; info :
-;;;     a GAppInfo
-;;;
-;;; files :
-;;;     a GList of of GFile objects
-;;;
-;;; Returns :
-;;;     a startup notification ID for the application, or NULL if not supported.
 ;;; ----------------------------------------------------------------------------
+
+;; TODO: Replace FILES with a list of Lisp namestrings.
 
 (cffi:defcfun ("g_app_launch_context_get_startup_notify_id"
                 app-launch-context-startup-notify-id) :string
+ #+liber-documentation
+ "@version{#2023-7-14}
+  @argument[context]{a @class{g:app-launch-context} instance}
+  @argument[info]{a @class{g:app-info} instance}
+  @argument[files]{a list of @class{g:file} objects}
+  @return{A string with a startup notification ID for the application, or
+    @code{nil} if not supported.}
+  @begin{short}
+    Initiates startup notification for the application and returns the
+    @code{DESKTOP_STARTUP_ID} for the launched operation, if supported.
+  @end{short}
+  Startup notification IDs are defined in the FreeDesktop.Org Startup
+  Notifications standard.
+  @see-class{g:app-launch-context}
+  @see-class{g:app-info}
+  @see-class{g:file}"
   (context (gobject:object app-launch-context))
   (info gobject:object)
   (files (glib:list-t gobject:object)))
@@ -1477,27 +1295,24 @@ lambda (context info platform-data)    :run-last
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_app_launch_context_launch_failed ()
-;;;
-;;; void
-;;; g_app_launch_context_launch_failed (GAppLaunchContext *context,
-;;;                                     const char *startup_notify_id);
-;;;
-;;; Called when an application has failed to launch, so that it can cancel the
-;;; application startup notification started in
-;;; g_app_launch_context_get_startup_notify_id().
-;;;
-;;; context :
-;;;     a GAppLaunchContext.
-;;;
-;;; startup_notify_id :
-;;;     the startup notification id that was returned by
-;;;     g_app_launch_context_get_startup_notify_id().
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcfun ("g_app_launch_context_failed" app-launch-context-failed) :void
+(cffi:defcfun ("g_app_launch_context_launch_failed"
+                app-launch-context-launch-failed) :void
+ #+liber-documentation
+ "@version{#2023-7-14}
+  @argument[context]{a @class{g:app-launch-context} instance}
+  @argument[startup-notify-id]{a string with the startup notification ID}
+  @begin{short}
+    Called when an application has failed to launch, so that it can cancel the
+    application startup notification started in the
+    @fun{g:app-launch-context-startup-notify-id} function.
+  @end{short}
+  @see-class{g:app-launch-context}
+  @see-function{g:app-launch-context-startup-notify-id}"
   (context (gobject:object app-launch-context))
   (startup-notify-id :string))
 
-(export 'app-launch-context-failed)
+(export 'app-launch-context-launch-failed)
 
 ;;; --- End of file gio.app-info.lisp ------------------------------------------

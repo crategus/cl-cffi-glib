@@ -4,7 +4,7 @@
 ;;; The documentation of this file is taken from the GObject Reference Manual
 ;;; Version 2.76 and modified to document the Lisp binding to the GObject
 ;;; library. See <http://www.gtk.org>. The API documentation of the Lisp binding
-;;; is available from <http://www.crategus.com/books/cl-cffi-gtk/>.
+;;; is available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
 ;;; Copyright (C) 2011 - 2023 Dieter Kaiser
 ;;;
@@ -113,9 +113,6 @@
 ;;; ----------------------------------------------------------------------------
 ;;; parse-g-value (gvalue parse-kind)
 ;;;
-;;; Parses the g-value structure and returns the corresponding Lisp object.
-;;; This is a more general function which replaces the functions g-value-...
-;;; The function is not part of the GObject library.
 ;;;
 ;;; Note:
 ;;;     It might be more consistent to name this function like the
@@ -154,6 +151,19 @@
       (t (parse-g-value-for-type gvalue gtype parse-kind)))))
 
 (defun value-get (gvalue)
+ #+liber-documentation
+ "@version{2023-7-10}
+  @argument[gvalue]{a pointer to the @symbol{g:value} instance}
+  @return{The value contained in the @symbol{g:value} instance. The type of
+    the value corresponds to the @symbol{g:value} type.}
+  @begin{short}
+    Parses the @symbol{g:value} structure and returns the corresponding Lisp 
+    object.
+  @end{short}
+  This is a more general function which replaces the @code{g:value-...} 
+  functions. The function is not part of the GObject library.
+  @see-symbol{g:value}
+  @see-function{g:value-set}"
   (parse-g-value gvalue))
 
 (export 'value-get)
@@ -256,6 +266,20 @@
       (t (set-g-value-for-type gvalue gtype value)))))
 
 (defun value-set (gvalue value gtype)
+ #+liber-documentation
+ "@version{2023-7-10}
+  @argument[gvalue]{a pointer to the @symbol{g:value} instance}
+  @argument[value]{a Lisp object to set as the value of the @symbol{g:value}
+    instance}
+  @argument[gtype]{a @class{g:type-t} type of the @symbol{g:value} instance}
+  @begin{short}
+    Parses the @symbol{g:value} structure and returns the corresponding Lisp 
+    object.
+  @end{short}
+  This is a more general function which replaces the @code{g:value-...} 
+  functions. The function is not part of the GObject library.
+  @see-symbol{g:value}
+  @see-function{g:value-get}"
   (set-g-value gvalue value gtype))
 
 (export 'value-set)
@@ -299,7 +323,7 @@
 (setf (liber:alias-for-symbol 'value)
       "CStruct"
       (liber:symbol-documentation 'value)
- "@version{#2022-12-29}
+ "@version{2023-7-10}
   @begin{short}
     The @sym{g:value} structure is basically a variable container that consists
     of a type identifier and a specific value of that type.
@@ -485,7 +509,7 @@
 
 (defun type-is-value (gtype)
  #+liber-documentation
- "@version{#2022-12-29}
+ "@version{2023-7-10}
   @argument[gtype]{a @class{g:type-t}}
   @return{Whether @arg{gtype} is suitable as a @symbol{g:value} instance type.}
   @begin{short}
@@ -510,7 +534,7 @@
 
 (defun type-is-value-abstract (gtype)
  #+liber-documentation
- "@version{#2022-12-29}
+ "@version{2023-7-10}
   @argument[gtype]{a @class{g:type-t} type}
   @return{@em{True} if @arg{gtype} is an abstract value type.}
   @begin{short}
@@ -544,7 +568,7 @@
 ;;; ----------------------------------------------------------------------------
 
 (defun type-value ()
- "@version{#2022-12-29}
+ "@version{2023-7-10}
   @return{The type ID of the \"GValue\" type.}
   @begin{short}
     The type ID of the \"GValue\" type which is a boxed type, used to pass
@@ -633,7 +657,7 @@
 
 (cffi:defcfun ("g_value_reset" value-reset) (:pointer (:struct value))
  #+liber-documentation
- "@version{#2022-12-29}
+ "@version{2023-7-10}
   @argument[value]{an initialized @symbol{g:value} instance}
   @return{The @symbol{g:value} instance that has been passed in.}
   @begin{short}
@@ -651,7 +675,7 @@
 
 (cffi:defcfun ("g_value_unset" value-unset) :void
  #+liber-documentation
- "@version{#2022-12-29}
+ "@version{2023-7-10}
   @argument[value]{an initialized @symbol{g:value} instance}
   @begin{short}
     Clears the current value in @arg{value} and \"unsets\" the type, this

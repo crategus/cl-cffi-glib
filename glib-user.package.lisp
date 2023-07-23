@@ -589,6 +589,7 @@
            #:content-type-is-unknown
            #:content-type-description
            #:content-type-mime-type
+           #:content-type-mime-dirs
            #:content-type-icon
            #:content-type-symbolic-icon
            #:content-type-generic-icon-name

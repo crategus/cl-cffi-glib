@@ -173,7 +173,8 @@ int main (int argc, void *argv[])
      (result (gobject:object async-result))
      (data :pointer))
   (let ((func (glib:get-stable-pointer-value data)))
-    (format t "in ASYNC-RESULT ~a ~a~%" source result)
+    (format t "in ASYNC-RESULT ~a ~a ~a~%" source result data)
+    (format t "  func : ~a~%" func)
     (funcall func source result)))
 
 #+liber-documentation
@@ -204,67 +205,56 @@ lambda (source result)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_async_result_get_user_data ()
-;;;
-;;; gpointer
-;;; g_async_result_get_user_data (GAsyncResult *res);
-;;;
-;;; Gets the user data from a GAsyncResult.
-;;;
-;;; result :
-;;;     a GAsyncResult.
-;;;
-;;; Returns :
-;;;     the user data for res .
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_async_result_get_user_data" async-result-user-data) :pointer
+ #+liber-documentation
+ "@version{#2023-7-13}
+  @argument[result]{a @class{g:async-result} instance}
+  @return{A pointer to the user data for @arg{result}.}
+  @begin{short}  
+    Gets the user data from a @class{g:async-result} instance.
+  @end{short}  
+  @see-class{g:async-result}"
   (result (gobject:object async-result)))
 
 (export 'async-result-user-data)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_async_result_get_source_object ()
-;;;
-;;; GObject *
-;;; g_async_result_get_source_object (GAsyncResult *res);
-;;;
-;;; Gets the source object from a GAsyncResult.
-;;;
-;;; result :
-;;;     a GAsyncResult
-;;;
-;;; Returns :
-;;;     a new reference to the source object for the res , or NULL if there is
-;;;     none.
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_async_result_get_source_object" async-result-source-object)
     gobject:object
+ #+liber-documentation
+ "@version{#2023-7-13}
+  @argument[result]{a @class{g:async-result} instance}
+  @return{A new reference to the source object for @arg{result}, or 
+  @code{nil} if there is none.}
+  @begin{short}
+    Gets the source object from a @class{g:async-result} instance.
+  @end{short}
+  @see-class{g:async-result}"
   (result (gobject:object async-result)))
 
 (export 'async-result-source-object)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_async_result_is_tagged ()
-;;;
-;;; gboolean
-;;; g_async_result_is_tagged (GAsyncResult *res,
-;;;                           gpointer source_tag);
-;;;
-;;; Checks if res has the given source_tag (generally a function pointer
-;;; indicating the function res was created by).
-;;;
-;;; result :
-;;;     a GAsyncResult
-;;;
-;;;  source_tag :
-;;;     an application-defined tag
-;;;
-;;;  Returns :
-;;;     TRUE if res has the indicated source_tag , FALSE if not.
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_async_result_is_tagged" async-result-is-tagged) :boolean
+ #+liber-documentation
+ "@version{#2023-7-13}
+  @argument[result]{a @class{g:async-result} instance}
+  @argument[source-tag]{a pointer to an application defined tag}
+  @return{@em{True} if @arg{result} has the indicated @arg{source-tag}, 
+    @em{false} if not.}
+  @begin{short}
+    Checks if @arg{result} has the given @arg{source-tag}, generally a function 
+    pointer indicating the function @arg{result} was created by.
+  @end{short}
+  @see-class{g:async-result}"
   (result (gobject:object async-result))
   (tag :pointer))
 

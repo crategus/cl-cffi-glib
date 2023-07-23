@@ -39,13 +39,15 @@
 ;;;     g_content_type_is_unknown
 ;;;     g_content_type_get_description
 ;;;     g_content_type_get_mime_type
+;;;     g_content_type_set_mime_dirs                       Since 2.60
+;;;     g_content_type_get_mime_dirs                       Since 2.60
 ;;;     g_content_type_get_icon
 ;;;     g_content_type_get_symbolic_icon
 ;;;     g_content_type_get_generic_icon_name
 ;;;     g_content_type_can_be_executable
 ;;;     g_content_type_from_mime_type
-;;;     g_content_type_guess
-;;;     g_content_type_guess_for_tree
+;;;     g_content_type_guess                               not implemented
+;;;     g_content_type_guess_for_tree                      not implemented
 ;;;     g_content_types_get_registered
 ;;; ----------------------------------------------------------------------------
 
@@ -53,74 +55,80 @@
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_content_type_equals ()
-;;;
-;;; gboolean g_content_type_equals (const gchar *type1, const gchar *type2);
-;;;
-;;; Compares two content types for equality.
-;;;
-;;; type1 :
-;;;     a content type string
-;;;
-;;; type2 :
-;;;     a content type string
-;;;
-;;; Returns :
-;;;     TRUE if the two strings are identical or equivalent, FALSE otherwise.
 ;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("g_content_type_equals" content-type-equals) :boolean
+ #+liber-documentation
+ "@version{#2023-7-12}
+  @argument[ctype1]{a content type string}
+  @argument[ctype2]{a content type string}
+  @return{@em{True} if the two content types are identical or equivalent,
+    @em{false} otherwise.}
+  @begin{short}
+    Compares two content types for equality.
+  @end{short}"
+  (ctype1 :string)
+  (ctype2 :string))
+
+(export 'content-type-equals)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_content_type_is_a ()
-;;;
-;;; gboolean g_content_type_is_a (const gchar *type, const gchar *supertype);
-;;;
-;;; Determines if type is a subset of supertype.
-;;;
-;;; type :
-;;;     a content type string
-;;;
-;;; supertype :
-;;;     a content type string
-;;;
-;;; Returns :
-;;;     TRUE if type is a kind of supertype, FALSE otherwise.
 ;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("g_content_type_is_a" content-type-is-a) :boolean
+ #+liber-documentation
+ "@version{#2023-7-12}
+  @argument[ctype]{a content type string}
+  @argument[supertype]{a content type string}
+  @return{@em{True} if @arg{ctype} is a kind of @arg{supertype}, @em{false}
+    otherwise.}
+  @begin{short}
+    Determines if @arg{ctype} is a subset of @arg{supertype}.
+  @end{short}"
+  (ctype :string)
+  (supertype :string))
+
+(export 'content-type-is-a)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_content_type_is_mime_type ()
-;;;
-;;; gboolean
-;;; g_content_type_is_mime_type (const gchar *type,
-;;;                              const gchar *mime_type);
-;;;
-;;; Determines if type is a subset of mime_type . Convenience wrapper around
-;;; g_content_type_is_a().
-;;;
-;;; type :
-;;;     a content type string
-;;;
-;;; mime_type :
-;;;     a mime type string
-;;;
-;;; Returns :
-;;;     TRUE if type is a kind of mime_type , FALSE otherwise.
-;;;
-;;; Since 2.52
 ;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("g_content_type_is_mime_type" content-type-is-mime-type) :boolean
+ #+liber-documentation
+ "@version{#2023-7-12}
+  @argument[ctype]{a content type string}
+  @argument[mimetype]{a MIME type string}
+  @return{@em{True} if @arg{ctype} is a kind of @arg{mimetype}, @em{false}
+    otherwise.}
+  @begin{short}
+    Determines if @arg{ctype} is a subset of @arg{mimetype}.
+  @end{short}
+  Convenience wrapper around the @fun{g:content-type-is-a} function.
+  @see-function{g:content-type-is-a}"
+  (ctype :string)
+  (mimetype :string))
+
+(export 'content-type-is-mime-type)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_content_type_is_unknown ()
-;;;
-;;; gboolean g_content_type_is_unknown (const gchar *type);
-;;;
-;;; Checks if the content type is the generic "unknown" type. On UNIX this is
-;;; the "application/octet-stream" mimetype, while on win32 it is "*".
-;;;
-;;; type :
-;;;     a content type string
-;;;
-;;; Returns :
-;;;     TRUE if the type is the unknown type.
 ;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("g_content_type_is_unknown" content-type-is-unknown) :boolean
+ #+liber-documentation
+ "@version{#2023-7-12}
+  @argument[ctype]{a content type string}
+  @return{@em{True} if @arg{ctype} is the unknown content type.}
+  @begin{short}
+    Checks if the content type is the generic \"unknown\" content type.
+  @end{short}
+  On UNIX this is the \"application/octet-stream\" MIME type, while on win32 it
+  is \"*\"."
+  (ctype :string))
+
+(export 'content-type-is-unknown)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_content_type_get_description () -> content-type-description
@@ -130,7 +138,7 @@
     (:string :free-from-foreign t)
  #+liber-documentation
  "@version{2022-12-27}
-  @argument[content]{a content type string}
+  @argument[ctype]{a content type string}
   @begin{return}
     A string with a short description of the content type.
   @end{return}
@@ -144,7 +152,7 @@
     @end{pre}
   @end{dictionary}
   @see-function{g:content-types-registered}"
-  (content :string))
+  (ctype :string))
 
 (export 'content-type-description)
 
@@ -155,17 +163,60 @@
 (cffi:defcfun ("g_content_type_get_mime_type" content-type-mime-type) :string
  #+liber-documentation
  "@version{2022-12-27}
-  @argument[content]{a content type string}
+  @argument[ctype]{a content type string}
   @begin{return}
-    A string with the registered MIME type for the given type, or @code{nil}
-    if unknown.
+    A string with the registered MIME type for the given @arg{ctype}, or
+    @code{nil} if unknown.
   @end{return}
   @begin{short}
     Gets the MIME type for the content type, if one is registered.
   @end{short}"
-  (content :string))
+  (ctype :string))
 
 (export 'content-type-mime-type)
+
+;;; ----------------------------------------------------------------------------
+;;; g_content_type_set_mime_dirs
+;;; g_content_type_get_mime_dirs
+;;; ----------------------------------------------------------------------------
+
+;; FIXME: This implementation does not work. The type conversion glib:strv-t
+;; is not the correct implementation.
+
+#+glib-2-60
+(defun (setf content-type-mime-dirs) (dirs)
+  (cffi:foreign-funcall "g_content_type_set_mime_dirs"
+                        (glib:strv-t :free-to-foreign nil) dirs
+                        :void)
+  dirs)
+
+#+glib-2-60
+(cffi:defcfun ("g_content_type_get_mime_dirs" content-type-mime-dirs)
+    glib:strv-t
+ #+liber-documentation
+ "@version{#2023-7-14}
+  @syntax[]{(g:content-type-mime-dirs) => dirs}
+  @syntax[]{(setf (g:content-type-mime-dirs) dirs)}
+  @argument[dirs]{a list of directories to load MIME data from, including any
+    @file{file/} subdirectory, and with the first directory to try listed first}
+  @begin{short}
+    The @sym{g:content-type-mime-type} function gets the list of directories
+    which MIME data is loaded from.
+  @end{short}
+  The @sym{(setf g:content-type-mime-type)} function sets the list of
+  directories used by GIO to load the MIME database. If @arg{dirs} is
+  @code{nil}, the directories used are the default:
+  @begin{itemize}
+    @item{the mime subdirectory of the directory in @code{$XDG_DATA_HOME}}
+    @item{the mime subdirectory of every directory in @code{$XDG_DATA_DIRS}}
+  @end{itemize}
+  This function is intended to be used when writing tests that depend on
+  information stored in the MIME database, in order to control the data.
+
+  Since 2.60")
+
+#+glib-2-60
+(export 'content-type-mime-dirs)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_content_type_get_icon () -> content-type-icon
@@ -175,7 +226,7 @@
     (gobject:object icon)
  #+liber-documentation
  "@version{2022-12-27}
-  @argument[content]{a content type string}
+  @argument[ctype]{a content type string}
   @begin{return}
     A @class{g:icon} object corresponding to the content type.
   @end{return}
@@ -191,7 +242,7 @@
   @see-class{g:icon}
   @see-function{g:content-type-symbolic-icon}
   @see-function{g:content-type-generic-icon-name}"
-  (content :string))
+  (ctype :string))
 
 (export 'content-type-icon)
 
@@ -203,7 +254,7 @@
     (gobject:object g-icon)
  #+liber-documentation
  "@version{2022-12-27}
-  @argument[content]{a content type string}
+  @argument[ctype]{a content type string}
   @begin{return}
     Symbolic @class{g:icon} object corresponding to the content type.
   @end{return}
@@ -211,7 +262,7 @@
   @see-class{g:icon}
   @see-function{g:content-type-icon}
   @see-function{g:content-type-generic-icon-name}"
-  (content :string))
+  (ctype :string))
 
 (export 'content-type-symbolic-icon)
 
@@ -223,13 +274,17 @@
                 content-type-generic-icon-name) (:string :free-from-foreign t)
  #+liber-documentation
  "@version{2022-12-27}
-  @argument[content]{a content type string}
+  @argument[ctype]{a content type string}
   @begin{return}
-    A string with the registered generic icon name for the given type, or
-    @code{nil} if unknown.
+    A string with the registered generic icon name for the given @arg{ctype},
+    or @code{nil} if unknown.
   @end{return}
-  @short{Gets the generic icon name for a content type.}
-  See the shared-mime-info specification for more on the generic icon name.
+  @begin{short}
+    Gets the generic icon name for a content type.
+  @end{short}
+  See the
+  @url[https://www.freedesktop.org/wiki/Specifications/shared-mime-info-spec/]{shared-mime-info specification}
+  for more on the generic icon name.
   @begin[Example]{dictionary}
     @begin{pre}
 (g:content-type-generic-icon-name \"text/plain\")
@@ -238,41 +293,46 @@
   @end{dictionary}
   @see-function{g:content-type-icon}
   @see-function{g:content-type-symbolic-icon}"
-  (content :string))
+  (ctype :string))
 
 (export 'content-type-generic-icon-name)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_content_type_can_be_executable ()
-;;;
-;;; gboolean g_content_type_can_be_executable (const gchar *type);
-;;;
-;;; Checks if a content type can be executable. Note that for instance things
-;;; like text files can be executables (i.e. scripts and batch files).
-;;;
-;;; type :
-;;;     a content type string
-;;;
-;;; Returns :
-;;;     TRUE if the file type corresponds to a type that can be executable,
-;;;     FALSE otherwise.
 ;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("g_content_type_can_be_executable"
+                content-type-can-be-executable) :boolean
+ #+liber-documentation
+ "@version{#2023-7-12}
+  @argument[ctype]{a content type string}
+  @return{@em{True} if the file type corresponds to a content type that can be
+    executable, @em{false} otherwise.}
+  @begin{short}
+    Checks if a content type can be executable.
+  @end{short}
+  Note that for instance things like text files can be executables, i.e.
+  scripts and batch files."
+  (ctype :string))
+
+(export 'content-type-can-be-executable)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_content_type_from_mime_type ()
-;;;
-;;; gchar * g_content_type_from_mime_type (const gchar *mime_type);
-;;;
-;;; Tries to find a content type based on the mime type name.
-;;;
-;;; mime_type :
-;;;     a mime type string
-;;;
-;;; Returns :
-;;;     Newly allocated string with content type or NULL. Free with g_free().
-;;;
-;;; Since 2.18
 ;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("g_content_type_from_mime_type" content-type-from-mime-type)
+    :string
+ #+liber-documentation
+ "@version{#2023-7-12}
+  @argument[mimetype]{a MIME type string}
+  @return{A string with the content type or @code{nil}.}
+  @begin{short}
+    Tries to find a content type based on the MIME type name.
+  @end{short}"
+  (mimetype :string))
+
+(export 'content-type-from-mime-type)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_content_type_guess ()

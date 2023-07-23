@@ -64,6 +64,14 @@
 
            #:register-object-type-implementation
     ))
+    
+(in-package :gobject)
+
+#+sbcl
+(when (and (find-package "SB-EXT")
+           (find-symbol "SET-FLOATING-POINT-MODES" (find-package "SB-EXT")))
+  (funcall (find-symbol "SET-FLOATING-POINT-MODES" (find-package "SB-EXT"))
+           :traps nil))
 
 ;;; ----------------------------------------------------------------------------
 

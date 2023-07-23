@@ -207,6 +207,8 @@
 ;;; gio:file-as-namestring
 ;;; ----------------------------------------------------------------------------
 
+;; TODO: Improve the documentation of g:file-as-namestring
+
 (cffi:define-foreign-type file-as-namestring-type ()
   ()
   (:actual-type :pointer)
@@ -223,6 +225,16 @@
   (cffi:foreign-funcall "g_file_get_parse_name"
                         :pointer value
                         (:string :free-from-foreign t)))
+
+#+liber-documentation
+(setf (liber:alias-for-class 'file-as-namestring)
+      "Type"
+      (documentation 'file-as-namestring 'type)
+ "@version{2023-7-13}
+  @begin{short}
+    The @sym{g:file-as-namestring} type represents the C @code{GFile} type
+    which represents files on a virtual file system.
+  @end{short}")
 
 (export 'file-as-namestring)
 

@@ -191,7 +191,7 @@ lambda (list position removed added)    :run-last
 
 (cffi:defcfun ("g_list_model_get_item" list-model-item) :pointer
  #+liber-documentation
- "@version{#2022-12-31}
+ "@version{#2023-7-22}
   @argument[list]{a @class{g:list-model} object}
   @argument[position]{an unsigned integer with the position of the item to
     fetch}
@@ -205,7 +205,7 @@ lambda (list position removed added)    :run-last
   The @code{null-pointer} value is never returned for an index that is smaller
   than the length of the list. See the @fun{g:list-model-n-items} function.
   @see-class{g:list-model}
-  @see-function{g-list-model-n-items}"
+  @see-function{g:list-model-n-items}"
   (list (gobject:object list-model))
   (position :uint))
 

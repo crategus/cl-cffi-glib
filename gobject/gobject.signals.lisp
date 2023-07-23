@@ -1037,7 +1037,7 @@
 
 (defun signal-query (signal-id)
  #+liber-documentation
- "@version{#2022-12-31}
+ "@version{2023-7-9}
   @argument[signal-id]{an unsigned integer with the signal ID of the signal to
     query information for}
   @return{A @struct{g:signal-query} structure with the signal info.}
@@ -1092,38 +1092,38 @@
   (cffi:with-foreign-object (query '(:struct %signal-query))
     (%signal-query signal-id query)
     (assert (not (zerop (cffi:foreign-slot-value query
-                                            '(:struct %signal-query)
-                                            :signal-id))))
+                                                 '(:struct %signal-query)
+                                                 :signal-id))))
     (let ((param-types
-            (iter
-              (with param-types = (cffi:foreign-slot-value query
-                                                      '(:struct %signal-query)
-                                                      :param-types))
-              (for i from 0 below (cffi:foreign-slot-value query
-                                                      '(:struct %signal-query)
-                                                      :n-params))
+            (iter (with param-types =
+                        (cffi:foreign-slot-value query
+                                                 '(:struct %signal-query)
+                                                 :param-types))
+              (for i from 0 below
+                        (cffi:foreign-slot-value query
+                                                 '(:struct %signal-query)
+                                                 :n-params))
               (for param-type = (cffi:mem-aref param-types
-                                          '(type-t :mangled-p t)
-                                          i))
+                                               '(type-t :mangled-p t)
+                                               i))
               (collect param-type))))
-      (make-signal-query :signal-id
-                         signal-id
+      (make-signal-query :signal-id signal-id
                          :signal-name
                          (cffi:foreign-slot-value query
-                                             '(:struct %signal-query)
-                                             :signal-name)
+                                                  '(:struct %signal-query)
+                                                  :signal-name)
                          :owner-type
                          (cffi:foreign-slot-value query
-                                             '(:struct %signal-query)
-                                             :owner-type)
+                                                  '(:struct %signal-query)
+                                                  :owner-type)
                          :signal-flags
                          (cffi:foreign-slot-value query
-                                             '(:struct %signal-query)
-                                             :signal-flags)
+                                                  '(:struct %signal-query)
+                                                  :signal-flags)
                          :return-type
                          (cffi:foreign-slot-value query
-                                             '(:struct %signal-query)
-                                             :return-type)
+                                                  '(:struct %signal-query)
+                                                  :return-type)
                          :param-types param-types))))
 
 (export 'signal-query)
@@ -1134,8 +1134,8 @@
 
 (cffi:defcfun ("g_signal_lookup" signal-lookup) :uint
  #+liber-documentation
- "@version{#2022-12-31}
-  @argument[name]{a string with the signal's name}
+ "@version{2023-7-9}
+  @argument[name]{a string with the name of the signal}
   @argument[itype]{the @class{g:type-t} that the signal operates on}
   @return{A unsigned integer with the identifying number of the signal, or 0
     if no signal was found.}
@@ -1246,7 +1246,7 @@
 
 (defun signal-emit (instance detailed &rest args)
  #+liber-documentation
- "@version{#2022-12-31}
+ "@version{2023-7-9}
   @argument[instance]{a @class{g:object} instance the signal is being emitted
     on}
   @argument[detailed]{a string with the detailed signal name}
@@ -1662,7 +1662,7 @@
 
 (cffi:defcfun ("g_signal_handler_block" signal-handler-block) :void
  #+liber-documentation
- "@version{#2022-12-31}
+ "@version{2023-7-9}
   @argument[instance]{a @class{g:object} instance to block the signal handler
     of}
   @argument[handler-id]{an unsigned integer handler ID of the handler to be
@@ -1690,7 +1690,7 @@
 
 (cffi:defcfun ("g_signal_handler_unblock" signal-handler-unblock) :void
  #+liber-documentation
- "@version{#2022-12-31}
+ "@version{2023-7-9}
   @argument[instance]{a @class{g:object} instance to unblock the signal
     handler of}
   @argument[handler-id]{an unsigned integer handler ID of the handler to be
@@ -1764,7 +1764,7 @@
 
 (defun signal-handler-find (instance signal-id)
  #+liber-documentation
- "@version{#2022-12-31}
+ "@version{2023-7-9}
   @argument[instance]{a @class{g:object} instance owning the signal handler
     to be found}
   @argument[signal-id]{an unsigned integer with a signal the handler has to be
@@ -1933,7 +1933,7 @@
 (cffi:defcfun ("g_signal_handler_is_connected" signal-handler-is-connected)
     :boolean
  #+liber-documentation
- "@version{#2022-12-31}
+ "@version{2023-7-9}
   @argument[instance]{a @class{g:object} instance where a signal handler is
     sought}
   @argument[handler-id]{an unsigned long integer with the handler ID}
@@ -2034,7 +2034,7 @@
 (cffi:defcfun ("g_signal_has_handler_pending" signal-has-handler-pending)
     :boolean
  #+liber-documentation
- "@version{#2022-12-31}
+ "@version{2023-7-9}
   @argument[instance]{a @class{g:object} instance whose signal handlers are
     sought}
   @argument[signal-id]{an unsigned integer with the signal ID}

@@ -200,6 +200,8 @@
             :initform nil
             :accessor boxed-opaque-pointer)))
 
+(export 'boxed-opaque-pointer)
+
 (defgeneric pointer (object))
 
 (defmethod pointer ((object boxed-opaque))
