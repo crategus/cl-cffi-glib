@@ -151,30 +151,16 @@ int main (int argc, void *argv[])
 
 ;;; ----------------------------------------------------------------------------
 ;;; GAsyncReadyCallback ()
-;;;
-;;; void
-;;; (*GAsyncReadyCallback) (GObject *source_object,
-;;;                         GAsyncResult *res,
-;;;                         gpointer user_data);
-;;;
-;;;
-;;; source_object :
-;;;
-;;;
-;;; res :
-;;;
-;;;
-;;; user_data :
-;;;     user data passed to the callback.
 ;;; ----------------------------------------------------------------------------
+
+;; TODO: The stable pointer is never freed. Is it correct to free the stable 
+;; pointer in the callback?
 
 (cffi:defcallback async-ready-callback :void
     ((source gobject:object)
      (result (gobject:object async-result))
      (data :pointer))
   (let ((func (glib:get-stable-pointer-value data)))
-    (format t "in ASYNC-RESULT ~a ~a ~a~%" source result data)
-    (format t "  func : ~a~%" func)
     (funcall func source result)))
 
 #+liber-documentation
