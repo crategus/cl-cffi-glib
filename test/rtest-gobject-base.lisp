@@ -282,20 +282,22 @@
 
 ;;;     g-object-data
 
-#+nil
 (test g-object-data
-  (let ((button (make-instance 'gtk:button)))
-    (is (cffi:null-pointer-p (g-object-data button "property")))
-    (is (= 0 (cffi:pointer-address (g-object-data button "property"))))
-    (is (cffi:pointerp (setf (g-object-data button "property") (make-pointer 100))))
-    (is (cffi:pointerp (g-object-data button "property")))
-    (is (= 100 (cffi:pointer-address (g-object-data button "property"))))
-    (is (cffi:pointerp (setf (g-object-data button "property")
-                        (g-object-pointer (make-instance 'gtk:label)))))
-    (is (cffi:pointerp (g-object-data button "property")))
-    (is (typep (gobject::get-g-object-for-pointer
-                   (g-object-data button "property"))
-               'gtk:label))))
+  (let ((item (make-instance 'g:menu-item)))
+    ;; no property
+    (is-false (g:object-data item "prop"))
+    ;; set integer property
+    (is (= 999 (setf (g:object-data item "prop") 999)))
+    (is (= 999 (g:object-data item "prop")))
+    ;; set Lisp list
+    (is (equal '(a b c) (setf (g:object-data item "prop") '(a b c))))
+    (is (equal '(a b c) (g:object-data item "prop")))
+    ;; set g:object 
+    (is (eq item (setf (g:object-data item "prop") item)))
+    (is (eq item (g:object-data item "prop")))
+    ;; remove the association
+    (is-false (setf (g:object-data item "prop") nil))  
+    (is-false (g:object-data item "prop"))))
 
 ;;;     g-object-set-data-full
 
