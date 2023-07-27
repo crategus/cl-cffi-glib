@@ -2484,48 +2484,68 @@ lambda (object pspec)    :no-hooks
 ;;; g_object_set_data () -> object-data
 ;;; ----------------------------------------------------------------------------
 
-;; TODO: Improve the implemenation with the usage of stable pointers.
-;; See the implementation of gobject:type-qdata.
+(cffi:defcfun ("g_object_set_data" %object-set-data) :void
+  (object object)
+  (key :string)
+  (data :pointer))
 
 (defun (setf object-data) (data object key)
-  (cffi:foreign-funcall "g_object_set_data"
-                        object object
-                        :string key
-                        :pointer data
-                        :void)
-  data)
+  (let ((ptr (%object-get-data object key)))
+    (cond ((null data)
+           ;; Remove data and free the stable-poiner
+           (%object-set-data object key (cffi:null-pointer))
+           (when (not (cffi:null-pointer-p ptr))
+             (glib:free-stable-pointer ptr)))
+          ((cffi:null-pointer-p ptr)
+           (setf ptr (glib:allocate-stable-pointer data))
+           (%object-set-data object key ptr))
+          (t
+           (setf (glib:get-stable-pointer-value ptr) data)
+           (%object-set-data object key ptr)))
+    data))
 
-(cffi:defcfun ("g_object_get_data" object-data) :pointer
+(cffi:defcfun ("g_object_get_data" %object-get-data) :pointer
+  (object object)
+  (key :string))
+
+(defun object-data (object key)
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2023-7-27}
   @syntax[]{(g:object-data object key) => data}
   @syntax[]{(setf (g:object-data object key) data)}
   @argument[object]{a @class{g:object} instance containing the associations}
   @argument[key]{a string with the name of the key}
-  @argument[data]{a pointer as data to associate with that key}
+  @argument[data]{any Lisp object as data to associate with that key}
   @begin{short}
     Each object carries around a table of associations from strings to pointers.
   @end{short}
   The @sym{g:object-data} function gets a named field from the objects table of
-  associations. The @sym{(setf g:object-data)} function sets an association. If
-  the object already had an association with that name, the old association will
-  be destroyed.
+  associations. The @sym{(setf g:object-data)} function sets an association.
+  If the object already had an association with that name, the old association
+  will be destroyed.
   @begin[Examples]{dictionary}
-    Set an integer as a pointer for a property on a @class{gtk:button} widget.
     @begin{pre}
-(defvar button (make-instance 'gtk:button))
-=> BUTTON
-(setf (g:object-data button \"property\") (cffi:make-pointer 100))
-=> #.(SB-SYS:INT-SAP #X00000064)
-(g:object-data button \"property\")
-=> #.(SB-SYS:INT-SAP #X00000064)
-(cffi:pointer-address *)
-=> 100
+(defvar item (make-instance 'g:menu-item)) => ITEM
+;; Set an integer
+(setf (g:object-data item \"prop\") 123) => 123
+(g:object-data item \"prop\") => 123
+;; Set a Lisp list
+(setf (g:object-data item \"prop\") '(a b c)) => (A B C)
+(g:object-data item \"prop\") => (A B C)
+;; Set a GObject
+(setf (g:object-data item \"prop\") (make-instance 'g:menu-item))
+=> #<GIO:MENU-ITEM {1001AAA263@}>
+(g:object-data item \"prop\")
+=> #<GIO:MENU-ITEM {1001AAA263@}>
+;; Clear the association
+(setf (g:object-data item \"prop\") nil) => nil
+(g:object-data item \"prop\") => nil
     @end{pre}
   @end{dictionary}
   @see-class{g:object}"
-  (object object)
-  (key :string))
+  (let ((ptr (%object-get-data object key)))
+    (when (not (cffi:null-pointer-p ptr))
+      (glib:get-stable-pointer-value ptr))))
 
 (export 'object-data)
 
@@ -2933,7 +2953,7 @@ lambda (object pspec)    :no-hooks
 
 (defun object-property (object name &optional gtype)
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2023-7-27}
   @syntax[]{(g:object-property object name gtype) => value}
   @syntax[]{(setf (g:object-property object name gtype) value)}
   @argument[object]{a @class{g:object} instance}
