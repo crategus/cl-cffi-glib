@@ -15,8 +15,7 @@
 
 (test g-content-type-is-a
   (is-true (g:content-type-is-a "text/plain" "text/plain"))
-  (is-true (g:content-type-is-a "text/plain" "text"))
-)
+  (is-false (g:content-type-is-a "text/plain" "text")))
 
 ;;;     g_content_type_is_mime_type
 

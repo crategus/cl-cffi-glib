@@ -453,9 +453,56 @@
 ;;;     g_type_default_interface_ref
 ;;;     g_type_default_interface_peek
 ;;;     g_type_default_interface_unref
+
 ;;;     g_type_children
+
+(test g-type-children
+  (is (or (equal '("GInitiallyUnowned" "GBinding" "GAppLaunchContext" 
+                   "GFileIcon" "GThemedIcon" "GEmblemedIcon" "GEmblem" 
+                   "GPermission" "GListStore" "GSimpleAction" "GPropertyAction" 
+                   "GSimpleActionGroup" "GApplication" "GApplicationCommandLine" 
+                   "GMenuModel" "GMenuItem" "GNotification" "GCancellable" 
+                   "GTask")
+                 (mapcar #'g:type-name 
+                         (g:type-children "GObject")))
+          (equal '("GInitiallyUnowned" "GBinding" "GAppLaunchContext" 
+                   "GFileIcon" "GThemedIcon" "GEmblemedIcon" "GEmblem" 
+                   "GPermission" "GListStore" "GSimpleAction" "GPropertyAction" 
+                   "GSimpleActionGroup" "GApplication" "GApplicationCommandLine" 
+                   "GMenuModel" "GMenuItem" "GNotification" "GCancellable" 
+                   "GTask" "GDesktopAppInfo" "GLocalFile" "GFileInfo" 
+                   "GFileMonitor" "GVolumeMonitor" "GVfs" "GNotificationBackend" 
+                   "GTypeModule" "GSettingsBackend" "GPowerProfileMonitorDBus" 
+                   "GDebugControllerDBus" "GMemoryMonitorDBus" 
+                   "GMemoryMonitorPortal" "GNetworkMonitorBase" 
+                   "GPowerProfileMonitorPortal" "GProxyResolverPortal" 
+                   "GDummyProxyResolver" "GHttpProxy" "GSocks4aProxy" 
+                   "GSocks5Proxy" "GDummyTlsBackend" "GVfsIcon" "GVfsUriMapper" 
+                   "GInputStream" "GDBusAuthObserver" "GCredentials" "GIOStream"
+                   "GDBusConnection" "GDBusProxy" "GSocketAddress" "GSocket" 
+                   "GSocketClient" "GSocketAddressEnumerator" "GOutputStream" 
+                   "GDBusAuth" "GDBusAuthMechanism" "GSocketControlMessage" 
+                   "GDBusMessage" "GDBusMethodInvocation" "GSimpleAsyncResult" 
+                   "GDaemonFile")
+                 (mapcar #'g:type-name 
+                         (g:type-children "GObject"))))))
+
 ;;;     g_type_interfaces
+
+(test g-type-interfaces
+  (is (equal '("GActionGroup" "GActionMap")
+             (mapcar #'g:type-name
+                     (g:type-interfaces "GApplication")))))
+
 ;;;     g_type_interface_prerequisites
+
+(test g-type-interface-prerequisites
+  (is (equal '("GObject")
+             (mapcar #'g:type-name
+                     (g:type-interface-prerequisites "GAction"))))
+  (is (equal '("GObject")
+             (mapcar #'g:type-name
+                     (g:type-interface-prerequisites "GIcon")))))
 
 ;;;     g-type-qdata
 

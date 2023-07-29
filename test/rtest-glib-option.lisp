@@ -106,7 +106,6 @@
 ;; TODO: This is in English, but can be in German, too. Set the language,
 ;; before runing the test.
 
-#+nil
 (test g-option-context-set-translate-func
   (glib:with-g-option-context (context "context")
     (let ((entries '(("long-name"       ; long-name
@@ -123,15 +122,15 @@
       (when *verbose-g-option*
         (format t "~%~a~%" (g:option-context-help context t)))
       (is (string=
-"Aufruf:
-  glib-test [OPTION …] CONTEXT
+"Usage:
+  glib-test [OPTION…] CONTEXT
 
 SUMMARY
 
-Hilfeoptionen:
-  -h, --help          Hilfeoptionen anzeigen
+Help Options:
+  -h, --help          Show help options
 
-Anwendungsoptionen:
+Application Options:
   -a, --long-name     description
 
 DESCRIPTION
@@ -155,7 +154,6 @@ DESCRIPTION
 ;; TODO: This is in English, but can be in German, too. Set the language,
 ;; before runing the test.
 
-#+nil
 (test g-option-context-add-main-entries
   (glib:with-g-option-context (context "Description")
     (let ((entries '(("long-name-1"     ; long-name
@@ -217,13 +215,13 @@ DESCRIPTION
       (when *verbose-g-option*
         (format t "~&~A~%" (g:option-context-help context t)))
       (is (string=
-"Aufruf:
-  glib-test [OPTION …] Description
+"Usage:
+  glib-test [OPTION…] Description
 
-Hilfeoptionen:
-  -?, --help                             Hilfeoptionen anzeigen
+Help Options:
+  -?, --help                             Show help options
 
-Anwendungsoptionen:
+Application Options:
   -a, --long-name-1                      Description1
   -b, --long-name-2=a string             Description2
   -c, --long-name-3=an integer           Description3
@@ -269,7 +267,6 @@ Anwendungsoptionen:
 ;; TODO: This is in English, but can be in German, too. Set the language,
 ;; before runing the test.
 
-#+nil
 (test g-option-group-add-entries
   (glib:with-g-option-group (group "myGroup" "A Group"  "Help Description")
     (glib:with-g-option-context (context "Description")
@@ -333,10 +330,10 @@ Anwendungsoptionen:
         (when *verbose-g-option*
           (format t "~&~A~%" (g:option-context-help context t group)))
         (is (string=
-"Aufruf:
-  glib-test [OPTION …] Description
+"Usage:
+  glib-test [OPTION…] Description
 
-Anwendungsoptionen:
+Application Options:
   -a, --long-name-1                      Description1
   -b, --long-name-2=a string             Description2
   -c, --long-name-3=an integer           Description3
@@ -359,7 +356,7 @@ Anwendungsoptionen:
 ;; TODO: This is in English, but can be in German, too. Set the language,
 ;; before runing the test.
 
-#+nil
+#-windows
 (test g-option-group-set-translate-func
   (glib:with-g-option-group (group "a" "b" "c")
     (is-false (g:option-group-set-translate-func group #'translate-func))
@@ -376,14 +373,14 @@ Anwendungsoptionen:
         (when *verbose-g-option*
           (format t "~%~a~%" (g:option-context-help context t)))
         (is (string=
-"Aufruf:
-  glib-test [OPTION …] Description
+"Usage:
+  glib-test [OPTION…] Description
 
-Hilfeoptionen:
-  -h, --help          Hilfeoptionen anzeigen
-  --help-all          Alle Hilfeoptionen anzeigen
+Help Options:
+  -h, --help          Show help options
+  --help-all          Show all help options
 
-Anwendungsoptionen:
+Application Options:
   -a, --long-name     DESCRIPTION
 
 "
@@ -491,4 +488,4 @@ Anwendungsoptionen:
             ;; Show the help output
             (format t "~&~%~a~%" (g:option-context-help context t))))))
 
-;;; --- 2023-7-9 ---------------------------------------------------------------
+;;; --- 2023-7-28 --------------------------------------------------------------

@@ -5,6 +5,13 @@
 
 ;;; --- Types and Values -------------------------------------------------------
 
+;;;     GParameter
+
+(test g-parameter-cstruct
+  (is (= 32 (cffi:foreign-type-size '(:struct gobject::%parameter))))
+  (is (equal '(GOBJECT::NAME GOBJECT:VALUE)
+             (cffi:foreign-slot-names '(:struct gobject::%parameter)))))
+
 ;;;     GObject
 
 (test g-object-class
@@ -292,11 +299,11 @@
     ;; set Lisp list
     (is (equal '(a b c) (setf (g:object-data item "prop") '(a b c))))
     (is (equal '(a b c) (g:object-data item "prop")))
-    ;; set g:object 
+    ;; set g:object
     (is (eq item (setf (g:object-data item "prop") item)))
     (is (eq item (g:object-data item "prop")))
     ;; remove the association
-    (is-false (setf (g:object-data item "prop") nil))  
+    (is-false (setf (g:object-data item "prop") nil))
     (is-false (g:object-data item "prop"))))
 
 ;;;     g-object-set-data-full
@@ -320,7 +327,8 @@
     ;; Clear the status
     (is-false (setf *data-full-status* nil))
     ;; Destroy the data, the callback will be executed
-    (is (cffi:pointerp (setf (g-object-data button "property") (cffi:null-pointer))))
+    (is (cffi:pointerp (setf (g-object-data button "property")
+                             (cffi:null-pointer))))
     ;; Check status
     (is (string= "destroy-notify-cb" *data-full-status*))))
 
@@ -463,4 +471,4 @@
 ;;;     g_weak_ref_set
 ;;;     g_assert_finalize_object
 
-;;; --- 2023-6-24 --------------------------------------------------------------
+;;; --- 2023-7-29 --------------------------------------------------------------
