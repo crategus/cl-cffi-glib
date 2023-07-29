@@ -160,45 +160,9 @@
 ;;; struct GParameter                                      not exported
 ;;; ----------------------------------------------------------------------------
 
-;; This structure is only needed in the construction of an object and is
-;; not exported.
-
-;; The generalized calculation of the size and offset works for sbcl and ccl on
-;; a 32-bit Linux. Check this for more system.
-
-#-windows
-(cffi:defcstruct (g-parameter :size
-                              #.(+ (cffi:foreign-type-size :string)
-                              (cffi:foreign-type-size '(:struct value))))
-  (:name (:string :free-from-foreign nil :free-to-foreign nil))
-  (:value (:struct value)
-          :offset #.(cffi:foreign-type-size :string))) ; A struct, not a pointer.
-
-#+windows
-(cffi:defcstruct g-parameter
-  (:name (:string :free-from-foreign nil :free-to-foreign nil))
-  (:value (:struct value))) ; A struct, not a pointer.
-
-#+liber-documentation
-(setf (liber:alias-for-symbol 'g-parameter)
-      "CStruct"
-      (liber:symbol-documentation 'g-parameter)
- "@version{#2013-10-25}
-  @begin{short}
-    The @sym{g-parameter} structure is an auxiliary structure used to hand
-    parameter name/value pairs to the function @fun{object-newv}.
-  @end{short}
-  @begin{pre}
-(cffi:defcstruct g-parameter
-  (:name (:string :free-from-foreign nil :free-to-foreign nil))
-  (:value value))
-  @end{pre}
-  @begin[code]{table}
-    @entry[:name]{The parameter name.}
-    @entry[:value]{The parameter value.}
-  @end{table}
-  @see-symbol{value}
-  @see-function{object-newv}")
+(cffi:defcstruct %parameter
+  (name (:string :free-from-foreign nil :free-to-foreign nil))
+  (value (:struct value)))
 
 ;;; ----------------------------------------------------------------------------
 ;;; struct GObject
@@ -279,9 +243,9 @@ lambda (object pspec)    :no-hooks
     @end{pre}
     The signal is emitted on an object when one of its properties has been
     changed. Note that getting this signal does not guarantee that the
-    value of the property has actually changed, it may also be emitted when the
-    setter for the property is called to reinstate the previous value. This
-    signal is typically used to obtain change notification for a single
+    value of the property has actually changed, it may also be emitted when
+    the setter for the property is called to reinstate the previous value.
+    This signal is typically used to obtain change notification for a single
     property, by specifying the property name as a detail in the
     @fun{g:signal-connect} function call, like this:
     @begin{pre}
@@ -461,10 +425,10 @@ lambda (object pspec)    :no-hooks
   (bt:with-recursive-lock-held (*gobject-gc-hooks-lock*)
     (when *gobject-gc-hooks*
       (log-for :gc "activating gc hooks for objects: ~A~%" *gobject-gc-hooks*)
-      (loop for pointer in *gobject-gc-hooks*
-            do (%object-remove-toggle-ref pointer
-                                          (cffi:callback toggle-notify)
-                                          (cffi:null-pointer)))
+      (iter (for pointer in *gobject-gc-hooks*)
+            (%object-remove-toggle-ref pointer
+                                       (cffi:callback toggle-notify)
+                                       (cffi:null-pointer)))
       (setf *gobject-gc-hooks* nil)))
   nil)
 
@@ -741,13 +705,13 @@ lambda (object pspec)    :no-hooks
   (let (arg-names arg-values arg-types nc-setters nc-arg-values)
     (declare (dynamic-extent arg-names arg-values arg-types
                              nc-setters nc-arg-values))
-    (loop
-      for (arg-name arg-value) on initargs by #'cddr
-      for slot = (find arg-name (class-slots class)
-                       :key 'slot-definition-initargs
-                       :test 'member)
-      when (and slot (typep slot 'gobject-effective-slot-definition))
-      do (typecase slot
+    (iter (for (arg-name arg-value) on initargs by #'cddr)
+          (for slot = (find arg-name
+                            (class-slots class)
+                            :key 'slot-definition-initargs
+                            :test 'member))
+          (when (and slot (typep slot 'gobject-effective-slot-definition)))
+          (typecase slot
            (gobject-property-effective-slot-definition
             (push (gobject-property-effective-slot-definition-g-property-name slot)
                   arg-names)
@@ -762,10 +726,9 @@ lambda (object pspec)    :no-hooks
                                             arg-names
                                             arg-values
                                             arg-types)))
-      (loop
-         for fn in nc-setters
-         for value in nc-arg-values
-         do (funcall fn object value))
+      (iter (for fn in nc-setters)
+            (for value in nc-arg-values)
+            (funcall fn object value))
       object)))
 
 ;;; ----------------------------------------------------------------------------
@@ -778,36 +741,38 @@ lambda (object pspec)    :no-hooks
                     (class-property-type object-type name))
                   args-names)))
   (let ((args-count (length args-names)))
-    (cffi:with-foreign-object (parameters '(:struct g-parameter) args-count)
-      (loop
-        for i from 0 below args-count
-        for arg-name in args-names
-        for arg-value in args-values
-        for arg-type in args-types
-        for arg-g-type = (if arg-type
-                             arg-type
-                             (class-property-type object-type arg-name))
-        for parameter = (cffi:mem-aptr parameters '(:struct g-parameter) i)
-        do (setf (cffi:foreign-slot-value parameter '(:struct g-parameter) :name)
-                 arg-name)
-        do (set-g-value (cffi:foreign-slot-pointer parameter
-                                              '(:struct g-parameter) :value)
-                        arg-value
-                        arg-g-type
-                        :zero-gvalue t))
+    (cffi:with-foreign-object (params '(:struct %parameter) args-count)
+      (iter (for i from 0 below args-count)
+            (for arg-name in args-names)
+            (for arg-value in args-values)
+            (for arg-type in args-types)
+            (for arg-gtype = (if arg-type
+                                 arg-type
+                                 (class-property-type object-type arg-name)))
+            (for param = (cffi:mem-aptr params
+                                        '(:struct %parameter) i))
+            (setf (cffi:foreign-slot-value param
+                                           '(:struct %parameter) 'name)
+                  arg-name)
+            (set-g-value (cffi:foreign-slot-pointer param
+                                                    '(:struct %parameter)
+                                                    'value)
+                         arg-value
+                         arg-gtype
+                         :zero-gvalue t))
       (unwind-protect
-        (%object-newv object-type args-count parameters)
-        (loop
-          for i from 0 below args-count
-          for parameter = (cffi:mem-aptr parameters '(:struct g-parameter) i)
-          do (cffi:foreign-string-free
-                 (cffi:mem-ref (cffi:foreign-slot-pointer parameter
-                                                '(:struct g-parameter)
-                                                :name)
-                          :pointer))
-          do (value-unset (cffi:foreign-slot-pointer parameter
-                                                '(:struct g-parameter)
-                                                :value)))))))
+        (%object-newv object-type args-count params)
+        (iter (for i from 0 below args-count)
+              (for param = (cffi:mem-aptr params '(:struct %parameter) i))
+              (cffi:foreign-string-free
+                  (cffi:mem-ref
+                      (cffi:foreign-slot-pointer param
+                                                 '(:struct %parameter)
+                                                 'name)
+                      :pointer))
+              (value-unset (cffi:foreign-slot-pointer param
+                                                      '(:struct %parameter)
+                                                      'value)))))))
 
 ;;; ----------------------------------------------------------------------------
 ;;; struct GObjectClass                                    not exported
@@ -1420,9 +1385,9 @@ lambda (object pspec)    :no-hooks
       (cffi:with-foreign-object (n-props :uint)
         (let ((pspecs (%object-class-list-properties class n-props)))
           (unwind-protect
-            (loop for count from 0 below (cffi:mem-ref n-props :uint)
-                  for pspec = (cffi:mem-aref pspecs :pointer count)
-                  collect pspec)
+            (iter (for count from 0 below (cffi:mem-ref n-props :uint))
+                  (for pspec = (cffi:mem-aref pspecs :pointer count))
+                  (collect pspec))
           (glib:free pspecs))))
       (type-class-unref class))))
 
@@ -1580,9 +1545,9 @@ lambda (object pspec)    :no-hooks
       (cffi:with-foreign-object (n-props :uint)
         (let ((pspecs (%object-interface-list-properties iface n-props)))
           (unwind-protect
-            (loop for count from 0 below (cffi:mem-ref n-props :uint)
-                  for pspec = (cffi:mem-aref pspecs :pointer count)
-                  collect pspec)
+            (iter (for count from 0 below (cffi:mem-ref n-props :uint))
+                  (for pspec = (cffi:mem-aref pspecs :pointer count))
+                  (collect pspec))
             (glib:free pspecs))))
       (type-default-interface-unref iface))))
 
@@ -1666,25 +1631,6 @@ lambda (object pspec)    :no-hooks
 ;; and is not exported.
 
 (cffi:defcfun ("g_object_newv" %object-newv) :pointer
- #+liber-documentation
- "@version{#2013-10-27}
-  @argument[object-type]{the type ID of the @class{object} subtype to
-    instantiate}
-  @argument[n-parameters]{the length of the parameters array}
-  @argument[parameters]{an array of @symbol{g-parameter}}
-  @return{A new instance of @arg{object-type}.}
-  @begin{short}
-    Creates a new instance of a @class{object} subtype and sets its
-    properties.
-  @end{short}
-
-  Construction parameters, see @code{:construct} and @code{:construct-only} of
-  type @symbol{param-spec-flags}, which are not explicitly specified are set
-  to their default values.
-  @see-class{object}
-  @see-symbol{g-parameter}
-  @see-symbol{param-spec-flags}
-  @see-function{object-new}"
   (object-type type-t)
   (n-parameter :uint)
   (parameters :pointer))
