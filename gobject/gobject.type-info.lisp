@@ -2712,7 +2712,7 @@
 
 (defun type-children (gtype)
  #+liber-documentation
- "@version{2022-12-29}
+ "@version{2023-7-29}
   @argument[gtype]{a @class{g:type-t} parent type}
   @return{A list of @class{g:type-t} child types.}
   @short{Returns a list of type IDs, listing the child types of @arg{gtype}.}
@@ -2729,8 +2729,8 @@
   (cffi:with-foreign-object (n-children :uint)
     (let ((ptr (%type-children gtype n-children)))
       (prog1
-        (loop for count from 0 below (cffi:mem-ref n-children :uint)
-              collect (cffi:mem-aref ptr 'type-t count))
+        (iter (for count from 0 below (cffi:mem-ref n-children :uint))
+              (collect (cffi:mem-aref ptr 'type-t count)))
         (glib:free ptr)))))
 
 (export 'type-children)
@@ -2745,7 +2745,7 @@
 
 (defun type-interfaces (gtype)
  #+liber-documentation
- "@version{2022-12-29}
+ "@version{2023-7-29}
   @argument[gtype]{a @class{g:type-t} ID to list interface types for}
   @return{A list of @class{g:type-t} interface types.}
   @begin{short}
@@ -2765,8 +2765,8 @@
   (cffi:with-foreign-object (n-interfaces :uint)
     (let ((ptr (%type-interfaces gtype n-interfaces)))
       (prog1
-        (loop for count from 0 below (cffi:mem-ref n-interfaces :uint)
-              collect (cffi:mem-aref ptr 'type-t count))
+        (iter (for count from 0 below (cffi:mem-ref n-interfaces :uint))
+              (collect (cffi:mem-aref ptr 'type-t count)))
         (glib:free ptr)))))
 
 (export 'type-interfaces)
@@ -2777,16 +2777,15 @@
 
 (cffi:defcfun ("g_type_interface_prerequisites" %type-interface-prerequisites)
     (:pointer :size)
-  (iface-type type-t)
+  (itype type-t)
   (n-prerequisites (:pointer :uint)))
 
-(defun type-interface-prerequisites (iface-type)
+(defun type-interface-prerequisites (itype)
  #+liber-documentation
- "@version{#2022-12-29}
-  @argument[iface-type]{a @class{g:type-t} interface type}
+ "@version{2023-7-29}
+  @argument[itype]{a @class{g:type-t} interface type}
   @begin{return}
-    A list of @class{g:type-t} IDs containing the prerequisites of
-    @arg{iface-type}.
+    A list of @class{g:type-t} IDs containing the prerequisites of @arg{itype}.
   @end{return}
   @begin{short}
     Returns the prerequisites of an interfaces type.
@@ -2799,10 +2798,10 @@
   @end{dictionary}
   @see-class{g:type-t}"
   (cffi:with-foreign-object (n-prerequisites :uint)
-    (let ((ptr (%type-interface-prerequisites iface-type n-prerequisites)))
+    (let ((ptr (%type-interface-prerequisites itype n-prerequisites)))
       (prog1
-        (loop for count from 0 below (cffi:mem-ref n-prerequisites :uint)
-              collect (cffi:mem-aref ptr 'type-t count))
+        (iter (for count from 0 below (cffi:mem-ref n-prerequisites :uint))
+              (collect (cffi:mem-aref ptr 'type-t count)))
         (glib:free ptr)))))
 
 (export 'type-interface-prerequisites)
