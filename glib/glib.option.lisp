@@ -1394,36 +1394,36 @@ lambda (str)
   (let ((n-entries (length entries)))
     (cffi:with-foreign-object (entries-ptr '(:struct option-entry)
                                            (1+ n-entries))
-      (loop
-        for entry in entries
-        for i from 0
-        for entry-ptr = (cffi:mem-aptr entries-ptr '(:struct option-entry) i)
-        do (cffi:with-foreign-slots ((long-name
-                                      short-name
-                                      flags
-                                      arg
-                                      arg-data
-                                      description
-                                      arg-description) entry-ptr
-                                                       (:struct option-entry))
-             (setf long-name (first entry)
-                   short-name (if (second entry)
-                                  (char-code (second entry))
-                                  0)
-                   flags (third entry)
-                   arg (fourth entry)
-                   ;; TODO: Check this. It is not correct?
-                   arg-data (if (and (fifth entry)
-                                     (member (fourth entry)
-                                             '(:none :int :double :string
-                                               :filename :string-array
-                                               :filename-array :int64)))
-                                (symbol-value (fifth entry))
-                                (cffi:null-pointer))
-                   description (sixth entry)
-                   arg-description (if (seventh entry)
-                                       (seventh entry)
-                                       (cffi:null-pointer)))))
+      (iter (for entry in entries)
+            (for i from 0)
+            (for entry-ptr = (cffi:mem-aptr entries-ptr
+                                            '(:struct option-entry) i))
+            (cffi:with-foreign-slots ((long-name
+                                       short-name
+                                       flags
+                                       arg
+                                       arg-data
+                                       description
+                                       arg-description) entry-ptr
+                                                        (:struct option-entry))
+              (setf long-name (first entry)
+                    short-name (if (second entry)
+                                   (char-code (second entry))
+                                   0)
+                    flags (third entry)
+                    arg (fourth entry)
+                    ;; TODO: Check this. It is not correct?
+                    arg-data (if (and (fifth entry)
+                                      (member (fourth entry)
+                                              '(:none :int :double :string
+                                                :filename :string-array
+                                                :filename-array :int64)))
+                                 (symbol-value (fifth entry))
+                                 (cffi:null-pointer))
+                    description (sixth entry)
+                    arg-description (if (seventh entry)
+                                        (seventh entry)
+                                        (cffi:null-pointer)))))
       ;; Set the fields of the last entry to NULL pointer or 0
       (let ((entry-ptr (cffi:mem-aptr entries-ptr
                                       '(:struct option-entry)
