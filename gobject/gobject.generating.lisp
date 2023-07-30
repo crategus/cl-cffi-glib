@@ -290,17 +290,26 @@
 
 ;;; ----------------------------------------------------------------------------
 
-(defmacro define-g-interface (g-type-name name
-                              (&key (export t)
+;; TODO: We have added code to allow other than g:object to be a prerequiste
+;; of an interface. We make GdkDragSurface a prerequiste of GdkSurface- But now
+;; the test gdk-cairo-context-cairo-create fails. The function
+;; translate-to-foreign for an object no longer regcognizes GdkWaylandSurface
+;; to be a GdkSurface. What is wrong?
+
+(defmacro define-g-interface (gtype-name name
+                              (&key (superclass 'object)
+                                    (export t)
                                     type-initializer)
                               (&rest properties))
   (setf properties (mapcar #'parse-property properties))
   `(progn
-     (defclass ,name ()
+     (defclass ,name (,@(when (and superclass
+                                   (not (eq superclass 'object)))
+                          (list superclass)))
        (,@(mapcar (lambda (property)
                     (meta-property->slot name property))
                   properties))
-       (:gname . ,g-type-name)
+       (:gname . ,gtype-name)
        ,@(when type-initializer
            (list `(:initializer . ,type-initializer)))
        (:interface-p . t)
@@ -317,6 +326,6 @@
                                     ,(package-name (symbol-package name)))))
                        properties)))
      (eval-when (:compile-toplevel :load-toplevel :execute)
-       (setf (gethash ,g-type-name *known-interfaces*) ',name))))
+       (setf (gethash ,gtype-name *known-interfaces*) ',name))))
 
 ;;; --- gobject.generating.lisp ------------------------------------------------
