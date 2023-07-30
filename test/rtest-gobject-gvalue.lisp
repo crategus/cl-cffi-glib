@@ -142,7 +142,7 @@
 ;;;     g-value-get
 ;;;     g-value-set
 
-(test g-value-get/set
+(test g-value-get/set.1
   (cffi:with-foreign-object (value '(:struct g:value))
     (is (= 99 (g:value-set value 99 "gint")))
     (is (= 99 (g:value-get value)))
@@ -150,6 +150,21 @@
     (is (= 99 (g:value-get value)))
     (is (= 99.0d0 (g:value-set value 99.0d0 "gdouble")))
     (is (= 99.0d0 (g:value-get value)))))
+
+;; Check the handling of values of GValue type
+(test g-value-get/set.2
+  (cffi:with-foreign-objects ((value1 '(:struct g:value))
+                              (value2 '(:struct g:value)))
+    ;; Init a GValue of "gint" type
+    (is (= 123 (g:value-set value1 123 "gint")))
+    (is (= 123 (g:value-get value1)))
+    ;; Store value1 in a GValue of "GValue" type
+    (is (eq (g:gtype "gint")
+            (g:value-type (g:value-set value2 value1 "GValue"))))
+    (is (eq (g:gtype "GValue") (g:value-type value2)))
+    (is (eq (g:gtype "gint") (g:value-type (g:value-get value2))))
+    ;; Get the value from value1 stored in value2
+    (is (= 123 (g:value-get (g:value-get value2))))))
 
 ;;;     g_value_set_instance
 ;;;     g_value_fits_pointer                     * not implemented *
