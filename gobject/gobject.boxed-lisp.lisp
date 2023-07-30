@@ -28,12 +28,16 @@
                                    (gtype (eql (glib:gtype "GBoxed")))
                                    kind)
   (declare (ignore kind))
-  (if (gtype= (value-type gvalue) (type-strv))
-      ;; Handle the special case for the GStrv type
-      (cffi:convert-from-foreign (value-boxed gvalue)
-                                 '(glib:strv-t :free-from-foreign nil))
-      (let ((info (glib:get-boxed-info (value-type gvalue))))
-        (boxed-parse-g-value gvalue info))))
+  (cond ((gtype= (value-type gvalue) (type-strv))
+         ;; Handle a GStrv type
+         (cffi:convert-from-foreign (value-boxed gvalue)
+                                    '(glib:strv-t :free-from-foreign nil)))
+        ;; Handle a GValue type
+        ((gtype= (value-type gvalue) (type-value))
+         (value-boxed gvalue))
+        (t
+         (let ((info (glib:get-boxed-info (value-type gvalue))))
+           (boxed-parse-g-value gvalue info)))))
 
 (defgeneric boxed-parse-g-value (gvalue info))
 
@@ -54,13 +58,17 @@
 (defmethod set-g-value-for-type (gvalue
                                  (gtype (eql (glib:gtype "GBoxed")))
                                  value)
-  (if (gtype= (value-type gvalue) (type-strv))
-      ;; Handle the special case for the GStrv type
-      (setf (value-boxed gvalue)
-            (cffi:convert-to-foreign value
-                                     '(glib:strv-t :free-from-foreign nil)))
-      (let ((info (glib:get-boxed-info (value-type gvalue))))
-        (boxed-set-g-value gvalue info value))))
+  (cond ((gtype= (value-type gvalue) (type-strv))
+         ;; Handle a GStrv type
+         (setf (value-boxed gvalue)
+               (cffi:convert-to-foreign value
+                                        '(glib:strv-t :free-from-foreign nil))))
+        ;; Handle a GValue type
+        ((gtype= (value-type gvalue) (type-value))
+         (setf (value-boxed gvalue) value))
+        (t
+         (let ((info (glib:get-boxed-info (value-type gvalue))))
+           (boxed-set-g-value gvalue info value)))))
 
 (defgeneric boxed-set-g-value (gvalue info value))
 
