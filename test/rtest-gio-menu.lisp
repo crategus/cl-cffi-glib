@@ -27,6 +27,9 @@
   ;; Check the class properties
   (is (equal '()
              (list-properties "GMenu")))
+  ;; Check the list of signals
+  (is (equal '()
+             (list-signals "GMenu")))
   ;; Check the class definition
   (is (equal '(GOBJECT:DEFINE-G-OBJECT-CLASS "GMenu" G-MENU
                        (:SUPERCLASS G-MENU-MODEL
