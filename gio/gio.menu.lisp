@@ -97,7 +97,7 @@
 
 #+liber-documentation
 (setf (documentation 'menu 'type)
- "@version{#2022-12-29}
+ "@version{2023-8-2}
   @begin{short}
     The @sym{g:menu} class is an implementation of the abstract
     @class{g:menu-model} class.

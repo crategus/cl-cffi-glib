@@ -38,16 +38,16 @@
 ;;;
 ;;; Accessors
 ;;;
-;;;     g_application_get_application_id                   Accessor
-;;;     g_application_set_application_id                   Accessor
-;;;     g_application_get_inactivity_timeout               Accessor
-;;;     g_application_set_inactivity_timeout               Accessor
-;;;     g_application_get_flags                            Accessor
-;;;     g_application_set_flags                            Accessor
-;;;     g_application_get_resource_base_path               Accessor
-;;;     g_application_set_resource_base_path               Accessor
-;;;     g_application_get_is_registered                    Accessor
-;;;     g_application_get_is_remote                        Accessor
+;;;     g_application_get_application_id     
+;;;     g_application_set_application_id     
+;;;     g_application_get_inactivity_timeout 
+;;;     g_application_set_inactivity_timeout 
+;;;     g_application_get_flags              
+;;;     g_application_set_flags              
+;;;     g_application_get_resource_base_path 
+;;;     g_application_set_resource_base_path 
+;;;     g_application_get_is_registered      
+;;;     g_application_get_is_remote          
 ;;;
 ;;; Functions
 ;;;
@@ -56,7 +56,7 @@
 ;;;
 ;;;     g_application_get_dbus_connection
 ;;;     g_application_get_dbus_object_path
-;;;     g_application_set_action_group                     deprecated
+;;;     g_application_set_action_group                     deprecated 2.32
 ;;;     g_application_register
 ;;;     g_application_hold
 ;;;     g_application_release
@@ -142,8 +142,7 @@
   #+glib-2-60
   (:allow-replacement 128)
   #+glib-2-60
-  (:replace 256)
-)
+  (:replace 256))
 
 #+liber-documentation
 (setf (liber:alias-for-symbol 'application-flags)
@@ -157,7 +156,9 @@
 (gobject:define-g-flags \"GApplicationFlags\" application-flags
   (:export t
    :type-initializer \"g_application_flags_get_type\")
+  #-glib-2-74
   (:flags-none 0)
+  #+glib-2-74
   (:default-flags 0)
   (:is-service 1)
   (:is-launcher 2)
@@ -166,7 +167,9 @@
   (:send-enviroment 16)
   (:non-unique 32)
   (:can-override-app-id 64)
+  #+glib-2-60
   (:allow-replacement 128)
+  #+glib-2-60
   (:replace 256))
   @end{pre}
   @begin[code]{table}
@@ -247,14 +250,14 @@
 (setf (documentation 'application 'type)
  "@version{2023-4-23}
   @begin{short}
-    The @sym{g:application} class is the foundation of an application.
+    The @class{g:application} class is the foundation of an application.
   @end{short}
-  The @sym{g:application} class wraps some low-level platform-specific services
-  and is intended to act as the foundation for higher-level application classes
-  such as the @class{gtk:application} class. In general, you should not use
-  this class outside of a higher level framework.
+  The @class{g:application} class wraps some low-level platform-specific 
+  services and is intended to act as the foundation for higher-level application   
+  classes such as the @class{gtk:application} class. In general, you should not 
+  use this class outside of a higher level framework.
 
-  The @sym{g:application} class provides convenient life cycle management by
+  The @class{g:application} class provides convenient life cycle management by
   maintaining a \"use count\" for the primary application instance. The use
   count can be changed using the @fun{g:application-hold} and
   @fun{g:application-release} functions. If it drops to zero, the application
@@ -262,7 +265,7 @@
   the use count to ensure that the application stays alive as long as it has
   any opened windows.
 
-  Another feature that the @sym{g:application} class, optionally, provides is
+  Another feature that the @class{g:application} class, optionally, provides is
   process uniqueness. Applications can make use of this functionality by
   providing a unique application ID. If given, only one application with this
   ID can be running at a time per session. The session concept is platform
@@ -273,10 +276,10 @@
   this is always the current instance. On Linux, the D-Bus session bus is used
   for communication.
 
-  The use of the @sym{g:application} class differs from some other commonly
+  The use of the @class{g:application} class differs from some other commonly
   used uniqueness libraries, such as the libunique library, in important ways.
   The application is not expected to manually register itself and check if it
-  is the primary instance. Instead, the main function of a @sym{g:application}
+  is the primary instance. Instead, the main function of a @class{g:application}
   instance should do very little more than instantiating the application
   instance, possibly connecting signal handlers, then calling the
   @fun{g:application-run} function. All checks for uniqueness are done
@@ -299,13 +302,13 @@
   shared GDBus session bus. Note that due to the internal architecture of GDBus,
   method calls can be dispatched at any time, even if a main loop is not
   running. For this reason, you must ensure that any object paths that you wish
-  to register are registered before a @sym{g:application} instance attempts to
+  to register are registered before a @class{g:application} instance attempts to
   acquire the bus name of your application, which happens in the
   @fun{g:application-register} function. Unfortunately, this means that you
   cannot use the @fun{g:application-is-remote} function to decide if you want to
   register object paths.
 
-  The @sym{g:application} class also implements the @class{g:action-group} and
+  The @class{g:application} class also implements the @class{g:action-group} and
   @class{g:action-map} interfaces and lets you easily export actions by adding
   them with the @fun{g:action-map-add-action} function. When invoking an action
   by calling the @fun{g:action-group-activate-action} function on the
@@ -315,7 +318,7 @@
   @code{GDBusMenuModel} wrapper for remote access to exported
   @class{g:menu-model} objects.
 
-  There is a number of different entry points into a @sym{g:application}
+  There is a number of different entry points into a @class{g:application}
   instance:
   @begin{itemize}
     @item{via 'Activate' (i.e. just starting the application)}
@@ -327,11 +330,11 @@
   of these in a single place.
 
   Regardless of which of these entry points is used to start the application,
-  the @sym{g:application} instance passes some platform data from the launching
-  instance to the primary instance, in the form of a @type{g:variant} dictionary
-  mapping strings to variants. To use platform data, override the
+  the @class{g:application} instance passes some platform data from the 
+  launching instance to the primary instance, in the form of a @type{g:variant} 
+  dictionary mapping strings to variants. To use platform data, override the
   @code{before_emit} or @code{after_emit} virtual functions in your
-  @sym{g:application} subclass. When dealing with
+  @class{g:application} subclass. When dealing with
   @class{g:application-command-line} objects, the platform data is directly
   available via the @fun{g:application-command-line-cwd},
   @fun{g:application-command-line-environ} and
@@ -342,7 +345,7 @@
   optionally the environment, i.e. the set of environment variables and their
   values, of the calling process, key \"environ\". The environment is only
   added to the platform data if the @code{:send-enviroment} flag is set. A
-  @sym{g:application} subclass can add own platform data by overriding the
+  @class{g:application} subclass can add own platform data by overriding the
   @code{add_platform_data} virtual function. For instance, the
   @class{gtk:application} class adds startup notification data in this way.
 
@@ -463,8 +466,8 @@ lambda (application)    :run-last
       The signal is emitted on the primary instance when an activation occurs.
       See the @fun{g:application-activate} function.
       @begin[code]{table}
-        @entry[application]{The @sym{g:application} instance which received the
-          signal.}
+        @entry[application]{The @class{g:application} instance which received 
+          the signal.}
       @end{table}
     @subheading{The \"command-line\" signal}
       @begin{pre}
@@ -474,8 +477,8 @@ lambda (application cmdline)    :run-last
       handled locally. See the @fun{g:application-run} function and the
       @class{g:application-command-line} documentation for more information.
       @begin[code]{table}
-        @entry[application]{The @sym{g:application} instance which received the
-          signal.}
+        @entry[application]{The @class{g:application} instance which received 
+          the signal.}
         @entry[cmdline]{A @class{g:application-command-line} object representing
           the passed command line.}
         @entry[Returns]{An integer that is set as the exit status for the
@@ -526,8 +529,8 @@ lambda (application options)    :run-last
       need more powerful capabilities than what is provided here, but this
       should not normally be required.
       @begin[code]{table}
-        @entry[application]{The @sym{g:application} instance which received the
-          signal.}
+        @entry[application]{The @class{g:application} instance which received 
+          the signal.}
         @entry[options]{The options dictionary of @class{g:variant-dict} type.}
         @entry[Returns]{An exit code. If you have handled your options and want
           to exit the process, return a non-negative option, 0 for success, and
@@ -543,8 +546,8 @@ lambda (application)    :run-last
       the @code{:allow-replacement} flag. The default handler for this signal
       calls the @fun{g:application-quit} function. Since 2.60.
       @begin[code]{table}
-        @entry[application]{The @sym{g:application} instance which received the
-          signal.}
+        @entry[application]{The @class{g:application} instance which received 
+          the signal.}
         @entry[Returns]{@em{True} if the signal has been handled.}
       @end{table}
     @subheading{The \"open\" signal}
@@ -554,8 +557,8 @@ lambda (application files n-files hint)    :run-last
       The signal is emitted on the primary instance when there are files to
       open. See the @fun{g:application-open} function for more information.
       @begin[code]{table}
-        @entry[application]{The @sym{g:application} instance which received the
-          signal.}
+        @entry[application]{The @class{g:application} instance which received 
+          the signal.}
         @entry[files]{A C array of @class{g:file} objects.}
         @entry[n-files]{An integer with the length of @arg{files}.}
         @entry[hint]{A string with a hint provided by the calling instance.}
@@ -567,8 +570,8 @@ lambda (application)    :run-last
       The signal is emitted only on the registered primary instance immediately
       after the main loop terminates.
       @begin[code]{table}
-        @entry[application]{The @sym{g:application} instance which received the
-          signal.}
+        @entry[application]{The @class{g:application} instance which received 
+          the signal.}
       @end{table}
     @subheading{The \"startup\" signal}
       @begin{pre}
@@ -577,8 +580,8 @@ lambda (application)    :run-first
       The signal is emitted on the primary instance immediately after
       registration. See the @fun{g:application-register} function.
       @begin[code]{table}
-        @entry[application]{The @sym{g:application} instance which received the
-          signal.}
+        @entry[application]{The @class{g:application} instance which received 
+          the signal.}
       @end{table}
   @end{dictionary}
   @see-constructor{g:application-new}
@@ -605,8 +608,8 @@ lambda (application)    :run-first
 (setf (documentation (liber:slot-documentation "action-group" 'application) t)
  "The @code{action-group} property of type @class{g:action-group} (Write) @br{}
   The group of actions that the application exports. @br{}
-  @em{Warning:} The @code{action-group} property is deprecated since version
-  2.32. Use the @class{g:action-map} interface instead.")
+  @em{Warning:} Deprecated since version 2.32. Use the @class{g:action-map} 
+  interface instead.")
 
 #+liber-documentation
 (setf (liber:alias-for-function 'application-action-group)
@@ -623,7 +626,7 @@ lambda (application)    :run-first
   This used to be how actions were associated with a @class{g:application}
   instance. Now there is the @class{g:action-map} interface for that.
   @begin[Warning]{dictionary}
-    The @sym{g:application-action-group} function has been deprecated since
+    The @fun{g:application-action-group} function has been deprecated since
     version 2.32 and should not be used in newly written code. Use the
     @class{g:action-map} interface instead. Never ever mix use of this API with
     use of the @class{g:action-map} interface on the same application or things
@@ -634,7 +637,7 @@ lambda (application)    :run-first
   @see-class{g:action-group}
   @see-class{g:action-map}")
 
-;;; --- application-application-id -------------------------------------------
+;;; --- application-application-id ---------------------------------------------
 
 #+liber-documentation
 (setf (documentation (liber:slot-documentation "application-id" 'application) t)
@@ -656,7 +659,7 @@ lambda (application)    :run-first
     Accessor of the @slot[g:application]{application-id} slot of the
     @class{g:application} class.
   @end{short}
-  The @sym{g:application-application-id} function gets the unique identifier for
+  The @fun{g:application-application-id} function gets the unique identifier for
   the application. The @sym{(setf g:application-application-id)} function sets
   the unique identifier.
 
@@ -687,7 +690,7 @@ lambda (application)    :run-first
     Accessor of the @slot[g:application]{flags} slot of the
     @class{g:application} class.
   @end{short}
-  The @sym{g:application-flags} function gets the flags for the application.
+  The @fun{g:application-flags} function gets the flags for the application.
   The @sym{(setf g:application-flags)} function sets the flags.
 
   The flags can only be modified if the application has not yet been registered.
@@ -718,7 +721,7 @@ lambda (application)    :run-first
     Accessor of the @slot[g:application]{inactivity-timeout} slot of the
     @class{g:application} class.
   @end{short}
-  The @sym{g:application-inactivity-timeout} function gets the current
+  The @fun{g:application-inactivity-timeout} function gets the current
   inactivity timeout for the application. The
   @sym{(setf g:application-inactivity-timeout)} function sets the inactivity
   timeout.
@@ -836,7 +839,7 @@ lambda (application)    :run-first
     Accessor of the @slot[g:application]{resource-base-path} slot of the
     @class{g:application} class.
   @end{short}
-  The @sym{g:application-resource-base-path} function gets the resource base
+  The @fun{g:application-resource-base-path} function gets the resource base
   path of the application. The @sym{(setf g:application-resource-base-path)}
   function sets or unsets the resource base path.
 
@@ -1040,15 +1043,15 @@ lambda (application)    :run-first
 
 (cffi:defcfun ("g_application_hold" application-hold) :void
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2023-8-2}
   @argument[application]{a @class{g:application} instance}
   @begin{short}
     Increases the use count of the application.
   @end{short}
   Use this function to indicate that the application has a reason to continue
-  to run. For example, the @sym{g:application-hold} function is called by GTK
-  when a toplevel window is on the screen. To cancel the hold, call the
-  @fun{g:application-release} function.
+  to run. For example, the function is called by GTK when a toplevel window is 
+  on the screen. To cancel the hold, call the @fun{g:application-release} 
+  function.
   @see-class{g:application}
   @see-function{g:application-release}"
   (application (gobject:object application)))
@@ -1061,7 +1064,7 @@ lambda (application)    :run-first
 
 (cffi:defcfun ("g_application_release" application-release) :void
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2023-8-2}
   @argument[application]{a @class{g:application} instance}
   @begin{short}
     Decrease the use count of the application.
@@ -1655,7 +1658,7 @@ lambda (application)    :run-first
   @begin{short}
     Accessor of the default application for the process.
   @end{short}
-  The @sym{g:application-default} function returns the default application
+  The @fun{g:application-default} function returns the default application
   instance for this process. The @sym{(setf g:application-default)} function
   sets or unsets the default application.
 

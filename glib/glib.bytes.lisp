@@ -63,23 +63,28 @@
 (setf (liber:alias-for-class 'bytes)
       "GBoxed"
       (documentation 'bytes 'type)
- "@version{2023-1-24}
+ "@version{2023-8-12}
+  @begin{pre}
+(define-g-boxed-opaque bytes \"GBytes\"
+  :type-initializer \"g_bytes_get_type\"
+  :alloc (%bytes-new (cffi:null-pointer) 0))
+  @end{pre}
   @begin{short}
-    The @sym{g:bytes} structure is a simple refcounted data type representing
+    The @class{g:bytes} structure is a simple refcounted data type representing
     an immutable sequence of zero or more bytes from an unspecified origin.
   @end{short}
-  The purpose of a @sym{g:bytes} instance is to keep the memory region that it
-  holds alive for as long as anyone holds a reference to the bytes. When the
+  The purpose of a @class{g:bytes} instance is to keep the memory region that
+  it holds alive for as long as anyone holds a reference to the bytes. When the
   last reference count is dropped, the memory is released. Multiple unrelated
-  callers can use byte data in the @sym{g:bytes} instance without coordinating
+  callers can use byte data in the @class{g:bytes} instance without coordinating
   their activities, resting assured that the byte data will not change or move
   while they hold a reference.
 
-  A @sym{g:bytes} instance can come from many different origins that may have
+  A @class{g:bytes} instance can come from many different origins that may have
   different procedures for freeing the memory region. Examples are memory from
   the @fun{g:malloc} function.
   @begin[Examples]{dictionary}
-    Usage of a @sym{g:bytes} instance for a Lisp string as byte data.
+    Usage of a @class{g:bytes} instance for a Lisp string as byte data.
     @begin{pre}
 (multiple-value-bind (data len)
     (foreign-string-alloc \"A test string.\")
@@ -94,7 +99,8 @@
 => \"A test string.\"
 => 14
     @end{pre}
-  @end{dictionary}")
+  @end{dictionary}
+  @see-constructor{g:bytes-new}")
 
 (export 'bytes)
 
