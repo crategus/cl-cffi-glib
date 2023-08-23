@@ -2,7 +2,7 @@
 
 (asdf:defsystem :gio-example
   :author "Dieter Kaiser"
-  :license "LLGPL"
+  :license "MIT"
   :serial t
   :depends-on (:cl-cffi-glib)
   :components ((:file "gio-example")
@@ -11,4 +11,4 @@
                (:file "application-open")
   ))
 
-;;; --- 2023-5-1 ---------------------------------------------------------------
+;;; --- 2023-8-23 --------------------------------------------------------------
