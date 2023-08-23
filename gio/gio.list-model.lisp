@@ -77,9 +77,9 @@
 (setf (liber:alias-for-class 'list-model)
       "Interface"
       (documentation 'list-model 'type)
- "@version{#2022-12-31}
+ "@version{2023-8-15}
   @begin{short}
-    The @sym{g:list-model} interface is an interface that represents a mutable
+    The @class{g:list-model} interface is an interface that represents a mutable
     list of @class{g:object} instances.
   @end{short}
   Its main intention is as a model for various widgets in user interfaces, such
@@ -94,21 +94,21 @@
   A good example would be the list of visible wireless network access points,
   where each access point can report dynamic properties such as signal strength.
 
-  It is important to note that the @sym{g:list-model} implementation itself does
-  not report changes to the individual items. It only reports changes to the
-  list membership. If you want to observe changes to the objects themselves then
-  you need to connect signals to the objects that you are interested in.
+  It is important to note that the @class{g:list-model} implementation itself
+  does not report changes to the individual items. It only reports changes to
+  the list membership. If you want to observe changes to the objects themselves
+  then you need to connect signals to the objects that you are interested in.
 
-  All items in a @sym{g:list-model} instance are of, or derived from, the same
+  All items in a @class{g:list-model} instance are of, or derived from, the same
   type. The @fun{g:list-model-item-type} function returns that type. The type
   may be an interface, in which case all objects in the list must implement it.
 
-  The semantics are close to that of an array: the @fun{g:list-model-n-items}
+  The semantics are close to that of an array. The @fun{g:list-model-n-items}
   function returns the number of items in the list and the
   @fun{g:list-model-item} function returns an item at a (0-based) position. In
   order to allow implementations to calculate the list length lazily, you can
-  also iterate over items: starting from 0, repeatedly call the
-  @fun{g:list-model-item} function until it returns @code{nil}.
+  also iterate over items. Starting from 0, repeatedly call the
+  @fun{g:list-model-item} function until it returns @code{null-pointer}.
 
   An implementation may create objects lazily, but must take care to return the
   same object for a given position until all references to it are gone.
@@ -118,8 +118,8 @@
   of laziness in the implementation of the list and to reduce the required
   number of signal connections at a given time.
 
-  This interface is intended only to be used from a single thread. The thread in
-  which it is appropriate to use it depends on the particular implementation,
+  This interface is intended only to be used from a single thread. The thread
+  in which it is appropriate to use it depends on the particular implementation,
   but typically it will be from the thread that owns the thread-default main
   context in effect at the time that the model was created.
   @begin[Signal Details]{dictionary}
@@ -132,7 +132,7 @@ lambda (list position removed added)    :run-last
       were added in their place. Note: If @arg{removed} is not equal
       @arg{added}, the positions of all later items in the model change.
       @begin[code]{table}
-        @entry[list]{The @sym{g:list-model} instance that changed.}
+        @entry[list]{The @class{g:list-model} instance that changed.}
         @entry[position]{An unsigned integer with the position at which
           @arg{list} changed.}
         @entry[removed]{An unsigned integer with the number of items removed.}
@@ -147,14 +147,14 @@ lambda (list position removed added)    :run-last
 
 (cffi:defcfun ("g_list_model_get_item_type" list-model-item-type) gobject:type-t
  #+liber-documentation
- "@version{#2022-12-31}
+ "@version{2023-8-15}
   @argument[list]{a @class{g:list-model} object}
   @return{The @class{g:type-t} type of the items contained in @arg{list}.}
   @begin{short}
     Gets the type of the items in the list.
   @end{short}
-  All items returned from the @sym{g:list-model-type} function are of that type
-  or a subtype, or are an implementation of that interface.
+  All items returned from the @fun{g:list-model-item-type} function are of that
+  type or a subtype, or are an implementation of that interface.
 
   The item type of a @class{g:list-model} object can not change during the life
   of the model.
@@ -170,7 +170,7 @@ lambda (list position removed added)    :run-last
 
 (cffi:defcfun ("g_list_model_get_n_items" list-model-n-items) :uint
  #+liber-documentation
- "@version{#2022-12-31}
+ "@version{2023-8-15}
   @argument[list]{a @class{g:list-model} object}
   @return{An integer with the number of items in @arg{list}.}
   @begin{short}
@@ -191,11 +191,11 @@ lambda (list position removed added)    :run-last
 
 (cffi:defcfun ("g_list_model_get_item" list-model-item) :pointer
  #+liber-documentation
- "@version{#2023-7-22}
+ "@version{2023-8-15}
   @argument[list]{a @class{g:list-model} object}
   @argument[position]{an unsigned integer with the position of the item to
     fetch}
-  @return{An pointer with the item at @arg{position}.}
+  @return{A pointer with the item at @arg{position}.}
   @begin{short}
     Get the item at @arg{position}.
   @end{short}
@@ -217,7 +217,7 @@ lambda (list position removed added)    :run-last
 
 (cffi:defcfun ("g_list_model_get_object" list-model-object) gobject:object
  #+liber-documentation
- "@version{#2022-12-31}
+ "@version{2023-8-15}
   @argument[list]{a @class{g:list-model} object}
   @argument[position]{an unsigned integer with the position of the item to
     fetch}
@@ -242,7 +242,7 @@ lambda (list position removed added)    :run-last
 
 (cffi:defcfun ("g_list_model_items_changed" list-model-items-changed) :void
  #+liber-documentation
- "@version{#2022-12-31}
+ "@version{#2023-8-15}
   @argument[list]{a @class{g:list-model} object}
   @argument[position]{an unsigned integer with the position at which @arg{list}
     changed}
@@ -251,7 +251,6 @@ lambda (list position removed added)    :run-last
   @begin{short}
     Emits the \"items-changed\" signal on @arg{list}.
   @end{short}
-
   This function should only be called by classes implementing the
   @class{g:list-model} interface. It has to be called after the internal
   representation of list has been updated, because handlers connected to this
@@ -269,7 +268,8 @@ lambda (list position removed added)    :run-last
   accesses to the model via the API, without returning to the main loop, and
   without calling other code, will continue to view the same contents of the
   model.
-  @see-class{g:list-model}"
+  @see-class{g:list-model}
+  @see-class{g:list-store}"
   (list (gobject:object list-model))
   (position :uint)
   (removed :uint)

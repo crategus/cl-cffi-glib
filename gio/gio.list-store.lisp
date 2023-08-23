@@ -47,6 +47,7 @@
 ;;;     g_list_store_sort
 ;;;     g_list_store_find
 ;;;     g_list_store_find_with_equal_func
+;;;     g_list_store_find_with_equal_func_full             Since 2.74
 ;;;
 ;;; Properties
 ;;;
@@ -75,7 +76,7 @@
    :interfaces ("GListModel")
    :type-initializer "g_list_store_get_type")
   ((item-type
-    list-store-item-type
+    %list-store-item-type ; internal only, not used
     "item-type" "GType" t t)
    #+glib-2-74
    (n-items
@@ -84,9 +85,9 @@
 
 #+liber-documentation
 (setf (documentation 'list-store 'type)
- "@version{2023-4-23}
+ "@version{2023-8-15}
   @begin{short}
-    The @sym{g:list-store} object is an implementation of the
+    The @class{g:list-store} object is an implementation of the
     @class{g:list-model} interface that stores all items in memory.
   @end{short}
   It provides insertions, deletions, and lookups in logarithmic time with a
@@ -102,6 +103,10 @@
 
 ;;; --- list-store-item-type ---------------------------------------------------
 
+;; Note: We define the accessor with the interface function. This we get the
+;; expected GType for ITEM-TYPE. The accessor %LIST-STORE-ITEM-TYPE returns
+;; a pointer.
+
 #+liber-documentation
 (setf (documentation (liber:slot-documentation "item-type" 'list-store) t)
  "The @code{item-type} property of type @class{g:type-t}
@@ -109,14 +114,19 @@
   The type of items contained in the list store. Items must be subclasses of
   the @class{g:object} class.")
 
+(declaim (inline list-store-item-type))
+
+(defun list-store-item-type (object)
+  (list-model-item-type object))
+
 #+liber-documentation
 (setf (liber:alias-for-function 'list-store-item-type)
       "Accessor"
       (documentation 'list-store-item-type 'function)
- "@version{2023-4-23}
-  @syntax[]{(g:list-store-item-type object) => pointer}
+ "@version{2023-8-15}
+  @syntax[]{(g:list-store-item-type object) => gtype}
   @argument[object]{a @class{g:list-store} object}
-  @argument[pointer]{a pointer to a @class{g:type-t} type}
+  @argument[gtype]{a @class{g:type-t} type}
   @begin{short}
     Accessor of the @slot[g:list-store]{item-type} slot of the
     @class{g:list-store} class.
@@ -124,11 +134,11 @@
   The type of items contained in the list store. Items must be subclasses of
   the @class{g:object} class.
   @begin[Note]{dictionary}
-    This function returns a pointer to the @class{g:type-t} type. Use the
-    @fun{g:list-model-item-type} function to get the @class{g:type-t} type.
+    This function is equivalent to the @fun{g:list-model-item-type} function.
   @end{dictionary}
   @see-class{g:list-store}
   @see-class{g:type-t}
+  @see-class{g:object}
   @see-function{g:list-model-item-type}")
 
 ;;; --- list-store-n-items -----------------------------------------------------
@@ -143,7 +153,7 @@
 (setf (liber:alias-for-function 'list-store-n-items)
       "Accessor"
       (documentation 'list-store-n-items 'function)
- "@version{2023-4-23}
+ "@version{2023-8-15}
   @syntax[]{(g:list-store-n-items object) => n-items}
   @argument[object]{a @class{g:list-store} object}
   @argument[n-items]{an unsigned integer with the number of items contained in
@@ -163,17 +173,17 @@
 
 (cffi:defcfun ("g_list_store_new" list-store-new) (gobject:object list-store)
  #+liber-documentation
- "@version{2023-5-4}
-  @argument[itype]{a @class{g:type-t} type for the items in the list}
+ "@version{2023-8-15}
+  @argument[gtype]{a @class{g:type-t} type for the items in the list}
   @return{A new @class{g:list-store} object.}
   @begin{short}
-    Creates a new list store with items of @arg{itype} type.
+    Creates a new list store with items of @arg{gtype} type.
   @end{short}
-  The @arg{itype} type must be a subclass of the @class{g:object} class.
+  The @arg{gtype} type must be a subclass of the @class{g:object} class.
   @see-class{g:list-store}
   @see-class{g:type-t}
   @see-class{g:object}"
-  (itype gobject:type-t))
+  (gtype gobject:type-t))
 
 (export 'list-store-new)
 
@@ -183,7 +193,7 @@
 
 (cffi:defcfun ("g_list_store_insert" list-store-insert) :void
  #+liber-documentation
- "@version{#2022-12-31}
+ "@version{#2023-8-15}
   @argument[store]{a @class{g:list-store} object}
   @argument[position]{an unsigned integer with the position at which to insert
     the new item}
@@ -191,17 +201,15 @@
   @begin{short}
     Inserts the item into the list store at @arg{position}.
   @end{short}
-  The item must be of type @slot[list-store]{item-type} type or derived from
+  The item must be of type @slot[g:list-store]{item-type} type or derived from
   it. The @arg{position} argument must be smaller than the length of the list
   store, or equal to it to append.
-
-  This function takes a ref on @arg{item}.
 
   Use the @fun{g:list-store-splice} function to insert multiple items at the
   same time efficiently.
   @see-class{g:list-store}
   @see-class{g:object}
-  @see-function{g:list-model-item-type}
+  @see-function{g:list-store-item-type}
   @see-function{g:list-store-splice}"
   (store (gobject:object list-store))
   (position :uint)
@@ -250,17 +258,18 @@
 
 (cffi:defcfun ("g_list_store_append" list-store-append) :void
  #+liber-documentation
- "@version{2023-5-4}
+ "@version{2023-8-15}
   @argument[list]{a @class{g:list-store} object}
   @argument[item]{a @class{g:object} object with the new item}
   @begin{short}
     Appends the item to the list store.
   @end{short}
-  The item must be of type @slot[list-store]{item-type} type. This function
-  takes a ref on @arg{item}. Use the @fun{g:list-store-splice} function to
-  append multiple items at the same time efficiently.
+  The item must be of type @slot[g:list-store]{item-type} type. Use the
+  @fun{g:list-store-splice} function to append multiple items at the same time
+  efficiently.
   @see-class{g:list-store}
   @see-class{g:object}
+  @see-function{g:list-store-item-type}
   @see-function{g:list-store-splice}"
   (store (gobject:object list-store))
   (item gobject:object))
@@ -273,7 +282,7 @@
 
 (cffi:defcfun ("g_list_store_remove" list-store-remove) :void
  #+liber-documentation
- "@version{#2022-12-31}
+ "@version{#2023-8-15}
   @argument[list]{a @class{g:list-store} object}
   @argument[position]{an unsigned integer with the position of the item that
     is to be removed}
@@ -298,7 +307,7 @@
 
 (cffi:defcfun ("g_list_store_remove_all" list-store-remove-all) :void
  #+liber-documentation
- "@version{#2022-12-31}
+ "@version{#2023-8-15}
   @argument[list]{a @class{g:list-store} object}
   @short{Removes all items from the list store.}
   @see-class{g:list-store}"
@@ -381,7 +390,7 @@
 
 (defun list-store-find (list item)
  #+liber-documentation
- "@version{#2022-12-31}
+ "@version{2023-8-15}
   @argument[list]{a @class{g:list-store} object}
   @argument[item]{a @class{g:object} item}
   @return{An unsigned integer with the first position of the item, if it was
@@ -397,6 +406,7 @@
   the @fun{g:list-store-find-with-equal-func} function with a custom
   @code{GEqualFunc} instead.
   @see-class{g:list-store}
+  @see-class{g:object}
   @see-function{g:list-store-find-with-equal-func}"
   (cffi:with-foreign-object (position :uint)
     (when (%list-store-find list item position)
@@ -435,6 +445,43 @@
 ;;;     the position where item occurred for the first time.
 ;;;
 ;;; Since: 2.64
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_list_store_find_with_equal_func_full
+;;;
+;;; gboolean
+;;; g_list_store_find_with_equal_func_full (GListStore* store,
+;;;                                         GObject* item,
+;;;                                         GEqualFuncFull equal_func,
+;;;                                         gpointer user_data,
+;;;                                         guint* position)
+;;;
+;;; Like g_list_store_find_with_equal_func() but with an additional user_data
+;;; that is passed to equal_func.
+;;;
+;;; item is always passed as second parameter to equal_func.
+;;;
+;;; Since GLib 2.76 it is possible to pass NULL for item.
+;;;
+;;; item :
+;;;     An item. The argument can be NULL.
+;;;
+;;; equal_func :
+;;;     A custom equality check function.
+;;;
+;;; user_data :
+;;;     User data for equal_func. The argument can be NULL.
+;;;
+;;; position :
+;;;     The first position of item, if it was found. The argument will be set
+;;;     by the function. The argument can be NULL.
+;;;
+;;; Return :
+;;;     Whether store contains item. If it was found, position will be set to
+;;;     the position where item occurred for the first time.
+;;;
+;;; Since 2.74
 ;;; ----------------------------------------------------------------------------
 
 ;;; --- End of file gio.list-store.lisp ----------------------------------------

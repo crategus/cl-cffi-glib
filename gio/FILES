@@ -61,8 +61,8 @@ Permissions
 
 Data Models
 
-  gio.list-model.lisp          - GListModel                         - GIO 2.68
-  gio.list-store.lisp          - GListStore                         - GIO 2.74 &
+  gio.list-model.lisp          - GListModel                         - GIO 2.76
+  gio.list-store.lisp          - GListStore                         - GIO 2.76 &
 
 Application support
 

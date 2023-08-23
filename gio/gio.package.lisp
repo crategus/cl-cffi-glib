@@ -32,7 +32,7 @@
   (:import-from #:cffi)
   (:import-from #:glib)
   (:import-from #:gobject))
-  
+
 (in-package :gio)
 
 ;;; ----------------------------------------------------------------------------
@@ -453,7 +453,7 @@
     @end{subsection}
     @begin[GListStore]{subsection}
       @about-class{list-store}
-      @about-generic{list-store-item-type}
+      @about-function{list-store-item-type}
       @about-generic{list-store-n-items}
       @about-function{list-store-new}
       @about-function{list-store-insert}
