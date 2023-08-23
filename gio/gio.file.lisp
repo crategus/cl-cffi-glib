@@ -222,9 +222,10 @@
 
 (defmethod cffi:translate-from-foreign
     (value (type file-as-namestring-type))
-  (cffi:foreign-funcall "g_file_get_parse_name"
-                        :pointer value
-                        (:string :free-from-foreign t)))
+  (when (and value (not (cffi:null-pointer-p value)))
+    (cffi:foreign-funcall "g_file_get_parse_name"
+                          :pointer value
+                          (:string :free-from-foreign t))))
 
 #+liber-documentation
 (setf (liber:alias-for-class 'file-as-namestring)
