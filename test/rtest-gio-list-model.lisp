@@ -16,6 +16,9 @@
   ;; Check the type initializer
   (is (eq (g:gtype "GListModel")
           (g:gtype (cffi:foreign-funcall "g_list_model_get_type" :size))))
+  ;; Check the interface prerequisites
+  (is (equal '("GObject")
+             (list-interface-prerequisites "GListModel")))
   ;; Get the names of the interface properties.
   (is (equal '()
              (list-interface-properties "GListModel")))
@@ -47,9 +50,21 @@
     ;; Use the interace functions
     (is (eq (g:gtype "GObject") (g:list-model-item-type store)))
     (is (= 2 (g:list-model-n-items store)))
+
     (is (cffi:pointerp (g:list-model-item store 0)))
+    (is (typep (cffi:convert-from-foreign (g:list-model-item store 0)
+                                          'g:object)
+               'g:simple-action))
     (is (typep (g:list-model-object store 0) 'g:simple-action))
-    (is (typep (g:list-model-object store 1) 'g:menu-item))))
+
+    (is (cffi:pointerp (g:list-model-item store 1)))
+    (is (typep (cffi:convert-from-foreign (g:list-model-item store 1)
+                                          'g:object)
+               'g:menu-item))
+    (is (typep (g:list-model-object store 1) 'g:menu-item))
+
+    (is (cffi:null-pointer-p (g:list-model-item store 2)))
+    (is-false  (g:list-model-object store 2))))
 
 (test g-list-model-get.2
   (let ((store (g:list-store-new "GAction")))
@@ -65,4 +80,4 @@
 
 ;;;     g_list_model_items_changed
 
-;;; --- 2023-7-9 ---------------------------------------------------------------
+;;; --- 2023-8-15 --------------------------------------------------------------

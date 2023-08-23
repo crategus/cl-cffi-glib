@@ -8,6 +8,8 @@
 
 (in-package :glib-test)
 
+(defvar *first-run-glib-test* t)
+
 (def-suite glib-test)
 (def-suite glib-suite :in glib-test)
 (def-suite gobject-suite :in glib-test)
@@ -42,6 +44,10 @@
                                   (g:type-parent gtype)))
                         :test #'string=)
         #'string<))
+
+(defun list-interface-prerequisites (gtype)
+  (mapcar #'g:type-name
+          (g:type-interface-prerequisites gtype)))
 
 (defun list-interface-properties (gtype)
   (mapcar #'g:param-spec-name

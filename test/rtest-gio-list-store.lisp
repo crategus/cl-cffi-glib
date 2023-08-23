@@ -44,8 +44,8 @@
 
 (test g-list-store-properties
   (let ((store (g:list-store-new "GSimpleAction")))
-    ;; The accessor returns a pointer to a GType
-    (is (cffi:pointerp (g:list-store-item-type store)))
+    ;; The accessor returns the GType
+    (is (eq (g:gtype "GSimpleAction") (g:list-store-item-type store)))
     ;; The inherited accessor returns the GType
     (is (eq (g:gtype "GSimpleAction") (g:list-model-item-type store)))
     ;; Check default value for N-ITEMS
@@ -82,4 +82,4 @@
 
 ;;;     g_list_store_find_with_equal_func
 
-;;; --- 2023-5-29 --------------------------------------------------------------
+;;; --- 2023-8-15 --------------------------------------------------------------

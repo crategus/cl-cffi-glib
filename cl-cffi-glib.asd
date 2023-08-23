@@ -199,6 +199,8 @@
      (:file "rtest-gio-cancellable")
 ;    (:file "gio.async-result")
 ;    (:file "gio.task")
+
+     (:file "rtest-glib-finish")
      )))
   :perform (test-op (o c)
              (uiop:symbol-call :fiveam :run!

@@ -106,6 +106,7 @@
 ;; TODO: This is in English, but can be in German, too. Set the language,
 ;; before runing the test.
 
+#-windows
 (test g-option-context-set-translate-func
   (glib:with-g-option-context (context "context")
     (let ((entries '(("long-name"       ; long-name
@@ -137,6 +138,38 @@ DESCRIPTION
 "
                    (g:option-context-help context t))))))
 
+#+windows
+(test g-option-context-set-translate-func
+  (glib:with-g-option-context (context "context")
+    (let ((entries '(("long-name"       ; long-name
+                      #\a               ; short-name
+                      (:in-main)        ; flags
+                      :none             ; arg
+                      nil               ; arg-data
+                      "description"     ; description
+                      nil))))           ; arg-description
+      (g:option-context-set-translate-func context #'translate-func)
+      (setf (g:option-context-summary context) "summary")
+      (setf (g:option-context-description context) "description")
+      (g:option-context-add-main-entries context entries nil)
+      (when *verbose-g-option*
+        (format t "~%~a~%" (g:option-context-help context t)))
+      (is (string=
+"Aufruf:
+  glib-test [OPTION …] CONTEXT
+
+SUMMARY
+
+Hilfeoptionen:
+  -h, --help          Hilfeoptionen anzeigen
+
+Anwendungsoptionen:
+  -a, --long-name     description
+
+DESCRIPTION
+"
+                   (g:option-context-help context t))))))
+
 ;;;     g_option_context_set_translation_domain
 
 ;;;     g_option_context_parse
@@ -154,6 +187,7 @@ DESCRIPTION
 ;; TODO: This is in English, but can be in German, too. Set the language,
 ;; before runing the test.
 
+#-windows
 (test g-option-context-add-main-entries
   (glib:with-g-option-context (context "Description")
     (let ((entries '(("long-name-1"     ; long-name
@@ -234,6 +268,87 @@ Application Options:
 "
                    (g:option-context-help context t))))))
 
+#+windows
+(test g-option-context-add-main-entries
+  (glib:with-g-option-context (context "Description")
+    (let ((entries '(("long-name-1"     ; long-name
+                      #\a               ; short-name
+                      (:in-main)        ; flags
+                      :none             ; arg
+                      nil               ; arg-data
+                      "Description1"    ; description
+                      nil)              ; arg-description
+                     ("long-name-2"
+                      #\b
+                      (:in-main)
+                      :string
+                      arg-string
+                      "Description2"
+                      "a string")
+                     ("long-name-3"
+                      #\c
+                      (:in-main)
+                      :int arg-int
+                      "Description3"
+                      "an integer")
+                     ("long-name-4"
+                      #\d
+                      (:in-main)
+                      :filename
+                      arg-filename
+                      "Description4"
+                      "a filename")
+                     ("long-name-5"
+                      #\e
+                      (:in-main)
+                      :string-array
+                      arg-string-array
+                      "Description5"
+                      "a string array")
+                     ("long-name-6"
+                      #\f
+                      (:in-main)
+                      :filename-array
+                      arg-filename-array
+                      "Description6"
+                      "a filename array")
+                     ("long-name-7"
+                      #\g
+                      (:in-main)
+                      :double
+                      arg-double
+                      "Description7"
+                      "a double float")
+                     ("long-name-8"
+                      #\h
+                      (:in-main)
+                      :int64
+                      arg-int64
+                      "Description8"
+                      "a long integer"))))
+      (g:option-context-add-main-entries context entries nil)
+      (when *verbose-g-option*
+        (format t "~&~A~%" (g:option-context-help context t)))
+      (is (string=
+"Aufruf:
+  glib-test [OPTION …] Description
+
+Hilfeoptionen:
+  -?, --help                             Hilfeoptionen anzeigen
+
+Anwendungsoptionen:
+  -a, --long-name-1                      Description1
+  -b, --long-name-2=a string             Description2
+  -c, --long-name-3=an integer           Description3
+  -d, --long-name-4=a filename           Description4
+  -e, --long-name-5=a string array       Description5
+  -f, --long-name-6=a filename array     Description6
+  -g, --long-name-7=a double float       Description7
+  -h, --long-name-8=a long integer       Description8
+
+"
+                   (g:option-context-help context t))))))
+
 ;;;     g_option_context_add_group
 
 ;;;     g_option_context_set_main_group
@@ -267,6 +382,7 @@ Application Options:
 ;; TODO: This is in English, but can be in German, too. Set the language,
 ;; before runing the test.
 
+#-windows
 (test g-option-group-add-entries
   (glib:with-g-option-group (group "myGroup" "A Group"  "Help Description")
     (glib:with-g-option-context (context "Description")
@@ -334,6 +450,86 @@ Application Options:
   glib-test [OPTION…] Description
 
 Application Options:
+  -a, --long-name-1                      Description1
+  -b, --long-name-2=a string             Description2
+  -c, --long-name-3=an integer           Description3
+  -d, --long-name-4=a filename           Description4
+  -e, --long-name-5=a string array       Description5
+  -f, --long-name-6=a filename array     Description6
+  -g, --long-name-7=a double float       Description7
+  -h, --long-name-8=a long integer       Description8
+
+"
+                     (g:option-context-help context t group)))))))
+
+#+windows
+(test g-option-group-add-entries
+  (glib:with-g-option-group (group "myGroup" "A Group"  "Help Description")
+    (glib:with-g-option-context (context "Description")
+      (let ((entries '(("long-name-1"     ; long-name
+                        #\a               ; short-name
+                        (:in-main)        ; flags
+                        :none             ; arg
+                        nil               ; arg-data
+                        "Description1"    ; description
+                        nil)              ; arg-description
+                       ("long-name-2"
+                        #\b
+                        (:in-main)
+                        :string
+                        arg-string
+                        "Description2"
+                        "a string")
+                       ("long-name-3"
+                        #\c
+                        (:in-main)
+                        :int arg-int
+                        "Description3"
+                        "an integer")
+                       ("long-name-4"
+                        #\d
+                        (:in-main)
+                        :filename
+                        arg-filename
+                        "Description4"
+                        "a filename")
+                       ("long-name-5"
+                        #\e
+                        (:in-main)
+                        :string-array
+                        arg-string-array
+                        "Description5"
+                        "a string array")
+                       ("long-name-6"
+                        #\f
+                        (:in-main)
+                        :filename-array
+                        arg-filename-array
+                        "Description6"
+                        "a filename array")
+                       ("long-name-7"
+                        #\g
+                        (:in-main)
+                        :double
+                        arg-double
+                        "Description7"
+                        "a double float")
+                       ("long-name-8"
+                        #\h
+                        (:in-main)
+                        :int64
+                        arg-int64
+                        "Description8"
+                        "a long integer"))))
+        (g:option-group-add-entries group entries)
+        (g:option-context-add-group context group)
+        (when *verbose-g-option*
+          (format t "~&~A~%" (g:option-context-help context t group)))
+        (is (string=
+"Aufruf:
+  glib-test [OPTION …] Description
+
+Anwendungsoptionen:
   -a, --long-name-1                      Description1
   -b, --long-name-2=a string             Description2
   -c, --long-name-3=an integer           Description3

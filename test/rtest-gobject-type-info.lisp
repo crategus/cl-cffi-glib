@@ -456,35 +456,66 @@
 
 ;;;     g_type_children
 
+#-windows
 (test g-type-children
-  (is (or (equal '("GInitiallyUnowned" "GBinding" "GAppLaunchContext" 
-                   "GFileIcon" "GThemedIcon" "GEmblemedIcon" "GEmblem" 
-                   "GPermission" "GListStore" "GSimpleAction" "GPropertyAction" 
-                   "GSimpleActionGroup" "GApplication" "GApplicationCommandLine" 
-                   "GMenuModel" "GMenuItem" "GNotification" "GCancellable" 
+  (if *first-run-glib-test*
+      (is (equal '("GInitiallyUnowned" "GBinding" "GAppLaunchContext"
+                   "GFileIcon" "GThemedIcon" "GEmblemedIcon" "GEmblem"
+                   "GPermission" "GListStore" "GSimpleAction" "GPropertyAction"
+                   "GSimpleActionGroup" "GApplication" "GApplicationCommandLine"
+                   "GMenuModel" "GMenuItem" "GNotification" "GCancellable"
                    "GTask")
-                 (mapcar #'g:type-name 
-                         (g:type-children "GObject")))
-          (equal '("GInitiallyUnowned" "GBinding" "GAppLaunchContext" 
-                   "GFileIcon" "GThemedIcon" "GEmblemedIcon" "GEmblem" 
-                   "GPermission" "GListStore" "GSimpleAction" "GPropertyAction" 
-                   "GSimpleActionGroup" "GApplication" "GApplicationCommandLine" 
-                   "GMenuModel" "GMenuItem" "GNotification" "GCancellable" 
-                   "GTask" "GDesktopAppInfo" "GLocalFile" "GFileInfo" 
-                   "GFileMonitor" "GVolumeMonitor" "GVfs" "GNotificationBackend" 
-                   "GTypeModule" "GSettingsBackend" "GPowerProfileMonitorDBus" 
-                   "GDebugControllerDBus" "GMemoryMonitorDBus" 
-                   "GMemoryMonitorPortal" "GNetworkMonitorBase" 
-                   "GPowerProfileMonitorPortal" "GProxyResolverPortal" 
-                   "GDummyProxyResolver" "GHttpProxy" "GSocks4aProxy" 
-                   "GSocks5Proxy" "GDummyTlsBackend" "GVfsIcon" "GVfsUriMapper" 
+                 (mapcar #'g:type-name
+                         (g:type-children "GObject"))))
+      (is (equal '("GInitiallyUnowned" "GBinding" "GAppLaunchContext"
+                   "GFileIcon" "GThemedIcon" "GEmblemedIcon" "GEmblem"
+                   "GPermission" "GListStore" "GSimpleAction" "GPropertyAction"
+                   "GSimpleActionGroup" "GApplication" "GApplicationCommandLine"
+                   "GMenuModel" "GMenuItem" "GNotification" "GCancellable"
+                   "GTask" "GDesktopAppInfo" "GLocalFile" "GFileInfo"
+                   "GFileMonitor" "GVolumeMonitor" "GVfs" "GNotificationBackend"
+                   "GTypeModule" "GSettingsBackend" "GPowerProfileMonitorDBus"
+                   "GDebugControllerDBus" "GMemoryMonitorDBus"
+                   "GMemoryMonitorPortal" "GNetworkMonitorBase"
+                   "GPowerProfileMonitorPortal" "GProxyResolverPortal"
+                   "GDummyProxyResolver" "GHttpProxy" "GSocks4aProxy"
+                   "GSocks5Proxy" "GDummyTlsBackend" "GVfsIcon" "GVfsUriMapper"
                    "GInputStream" "GDBusAuthObserver" "GCredentials" "GIOStream"
-                   "GDBusConnection" "GDBusProxy" "GSocketAddress" "GSocket" 
-                   "GSocketClient" "GSocketAddressEnumerator" "GOutputStream" 
-                   "GDBusAuth" "GDBusAuthMechanism" "GSocketControlMessage" 
-                   "GDBusMessage" "GDBusMethodInvocation" "GSimpleAsyncResult" 
+                   "GDBusConnection" "GDBusProxy" "GSocketAddress" "GSocket"
+                   "GSocketClient" "GSocketAddressEnumerator" "GOutputStream"
+                   "GDBusAuth" "GDBusAuthMechanism" "GSocketControlMessage"
+                   "GDBusMessage" "GDBusMethodInvocation" "GSimpleAsyncResult"
                    "GDaemonFile")
-                 (mapcar #'g:type-name 
+                 (mapcar #'g:type-name
+                         (g:type-children "GObject"))))))
+
+#+windows
+(test g-type-children
+  (is (or (equal '("GWin32RegistryKey" "GWin32AppInfoApplication" "GWin32AppInfoShellVerb"
+ "GWin32AppInfoFileExtension" "GWin32AppInfoHandler" "GThemedIcon"
+ "GWin32AppInfoURLSchema" "GInitiallyUnowned" "GBinding" "GAppLaunchContext"
+ "GFileIcon" "GEmblemedIcon" "GEmblem" "GPermission" "GListStore"
+ "GSimpleAction" "GPropertyAction" "GSimpleActionGroup" "GApplication"
+ "GApplicationCommandLine" "GMenuModel" "GMenuItem" "GNotification"
+ "GCancellable" "GTask")
+                 (mapcar #'g:type-name
+                         (g:type-children "GObject")))
+          (equal '("GWin32RegistryKey" "GWin32AppInfoApplication" "GWin32AppInfoShellVerb"
+ "GWin32AppInfoFileExtension" "GWin32AppInfoHandler" "GThemedIcon"
+ "GWin32AppInfoURLSchema" "GInitiallyUnowned" "GBinding" "GAppLaunchContext"
+ "GFileIcon" "GEmblemedIcon" "GEmblem" "GPermission" "GListStore"
+ "GSimpleAction" "GPropertyAction" "GSimpleActionGroup" "GApplication"
+ "GApplicationCommandLine" "GMenuModel" "GMenuItem" "GNotification"
+ "GCancellable" "GTask" "GWin32AppInfo" "GFileMonitor" "GVolumeMonitor" "GVfs"
+ "GNotificationBackend" "GSettingsBackend" "GPowerProfileMonitorDBus"
+ "GMemoryMonitorWin32" "GDummyProxyResolver" "GHttpProxy" "GSocks4aProxy"
+ "GSocks5Proxy" "GDummyTlsBackend" "GNetworkMonitorBase" "GLocalFile"
+ "GInputStream" "GDBusAuthObserver" "GCredentials" "GIOStream"
+ "GDBusConnection" "GDBusProxy" "GSocketAddress" "GSocket" "GNetworkAddress"
+ "GSocketClient" "GSocketAddressEnumerator" "GResolver" "GInetAddress"
+ "GOutputStream" "GDBusAuth" "GDBusAuthMechanism" "GDBusMessage"
+ "GSimpleAsyncResult" "GWinHttpFile")
+                 (mapcar #'g:type-name
                          (g:type-children "GObject"))))))
 
 ;;;     g_type_interfaces
@@ -559,4 +590,4 @@
 ;;;     G_DEFINE_POINTER_TYPE                              not implemented
 ;;;     G_DEFINE_POINTER_TYPE_WITH_CODE                    not implemented
 
-;;; --- 2023-7-9 ---------------------------------------------------------------
+;;; --- 2023-8-23 --------------------------------------------------------------
