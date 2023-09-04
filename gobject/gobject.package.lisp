@@ -63,6 +63,9 @@
            #:enum-item-nick
 
            #:register-object-type-implementation
+           
+           #:parse-g-value-for-type
+           #:set-g-value-for-type
     ))
     
 (in-package :gobject)
