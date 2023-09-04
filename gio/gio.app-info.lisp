@@ -1081,7 +1081,7 @@ lambda (context info platform-data)    :run-last
 
 (defun app-info-launch-default-for-uri (uri context)
  #+liber-documentation
- "@version{#2022-12-27}
+ "@version{2023-9-2}
   @argument[uri]{a string with the URI to show}
   @argument[context]{an optional @class{g:app-launch-context} object}
   @return{@em{True} on sucess, @em{false} on error.}

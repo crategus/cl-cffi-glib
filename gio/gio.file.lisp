@@ -886,10 +886,10 @@
 
 (cffi:defcfun ("g_file_get_basename" file-basename) :string
  #+liber-documentation
- "@version{2022-12-27}
-  @argument[file]{a input @class{g:file} object}
+ "@version{2023-8-30}
+  @argument[file]{an input @class{g:file} object}
   @return{A string containing the base name of the @class{g:file} object, or
-    @code{ nil} if the given @class{g:file} is invalid.}
+    @code{nil} if the given @class{g:file} object is invalid.}
   @begin{short}
     Gets the base name, the last component of the path, for a given
     @class{g:file} object.
@@ -901,12 +901,11 @@
   The base name is a byte string, not UTF-8. It has no defined encoding or rules
   other than it may not contain zero bytes. If you want to use filenames in a
   user interface you should use the display name that you can get by requesting
-  the \"standard::display-name\" attribute with the @fun{g:file-query-info}
+  the \"standard::display-name\" attribute with the @code{g_file_query_info()}
   function.
 
   This call does no blocking I/O.
-  @see-class{g:file}
-  @see-function{g:file-query-info}"
+  @see-class{g:file}"
   (file gobject:object))
 
 (export 'file-basename)
