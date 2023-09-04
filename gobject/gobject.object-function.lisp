@@ -67,7 +67,7 @@
   (let ((ref (cffi:foreign-alloc '(:struct object-func-ref)))
         (fn-id (save-handler-to-object object function)))
     (setf (cffi:foreign-slot-value ref '(:struct object-func-ref) :object)
-          (pointer object)
+          (object-pointer object)
           (cffi:foreign-slot-value ref '(:struct object-func-ref) :fn-id)
           fn-id)
     ref))

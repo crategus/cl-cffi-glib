@@ -45,12 +45,12 @@
 ;; Use the abbreviation POINTER for G:OBJECT-POINTER
 (test g-object-pointer.2
   (let* ((object (make-instance 'g:simple-action))
-         (ptr (gobject:pointer object)))
+         (ptr (glib:pointer object)))
     (is (cffi:pointerp ptr))
-    (is (cffi:null-pointer-p (setf (gobject:pointer object) (cffi:null-pointer))))
-    (is (cffi:null-pointer-p (gobject:pointer object)))
-    (is (cffi:pointerp (setf (gobject:pointer object) ptr)))
-    (is (cffi:pointerp (gobject:pointer object)))))
+    (is (cffi:null-pointer-p (setf (glib:pointer object) (cffi:null-pointer))))
+    (is (cffi:null-pointer-p (glib:pointer object)))
+    (is (cffi:pointerp (setf (glib:pointer object) ptr)))
+    (is (cffi:pointerp (glib:pointer object)))))
 
 ;;; --- Signals ----------------------------------------------------------------
 

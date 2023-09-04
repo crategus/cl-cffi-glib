@@ -1731,7 +1731,7 @@
   @see-class{g:type-t}
   @see-symbol{g:type-instance}
   @see-function{g:type-from-class}"
-  (let ((ptr (if (cffi:pointerp instance) instance (pointer instance))))
+  (let ((ptr (if (cffi:pointerp instance) instance (object-pointer instance))))
     (type-from-class (cffi:foreign-slot-value ptr
                                               '(:struct type-instance)
                                               :class))))
@@ -1810,7 +1810,7 @@
   @end{dictionary}
   @see-symbol{g:type-instance}
   @see-symbol{g:type-class}"
-  (let ((ptr (if (cffi:pointerp instance) instance (pointer instance))))
+  (let ((ptr (if (cffi:pointerp instance) instance (object-pointer instance))))
     (cffi:foreign-slot-value ptr '(:struct type-instance) :class)))
 
 (export 'type-instance-class)

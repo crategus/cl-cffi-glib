@@ -184,7 +184,7 @@
 (defun ref-count (pointer)
   (cffi:foreign-slot-value (if (cffi:pointerp pointer)
                                pointer
-                               (pointer pointer))
+                               (object-pointer pointer))
                            '(:struct %object) :ref-count))
 
 ;;; ----------------------------------------------------------------------------
@@ -317,13 +317,13 @@ lambda (object pspec)    :no-hooks
 
 ;; Abbreviation POINTER for the OBJECT-POINTER slot access function
 
-(defmethod pointer ((instance object))
+(defmethod glib:pointer ((instance object))
   (object-pointer instance))
 
-(defmethod (setf pointer) (value (instance object))
+(defmethod (setf glib:pointer) (value (instance object))
   (setf (object-pointer instance) value))
 
-(export 'pointer)
+;(export 'pointer)
 
 ;;; --- object-signal-handlers -------------------------------------------------
 
@@ -410,8 +410,8 @@ lambda (object pspec)    :no-hooks
 
 (defmethod release ((obj object))
   (tg:cancel-finalization obj)
-  (let ((p (pointer obj)))
-    (setf (pointer obj) nil)
+  (let ((p (object-pointer obj)))
+    (setf (object-pointer obj) nil)
     (dispose-carefully p)))
 
 (defun dispose-carefully (pointer)
@@ -460,7 +460,7 @@ lambda (object pspec)    :no-hooks
 (defmethod initialize-instance :after ((obj object) &key &allow-other-keys)
   (unless (slot-boundp obj 'pointer)
     (error "Pointer slot is not initialized for ~A" obj))
-  (let* ((pointer (pointer obj))
+  (let* ((pointer (object-pointer obj))
          (s (format nil "~A" obj)))
     (tg:finalize obj
                  (lambda ()
@@ -486,7 +486,7 @@ lambda (object pspec)    :no-hooks
 
 (defun should-ref-sink-at-creation (object)
   (let ((r (cond ;; not new objects should be ref_sunk
-                 ((equal *current-object-from-pointer* (pointer object))
+                 ((equal *current-object-from-pointer* (object-pointer object))
                   (log-for :gc "*cur-obj-from-ptr* ")
                   t)
                  ;; g_object_new returns objects with ref=1,
@@ -502,20 +502,21 @@ lambda (object pspec)    :no-hooks
 
 (defun register-g-object (obj)
   (log-for :gc "registered GObject ~A (~A) with initial ref-count ~A ~A~%"
-           (pointer obj)
+           (object-pointer obj)
            obj
            (ref-count obj)
-           (if (%object-is-floating (pointer obj)) "(floating)" ""))
+           (if (%object-is-floating (object-pointer obj)) "(floating)" ""))
   (when (should-ref-sink-at-creation obj)
-    (log-for :gc "g_object_ref_sink(~A)~%" (pointer obj))
-    (%object-ref-sink (pointer obj)))
+    (log-for :gc "g_object_ref_sink(~A)~%" (object-pointer obj))
+    (%object-ref-sink (object-pointer obj)))
   (setf (object-has-reference obj) t)
-  (setf (gethash (cffi:pointer-address (pointer obj)) *foreign-gobjects-strong*)
+  (setf (gethash (cffi:pointer-address (object-pointer obj)) 
+                 *foreign-gobjects-strong*)
         obj)
-  (%object-add-toggle-ref (pointer obj)
+  (%object-add-toggle-ref (object-pointer obj)
                           (cffi:callback toggle-notify)
                           (cffi:null-pointer))
-  (%object-unref (pointer obj)))
+  (%object-unref (object-pointer obj)))
 
 ;;; ----------------------------------------------------------------------------
 
@@ -562,21 +563,21 @@ lambda (object pspec)    :no-hooks
     ((null object)
      (cffi:null-pointer))
     ((cffi:pointerp object) object)
-    ((null (pointer object))
+    ((null (object-pointer object))
      (error "Object ~A has been disposed" object))
     ((typep object 'object)
      (when (sub-type type)
        (assert (typep object (sub-type type))
                nil
                "Object ~A is not a subtype of ~A" object (sub-type type)))
-     (pointer object))
+     (object-pointer object))
     (t (error "Object ~A is not translatable as GObject*" object))))
 
 (defmethod cffi:translate-from-foreign (pointer (type foreign-g-object-type))
   (let ((object (get-g-object-for-pointer pointer)))
     (when (and object
                (foreign-g-object-type-already-referenced type))
-      (%object-unref (pointer object)))
+      (%object-unref (object-pointer object)))
     object))
 
 ;; Translate a pointer to a C object to the corresponding Lisp object.
@@ -668,7 +669,7 @@ lambda (object pspec)    :no-hooks
 
 (defmethod make-instance ((class gobject-class) &rest initargs &key pointer)
   (log-for :subclass
-           ":subclass MAkE-INSTANCE ~A ~{~A~^ ~})~%" class initargs)
+           ":subclass MAKE-INSTANCE ~A ~{~A~^ ~})~%" class initargs)
   (ensure-finalized class)
   (let ((*currently-making-object-p* t))
     (if pointer

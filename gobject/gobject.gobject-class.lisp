@@ -394,10 +394,10 @@
      (slot gobject-property-effective-slot-definition))
   (handler-case
     (and (slot-boundp object 'pointer)
-         (pointer object)
+         (object-pointer object)
          (progn
            (class-property-type
-               (type-from-instance (pointer object))
+               (type-from-instance (object-pointer object))
                (gobject-property-effective-slot-definition-g-property-name slot)
                :assert-readable t)
              t))
@@ -406,7 +406,7 @@
 (defmethod slot-boundp-using-class ((class gobject-class) object
                                     (slot gobject-fn-effective-slot-definition))
   (and (slot-boundp object 'pointer)
-       (pointer object)
+       (object-pointer object)
        (not (null (gobject-fn-effective-slot-definition-g-getter-fn slot)))))
 
 (defmethod slot-boundp-using-class ((class gobject-class) object
@@ -417,7 +417,7 @@
 (defmethod slot-value-using-class ((class gobject-class) object
                                    (slot gobject-property-effective-slot-definition))
   (object-property
-               (pointer object)
+               (object-pointer object)
                (gobject-property-effective-slot-definition-g-property-name slot)
                (gobject-effective-slot-definition-g-property-type slot)))
 
@@ -425,7 +425,7 @@
            (new-value (class gobject-class)
             object (slot gobject-property-effective-slot-definition))
   (setf (object-property
-            (pointer object)
+            (object-pointer object)
             (gobject-property-effective-slot-definition-g-property-name slot)
             (gobject-effective-slot-definition-g-property-type slot))
         new-value))

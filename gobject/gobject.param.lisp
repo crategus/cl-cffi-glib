@@ -3345,7 +3345,7 @@
 (defun (setf value-object) (value gvalue)
   (%value-set-object gvalue
                      (if value
-                         (pointer value)
+                         (object-pointer value)
                          (cffi:null-pointer)))
   value)
 

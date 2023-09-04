@@ -476,9 +476,9 @@
                 object pointer)
        (unless (or pointer
                    (and (slot-boundp object 'pointer)
-                        (pointer object)))
+                        (object-pointer object)))
          (log-for :subclass "calling g-object-constructor~%")
-         (setf (pointer object)
+         (setf (object-pointer object)
                (call-gobject-constructor ,name nil nil)
                (object-has-reference object) t)))
      #+nil
@@ -572,9 +572,9 @@
                 object pointer)
        (unless (or pointer
                    (and (slot-boundp object 'pointer)
-                        (pointer object)))
+                        (object-pointer object)))
          (log-for :subclass ":subclass calling g-object-constructor~%")
-         (setf (pointer object)
+         (setf (object-pointer object)
                (call-gobject-constructor ,g-type-name nil nil)
                (object-has-reference object) t)))
 

@@ -55,6 +55,7 @@
            #:make-boxed-type
            #:get-boxed-info
            #:with-foreign-boxed-array
+           #:pointer
            ;; Symbols from glib.error.lisp
            #:with-g-error
            #:with-ignore-g-error

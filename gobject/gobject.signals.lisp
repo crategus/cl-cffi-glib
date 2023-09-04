@@ -207,7 +207,7 @@
     (setf (cffi:foreign-slot-value closure '(:struct lisp-closure) :function-id)
           function-id
           (cffi:foreign-slot-value closure '(:struct lisp-closure) :object)
-          (pointer object))
+          (object-pointer object))
     (closure-add-finalize-notifier closure
                                    (cffi:null-pointer)
                                    (cffi:callback lisp-closure-finalize))
@@ -1266,7 +1266,7 @@
     signal on an instance.
   @end{dictionary}
   @see-class{g:object}"
-  (let* ((itype (type-from-instance (pointer instance)))
+  (let* ((itype (type-from-instance (object-pointer instance)))
          (query (signal-parse-name itype detailed)))
     (unless query
       (error "Signal ~A not found on instance ~A" detailed instance))
@@ -1449,7 +1449,7 @@
   @end{dictionary}
   @see-class{g:object}
   @see-function{g:signal-connect-after}"
-  (%signal-connect-closure (pointer instance)
+  (%signal-connect-closure (object-pointer instance)
                            signal
                            (create-closure instance handler)
                            after))

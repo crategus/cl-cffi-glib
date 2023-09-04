@@ -75,7 +75,7 @@
 
 (test g-type-instance-structure
   (let* ((button (make-instance 'g:simple-action))
-         (class (cffi:foreign-slot-value (gobject::pointer button)
+         (class (cffi:foreign-slot-value (glib:pointer button)
                                          '(:struct g:type-instance) :class)))
     (is (= 8 (cffi:foreign-type-size '(:struct g:type-instance))))
     (is (equal '(:class) (cffi:foreign-slot-names '(:struct g:type-instance))))
