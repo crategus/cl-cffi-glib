@@ -176,7 +176,7 @@
 ;;;     g-signal-handler-block
 ;;;     g-signal-handler-unblock
 
-(test g-signal-handler-block
+(test g-signal-handler-block/unblock
   (let* ((action (make-instance 'g:simple-action))
          (signal-id (g:signal-lookup "activate" "GSimpleAction"))
          (handler-id (g:signal-connect action "activate"
@@ -208,16 +208,15 @@
 
 ;; TODO: Implement the g:signal-handler-disconnect function
 
-#+nil
 (test g-signal-handler-disconnect
-  (let* ((button (make-instance 'gtk:button))
-         (handler-id (g:signal-connect button "clicked"
-                       (lambda (widget)
-                         (declare (ignore widget))
+  (let* ((action (make-instance 'g:simple-action))
+         (handler-id (g:signal-connect action "activate"
+                       (lambda (object)
+                         (declare (ignore object))
                          t))))
-    (is-true (g-signal-handler-is-connected button handler-id))
-    (is-false (g-signal-handler-disconnect button handler-id))
-    (is-true (g-signal-handler-is-connected button handler-id))))
+    (is-true (g:signal-handler-is-connected action handler-id))
+    (is-false (g:signal-handler-disconnect action handler-id))
+    (is-false (g:signal-handler-is-connected action handler-id))))
 
 ;;;     g-signal-handler-find
 

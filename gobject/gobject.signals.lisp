@@ -1721,9 +1721,9 @@
 ;;; g_signal_handler_disconnect ()
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcfun ("g_signal_handler_disconnect" %signal-handler-disconnect) :void
+(cffi:defcfun ("g_signal_handler_disconnect" signal-handler-disconnect) :void
  #+liber-documentation
- "@version{#2022-12-31}
+ "@version{2023-9-6}
   @argument[instance]{a @class{g:object} instance to remove the signal handler
     from}
   @argument[handler-id]{an unsigned long integer with the handler ID of the
@@ -1742,12 +1742,7 @@
   (object (object :free-to-foreign nil)) ; to stop a bug, seems to work?
   (handler-id :ulong))
 
-(defun signal-handler-disconnect (object handler-id)
-  (declare (ignore object handler-id))
-  ;; TODO: The implementation of %signal-handler-disconnect is wrong.
-  ;; In Lisp we have a list of signal handlers. The disconnected signal
-  ;; handler must be removed from this list. And this time we do nothing
-)
+(export 'signal-handler-disconnect)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_signal_handler_find ()
