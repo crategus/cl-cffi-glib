@@ -147,20 +147,18 @@ lambda (list position removed added)    :run-last
 
 (cffi:defcfun ("g_list_model_get_item_type" list-model-item-type) gobject:type-t
  #+liber-documentation
- "@version{2023-8-15}
-  @argument[list]{a @class{g:list-model} object}
-  @return{The @class{g:type-t} type of the items contained in @arg{list}.}
+ "@version{2023-9-7}
+  @argument[model]{a @class{g:list-model} object}
+  @return{The @class{g:type-t} type of the items contained in @arg{model}.}
   @begin{short}
-    Gets the type of the items in the list.
+    Gets the type of the items in the list model.
   @end{short}
   All items returned from the @fun{g:list-model-item-type} function are of that
-  type or a subtype, or are an implementation of that interface.
-
-  The item type of a @class{g:list-model} object can not change during the life
-  of the model.
+  type or a subtype, or are an implementation of that interface. The item type
+  of a @class{g:list-model} object can not change during the life of the model.
   @see-class{g:list-model}
   @see-class{g:type-t}"
-  (list (gobject:object list-model)))
+  (model (gobject:object list-model)))
 
 (export 'list-model-item-type)
 
@@ -170,18 +168,19 @@ lambda (list position removed added)    :run-last
 
 (cffi:defcfun ("g_list_model_get_n_items" list-model-n-items) :uint
  #+liber-documentation
- "@version{2023-8-15}
-  @argument[list]{a @class{g:list-model} object}
-  @return{An integer with the number of items in @arg{list}.}
+ "@version{2023-9-7}
+  @argument[model]{a @class{g:list-model} object}
+  @return{An integer with the number of items in @arg{model}.}
   @begin{short}
-    Gets the number of items in the list.
+    Gets the number of items in the list model.
   @end{short}
   Depending on the model implementation, calling this function may be less
-  efficient than iterating the list with increasing values for position until
-  the @fun{g:list-model-item} functions returns @code{null-pointer}.
+  efficient than iterating the list model with increasing values for position
+  until the @fun{g:list-model-item} functions returns the @code{null-pointer}
+  value.
   @see-class{g:list-model}
   @see-function{g:list-model-item}"
-  (list (gobject:object list-model)))
+  (model (gobject:object list-model)))
 
 (export 'list-model-n-items)
 
@@ -191,22 +190,31 @@ lambda (list position removed added)    :run-last
 
 (cffi:defcfun ("g_list_model_get_item" list-model-item) :pointer
  #+liber-documentation
- "@version{2023-8-15}
-  @argument[list]{a @class{g:list-model} object}
+ "@version{2023-9-7}
+  @argument[model]{a @class{g:list-model} object}
   @argument[position]{an unsigned integer with the position of the item to
     fetch}
   @return{A pointer with the item at @arg{position}.}
   @begin{short}
-    Get the item at @arg{position}.
+    Get the item at @arg{position} in the list model.
   @end{short}
   If the @arg{position} argument is greater than the number of items in the
-  list, @code{null-pointer} is returned.
-
-  The @code{null-pointer} value is never returned for an index that is smaller
-  than the length of the list. See the @fun{g:list-model-n-items} function.
+  list model, the @code{null-pointer} value is returned. The @code{null-pointer} 
+  value is never returned for an index that is smaller than the length of the 
+  list model. See the @fun{g:list-model-n-items} function.
+  @begin[Note]{dictionary}
+    This function returns a pointer which can be translated to the
+    corresponding object with the @code{cffi:convert-from-foreign} function:
+    @begin{pre}
+(cffi:convert-from-foreign (g:list-model-item model position) 'g:object)
+    @end{pre}
+    In the Lisp implementation, the @fun{g:list-model-object} function is more
+    useful, which directly returns the object at @arg{position}.
+  @end{dictionary}
   @see-class{g:list-model}
-  @see-function{g:list-model-n-items}"
-  (list (gobject:object list-model))
+  @see-function{g:list-model-n-items}
+  @see-function{g:list-model-object}"
+  (model (gobject:object list-model))
   (position :uint))
 
 (export 'list-model-item)
@@ -218,7 +226,7 @@ lambda (list position removed added)    :run-last
 (cffi:defcfun ("g_list_model_get_object" list-model-object) gobject:object
  #+liber-documentation
  "@version{2023-8-15}
-  @argument[list]{a @class{g:list-model} object}
+  @argument[model]{a @class{g:list-model} object}
   @argument[position]{an unsigned integer with the position of the item to
     fetch}
   @return{The @class{g:object} instance at @arg{position}.}
@@ -226,12 +234,12 @@ lambda (list position removed added)    :run-last
     Get the item at @arg{position}.
   @end{short}
   If the @arg{position} argument is greater than the number of items in the
-  list, @code{nil} is returned. The @code{nil} value is never returned for an
-  index that is smaller than the length of the list. See the
+  list model, @code{nil} is returned. The @code{nil} value is never returned 
+  for an index that is smaller than the length of the list model. See the
   @fun{g:list-model-n-items} function.
   @see-class{g:list-model}
   @see-function{g:list-model-n-items}"
-  (list (gobject:object list-model))
+  (model (gobject:object list-model))
   (position :uint))
 
 (export 'list-model-object)
@@ -243,18 +251,18 @@ lambda (list position removed added)    :run-last
 (cffi:defcfun ("g_list_model_items_changed" list-model-items-changed) :void
  #+liber-documentation
  "@version{#2023-8-15}
-  @argument[list]{a @class{g:list-model} object}
-  @argument[position]{an unsigned integer with the position at which @arg{list}
-    changed}
+  @argument[model]{a @class{g:list-model} object}
+  @argument[position]{an unsigned integer with the position at which 
+    @arg{model} changed}
   @argument[removed]{an unsigned integer with the number of items removed}
   @argument[added]{an unsigned integer with the number of items added}
   @begin{short}
-    Emits the \"items-changed\" signal on @arg{list}.
+    Emits the \"items-changed\" signal on @arg{model}.
   @end{short}
   This function should only be called by classes implementing the
   @class{g:list-model} interface. It has to be called after the internal
-  representation of list has been updated, because handlers connected to this
-  signal might query the new state of the list.
+  representation of the list model has been updated, because handlers connected 
+  to this signal might query the new state of the list model.
 
   Implementations must only make changes to the model, as visible to its
   consumer, in places that will not cause problems for that consumer. For models
@@ -270,7 +278,7 @@ lambda (list position removed added)    :run-last
   model.
   @see-class{g:list-model}
   @see-class{g:list-store}"
-  (list (gobject:object list-model))
+  (model (gobject:object list-model))
   (position :uint)
   (removed :uint)
   (added :uint))

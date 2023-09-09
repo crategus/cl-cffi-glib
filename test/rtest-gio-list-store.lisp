@@ -59,12 +59,162 @@
   (is (typep (g:list-store-new "GSimpleAction") 'g:list-store)))
 
 ;;;     g_list_store_insert
+
+(test g-list-store-insert
+  (let ((store (g:list-store-new "GSimpleAction")))
+    (is-false (g:list-store-insert store 0 (make-instance 'g:simple-action)))
+    (is-false (g:list-store-insert store 0 (make-instance 'g:simple-action)))
+    (is-false (g:list-store-insert store 1 (make-instance 'g:simple-action)))
+    (is (= 3 (g:list-store-n-items store)))
+    (is-false (g:list-store-remove-all store))
+    (is (= 0 (g:list-store-n-items store)))))
+
 ;;;     g_list_store_insert_sorted
+
+(test g-list-store-insert-sorted.1
+  (let ((store (g:list-store-new "GSimpleAction")))
+    (dotimes (i 10)
+      (is (= 0
+             (g:list-store-insert-sorted
+                 store
+                 (make-instance 'g:simple-action
+                                :name
+                                (format nil "Action ~a" i))
+                 (lambda (a b)
+                   (if (string< (g:simple-action-name a)
+                                (g:simple-action-name b))
+                       1
+                       -1))))))
+    (is (equal '("Action 9" "Action 8" "Action 7" "Action 6" "Action 5"
+                 "Action 4" "Action 3" "Action 2" "Action 1" "Action 0")
+               (iter (for i from 0 below 10)
+                     (for obj = (g:list-model-object store i))
+                     (collect (format nil "~a"
+                                          (g:simple-action-name obj))))))))
+
+(test g-list-store-insert-sorted.2
+  (let ((store (g:list-store-new "GSimpleAction")))
+    (dotimes (i 10)
+      (is (= i
+             (g:list-store-insert-sorted
+                 store
+                 (make-instance 'g:simple-action
+                                :name
+                                (format nil "Action ~a" i))
+                 (lambda (a b)
+                   (if (string> (g:simple-action-name a)
+                                (g:simple-action-name b))
+                       1
+                       -1))))))
+    (is (equal '("Action 0" "Action 1" "Action 2" "Action 3" "Action 4"
+                 "Action 5" "Action 6" "Action 7" "Action 8" "Action 9")
+               (iter (for i from 0 below 10)
+                     (for obj = (g:list-model-object store i))
+                     (collect (format nil "~a"
+                                          (g:simple-action-name obj))))))))
+
 ;;;     g_list_store_append
 ;;;     g_list_store_remove
 ;;;     g_list_store_remove_all
+
+(test g-list-store-append/remove
+  (let ((store (g:list-store-new "GAction")))
+    (is (= 0 (g:list-store-n-items store)))
+    (is-false (g:list-store-append store (make-instance 'g:simple-action)))
+    (is (= 1 (g:list-store-n-items store)))
+    (is-false (g:list-store-append store (make-instance 'g:simple-action)))
+    (is (= 2 (g:list-store-n-items store)))
+    (is-false (g:list-store-append store (make-instance 'g:simple-action)))
+    (is (= 3 (g:list-store-n-items store)))
+    (is-false (g:list-store-remove store 1))
+    (is (= 2 (g:list-store-n-items store)))
+    (is-false (g:list-store-remove-all store))
+    (is (= 0 (g:list-store-n-items store)))))
+
 ;;;     g_list_store_splice
+
+(test g-list-store-splice.1
+  (let ((store (g:list-store-new "GSimpleAction")))
+    (dotimes (i 10)
+      (is (= i
+             (g:list-store-insert-sorted
+                 store
+                 (make-instance 'g:simple-action
+                                :name
+                                (format nil "Action ~a" i))
+                 (lambda (a b)
+                   (if (string> (g:simple-action-name a)
+                                (g:simple-action-name b))
+                       1
+                       -1))))))
+    (g:list-store-splice store 5 2 nil)
+    (is (equal '("Action 0" "Action 1" "Action 2" "Action 3" "Action 4"
+                 "Action 7" "Action 8" "Action 9")
+               (iter (for i from 0 below (g:list-store-n-items store))
+                     (for obj = (g:list-model-object store i))
+                     (collect (g:simple-action-name obj)))))))
+
+(test g-list-store-splice.2
+  (let ((store (g:list-store-new "GSimpleAction")))
+    (dotimes (i 10)
+      (is (= i
+             (g:list-store-insert-sorted
+                 store
+                 (make-instance 'g:simple-action
+                                :name
+                                (format nil "Action ~a" i))
+                 (lambda (a b)
+                   (if (string> (g:simple-action-name a)
+                                (g:simple-action-name b))
+                       1
+                       -1))))))
+    (g:list-store-splice store 5 2
+                         (list (make-instance 'g:simple-action
+                                              :name "action")
+                               (make-instance 'g:simple-action
+                                              :name "action")
+                               (make-instance 'g:simple-action
+                                              :name "action")))
+    (is (equal '("Action 0" "Action 1" "Action 2" "Action 3" "Action 4"
+                 "action" "action" "action" "Action 7" "Action 8" "Action 9")
+               (iter (for i from 0 below (g:list-store-n-items store))
+                     (for obj = (g:list-model-object store i))
+                     (collect (g:simple-action-name obj)))))))
+
 ;;;     g_list_store_sort
+
+(test g-list-store-sort
+  (let ((store (g:list-store-new "GSimpleAction")))
+    (dotimes (i 10)
+      (is (= 0
+             (g:list-store-insert-sorted
+                 store
+                 (make-instance 'g:simple-action
+                                :name
+                                (format nil "Action ~a" i))
+                 (lambda (a b)
+                   (if (string< (g:simple-action-name a)
+                                (g:simple-action-name b))
+                       1
+                       -1))))))
+    (is (equal '("Action 9" "Action 8" "Action 7" "Action 6" "Action 5"
+                 "Action 4" "Action 3" "Action 2" "Action 1" "Action 0")
+               (iter (for i from 0 below 10)
+                     (for obj = (g:list-model-object store i))
+                     (collect (format nil "~a"
+                                          (g:simple-action-name obj))))))
+    (g:list-store-sort store
+                       (lambda (a b)
+                         (if (string> (g:simple-action-name a)
+                                      (g:simple-action-name b))
+                             1
+                             -1)))
+    (is (equal '("Action 0" "Action 1" "Action 2" "Action 3" "Action 4"
+                 "Action 5" "Action 6" "Action 7" "Action 8" "Action 9")
+               (iter (for i from 0 below 10)
+                     (for obj = (g:list-model-object store i))
+                     (collect (format nil "~a"
+                                          (g:simple-action-name obj))))))))
 
 ;;;     g_list_store_find
 
@@ -82,4 +232,41 @@
 
 ;;;     g_list_store_find_with_equal_func
 
-;;; --- 2023-8-15 --------------------------------------------------------------
+(test g-list-store-find-with-equal-func
+  (let ((store (g:list-store-new "GSimpleAction")))
+    (dotimes (i 10)
+      (is (= i
+             (g:list-store-insert-sorted
+                     store
+                     (make-instance 'g:simple-action
+                                    :name
+                                    (format nil "Action ~a" i))
+                     (lambda (a b)
+                       (if (string> (g:simple-action-name a)
+                                    (g:simple-action-name b))
+                           1
+                           -1))))))
+    (is (equal '("Action 0" "Action 1" "Action 2" "Action 3" "Action 4"
+                 "Action 5" "Action 6" "Action 7" "Action 8" "Action 9")
+               (iter (for i from 0 below 10)
+                     (for obj = (g:list-model-object store i))
+                     (collect (format nil "~a"
+                                          (g:simple-action-name obj))))))
+    (is (= 5
+           (g:list-store-find-with-equal-func
+                   store
+                   (make-instance 'g:simple-action
+                                  :name "Action 5")
+                   (lambda (a b)
+                     (string= (g:simple-action-name a)
+                              (g:simple-action-name b))))))
+    (is (= 7
+           (g:list-store-find-with-equal-func
+                   store
+                   (make-instance 'g:simple-action
+                                  :name "Action 7")
+                   (lambda (a b)
+                     (string= (g:simple-action-name a)
+                              (g:simple-action-name b))))))))
+
+;;; --- 2023-9-4 ---------------------------------------------------------------

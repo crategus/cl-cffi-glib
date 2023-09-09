@@ -455,6 +455,8 @@
       @about-class{list-store}
       @about-function{list-store-item-type}
       @about-generic{list-store-n-items}
+      @about-symbol{compare-data-func}
+      @about-symbol{equal-func-full}
       @about-function{list-store-new}
       @about-function{list-store-insert}
       @about-function{list-store-insert-sorted}

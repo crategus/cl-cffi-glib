@@ -747,6 +747,8 @@
            #:list-store
            #:list-store-item-type
            #:list-store-n-items
+           #:compare-data-func
+           #:equal-func-full
            #:list-store-new
            #:list-store-insert
            #:list-store-insert-sorted
