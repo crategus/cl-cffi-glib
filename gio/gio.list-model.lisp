@@ -199,8 +199,8 @@ lambda (list position removed added)    :run-last
     Get the item at @arg{position} in the list model.
   @end{short}
   If the @arg{position} argument is greater than the number of items in the
-  list model, the @code{null-pointer} value is returned. The @code{null-pointer} 
-  value is never returned for an index that is smaller than the length of the 
+  list model, the @code{null-pointer} value is returned. The @code{null-pointer}
+  value is never returned for an index that is smaller than the length of the
   list model. See the @fun{g:list-model-n-items} function.
   @begin[Note]{dictionary}
     This function returns a pointer which can be translated to the
@@ -234,7 +234,7 @@ lambda (list position removed added)    :run-last
     Get the item at @arg{position}.
   @end{short}
   If the @arg{position} argument is greater than the number of items in the
-  list model, @code{nil} is returned. The @code{nil} value is never returned 
+  list model, @code{nil} is returned. The @code{nil} value is never returned
   for an index that is smaller than the length of the list model. See the
   @fun{g:list-model-n-items} function.
   @see-class{g:list-model}
@@ -252,7 +252,7 @@ lambda (list position removed added)    :run-last
  #+liber-documentation
  "@version{#2023-8-15}
   @argument[model]{a @class{g:list-model} object}
-  @argument[position]{an unsigned integer with the position at which 
+  @argument[position]{an unsigned integer with the position at which
     @arg{model} changed}
   @argument[removed]{an unsigned integer with the number of items removed}
   @argument[added]{an unsigned integer with the number of items added}
@@ -261,7 +261,7 @@ lambda (list position removed added)    :run-last
   @end{short}
   This function should only be called by classes implementing the
   @class{g:list-model} interface. It has to be called after the internal
-  representation of the list model has been updated, because handlers connected 
+  representation of the list model has been updated, because handlers connected
   to this signal might query the new state of the list model.
 
   Implementations must only make changes to the model, as visible to its
