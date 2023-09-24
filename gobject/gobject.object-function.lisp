@@ -1,7 +1,7 @@
 ;;; ----------------------------------------------------------------------------
 ;;; gobject.object-function.lisp
 ;;;
-;;; Copyright (C) 2011 - 2021 Dieter Kaiser
+;;; Copyright (C) 2011 - 2023 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -24,6 +24,27 @@
 
 (in-package :gobject)
 
+;; TODO: This is a second method for the definition of a call function.
+;; Is this needed?! The implementation is removed from GTK 4.
+
+;; Example for GtkAssistantPageFunc:
+;;
+;; (gobject:define-cb-methods assistant-page-func :int ((current-page :int)))
+;;
+;; (cffi:defcfun ("gtk_assistant_set_forward_page_func"
+;;                %assistant-set-forward-page-func) :void
+;;   (assistant (g:object assistant))
+;;   (func :pointer)
+;;   (data :pointer)
+;;   (destroy :pointer))
+;;
+;; (defun assistant-set-forward-page-func (assistant func)
+;;   (%assistant-set-forward-page-func
+;;          assistant
+;;          (cffi:callback assistant-page-func)
+;;          (gobject:create-fn-ref assistant func)
+;;          (cffi:callback assistant-page-func-destroy-notify))
+
 (cffi:defcstruct object-func-ref
   (:object :pointer)
   (:fn-id :int))
@@ -34,33 +55,33 @@
                    (symbol-package name))))
     (let ((call-cb (make-name "~A"))
           (destroy-cb (make-name "~A-DESTROY-NOTIFY"))
-          (object (gensym "OBJECT"))
+          (obj (gensym "OBJECT"))
           (fn-id (gensym "FN-ID"))
           (fn (gensym "FN"))
           (data (gensym "DATA"))
           (arg-names (mapcar #'first args)))
       `(progn
          (cffi:defcallback ,call-cb ,return-type (,@args (,data :pointer))
-           (let* ((,object (cffi:convert-from-foreign
-                               (cffi:foreign-slot-value ,data
-                                                        '(:struct object-func-ref)
-                                                        :object)
-                               'object))
+           (let* ((,obj (cffi:convert-from-foreign
+                            (cffi:foreign-slot-value ,data
+                                                     '(:struct object-func-ref)
+                                                     :object)
+                            'object))
                   (,fn-id (cffi:foreign-slot-value ,data
                                                    '(:struct object-func-ref)
                                                    :fn-id))
-                  (,fn (retrieve-handler-from-object ,object ,fn-id)))
+                  (,fn (retrieve-handler-from-object ,obj ,fn-id)))
              (funcall ,fn ,@arg-names)))
          (cffi:defcallback ,destroy-cb :void ((,data :pointer))
-           (let* ((,object (cffi:convert-from-foreign
-                               (cffi:foreign-slot-value ,data
-                                                        '(:struct object-func-ref)
-                                                        :object)
-                               'object))
+           (let* ((,obj (cffi:convert-from-foreign
+                            (cffi:foreign-slot-value ,data
+                                                     '(:struct object-func-ref)
+                                                     :object)
+                            'object))
                   (,fn-id (cffi:foreign-slot-value ,data
                                                    '(:struct object-func-ref)
                                                    :fn-id)))
-             (delete-handler-from-object ,object ,fn-id))
+             (delete-handler-from-object ,obj ,fn-id))
            (cffi:foreign-free ,data))))))
 
 (defun create-fn-ref (object function)

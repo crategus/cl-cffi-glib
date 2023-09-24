@@ -799,17 +799,17 @@
               "Whether the type designator is mangled with
                the @code{G_SIGNAL_TYPE_STATIC_SCOPE} flag."))
   (:documentation
-    "@version{#2022-12-29}
+    "@version{#2023-9-19}
      @begin{short}
-       Values of this CFFI foreign type @sym{g:type-t} identify the C GType.
+       Values of this CFFI foreign type @class{g:type-t} identify the C GType.
      @end{short}
-     The @sym{g:type-t} type is designated by its name, a string, or a numeric
-     identifier. Functions accept @sym{g:type-t} type designators as a string
+     The @class{g:type-t} type is designated by its name, a string, or a numeric
+     identifier. Functions accept @class{g:type-t} type designators as a string
      or integer and return them as a string. The @fun{g:type-name} and
      @fun{g:type-from-name} functions are used to convert between the name and
-     the numeric identifier. Numeric identifier of @sym{g:type-t} may be
+     the numeric identifier. Numeric identifier of @class{g:type-t} may be
      different between different program runs. But string identifier of a
-     @sym{g:type-t} type does not change.
+     @class{g:type-t} type does not change.
      @begin[Examples]{dictionary}
        @begin{pre}
 +g-type-double+ => 60
@@ -1120,8 +1120,8 @@
       (liber:symbol-documentation 'type-value-table)
  "@version{#2022-12-31}
   @begin{short}
-    The @sym{type-value-table} provides the functions required by the
-    @symbol{value} implementation, to serve as a container for values of a
+    The @symbol{type-value-table} structure provides the functions required by
+    the @symbol{value} implementation, to serve as a container for values of a
     type.
   @end{short}
   @begin{pre}
@@ -1456,8 +1456,8 @@
   Use the function @fun{type-fundamental-next} instead of this function to
   create new fundamental type number.
   @begin[Note]{dictionary}
-    @sym{type-make-fundamental} does not return a Lisp @class{type-t} value,
-    but the ID number of the @class{type-t}.
+    The @fun{g:type-make-fundamental} function does not return a Lisp
+    @class{type-t} value, but the ID number of the @class{type-t}.
   @end{dictionary}
   @begin[Examples]{dictionary}
     @begin{pre}
@@ -2844,8 +2844,8 @@
   @argument[quark]{a @type{g:quark-as-string} ID to identify the data}
   @argument[data]{the data}
   @begin{short}
-    The @sym{g:type-qdata} function obtains data which has previously been
-    attached to @arg{gtype} with the @sym{(setf g:type-qdata)} function.
+    The @fun{g:type-qdata} function obtains data which has previously been
+    attached to @arg{gtype} with the @setf{g:type-qdata} function.
   @end{short}
 
   Note that this does not take subtyping into account. Data attached to one
@@ -3561,7 +3561,7 @@
   @code{G_GNUC_CONST} requires that the function not have side effects, which
   @code{_get_type()} methods do on the first call). As a result, if you write a
   bare call to a @code{_get_type()} macro, it may get optimized out by the
-  compiler. Using @sym{g:type-ensure} guarantees that the type's
+  compiler. Using the @fun{g:type-ensure} function guarantees that the type's
   @code{_get_type()} method is called.
   @see-class{g:type-t}"
   (gtype type-t))

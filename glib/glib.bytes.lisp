@@ -56,6 +56,7 @@
 ;;; ----------------------------------------------------------------------------
 
 (define-g-boxed-opaque bytes "GBytes"
+  :export t
   :type-initializer "g_bytes_get_type"
   :alloc (%bytes-new (cffi:null-pointer) 0))
 
@@ -101,8 +102,6 @@
     @end{pre}
   @end{dictionary}
   @see-constructor{g:bytes-new}")
-
-(export 'bytes)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_bytes_new () -> bytes-new

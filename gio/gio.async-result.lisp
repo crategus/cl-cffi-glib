@@ -65,7 +65,7 @@
 (setf (liber:alias-for-class 'async-result)
       "Interface"
       (documentation 'async-result 'type)
- "@version{#2023-5-6}
+ "@version{#2023-9-18}
   @begin{short}
     Provides a base class for implementing asynchronous function results.
   @end{short}
@@ -75,15 +75,15 @@
   function to the asynchronous function. This callback will be triggered when
   the operation has completed, and must be run in a later iteration of the
   thread-default main context from where the operation was initiated. It will
-  be passed a @sym{g:async-result} instance filled with the details of the
+  be passed a @class{g:async-result} instance filled with the details of the
   operation's success or failure, the object the asynchronous function was
   started for and any error codes returned. The asynchronous callback function
   is then expected to call the corresponding @code{_finish()} function, passing
-  the object the function was called for, the @sym{g:async-result} instance,
+  the object the function was called for, the @class{g:async-result} instance,
   and optionally an error to grab any error conditions that may have occurred.
 
   The @code{_finish()} function for an operation takes the generic result of
-  type @sym{g:async-result} and returns the specific result that the operation
+  type @class{g:async-result} and returns the specific result that the operation
   in question yields, e.g. a @code{GFileEnumerator} for a \"enumerate children\"
   operation. If the result or error status of the operation is not needed, there
   is no need to call the @code{_finish()} function. GIO will take care of
@@ -91,7 +91,7 @@
   @symbol{g:async-ready-callback} function returns. You can pass @code{nil} for
   the @symbol{g:async-ready-callback} function if you do not need to take any
   action at all after the operation completes. Applications may also take a
-  reference to the @sym{g:async-result} instance and call the @code{_finish()}
+  reference to the @class{g:async-result} instance and call the @code{_finish()}
   function later. However, the @code{_finish()} function may be called at most
   once.
 
@@ -153,30 +153,31 @@ int main (int argc, void *argv[])
 ;;; GAsyncReadyCallback ()
 ;;; ----------------------------------------------------------------------------
 
-;; TODO: The stable pointer is never freed. Is it correct to free the stable 
-;; pointer in the callback?
+;; TODO: We free the allocated pointer in an UNWIND-PROTECT macro. Is this safe?
 
 (cffi:defcallback async-ready-callback :void
     ((source gobject:object)
      (result (gobject:object async-result))
      (data :pointer))
   (let ((func (glib:get-stable-pointer-value data)))
-    (funcall func source result)))
+    (unwind-protect
+      (funcall func source result))
+      (glib:free-stable-pointer data)))
 
 #+liber-documentation
 (setf (liber:alias-for-symbol 'async-ready-callback)
       "Callback"
       (liber:symbol-documentation 'async-ready-callback)
- "@version{#2023-5-8}
+ "@version{#2023-9-18}
   @begin{short}
     Type definition for a function that will be called back when an asynchronous
     operation within GIO has been completed.
   @end{short}
-  The @sym{g:async-ready-callback} callbacks from the @class{g:task} object
+  The @symbol{g:async-ready-callback} callbacks from the @class{g:task} object
   are guaranteed to be invoked in a later iteration of the thread-default main
   context where the @class{g:task} object was created. All other users of the
-  @sym{g:async-ready-callback} function must likewise call it asynchronously in
-  a later iteration of the main context.
+  @symbol{g:async-ready-callback} function must likewise call it asynchronously
+  in a later iteration of the main context.
   @begin{pre}
 lambda (source result)
   @end{pre}
@@ -198,9 +199,9 @@ lambda (source result)
  "@version{#2023-7-13}
   @argument[result]{a @class{g:async-result} instance}
   @return{A pointer to the user data for @arg{result}.}
-  @begin{short}  
+  @begin{short}
     Gets the user data from a @class{g:async-result} instance.
-  @end{short}  
+  @end{short}
   @see-class{g:async-result}"
   (result (gobject:object async-result)))
 
@@ -215,7 +216,7 @@ lambda (source result)
  #+liber-documentation
  "@version{#2023-7-13}
   @argument[result]{a @class{g:async-result} instance}
-  @return{A new reference to the source object for @arg{result}, or 
+  @return{A new reference to the source object for @arg{result}, or
   @code{nil} if there is none.}
   @begin{short}
     Gets the source object from a @class{g:async-result} instance.
@@ -234,10 +235,10 @@ lambda (source result)
  "@version{#2023-7-13}
   @argument[result]{a @class{g:async-result} instance}
   @argument[source-tag]{a pointer to an application defined tag}
-  @return{@em{True} if @arg{result} has the indicated @arg{source-tag}, 
+  @return{@em{True} if @arg{result} has the indicated @arg{source-tag},
     @em{false} if not.}
   @begin{short}
-    Checks if @arg{result} has the given @arg{source-tag}, generally a function 
+    Checks if @arg{result} has the given @arg{source-tag}, generally a function
     pointer indicating the function @arg{result} was created by.
   @end{short}
   @see-class{g:async-result}"

@@ -103,11 +103,11 @@
 
 #+liber-documentation
 (setf (documentation 'strv-t 'type)
- "@version{2022-11-21}
+ "@version{2023-9-18}
   @begin{short}
-    The @sym{g:strv-t} type represents and performs automatic conversion between
-    a list of Lisp strings and an array of C strings of the CFFI @code{:string}
-    type.
+    The @type{g:strv-t} type represents and performs automatic conversion
+    between a list of Lisp strings and an array of C strings of the CFFI
+    @code{:string} type.
   @end{short}
   @begin[Examples]{dictionary}
     @begin{pre}
@@ -170,12 +170,12 @@
 
 #+liber-documentation
 (setf (documentation 'list-t 'type)
- "@version{2022-11-21}
+ "@version{2023-9-18}
   @begin{short}
-    The @sym{g:list-t} type represents a C doubly linked list with elements of
+    The @type{g:list-t} type represents a C doubly linked list with elements of
     the @code{GList} structure.
   @end{short}
-  The @sym{g:list-t} type performs automatic conversion from a C list to a Lisp
+  The @type{g:list-t} type performs automatic conversion from a C list to a Lisp
   list. The elements of the list can be pointers, strings or GObjects.
   @begin[Examples]{dictionary}
     @begin{pre}
@@ -272,13 +272,13 @@
 
 #+liber-documentation
 (setf (documentation 'slist-t 'type)
- "@version{2022-11-21}
+ "@version{2023-9-18}
   @begin{short}
-    The @sym{g:slist-t} type represents a C singly linked list with elements of
+    The @type{g:slist-t} type represents a C singly linked list with elements of
     the @code{GSList} structure.
   @end{short}
-  The @sym{g:slist-t} type performs automatic conversion from a C list to a Lisp
-  list. The elements of the list can be pointers, strings or GObjects.
+  The @type{g:slist-t} type performs automatic conversion from a C list to a
+  Lisp list. The elements of the list can be pointers, strings or GObjects.
   @begin[Examples]{dictionary}
     @begin{pre}
 (cffi:convert-to-foreign (list \"a\" \"b\" \"c\") '(g:slist-t :string))
@@ -336,17 +336,17 @@
 
 #+liber-documentation
 (setf (documentation 'quark-as-string 'type)
- "@version{2022-11-21}
+ "@version{2023-9-18}
   @begin{short}
     Quarks are associations between strings and integer identifiers.
   @end{short}
   Given either the string or the @code{GQuark} identifier it is possible to
   retrieve the other.
   @begin[Lisp binding]{dictionary}
-    In the Lisp binding the @sym{g:quark-as-string} type translates a string
+    In the Lisp binding the @type{g:quark-as-string} type translates a string
     argument to the corresponding @code{GQuark} identifier and a @code{GQuark}
     return value is translated to the corresponding Lisp string. No further
-    functions are implemented for the @sym{g:quark-as-string} type.
+    functions are implemented for the @type{g:quark-as-string} type.
 
     If the Lisp string does not currently have an associated @code{GQuark}, a
     new @code{GQuark} is created. A @code{GQuark} value of zero is associated
@@ -401,9 +401,9 @@
 (setf (liber:alias-for-class 'date-time)
       "Type"
       (documentation 'date-time 'type)
- "@version{2023-5-22}
+ "@version{2023-9-18}
   @begin{short}
-    The @sym{g:date-time} type represents the C @code{GDateTime} type which
+    The @type{g:date-time} type represents the C @code{GDateTime} type which
     represents a date and time, including a time one.
   @end{short}
   @begin[Examples]{dictionary}
@@ -435,12 +435,12 @@
 (setf (liber:alias-for-class 'unichar)
       "Type"
       (documentation 'unichar 'type)
- "@version{2023-5-22}
+ "@version{2023-9-18}
   @begin{short}
-    The @sym{g:unichar} type represents the C @code{gunichar} type which can
+    The @class{g:unichar} type represents the C @code{gunichar} type which can
     hold any UCS-4 character code.
   @end{short}
-  The @sym{g:unichar} type performs automatic conversion from the C
+  The @class{g:unichar} type performs automatic conversion from the C
   @code{gunichar} type to a Lisp character and a Lisp character to the C type.
   An integer value as argument to the @sym{cffi:convert-to-foreign} function
   is passed through.
@@ -473,26 +473,26 @@
 
 (cffi:defcfun ("g_malloc" malloc) :pointer
  #+liber-documentation
- "@version{2022-11-21}
+ "@version{2023-9-18}
   @argument[nbytes]{an integer of @code{:size} type with the number of bytes
   to allocate}
   @return{A foreign pointer to the allocated memory.}
   @begin{short}
     Allocates @arg{nbytes} bytes of memory.
   @end{short}
-  If the @arg{nbytes} argument is 0 the @sym{malloc} function returns a foreign
-  @code{null-pointer} value.
+  If the @arg{nbytes} argument is 0 the @fun{g:malloc} function returns a
+  foreign @code{null-pointer} value.
   @begin[Examples]{dictionary}
     @begin{pre}
-(glib:malloc 100)
+(g:malloc 100)
 => #.(SB-SYS:INT-SAP #X559FB7283340)
-(glib:malloc 0)
+(g:malloc 0)
 => #.(SB-SYS:INT-SAP #X00000000)
-(cffi:null-pointer-p (glib:malloc 0))
+(cffi:null-pointer-p (g:malloc 0))
 => T
     @end{pre}
   @end{dictionary}
-  @see-function{glib:free}"
+  @see-function{g:free}"
   (nbytes :size))
 
 (export 'malloc)
@@ -503,14 +503,14 @@
 
 (cffi:defcfun ("g_free" free) :void
  #+liber-documentation
- "@version{2022-11-21}
+ "@version{2023-9-18}
   @argument[mem]{a foreign pointer to the memory to free}
   @begin{short}
     Frees the memory pointed to by the @arg{mem} foreign pointer.
   @end{short}
   If the @arg{mem} argument is a foreign @code{null-pointer} the
-  @sym{glib:free} function simply returns.
-  @see-function{glib:malloc}"
+  @fun{g:free} function simply returns.
+  @see-function{g:malloc}"
   (mem :pointer))
 
 (export 'free)
@@ -529,7 +529,7 @@
 
 (cffi:defcfun ("g_get_application_name" application-name) :string
  #+liber-documentation
- "@version{2022-11-23}
+ "@version{2023-9-18}
   @syntax[]{(g:application-name) => name}
   @syntax[]{(setf (g:application-name) name)}
   @argument[name]{a string with the localized name of the application}
@@ -538,12 +538,12 @@
   @end{short}
   This name should be localized if possible, and is intended for display to the
   user. Contrast with the @fun{g:prgname} function, which gets a non-localized
-  name. If the @sym{(setf g:application-name)} function has not been called,
-  returns the result of the @fun{g:prgname} function, which may be @code{nil}
-  if the @sym{(setf g:prgname)} function has also not been called.
+  name. If the @setf{g:application-name} function has not been called, returns
+  the result of the @fun{g:prgname} function, which may be @code{nil} if the
+  @setf{g:prgname} function has also not been called.
 
   The @fun{g:prgname} function will be called automatically by
-  @code{gtk_init()}, but the @sym{g:application-name} function will not. Note
+  @code{gtk_init()}, but the @fun{g:application-name} function will not. Note
   that for thread safety reasons, this function can only be called once.
 
   The application name will be used in contexts such as error messages, or

@@ -192,7 +192,7 @@
 
 #+liber-documentation
 (setf (documentation 'app-launch-context 'type)
- "@version{2022-12-27}
+ "@version{2023-9-18}
   @begin{short}
     Integrating the launch with the launching application.
   @end{short}
@@ -207,7 +207,7 @@
 lambda (context startup-notify-id)    :run-last
       @end{pre}
       @begin[code]{table}
-        @entry[context]{The @sym{g:app-launch-context} object emitting the
+        @entry[context]{The @class{g:app-launch-context} object emitting the
           signal.}
         @entry[startup-notify-id]{A string with the startup notification ID
           for the failed launch.}
@@ -239,7 +239,7 @@ lambda (context startup-notify-id)    :run-last
 lambda (context info platform-data)    :run-last
       @end{pre}
       @begin[code]{table}
-        @entry[context]{The @sym{g:app-launch-context} object emitting the
+        @entry[context]{The @class{g:app-launch-context} object emitting the
           signal.}
         @entry[info]{A @class{g:app-info} instance that is about to be
           launched.}
@@ -257,7 +257,7 @@ lambda (context info platform-data)    :run-last
 lambda (context info platform-data)    :run-last
       @end{pre}
       @begin[code]{table}
-        @entry[context]{The @sym{g:app-launch-context} object emitting the
+        @entry[context]{The @class{g:app-launch-context} object emitting the
           signal.}
         @entry[info]{The @class{g:app-info} object that was just launched.}
         @entry[platform-data]{A @type{g:variant} instance with additional
@@ -1079,11 +1079,12 @@ lambda (context info platform-data)    :run-last
   (context (gobject:object app-launch-context))
   (err :pointer))
 
-(defun app-info-launch-default-for-uri (uri context)
+(defun app-info-launch-default-for-uri (uri &optional context)
  #+liber-documentation
- "@version{2023-9-2}
+ "@version{2023-9-18}
   @argument[uri]{a string with the URI to show}
-  @argument[context]{an optional @class{g:app-launch-context} object}
+  @argument[context]{an optional @class{g:app-launch-context} object,
+    the argument can be @code{nil}, that is the default}
   @return{@em{True} on sucess, @em{false} on error.}
   @begin{short}
     Utility function that launches the default application registered to handle
@@ -1093,68 +1094,81 @@ lambda (context info platform-data)    :run-last
   @see-class{g:app-info}
   @see-class{g:app-launch-context}"
   (glib:with-ignore-g-error (err)
-    (%app-info-launch-default-for-uri uri context err)))
+    (let ((context (if context context (cffi:null-pointer))))
+      (%app-info-launch-default-for-uri uri context err))))
 
 (export 'app-info-launch-default-for-uri)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_app_info_launch_default_for_uri_async ()
-;;;
-;;; void
-;;; g_app_info_launch_default_for_uri_async (const char *uri,
-;;;                                          GAppLaunchContext *context,
-;;;                                          GCancellable *cancellable,
-;;;                                          GAsyncReadyCallback callback,
-;;;                                          gpointer user_data);
-;;;
-;;; Async version of g_app_info_launch_default_for_uri().
-;;;
-;;; This version is useful if you are interested in receiving error information
-;;; in the case where the application is sandboxed and the portal may present
-;;; an application chooser dialog to the user.
-;;;
-;;; This is also useful if you want to be sure that the D-Bus–activated
-;;; applications are really started before termination and if you are
-;;; interested in receiving error information from their activation.
-;;;
-;;; uri :
-;;;     the uri to show
-;;;
-;;; context :
-;;;     an optional GAppLaunchContext.
-;;;
-;;; cancellable :
-;;;     a GCancellable.
-;;;
-;;; callback :
-;;;     a GAsyncReadyCallback to call when the request is done.
-;;;
-;;; user_data :
-;;;     data to pass to callback .
-;;;
-;;; Since 2.50
 ;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("g_app_info_launch_default_for_uri_async"
+               %app-info-launch-default-for-uri-async) :void
+  (uri :string)
+  (context (gobject:object app-launch-context))
+  (cancellable (gobject:object cancellable))
+  (func :pointer)
+  (data :pointer))
+
+(defun app-info-launch-default-for-uri-async (uri context cancellable func)
+ #+liber-documentation
+ "@version{2023-9-18}
+  @argument[uri]{a string with the URI to show}
+  @argument[context]{an optional @class{g:app-launch-context} object, or
+    @code{nil}}
+  @argument[cancellable]{a @class{g:cancellable} object}
+  @argument[func]{a @symbol{g:async-ready-callback} callback function to
+    call when the request is done}
+  @begin{short}
+    Asynchronous version of the @fun{g:app-info-launch-default-for-uri}
+    function.
+  @end{short}
+  This version is useful if you are interested in receiving error information
+  in the case where the application is sandboxed and the portal may present
+  an application chooser dialog to the user.
+
+  This is also useful if you want to be sure that the D-Bus–activated
+  applications are really started before termination and if you are interested
+  in receiving error information from their activation.
+  @see-class{g:app-launch-context}
+  @see-class{g:cancellable}
+  @see-symbol{g:async-ready-callback}
+  @see-function{g:app-info-launch-default-for-uri}"
+  (let ((ptr (glib:allocate-stable-pointer func)))
+    (%app-info-launch-default-for-uri-async
+                       uri
+                       (if context context (cffi:null-pointer))
+                       (if cancellable cancellable (cffi:null-pointer))
+                       (cffi:callback async-ready-callback)
+                       ptr)))
+
+(export 'app-info-launch-default-for-uri-async)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_app_info_launch_default_for_uri_finish ()
-;;;
-;;; gboolean
-;;; g_app_info_launch_default_for_uri_finish (GAsyncResult *result,
-;;;                                           GError **error);
-;;;
-;;; Finishes an asynchronous launch-default-for-uri operation.
-;;;
-;;; result :
-;;;     a GAsyncResult
-;;;
-;;; error :
-;;;     return location for an error, or NULL.
-;;;
-;;; Returns :
-;;;     TRUE if the launch was successful, FALSE if error is set
-;;;
-;;; Since 2.50
 ;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("g_app_info_launch_default_for_uri_finish"
+               %app-info-launch-default-for-uri-finish) :boolean
+  (result (gobject:object async-result))
+  (err :pointer))
+
+(defun app-info-launch-default-for-uri-finish (result)
+ #+liber-documentation
+ "@version{2023-9-18}
+  @argument[result]{a @class{g:async-result} object}
+  @return{@em{True} if the launch was successful, @em{false} otherwise}
+  @begin{short}
+    Finishes an asynchronous launch-default-for-uri operation.
+  @end{short}
+  @see-class{g:app-launch-context}
+  @see-class{g:async-result}
+  @see-function{g:app-info-launch-default-for-uri-async}"
+  (glib:with-ignore-g-error (err)
+    (%app-info-launch-default-for-uri-finish result err)))
+
+(export 'app-info-launch-default-for-uri-finish)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_app_launch_context_new ()
