@@ -57,6 +57,7 @@
            #:with-foreign-boxed-array
            #:pointer
            ;; Symbols from glib.error.lisp
+           #:error
            #:with-g-error
            #:with-ignore-g-error
            #:with-catching-to-g-error))
