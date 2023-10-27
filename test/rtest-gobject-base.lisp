@@ -310,27 +310,56 @@
 
 (defvar *data-full-status* nil)
 
+;; Callback function for the destroy notify handler
 (cffi:defcallback destroy-notify-cb :void ((data :pointer))
+  (declare (ignore data))
+  (format t "~&in DESTROY-NOTIFY-CB~%")
   (is (string= "destroy-notify-cb"
-               (setf *data-full-status* "destroy-notify-cb")))
-  (is (cffi:pointerp data))
-  (is (= 100 (cffi:pointer-address data))))
+               (setf *data-full-status* "destroy-notify-cb"))))
 
-#+nil
-(test g-object-set-data-full
-  (let ((button (make-instance 'gtk:button)))
+(test g-object-set-data-full.1
+  (let ((action (make-instance 'g:simple-action)))
     ;; Set data on the object with a destroy callback
-    (is-false (g-object-set-data-full button
-                                      "property"
-                                      (make-pointer 100)
-                                      (callback destroy-notify-cb)))
+    (is (= 100 (g:object-set-data-full action
+                                       "property"
+                                       100
+                                       (cffi:callback destroy-notify-cb))))
     ;; Clear the status
     (is-false (setf *data-full-status* nil))
+    ;; Get the data
+    (is (= 100 (g:object-data action "property")))
     ;; Destroy the data, the callback will be executed
-    (is (cffi:pointerp (setf (g-object-data button "property")
-                             (cffi:null-pointer))))
+    (is-false (setf (g:object-data action "property") nil))
     ;; Check status
     (is (string= "destroy-notify-cb" *data-full-status*))))
+
+(test g-object-set-data-full.2
+  (let ((item (make-instance 'g:menu-item)))
+    ;; no property
+    (is-false (g:object-data item "prop"))
+    ;; set integer property
+    (is (= 999 (g:object-set-data-full item 
+                                       "prop" 
+                                       999     
+                                       (cffi:callback destroy-notify-cb))))
+    (is (= 999 (g:object-data item "prop")))
+    ;; set Lisp list
+    (is (equal '(a b c) 
+               (g:object-set-data-full item 
+                                       "prop"
+                                       '(a b c)
+                                        (cffi:callback destroy-notify-cb))))
+    (is (equal '(a b c) (g:object-data item "prop")))
+    ;; set g:object
+    (is (eq item (g:object-set-data-full item 
+                                         "prop" 
+                                         item
+                                         (cffi:callback destroy-notify-cb))))
+    (is (eq item (g:object-data item "prop")))
+    ;; remove the association
+    (is-false (setf (g:object-data item "prop") nil))
+    (is-false (g:object-data item "prop"))))
+
 
 ;;;     g-object-steal-data
 
@@ -471,4 +500,4 @@
 ;;;     g_weak_ref_set
 ;;;     g_assert_finalize_object
 
-;;; --- 2023-7-29 --------------------------------------------------------------
+;;; --- 2023-10-22 -------------------------------------------------------------

@@ -5,15 +5,6 @@
 
 ;;; --- Types and Values -------------------------------------------------------
 
-;;;     GResource
-
-(test g-resource-boxed
-  ;; Type check
-  (is (g:type-is-a (g:gtype "GResource") gobject:+g-type-boxed+))
-  ;; Check the type initializer
-  (is (eq (g:gtype "GResource")
-          (g:gtype (cffi:foreign-funcall "g_resource_get_type" :size)))))
-
 ;;;     GResourceFlags
 
 (test g-resource-flags
@@ -35,11 +26,10 @@
   (is (equal '("none" "compressed")
              (list-flags-item-nick "GResourceFlags")))
   ;; Check the flags definition
-  (is (equal '(GOBJECT:DEFINE-G-FLAGS "GResourceFlags"
-                              G-RESOURCE-FLAGS
-                              (:EXPORT T)
-                              (:NONE 0)
-                              (:COMPRESSED 1))
+  (is (equal '(GOBJECT:DEFINE-G-FLAGS "GResourceFlags" G-RESOURCE-FLAGS
+                                      (:EXPORT T)
+                                      (:NONE 0)
+                                      (:COMPRESSED 1))
              (gobject:get-g-type-definition "GResourceFlags"))))
 
 ;;;     GResourceLookupFlags
@@ -65,10 +55,22 @@
              (list-flags-item-nick "GResourceLookupFlags")))
   ;; Check the flags definition
   (is (equal '(GOBJECT:DEFINE-G-FLAGS "GResourceLookupFlags"
-                              G-RESOURCE-LOOKUP-FLAGS
-                              (:EXPORT T)
-                              (:NONE 0))
+                                      G-RESOURCE-LOOKUP-FLAGS
+                                      (:EXPORT T)
+                                      (:NONE 0))
              (gobject:get-g-type-definition "GResourceLookupFlags"))))
+
+;;;     GResource
+
+(test g-resource-boxed
+  ;; Type check
+  (is (g:type-is-a (g:gtype "GResource") gobject:+g-type-boxed+))
+  ;; Check the type initializer
+  (is (eq (g:gtype "GResource")
+          (g:gtype (cffi:foreign-funcall "g_resource_get_type" :size))))
+  ;; Check the registered name
+  (is (eq 'g:resource
+          (glib:symbol-for-gtype "GResource"))))
 
 ;;;     GStaticResource
 ;;;     G_RESOURCE_ERROR
@@ -189,4 +191,4 @@
                      (g:resources-info "/com/crategus/test/rtest-application.ui"
                                        :none)))))))
 
-;;; --- 2023-7-9 ---------------------------------------------------------------
+;;; --- 2023-10-20 -------------------------------------------------------------
