@@ -46,7 +46,7 @@
 (defmacro glib-defcallback (name-and-options return-type args &body body)
   (let* ((c-args (iter (for arg in args)
                        (for (name type) = arg)
-                       (if (and (listp type) (eq 'boxed (first type)))
+                       (if (and (listp type) (eq 'glib:boxed (first type)))
                            (collect `(,name :pointer))
                            (collect arg))))
          (c-body (wrap-body-with-boxed-translations args body)))
