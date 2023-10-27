@@ -685,7 +685,7 @@ baker_bake_cake_sync (Baker               *self,
   @see-class{g:task}"
   (%task-new (gobject:object-pointer source)
              cancellable
-             (cffi:callback asyn-ready-callback)
+             (cffi:callback async-ready-callback)
              (glib:allocate-stable-pointer func)))
 
 (export 'task-new)
@@ -710,6 +710,18 @@ baker_bake_cake_sync (Baker               *self,
 ;;;     GDestroyNotify for task_data .
 ;;; ----------------------------------------------------------------------------
 
+(cffi:defcfun ("g_task_set_task_data" %task-set-task-data) :void
+  (task (gobject:object task))
+  (data :pointer)
+  (notify :pointer))
+
+(defun (setf task-task-data) (data task)
+  (let ((ptr (glib:allocate-stable-pointer data)))
+    (%task-set-task-data task
+                         ptr
+                         (cffi:callback glib:stable-pointer-destroy-notify))
+    data))
+
 ;;; ----------------------------------------------------------------------------
 ;;; g_task_get_task_data ()
 ;;;
@@ -724,6 +736,15 @@ baker_bake_cake_sync (Baker               *self,
 ;;; Returns :
 ;;;     task 's task_data.
 ;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("g_task_get_task_data" %task-task-data) :pointer
+  (task (gobject:object task)))
+
+(defun task-task-data (task)
+  (let ((ptr (%task-task-data task)))
+    (glib:get-stable-pointer-value ptr)))
+
+(export 'task-task-data)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_task_set_priority ()
@@ -1187,6 +1208,16 @@ The value is a NUL terminated UTF-8 string.
 ;;;     a GDestroyNotify function.
 ;;; ----------------------------------------------------------------------------
 
+(cffi:defcfun ("g_task_return_pointer" %task-return-pointer) :void
+  (task (gobject:object task))
+  (result :pointer)
+  (destroy :pointer))
+
+(defun task-return-pointer (task result)
+  (%task-return-pointer task result (cffi:null-pointer)))
+
+(export 'task-return-pointer)
+
 ;;; ----------------------------------------------------------------------------
 ;;; g_task_return_value ()
 ;;;
@@ -1362,6 +1393,16 @@ The value is a NUL terminated UTF-8 string.
 ;;;     the task result, or NULL on error.
 ;;; ----------------------------------------------------------------------------
 
+(cffi:defcfun ("g_task_propagate_pointer" %task-propagate-pointer) :pointer
+  (task (gobject:object task))
+  (err :pointer))
+
+(defun task-propagate-pointer (task)
+  (glib:with-g-error (err)
+    (%task-propagate-pointer task err)))
+
+(export 'task-propagate-pointer)
+
 ;;; ----------------------------------------------------------------------------
 ;;; g_task_propagate_value ()
 ;;;
@@ -1437,6 +1478,23 @@ The value is a NUL terminated UTF-8 string.
 ;;;     a GTaskThreadFunc.
 ;;; ----------------------------------------------------------------------------
 
+(cffi:defcfun ("g_task_run_in_thread" %task-run-in-thread) :void
+  (task (gobject:object task))
+  (func :pointer))
+
+(defun task-run-in-thread (task func)
+  (format t "in TASK-RUN-IN-THREAD:~%")
+  (format t "    task : ~a~%" task)
+  (format t "    func : ~a~%" func)
+  (let ((ptr (glib:allocate-stable-pointer func)))
+    (format t "    ptr : ~a~%" ptr)
+    ;; Store the pointer to the callback function in task data
+    (setf (task-task-data task) ptr)
+    (%task-run-in-thread task
+                         (cffi:callback task-thread-func))))
+
+(export 'task-run-in-thread)
+
 ;;; ----------------------------------------------------------------------------
 ;;; g_task_run_in_thread_sync ()
 ;;;
@@ -1502,6 +1560,26 @@ The value is a NUL terminated UTF-8 string.
 ;;; cancellable :
 ;;;     task 's GCancellable, or NULL
 ;;; ----------------------------------------------------------------------------
+
+(cffi:defcallback task-thread-func :void
+    ((task (gobject:object task))
+     (source :pointer)
+     (data :pointer)
+     (cancellable :pointer))
+  (format t "in TASK-THREAD-FUNC:~%")
+  (format t "    task : ~a~%" task)
+  (format t "    source : ~a~%" source)
+  (format t "    data : ~a~%" data)
+  (format t "    data value : ~a~%" (glib:get-stable-pointer-value data))
+  (format t "    task data : ~a~%" (task-task-data task))
+  (format t "    cancellable : ~a~%" cancellable)
+  (let ((func (glib:get-stable-pointer-value (task-task-data task))))
+;    (unwind-protect
+      (funcall func task source data cancellable))
+;      (glib:free-stable-pointer data)))
+)
+
+(export 'task-thread-func)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_task_attach_source ()
