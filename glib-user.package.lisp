@@ -998,18 +998,12 @@
            #:task
            #:task-completed
            #:task-new
-           #:task-set-task-data
-           #:task-get-task-data
-           #:task-set-priority
-           #:task-get-priority
-           #:task-set-check-cancellable
-           #:task-get-check-cancellable
-           #:task-set-return-on-cancel
-           #:task-get-return-on-cancel
-           #:task-set-source-tag
-           #:task-get-source-tag
-           #:task-set-name
-           #:task-get-name
+           #:task-task-data
+           #:task-priority
+           #:task-check-cancellable
+           #:task-return-on-cancel
+           #:task-source-tag
+           #:task-name
            #:task-report-error
            #:task-report-new-error
            #:task-get-cancellable

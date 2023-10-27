@@ -31,7 +31,8 @@
 ;;;
 ;;;      Print debug information
 ;;;
-;;; Usage is as following. Define a global variable, e.g.;
+;;; Usage is as following. Define a global variable which starts with
+;;; DEBUG- , e.g.;
 ;;;
 ;;;     (defvar *debug-gboxed-gc* nil)
 ;;;
@@ -39,7 +40,7 @@
 ;;; is shown. Set the global *debug-gboxed-gc* variable to T to get debug
 ;;; information.
 ;;;
-;;;     (log-for :debug-gboxed-gc
+;;;     (log-for :gboxed-gc
 ;;;              "Activate gc hooks for boxed opaque: ~A~%"
 ;;;              *gboxed-gc-hooks*)
 ;;; ----------------------------------------------------------------------------

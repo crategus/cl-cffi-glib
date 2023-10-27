@@ -220,11 +220,11 @@
 (setf (documentation 'object 'type)
  "@version{#2022-12-30}
   @begin{short}
-    The @sym{g:object} class is the fundamental type providing the common
+    The @class{g:object} class is the fundamental type providing the common
     attributes and methods for all object types in GTK, Pango and other
     libraries.
   @end{short}
-  The @sym{object} class provides methods for object construction and
+  The @ckass{g:object} class provides methods for object construction and
   destruction, property access methods, and signal support. Signals are
   described in detail in the @url[https://docs.gtk.org/gobject/]{GObject
   documentation}.
@@ -259,7 +259,7 @@ lambda (object pspec)    :no-hooks
     It is important to note that you must use canonical parameter names as
     detail strings for the notify signal.
     @begin[code]{table}
-      @entry[object]{The @sym{g:object} instance which received the signal.}
+      @entry[object]{The @class{g:object} instance which received the signal.}
       @entry[pspec]{The @symbol{g:param-spec} instance of the property which
         changed.}
     @end{table}
@@ -305,7 +305,7 @@ lambda (object pspec)    :no-hooks
   @begin{short}
     Accessor of the @slot[g:object]{pointer} slot of the @class{g:object} class.
   @end{short}
-  The @sym{g:object-pointer} function gets the foreign C pointer of a
+  The @fun{g:object-pointer} function gets the foreign C pointer of a
   @class{g:object} instance.
   @begin[Examples]{dictionary}
     @begin{pre}
@@ -379,11 +379,11 @@ lambda (object pspec)    :no-hooks
 (setf (documentation 'initially-unowned 'type)
  "@version{#2022-12-30}
   @begin{short}
-    The @sym{g:initially-unowned} class is derived from the @class{g:object}
+    The @class{g:initially-unowned} class is derived from the @class{g:object}
     class.
   @end{short}
   The only difference between the two is that the initial reference of a
-  @sym{g:initially-unowned} object is flagged as a floating reference. This
+  @class{g:initially-unowned} object is flagged as a floating reference. This
   means that it is not specifically claimed to be \"owned\" by any code portion.
 
   The floating reference can be converted into an ordinary reference by
@@ -510,7 +510,7 @@ lambda (object pspec)    :no-hooks
     (log-for :gc "g_object_ref_sink(~A)~%" (object-pointer obj))
     (%object-ref-sink (object-pointer obj)))
   (setf (object-has-reference obj) t)
-  (setf (gethash (cffi:pointer-address (object-pointer obj)) 
+  (setf (gethash (cffi:pointer-address (object-pointer obj))
                  *foreign-gobjects-strong*)
         obj)
   (%object-add-toggle-ref (object-pointer obj)
@@ -883,9 +883,9 @@ lambda (object pspec)    :no-hooks
       (liber:symbol-documentation 'object-construct-param)
  "@version{#2020-2-17}
   @begin{short}
-    The @sym{object-construct-param} structure is an auxiliary structure used
-    to hand @symbol{param-spec}/@symbol{value} pairs to the constructor of
-    a @symbol{object-class} structure.
+    The @symbol{g:object-construct-param} structure is an auxiliary structure
+    used to hand @symbol{g:param-spec}/@symbol{g:value} pairs to the constructor
+    of a @symbol{g:object-class} structure.
   @end{short}
   @begin{pre}
 (cffi:defcstruct object-construct-param
@@ -2059,8 +2059,8 @@ lambda (object pspec)    :no-hooks
 
   This functionality is intended for binding @arg{object} to a proxy object
   managed by another memory manager. This is done with two paired references:
-  the strong reference added by the @sym{object-add-toggle-ref} function and a
-  reverse reference to the proxy object which is either a strong reference or
+  the strong reference added by the @fun{g:object-add-toggle-ref} function and
+  a reverse reference to the proxy object which is either a strong reference or
   weak reference.
 
   The setup is that when there are no other references to @arg{object}, only a
@@ -2072,7 +2072,7 @@ lambda (object pspec)    :no-hooks
   @code{nil}).
 
   Since a (normal) reference must be held to the object before calling the
-  @sym{object-add-toggle-ref} function, the initial state of the reverse link
+  @fun{g:object-add-toggle-ref} function, the initial state of the reverse link
   is always strong.
 
   Multiple toggle references may be added to the same gobject, however if
@@ -2457,7 +2457,7 @@ lambda (object pspec)    :no-hooks
 
 (defun object-data (object key)
  #+liber-documentation
- "@version{2023-7-27}
+ "@version{2023-10-17}
   @syntax[]{(g:object-data object key) => data}
   @syntax[]{(setf (g:object-data object key) data)}
   @argument[object]{a @class{g:object} instance containing the associations}
@@ -2466,10 +2466,10 @@ lambda (object pspec)    :no-hooks
   @begin{short}
     Each object carries around a table of associations from strings to pointers.
   @end{short}
-  The @sym{g:object-data} function gets a named field from the objects table of
-  associations. The @sym{(setf g:object-data)} function sets an association.
-  If the object already had an association with that name, the old association
-  will be destroyed.
+  The @fun{g:object-data} function gets a named field from the objects table of
+  associations. The @setf{g:object-data} function sets an association. If the
+  object already had an association with that name, the old association will be
+  destroyed.
   @begin[Examples]{dictionary}
     @begin{pre}
 (defvar item (make-instance 'g:menu-item)) => ITEM
@@ -2510,11 +2510,19 @@ lambda (object pspec)    :no-hooks
 ;;;     the data element.
 ;;; ----------------------------------------------------------------------------
 
+(cffi:defcallback destroy-notify :void
+    ((data :pointer))
+  (format t "in DESTROY-NOTIFY with data : ~a~%" data)
+  (let ((func (glib:get-stable-pointer-value data)))
+    (funcall func)))
+
+(export 'destroy-notify)
+
 ;;; ----------------------------------------------------------------------------
 ;;; g_object_set_data_full ()
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcfun ("g_object_set_data_full" object-set-data-full) :void
+(cffi:defcfun ("g_object_set_data_full" %object-set-data-full) :void
  #+liber-documentation
  "@version{#2022-12-30}
   @argument[object]{@class{g:object} instance containing the associations}
@@ -2534,7 +2542,7 @@ lambda (object pspec)    :no-hooks
     function. See the example for the syntax to use.
   @end{dictionary}
   @begin[Examples]{dictionary}
-    This code example shows the usage of the @sym{g:object-set-data-full}
+    This code example shows the usage of the @fun{g:object-set-data-full}
     function with a destroy notify handler. The code is taken from the
     @code{gtk-widget-factory} demo.
     @begin{pre}
@@ -2565,6 +2573,38 @@ lambda (object pspec)    :no-hooks
   (key :string)
   (data :pointer)
   (destroy :pointer))
+
+;; This implementation is not correct.
+#+nil
+(defun object-set-data-full (object key data destroy)
+  (let ((ptr (%object-get-data object key)))
+    (cond ((null data)
+           ;; Remove data and free the stable-poiner
+           (%object-set-data object key (cffi:null-pointer))
+           (when (not (cffi:null-pointer-p ptr))
+             (glib:free-stable-pointer ptr)))
+          ((cffi:null-pointer-p ptr)
+             (setf ptr (glib:allocate-stable-pointer data))
+             (%object-set-data-full object
+                                    key
+                                    ptr
+                                    destroy))
+          (t
+           (setf (glib:get-stable-pointer-value ptr) data)
+           (%object-set-data-full object
+                                  key
+                                  ptr
+                                  destroy)))
+    data))
+
+;; TODO: Improve this implementation and update the documentation.
+;; We have to free the data.
+
+(defun object-set-data-full (object key data destroy)
+  (%object-set-data-full object
+                         key
+                         (glib:allocate-stable-pointer data)
+                         destroy))
 
 (export 'object-set-data-full)
 

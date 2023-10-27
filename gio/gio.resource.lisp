@@ -407,7 +407,7 @@
 ;;;
 ;;; If data is empty or corrupt, G_RESOURCE_ERROR_INTERNAL will be returned.
 ;;;
-;;;data :
+;;; data :
 ;;;     A GBytes
 ;;;
 ;;; error :
