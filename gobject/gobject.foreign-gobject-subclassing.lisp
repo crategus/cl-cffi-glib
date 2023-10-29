@@ -346,10 +346,13 @@
                class-name
                interface-name)
       (iter (for method in (vtable-description-methods vtable))
-            (for cb = (cffi:get-callback (vtable-method-info-callback-name method)))
+            (for cb = (cffi:get-callback 
+                          (vtable-method-info-callback-name method)))
             (for slot-name = (vtable-method-info-slot-name method))
             (log-for :subclass "->setting method ~A to ~A~%" method cb)
-            (setf (cffi:foreign-slot-value iface vtable-cstruct slot-name) cb)))))
+            (setf (cffi:foreign-slot-value iface
+                                          `(:struct ,vtable-cstruct)
+                                           slot-name) cb)))))
 
 (cffi:defcallback c-interface-init :void ((iface :pointer) (data :pointer))
   (interface-init iface data))
