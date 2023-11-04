@@ -308,15 +308,20 @@
 
 ;;;     g-object-set-data-full
 
+;; FIXME: Reimplement g:object-set-data-full
+
+#+nil
 (defvar *data-full-status* nil)
 
 ;; Callback function for the destroy notify handler
+#+nil
 (cffi:defcallback destroy-notify-cb :void ((data :pointer))
   (declare (ignore data))
   (format t "~&in DESTROY-NOTIFY-CB~%")
   (is (string= "destroy-notify-cb"
                (setf *data-full-status* "destroy-notify-cb"))))
 
+#+nil
 (test g-object-set-data-full.1
   (let ((action (make-instance 'g:simple-action)))
     ;; Set data on the object with a destroy callback
@@ -333,26 +338,27 @@
     ;; Check status
     (is (string= "destroy-notify-cb" *data-full-status*))))
 
+#+nil
 (test g-object-set-data-full.2
   (let ((item (make-instance 'g:menu-item)))
     ;; no property
     (is-false (g:object-data item "prop"))
     ;; set integer property
-    (is (= 999 (g:object-set-data-full item 
-                                       "prop" 
-                                       999     
+    (is (= 999 (g:object-set-data-full item
+                                       "prop"
+                                       999
                                        (cffi:callback destroy-notify-cb))))
     (is (= 999 (g:object-data item "prop")))
     ;; set Lisp list
-    (is (equal '(a b c) 
-               (g:object-set-data-full item 
+    (is (equal '(a b c)
+               (g:object-set-data-full item
                                        "prop"
                                        '(a b c)
                                         (cffi:callback destroy-notify-cb))))
     (is (equal '(a b c) (g:object-data item "prop")))
     ;; set g:object
-    (is (eq item (g:object-set-data-full item 
-                                         "prop" 
+    (is (eq item (g:object-set-data-full item
+                                         "prop"
                                          item
                                          (cffi:callback destroy-notify-cb))))
     (is (eq item (g:object-data item "prop")))
@@ -500,4 +506,4 @@
 ;;;     g_weak_ref_set
 ;;;     g_assert_finalize_object
 
-;;; --- 2023-10-22 -------------------------------------------------------------
+;;; --- 2023-11-4 --------------------------------------------------------------

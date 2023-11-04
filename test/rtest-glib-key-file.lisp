@@ -252,18 +252,15 @@
 (test g-key-file-comment.2
   (glib:with-g-key-file (keyfile)
     (is-true (g:key-file-load-from-data keyfile *key-values* :keep-comments))
-
     (is (string= "Comment"
                  (setf (g:key-file-comment keyfile "Another Group" "Integer")
                        "Comment")))
     (is (string= "Comment"
                  (g:key-file-comment keyfile "Another Group" "Integer")))
-
     (is (string= "Another Comment"
                  (setf (g:key-file-comment keyfile "Another Group" nil)
                        "Another Comment")))
-    ;; This seems not to be consistent. There is an extra # char.
-    (is (string= "#Another Comment"
+    (is (string= "Another Comment"
                  (g:key-file-comment keyfile "Another Group" nil)))))
 
 ;;;     g_key_file_set_locale_string
@@ -314,4 +311,4 @@
         (error "Error saving key file."))
       (is (stringp data)))))
 
-;;; --- 2023-7-9 ---------------------------------------------------------------
+;;; --- 2023-11-4 --------------------------------------------------------------

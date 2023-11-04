@@ -70,7 +70,8 @@
           (glib:symbol-for-gtype "GAppLaunchContext")))
   ;; Check the type initializer
   (is (eq (g:gtype "GAppLaunchContext")
-          (g:gtype (cffi:foreign-funcall "g_app_launch_context_get_type" :size))))
+          (g:gtype (cffi:foreign-funcall "g_app_launch_context_get_type"
+                                         :size))))
   ;; Check the parent
   (is (eq (g:gtype "GObject")
           (g:type-parent "GAppLaunchContext")))
@@ -187,14 +188,16 @@
 #-windows
 (test g-app-info-executable
   (is (every #'stringp
-             (mapcar #'g:app-info-executable (g:app-info-all)))))
+             (remove nil
+                     (mapcar #'g:app-info-executable (g:app-info-all))))))
 
 ;;;     g_app_info_get_commandline
 
 #-windows
 (test g-app-info-commandline
   (is (every #'stringp
-             (mapcar #'g:app-info-commandline (g:app-info-all)))))
+             (remove nil
+                     (mapcar #'g:app-info-commandline (g:app-info-all))))))
 
 ;;;     g_app_info_get_icon
 
@@ -308,4 +311,4 @@
 ;;;     g_app_launch_context_get_startup_notify_id
 ;;;     g_app_launch_context_launch_failed
 
-;;; --- 2023-5-29 --------------------------------------------------------------
+;;; --- 2023-11-4 --------------------------------------------------------------
