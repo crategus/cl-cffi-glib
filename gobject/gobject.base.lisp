@@ -2574,30 +2574,7 @@ lambda (object pspec)    :no-hooks
   (data :pointer)
   (destroy :pointer))
 
-;; This implementation is not correct.
-#+nil
-(defun object-set-data-full (object key data destroy)
-  (let ((ptr (%object-get-data object key)))
-    (cond ((null data)
-           ;; Remove data and free the stable-poiner
-           (%object-set-data object key (cffi:null-pointer))
-           (when (not (cffi:null-pointer-p ptr))
-             (glib:free-stable-pointer ptr)))
-          ((cffi:null-pointer-p ptr)
-             (setf ptr (glib:allocate-stable-pointer data))
-             (%object-set-data-full object
-                                    key
-                                    ptr
-                                    destroy))
-          (t
-           (setf (glib:get-stable-pointer-value ptr) data)
-           (%object-set-data-full object
-                                  key
-                                  ptr
-                                  destroy)))
-    data))
-
-;; TODO: Improve this implementation and update the documentation.
+;; FIXME: Improve this implementation and update the documentation.
 ;; We have to free the data.
 
 (defun object-set-data-full (object key data destroy)
