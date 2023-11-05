@@ -128,6 +128,9 @@
 
 (defsystem :cl-cffi-glib/test
   :name "cl-cffi-glib/test"
+  :version "0.4.0"
+  :author "Dieter Kaiser"
+  :license "MIT"
   :components
   ((:module test
     :serial t
