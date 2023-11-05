@@ -190,6 +190,8 @@
       (ignore () :report "Ignore version requirement" nil))))
 
 (eval-when (:compile-toplevel :load-toplevel :execute)
+  ;; push the hostname on *features*
+  (pushnew (intern (string-upcase (machine-instance)) :keyword) *features*)
   (pushnew :glib *features*))
 
 (cffi:defcvar
