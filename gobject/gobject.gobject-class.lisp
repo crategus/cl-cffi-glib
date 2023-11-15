@@ -196,7 +196,7 @@
 (defun initialize-gobject-class-g-type (class)
   ;; We get warnings from the second part of the if-statement for
   ;; objects which we have subclassed. We switch off the warnings.
-  (let ((glib:*warn-unknown-gtype* nil))
+  (let ((*warn-unknown-gtype* nil))
     (log-for :subclass
              ":subclass INITIALIZE-GOBJECT-CLASS-G-TYPE for class ~a ~a~%"
              class
@@ -234,7 +234,7 @@
         (when (zerop (glib:gtype-id
                          (glib:gtype (gobject-class-direct-gname class))))
           ;; This is a hack to avoid a warning when loading the library.
-          (when (and glib:*warn-unknown-gtype* ; a hack we never get a warning
+          (when (and *warn-unknown-gtype* ; a hack we never get a warning
                      (not (string= "AtkImplementorIface"
                                    (gobject-class-direct-gname class))))
             (warn "Declared GType name '~A' for class '~A' is invalid."

@@ -168,7 +168,7 @@
 ;;;     GTypeInterfaceCheckFunc
 ;;;
 ;;;     g_type_value_table_peek
-;;;     g_type_ensure                                      not exported
+;;;     g_type_ensure
 ;;;     g_type_get_type_registration_serial                not implemented
 ;;;     g_type_get_instance_count                          not implemented
 ;;;
@@ -215,7 +215,7 @@
   @variable-value{0}
   @begin{short}
     An invalid type used as error return value in some functions which return
-    a @class{g:type-t} type.
+    a @class{g:type-t} type ID.
   @end{short}
   @see-class{g:type-t}")
 
@@ -665,7 +665,7 @@
       (documentation '+g-type-checksum+ 'variable)
  "@version{2022-12-29}
   @begin{short}
-    The @class{g:type-t} for a boxed type holding a @code{GChecksum}.
+    The @class{g:type-t} type ID for a boxed type holding a @code{GChecksum}.
   @end{short}
   @see-class{g:type-t}")
 
@@ -801,15 +801,16 @@
   (:documentation
     "@version{#2023-9-19}
      @begin{short}
-       Values of this CFFI foreign type @class{g:type-t} identify the C GType.
+       Values of this CFFI foreign @class{g:type-t} type ID identify the C
+       GType.
      @end{short}
-     The @class{g:type-t} type is designated by its name, a string, or a numeric
-     identifier. Functions accept @class{g:type-t} type designators as a string
-     or integer and return them as a string. The @fun{g:type-name} and
-     @fun{g:type-from-name} functions are used to convert between the name and
-     the numeric identifier. Numeric identifier of @class{g:type-t} may be
-     different between different program runs. But string identifier of a
-     @class{g:type-t} type does not change.
+     The @class{g:type-t} type ID is designated by its name, a string, or a
+     numeric identifier. Functions accept @class{g:type-t} type ID designators
+     as a string or integer and return them as a string. The @fun{g:type-name}
+     and @fun{g:type-from-name} functions are used to convert between the name
+     and the numeric identifier. Numeric identifier of the @class{g:type-t}
+     type ID may be different between different program runs. But string
+     identifier of a @class{g:type-t} type ID does not change.
      @begin[Examples]{dictionary}
        @begin{pre}
 +g-type-double+ => 60
@@ -1371,7 +1372,7 @@
   (:instance-size :uint))
   @end{pre}
   @begin[code]{table}
-    @entry[type]{The @class{g:type-t} value of the type.}
+    @entry[type]{The @class{g:type-t} type ID of the type.}
     @entry[type-name]{A string with the name of the type.}
     @entry[class-size]{An unsigned integer with the size of the class
       structure.}
@@ -1422,8 +1423,8 @@
 (cffi:defcfun ("g_type_fundamental" type-fundamental) type-t
  #+liber-documentation
  "@version{2022-12-29}
-  @argument[gtype]{a valid @class{g:type-t} ID}
-  @return{The fundamental @class{g:type-t} type of the @arg{gtype} argument.}
+  @argument[gtype]{a valid @class{g:type-t} type ID}
+  @return{The fundamental @class{g:type-t} type ID of the @arg{gtype} argument.}
   @begin{short}
     The fundamental type which is the ancestor of the @arg{gtype} argument.
   @end{short}
@@ -1482,7 +1483,7 @@
 (defun type-is-abstract (gtype)
  #+liber-documentation
  "@version{2022-12-29}
-  @argument[gtype]{a @class{g:type-t} ID}
+  @argument[gtype]{a @class{g:type-t} type ID}
   @return{@em{True} if @arg{gtype} is an abstract type.}
   @begin{short}
     Checks if @arg{gtype} is an abstract type.
@@ -1507,7 +1508,7 @@
 (defun type-is-derived (gtype)
  #+liber-documentation
  "@version{2022-12-29}
-  @argument[gtype]{a @class{g:type-t} ID}
+  @argument[gtype]{a @class{g:type-t} type ID}
   @return{@em{True} if @arg{gtype} is a dervied type.}
   @begin{short}
     Checks if @arg{gtype} is derived or in object oriented terminology
@@ -1534,7 +1535,7 @@
 (defun type-is-fundamental (gtype)
  #+liber-documentation
  "@version{2022-12-29}
-  @argument[gtype]{a @class{g:type-t} ID}
+  @argument[gtype]{a @class{g:type-t} type ID}
   @return{@em{True} if @arg{gtype} is a fundamental type.}
   @begin{short}
     Checks if @arg{gtype} is a fundamental type.
@@ -1562,7 +1563,7 @@
 (defun type-is-value-type (gtype)
  #+liber-documentation
  "@version{2022-12-29}
-  @argument[gtype]{a @class{g:type-t} ID}
+  @argument[gtype]{a @class{g:type-t} type ID}
   @return{@em{True} if @arg{gtype} is a value type.}
   @begin{short}
     Checks if @arg{gtype} is a value type and can be used with the function
@@ -1616,7 +1617,7 @@
 (defun type-is-classed (gtype)
  #+liber-documentation
  "@version{2022-12-29}
-  @argument[gtype]{a @class{g:type-t} ID}
+  @argument[gtype]{a @class{g:type-t} type ID}
   @return{@em{True} if @arg{gtype} is a classed type.}
   @short{Checks if @arg{gtype} is a classed type.}
   @see-class{g:type-t}
@@ -1684,7 +1685,7 @@
 (defun type-is-interface (gtype)
  #+liber-documentation
  "@version{2022-12-29}
-  @argument[gtype]{a @class{g:type-t} ID}
+  @argument[gtype]{a @class{g:type-t} type ID}
   @return{@em{True} if @arg{gtype} is an interface type.}
   @begin{short}
     Checks if @arg{gtype} is an interface type.
@@ -1715,7 +1716,7 @@
  #+liber-documentation
  "@version{2022-12-29}
   @argument[instance]{a valid @symbol{g:type-instance} instance}
-  @return{The @class{g:type-t} ID of @arg{instance}.}
+  @return{The @class{g:type-t} type ID of @arg{instance}.}
   @short{Get the type identifier from a given instance.}
   This function should only be used in type implementations.
   @begin[Note]{dictionary}
@@ -1744,20 +1745,21 @@
 
 (defun type-from-class (class)
  #+liber-documentation
- "@version{2022-12-29}
+ "@version{2023-11-14}
   @argument[class]{a valid @symbol{g:type-class} instance}
-  @return{The @class{g:type-t} ID of @arg{class}.}
+  @return{The @class{g:type-t} type ID of @arg{class}.}
   @short{Get the type identifier from a given class instance.}
   This function should only be used in type implementations.
   @begin[Examples]{dictionary}
     @begin{pre}
-(g:type-from-class (g:type-class-ref \"GtkWidget\"))
-=> #<GTYPE :name \"GtkWidget\" :id 134921656>
+(g:type-from-class (g:type-class-ref \"GObject\"))
+=> #<GTYPE :name \"GObject\" :id 80>
     @end{pre}
   @end{dictionary}
   @see-class{g:type-t}
   @see-symbol{g:type-class}
-  @see-function{g:type-from-instance}"
+  @see-function{g:type-from-instance}
+  @see-function{g:type-from-interface}"
   (cffi:foreign-slot-value class '(:struct type-class) :type))
 
 (export 'type-from-class)
@@ -1770,7 +1772,7 @@
  #+liber-documentation
  "@version{2022-12-29}
   @argument[iface]{a valid @symbol{g:type-interface} instance}
-  @return{The @class{g:type-t} ID of @arg{iface}.}
+  @return{The @class{g:type-t} type ID of @arg{iface}.}
   @short{Get the type identifier from a given interface instance.}
   This function should only be used in type implementations.
   @begin[Examples]{dictionary}
@@ -1941,7 +1943,7 @@
  #+liber-documentation
  "@version{2022-12-29}
   @argument[instance]{a @symbol{g:type-instance} instance}
-  @argument[gtype]{a @class{g:type-t} ID to be checked}
+  @argument[gtype]{a @class{g:type-t} type ID to be checked}
   @return{@em{True} on success.}
   @begin{short}
     Checks if @arg{instance} is an instance of the type identified by
@@ -2012,7 +2014,7 @@
  #+liber-documentation
  "@version{2022-12-29}
   @argument[class]{a @symbol{g:type-class} instance}
-  @argument[gtype]{a @class{g:type-t} ID to be checked}
+  @argument[gtype]{a @class{g:type-t} type ID to be checked}
   @return{@em{True} on success.}
   @begin{short}
     Checks if @arg{class} is a class structure of the type identified by
@@ -2121,7 +2123,7 @@
 (defun type-name (gtype)
  #+liber-documentation
  "@version{2022-12-29}
-  @argument[gtype]{a @class{g:type-t} ID to return the type name for}
+  @argument[gtype]{a @class{g:type-t} type ID to return the type name for}
   @return{A string with the type name.}
   @begin{short}
     Get the unique name that is assigned to a type ID.
@@ -2170,7 +2172,7 @@
  #+liber-documentation
  "@version{2022-12-29}
   @argument[name]{a string with the type name to lookup}
-  @return{Corresponding @class{g:type-t} ID for @arg{name}.}
+  @return{Corresponding @class{g:type-t} type ID for @arg{name}.}
   @begin{short}
     Lookup the type ID from a given type name.
   @end{short}
@@ -2198,7 +2200,7 @@
 (cffi:defcfun ("g_type_parent" type-parent) type-t
  #+liber-documentation
  "@version{2022-12-29}
-  @argument[gtype]{a derived @class{g:type-t} ID}
+  @argument[gtype]{a derived @class{g:type-t} type ID}
   @return{The parent type of @arg{gtype}.}
   @begin{short}
     Returns the direct parent type of the passed in GType.
@@ -2228,7 +2230,7 @@
 (cffi:defcfun ("g_type_depth" type-depth) :uint
  #+liber-documentation
  "@version{#2022-12-29}
-  @argument[gtype]{a @class{g:type-t} ID}
+  @argument[gtype]{a @class{g:type-t} type ID}
   @return{An unsigned integer with the depth of @arg{gtype}.}
   @begin{short}
     Returns the length of the ancestry of the passed in GType.
@@ -2255,7 +2257,7 @@
   @argument[leaf]{descendant of @arg{root} and the type to be returned}
   @argument[root]{immediate parent of the returned type}
   @begin{return}
-    Immediate @class{g:type-t} child ID of @arg{root} and anchestor of
+    Immediate @class{g:type-t} child type ID of @arg{root} and anchestor of
     @arg{leaf}.
   @end{return}
   @begin{short}
@@ -2314,7 +2316,7 @@
     @end{pre}
   @end{dictionary}
   @see-class{g:type-t}"
-  (let ((glib:*warn-unknown-gtype* nil)) ; no warnings for the test function
+  (let ((*warn-unknown-gtype* nil)) ; no warnings for the test function
     (%type-is-a gtype is-a-type)))
 
 (export 'type-is-a)
@@ -2329,28 +2331,35 @@
 
 (defun type-class-ref (gtype)
  #+liber-documentation
- "@version{2022-12-29}
-  @argument[gtype]{a @class{g:type-t} ID of a classed type}
-  @return{The @symbol{g:type-class} instance for the given @arg{gtype}.}
+ "@version{2023-11-12}
+  @argument[gtype]{a @class{g:type-t} type ID of a classed type}
+  @return{A pointer to the @symbol{g:type-class} instance for the given
+    @arg{gtype}.}
   @begin{short}
-    Increments the reference count of the class structure belonging to
-    @arg{gtype} and returns the pointer to the class structure.
+    Increments the reference count of the class instance belonging to
+    @arg{gtype} and returns the pointer to the class instance.
   @end{short}
-  This function will create the class if it does not exist already. Returns
-  @code{nil} when @arg{gtype} is not a valid type ID.
+  This function will create the class instance if it does not exist already.
+  Returns @code{nil} when @arg{gtype} is not a valid type ID for classed type.
   @begin[Examples]{dictionary}
     @begin{pre}
-(g:type-class-ref \"GtkLabel\") => #.(SB-SYS:INT-SAP #X55D446CF8320)
-(g:type-from-class *) => #<GTYPE :name \"GtkLabel\" :id 94370208288432>
+(g:type-class-ref \"GApplication\") => #.(SB-SYS:INT-SAP #X55FA5306FE40)
+(g:type-from-class *) => #<GTYPE :name \"GApplication\" :id 94533623145984>
+(g:type-class-ref \"GAction\") => NIL
+(g:type-class-ref \"gdouble\") => NIL
+(g:type-class-ref \"unknown\") => NIL
     @end{pre}
   @end{dictionary}
   @see-class{g:type-t}
   @see-symbol{g:type-class}
   @see-function{g:type-class-peek}
   @see-function{g:type-class-unref}"
-  (let ((class (%type-class-ref gtype)))
-    (when (not (cffi:null-pointer-p class))
-      class)))
+  (let ((*warn-unknown-gtype* nil))
+    (let ((gtype (glib:gtype gtype)))
+      (when (and gtype (type-is-classed gtype))
+        (let ((class (%type-class-ref gtype)))
+          (unless (cffi:null-pointer-p class)
+            class))))))
 
 (export 'type-class-ref)
 
@@ -2364,10 +2373,10 @@
 
 (defun type-class-peek (gtype)
  #+liber-documentation
- "@version{#2022-12-29}
-  @argument[gtype]{a @class{g:type-t} ID of a classed type}
+ "@version{2023-11-12}
+  @argument[gtype]{a @class{g:type-t} type ID of a classed type}
   @begin{return}
-    The @symbol{g:type-class} instance for the given @arg{gtype} ID or
+    The @symbol{g:type-class} instance for the given @arg{gtype} type ID or
     @code{nil} if the class does not currently exist.
   @end{return}
   @begin{short}
@@ -2378,17 +2387,22 @@
   type passed in does not currently exist (has not been referenced before).
   @begin[Examples]{dictionary}
     @begin{pre}
-(g:type-class-peek \"GtkLabel\") => NIL
-(g:type-class-ref \"GtkLabel\") => #.(SB-SYS:INT-SAP #X081B9760)
-(g:type-class-peek \"GtkLabel\") => #.(SB-SYS:INT-SAP #X081B9760)
+(g:type-class-peek \"GSimpleAction\") => #.(SB-SYS:INT-SAP #X55FA5306FE40)
+(g:type-from-class *) => #<GTYPE :name \"GSimpleAction\" :id 94533623145984>
+(g:type-class-peek \"GAction\") => NIL
+(g:type-class-peek \"gdouble\") => NIL
+(g:type-class-peek \"unknown\") => NIL
     @end{pre}
   @end{dictionary}
   @see-class{g:type-t}
   @see-symbol{g:type-class}
   @see-function{g:type-class-ref}"
-  (let ((class (%type-class-peek gtype)))
-    (when (not (cffi:null-pointer-p class))
-      class)))
+  (let ((*warn-unknown-gtype* nil))
+    (let ((gtype (glib:gtype gtype)))
+      (when (and gtype (type-is-classed gtype))
+        (let ((class (%type-class-peek gtype)))
+          (unless (cffi:null-pointer-p class)
+            class))))))
 
 (export 'type-class-peek)
 
@@ -2418,8 +2432,9 @@
 
 (cffi:defcfun ("g_type_class_unref" type-class-unref) :void
  #+liber-documentation
- "@version{2022-12-29}
-  @argument[class]{a @symbol{g:type-class} instance to unreference}
+ "@version{2023-11-12}
+  @argument[class]{a pointer to the @symbol{g:type-class} instance to
+    unreference}
   @begin{short}
     Decrements the reference count of the class instance being passed in.
   @end{short}
@@ -2564,7 +2579,7 @@
  #+liber-documentation
  "@version{#2022-12-29}
   @argument[instance-class]{a @symbol{g:type-class} instance}
-  @argument[iface-type]{a @class{g:type-t} interface ID which this
+  @argument[iface-type]{a @class{g:type-t} interface type ID which this
     @arg{instance-class} conforms to}
   @begin{return}
     The @symbol{g:type-interface} instance of @arg{iface-type} if
@@ -2615,39 +2630,44 @@
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_type_default_interface_ref" %type-default-interface-ref)
-    :pointer
+    (:pointer (:struct type-interface))
   (gtype type-t))
 
 (defun type-default-interface-ref (gtype)
  #+liber-documentation
- "@version{#2022-12-29}
-  @argument[gtype]{a @class{g:type-t} interface type}
-  @return{The default vtable for the interface of type @arg{gtype}.}
+ "@version{2023-12-12}
+  @argument[gtype]{a @class{g:type-t} interface type ID}
+  @return{A pointer to the default @code{vtable} for the interface of type
+    @arg{gtype}, or @code{nil} if @arg{gtype} is not an interface type.}
   @begin{short}
     Increments the reference count for the interface type, and returns the
-    default interface vtable for the type.
+    default interface @code{vtable} for the type.
   @end{short}
-  Call the @fun{g:type-default-interface-unref} function when you are done using
-  the interface.
+  Call the @fun{g:type-default-interface-unref} function when you are done
+  using the interface.
 
-  If the interface type is not currently in use, then the default vtable for the
-  type will be created and initalized by calling the base interface init and
-  default vtable init functions for the type. Calling this function is useful
-  when you want to make sure that signals and properties for an interface have
-  been installed.
+  If the interface type is not currently in use, then the default @code{vtable}
+  for the type will be created and initalized by calling the base interface init
+  and default @code{vtable} init functions for the type. Calling this function
+  is useful when you want to make sure that signals and properties for an
+  interface have been installed.
   @begin[Examples]{dictionary}
     @begin{pre}
-(g:type-default-interface-ref \"GtkOrientable\")
-=> #.(SB-SYS:INT-SAP #X55D446D53DE0)
-(g:type-from-interface *)
-=> #<GTYPE :name \"GtkOrientable\" :id 94370208235568>
+(g:type-default-interface-ref \"GAction\") => #.(SB-SYS:INT-SAP #X55D446D53DE0)
+(g:type-from-interface *) => #<GTYPE :name \"GAction\" :id 94370208235568>
+(g:type-default-interface-ref \"GSimpleAction\") => NIL
+(g:type-default-interface-ref \"gdouble\") => NIL
+(g:type-default-interface-ref \"unknown\") => NIL
     @end{pre}
   @end{dictionary}
   @see-class{g:type-t}
   @see-function{g:type-default-interface-unref}"
-  (let ((iface (%type-default-interface-ref gtype)))
-    (when (not (cffi:null-pointer-p iface))
-      iface)))
+  (let ((*warn-unknown-gtype* nil))
+    (let ((gtype (glib:gtype gtype)))
+      (when (and gtype (type-is-interface gtype))
+        (let ((iface (%type-default-interface-ref gtype)))
+          (unless (cffi:null-pointer-p iface)
+            iface))))))
 
 (export 'type-default-interface-ref)
 
@@ -2656,26 +2676,29 @@
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_type_default_interface_peek" %type-default-interface-peek)
-    :pointer
+    (:pointer (:struct type-interface))
   (gtype type-t))
 
 (defun type-default-interface-peek (gtype)
 #+liber-documentation
- "@version{#2022-12-29}
-  @argument[gtype]{a @class{g:type-t} interface type}
+ "@version{2023-11-12}
+  @argument[gtype]{a @class{g:type-t} interface type ID}
   @begin{return}
-    The default vtable for the interface of type @arg{gtype}, or @code{nil} if
-    the type is not currently in use.
+    The default @code{vtable} for the interface of type @arg{gtype}, @code{nil}
+    if the type is not currently in use or is not an interface type.
   @end{return}
   @begin{short}
     If the interface type @arg{gtype} is currently in use, returns its default
-    interface vtable.
+    interface @code{vtable}.
   @end{short}
   @see-class{g:type-t}
   @see-function{g:type-default-interface-ref}"
-  (let ((iface (%type-default-interface-peek gtype)))
-    (when (not (cffi:null-pointer-p iface))
-      iface)))
+  (let ((*warn-unknown-gtype* nil))
+    (let ((gtype (glib:gtype gtype)))
+      (when (and gtype (type-is-interface gtype))
+        (let ((iface (%type-default-interface-peek gtype)))
+          (unless (cffi:null-pointer-p iface)
+            iface))))))
 
 (export 'type-default-interface-peek)
 
@@ -2686,19 +2709,19 @@
 (cffi:defcfun ("g_type_default_interface_unref" type-default-interface-unref)
     :void
  #+liber-documentation
- "@version{#2022-12-29}
-  @argument[iface]{a default vtable instance for an interface, as returned by
-    the @fun{g:type-default-interface-ref} function}
+ "@version{2023-11-12}
+  @argument[iface]{a pointer to the default @code{vtable} instance for an
+    interface, as returned by the @fun{g:type-default-interface-ref} function}
   @begin{short}
     Decrements the reference count for the type corresponding to the interface
-    default vtable of @arg{interface}.
+    default @code{vtable} of @arg{iface}.
   @end{short}
   If the type is dynamic, then when no one is using the interface and all
-  references have been released, the finalize function for the interface's
-  default vtable will be called.
+  references have been released, the finalize function for the default
+  @arg{vtable} of the interface will be called.
   @see-class{g:type-t}
   @see-function{g:type-default-interface-ref}"
-  (iface :pointer))
+  (iface (:pointer (:struct type-interface))))
 
 (export 'type-default-interface-unref)
 
@@ -2713,7 +2736,7 @@
 (defun type-children (gtype)
  #+liber-documentation
  "@version{2023-7-29}
-  @argument[gtype]{a @class{g:type-t} parent type}
+  @argument[gtype]{a @class{g:type-t} parent type ID}
   @return{A list of @class{g:type-t} child types.}
   @short{Returns a list of type IDs, listing the child types of @arg{gtype}.}
   @begin[Examples]{dictionary}
@@ -2746,8 +2769,8 @@
 (defun type-interfaces (gtype)
  #+liber-documentation
  "@version{2023-7-29}
-  @argument[gtype]{a @class{g:type-t} ID to list interface types for}
-  @return{A list of @class{g:type-t} interface types.}
+  @argument[gtype]{a @class{g:type-t} type ID to list interface types for}
+  @return{A list of @class{g:type-t} interface type IDs.}
   @begin{short}
     Returns a list of type IDs, listing the interface types that @arg{gtype}
     conforms to.
@@ -2783,9 +2806,10 @@
 (defun type-interface-prerequisites (itype)
  #+liber-documentation
  "@version{2023-7-29}
-  @argument[itype]{a @class{g:type-t} interface type}
+  @argument[itype]{a @class{g:type-t} interface type ID}
   @begin{return}
-    A list of @class{g:type-t} IDs containing the prerequisites of @arg{itype}.
+    A list of @class{g:type-t} type IDs containing the prerequisites of
+    @arg{itype}.
   @end{return}
   @begin{short}
     Returns the prerequisites of an interfaces type.
@@ -2840,7 +2864,7 @@
  "@version{2022-12-29}
   @syntax[]{(g:type-qdata type quark) => data}
   @syntax[]{(setf (g:type-qdata type quark) data)}
-  @argument[gtype]{a @class{g:type-t} ID}
+  @argument[gtype]{a @class{g:type-t} type ID}
   @argument[quark]{a @type{g:quark-as-string} ID to identify the data}
   @argument[data]{the data}
   @begin{short}
@@ -2875,15 +2899,15 @@
 (cffi:defcfun ("g_type_query" type-query) :void
  #+liber-documentation
  "@version{#2020-10-31}
-  @argument[gtype]{a @class{g:type-t} value of a static, classed type}
+  @argument[gtype]{a @class{g:type-t} type ID of a static, classed type}
   @argument[query]{a user provided @symbol{g:type-query} instance that is
     filled in with constant values upon success}
   @begin{short}
     Queries the type system for information about a specific type.
   @end{short}
   This function will fill in a user provided structure to hold type specific
-  information. If an invalid @class{g:type-t} is passed in, the type member of
-  the @symbol{g:type-query} is 0. All members filled into the
+  information. If an invalid @class{g:type-t} type ID is passed in, the type
+  member of the @symbol{g:type-query} is 0. All members filled into the
   @symbol{g:type-query} structure should be considered constant and have to be
   left untouched.
   @see-symbol{g:type-query}"
@@ -3125,12 +3149,12 @@
 (cffi:defcfun ("g_type_register_static" type-register-static) type-t
  #+liber-documentation
  "@version{#2020-11-1}
-  @argument[parent-type]{a @class{g:type-t} from which this type will be
-    derived}
+  @argument[parent-type]{a @class{g:type-t} type ID from which this type will
+    be derived}
   @argument[type-name]{a string used as the name of the new type}
   @argument[info]{a @symbol{g:type-info} instance for this type}
   @argument[flags]{bitwise combination of @symbol{g:type-flags} values}
-  @return{The new @class{g:type-t} identifier.}
+  @return{The new @class{g:type-t} type ID identifier.}
   @begin{short}
     Registers @arg{g:type-name} as the name of a new static type derived from
     @arg{parent-type}.
@@ -3155,7 +3179,8 @@
                 type-register-static-simple) type-t
  #+liber-documentation
  "@version{#2020-11-1}
-  @argument[parent-type]{a @class{g:type-t} from which this type will be derived}
+  @argument[parent-type]{a @class{g:type-t} type ID from which this type will
+    be derived}
   @argument[type-name]{a string used as the name of the new type}
   @argument[class-size]{an unsigned integer with the size of the class
     structure}
@@ -3166,7 +3191,7 @@
   @argument[instance-init]{a pointer with the location of the instance
     initialization function}
   @argument[flags]{bitwise combination of @symbol{g:type-flags} values}
-  @return{The new @class{g:type-t} identifier.}
+  @return{The new @class{g:type-t} type ID identifier.}
   @begin{short}
     Registers @arg{g:type-name} as the name of a new static type derived from
     @arg{parent-type}.
@@ -3258,8 +3283,8 @@
 (cffi:defcfun ("g_type_add_interface_static" type-add-interface-static) :void
  #+liber-documentation
  "@version{#2020-11-1}
-  @argument[instance-type]{a @class{g:type-t} value of an instantiable type}
-  @argument[interface-type]{a @class{g:type-t} value of an interface type}
+  @argument[instance-type]{a @class{g:type-t} type ID of an instantiable type}
+  @argument[interface-type]{a @class{g:type-t} type ID of an interface type}
   @argument[info]{a @symbol{interface-info} instance for this
     (@arg{instance-type}, @arg{interface-type}) combination}
   @begin{short}
@@ -3302,8 +3327,8 @@
                 type-interface-add-prerequisite) :void
  #+liber-documentation
  "@version{#2013-6-11}
-  @argument[interface-type]{a @class{g:type-t} of an interface type}
-  @argument[prerequisite-type]{a @class{g:type-t} of an interface or
+  @argument[interface-type]{a @class{g:type-t} type ID of an interface type}
+  @argument[prerequisite-type]{a @class{g:type-t} type ID of an interface or
     instantiatable type}
   @begin{short}
     Adds @arg{prerequisite-type} to the list of prerequisites of
@@ -3526,7 +3551,7 @@
     (:pointer (:struct type-value-table))
  #+liber-documentation
  "@version{#2013-6-11}
-  @argument[type]{a @class{g:type-t} value}
+  @argument[type]{a @class{g:type-t} type ID}
   @begin{return}
     Location of the @symbol{g:type-value-table} associated with @arg{type} or
     @code{null-pointer} if there is no @symbol{g:type-value-table} associated
@@ -3542,29 +3567,29 @@
   (gtype type-t))
 
 ;;; ----------------------------------------------------------------------------
-;;; g_type_ensure ()                                       not exported
+;;; g_type_ensure ()
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcfun ("g_type_ensure" type-ensure) :void
+(cffi:defcfun ("g_type_ensure" %type-ensure) :void
+  (gtype type-t))
+
+(defun type-ensure (gtype)
  #+liber-documentation
- "@version{#2020-11-13}
-  @argument[gtype]{a @class{g:type-t}}
+ "@version{2023-11-12}
+  @argument[gtype]{a @class{g:type-t} type ID}
+  @return{@em{True} if @arg{gtype} is a valid type ID, otherwise @em{false}.}
   @begin{short}
     Ensures that the indicated @arg{gtype} has been registered with the type
-    system, and its @code{_class_init()} method has been run.
+    system, and its initializer method has been run.
   @end{short}
-
-  In theory, simply calling the type's @code{_get_type()} method (or using the
-  corresponding macro) is supposed take care of this. However,
-  @code{_get_type()} methods are often marked @code{G_GNUC_CONST} for
-  performance reasons, even though this is technically incorrect (since
-  @code{G_GNUC_CONST} requires that the function not have side effects, which
-  @code{_get_type()} methods do on the first call). As a result, if you write a
-  bare call to a @code{_get_type()} macro, it may get optimized out by the
-  compiler. Using the @fun{g:type-ensure} function guarantees that the type's
-  @code{_get_type()} method is called.
   @see-class{g:type-t}"
-  (gtype type-t))
+  (let ((*warn-unknown-gtype* nil))
+    (let ((gtype (glib:gtype gtype)))
+      (when gtype
+        (%type-ensure gtype)
+        t))))
+
+(export 'type-ensure)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_type_get_type_registration_serial ()

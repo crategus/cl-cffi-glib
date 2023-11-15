@@ -202,6 +202,10 @@
 
 ;; Corresponding Lisp structure describing a property of a GObject class.
 
+;; TODO: %PARAM-SPEC is the structure to access a GParamSpec from the Lisp side.
+;; This should be exported and not the implementatin PARAM-SPEC which
+;; corresponds to the C side
+
 (defstruct %param-spec
   name
   type
