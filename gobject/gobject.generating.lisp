@@ -51,16 +51,24 @@
   readable
   writable)
 
+(defstruct (cl-property (:include property))
+  args)
+
 (defstruct (gobject-property (:include property))
   gname
   gtype)
 
 (defstruct (cffi-property (:include property))
-  type
+  ctype
   reader
   writer)
 
 ;;; ----------------------------------------------------------------------------
+
+(defmethod make-load-form ((object cl-property) &optional env)
+  (declare (ignore env))
+  `(make-cl-property :name `,(property-name object)
+                     :args `,(cl-property-args)))
 
 (defmethod make-load-form ((object gobject-property) &optional env)
   (declare (ignore env))
@@ -77,7 +85,7 @@
                        :accessor ',(property-accessor object)
                        :readable ',(property-readable object)
                        :writable ',(property-writable object)
-                       :type ',(cffi-property-type object)
+                       :ctype ',(cffi-property-ctype object)
                        :reader ',(cffi-property-reader object)
                        :writer ',(cffi-property-writer object)))
 
@@ -86,10 +94,17 @@
 ;; Needed for the macros define-g-object-class and define-g-interface
 
 (defun parse-property (spec)
-  (cond ((eq (first spec) :cffi)
+  (cond ((eq :cffi (first spec))
          (parse-cffi-property (rest spec)))
+        ((eq :cl (first spec))
+         (parse-cl-property (rest spec)))
         (t
          (parse-gobject-property spec))))
+
+(defun parse-cl-property (spec)
+  (destructuring-bind (name &rest args) spec
+    (make-cl-property :name name
+                      :args args)))
 
 (defun parse-gobject-property (spec)
   (destructuring-bind (name accessor gname gtype readable writable) spec
@@ -101,10 +116,10 @@
                            :writable writable)))
 
 (defun parse-cffi-property (spec)
-  (destructuring-bind (name accessor type reader writer) spec
+  (destructuring-bind (name accessor ctype reader writer) spec
     (make-cffi-property :name name
                         :accessor accessor
-                        :type type
+                        :ctype ctype
                         :reader reader
                         :writer writer
                         :readable (not (null reader))
@@ -232,7 +247,7 @@
                 (error "Unknown interface ~A" interface)))))
 
 ;;; ----------------------------------------------------------------------------
-
+#+nil
 (defun meta-property->slot (class-name property)
   (declare (ignorable class-name))
   `(,(property-name property)
@@ -241,7 +256,7 @@
                       :gobject-fn)
      :g-property-type ,(if (gobject-property-p property)
                            (gobject-property-gtype property)
-                           (cffi-property-type property))
+                           (cffi-property-ctype property))
      :accessor ,(property-accessor property)
      ,@(when (if (gobject-property-p property)
                  t
@@ -253,6 +268,31 @@
            `(:g-property-name ,(gobject-property-gname property))
            `(:g-getter ,(cffi-property-reader property)
              :g-setter ,(cffi-property-writer property)))))
+
+(defun property->slot (class property)
+  (declare (ignorable class))
+  (cond ((gobject-property-p property)
+         `(,(property-name property)
+           :allocation :gobject-property
+           :g-property-type ,(gobject-property-gtype property)
+           :accessor ,(property-accessor property)
+           :initarg ,(intern (string-upcase (property-name property))
+                             (find-package :keyword))
+           :g-property-name ,(gobject-property-gname property)))
+        ((cffi-property-p property)
+         `(,(property-name property)
+           :allocation :gobject-fn
+           :g-property-type ,(cffi-property-ctype property)
+           :accessor ,(property-accessor property)
+           ,@(when (not (null (cffi-property-writer property)))
+               `(:initarg
+                 ,(intern (string-upcase (property-name property))
+                          (find-package :keyword))))
+           :g-getter ,(cffi-property-reader property)
+           :g-setter ,(cffi-property-writer property)))
+        ((cl-property-p property)
+         `(,(property-name property)
+           ,@(cl-property-args property)))))
 
 ;;; ----------------------------------------------------------------------------
 
@@ -269,7 +309,7 @@
                           (list superclass))
                       ,@(mapcar #'interface->lisp-class-name interfaces))
        (,@(mapcar (lambda (property)
-                     (meta-property->slot name property))
+                     (property->slot name property))
                    properties))
        (:gname . ,g-type-name)
        ,@(when type-initializer
@@ -307,7 +347,7 @@
                                    (not (eq superclass 'object)))
                           (list superclass)))
        (,@(mapcar (lambda (property)
-                    (meta-property->slot name property))
+                    (property->slot name property))
                   properties))
        (:gname . ,gtype-name)
        ,@(when type-initializer
