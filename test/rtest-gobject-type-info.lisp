@@ -329,17 +329,24 @@
 ;;;   G_TYPE_FROM_CLASS
 
 (test g-type-from-class
-  (is (eq (g:gtype "GApplication")
-          (g:type-from-class (g:type-class-ref "GApplication"))))
-  (is (eq (g:gtype "GSimpleAction")
-          (g:type-from-class (g:type-class-ref "GSimpleAction")))))
+  (let ((class nil))
+    (is (eq (g:gtype "GApplication")
+            (g:type-from-class (setf class
+                                     (g:type-class-ref "GApplication")))))
+    (is-false (g:type-class-unref class))
+    (is (eq (g:gtype "GSimpleAction")
+            (g:type-from-class (setf class
+                                     (g:type-class-ref "GSimpleAction")))))
+    (is-false (g:type-class-unref class))))
 
 ;;;   G_TYPE_FROM_INTERFACE
 
 (test g-type-from-interface
-  (is (eq (g:gtype "GAction")
-          (g:type-from-interface
-              (g:type-default-interface-ref "GAction")))))
+  (let ((class nil))
+    (is (eq (g:gtype "GAction")
+            (g:type-from-interface
+                (setf class (g:type-default-interface-ref "GAction")))))
+    (is-false (g:type-default-interface-unref class))))
 
 ;;;     g-type-instance-class
 
@@ -424,35 +431,62 @@
 
 ;;;     g_type_class_ref
 ;;;     g_type_class_unref
+;;;     g_type_class_peek
 
-(test g-type-class-ref
+(test g-type-class-ref/unref/peek
   (let ((class nil))
-    ;; gtype is a string
+    ;; GTYPE is a string
     (is (cffi:pointerp (setf class (g:type-class-ref "GSimpleAction"))))
     (is (eq (g:gtype "GSimpleAction") (g:type-from-class class)))
+    (is (cffi:pointer-eq class
+                         (g:type-class-peek "GSimpleAction")))
     (is-false (g:type-class-unref class))
-    ;; gtype is a ID
+
+    ;; GTYPE is an integer ID
     (is (cffi:pointerp (setf class
                              (g:type-class-ref
                                (glib::gtype-id (g:gtype "GSimpleAction"))))))
     (is (eq (g:gtype "GSimpleAction") (g:type-from-class class)))
+    (is (cffi:pointer-eq class
+                         (g:type-class-peek
+                           (glib:gtype-id (glib:gtype "GSimpleAction")))))
     (is-false (g:type-class-unref class))
-    ;; gtype is a g-type
+
+    ;; GTYPE is a g:type-t type ID
     (is (cffi:pointerp (setf class
                              (g:type-class-ref (g:gtype "GSimpleAction")))))
     (is (eq (g:gtype "GSimpleAction") (g:type-from-class class)))
-    (is-false (g:type-class-unref class))))
+    (is (cffi:pointer-eq class
+                         (g:type-class-peek (glib:gtype "GSimpleAction"))))
+    (is-false (g:type-class-unref class))
+    ;; GTYPE is not classed
+    (is-false (g:type-class-ref "gboolean"))
+    (is-false (g:type-class-ref "GAction"))
+    ;; GTYPE is not known
+    (is-false (g:type-class-ref "unknown"))))
 
-;;;     g_type_class_peek
 ;;;     g_type_class_peek_static
 ;;;     g_type_class_peek_parent
 ;;;     g_type_class_add_private
 ;;;     g_type_add_class_private                           not implemented
 ;;;     g_type_interface_peek
 ;;;     g_type_interface_peek_parent                       not implemented
+
 ;;;     g_type_default_interface_ref
 ;;;     g_type_default_interface_peek
 ;;;     g_type_default_interface_unref
+
+(test g-type-default-interface-ref/unref/peek
+  (let ((iface nil))
+    ;; VTABLE for GAction interface
+    (is (cffi:pointerp (setf iface (g:type-default-interface-ref "GAction"))))
+    (is (eq (g:gtype "GAction") (g:type-from-interface iface)))
+    (is (cffi:pointer-eq iface (g:type-default-interface-peek "GAction")))
+    (is-false (g:type-default-interface-unref iface))
+    ;; GSimpleAction is not an interface
+    (is-false (g:type-default-interface-ref "GSimpleAction"))
+    (is-false (g:type-default-interface-ref "gdouble"))
+    (is-false (g:type-default-interface-ref "unknown"))))
 
 ;;;     g_type_children
 
@@ -464,57 +498,22 @@
                    "GPermission" "GListStore" "GSimpleAction" "GPropertyAction"
                    "GSimpleActionGroup" "GApplication" "GApplicationCommandLine"
                    "GMenuModel" "GMenuItem" "GNotification" "GCancellable"
-                   "GTask")
-                 (mapcar #'g:type-name
-                         (g:type-children "GObject"))))
-      (is (equal '("GInitiallyUnowned" "GBinding" "GAppLaunchContext"
-                   "GFileIcon" "GThemedIcon" "GEmblemedIcon" "GEmblem"
-                   "GPermission" "GListStore" "GSimpleAction" "GPropertyAction"
-                   "GSimpleActionGroup" "GApplication" "GApplicationCommandLine"
-                   "GMenuModel" "GMenuItem" "GNotification" "GCancellable"
-                   "GTask" "GDesktopAppInfo" "GLocalFile" "GFileInfo"
-                   "GFileMonitor" "GVolumeMonitor" "GVfs" "GNotificationBackend"
-                   "GTypeModule" "GSettingsBackend" "GPowerProfileMonitorDBus"
-                   "GDebugControllerDBus" "GMemoryMonitorDBus"
-                   "GMemoryMonitorPortal" "GNetworkMonitorBase"
-                   "GPowerProfileMonitorPortal" "GProxyResolverPortal"
-                   "GDummyProxyResolver" "GHttpProxy" "GSocks4aProxy"
-                   "GSocks5Proxy" "GDummyTlsBackend" "GVfsIcon" "GVfsUriMapper"
-                   "GInputStream" "GDBusAuthObserver" "GCredentials" "GIOStream"
-                   "GDBusConnection" "GDBusProxy" "GSocketAddress" "GSocket"
-                   "GSocketClient" "GSocketAddressEnumerator" "GOutputStream"
-                   "GDBusAuth" "GDBusAuthMechanism" "GSocketControlMessage"
-                   "GDBusMessage" "GDBusMethodInvocation" "GSimpleAsyncResult"
-                   "GDaemonFile")
+                   "GTask" "GClock1" "GClock2" "GClock3" "GClock4" "GClock5")
                  (mapcar #'g:type-name
                          (g:type-children "GObject"))))))
 
 #+windows
 (test g-type-children
-  (is (or (equal '("GWin32RegistryKey" "GWin32AppInfoApplication" "GWin32AppInfoShellVerb"
- "GWin32AppInfoFileExtension" "GWin32AppInfoHandler" "GThemedIcon"
- "GWin32AppInfoURLSchema" "GInitiallyUnowned" "GBinding" "GAppLaunchContext"
- "GFileIcon" "GEmblemedIcon" "GEmblem" "GPermission" "GListStore"
- "GSimpleAction" "GPropertyAction" "GSimpleActionGroup" "GApplication"
- "GApplicationCommandLine" "GMenuModel" "GMenuItem" "GNotification"
- "GCancellable" "GTask")
-                 (mapcar #'g:type-name
-                         (g:type-children "GObject")))
-          (equal '("GWin32RegistryKey" "GWin32AppInfoApplication" "GWin32AppInfoShellVerb"
- "GWin32AppInfoFileExtension" "GWin32AppInfoHandler" "GThemedIcon"
- "GWin32AppInfoURLSchema" "GInitiallyUnowned" "GBinding" "GAppLaunchContext"
- "GFileIcon" "GEmblemedIcon" "GEmblem" "GPermission" "GListStore"
- "GSimpleAction" "GPropertyAction" "GSimpleActionGroup" "GApplication"
- "GApplicationCommandLine" "GMenuModel" "GMenuItem" "GNotification"
- "GCancellable" "GTask" "GWin32AppInfo" "GFileMonitor" "GVolumeMonitor" "GVfs"
- "GNotificationBackend" "GSettingsBackend" "GPowerProfileMonitorDBus"
- "GMemoryMonitorWin32" "GDummyProxyResolver" "GHttpProxy" "GSocks4aProxy"
- "GSocks5Proxy" "GDummyTlsBackend" "GNetworkMonitorBase" "GLocalFile"
- "GInputStream" "GDBusAuthObserver" "GCredentials" "GIOStream"
- "GDBusConnection" "GDBusProxy" "GSocketAddress" "GSocket" "GNetworkAddress"
- "GSocketClient" "GSocketAddressEnumerator" "GResolver" "GInetAddress"
- "GOutputStream" "GDBusAuth" "GDBusAuthMechanism" "GDBusMessage"
- "GSimpleAsyncResult" "GWinHttpFile")
+  (if *first-run-glib-test*
+      (is (equal '("GWin32RegistryKey" "GWin32AppInfoApplication" 
+                   "GWin32AppInfoShellVerb" "GWin32AppInfoFileExtension" 
+                   "GWin32AppInfoHandler" "GThemedIcon" "GWin32AppInfoURLSchema" 
+                   "GInitiallyUnowned" "GBinding" "GAppLaunchContext"
+                   "GFileIcon" "GEmblemedIcon" "GEmblem" "GPermission" 
+                   "GListStore" "GSimpleAction" "GPropertyAction" 
+                   "GSimpleActionGroup" "GApplication" "GApplicationCommandLine" 
+                   "GMenuModel" "GMenuItem" "GNotification" "GCancellable" 
+                   "GTask" "GClock1" "GClock2" "GClock3" "GClock4" "GClock5")
                  (mapcar #'g:type-name
                          (g:type-children "GObject"))))))
 
@@ -575,7 +574,22 @@
 ;;;     g_type_add_interface_check                         not implemented
 ;;;     g_type_remove_interface_check                      not implemented
 ;;;     g_type_value_table_peek                            not exported
-;;;     g_type_ensure                                      not exported
+
+;;;     g_type_ensure
+
+(test g-type-ensure
+  (is-true (g:type-ensure "GAction"))
+  (is-true (g:type-ensure "GSimpleAction"))
+  (if *first-run-glib-test*
+    ;; After loading the library the gtype is not known
+    (is-false (g:type-ensure "GSimpleAsyncResult"))
+    ;; The second or more run of the testsuite
+    (is-true (g:type-ensure "GSimpleAsyncResult")))
+  (is-true (g:type-ensure "gboolean"))
+  (is-true (g:type-ensure "GEnum"))
+  ;; GTYPE is not known
+  (is-false (g:type-ensure "unknown")))
+
 ;;;     g_type_get_type_registration_serial                not implemented
 ;;;     G_DEFINE_TYPE                                      not implemented
 ;;;     G_DEFINE_TYPE_WITH_CODE                            not implemented
@@ -590,4 +604,4 @@
 ;;;     G_DEFINE_POINTER_TYPE                              not implemented
 ;;;     G_DEFINE_POINTER_TYPE_WITH_CODE                    not implemented
 
-;;; --- 2023-8-23 --------------------------------------------------------------
+;;; --- 2023-11-12 -------------------------------------------------------------

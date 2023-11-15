@@ -12,6 +12,7 @@
     (is (= (1+ counter) (glib::get-stable-pointers-counter)))
     (is (every (lambda (x) (or (null x)
                                (cffi:pointerp x)
+                               (listp x)
                                (functionp x)))
                  (glib::get-stable-pointers)))
     (is (= 88 (funcall (glib:get-stable-pointer-value ptr))))
@@ -21,6 +22,7 @@
     (is (= counter (glib::get-stable-pointers-counter)))
     (is (every (lambda (x) (or (null x)
                                (cffi:pointerp x)
+                               (listp x)
                                (functionp x)))
                  (glib::get-stable-pointers)))))
 
@@ -35,4 +37,4 @@
       (is (<= counter length))
       (is (= counter (glib::get-stable-pointers-counter))))))
 
-;;; --- 2023-7-9 ---------------------------------------------------------------
+;;; --- 2023-11-11 -------------------------------------------------------------

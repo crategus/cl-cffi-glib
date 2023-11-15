@@ -3,6 +3,52 @@
 (def-suite gobject-base :in gobject-suite)
 (in-suite gobject-base)
 
+;;; --- Lisp functions ---------------------------------------------------------
+
+;;;     class-property-pspec
+
+(test class-property-pspec
+  (let ((pspec nil))
+    ;; Get GParamSpec for the gname and check the values
+    (is (typep (setf pspec
+                     (gobject::class-property-pspec "GApplication" "flags"))
+               'gobject::%param-spec))
+    (is (string= "flags" (gobject::%param-spec-name pspec)))
+    (is (eq (g:gtype "GApplicationFlags") (gobject::%param-spec-type pspec)))
+    (is-true (gobject::%param-spec-readable pspec))
+    (is-true (gobject::%param-spec-writable pspec))
+    (is (eq (g:gtype "GApplication") (gobject::%param-spec-owner-type pspec)))
+    ;; Get GParamSpec for the GType
+    (is (typep (gobject::class-property-pspec (g:gtype "GApplication") "flags")
+               'gobject::%param-spec))
+    ;; Results for not registered properties
+    (is-false (gobject::class-property-pspec "GApplication" "unknown"))
+    (is-false (gobject::class-property-pspec "unknown" "unknown"))))
+
+;;;     class-property-type
+
+(test class-property-type
+  (is (eq (g:gtype "GApplicationFlags")
+          (gobject::class-property-type "GApplication" "flags")))
+  (is (eq (g:gtype "GApplicationFlags")
+          (gobject::class-property-type "GApplication"
+                                        "flags"
+                                        :assert-readable t
+                                        :assert-writable t)))
+  (is (eq (g:gtype "gboolean")
+          (gobject::class-property-type "GApplication" "is-busy")))
+  (is (eq (g:gtype "gboolean")
+          (gobject::class-property-type "GApplication"
+                                        "is-busy"
+                                        :assert-readable t)))
+  ;; Property is not writable
+  (signals (error) (gobject::class-property-type "GApplication"
+                                                 "is-busy"
+                                                 :assert-writable t))
+  ;; Invalid property
+  (signals (error) (gobject::class-property-type "GApplication" "unknown"))
+  (signals (error) (gobject::class-property-type "unknown" "unknown")))
+
 ;;; --- Types and Values -------------------------------------------------------
 
 ;;;     GParameter

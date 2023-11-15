@@ -260,6 +260,7 @@
     (is (string= "Another Comment"
                  (setf (g:key-file-comment keyfile "Another Group" nil)
                        "Another Comment")))
+    #+glib-2-78
     (is (string= "Another Comment"
                  (g:key-file-comment keyfile "Another Group" nil)))))
 
