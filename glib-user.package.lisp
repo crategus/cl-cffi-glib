@@ -327,7 +327,7 @@
            #:+g-type-variant+
            #:+g-type-checksum+
            #:type-t
-           #:gtype                               ; TODO: Change the name
+           #:gtype                               ; TODO: Change the name?
            #:type-interface
            #:type-class
            #:type-instance
@@ -361,6 +361,7 @@
            #:type-interfaces
            #:type-interface-prerequisites
            #:type-qdata
+           #:type-ensure
 
            ;; Symbols from gobject.gvalue.lisp
            #:value

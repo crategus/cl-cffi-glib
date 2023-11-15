@@ -29,7 +29,9 @@
 
 (defpackage :gobject
   (:use :closer-common-lisp :iterate) ; :closer-common-lisp includes :cl
-  (:import-from :glib)
+  (:import-from :glib
+                ;;Symbols from glib.gtype.lisp
+                #:*warn-unknown-gtype*)
   (:import-from :cffi)
   (:import-from :closer-mop)
   (:import-from :trivial-garbage)
@@ -63,11 +65,11 @@
            #:enum-item-nick
 
            #:register-object-type-implementation
-           
+
            #:parse-g-value-for-type
            #:set-g-value-for-type
     ))
-    
+
 (in-package :gobject)
 
 #+sbcl
@@ -327,6 +329,8 @@
   @begin[Generic Values]{section}
     A polymorphic type that can hold values of any other type.
     @about-symbol{value}
+    @about-macro{with-g-value}
+    @about-macro{with-g-values}
     @about-function{value-holds}
     @about-function{value-type}
     @about-function{value-type-name}

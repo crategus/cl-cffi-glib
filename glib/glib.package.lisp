@@ -42,7 +42,6 @@
            #:gtype-name
            #:gtype-id
            #:symbol-for-gtype
-           #:*warn-unknown-gtype*
            ;; Symbols from glib.boxed-type.lisp
            #:boxed-opaque-info
            #:boxed-opaque-pointer
@@ -56,6 +55,7 @@
            #:get-boxed-info
            #:with-foreign-boxed-array
            #:pointer
+           #:cleanup-translated-object-for-callback
            ;; Symbols from glib.error.lisp
            #:error
            #:with-g-error

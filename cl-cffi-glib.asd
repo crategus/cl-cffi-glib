@@ -35,7 +35,7 @@
     ((:file "glib.package")
      ;; Lisp utilities
      (:file "glib.cl-utils")
-     ;; Lisp support for callbacks, GType, and GBoxed
+     ;; Lisp support for GType, and GBoxed
      (:file "glib.stable-pointer")
      (:file "glib.gtype")
      (:file "glib.boxed-type")
@@ -55,7 +55,6 @@
     ((:file "gobject.package")
      (:file "gobject.init")
      (:file "gobject.object-function")
-     (:file "gobject.glib-defcallback")
      (:file "gobject.generating")
 
      (:file "gobject.type-info")
@@ -151,7 +150,6 @@
      (:file "rtest-glib-variant")
 
      ;; gobject-suite
-     (:file "rtest-gobject-generating")
      (:file "rtest-gobject-type-info")
      (:file "rtest-gobject-gvalue")
      (:file "rtest-gobject-enumeration")
@@ -163,6 +161,8 @@
      (:file "rtest-gobject-signals")
      (:file "rtest-gobject-binding")
      (:file "rtest-gobject-utils")
+     (:file "rtest-gobject-generating")
+     (:file "rtest-gobject-subclassing")
 
      ;; gio-suite
 
@@ -208,6 +208,6 @@
   :perform (test-op (o c)
              (uiop:symbol-call :fiveam :run!
                                (uiop:find-symbol* :glib-test :glib-test)))
-  :depends-on (:cl-cffi-glib :fiveam))
+  :depends-on (:cl-cffi-glib :local-time :fiveam))
 
 ;;; --- End of file cl-cffi-glib.asd -------------------------------------------
