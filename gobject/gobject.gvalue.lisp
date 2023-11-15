@@ -52,7 +52,7 @@
 ;;;     g_value_reset
 ;;;     g_value_unset
 ;;;     g_value_init_from_instance
-;;;     g_value_set_instance
+;;;     g_value_set_instance                               not implemented
 ;;;     g_value_fits_pointer                               not implemented
 ;;;     g_value_peek_pointer                               not implemented
 ;;;     g_value_type_compatible
@@ -69,6 +69,88 @@
 ;;; ----------------------------------------------------------------------------
 
 (in-package :gobject)
+
+(defmacro with-g-value ((var &rest args) &body body)
+ #+liber-documentation
+ "@version{2023-11-7}
+  @syntax[]{gobject:(with-g-value (gvalue) body) => result}
+  @syntax[]{(gobject:with-g-value (gvalue gtype) body) => result}
+  @syntax[]{(gobject:with-g-value (gvalue gtype value) body) => result}
+  @argument[gvalue]{a @symbol{g:value} instance to create and initialize}
+  @argument[gtype]{an optional @symbol{g:type-t} type}
+  @argument[value]{an optional value corresponding to @arg{gtype} to set}
+  @begin{short}
+    The @fun{gobject:with-g-value} macro allocates a new  @symbol{g:value}
+    instance, initializes it with the given values and executes the body that
+    uses @arg{gvalue}.
+  @end{short}
+  After execution of the body the @fun{g:value-unset} function is called on
+  @arg{gvalue}. This clears the current value in @arg{gvalue}, unsets the
+  type and releases all resources associated with @arg{gvalue}.
+  @begin[Note]{dictionary}
+    The @arg{gvalue} parameter is initialized with the @fun{g:value-init}
+    functon and unset with the @fun{g:value-unset} function. The optional
+    @arg{value} ist set with the @fun{g:value-set} function.
+  @end{dictionary}
+  @see-symbol{g:value}
+  @see-function{g:value-init}
+  @see-function{g:value-unset}
+  @see-function{g:value-set}"
+  (cond ((null args)
+         ;; no arguments
+         `(cffi:with-foreign-object (,var '(:struct value))
+            (value-init ,var)
+            (unwind-protect
+              (progn ,@body)
+              (value-unset ,var))))
+        ((null (second args))
+         (let ((gtype (first args)))
+           ;; one argument with the gtype
+           `(cffi:with-foreign-object (,var '(:struct value))
+              (value-init ,var ,gtype)
+              (unwind-protect
+                (progn ,@body)
+                (value-unset ,var)))))
+        ((null (third args))
+         ;; two argument with the gtype and an initial value to set
+         (destructuring-bind (gtype value) args
+           `(cffi:with-foreign-object (,var '(:struct value))
+              (value-init ,var ,gtype)
+              (value-set ,var ,value ,gtype)
+              (unwind-protect
+                (progn ,@body)
+                (value-unset ,var)))))
+        (t
+          (error "WITH-G-VALUE: Wrong number of arguments"))))
+
+(export 'with-g-value)
+
+(defmacro with-g-values (vars &body body)
+ #+liber-documentation
+ "@version{2023-11-7}
+  @syntax[]{(gobject:with-g-values (gvalue1 gvalue2 ... gvaluen) body) => result}
+  @argument[gvalue1 ... gvaluen]{the newly created @symbol{g:value} instances}
+  @argument[body]{a body that uses the bindings @arg{gvalue1 ... gvaluen}}
+  @begin{short}
+    The @fun{gobject:with-g-values} macro creates new variable bindings and
+    executes the body that use these bindings.
+  @end{short}
+  The macro performs the bindings sequentially, like the @sym{let*} macro.
+
+  Each @arg{gvalue} can be initialized with a type and a value using the syntax
+  for the @fun{gobject:with-g-value} macro.
+  @see-macro{gobject:with-g-value}
+  @see-symbol{g:value}"
+  (if vars
+      (let ((var (if (listp (first vars)) (first vars) (list (first vars)))))
+        `(with-g-value ,var
+           (with-g-values ,(rest vars)
+             ,@body)))
+      `(progn ,@body)))
+
+(export 'with-g-values)
+
+;;; ----------------------------------------------------------------------------
 
 ;; TODO: Consider to implement GValue as a boxed type.
 
@@ -157,10 +239,10 @@
   @return{The value contained in the @symbol{g:value} instance. The type of
     the value corresponds to the @symbol{g:value} type.}
   @begin{short}
-    Parses the @symbol{g:value} structure and returns the corresponding Lisp 
+    Parses the @symbol{g:value} structure and returns the corresponding Lisp
     object.
   @end{short}
-  This is a more general function which replaces the @code{g:value-...} 
+  This is a more general function which replaces the @code{g:value-...}
   functions. The function is not part of the GObject library.
   @see-symbol{g:value}
   @see-function{g:value-set}"
@@ -267,16 +349,16 @@
 
 (defun value-set (gvalue value gtype)
  #+liber-documentation
- "@version{2023-7-10}
+ "@version{2023-11-7}
   @argument[gvalue]{a pointer to the @symbol{g:value} instance}
   @argument[value]{a Lisp object to set as the value of the @symbol{g:value}
     instance}
   @argument[gtype]{a @class{g:type-t} type of the @symbol{g:value} instance}
   @begin{short}
-    Parses the @symbol{g:value} structure and returns the corresponding Lisp 
+    Parses the @symbol{g:value} structure and sets the corresponding Lisp
     object.
   @end{short}
-  This is a more general function which replaces the @code{g:value-...} 
+  This is a more general function which replaces the @code{g:value-...}
   functions. The function is not part of the GObject library.
   @see-symbol{g:value}
   @see-function{g:value-get}"
@@ -323,23 +405,32 @@
 (setf (liber:alias-for-symbol 'value)
       "CStruct"
       (liber:symbol-documentation 'value)
- "@version{2023-7-10}
+ "@version{2023-11-7}
   @begin{short}
-    The @sym{g:value} structure is basically a variable container that consists
-    of a type identifier and a specific value of that type.
+    The @symbol{g:value} structure is basically a variable container that
+    consists of a type identifier and a specific value of that type.
   @end{short}
-  The type identifier within a @sym{g:value} instance always determines the
-  type of the associated value. To create a undefined @sym{g:value} instance,
-  simply create a zero-filled @sym{g:value} instance. To initialize the
-  @sym{g:value} instance, use the @fun{g:value-init} function. A @sym{g:value}
-  instance cannot be used until it is initialized. The basic type operations
-  (such as freeing and copying) are determined by the @code{GTypeValueTable}
-  associated with the type ID stored in the @sym{g:value} instance. Other
-  @sym{g:value} operations (such as converting values between types) are
-  provided by this interface.
+  The type identifier within a @symbol{g:value} instance always determines the
+  type of the associated value. To create a undefined @symbol{g:value} instance,
+  simply create a zero-filled @symbol{g:value} instance. To initialize the
+  @symbol{g:value} instance, use the @fun{g:value-init} function. A
+  @symbol{g:value} instance cannot be used until it is initialized. The basic
+  type operations (such as freeing and copying) are determined by the
+  @code{GTypeValueTable} associated with the type ID stored in the
+  @symbol{g:value} instance. Other @symbol{g:value} operations (such as
+  converting values between types) are provided by this interface.
 
-  The code in the example program below demonstrates @sym{g:value}'s features.
-  @begin{pre}
+  The data within the @symbol{g:value} instance has protected scope: it is
+  accessible only to functions within a @code{GTypeValueTable} structure, or
+  implementations of the @code{g:value-*} API. That is, code portions which
+  implement new fundamental types. @symbol{g:value} users cannot make any
+  assumptions about how data is stored within the 2 element data union, and the
+  @class{g:type-t} member should only be accessed through the @fun{g:value-type}
+  function.
+  @begin[Examples]{dictionary}
+    The code in the example program below demonstrates @symbol{g:value}'s
+    features.
+    @begin{pre}
 ;; A transformation from an integer to a string
 (cffi:defcallback int2string :void ((src (:pointer (:struct g:value)))
                                     (dest (:pointer (:struct g:value))))
@@ -349,8 +440,7 @@
 
 (defun example-g-value ()
   ;; Declare two variables of type g:value.
-  (cffi:with-foreign-objects ((value1 '(:struct g:value))
-                              (value2 '(:struct g:value)))
+  (gobject:with-g-values (value1 value2)
 
     ;; Initialization, setting and reading a value of type g:value
     (g:value-init value1 \"gchararray\")
@@ -399,14 +489,8 @@
     ;; Try the transformation
     (g:value-transform value1 value2)
     (format t \"value2 = ~A~%~%\" (g:value-get value2))))
-  @end{pre}
-  The data within the @sym{g:value} instance has protected scope: it is
-  accessible only to functions within a @code{GTypeValueTable} structure, or
-  implementations of the @code{g:value-*} API. That is, code portions which
-  implement new fundamental types. @sym{g:value} users cannot make any
-  assumptions about how data is stored within the 2 element data union, and the
-  @class{g:type-t} member should only be accessed through the @fun{g:value-type}
-  function.
+    @end{pre}
+  @end{dictionary}
   @see-function{g:value-init}
   @see-class{g:type-t}
   @see-function{g:value-type}")
@@ -614,9 +698,10 @@
 
 (defun value-init (value &optional (gtype nil))
  #+liber-documentation
- "@version{2023-6-25}
+ "@version{2023-11-7}
   @argument[value]{an uninitialized @symbol{g:value} instance}
-  @argument[gtype]{a @class{g:type-t} type @arg{value} should hold values of}
+  @argument[gtype]{a @class{g:type-t} type the @arg{value} argument should hold
+    values of}
   @return{The @symbol{g:value} instance that has been passed in.}
   @begin{short}
     Initializes @arg{value} with the @arg{gtype} type.
@@ -675,11 +760,11 @@
 
 (cffi:defcfun ("g_value_unset" value-unset) :void
  #+liber-documentation
- "@version{2023-7-10}
+ "@version{2023-11-7}
   @argument[value]{an initialized @symbol{g:value} instance}
   @begin{short}
     Clears the current value in @arg{value} and \"unsets\" the type, this
-    releases all resources associated with this @symbol{value} instance.
+    releases all resources associated with this @arg{value} instance.
   @end{short}
   An unset value is the same as an uninitialized (zero-filled) @symbol{g:value}
   instance.
@@ -711,20 +796,11 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_value_set_instance ()                                not exported
+;;; g_value_set_instance ()
+;;;
+;;; Sets value from an instantiatable type via the value_table's collect_value()
+;;; function.
 ;;; ----------------------------------------------------------------------------
-
-(cffi:defcfun ("g_value_set_instance" value-set-instance) :void
- #+liber-documentation
- "@version{#2021-4-8}
-  @argument[value]{an initialized @symbol{value} instance}
-  @argument[instance]{the instance}
-  @begin{short}
-    Sets @arg{value} from an instantiatable type via the @arg{value_table}'s
-    @arg{collect_value()} function.
-  @end{short}"
-  (value (:pointer (:struct value)))
-  (instance :pointer))
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_value_fits_pointer ()
@@ -906,4 +982,4 @@
 
 (export 'strdup-value-contents)
 
-;;; --- End of file gobject.g-value.lisp ---------------------------------------
+;;; --- End of file gobject.gvalue.lisp ----------------------------------------
