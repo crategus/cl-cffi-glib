@@ -156,6 +156,11 @@
         *current-object-from-pointer* nil
         *currently-making-object-p* nil))
 
+;; Access the hashtables with functions
+(defun get-gobject-for-pointer (pointer)
+  (or (gethash (cffi:pointer-address pointer) *foreign-gobjects-strong*)
+      (gethash (cffi:pointer-address pointer) *foreign-gobjects-weak*)))
+
 ;;; ----------------------------------------------------------------------------
 ;;; struct GParameter                                      not exported
 ;;; ----------------------------------------------------------------------------
@@ -211,7 +216,7 @@
 (export 'object-has-reference)
 (export 'object-signal-handlers)
 
-;; Add object to the global Hash table *registered-object-types*
+;; Add object to the global Hash table for registered types
 (setf (glib:symbol-for-gtype "GObject") 'object)
 
 ;;; ----------------------------------------------------------------------------
@@ -582,7 +587,9 @@ lambda (object pspec)    :no-hooks
 
 ;; Translate a pointer to a C object to the corresponding Lisp object.
 ;; If a correpondig Lisp object does not exist, create the Lisp object.
-
+;; TODO: Consider to rename this function, we have introduced the function
+;; get-gobject-for-pointer that gets the Lisp object, if it exists and
+;; returns nil otherwise
 (defun get-g-object-for-pointer (pointer)
   (unless (cffi:null-pointer-p pointer)
     (or (gethash (cffi:pointer-address pointer) *foreign-gobjects-strong*)
@@ -637,33 +644,43 @@ lambda (object pspec)    :no-hooks
 
 ;;; ----------------------------------------------------------------------------
 
-;; Get the type of a property for a class.
-
-(defun class-property-type (object-type property-name
-                            &key assert-readable assert-writable)
-  (let* ((property (class-property-info object-type property-name)))
-    (when (and assert-readable
-               (not (%param-spec-readable property)))
-      (error 'property-unreadable-error
-             :property-name property-name
-             :class-name (glib:gtype-name (glib:gtype object-type))))
-    (when (and assert-writable
-               (not (%param-spec-writable property)))
-      (error 'property-unwritable-error
-             :property-name property-name
-             :class-name (glib:gtype-name (glib:gtype object-type))))
-    (%param-spec-type property)))
-
 ;; Get the definition of a property for the GObject type. Both arguments are of
 ;; type string, e.g. (class-property-info "GtkLabel" "label")
 
-(defun class-property-info (gtype property-name)
+;; TODO: Duplicates the implemenation of OBJECT-CLASS-FIND-PROPERTY. But
+;; we return a %PARAM-SPEC instance which is the Lisp side of a GParamSpec
+;; instance. Improve the implementation of GParamSpec!?
+
+(defun class-property-pspec (gtype name)
   (let ((class (type-class-ref gtype)))
-    (unwind-protect
-      (let ((pspec (%object-class-find-property class property-name)))
-        (when pspec
-          (parse-g-param-spec pspec)))
-      (type-class-unref class))))
+    (when class
+      (unwind-protect
+        (let ((pspec (%object-class-find-property class name)))
+          (unless (cffi:null-pointer-p pspec)
+            (parse-g-param-spec pspec)))
+        (type-class-unref class)))))
+
+;; Get the type of a property NAME for a class of type GTYPE
+;; Checks if the properties are readable or writeable
+
+(defun class-property-type (gtype name &key assert-readable assert-writable)
+  (let ((pspec (class-property-pspec gtype name)))
+    (assert pspec
+            nil
+            "CLASS-PROPERTY-TYPE: Property ~a not registered for ~a object"
+            name
+            gtype)
+    (when (and assert-readable
+               (not (%param-spec-readable pspec)))
+      (error 'property-unreadable-error
+             :property-name name
+             :class-name (type-name gtype)))
+    (when (and assert-writable
+               (not (%param-spec-writable pspec)))
+      (error 'property-unwritable-error
+             :property-name name
+             :class-name (type-name gtype)))
+    (%param-spec-type pspec)))
 
 ;;; ----------------------------------------------------------------------------
 
@@ -865,6 +882,21 @@ lambda (object pspec)    :no-hooks
     @end{entry}
   @end{table}
   @see-class{object}")
+
+;; Accessors for the slots of the GObjectClass structure
+(defun object-class-get-property (class)
+  (cffi:foreign-slot-value class '(:struct object-class) :get-property))
+
+(defun (setf object-class-get-property) (value class)
+  (setf (cffi:foreign-slot-value class '(:struct object-class) :get-property)
+        value))
+
+(defun object-class-set-property (class)
+  (cffi:foreign-slot-value class '(:struct object-class) :set-property))
+
+(defun (setf object-class-set-property) (value class)
+  (setf (cffi:foreign-slot-value class '(:struct object-class) :set-property)
+        value))
 
 ;;; ----------------------------------------------------------------------------
 ;;; struct GObjectConstructParam                           not exported
