@@ -192,7 +192,7 @@
 
 #+liber-documentation
 (setf (documentation 'app-launch-context 'type)
- "@version{2023-9-18}
+ "@version{2023-11-26}
   @begin{short}
     Integrating the launch with the launching application.
   @end{short}
@@ -200,12 +200,12 @@
   new application on the same screen as the launching window.
   @begin[Signal Details]{dictionary}
     @subheading{The \"launch-failed\" signal}
-      The signal is emitted when a @class{g:app-info} launch fails. The startup
-      notification ID is provided, so that the launcher can cancel the startup
-      notification.
       @begin{pre}
 lambda (context startup-notify-id)    :run-last
       @end{pre}
+      The signal is emitted when a @class{g:app-info} launch fails. The startup
+      notification ID is provided, so that the launcher can cancel the startup
+      notification.
       @begin[code]{table}
         @entry[context]{The @class{g:app-launch-context} object emitting the
           signal.}
@@ -213,19 +213,22 @@ lambda (context startup-notify-id)    :run-last
           for the failed launch.}
       @end{table}
    @subheading{The \"launch-started\" signal}
+     @begin{pre}
+lambda (context info platform-data)    :run-first
+     @end{pre}
      The signal is emitted when a @class{g:app-info} instance is about to be
      launched. If non-@code{null} the @arg{platform-data} is a @type{g:variant}
      dictionary mapping strings to variants, i.e. @code{a{sv@}}, which contains
      additional, platform specific data about this launch. On UNIX, at least
-     the startup-notification-id keys will be present.
+     the @code{startup-notification-id} keys will be present.
 
-     The value of the startup-notification-id key (type @code{s}) is a startup
-     notification ID corresponding to the format from the startup-notification
-     specification. It allows tracking the progress of the launchee through
-     startup.
+     The value of the @code{startup-notification-id} key (type @code{s}) is a
+     startup notification ID corresponding to the format from the startup
+     notification specification. It allows tracking the progress of the launchee
+     through startup.
 
-     It is guaranteed that this signal is followed by either a \"launched\" or
-     \"launch-failed\" signal.
+     It is guaranteed that this signal is followed by either a
+     @code{\"launched\"} or @code{\"launch-failed\"} signal.
 
      Because a launch operation may involve spawning multiple instances of the
      target application, you should expect this signal to be emitted multiple
@@ -234,28 +237,25 @@ lambda (context startup-notify-id)    :run-last
      The default handler is called after the handlers added via the
      @fun{g:signal-connect} function.
 
-     Since: 2.72
+     Since 2.72
+     @begin[code]{table}
+       @entry[context]{The @class{g:app-launch-context} object emitting the
+         signal.}
+       @entry[info]{A @class{g:app-info} instance that is about to be
+         launched.}
+       @entry[platform-data]{A @type{g:variant} value with additional
+         platform specific data for this launch. The argument can be
+         @code{NULL}.}
+     @end{table}
+    @subheading{The \"launched\" signal}
       @begin{pre}
 lambda (context info platform-data)    :run-last
       @end{pre}
-      @begin[code]{table}
-        @entry[context]{The @class{g:app-launch-context} object emitting the
-          signal.}
-        @entry[info]{A @class{g:app-info} instance that is about to be
-          launched.}
-        @entry[platform-data]{A @type{g:variant} value with additional
-          platform specific data for this launch. The argument can be
-          @code{NULL}.}
-      @end{table}
-    @subheading{The \"launched\" signal}
       The signal is emitted when a @class{g:app-info} object is successfully
       launched. The argument @arg{platform-data} is an @type{g:variant}
       dictionary mapping strings to variants, i.e. @code{a{sv@}}, which contains
       additional, platform-specific data about this launch. On UNIX, at least
       the \"pid\" and \"startup-notification-id\" keys will be present.
-      @begin{pre}
-lambda (context info platform-data)    :run-last
-      @end{pre}
       @begin[code]{table}
         @entry[context]{The @class{g:app-launch-context} object emitting the
           signal.}
@@ -387,14 +387,15 @@ lambda (context info platform-data)    :run-last
 
 (cffi:defcfun ("g_app_info_get_display_name" app-info-display-name) :string
  #+liber-documentation
- "@version{#2023-7-11}
+ "@version{2023-11-26}
   @argument[info]{a @class{g:app-info} instance}
-  @return{A string with the the display name of the application for @arg{info},
-    or the name if no display name is available.}
+  @return{The string with the the display name of the application for
+    @arg{info}, or the name of the application if no display name is available.}
   @begin{short}
     Gets the display name of the application.
   @end{short}
-  The display name is often more descriptive to the user than the name itself.
+  The display name is often more descriptive to the user than the
+  application name itself.
   @see-class{g:app-info}
   @see-function{g:app-info-name}"
   (info gobject:object))
@@ -460,7 +461,7 @@ lambda (context info platform-data)    :run-last
 
 (cffi:defcfun ("g_app_info_get_icon" app-info-icon) (gobject:object icon)
  #+liber-documentation
- "@version{#2023-7-11}
+ "@version{2023-11-26}
   @argument[info]{a @class{g:app-info} instance}
   @return{The default @class{g:icon} object for @arg{info} or @code{nil} if
     there is no default icon.}
@@ -477,6 +478,9 @@ lambda (context info platform-data)    :run-last
 ;;; g_app_info_launch ()
 ;;; ----------------------------------------------------------------------------
 
+;; TODO: Consider to change the implementation and pass a list of Lisp path
+;; or namestring arguments.
+
 (cffi:defcfun ("g_app_info_launch" %app-info-launch) :boolean
   (info gobject:object)
   (files (glib:list-t gobject:object))
@@ -485,9 +489,9 @@ lambda (context info platform-data)    :run-last
 
 (defun app-info-launch (info files context)
  #+liber-documentation
- "@version{#2023-7-11}
+ "@version{2023-11-26}
   @argument[info]{a @class{g:app-info} instance}
-  @argument[files]{a list of @class{g:files} objects}
+  @argument[files]{a list of @class{g:file} objects}
   @argument[context]{a @class{g:app-launch-context} instance or @code{nil}}
   @return{@em{True} on successful launch, @em{false} otherwise.}
   @begin{short}
@@ -495,9 +499,8 @@ lambda (context info platform-data)    :run-last
   @end{short}
   Passes @arg{files} to the launched application as arguments, using the
   optional @arg{context} argument to get information about the details of the
-  launcher, like what screen it is on.
-
-  To launch the application without arguments pass a @code{nil} files list.
+  application launcher, like what screen it is on. To launch the application
+  without arguments pass @code{nil} for the files list.
 
   Note that even if the launch is successful the application launched can fail
   to start if it runs into problems during startup. There is no way to detect
@@ -521,6 +524,7 @@ lambda (context info platform-data)    :run-last
   information provided in @arg{context}.
   @see-class{g:app-info}
   @see-class{g:app-launch-context}
+  @see-class{g:file}
   @see-function{g:app-info-launch-uris}
   @see-function{g:app-launch-context-setenv}
   @see-function{g:app-launch-context-unsetenv}"
@@ -925,12 +929,11 @@ lambda (context info platform-data)    :run-last
 
 (cffi:defcfun ("g_app_info_get_all" app-info-all) (glib:list-t gobject:object)
  #+liber-documentation
- "@version{#2023-7-11}
-  @return{A list of references to @class{g:app-info} instances.}
+ "@version{2023-11-26}
+  @return{A list of @class{g:app-info} instances.}
   @begin{short}
     Gets a list of all of the applications currently registered on this system.
   @end{short}
-
   For desktop files, this includes applications that have @code{NoDisplay=true}
   set or are excluded from display by means of @code{OnlyShowIn} or
   @code{NotShowIn}. See the @fun{g:app-info-should-show} function. The returned
