@@ -44,6 +44,8 @@
 (unexport 'glib:with-g-error :glib)
 (unexport 'glib:with-ignore-g-error :glib)
 (unexport 'glib:with-catching-to-g-error :glib)
+(unexport 'glib:with-foreign-boxed-array :glib)
+(unexport 'glib:with-g-boxed-array :glib)
 
 (unexport 'gobject:initially-unowned :gobject)
 (unexport 'gobject:gobject-class :gobject)

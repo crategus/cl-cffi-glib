@@ -54,6 +54,7 @@
            #:make-boxed-type
            #:get-boxed-info
            #:with-foreign-boxed-array
+           #:with-g-boxed-array
            #:pointer
            #:cleanup-translated-object-for-callback
            ;; Symbols from glib.error.lisp

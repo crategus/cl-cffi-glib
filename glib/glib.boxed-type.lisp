@@ -969,4 +969,26 @@
                 ,values-seq-1))
          ,@body))))
 
+(defmacro with-g-boxed-array ((n-var array-var gtype values) &body body)
+  (let ((values-1 (gensym "VALUES-"))
+        (cstruct (generated-cstruct-name gtype))
+        (x (gensym "X-"))
+        (i (gensym "I-")))
+    `(let* ((,values-1 ,values)
+            (,n-var (length ,values-1)))
+       (cffi:with-foreign-object (,array-var '(:struct ,cstruct) ,n-var)
+         (let ((,i 0))
+           (map nil
+                (lambda (,x)
+                  (copy-boxed-slots-to-foreign
+                    ,x
+                    (cffi:inc-pointer ,array-var
+                                 (* ,i
+                                    (cffi:foreign-type-size '(:struct ,cstruct))))
+                       ',gtype)
+                  (incf ,i))
+                ,values-1))
+         ,@body))))
+
+
 ;;; --- End of file glib.boxed-type.lisp ---------------------------------------
