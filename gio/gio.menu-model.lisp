@@ -382,13 +382,14 @@ lambda (model position removed added)   :run-last
  #+liber-documentation
  "@version{#2022-12-30}
   @argument[model]{a @class{g:menu-model} object}
-  @return{@em{True} if the model is mutable, i.e. the \"items-changed\" signal
-    may be emitted.}
+  @return{@em{True} if the model is mutable, i.e. the @code{\"items-changed\"}
+  signal may be emitted.}
   @begin{short}
     Queries if @arg{model} is mutable.
   @end{short}
-  An immutable @class{g:menu-model} object will never emit the \"items-changed\"
-  signal. Consumers of the model may make optimisations accordingly.
+  An immutable @class{g:menu-model} object will never emit the
+  @code{\"items-changed\"} signal. Consumers of the model may make
+  optimisations accordingly.
   @see-class{g:menu-model}"
   (model (gobject:object menu-model)))
 

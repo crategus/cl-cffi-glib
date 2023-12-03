@@ -419,7 +419,7 @@ lambda (a b)
   The @arg{additions} argument must contain items of the
   @slot[g:list-store]{item-type} type. This function is more efficient than the
   @fun{g:list-store-insert} and @fun{g:list-store-remove} functions, because it
-  only emits the \"items-changed\" signal once for the change.
+  only emits the @code{\"items-changed\"} signal once for the change.
 
   The @arg{position} and @arg{n-removals} arguments must be correct, i.e.
   @arg{position} + @arg{n-removals} must be less than or equal to the length of
