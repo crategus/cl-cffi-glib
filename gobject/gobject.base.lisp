@@ -66,7 +66,7 @@
 ;;;     g_object_interface_find_property
 ;;;     g_object_interface_list_properties
 ;;;     g_object_new
-;;;     g_object_new_with_properties                       not imeplemented
+;;;     g_object_new_with_properties                       not implemented
 ;;;     g_object_newv                                      not exported
 ;;;     g_object_ref                                       not exported
 ;;;     g_object_unref                                     not exported
@@ -223,23 +223,22 @@
 
 #+liber-documentation
 (setf (documentation 'object 'type)
- "@version{#2022-12-30}
+ "@version{2023-12-1}
   @begin{short}
     The @class{g:object} class is the fundamental type providing the common
     attributes and methods for all object types in GTK, Pango and other
     libraries.
   @end{short}
-  The @ckass{g:object} class provides methods for object construction and
-  destruction, property access methods, and signal support. Signals are
-  described in detail in the @url[https://docs.gtk.org/gobject/]{GObject
-  documentation}.
+  The @class{g:object} class provides methods for object construction and
+  destruction, property access methods, and signal support.
   @begin[Lisp Implementation]{dictionary}
-    In the Lisp implementation three slots are added. The @code{pointer} slot
-    holds the foreign pointer to the C instance of the object. The
-    @code{signal-handlers} slot stores the Lisp signals which are connected to
-    an instance with the @fun{g:signal-connect} function. The
-    @code{has-reference} slot is initialized to the value @em{true} during
-    creation of an object. See the slot access functions for examples.
+    In the Lisp implementation three slots are added. The
+    @slot[g:object]{pointer} slot holds the foreign pointer to the C instance
+    of the object. The @slot[g:object]{signal-handlers} slot stores the Lisp
+    functions which are connected to an instance with the @fun{g:signal-connect}
+    function. The @slot[g:object]{has-reference} slot is initialized to the
+    value @em{true} during creation of an object. See the slot access functions
+    for examples.
   @end{dictionary}
   @begin[Signal Details]{dictionary}
     @subheading{The \"notify\" signal}
@@ -269,6 +268,7 @@ lambda (object pspec)    :no-hooks
         changed.}
     @end{table}
   @end{dictionary}
+  @see-constructor{g:object-new}
   @see-slot{g:object-has-reference}
   @see-slot{g:object-pointer}
   @see-slot{g:object-signal-handlers}
@@ -279,7 +279,7 @@ lambda (object pspec)    :no-hooks
 ;;; Property and Accessor details
 ;;; ----------------------------------------------------------------------------
 
-;;; --- object-has-reference ---------------------------------------------------
+;;; --- g:object-has-reference -------------------------------------------------
 
 #+liber-documentation
 (setf (documentation (liber:slot-documentation "has-reference" 'object) t)
@@ -289,14 +289,17 @@ lambda (object pspec)    :no-hooks
 (setf (liber:alias-for-function 'object-has-reference)
       "Accessor"
       (documentation 'object-has-reference 'function)
- "@version{#2022-12-30}
+ "@version{2023-12-1}
+  @syntax[]{(g:object-has-reference object) => has-reference}
+  @argument[object]{a @class{g:object} instance}
+  @argument[has-reference]{@em{true} when registering @arg{object}}
   @begin{short}
     Accessor of the @code{has-reference} slot of the @class{g:object} class.
   @end{short}
   The slot is set to @em{true} when registering an object during creation.
   @see-class{g:object}")
 
-;;; --- object-pointer ---------------------------------------------------------
+;;; --- g:object-pointer -------------------------------------------------------
 
 #+liber-documentation
 (setf (documentation (liber:slot-documentation "pointer" 'object) t)
@@ -306,7 +309,10 @@ lambda (object pspec)    :no-hooks
 (setf (liber:alias-for-function 'object-pointer)
       "Accessor"
       (documentation 'object-pointer 'function)
- "@version{#2022-12-30}
+ "@version{2023-12-1}
+  @syntax[]{(g:object-pointer object) => pointer}
+  @argument[object]{a @class{g:object} instance}
+  @argument[pointer]{a foreign pointer to the C instance of @arg{object}}
   @begin{short}
     Accessor of the @slot[g:object]{pointer} slot of the @class{g:object} class.
   @end{short}
@@ -328,9 +334,7 @@ lambda (object pspec)    :no-hooks
 (defmethod (setf glib:pointer) (value (instance object))
   (setf (object-pointer instance) value))
 
-;(export 'pointer)
-
-;;; --- object-signal-handlers -------------------------------------------------
+;;; --- g:object-signal-handlers -----------------------------------------------
 
 #+liber-documentation
 (setf (documentation (liber:slot-documentation "signal-handlers" 'object) t)
@@ -340,10 +344,13 @@ lambda (object pspec)    :no-hooks
 (setf (liber:alias-for-function 'object-signal-handlers)
       "Accessor"
       (documentation 'object-signal-handlers 'function)
- "@version{#2022-12-30}
+ "@version{2023-12-1}
+  @argument[object]{a @class{g:object} instance}
+  @argument[handlers]{an array with the signal handlers connected to
+    @arg{object}}
   @begin{short}
     Returns the array of Lisp signal handlers which are connected with the
-    @fun{g:signal-connect} function to a @class{object} instance.
+    @fun{g:signal-connect} function to a @class{g:object} instance.
   @end{short}
   @begin[Examples]{dictionary}
     @begin{pre}
@@ -814,7 +821,7 @@ lambda (object pspec)    :no-hooks
       "CStruct"
       (liber:symbol-documentation 'object-class)
  "@version{#2021-9-9}
-  @short{The class structure for the @class{object} type.}
+  @short{The class structure for the @class{g:object} type.}
   @begin{pre}
 (cffi:defcstruct object-class
   (:type-class g-type-class)
@@ -881,7 +888,7 @@ lambda (object pspec)    :no-hooks
       its initialisation.
     @end{entry}
   @end{table}
-  @see-class{object}")
+  @see-class{g:object}")
 
 ;; Accessors for the slots of the GObjectClass structure
 (defun object-class-get-property (class)
@@ -1006,14 +1013,14 @@ lambda (object pspec)    :no-hooks
 
 (defun type-is-object (gtype)
  #+liber-documentation
- "@version{2022-12-30}
+ "@version{2023-12-1}
   @argument[gtype]{a @class{g:type-t} type ID to check}
   @begin{return}
     @em{False} or @em{true}, indicating whether the @arg{gtype} argument is a
-    @var{+g-type-object+} type.
+    @code{\"GObject\"} type.
   @end{return}
   @begin{short}
-    Checks if the passed in type ID is a @var{+g-type-object+} type or derived
+    Checks if the passed in type ID is a @code{\"GObject\"} type or derived
     from it.
   @end{short}
   @begin[Examples]{dictionary}
@@ -1025,9 +1032,7 @@ lambda (object pspec)    :no-hooks
 (g:type-is-object nil) => NIL
     @end{pre}
   @end{dictionary}
-  @see-class{g:type-t}
-  @see-class{g:object}
-  @see-variable{+g-type-object+}"
+  @see-class{g:type-t}"
   (and (not (type-is-a gtype (glib:gtype +g-type-interface+)))
        (type-is-a gtype (glib:gtype +g-type-object+))))
 
@@ -1053,11 +1058,10 @@ lambda (object pspec)    :no-hooks
 
 (defun is-object (object)
  #+liber-documentation
- "@version{#2022-12-30}
-  @argument[object]{a valid @symbol{g:type-instance} instance to check for
-    being a @var{+g-type-object+} type}
+ "@version{2023-12-1}
+  @argument[object]{a valid @symbol{g:type-instance} instance to check}
   @begin{short}
-    Checks whether the @arg{object} argument is of @var{+g-type-object+} type
+    Checks whether the @arg{object} argument is of @code{\"GObject\"} type
     or derived from it.
   @end{short}
   @begin[Example]{dictionary}
@@ -1066,8 +1070,7 @@ lambda (object pspec)    :no-hooks
     @end{pre}
   @end{dictionary}
   @see-class{g:object}
-  @see-symbol{g:type-instance}
-  @see-variable{+g-type-object+}"
+  @see-symbol{g:type-instance}"
   (type-check-instance-type object +g-type-object+))
 
 (export 'is-object)
@@ -1103,7 +1106,7 @@ lambda (object pspec)    :no-hooks
 (g:is-object-class *) => T
     @end{pre}
   @end{dictionary}
-  @see-class{object}
+  @see-class{g:object}
   @see-symbol{object-class}
   @see-variable{+g-type-object+}"
   (type-check-class-type class +g-type-object+))
@@ -1115,16 +1118,16 @@ lambda (object pspec)    :no-hooks
 (defun object-class (object)
  #+liber-documentation
  "@version{#2021-9-9}
-  @argument[object]{a @class{object} instance}
+  @argument[object]{a @class{g:object} instance}
   @return{A foreign pointer to the @symbol{object-class} instance.}
-  @short{Gets the class instance associated to a @class{object} instance.}
+  @short{Gets the class instance associated to a @class{g:object} instance.}
   @begin[Examples]{dictionary}
     @begin{pre}
 (g:object-class (make-instance 'gtk-button))
 => #.(SB-SYS:INT-SAP #X557BB1322590)
     @end{pre}
   @end{dictionary}
-  @see-class{object}
+  @see-class{g:object}
   @see-symbol{object-class}"
   (type-instance-class object))
 
@@ -1134,9 +1137,9 @@ lambda (object pspec)    :no-hooks
 
 (defun object-type (object)
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2023-12-1}
   @argument[object]{a @class{g:object} instance to return the type ID for}
-  @return{A @class{g:type-t} type ID of the @arg{object} argument.}
+  @return{The @class{g:type-t} type ID of the @arg{object} argument.}
   @begin{short}
     Gets the type ID for the instance of an object.
   @end{short}
@@ -1146,8 +1149,8 @@ lambda (object pspec)    :no-hooks
   @begin[Examples]{dictionary}
     @begin{pre}
 (g:object-type (make-instance 'gtk:label))
-=> #S(GTYPE :NAME \"GtkLabel\" :%ID 134905144)
-(g:obect-type nil) => nil
+=> #S(GTYPE :name \"GtkLabel\" :id 134905144)
+(g:object-type nil) => nil
     @end{pre}
   @end{dictionary}
   @see-class{g:object}
@@ -1165,9 +1168,9 @@ lambda (object pspec)    :no-hooks
 
 (defun object-type-name (object)
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2023-12-1}
   @argument[object]{a @class{g:object} instance to return the type name for}
-  @return{A string with type name of the @arg{object} argument.}
+  @return{The string with type name of the @arg{object} argument.}
   @begin{short}
     Gets the name of the type for an instance.
   @end{short}
@@ -1208,9 +1211,9 @@ lambda (object pspec)    :no-hooks
 => #<GTYPE :name \"GtkLabel\" :id 93989740834480>
     @end{pre}
   @end{dictionary}
-  @see-class{type-t}
-  @see-class{object}
-  @see-symbol{object-class}"
+  @see-class{g:type-t}
+  @see-class{g:object}
+  @see-symbol{g:object-class}"
   (type-from-class class))
 
 ;;; ----------------------------------------------------------------------------
@@ -1228,8 +1231,8 @@ lambda (object pspec)    :no-hooks
 (g:object-class-name (g:type-class-ref \"GtkLabel\")) => \"GtkLabel\"
     @end{pre}
   @end{dictionary}
-  @see-class{object}
-  @see-symbol{object-class}"
+  @see-class{g:object}
+  @see-symbol{g:object-class}"
   (type-name (type-from-class class)))
 
 ;;; ----------------------------------------------------------------------------
@@ -1252,7 +1255,7 @@ lambda (object pspec)    :no-hooks
   Note that it is possible to redefine a property in a derived class, by
   installing a property with the same name. This can be useful at times, e.g.
   to change the range of allowed values or the default value.
-  @see-class{object}
+  @see-class{g:object}
   @see-symbol{object-class}
   @see-symbol{param-spec}"
   (class (:pointer (:struct object-class)))
@@ -1342,36 +1345,36 @@ lambda (object pspec)    :no-hooks
 
 (defun object-class-find-property (gtype name)
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2023-12-1}
   @argument[gtype]{a @class{g:type-t} type ID for an object class type}
   @argument[name]{a string with the name of the property to look up}
   @begin{return}
-    The @symbol{g:param-spec} instance for the property, or @code{nil} if the
-    object class does not have a property of that name.
+    The @symbol{g:param-spec} instance for the property, or @code{nil} if
+    the object class does not have a property of that name.
   @end{return}
   @begin{short}
     Looks up the @symbol{g:param-spec} instance for a property of an object
     class type.
   @end{short}
+  Signals an error if the @arg{gtype} type ID is not a @code{\"GObject\"} type.
   @begin[Example]{dictionary}
-    The @symbol{g:param-spec} instance for the property \"label\" of a
-    @class{gtk:label} widget is looked up.
+    Get the @symbol{g:param-spec} instance for the @slot[g:simple-action]{name}
+    property of the @class{g:simple-action} object is looked up.
     @begin{pre}
-(setq pspec (g:object-class-find-property \"GtkLabel\" \"label\"))
-=> #.(SB-SYS:INT-SAP #X009FC730)
-(g:param-spec-type pspec)
-=> #<GTYPE :name \"GParamString\" :id 9641904>
-(g:param-spec-value-type pspec)
-=> #<GTYPE :name \"gchararray\" :id 64>
-(g:param-spec-name pspec)
-=> \"label\"
+(setq pspec (g:object-class-find-property \"GSimpleAction\" \"name\"))
+=> #.(SB-SYS:INT-SAP #X560E17A46220)
+(g:param-spec-name pspec) => \"name\"
+(g:param-spec-type pspec) => #<GTYPE :name \"GParamString\" :id 94618525293072>
+(g:param-spec-value-type pspec) => #<GTYPE :name \"gchararray\" :id 64>
     @end{pre}
   @end{dictionary}
   @see-class{g:object}
   @see-class{g:type-t}
   @see-symbol{g:param-spec}
   @see-function{g:object-class-list-properties}"
-  (assert (type-is-a gtype +g-type-object+))
+  (assert (type-is-object gtype)
+          nil
+          "G:OBJECT-CLASS-FIND-PROPERTY: ~a is not a GObject" gtype)
   (let ((class (type-class-ref gtype)))
     (unwind-protect
       (let ((pspec (%object-class-find-property class name)))
@@ -1391,28 +1394,29 @@ lambda (object pspec)    :no-hooks
 
 (defun object-class-list-properties (gtype)
  #+liber-documentation
- "@version{2022-12-30}
+ "@version{2023-12-1}
   @argument[gtype]{a @class{g:type-t} type ID of an object class}
-  @return{A list of @symbol{g:param-spec} instances.}
+  @return{The list of @symbol{g:param-spec} instances.}
   @begin{short}
     Gets a list of @symbol{g:param-spec} instances for all properties of an
     object class type.
   @end{short}
+  Signals an error if the @arg{gtype} type ID is not a @code{\"GObject\"} type.
   @begin[Example]{dictionary}
     @begin{pre}
 (mapcar #'g:param-spec-name
-        (g:object-class-list-properties \"GtkApplication\"))
+        (g:object-class-list-properties \"GApplication\"))
 => (\"application-id\" \"flags\" \"resource-base-path\" \"is-registered\"
-    \"is-remote\" \"inactivity-timeout\" \"action-group\" \"is-busy\"
-    \"register-session\" \"screensaver-active\" \"app-menu\" \"menubar\"
-    \"active-window\")
+    \"is-remote\" \"inactivity-timeout\" \"action-group\" \"is-busy\")
     @end{pre}
   @end{dictionary}
   @see-class{g:object}
   @see-class{g:type-t}
   @see-symbol{g:param-spec}
   @see-function{g:object-class-find-property}"
-  (assert (type-is-a gtype +g-type-object+))
+  (assert (type-is-object gtype)
+          nil
+          "G:OBJECT-CLASS-LIST-PROPERTIES: ~a is not a GObject" gtype)
   (let ((class (type-class-ref gtype)))
     (unwind-protect
       (cffi:with-foreign-object (n-props :uint)
@@ -1456,11 +1460,11 @@ lambda (object pspec)    :no-hooks
     If you need to get the overridden property, you can call the
     @fun{param-spec-get-redirect-target} function.
   @end{dictionary}
-  @see-class{object}
-  @see-symbol{object-class}
-  @see-function{object-class-find-property}
-  @see-function{object-class-list-properties}
-  @see-function{param-spec-get-redirect-target}"
+  @see-class{g:object}
+  @see-symbol{g:object-class}
+  @see-function{g:object-class-find-property}
+  @see-function{g:object-class-list-properties}
+  @see-function{g:param-spec-get-redirect-target}"
   (class (:pointer (:struct object-class)))
   (property-id :uint)
   (name :string))
@@ -1492,10 +1496,10 @@ lambda (object pspec)    :no-hooks
   initialization function (the @code{class_init} member of
   @symbol{type-info}.) It must not be called after after @code{class_init} has
   been called for any object types implementing this interface.
-  @see-class{object}
-  @see-symbol{param-spec}
-  @see-symbol{type-info}
-  @see-function{object-class-override-property}"
+  @see-class{g:object}
+  @see-symbol{g:param-spec}
+  @see-symbol{g:type-info}
+  @see-function{g:object-class-override-property}"
   (iface :pointer)
   (pspec (:pointer (:struct param-spec))))
 
@@ -1506,11 +1510,11 @@ lambda (object pspec)    :no-hooks
 (cffi:defcfun ("g_object_interface_find_property"
                %object-interface-find-property) (:pointer (:struct param-spec))
   (iface (:pointer (:struct type-interface)))
-  (property-name :string))
+  (name :string))
 
 (defun object-interface-find-property (gtype name)
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2023-12-1}
   @argument[gtype]{a @class{g:type-t} type ID for an interface type}
   @argument[name]{a string with the name of a property to lookup}
   @begin{return}
@@ -1521,6 +1525,8 @@ lambda (object pspec)    :no-hooks
     Find the @symbol{g:param-spec} instance with the given property name for
     an interface type.
   @end{short}
+  Signals an error if the @arg{gtype} type ID is not an @code{\"GInterface\"}
+  type.
   @begin[Examples]{dictionary}
     @begin{pre}
 (g:object-interface-find-property \"GAction\" \"name\")
@@ -1531,10 +1537,12 @@ lambda (object pspec)    :no-hooks
 => NIL
     @end{pre}
   @end{dictionary}
-  @see-class{g:object}
   @see-class{g:type-t}
   @see-symbol{g:param-spec}"
-  (assert (type-is-a gtype +g-type-interface+))
+  (assert (type-is-a gtype +g-type-interface+)
+          nil
+          "G:OBJECT-INTERFACE-FIND-PROPERTY: ~a is not a GInterface type"
+          gtype)
   (let ((iface (type-default-interface-ref gtype)))
     (unwind-protect
       (let ((pspec (%object-interface-find-property iface name)))
@@ -1555,13 +1563,15 @@ lambda (object pspec)    :no-hooks
 
 (defun object-interface-list-properties (gtype)
  #+liber-documentation
- "@version{2022-12-30}
+ "@version{2023-12-1}
   @argument[gtype]{a @class{g:type-t} type ID of an interface type}
-  @return{A list of @symbol{g:param-spec} instances for all properties of an
+  @return{The list of @symbol{g:param-spec} instances for all properties of an
     interface type.}
   @begin{short}
     Lists the properties of an interface type.
   @end{short}
+  Signals an error if the @arg{gtype} type ID is not an @code{\"GInterface\"}
+  type.
   @begin[Example]{dictionary}
     @begin{pre}
 (mapcar #'g:param-spec-name
@@ -1569,10 +1579,12 @@ lambda (object pspec)    :no-hooks
 => (\"enabled\" \"name\" \"parameter-type\" \"state\" \"state-type\")
     @end{pre}
   @end{dictionary}
-  @see-class{g:object}
   @see-class{g:type-t}
   @see-symbol{g:param-spec}"
-  (assert (type-is-a gtype +g-type-interface+))
+  (assert (type-is-a gtype +g-type-interface+)
+          nil
+          "G:OBJECT-INTERFACE-LIST-PROPERTIES: ~a is not a GInterface type"
+          gtype)
   (let ((iface (type-default-interface-ref gtype)))
     (unwind-protect
       (cffi:with-foreign-object (n-props :uint)
@@ -1592,7 +1604,7 @@ lambda (object pspec)    :no-hooks
 
 (defun object-new (gtype &rest args)
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2023-12-1}
   @argument[gtype]{a @class{g:type-t} type ID of the @class{g:object} subtype
     to instantiate}
   @argument[args]{pairs of the property keyword and value}
@@ -1678,10 +1690,10 @@ lambda (object pspec)    :no-hooks
 (cffi:defcfun ("g_object_ref" %object-ref) :pointer
  #+liber-documentation
  "@version{#2014-11-13}
-  @argument[object]{a @class{object} instance}
+  @argument[object]{a @class{g:object} instance}
   @return{The same @arg{object}.}
   @short{Increases the reference count of object.}
-  @see-class{object}"
+  @see-class{g:object}"
   (object :pointer))
 
 ;;; ----------------------------------------------------------------------------
@@ -1694,13 +1706,13 @@ lambda (object pspec)    :no-hooks
 (cffi:defcfun ("g_object_unref" %object-unref) :void
  #+liber-documentation
  "@version{#2014-11-13}
-  @argument[object]{a @class{object} instance}
+  @argument[object]{a @class{g:object} instance}
   @begin{short}
     Decreases the reference count of @arg{object}.
   @end{short}
   When its reference count drops to 0, the object is finalized (i.e. its memory
   is freed).
-  @see-class{object}"
+  @see-class{g:object}"
   (object :pointer))
 
 ;;; ----------------------------------------------------------------------------
@@ -1713,7 +1725,7 @@ lambda (object pspec)    :no-hooks
 (cffi:defcfun ("g_object_ref_sink" %object-ref-sink) :pointer
  #+liber-documentation
  "@version{#2020-2-17}
-  @argument[object]{a @class{object} instance}
+  @argument[object]{a @class{g:object} instance}
   @return{@arg{object}}
   @begin{short}
     Increase the reference count of @arg{object}, and possibly remove the
@@ -1724,7 +1736,7 @@ lambda (object pspec)    :no-hooks
   clearing the floating flag while leaving the reference count unchanged. If
   the @arg{object} is not floating, then this call adds a new normal reference
   increasing the reference count by one.
-  @see-class{object}"
+  @see-class{g:object}"
   (object :pointer))
 
 ;;; ----------------------------------------------------------------------------
@@ -1809,12 +1821,12 @@ lambda (object pspec)    :no-hooks
 (cffi:defcfun ("g_object_is_floating" %object-is-floating) :boolean
  #+liber-documentation
  "@version{#2020-2-17}
-  @argument[object]{a @class{object} instance}
+  @argument[object]{a @class{g:object} instance}
   @return{@em{True} if @arg{object} has a floating reference.}
   @begin{short}
     Checks whether @arg{object} has a floating reference.
   @end{short}
-  @see-class{object}"
+  @see-class{g:object}"
   (object :pointer))
 
 ;;; ----------------------------------------------------------------------------
@@ -1868,7 +1880,7 @@ lambda (object pspec)    :no-hooks
 (cffi:defcfun ("g_object_weak_ref" %object-weak-ref) :void
  #+liber-documentation
  "@version{#2020-2-17}
-  @argument[object]{@class{object} instance to reference weakly}
+  @argument[object]{@class{g:object} instance to reference weakly}
   @argument[notify]{callback to invoke before the @arg{object} is freed}
   @argument[data]{extra data to pass to @arg{notify}}
   @begin{short}
@@ -1883,7 +1895,7 @@ lambda (object pspec)    :no-hooks
   they cannot safely be used in one thread if the object's last
   @fun{object-unref} might happen in another thread. Use @class{weak-ref} if
   thread-safety is required.
-  @see-class{object}
+  @see-class{g:object}
   @see-function{object-ref}
   @see-function{object-unref}"
   (object :pointer)
@@ -2078,7 +2090,7 @@ lambda (object pspec)    :no-hooks
 (cffi:defcfun ("g_object_add_toggle_ref" %object-add-toggle-ref) :void
  #+liber-documentation
  "@version{#2020-2-17}
-  @argument[object]{a @class{object} instance}
+  @argument[object]{a @class{g:object} instance}
   @argument[notify]{a function to call when this reference is the last reference
     to the @arg{object}, or is no longer the last reference}
   @argument[data]{data to pass to notify}
@@ -2111,7 +2123,7 @@ lambda (object pspec)    :no-hooks
   there are multiple toggle references to an object, none of them will ever be
   notified until all but one are removed. For this reason, you should only
   ever use a toggle reference if there is important state in the proxy object.
-  @see-class{object}"
+  @see-class{g:object}"
   (object :pointer)
   (notify :pointer)
   (data :pointer))
@@ -2126,7 +2138,7 @@ lambda (object pspec)    :no-hooks
 (cffi:defcfun ("g_object_remove_toggle_ref" %object-remove-toggle-ref) :void
  #+liber-documentation
  "@version{#2020-2-17}
-  @argument[object]{a @class{object} instance}
+  @argument[object]{a @class{g:object} instance}
   @argument[notify]{a function to call when this reference is the last reference
     to the @arg{object}, or is no longer the last reference}
   @argument[data]{data to pass to @arg{notify}}
@@ -2134,7 +2146,7 @@ lambda (object pspec)    :no-hooks
     Removes a reference added with the @fun{object-add-toggle-ref} function.
     The reference count of the @arg{object} is decreased by one.
   @end{short}
-  @see-class{object}
+  @see-class{g:object}
   @see-function{object-add-toggle-ref}"
   (object :pointer)
   (notify :pointer)
@@ -2356,12 +2368,12 @@ lambda (object pspec)    :no-hooks
 
 (cffi:defcfun ("g_object_notify" object-notify) :void
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2023-12-1}
   @argument[object]{a @class{g:object} instance}
   @argument[name]{a string with the name of a property installed on the class
     of @arg{object}}
   @begin{short}
-    Emits a \"notify\" signal for the property on the object.
+    Emits a @code{\"notify\"} signal for the property on the object.
   @end{short}
   @see-class{g:object}"
   (object object)
@@ -2422,15 +2434,16 @@ lambda (object pspec)    :no-hooks
 
 (cffi:defcfun ("g_object_freeze_notify" object-freeze-notify) :void
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2023-12-1}
   @argument[object]{a @class{g:object} instance}
   @begin{short}
     Increases the freeze count on the object.
   @end{short}
-  If the freeze count is non-zero, the emission of \"notify\" signals on the
-  object is stopped. The signals are queued until the freeze count is decreased
-  to zero. This is necessary for accessors that modify multiple properties to
-  prevent premature notification while the object is still being modified.
+  If the freeze count is non-zero, the emission of @code{\"notify\"} signals on
+  the object is stopped. The signals are queued until the freeze count is
+  decreased to zero. This is necessary for accessors that modify multiple
+  properties to prevent premature notification while the object is still being
+  modified.
   @see-class{g:object}
   @see-function{g:object-thaw-notify}"
   (object object))
@@ -2443,15 +2456,15 @@ lambda (object pspec)    :no-hooks
 
 (cffi:defcfun ("g_object_thaw_notify" object-thaw-notify) :void
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2023-12-1}
   @argument[object]{a @class{g:object} instance}
   @begin{short}
     Reverts the effect of a previous call to the @fun{g:object-freeze-notify}
     function.
   @end{short}
   The freeze count is decreased on the object and when it reaches zero, all
-  queued \"notify\" signals are emitted. It is an error to call this function
-  when the freeze count is zero.
+  queued @code{\"notify\"} signals are emitted. It is an error to call this
+  function when the freeze count is zero.
   @see-class{g:object}
   @see-function{g:object-freeze-notify}"
   (object object))
@@ -2529,24 +2542,28 @@ lambda (object pspec)    :no-hooks
 (export 'object-data)
 
 ;;; ----------------------------------------------------------------------------
-;;; GDestroyNotify ()  from the GLIB documentation
-;;;
-;;; void
-;;; (*GDestroyNotify) (gpointer data);
-;;;
-;;; Specifies the type of function which is called when a data element is
-;;; destroyed. It is passed the pointer to the data element and should free any
-;;; memory and resources allocated for it.
-;;;
-;;; data :
-;;;     the data element.
+;;; GDestroyNotify ()
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcallback destroy-notify :void
     ((data :pointer))
-  (format t "in DESTROY-NOTIFY with data : ~a~%" data)
   (let ((func (glib:get-stable-pointer-value data)))
-    (funcall func)))
+    (unwind-protect
+      (funcall func)
+      (glib:free-stable-pointer data))))
+
+#+liber-documentation
+(setf (liber:alias-for-symbol 'destroy-notify)
+      "Callback"
+      (liber:symbol-documentation 'destroy-notify)
+ "@version{2023-12-2}
+  @begin{short}
+    Specifies the type of function which is called when a data element is
+    destroyed.
+  @end{short}
+  The callback function takes no argument and has no return value.
+  See the @fun{g:object-set-data-full} function for an example.
+  @see-function{g:object-set-data-full}")
 
 (export 'destroy-notify)
 
@@ -2554,14 +2571,20 @@ lambda (object pspec)    :no-hooks
 ;;; g_object_set_data_full ()
 ;;; ----------------------------------------------------------------------------
 
+;; TODO: The implementation has changed. Create a new example.
+
 (cffi:defcfun ("g_object_set_data_full" %object-set-data-full) :void
+  (object object)
+  (key :string)
+  (data :pointer)
+  (destroy :pointer))
+
+(defun object-set-data-full (object key func)
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2023-12-2}
   @argument[object]{@class{g:object} instance containing the associations}
   @argument[key]{a string with the name of the key}
-  @argument[data]{data as a pointer to associate with that @arg{key}}
-  @argument[destroy]{callback function to call when the association is
-    destroyed}
+  @argument[func]{a @symbol{g:destroy-notify} callback function}
   @begin{short}
     Like the @fun{g:object-data} function except it adds notification for
     when the association is destroyed, either by setting it to a different
@@ -2569,56 +2592,17 @@ lambda (object pspec)    :no-hooks
   @end{short}
   Note that the @arg{destroy} callback function is not called if the @arg{data}
   argument is @code{nil}.
-  @begin[Note]{dictionary}
-    You must define a callback function and pass the pointer of the callback
-    function. See the example for the syntax to use.
-  @end{dictionary}
-  @begin[Examples]{dictionary}
-    This code example shows the usage of the @fun{g:object-set-data-full}
-    function with a destroy notify handler. The code is taken from the
-    @code{gtk-widget-factory} demo.
-    @begin{pre}
-;; Callback function for the destroy notify handler
-(cffi:defcallback pulse-remove :void ((data :pointer))
-  (g:source-remove (cffi:pointer-address data)))
-
-;; Function called by the timeout handler
-(defun pulse-it (widget)
-  ;; Pulse the widget which is an entry or a progress bar
-  (if (eq 'gtk:entry (type-of widget))
-      (gtk:entry-progress-pulse widget)
-      (gtk:progress-bar-pulse widget))
-  ;; Set a timeout handler and store the handler on the property list
-  (g:object-set-data-full widget
-                          \"pulse-id\"
-                          (cffi:make-pointer
-                              (g:timeout-add *pulse-time*
-                                             (lambda () (pulse-it widget))))
-                          (cffi:callback pulse-remove))
-  ;; Remove the source
-  +g-source-remove+)
-    @end{pre}
-  @end{dictionary}
   @see-class{g:object}
   @see-function{g:object-data}"
-  (object object)
-  (key :string)
-  (data :pointer)
-  (destroy :pointer))
-
-;; FIXME: Improve this implementation and update the documentation.
-;; We have to free the data.
-
-(defun object-set-data-full (object key data destroy)
   (%object-set-data-full object
                          key
-                         (glib:allocate-stable-pointer data)
-                         destroy))
+                         (glib:allocate-stable-pointer func)
+                         (cffi:callback destroy-notify)))
 
 (export 'object-set-data-full)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_object_steal_data ()
+;;; g_object_steal_data ()                                 not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_object_steal_data" object-steal-data) :pointer
@@ -2636,8 +2620,6 @@ lambda (object pspec)    :no-hooks
   @see-function{g:object-set-data-full}"
   (object object)
   (key :string))
-
-(export 'object-steal-data)
 
 ;;;-----------------------------------------------------------------------------
 ;;; g_object_dup_data ()
