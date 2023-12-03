@@ -256,8 +256,8 @@
     @about-function{object-freeze-notify}
     @about-function{object-thaw-notify}
     @about-function{object-data}
+    @about-symbol{destroy-notify}
     @about-function{object-set-data-full}
-    @about-function{object-steal-data}
     @about-function{object-property}
   @end{section}
   @begin[Enumeration and Flag Types]{section}
