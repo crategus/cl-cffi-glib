@@ -87,9 +87,9 @@
   lists of data, with support for updates.
 
   Each object in the list may also report changes in itself via some mechanism,
-  normally the \"notify\" signal. Taken together with the \"items-changed\"
-  signal, this provides for a list that can change its membership, and in which
-  the members can change their individual properties.
+  normally the @code{\"notify\"} signal. Taken together with the
+  @code{\"items-changed\"} signal, this provides for a list that can change its
+  membership, and in which the members can change their individual properties.
 
   A good example would be the list of visible wireless network access points,
   where each access point can report dynamic properties such as signal strength.
@@ -140,6 +140,80 @@ lambda (list position removed added)    :run-last
       @end{table}
   @end{dictionary}
   @see-class{g:list-store}")
+
+;;; ----------------------------------------------------------------------------
+;;; GListModelInterface
+;;; ----------------------------------------------------------------------------
+
+#|
+Interface structure
+struct GioListModelInterface {
+  GTypeInterface g_iface;
+  GType (* get_item_type) (
+    GListModel* list
+  );
+  guint (* get_n_items) (
+    GListModel* list
+  );
+  GObject* (* get_item) (
+    GListModel* list,
+    guint position
+  );
+  
+}
+The virtual function table for GListModel.
+
+Interface members
+g_iface	
+GTypeInterface
+ 	
+Parent GTypeInterface.
+
+get_item_type	
+GType (* get_item_type) (
+    GListModel* list
+  )
+ 	No description available.
+get_n_items	
+guint (* get_n_items) (
+    GListModel* list
+  )
+ 	No description available.
+get_item	
+GObject* (* get_item) (
+    GListModel* list,
+    guint position
+  )
+ 	No description available.
+
+Virtual methods 
+Gio.ListModel.get_item
+Get the item at position. If position is greater than the number of items in list, NULL is returned.
+
+since: 2.44
+
+Gio.ListModel.get_item_type
+Gets the type of the items in list.
+
+since: 2.44
+
+Gio.ListModel.get_n_items
+Gets the number of items in list.
+
+since: 2.44
+|#
+
+(gobject:define-vtable ("GListModel" list-model)
+  (:skip parent-instance (:struct gobject:type-interface))
+  ;; Methods of the GListModel interface
+  (get-item-type (gobject:type-t (model (gobject:object list-model))))
+  (get-n-items (:uint (model (gobject:object list-model))))
+  (get-item (gobject:object (model (gobject:object list-model))
+                            (position :uint))))
+
+(export 'list-model-get-item-type-impl)
+(export 'list-model-get-n-items-impl)
+(export 'list-model-get-item-impl)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_list_model_get_item_type () -> list-model-item-type
@@ -257,7 +331,7 @@ lambda (list position removed added)    :run-last
   @argument[removed]{an unsigned integer with the number of items removed}
   @argument[added]{an unsigned integer with the number of items added}
   @begin{short}
-    Emits the \"items-changed\" signal on @arg{model}.
+    Emits the @code{\"items-changed\"} signal on @arg{model}.
   @end{short}
   This function should only be called by classes implementing the
   @class{g:list-model} interface. It has to be called after the internal
