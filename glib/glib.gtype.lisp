@@ -81,18 +81,11 @@
 (defvar *warn-unknown-gtype* t)
 
 (defun warn-unknown-gtype (name)
-  ;; Do not print a warning for types which are not derived from GObject
-  ;; FIXME: This is a hack.
-  (when (and *warn-unknown-gtype*
-             (or (numberp name)
-                 (not (member name '("AtkImplementorIface"
-                                     "LispArrayListStore"
-                                     "LispTreeStore")
-                              :test #'string=))))
+  (when *warn-unknown-gtype*
     (let ((msg (if (stringp name)
                    (string-upcase name)
-                   (format nil "ID:~a" name))))
-      (warn "GType ~A is not known to the GType system." msg))))
+                   (format nil "~a" name))))
+      (warn "~a is not known to the GType system" msg))))
 
 ;;; ----------------------------------------------------------------------------
 
