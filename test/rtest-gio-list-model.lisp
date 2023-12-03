@@ -19,7 +19,7 @@
   ;; Check the interface prerequisites
   (is (equal '("GObject")
              (list-interface-prerequisites "GListModel")))
-  ;; Get the names of the interface properties.
+  ;; Check the interface properties
   (is (equal '()
              (list-interface-properties "GListModel")))
   ;; Check the list of signals
@@ -33,7 +33,18 @@
 
 ;;; --- Signals ----------------------------------------------------------------
 
-;;;     void    items-changed
+;;;     items-changed
+
+(test g-list-model-items-changed-signal
+  (let ((query (g:signal-query (g:signal-lookup "items-changed" "GListModel"))))
+    (is (string= "items-changed" (g:signal-query-signal-name query)))
+    (is (string= "GListModel" (g:type-name (g:signal-query-owner-type query))))
+    (is (equal '(:RUN-LAST)
+               (sort (g:signal-query-signal-flags query) #'string<)))
+    (is (string= "void" (g:type-name (g:signal-query-return-type query))))
+    (is (equal '("guint" "guint" "guint")
+               (mapcar #'g:type-name (g:signal-query-param-types query))))
+    (is-false (g:signal-query-signal-detail query))))
 
 ;;; --- Functions --------------------------------------------------------------
 
@@ -62,7 +73,7 @@
                                           'g:object)
                'g:menu-item))
     (is (typep (g:list-model-object store 1) 'g:menu-item))
-
+    ;; Access an invalid position
     (is (cffi:null-pointer-p (g:list-model-item store 2)))
     (is-false  (g:list-model-object store 2))))
 
@@ -80,4 +91,5 @@
 
 ;;;     g_list_model_items_changed
 
-;;; --- 2023-8-15 --------------------------------------------------------------
+;;; --- 2023-11-30 -------------------------------------------------------------
+

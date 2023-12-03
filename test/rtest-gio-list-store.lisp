@@ -49,7 +49,9 @@
     ;; The inherited accessor returns the GType
     (is (eq (g:gtype "GSimpleAction") (g:list-model-item-type store)))
     ;; Check default value for N-ITEMS
-    (is (= 0 (g:list-store-n-items store)))))
+    (is (= 0 (g:list-store-n-items store)))
+    ;; Again for the inheritied accessor
+    (is (= 0 (g:list-model-n-items store)))))
 
 ;;; --- Functions --------------------------------------------------------------
 
@@ -270,3 +272,4 @@
                               (g:simple-action-name b))))))))
 
 ;;; --- 2023-9-4 ---------------------------------------------------------------
+

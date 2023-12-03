@@ -68,7 +68,10 @@
           (glib:symbol-for-gtype "GObject")))
   ;; Check the type initializer
   (is (eq (g:gtype "GObject")
-          (g:gtype (cffi:foreign-funcall "g_object_get_type" :size)))))
+          (g:gtype (cffi:foreign-funcall "g_object_get_type" :size))))
+  ;; Check the list of signals
+  (is (equal '("notify")
+             (list-signals "GObject"))))
 
 ;;; --- Properties -------------------------------------------------------------
 
@@ -83,7 +86,8 @@
   (let* ((object (make-instance 'g:simple-action))
          (ptr (g:object-pointer object)))
     (is (cffi:pointerp ptr))
-    (is (cffi:null-pointer-p (setf (g:object-pointer object) (cffi:null-pointer))))
+    (is (cffi:null-pointer-p (setf (g:object-pointer object)
+                                   (cffi:null-pointer))))
     (is (cffi:null-pointer-p (g:object-pointer object)))
     (is (cffi:pointerp (setf (g:object-pointer object) ptr)))
     (is (cffi:pointerp (g:object-pointer object)))))
@@ -100,12 +104,7 @@
 
 ;;; --- Signals ----------------------------------------------------------------
 
-(test g-object-signals
-  ;; Check the list of signals
-  (is (equal '("notify")
-             (mapcar #'g:signal-name
-                     (g:signal-list-ids "GObject"))))
-
+(test g-object-notify-signal
   ;; Query info for "notify" signal
   (let ((query (g:signal-query (g:signal-lookup "notify" "GObject"))))
     (is (string= "notify" (g:signal-query-signal-name query)))
@@ -192,9 +191,10 @@
   (is (g:is-param-spec (g:object-class-find-property "GSimpleAction" "name")))
   (is (g:is-param-spec
           (g:object-class-find-property (g:gtype "GSimpleAction") "name")))
-  ;; Returns nil Unknown if the class does not have the property
+  ;; Returns nil if the class does not have the property
   (is-false (g:object-class-find-property "GSimpleAction" "xxx"))
   ;; Error when gtype is not GObject type
+  (signals (error) (g:object-class-find-property "GAction" "name"))
   (signals (error) (g:object-class-find-property "unknown" "xxx")))
 
 ;;;     g_object_class_list_properties
@@ -204,6 +204,7 @@
              (mapcar #'g:param-spec-name
                      (g:object-class-list-properties "GSimpleAction"))))
   ;; Error when gtype is not GObject type
+  (signals (error) (g:object-class-list-properties "GAction"))
   (signals (error) (g:object-class-list-properties "unknown")))
 
 ;;;     g_object_class_override_property
@@ -216,6 +217,8 @@
   (is (g:is-param-spec
           (g:object-interface-find-property (g:gtype "GAction") "enabled")))
   (is-false (g:object-interface-find-property "GAction" "xxx"))
+  ;; Error if gtype is not a GInterface type
+  (signals (error) (g:object-interface-find-property "GSimpleAction" "name"))
   (signals (error) (g:object-interface-find-property "unknwon" "xxx")))
 
 ;;;     g_object_interface_list_properties
@@ -231,12 +234,17 @@
 
 ;;;     g-object-new
 
-#+nil
 (test g-object-new
-  (is (eq (gtype "GtkButton")
-          (g:object-type (g:object-new "GtkButton"))))
-  (is (eq (gtype "GtkButton")
-          (g:object-type (g:object-new "GtkButton" :label "text" :margin 6)))))
+  (let (action)
+    (is (eq (g:gtype "GSimpleAction")
+            (g:object-type (g:object-new "GSimpleAction"))))
+    (is (eq (g:gtype "GSimpleAction")
+            (g:object-type (setf action
+                                 (g:object-new "GSimpleAction"
+                                               :name "action"
+                                               :enabled nil)))))
+    (is (string= "action" (g:simple-action-name action)))
+    (is-false (g:simple-action-enabled action))))
 
 ;;;     g_object_new_with_properties
 ;;;     g_object_newv
@@ -267,71 +275,71 @@
 
 ;;;     g-object-notify
 
-#+nil
 (test g-object-notify
   (let* ((message nil)
-         (button (make-instance 'gtk:button))
-         (handler-id (g:signal-connect button "notify::can-default"
-                       (lambda (widget pspec)
-                         (setf message
-                               "Signal notify::can-default in g-object-notify")
-                         (is (gtype "GtkButton") (g-object-type widget))
-                         (is (g-is-param-spec pspec))))))
+         (action (make-instance 'g:simple-action))
+         (handler-id (g:signal-connect action "notify::name"
+                         (lambda (object pspec)
+                           (setf message
+                                 "Signal notify::name emitted")
+                           (is (g:gtype "GSimpleAction") (g:object-type object))
+                           (is (g:is-param-spec pspec))
+                           (is (string= "name" (g:param-spec-name pspec)))))))
     (is (integerp handler-id))
     ;; Notify button
-    (is-false (g-object-notify button "can-default"))
-    (is (string= "Signal notify::can-default in g-object-notify" message))))
+    (is-false (g:object-notify action "name"))
+    (is (string= "Signal notify::name emitted" message))))
 
 ;;;     g_object_notify_by_pspec
 
 ;;;     g-object-freeze-notify
 ;;;     g-object-thaw-notify
 
-#+nil
 (test g-object-freeze-notify.1
   (let* ((message nil)
-         (button (make-instance 'gtk:button))
-         (handler-id (g:signal-connect button "notify::can-default"
-                       (lambda (widget pspec)
-                         (setf message
-                               (append message (list "notify::can-default")))
-                         (is (eq (gtype "GtkButton") (g-object-type widget)))
-                         (is (g-is-param-spec pspec))))))
+         (action (make-instance 'g:simple-action))
+         (handler-id (g:signal-connect action "notify::name"
+                         (lambda (object pspec)
+                           (setf message
+                                 (append message (list "notify::name")))
+                           (is (eq (g:gtype "GSimpleAction")
+                                   (g:object-type object)))
+                           (is (g:is-param-spec pspec))))))
     (is (integerp handler-id))
     ;; Freeze the notify signal
-    (is-false (g-object-freeze-notify button))
+    (is-false (g:object-freeze-notify action))
     (setf message (append message (list "freeze")))
     ;; Notify button
-    (is-false (g-object-notify button "can-default"))
+    (is-false (g:object-notify action "name"))
     ;; Thaw the notify signal
     (setf message (append message (list "thaw")))
-    (is-false (g-object-thaw-notify button))
+    (is-false (g:object-thaw-notify action))
     ;; Check the order of the execution
-    (is (equal '("freeze" "thaw" "notify::can-default") message))))
+    (is (equal '("freeze" "thaw" "notify::name") message))))
 
 ;; Counter sample without g-object-freeze-notify
 
-#+nil
 (test g-object-freeze-notify.2
   (let* ((message nil)
-         (button (make-instance 'gtk:button))
-         (handler-id (g:signal-connect button "notify::can-default"
-                         (lambda (widget pspec)
+         (action (make-instance 'g:simple-action))
+         (handler-id (g:signal-connect action "notify::name"
+                         (lambda (object pspec)
                            (setf message
-                                 (append message (list "notify::can-default")))
-                           (is (eq (gtype "GtkButton") (g-object-type widget)))
-                           (is (g-is-param-spec pspec))))))
+                                 (append message (list "notify::name")))
+                           (is (eq (g:gtype "GSimpleAction")
+                                   (g:object-type object)))
+                           (is (g:is-param-spec pspec))))))
     (is (integerp handler-id))
     ;; Freeze the notify signal
 ;    (g-object-freeze-notify button)
     (setf message (append message (list "freeze")))
     ;; Notify button
-    (g-object-notify button "can-default")
+    (g:object-notify action "name")
     ;; Thaw the notify signal
     (setf message (append message (list "thaw")))
 ;    (g-object-thaw-notify button)
     ;; Check the order of the execution
-    (is (equal '("freeze" "notify::can-default" "thaw") message))))
+    (is (equal '("freeze" "notify::name" "thaw") message))))
 
 ;;;     g-object-data
 
@@ -354,77 +362,20 @@
 
 ;;;     g-object-set-data-full
 
-;; FIXME: Reimplement g:object-set-data-full
-
-#+nil
-(defvar *data-full-status* nil)
-
-;; Callback function for the destroy notify handler
-#+nil
-(cffi:defcallback destroy-notify-cb :void ((data :pointer))
-  (declare (ignore data))
-  (format t "~&in DESTROY-NOTIFY-CB~%")
-  (is (string= "destroy-notify-cb"
-               (setf *data-full-status* "destroy-notify-cb"))))
-
-#+nil
-(test g-object-set-data-full.1
-  (let ((action (make-instance 'g:simple-action)))
-    ;; Set data on the object with a destroy callback
-    (is (= 100 (g:object-set-data-full action
-                                       "property"
-                                       100
-                                       (cffi:callback destroy-notify-cb))))
-    ;; Clear the status
-    (is-false (setf *data-full-status* nil))
-    ;; Get the data
-    (is (= 100 (g:object-data action "property")))
+(test g-object-set-data-full
+  (let ((action (make-instance 'g:simple-action))
+        (msg nil))
+    ;; Set a destroy notify callback on the object
+    (is-false (g:object-set-data-full action
+                                      "property"
+                                      (lambda ()
+                                        (setf msg "destroy-notify-cb"))))
     ;; Destroy the data, the callback will be executed
     (is-false (setf (g:object-data action "property") nil))
     ;; Check status
-    (is (string= "destroy-notify-cb" *data-full-status*))))
-
-#+nil
-(test g-object-set-data-full.2
-  (let ((item (make-instance 'g:menu-item)))
-    ;; no property
-    (is-false (g:object-data item "prop"))
-    ;; set integer property
-    (is (= 999 (g:object-set-data-full item
-                                       "prop"
-                                       999
-                                       (cffi:callback destroy-notify-cb))))
-    (is (= 999 (g:object-data item "prop")))
-    ;; set Lisp list
-    (is (equal '(a b c)
-               (g:object-set-data-full item
-                                       "prop"
-                                       '(a b c)
-                                        (cffi:callback destroy-notify-cb))))
-    (is (equal '(a b c) (g:object-data item "prop")))
-    ;; set g:object
-    (is (eq item (g:object-set-data-full item
-                                         "prop"
-                                         item
-                                         (cffi:callback destroy-notify-cb))))
-    (is (eq item (g:object-data item "prop")))
-    ;; remove the association
-    (is-false (setf (g:object-data item "prop") nil))
-    (is-false (g:object-data item "prop"))))
-
+    (is (string= "destroy-notify-cb" msg))))
 
 ;;;     g-object-steal-data
-
-#+nil
-(test g-object-steal-data
-  (let ((button (make-instance 'gtk:button)))
-    ;; Set the data
-    (is (cffi:pointerp (setf (g-object-data button "property") (make-pointer 100))))
-    (is (= 100 (cffi:pointer-address (g-object-data button "property"))))
-    ;; Steal the data
-    (is (= 100 (cffi:pointer-address (g-object-steal-data button "property"))))
-    (is (=   0 (cffi:pointer-address (g-object-data button "property"))))))
-
 ;;;     g_object_dup_data
 ;;;     g_object_replace_data
 ;;;     g_object_get_qdata
@@ -436,106 +387,18 @@
 
 ;;;     g-object-property
 
-#+nil
-(test g-object-property.1
-  (let ((obj (make-instance 'gtk:label)))
-    (is (= 1.0d0
-           (setf (g-object-property (g-object-pointer obj) "angle") 1.0d0)))
-    (is (= 1.0d0 (g-object-property (g-object-pointer obj) "angle")))
-    (is (eq :start
-            (setf (g-object-property (g-object-pointer obj) "ellipsize")
-                  :start)))
-    (is (eq :start (g-object-property (g-object-pointer obj) "ellipsize")))
-    (is (eq :fill
-            (setf (g-object-property (g-object-pointer obj) "justify") :fill)))
-    (is (eq :fill (g-object-property (g-object-pointer obj) "justify")))
-    (is (string= "label"
-                 (setf (g-object-property (g-object-pointer obj) "label")
-                       "label")))
-    (is (string= "label" (g-object-property (g-object-pointer obj) "label")))
-    (is (= 10
-           (setf (g-object-property (g-object-pointer obj) "max-width-chars")
-                 10)))
-    (is (= 10 (g-object-property (g-object-pointer obj) "max-width-chars")))))
-
-#+nil
-(test g-object-property.2
-  (let ((obj (make-instance 'gtk:label)))
-    (is (= 1.0d0 (setf (g-object-property obj "angle") 1.0d0)))
-    (is (= 1.0d0 (g-object-property obj "angle")))
-    (is (eq :start (setf (g-object-property obj "ellipsize") :start)))
-    (is (eq :start (g-object-property obj "ellipsize")))
-    (is (eq :fill (setf (g-object-property obj "justify") :fill)))
-    (is (eq :fill (g-object-property obj "justify")))
-    (is (string= "label" (setf (g-object-property obj "label") "label")))
-    (is (string= "label" (g-object-property obj "label")))
-    (is (= 10 (setf (g-object-property obj "max-width-chars") 10)))
-    (is (= 10 (g-object-property obj "max-width-chars")))))
-
-#+nil
-(test g-object-property.3
-  (let ((obj (make-instance 'gtk:label :label "label")))
-    (is (= 0.0d0 (g-object-property obj "angle" "gdouble")))
-    (is (= 2.0d0 (setf (g-object-property obj "angle" "gdouble") 2.0d0)))
-    (is (= 2.0d0 (g-object-property obj "angle")))))
-
-#+nil
-(test g-object-property.4
-  (let ((obj (make-instance 'gtk:label :label "label")))
-    ;; FIXME: Is  NIL the expected return value?
-    (is-false (g-object-property obj "attributes"))))
-
-#+nil
-(test g-object-property.5
-  (let ((obj (make-instance 'gtk:label :label "label")))
-    (is (= 0 (g-object-property obj "cursor-position" "gint")))
-    ;; cursor-position is not writable
-;    (is (= 2 (setf (g-object-property obj "cursor-position" "gint") 2)))
-;    (is (= 2 (g-object-property obj "cursor-position")))
-  ))
-
-#+nil
-(test g-object-property.6
-  (let ((obj (make-instance 'gtk:label :label "label")))
-    (is (eq :none (g-object-property obj "ellipsize" "PangoEllipsizeMode")))
-    (is (eq :start
-            (setf (g-object-property obj "ellipsize" "PangoEllipsizeMode")
-                  :start)))
-    (is (eq :start (g-object-property obj "ellipsize")))))
-
-#+nil
-(test g-object-property.7
-  (let ((obj (make-instance 'gtk:label :label "label")))
-    (is (eq :left (g-object-property obj "justify")))
-    (is (eq :center
-            (setf (g-object-property obj "justify" "GtkJustification")
-                  :center)))
-    (is (eq :center (g-object-property obj "justify")))))
-
-#+nil
-(test g-object-property.8
-  (let ((obj (make-instance 'gtk:label :label "label")))
-    (is (string= "label" (g-object-property obj "label")))
-    (is (string= "text"
-                 (setf (g-object-property obj "label" "gchararray") "text")))
-    (is (string= "text" (g-object-property obj "label")))))
-
-#+nil
-(test g-object-property.9
-  (let ((obj (make-instance 'gtk:label :label "label")))
-    (is (= -1 (g-object-property obj "max-width-chars" "gint")))
-    (is (= 10 (setf (g-object-property obj "max-width-chars" "gint") 10)))
-    (is (= 10 (g-object-property obj "max-width-chars")))))
-
-#+nil
-(test g-object-property.10
-  (let ((obj (make-instance 'gtk:label :label "label")))
-    (is (= 16777215 (g-object-property obj "mnemonic-keyval" "guint")))
-    ;; mnemonic-keyval is not writable
-;    (is (= 10000000
-;            (setf (g-object-property obj "mnemonic-keyval" "guint") 10000000)))
-;    (is (= 10000000 (g-object-property obj "mnmonic-keyval")))
-  ))
+(test g-object-property
+  (let ((obj (g:simple-action-new "action" "s")))
+    ;; Get the property NAME of GSimpleAction
+    (is (string= "action" (g:object-property obj "name")))
+    ;; We do not pass the object itself, but the pointer
+    (is (string= "action" (g:object-property (g:object-pointer obj) "name")))
+    ;; Set and get the property ENABLED of GSimpleAction
+    (is-false (setf (g:object-property obj "enabled") nil))
+    (is-false (g:object-property obj "enabled"))
+    ;; We do not pass the object itself, but the pointer
+    (is-true (setf (g:object-property (g:object-pointer obj) "enabled") t))
+    (is-true (g:object-property (g:object-pointer obj) "enabled"))))
 
 ;;;     g_object_new_valist
 ;;;     g_object_set_valist
@@ -552,4 +415,5 @@
 ;;;     g_weak_ref_set
 ;;;     g_assert_finalize_object
 
-;;; --- 2023-11-4 --------------------------------------------------------------
+;;; --- 2023-12-2 --------------------------------------------------------------
+
