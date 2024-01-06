@@ -51,10 +51,10 @@
   (let ((icon (g:themed-icon-new "gnome-dev-cdrom")))
     (is (equal '("gnome-dev-cdrom")
                (g:themed-icon-names icon)))
-    (g:themed-icon-append-name icon "gnome-dev")
+    (is-false (g:themed-icon-append-name icon "gnome-dev"))
     (is (equal '("gnome-dev-cdrom" "gnome-dev")
                (g:themed-icon-names icon)))
-    (g:themed-icon-prepend-name icon "gnome-dev-cdrom-audio")
+    (is-false (g:themed-icon-prepend-name icon "gnome-dev-cdrom-audio"))
     (is (equal '("gnome-dev-cdrom-audio" "gnome-dev-cdrom" "gnome-dev")
                (g:themed-icon-names icon)))))
 
@@ -77,16 +77,13 @@
                       "gnome"))
          (icon1 (g:themed-icon-new-from-names names))
          (icon2 (g:themed-icon-new-with-default-fallbacks "gnome-dev-cdrom-audio")))
-;    (is (equal (g:themed-icon-names icon1)
-;               (g:themed-icon-names icon2)))
+    (is (equal '("gnome-dev-cdrom-audio" "gnome-dev-cdrom" "gnome-dev" "gnome")
+               (g:themed-icon-names icon1)))
+    (is (equal '("gnome-dev-cdrom-audio")
+               (g:themed-icon-names icon2)))
     (is (= 2604122446 (g:icon-hash icon1)))
     (is (= 2604122446 (g:icon-hash icon2)))
-;    (is (= (g-icon-hash icon1) (g-icon-hash icon2)))
-    (is-true (g:icon-equal icon1 icon2))
-))
+    (is (= (g:icon-hash icon1) (g:icon-hash icon2)))
+    (is-true (g:icon-equal icon1 icon2))))
 
-;;;     g_themed_icon_prepend_name
-;;;     g_themed_icon_append_name
-;;;     g_themed_icon_get_names
-
-;;; --- 2023-7-9 ---------------------------------------------------------------
+;;; 2023-12-26

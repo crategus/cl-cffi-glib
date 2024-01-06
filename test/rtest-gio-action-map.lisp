@@ -13,6 +13,9 @@
   ;; Check the registered symbol
   (is (eq 'g:action-map
           (glib:symbol-for-gtype "GActionMap")))
+  ;; Check the interface prerequisites
+  (is (equal '("GObject")
+             (list-interface-prerequisites "GActionMap")))
   ;; Get the names of the interface properties.
   (is (equal '()
              (list-interface-properties "GActionMap")))
@@ -84,4 +87,4 @@
     (g:action-map-remove-action group "quit")
     (is-false (g:action-map-lookup-action group "quit"))))
 
-;;; --- 2023-7-9 ---------------------------------------------------------------
+;;; 2023-12-23
