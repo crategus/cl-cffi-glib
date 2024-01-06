@@ -6,7 +6,7 @@
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
 ;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2011 - 2023 Dieter Kaiser
+;;; Copyright (C) 2011 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -56,7 +56,7 @@
       (documentation 'error 'type)
  "@version{2023-6-1}
   @begin{short}
-    The @sym{g:error} structure contains information about an error that has
+    The @class{g:error} structure contains information about an error that has
     occurred.
   @end{short}")
 
@@ -90,7 +90,7 @@
 
 ;;; ----------------------------------------------------------------------------
 
-;; The Lisp implemenation for GError replaces the C implementation. Only the
+;; The Lisp implementation for GError replaces the C implementation. Only the
 ;; WITH-G-ERROR, WITH-IGNORE-G-ERROR, and WITH-CATCHING-TO-G-ERROR macros are
 ;; exported for use.
 

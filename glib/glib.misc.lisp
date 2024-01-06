@@ -6,7 +6,7 @@
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
 ;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2011 - 2023 Dieter Kaiser
+;;; Copyright (C) 2011 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -28,7 +28,7 @@
 ;;; ----------------------------------------------------------------------------
 ;;;
 ;;; This file contains several type definitions and functions, which are
-;;; needed for the implemenation of the GTK library.
+;;; needed for the implementation of the GTK library.
 ;;;
 ;;; Various types
 ;;;
@@ -442,7 +442,7 @@
   @end{short}
   The @class{g:unichar} type performs automatic conversion from the C
   @code{gunichar} type to a Lisp character and a Lisp character to the C type.
-  An integer value as argument to the @sym{cffi:convert-to-foreign} function
+  An integer value as argument to the @fun{cffi:convert-to-foreign} function
   is passed through.
   @begin[Examples]{dictionary}
     Convert a Lisp character to a C @code{gunichar} value:
@@ -476,7 +476,7 @@
  "@version{2023-9-18}
   @argument[nbytes]{an integer of @code{:size} type with the number of bytes
   to allocate}
-  @return{A foreign pointer to the allocated memory.}
+  @return{The foreign pointer to the allocated memory.}
   @begin{short}
     Allocates @arg{nbytes} bytes of memory.
   @end{short}

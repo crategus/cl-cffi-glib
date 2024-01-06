@@ -6,7 +6,7 @@
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
 ;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2011 - 2023 Dieter Kaiser
+;;; Copyright (C) 2011 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -94,7 +94,7 @@
   @end{section}
   @begin[Miscellaneous]{section}
     Documentation of several type definitions and functions, which are
-    needed for the implemenation of the GTK library. Only a small part of the
+    needed for the implementation of the GTK library. Only a small part of the
     GLib library is implemented.
     @begin[String Utility Functions]{subsection}
       String Utility Functions. The following type is implemented:
