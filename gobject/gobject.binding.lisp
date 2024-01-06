@@ -6,7 +6,7 @@
 ;;; library. See <http://www.gtk.org>. The API documentation of the Lisp
 ;;; binding is available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2019 - 2023 Dieter Kaiser
+;;; Copyright (C) 2019 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -68,7 +68,7 @@
 
 (in-package :gobject)
 
-;;; --- binding-flags ----------------------------------------------------------
+;;; --- g:binding-flags --------------------------------------------------------
 
 (define-g-flags "GBindingFlags" binding-flags
   (:export t
@@ -82,7 +82,7 @@
 (setf (liber:alias-for-symbol 'binding-flags)
       "GFlags"
       (liber:symbol-documentation 'binding-flags)
- "@version{#2022-12-29}
+ "@version{2024-1-1}
   @begin{short}
     Flags to be passed to the @fun{g:object-bind-property} or
     @fun{g:object-bind-property-full} functions.
@@ -115,7 +115,7 @@
   @see-function{g:object-bind-property}
   @see-function{g:object-bind-property-full}")
 
-;;; --- binding ----------------------------------------------------------------
+;;; --- g:binding --------------------------------------------------------------
 
 (define-g-object-class "GBinding" binding
   (:superclass object
@@ -142,7 +142,7 @@
 (setf (documentation 'binding 'type)
  "@version{#2022-12-29}
   @begin{short}
-    The @sym{g:binding} object is the representation of a binding between a
+    The @class{g:binding} object is the representation of a binding between a
     property on a @class{g:object} instance, or source, and another property on
     another @class{g:object} instance, or target.
   @end{short}
@@ -190,7 +190,7 @@ g_object_bind_property_full (adjustment1, \"value\",
   the current value of the property before applying it to the @code{value}
   property of @code{adjustment1}.
 
-  Note that the @sym{g:binding} object does not resolve cycles by itself. A
+  Note that the @class{g:binding} object does not resolve cycles by itself. A
   cycle like
   @begin{pre}
 object1:propertyA -> object2:propertyB
@@ -198,15 +198,15 @@ object2:propertyB -> object3:propertyC
 object3:propertyC -> object1:propertyA
   @end{pre}
   might lead to an infinite loop. The loop, in this particular case, can be
-  avoided if the objects emit the \"notify\" signal only if the value has
-  effectively been changed. A binding is implemented using the \"notify\"
+  avoided if the objects emit the @code{\"notify\"} signal only if the value has
+  effectively been changed. A binding is implemented using the @code{\"notify\"}
   signal, so it is susceptible to all the various ways of blocking a signal
   emission, like the @fun{g:signal-stop-emission} or
   @fun{g:signal-handler-block} functions.
 
   A binding will be severed, and the resources it allocates freed, whenever
   either one of the @class{g:object} instances it refers to are finalized, or
-  when the @sym{g:binding} instance loses its last reference.
+  when the @class{g:binding} instance loses its last reference.
 
   Bindings for languages with garbage collection can use the
   @fun{g:binding-unbind} function to explicitly release a binding between the
@@ -222,7 +222,7 @@ object3:propertyC -> object1:propertyA
 ;;; Propery and Accessor Details
 ;;; ----------------------------------------------------------------------------
 
-;;; --- binding-flags ----------------------------------------------------------
+;;; --- g:binding-flags --------------------------------------------------------
 
 #+liber-documentation
 (setf (documentation (liber:slot-documentation "flags" 'binding) t)
@@ -245,7 +245,7 @@ object3:propertyC -> object1:propertyA
   @see-class{g:binding}
   @see-symbol{g:binding-flags}")
 
-;;; --- binding-source ---------------------------------------------------------
+;;; --- g:binding-source -------------------------------------------------------
 
 #+liber-documentation
 (setf (documentation (liber:slot-documentation "source" 'binding) t)
@@ -269,7 +269,7 @@ object3:propertyC -> object1:propertyA
   @see-class{g:binding}
   @see-class{g:object}")
 
-;;; --- binding-source-property ------------------------------------------------
+;;; --- g:binding-source-property ----------------------------------------------
 
 #+liber-documentation
 (setf (documentation (liber:slot-documentation "source-property" 'binding) t)
@@ -294,7 +294,7 @@ object3:propertyC -> object1:propertyA
   Retrieves the name of the property of the source used for the binding.
   @see-class{g:binding}")
 
-;;; --- binding-target ---------------------------------------------------------
+;;; --- g:binding-target -------------------------------------------------------
 
 #+liber-documentation
 (setf (documentation (liber:slot-documentation "target" 'binding) t)
@@ -318,7 +318,7 @@ object3:propertyC -> object1:propertyA
   @see-class{g:binding}
   @see-class{g:object}")
 
-;;; --- binding-target-property ------------------------------------------------
+;;; --- g:binding-target-property ----------------------------------------------
 
 #+liber-documentation
 (setf (documentation (liber:slot-documentation "target-property" 'binding) t)
@@ -357,7 +357,7 @@ object3:propertyC -> object1:propertyA
   @end{short}
   This function will release the reference that is being held on the binding
   instance. If you want to hold on to the @class{g:binding} instance after
-  calling the @sym{g:binding-unbind} function, you will need to hold a reference
+  calling the @fun{g:binding-unbind} function, you will need to hold a reference
   to it.
   @see-class{g:binding}"
   (binding (object binding)))
@@ -373,7 +373,7 @@ object3:propertyC -> object1:propertyA
 
 (cffi:defcfun ("g_object_bind_property" object-bind-property) (object binding)
  #+liber-documentation
- "@version{#2022-12-29}
+ "@version{2024-1-1}
   @argument[source]{a @class{g:object} source instance}
   @argument[source-prop]{a string with the property on @arg{source} to bind}
   @argument[target]{a @class{g:object} target instance}

@@ -6,7 +6,7 @@
 ;;; library. See <http://www.gtk.org>. The API documentation of the Lisp
 ;;; binding is available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2011 - 2023 Dieter Kaiser
+;;; Copyright (C) 2011 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -265,14 +265,14 @@
 ;;; G_ENUM_CLASS_TYPE_NAME                                 not exported
 ;;; ----------------------------------------------------------------------------
 
-;; TODO: Consider to remove the implemenation. We do not export this function.
+;; TODO: Consider to remove the implementation. We do not export this function.
 ;; It is a call of type-name and type-from-class.
 
 (defun enum-class-type-name (class)
  #+liber-documentation
  "@version{#2022-12-29}
   @argument[class]{a @symbol{g:enum-class} instance}
-  @return{A string with the type name.}
+  @return{The string with the type name.}
   @begin{short}
     Get the type name from a given @symbol{g:enum-class} instance.
   @end{short}
@@ -616,14 +616,14 @@
 ;;; G_FLAGS_CLASS_TYPE_NAME                                not exported
 ;;; ----------------------------------------------------------------------------
 
-;; TODO: Consider to remove the implemenation. We do not export this function.
+;; TODO: Consider to remove the implementation. We do not export this function.
 ;; It is a call of type-name and type-from-class.
 
 (defun flags-class-type-name (class)
  #+liber-documentation
  "@version{#2020-10-16}
   @argument[class]{a @symbol{flags-class} structure}
-  @return{A string with the type name.}
+  @return{The string with the type name.}
   @begin{short}
     Get the type name from a given @symbol{flags-class} structure.
   @end{short}
@@ -732,7 +732,7 @@
 
   It is normally more convenient to let glib-mkenums generate a
   @code{my_enum_get_type()} function from a usual C enumeration definition than
-  to write one yourself using @sym{enum-register-static}."
+  to write one yourself using the @fun{g:enum-register-static} function."
   (name :string)
   (static-values (:pointer (:struct enum-value))))
 
@@ -758,7 +758,7 @@
 
   It is normally more convenient to let @code{glib-mkenums} generate a
   @code{my_flags_get_type()} function from a usual C enumeration definition
-  than to write one yourself using @sym{flags-register-static}."
+  than to write one yourself using the @fun{g:flags-register-static} function."
   (name :string)
   (static-values (:pointer (:struct flags-value))))
 

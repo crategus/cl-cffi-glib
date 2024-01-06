@@ -6,7 +6,7 @@
 ;;; library. See <http://www.gtk.org>. The API documentation of the Lisp
 ;;; binding is available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2011 - 2023 Dieter Kaiser
+;;; Copyright (C) 2011 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -654,7 +654,7 @@ lambda (object pspec)    :no-hooks
 ;; Get the definition of a property for the GObject type. Both arguments are of
 ;; type string, e.g. (class-property-info "GtkLabel" "label")
 
-;; TODO: Duplicates the implemenation of OBJECT-CLASS-FIND-PROPERTY. But
+;; TODO: Duplicates the implementation of OBJECT-CLASS-FIND-PROPERTY. But
 ;; we return a %PARAM-SPEC instance which is the Lisp side of a GParamSpec
 ;; instance. Improve the implementation of GParamSpec!?
 
@@ -1119,7 +1119,7 @@ lambda (object pspec)    :no-hooks
  #+liber-documentation
  "@version{#2021-9-9}
   @argument[object]{a @class{g:object} instance}
-  @return{A foreign pointer to the @symbol{object-class} instance.}
+  @return{The foreign pointer to the @symbol{object-class} instance.}
   @short{Gets the class instance associated to a @class{g:object} instance.}
   @begin[Examples]{dictionary}
     @begin{pre}
@@ -1224,7 +1224,7 @@ lambda (object pspec)    :no-hooks
  #+liber-documentation
  "@version{#2021-9-9}
   @argument[class]{a foreign pointer of a @symbol{object-class} instance}
-  @return{A string with the type name of the @arg{class} argument.}
+  @return{The string with the type name of the @arg{class} argument.}
   @short{Returns the name of the type of a class instance.}
   @begin[Examples]{dictionary}
     @begin{pre}

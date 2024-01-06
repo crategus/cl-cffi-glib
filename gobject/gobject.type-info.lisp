@@ -6,7 +6,7 @@
 ;;; library. See <http://www.gtk.org>. The API documentation of the Lisp
 ;;; binding is available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2011 - 2023 Dieter Kaiser
+;;; Copyright (C) 2011 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -1608,7 +1608,7 @@
 
 ;; We need this second variant of the function g_type_test_flags(), because
 ;; we can not pass a flag of type type-fundamental-flag to our first version.
-;; See the implemenation for G_TYPE_IS_ABSTRACT.
+;; See the implementation for G_TYPE_IS_ABSTRACT.
 
 (cffi:defcfun ("g_type_test_flags" %type-test-fundamental-flags) :boolean
   (gtype type-t)
@@ -2124,7 +2124,7 @@
  #+liber-documentation
  "@version{2022-12-29}
   @argument[gtype]{a @class{g:type-t} type ID to return the type name for}
-  @return{A string with the type name.}
+  @return{The string with the type name.}
   @begin{short}
     Get the unique name that is assigned to a type ID.
   @end{short}
@@ -2231,7 +2231,7 @@
  #+liber-documentation
  "@version{#2022-12-29}
   @argument[gtype]{a @class{g:type-t} type ID}
-  @return{An unsigned integer with the depth of @arg{gtype}.}
+  @return{The unsigned integer with the depth of @arg{gtype}.}
   @begin{short}
     Returns the length of the ancestry of the passed in GType.
   @end{short}
@@ -2333,7 +2333,7 @@
  #+liber-documentation
  "@version{2023-11-12}
   @argument[gtype]{a @class{g:type-t} type ID of a classed type}
-  @return{A pointer to the @symbol{g:type-class} instance for the given
+  @return{The pointer to the @symbol{g:type-class} instance for the given
     @arg{gtype}.}
   @begin{short}
     Increments the reference count of the class instance belonging to
@@ -2637,7 +2637,7 @@
  #+liber-documentation
  "@version{2023-12-12}
   @argument[gtype]{a @class{g:type-t} interface type ID}
-  @return{A pointer to the default @code{vtable} for the interface of type
+  @return{The pointer to the default @code{vtable} for the interface of type
     @arg{gtype}, or @code{nil} if @arg{gtype} is not an interface type.}
   @begin{short}
     Increments the reference count for the interface type, and returns the
@@ -2737,7 +2737,7 @@
  #+liber-documentation
  "@version{2023-7-29}
   @argument[gtype]{a @class{g:type-t} parent type ID}
-  @return{A list of @class{g:type-t} child types.}
+  @return{The list of @class{g:type-t} child types.}
   @short{Returns a list of type IDs, listing the child types of @arg{gtype}.}
   @begin[Examples]{dictionary}
     @begin{pre}
@@ -2770,7 +2770,7 @@
  #+liber-documentation
  "@version{2023-7-29}
   @argument[gtype]{a @class{g:type-t} type ID to list interface types for}
-  @return{A list of @class{g:type-t} interface type IDs.}
+  @return{The list of @class{g:type-t} interface type IDs.}
   @begin{short}
     Returns a list of type IDs, listing the interface types that @arg{gtype}
     conforms to.

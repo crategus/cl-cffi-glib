@@ -6,7 +6,7 @@
 ;;; library. See <http://www.gtk.org>. The API documentation of the Lisp
 ;;; binding is available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2011 - 2023 Dieter Kaiser
+;;; Copyright (C) 2011 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -1040,7 +1040,7 @@
  "@version{2023-7-9}
   @argument[signal-id]{an unsigned integer with the signal ID of the signal to
     query information for}
-  @return{A @struct{g:signal-query} structure with the signal info.}
+  @return{The @struct{g:signal-query} instance with the signal info.}
   @begin{short}
     Returns the signal info.
   @end{short}
@@ -1137,7 +1137,7 @@
  "@version{2023-7-9}
   @argument[name]{a string with the name of the signal}
   @argument[itype]{the @class{g:type-t} that the signal operates on}
-  @return{A unsigned integer with the identifying number of the signal, or 0
+  @return{The unsigned integer with the identifying number of the signal, or 0
     if no signal was found.}
   @begin{short}
     Given the name of the signal and the type of object it connects to, gets
@@ -1172,8 +1172,8 @@
  #+liber-documentation
  "@version{2022-11-20}
   @argument[id]{an unsigned integer with the identifying number of the signal}
-  @return{A string with the signal name, or @code{nil} if the signal number was
-    invalid.}
+  @return{The string with the signal name, or @code{nil} if the signal number
+    was invalid.}
   @begin{short}
     Given the identifier of the signal, finds its name.
   @end{short}
@@ -1213,7 +1213,7 @@
  #+liber-documentation
  "@version{2023-6-11}
   @argument[gtype]{a @class{g:type-t} type ID}
-  @return{A list of unsigned integer with the signal IDs.}
+  @return{The list of unsigned integer with the signal IDs.}
   @begin{short}
     Lists the signals by ID that a certain instance or interface type created.
   @end{short}
@@ -1253,7 +1253,7 @@
   @argument[args]{parameters to be passed to the signal}
   @return{The return value of the signal.}
   @short{Emits a signal.}
-  Note that the @sym{g:signal-emit} function resets the return value to the
+  Note that the @fun{g:signal-emit} function resets the return value to the
   default if no handlers are connected.
   @begin[Lisp implementation]{dictionary}
     In the Lisp implementation this function takes not the signal ID but the
@@ -1343,7 +1343,7 @@
 
 (cffi:defcfun ("g_signal_emitv" %signal-emitv) :void
  #+liber-documentation
- "@version{#2013-8-20}
+ "@version{#2023-12-26}
   @argument[instance-and-params]{argument list for the signal emission. The
     first element in the array is a @symbol{value} for the instance the signal
     is being emitted on. The rest are any arguments to be passed to the signal.}
@@ -1354,11 +1354,10 @@
   @begin{short}
     Emits a signal.
   @end{short}
-
-  Note that the function @sym{g:signal-emitv} does not change @arg{return-value}
-  if no handlers are connected, in contrast to the functions @fun{g:signal-emit}
-  and @fun{g:signal-emit-valist}.
-  @see-symbol{value}
+  Note that the @fun{g:signal-emitv} function does not change @arg{return-value}
+  if no handlers are connected, in contrast to the @fun{g:signal-emit} and
+  @fun{g:signal-emit-valist} functions.
+  @see-symbol{g:value}
   @see-function{g:signal-emit}
   @see-function{g:signal-emit-valist}"
   (instance-and-params (:pointer (:struct value)))
@@ -1400,12 +1399,12 @@
 
 (defun signal-connect (instance signal handler &key after)
  #+liber-documentation
- "@version{2022-11-25}
+ "@version{2023-12-26}
   @argument[instance]{a @class{g:object} instance to connect to}
   @argument[signal]{a string of the form \"signal-name::detail\"}
   @argument[handler]{a Lisp callback function to connect}
   @argument[after]{if @em{true} the handler is called after the default handler}
-  @return{A unsigned long integer with the handler ID.}
+  @return{The unsigned long integer with the handler ID.}
   @begin{short}
     Connects a Lisp callback function to a signal for a particular object.
   @end{short}
@@ -1464,11 +1463,11 @@
 
 (defun signal-connect-after (instance signal handler)
  #+liber-documentation
- "@version{#2022-12-4}
+ "@version{#2023-12-26}
   @argument[instance]{a @class{g:object} instance to connect to}
   @argument[signal]{a string of the form \"signal-name::detail\"}
   @argument[handler]{a Lisp callback function to connect}
-  @return{A unsigned long with the handler ID.}
+  @return{The unsigned long with the handler ID.}
   @begin{short}
     Connects a Lisp callback function to a signal for a particular object.
   @end{short}
@@ -1612,7 +1611,7 @@
   @argument[closure]{the @symbol{closure} callback function to connect}
   @argument[after]{a boolean whether the handler should be called before or
     after the default handler of the signal}
-  @return{A @code{:ulong} with the handler ID.}
+  @return{The unsigned integer with the handler ID.}
   @begin{short}
     Connects a callback function to a signal for a particular object.
   @end{short}
@@ -1764,7 +1763,7 @@
     to be found}
   @argument[signal-id]{an unsigned integer with a signal the handler has to be
     connected to}
-  @return{A valid non-0 signal handler ID of type @code{:ulong} for a
+  @return{The unsigned integer with a valid non-0 signal handler ID for a
     successful match.}
   @begin{short}
     Finds the first signal handler that matches the given @arg{signal-id}.
@@ -1932,8 +1931,8 @@
   @argument[instance]{a @class{g:object} instance where a signal handler is
     sought}
   @argument[handler-id]{an unsigned long integer with the handler ID}
-  @return{A boolean whether @arg{handler-id} identifies a handler connected to
-    instance.}
+  @return{The boolean whether @arg{handler-id} identifies a handler connected to
+    @arg{instance}.}
   @begin{short}
     Returns whether @arg{handler-id} is the ID of a handler connected to
     instance.

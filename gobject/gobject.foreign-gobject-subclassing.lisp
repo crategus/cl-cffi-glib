@@ -1,7 +1,7 @@
 ;;; ----------------------------------------------------------------------------
 ;;; gobject.foreign-gobject-subclassing.lisp
 ;;;
-;;; Copyright (C) 2011 - 2023 Dieter Kaiser
+;;; Copyright (C) 2011 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -492,6 +492,7 @@
          (subclass-info (get-subclass-info gname))
          (subclass (subclass-info-class subclass-info)))
     ;; Set SUBCLASS as the symbol for the GType
+    ;; FIXME: This seems to be to late. Do this more early.
     (setf (glib:symbol-for-gtype gname) subclass)
     ;; Initialize the getter and setter methods for the object class
     (setf (object-class-get-property cclass)
@@ -623,7 +624,7 @@
                                  :parent ,parent
                                  :interfaces ',interfaces
                                  :properties ',properties))
-       ;; Decldare the Lisp class
+       ;; Declare the Lisp class
        (defclass ,name (,@(when (and superclass
                                      (not (eq superclass 'object)))
                             (list superclass))
@@ -636,7 +637,7 @@
          (:metaclass gobject-class))
 
        ;; Register the class
-       (glib-init::at-init (',name)
+       (glib-init:at-init (',name)
          (log-for :subclass
                   "Debug subclass: Registering GObject type ~A for type ~A~%"
                   ',name ,g-type-name)
@@ -677,7 +678,6 @@
                                      (find-package
                                        ,(package-name (symbol-package name)))))
                           props)))
-
 )))
 
 (export 'define-g-object-subclass)
