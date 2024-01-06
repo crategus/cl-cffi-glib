@@ -6,7 +6,7 @@
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
 ;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2012 - 2023 Dieter Kaiser
+;;; Copyright (C) 2012 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -72,9 +72,9 @@
 (setf (liber:alias-for-class 'action-map)
       "Interface"
       (documentation 'action-map 'type)
- "@version{#2022-12-30}
+ "@version{2023-12-23}
   @begin{short}
-    The @sym{g:action-map} interface is implemented by @class{g:action-group}
+    The @class{g:action-map} interface is implemented by @class{g:action-group}
     implementations that operate by containing a number of named
     @class{g:action} instances, such as a @class{g:simple-action-group} object.
   @end{short}
@@ -93,10 +93,10 @@
 (cffi:defcfun ("g_action_map_lookup_action" action-map-lookup-action)
     (gobject:object action)
  #+liber-documentation
- "@version{2023-3-19}
+ "@version{2023-12-23}
   @argument[map]{a @class{g:action-map} object}
   @argument[name]{a string with the name of an action}
-  @return{A @class{g:action} object, or @code{nil}.}
+  @return{The @class{g:action} object, or @code{nil}.}
   @begin{short}
     Looks up the action with the given name in the action map.
   @end{short}
@@ -120,7 +120,7 @@
 
 (defun action-map-add-action-entries (map entries)
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2023-12-23}
   @argument[map]{a @class{g:action-map} object}
   @argument[entries]{a list of descriptions for the actions}
   @begin{short}
@@ -132,11 +132,11 @@
   parameters:
   @begin[code]{table}
     @entry[name]{A string with the name of the action.}
-    @entry[activate]{The callback function to connect to the \"activate\" signal
-      of the action. This can be @code{nil} for stateful actions, in which case
-      the default handler is used. For boolean-stated actions with no parameter,
-      this is a toggle. For other state types, and parameter type equal to the
-      state type, this will be a function that just calls the
+    @entry[activate]{The callback function to connect to the @code{\"activate\"}
+      signal of the action. This can be @code{nil} for stateful actions, in
+      which case the default handler is used. For boolean-stated actions with
+      no parameter, this is a toggle. For other state types, and parameter type
+      equal to the state type, this will be a function that just calls the
       @code{change-state} callback function, which you should provide.}
     @entry[parameter-type]{The type of the parameter that must be
       passed to the activate function for this action, given as a single
@@ -147,13 +147,13 @@
       information, so type tags must be added to the string if they are
       necessary. Stateless actions should give @code{nil} here.}
     @entry[change-state]{The callback function to connect to the
-      \"change-state\" signal of the action. All stateful actions should
+      @code{\"change-state\"} signal of the action. All stateful actions should
       provide a handler here, stateless actions should not.}
   @end{table}
   All values after name are optional. Additional optional fields may be added
   in the future.
   @begin[Example]{dictionary}
-    Using the @sym{g:action-map-add-action-entries} function:
+    Using the @fun{g:action-map-add-action-entries} function:
     @begin{pre}
 (defun activate-quit (action parameter)
   (declare (ignore action parameter)))
@@ -227,7 +227,7 @@
 
 (cffi:defcfun ("g_action_map_remove_action" action-map-remove-action) :void
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2023-12-23}
   @argument[map]{a @class{g:action-map} object}
   @argument[name]{a string with the name of the action}
   @begin{short}

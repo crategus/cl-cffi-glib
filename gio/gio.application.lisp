@@ -6,7 +6,7 @@
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
 ;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2012 - 2023 Dieter Kaiser
+;;; Copyright (C) 2012 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -38,16 +38,16 @@
 ;;;
 ;;; Accessors
 ;;;
-;;;     g_application_get_application_id     
-;;;     g_application_set_application_id     
-;;;     g_application_get_inactivity_timeout 
-;;;     g_application_set_inactivity_timeout 
-;;;     g_application_get_flags              
-;;;     g_application_set_flags              
-;;;     g_application_get_resource_base_path 
-;;;     g_application_set_resource_base_path 
-;;;     g_application_get_is_registered      
-;;;     g_application_get_is_remote          
+;;;     g_application_get_application_id
+;;;     g_application_set_application_id
+;;;     g_application_get_inactivity_timeout
+;;;     g_application_set_inactivity_timeout
+;;;     g_application_get_flags
+;;;     g_application_set_flags
+;;;     g_application_get_resource_base_path
+;;;     g_application_set_resource_base_path
+;;;     g_application_get_is_registered
+;;;     g_application_get_is_remote
 ;;;
 ;;; Functions
 ;;;
@@ -193,7 +193,7 @@
       behave differently depending on certain environment variables. For
       instance, an editor might be expected to use the @code{GIT_COMMITTER_NAME}
       environment variable when editing a GIT commit message. The environment
-      is available to the \"command-line\" signal handler via the
+      is available to the @code{\"command-line\"} signal handler via the
       @fun{g:application-command-line-getenv} function.}
     @entry[:non-unique]{Make no attempts to do any of the typical
       single-instance application negotiation. The application neither attempts
@@ -252,9 +252,9 @@
   @begin{short}
     The @class{g:application} class is the foundation of an application.
   @end{short}
-  The @class{g:application} class wraps some low-level platform-specific 
-  services and is intended to act as the foundation for higher-level application   
-  classes such as the @class{gtk:application} class. In general, you should not 
+  The @class{g:application} class wraps some low-level platform-specific
+  services and is intended to act as the foundation for higher-level application
+  classes such as the @class{gtk:application} class. In general, you should not
   use this class outside of a higher level framework.
 
   The @class{g:application} class provides convenient life cycle management by
@@ -326,12 +326,12 @@
     @item{by handling a command-line}
     @item{via activating an action}
   @end{itemize}
-  The \"startup\" signal lets you handle the application initialization for all
-  of these in a single place.
+  The @code{\"startup\"} signal lets you handle the application initialization
+  for all of these in a single place.
 
   Regardless of which of these entry points is used to start the application,
-  the @class{g:application} instance passes some platform data from the 
-  launching instance to the primary instance, in the form of a @type{g:variant} 
+  the @class{g:application} instance passes some platform data from the
+  launching instance to the primary instance, in the form of a @type{g:variant}
   dictionary mapping strings to variants. To use platform data, override the
   @code{before_emit} or @code{after_emit} virtual functions in your
   @class{g:application} subclass. When dealing with
@@ -349,9 +349,9 @@
   @code{add_platform_data} virtual function. For instance, the
   @class{gtk:application} class adds startup notification data in this way.
 
-  To parse command line arguments you may handle the \"command-line\" signal or
-  override the @code{local_command_line()} virtual function, to parse them in
-  either the primary instance or the local instance, respectively.
+  To parse command line arguments you may handle the @code{\"command-line\"}
+  signal or override the @code{local_command_line()} virtual function, to parse
+  them in either the primary instance or the local instance, respectively.
   @begin[Examples]{dictionary}
     An example to show the use of the signals of an application.
     @begin{pre}
@@ -466,7 +466,7 @@ lambda (application)    :run-last
       The signal is emitted on the primary instance when an activation occurs.
       See the @fun{g:application-activate} function.
       @begin[code]{table}
-        @entry[application]{The @class{g:application} instance which received 
+        @entry[application]{The @class{g:application} instance which received
           the signal.}
       @end{table}
     @subheading{The \"command-line\" signal}
@@ -477,7 +477,7 @@ lambda (application cmdline)    :run-last
       handled locally. See the @fun{g:application-run} function and the
       @class{g:application-command-line} documentation for more information.
       @begin[code]{table}
-        @entry[application]{The @class{g:application} instance which received 
+        @entry[application]{The @class{g:application} instance which received
           the signal.}
         @entry[cmdline]{A @class{g:application-command-line} object representing
           the passed command line.}
@@ -529,7 +529,7 @@ lambda (application options)    :run-last
       need more powerful capabilities than what is provided here, but this
       should not normally be required.
       @begin[code]{table}
-        @entry[application]{The @class{g:application} instance which received 
+        @entry[application]{The @class{g:application} instance which received
           the signal.}
         @entry[options]{The options dictionary of @class{g:variant-dict} type.}
         @entry[Returns]{An exit code. If you have handled your options and want
@@ -546,7 +546,7 @@ lambda (application)    :run-last
       the @code{:allow-replacement} flag. The default handler for this signal
       calls the @fun{g:application-quit} function. Since 2.60.
       @begin[code]{table}
-        @entry[application]{The @class{g:application} instance which received 
+        @entry[application]{The @class{g:application} instance which received
           the signal.}
         @entry[Returns]{@em{True} if the signal has been handled.}
       @end{table}
@@ -557,7 +557,7 @@ lambda (application files n-files hint)    :run-last
       The signal is emitted on the primary instance when there are files to
       open. See the @fun{g:application-open} function for more information.
       @begin[code]{table}
-        @entry[application]{The @class{g:application} instance which received 
+        @entry[application]{The @class{g:application} instance which received
           the signal.}
         @entry[files]{A C array of @class{g:file} objects.}
         @entry[n-files]{An integer with the length of @arg{files}.}
@@ -570,7 +570,7 @@ lambda (application)    :run-last
       The signal is emitted only on the registered primary instance immediately
       after the main loop terminates.
       @begin[code]{table}
-        @entry[application]{The @class{g:application} instance which received 
+        @entry[application]{The @class{g:application} instance which received
           the signal.}
       @end{table}
     @subheading{The \"startup\" signal}
@@ -580,7 +580,7 @@ lambda (application)    :run-first
       The signal is emitted on the primary instance immediately after
       registration. See the @fun{g:application-register} function.
       @begin[code]{table}
-        @entry[application]{The @class{g:application} instance which received 
+        @entry[application]{The @class{g:application} instance which received
           the signal.}
       @end{table}
   @end{dictionary}
@@ -602,13 +602,13 @@ lambda (application)    :run-first
 ;;; Property and Accessor Details
 ;;; ----------------------------------------------------------------------------
 
-;;; --- application-action-group -----------------------------------------------
+;;; --- g:application-action-group ---------------------------------------------
 
 #+liber-documentation
 (setf (documentation (liber:slot-documentation "action-group" 'application) t)
  "The @code{action-group} property of type @class{g:action-group} (Write) @br{}
   The group of actions that the application exports. @br{}
-  @em{Warning:} Deprecated since version 2.32. Use the @class{g:action-map} 
+  @em{Warning:} Deprecated since version 2.32. Use the @class{g:action-map}
   interface instead.")
 
 #+liber-documentation
@@ -637,7 +637,7 @@ lambda (application)    :run-first
   @see-class{g:action-group}
   @see-class{g:action-map}")
 
-;;; --- application-application-id ---------------------------------------------
+;;; --- g:application-application-id -------------------------------------------
 
 #+liber-documentation
 (setf (documentation (liber:slot-documentation "application-id" 'application) t)
@@ -660,8 +660,8 @@ lambda (application)    :run-first
     @class{g:application} class.
   @end{short}
   The @fun{g:application-application-id} function gets the unique identifier for
-  the application. The @sym{(setf g:application-application-id)} function sets
-  the unique identifier.
+  the application. The @setf{g:application-application-id} function sets the
+  unique identifier.
 
   The application ID can only be modified if the application has not yet been
   registered. The application ID must be valid. See the
@@ -669,7 +669,7 @@ lambda (application)    :run-first
   @see-class{g:application}
   @see-function{g:application-id-is-valid}")
 
-;;; --- application-flags ------------------------------------------------------
+;;; --- g:application-flags ----------------------------------------------------
 
 #+liber-documentation
 (setf (documentation (liber:slot-documentation "flags" 'application) t)
@@ -691,14 +691,14 @@ lambda (application)    :run-first
     @class{g:application} class.
   @end{short}
   The @fun{g:application-flags} function gets the flags for the application.
-  The @sym{(setf g:application-flags)} function sets the flags.
+  The @setf{g:application-flags} function sets the flags.
 
   The flags can only be modified if the application has not yet been registered.
   See the @symbol{g:application-flags} documentation.
   @see-class{g:application}
   @see-symbol{g:application-flags}")
 
-;;; --- application-inactivity-timeout -----------------------------------------
+;;; --- g:application-inactivity-timeout ---------------------------------------
 
 #+liber-documentation
 (setf (documentation (liber:slot-documentation "inactivity-timeout"
@@ -723,8 +723,7 @@ lambda (application)    :run-first
   @end{short}
   The @fun{g:application-inactivity-timeout} function gets the current
   inactivity timeout for the application. The
-  @sym{(setf g:application-inactivity-timeout)} function sets the inactivity
-  timeout.
+  @setf{g:application-inactivity-timeout} function sets the inactivity timeout.
 
   This is the amount of time in milliseconds after the last call to the
   @fun{g:application-release} function before the application stops running.
@@ -734,7 +733,7 @@ lambda (application)    :run-first
   @see-class{g:application}
   @see-function{g:application-release}")
 
-;;; --- application-is-busy ----------------------------------------------------
+;;; --- g:application-is-busy --------------------------------------------------
 
 #+liber-documentation
 (setf (documentation (liber:slot-documentation "is-busy" 'application) t)
@@ -761,7 +760,7 @@ lambda (application)    :run-first
   @see-function{g:application-mark-busy}
   @see-function{g:application-bind-busy-property}")
 
-;;; --- application-is-registered ----------------------------------------------
+;;; --- g:application-is-registered --------------------------------------------
 
 #+liber-documentation
 (setf (documentation (liber:slot-documentation "is-registered" 'application) t)
@@ -786,7 +785,7 @@ lambda (application)    :run-first
   @see-class{g:application}
   @see-function{g:application-register}")
 
-;;; --- application-is-remote --------------------------------------------------
+;;; --- g:application-is-remote ------------------------------------------------
 
 #+liber-documentation
 (setf (documentation (liber:slot-documentation "is-remote" 'application) t)
@@ -816,7 +815,7 @@ lambda (application)    :run-first
   @see-function{g:application-register}
   @see-function{g:application-is-registered}")
 
-;;; --- application-resource-base-path -----------------------------------------
+;;; --- g:application-resource-base-path ---------------------------------------
 
 #+liber-documentation
 (setf (documentation (liber:slot-documentation "resource-base-path"
@@ -840,8 +839,8 @@ lambda (application)    :run-first
     @class{g:application} class.
   @end{short}
   The @fun{g:application-resource-base-path} function gets the resource base
-  path of the application. The @sym{(setf g:application-resource-base-path)}
-  function sets or unsets the resource base path.
+  path of the application. The @setf{g:application-resource-base-path} function
+  sets or unsets the resource base path.
 
   The resource base path is used to automatically load various application
   resources such as menu layouts and action descriptions. The various types of
@@ -921,7 +920,7 @@ lambda (application)    :run-first
  "@version{#2022-12-30}
   @argument[id]{a string with the application ID}
   @argument[flags]{a @symbol{g:application-flags} value}
-  @return{A new @class{g:application} instance.}
+  @return{The new @class{g:application} instance.}
   @begin{short}
     Creates a new @class{g:application} instance.
   @end{short}
@@ -1022,9 +1021,9 @@ lambda (application)    :run-first
   calling this function.
 
   If the application has already been registered then @em{true} is returned
-  with no work performed. The \"startup\" signal is emitted if registration
-  succeeds and the application is the primary instance. In the event of an
-  error @em{false} is returned.
+  with no work performed. The @code{\"startup\"} signal is emitted if
+  registration succeeds and the application is the primary instance. In the
+  event of an error @em{false} is returned.
   @begin[Note]{dictionary}
     The return value of this function is not an indicator that this instance is
     or is not the primary instance of the application. See the
@@ -1049,8 +1048,8 @@ lambda (application)    :run-first
     Increases the use count of the application.
   @end{short}
   Use this function to indicate that the application has a reason to continue
-  to run. For example, the function is called by GTK when a toplevel window is 
-  on the screen. To cancel the hold, call the @fun{g:application-release} 
+  to run. For example, the function is called by GTK when a toplevel window is
+  on the screen. To cancel the hold, call the @fun{g:application-release}
   function.
   @see-class{g:application}
   @see-function{g:application-release}"
@@ -1090,9 +1089,9 @@ lambda (application)    :run-first
     Immediately quits the application.
   @end{short}
   Upon return to the main loop, the @fun{g:application-run} function will
-  return, emitting only the \"shutdown\" signal before doing so. The hold count
-  is ignored. The result of calling the @fun{g:application-run} function again
-  after it returns is unspecified.
+  return, emitting only the @code{\"shutdown\"} signal before doing so. The hold
+  count is ignored. The result of calling the @fun{g:application-run} function
+  again after it returns is unspecified.
   @see-class{g:application}
   @see-function{g:application-run}"
   (application (gobject:object application)))
@@ -1110,8 +1109,8 @@ lambda (application)    :run-first
   @begin{short}
     Activates the application.
   @end{short}
-  In essence, this results in the \"activate\" signal being emitted in the
-  primary instance. The application must be registered before calling this
+  In essence, this results in the @code{\"activate\"} signal being emitted in
+  the primary instance. The application must be registered before calling this
   function.
   @see-class{g:application}"
   (application (gobject:object application)))
@@ -1135,11 +1134,12 @@ lambda (application)    :run-first
   @argument[files]{a list of strings with the file names}
   @argument[hint]{a string with a hint or an empty string \"\"}
   @begin{short}
-    This results in the \"open\" signal being emitted in the primary instance.
+    This results in the @code{\"open\"} signal being emitted in the primary
+    instance.
   @end{short}
-  The @arg{hint} argument is simply passed through to the \"open\" signal. It
-  is intended to be used by applications that have multiple modes for opening
-  files, e.g. \"view\" versus \"edit\". Unless you have a need for this
+  The @arg{hint} argument is simply passed through to the @code{\"open\"}
+  signal. It is intended to be used by applications that have multiple modes for
+  opening files, e.g. \"view\" versus \"edit\". Unless you have a need for this
   functionality, you should use an empty string \"\".
 
   The application must be registered before calling this function and it must
@@ -1246,7 +1246,7 @@ lambda (application)    :run-first
  "@version{2022-12-30}
   @argument[application]{a @class{g:application} instance}
   @argument[argv]{a list of strings with command line parameters, or @code{nil}}
-  @return{An integer with the exit status.}
+  @return{The integer with the exit status.}
   @begin{short}
     Runs the application.
   @end{short}
@@ -1262,24 +1262,24 @@ lambda (application)    :run-first
   The @class{g:application} instance will attempt to parse the command line
   arguments. You can add command line flags to the list of recognised options by
   way of the @fun{g:application-add-main-option-entries} function. After this,
-  the \"handle-local-options\" signal is emitted, from which the application
-  can inspect the values of its option entries.
+  the @code{\"handle-local-options\"} signal is emitted, from which the
+  application can inspect the values of its option entries.
 
-  The \"handle-local-options\" signal handler is a good place to handle options
-  such as @code{--version}, where an immediate reply from the local process is
-  desired, instead of communicating with an already-running instance. A
-  \"handle-local-options\" signal handler can stop further processing by
-  returning a non-negative value, which then becomes the exit status of the
+  The @code{\"handle-local-options\"} signal handler is a good place to handle
+  options such as @code{--version}, where an immediate reply from the local
+  process is desired, instead of communicating with an already-running instance.
+  A @code{\"handle-local-options\"} signal handler can stop further processing
+  by returning a non-negative value, which then becomes the exit status of the
   process.
 
   What happens next depends on the @symbol{g:application-flags} flags: if the
   @code{:handles-command-line} flag was specified then the remaining command
-  line arguments are sent to the primary instance, where a \"command-line\"
-  signal is emitted. Otherwise, the remaining command line arguments are assumed
-  to be a list of files. If there are no files listed, the application is
-  activated via the \"activate\" signal. If there are one or more files, and the
-  @code{:handles-open} flag was specified then the files are opened via the
-  \"open\" signal.
+  line arguments are sent to the primary instance, where a
+  @code{\"command-line\"} signal is emitted. Otherwise, the remaining command
+  line arguments are assumed to be a list of files. If there are no files
+  listed, the application is activated via the @code{\"activate\"} signal. If
+  there are one or more files, and the @code{:handles-open} flag was specified
+  then the files are opened via the @code{\"open\"} signal.
 
   If you are interested in doing more complicated local handling of the
   command line then you should implement your own @class{g:application} subclass
@@ -1352,15 +1352,16 @@ lambda (application)    :run-first
   See the @fun{g:option-context-add-main-entries} function for a
   documentation of the list of option entries.
 
-  After the command line arguments are parsed, the \"handle-local-options\"
-  signal will be emitted. At this point, the application can inspect the values
-  pointed to by the @code{arg-data} field in the given option entries.
+  After the command line arguments are parsed, the
+  @code{\"handle-local-options\"} signal will be emitted. At this point, the
+  application can inspect the values pointed to by the @code{arg-data} field in
+  the given option entries.
 
   Unlike the @type{g:option-context} implementation, the @class{g:application}
   class supports giving @code{nil} for the @code{arg-data} field for a
   non-callback option entry. This results in the argument in question being
   packed into a @class{g:variant-dict} parameter which is also passed to the
-  \"handle-local-options\" signal handler, where it can be inspected and
+  @code{\"handle-local-options\"} signal handler, where it can be inspected and
   modified. If the @code{:handles-command-line} flag is set, then the resulting
   dictionary is sent to the primary instance, where the
   @fun{g:application-command-line-options-dict} function will return it. This
@@ -1384,8 +1385,8 @@ lambda (application)    :run-first
   as errors. Unrecognised options have never been ignored when the
   @code{:handles-command-line} flag is unset.
 
-  If the \"handle-local-options\" signal needs to see the list of filenames,
-  then the use of @code{G_OPTION_REMAINING} is recommended. If the
+  If the @code{\"handle-local-options\"} signal needs to see the list of
+  filenames, then the use of @code{G_OPTION_REMAINING} is recommended. If the
   @code{arg-data} field is @code{nil} then @code{G_OPTION_REMAINING} can be used
   as a key into the options dictionary. If you do use @code{G_OPTION_REMAINING}
   then you need to handle these arguments for yourself because once they are
@@ -1471,10 +1472,20 @@ lambda (application)    :run-first
 ;;; g_application_add_main_option ()
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcfun ("g_application_add_main_option" application-add-main-option)
+(cffi:defcfun ("g_application_add_main_option" %application-add-main-option)
     :void
+  (application (gobject:object application))
+  (long :string)
+  (short :char)
+  (flags glib:option-flags)
+  (arg glib:option-arg)
+  (desc :string)
+  (arg-desc :string))
+
+(defun application-add-main-option (application
+                                    long short flags arg desc arg-desc)
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{#2023-12-19}
   @argument[application]{a @class{g:application} instance}
   @argument[long]{a string with the long name of an option used to specify it
     in a command line}
@@ -1493,7 +1504,7 @@ lambda (application)    :run-first
   entry that has its the @code{arg-data} field set to @code{nil}.
 
   The parsed arguments will be packed into a @class{g:variant-dict} parameter
-  which is passed to the \"handle-local-options\" signal handler. If the
+  which is passed to the @code{\"handle-local-options\"} signal handler. If the
   @code{:handles-command-line} flag is set, then it will also be sent to the
   primary instance. See the @fun{g:application-add-main-option-entries} function
   for more details.
@@ -1506,13 +1517,13 @@ lambda (application)    :run-first
   @see-symbol{g:option-arg}
   @see-function{g:option-group-add-entries}
   @see-function{g:application-add-main-option-entries}"
-  (application (gobject:object application))
-  (long :string)
-  (short :char)
-  (flags glib:option-flags)
-  (arg glib:option-arg)
-  (desc :string)
-  (arg-desc :string))
+  (%application-add-main-option application
+                                long
+                                short
+                                flags
+                                arg
+                                (if desc desc (cffi:null-pointer))
+                                (if arg-desc arg-desc (cffi:null-pointer))))
 
 (export 'application-add-main-option)
 
@@ -1540,9 +1551,9 @@ lambda (application)    :run-first
   The reason for that is because, by the time the options arrive at the primary
   instance, it is typically too late to do anything with them. Taking the GTK
   option group as an example: GTK will already have been initialised by the time
-  the \"command-line\" signal handler runs. In the case that this is not the
-  first-running instance of the application, the existing instance may already
-  have been running for a very long time.
+  the @code{\"command-line\"} signal handler runs. In the case that this is not
+  the first-running instance of the application, the existing instance may
+  already have been running for a very long time.
 
   This means that the options from the @type{g:option-group} instance are only
   really usable in the case that the instance of the application being run is
@@ -1659,7 +1670,7 @@ lambda (application)    :run-first
     Accessor of the default application for the process.
   @end{short}
   The @fun{g:application-default} function returns the default application
-  instance for this process. The @sym{(setf g:application-default)} function
+  instance for this process. The @fun{(setf g:application-default)} function
   sets or unsets the default application.
 
   Normally there is only one application per process and it becomes the default

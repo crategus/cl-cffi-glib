@@ -6,7 +6,7 @@
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
 ;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2013 - 2023 Dieter Kaiser
+;;; Copyright (C) 2013 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -83,17 +83,17 @@
 
 #+liber-documentation
 (setf (documentation 'themed-icon 'type)
- "@version{#2022-12-29}
+ "@version{2023-12-26}
   @begin{short}
-    The @sym{g:themed-icon} class is an implementation of the @class{g:icon}
+    The @class{g:themed-icon} class is an implementation of the @class{g:icon}
     interface that supports icon themes.
   @end{short}
-  The @sym{g:themed-icon} class contains a list of all of the icons present in
-  an icon theme, so that icons can be looked up quickly. The @sym{g:themed-icon}
-  class does not provide actual pixmaps for icons, just the icon names. Ideally
-  something like the @fun{gtk:icon-theme-choose-icon} function should be used to
-  resolve the list of names so that fallback icons work nicely with themes that
-  inherit other themes.
+  The @class{g:themed-icon} class contains a list of all of the icons present
+  in an icon theme, so that icons can be looked up quickly. The
+  @class{g:themed-icon} class does not provide actual pixmaps for icons, just
+  the icon names. Ideally something like the @fun{gtk:icon-theme-choose-icon}
+  function should be used to resolve the list of names so that fallback icons
+  work nicely with themes that inherit other themes.
   @see-constructor{g:themed-icon-new}
   @see-constructor{g:themed-icon-new-from-names}
   @see-constructor{g:themed-icon-new-with-default-fallbacks}
@@ -103,12 +103,10 @@
   @see-class{g:icon}")
 
 ;;; ----------------------------------------------------------------------------
-;;;
 ;;; Property and Accessor Details
-;;;
 ;;; ----------------------------------------------------------------------------
 
-;;; --- themed-icon-name -------------------------------------------------------
+;;; --- g:themed-icon-name -----------------------------------------------------
 
 #+liber-documentation
 (setf (documentation (liber:slot-documentation "name" 'themed-icon) t)
@@ -120,7 +118,7 @@
 (setf (liber:alias-for-function 'themed-icon-name)
       "Accessor"
       (documentation 'themed-icon-name 'function)
- "@version{#2022-12-29}
+ "@version{2023-12-26}
   @syntax[]{(g:themed-icon-name object) => name}
   @syntax[]{(setf (g:themed-icon-name object) name)}
   @argument[object]{a @class{g:themed-icon} object}
@@ -131,7 +129,7 @@
   @end{short}
   @see-class{g:themed-icon}")
 
-;;; --- themed-icon-names ------------------------------------------------------
+;;; --- g:themed-icon-names ----------------------------------------------------
 
 #+liber-documentation
 (setf (documentation (liber:slot-documentation "names" 'themed-icon) t)
@@ -143,7 +141,7 @@
 (setf (liber:alias-for-function 'themed-icon-names)
       "Accessor"
       (documentation 'themed-icon-names 'function)
- "@version{#2022-12-29}
+ "@version{2023-12-26}
   @syntax[]{(g:themed-icon-names object) => names}
   @syntax[]{(setf (g:themed-icon-names object) names)}
   @argument[object]{a @class{g:themed-icon} object}
@@ -155,7 +153,7 @@
   Gets the names of icons from within @arg{object}.
   @see-class{g:themed-icon}")
 
-;;; --- themed-icon-use-default-fallbacks --------------------------------------
+;;; --- g:themed-icon-use-default-fallbacks ------------------------------------
 
 #+liber-documentation
 (setf (documentation (liber:slot-documentation "use-default-fallbacks"
@@ -178,7 +176,7 @@
 (setf (liber:alias-for-function 'themed-icon-use-default-fallbacks)
       "Accessor"
       (documentation 'themed-icon-use-default-fallbacks 'function)
- "@version{#2022-12-29}
+ "@version{2023-12-26}
   @syntax[]{(g:themed-icon-use-default-fallbacks object) => setting}
   @syntax[]{(setf (g:themed-icon-use-default-fallbacks object) setting)}
   @argument[object]{a @class{g:themed-icon} object}
@@ -207,9 +205,9 @@
 
 (defun themed-icon-new (name)
  #+liber-documentation
- "@version{#2022-12-29}
+ "@version{2023-12-26}
   @argument[name]{a string containing an icon name}
-  @return{A new @class{g:themed-icon} object.}
+  @return{The new @class{g:themed-icon} object.}
   @begin{short}
     Creates a new themed icon for the icon name.
   @end{short}
@@ -229,9 +227,9 @@
 
 (defun themed-icon-new-from-names (&rest names)
  #+liber-documentation
- "@version{#2022-12-29}
+ "@version{2023-12-26}
   @argument[names]{a list of strings containing icon names}
-  @return{A new @class{g:themed-icon} object.}
+  @return{The new @class{g:themed-icon} object.}
   @begin{short}
     Creates a new themed icon for @arg{names}.
   @end{short}
@@ -251,9 +249,9 @@
 
 (defun themed-icon-new-with-default-fallbacks (name)
  #+liber-documentation
- "@version{#2022-12-29}
+ "@version{2023-12-26}
   @argument[name]{a string containing an icon name}
-  @return{A new @class{g:themed-icon} object.}
+  @return{The new @class{g:themed-icon} object.}
   @begin{short}
     Creates a new themed icon for @arg{name}, and all the names that can
     be created by shortening iconname at '-' characters.
@@ -286,7 +284,7 @@
 
 (cffi:defcfun ("g_themed_icon_prepend_name" themed-icon-prepend-name) :void
  #+liber-documentation
- "@version{#2022-12-29}
+ "@version{2023-12-26}
   @argument[icon]{a @class{g:themed-icon} object}
   @argument[name]{a string with the name of the icon to prepend to list of
     icons from within @arg{icon}}
@@ -309,7 +307,7 @@
 
 (cffi:defcfun ("g_themed_icon_append_name" themed-icon-append-name) :void
  #+liber-documentation
- "@version{#2022-12-29}
+ "@version{2023-12-26}
   @argument[icon]{a @class{g:themed-icon} object}
   @argument[name]{a string with the name of the icon to append to list of icons
     from within @arg{icon}}
