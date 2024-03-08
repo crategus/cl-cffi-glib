@@ -6,7 +6,7 @@
 ;;; library. See <http://www.gtk.org>. The API documentation of the Lisp binding
 ;;; is available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2011 - 2023 Dieter Kaiser
+;;; Copyright (C) 2011 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -73,7 +73,7 @@
 (defmacro with-g-value ((var &rest args) &body body)
  #+liber-documentation
  "@version{2023-11-7}
-  @syntax[]{gobject:(with-g-value (gvalue) body) => result}
+  @syntax[]{gobject:with-g-value (gvalue) body) => result}
   @syntax[]{(gobject:with-g-value (gvalue gtype) body) => result}
   @syntax[]{(gobject:with-g-value (gvalue gtype value) body) => result}
   @argument[gvalue]{a @symbol{g:value} instance to create and initialize}
@@ -89,7 +89,7 @@
   type and releases all resources associated with @arg{gvalue}.
   @begin[Note]{dictionary}
     The @arg{gvalue} parameter is initialized with the @fun{g:value-init}
-    functon and unset with the @fun{g:value-unset} function. The optional
+    function and unset with the @fun{g:value-unset} function. The optional
     @arg{value} ist set with the @fun{g:value-set} function.
   @end{dictionary}
   @see-symbol{g:value}
@@ -969,7 +969,7 @@
  "@version{#2022-12-29}
   @argument[value]{a @symbol{g:value} instance which contents are to be
     described}
-  @return{A string with the contents of @arg{value}.}
+  @return{The string with the contents of @arg{value}.}
   @begin{short}
     Return a string, which describes the contents of a @symbol{g:value}
     instance.
