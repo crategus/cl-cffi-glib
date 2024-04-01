@@ -531,6 +531,8 @@
            #:object-interface-find-property
            #:object-interface-list-properties
            #:object-new
+           #:object-ref
+           #:object-unref
            #:object-notify
            #:object-freeze-notify
            #:object-thaw-notify

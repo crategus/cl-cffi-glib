@@ -252,6 +252,8 @@
     @about-function{object-interface-find-property}
     @about-function{object-interface-list-properties}
     @about-function{object-new}
+    @about-function{object-ref}
+    @about-function{object-unref}
     @about-function{object-notify}
     @about-function{object-freeze-notify}
     @about-function{object-thaw-notify}

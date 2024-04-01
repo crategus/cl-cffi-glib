@@ -1681,39 +1681,42 @@ lambda (object pspec)    :no-hooks
   (parameters :pointer))
 
 ;;; ----------------------------------------------------------------------------
-;;; g_object_ref ()                                        not exported
+;;; g_object_ref ()
 ;;; ----------------------------------------------------------------------------
 
-;; The memory management is done in the Lisp library. We do not export this
-;; function.
-
 (cffi:defcfun ("g_object_ref" %object-ref) :pointer
+  (object :pointer))
+
+(defun object-ref (object)
  #+liber-documentation
- "@version{#2014-11-13}
+ "@version{2024-3-30}
   @argument[object]{a @class{g:object} instance}
   @return{The same @arg{object}.}
   @short{Increases the reference count of object.}
   @see-class{g:object}"
-  (object :pointer))
+  (cffi:convert-from-foreign (%object-ref (object-pointer object)) 'object))
+
+(export 'object-ref)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_object_unref ()                                      not exported
+;;; g_object_unref ()
 ;;; ----------------------------------------------------------------------------
-
-;; The memory management is done in the Lisp library. We do not export this
-;; function.
 
 (cffi:defcfun ("g_object_unref" %object-unref) :void
+  (object :pointer))
+
+(defun object-unref (object)
  #+liber-documentation
- "@version{#2014-11-13}
+ "@version{#2024-3-30}
   @argument[object]{a @class{g:object} instance}
   @begin{short}
     Decreases the reference count of @arg{object}.
   @end{short}
-  When its reference count drops to 0, the object is finalized (i.e. its memory
-  is freed).
+  When its reference count drops to 0, the object is finalized.
   @see-class{g:object}"
-  (object :pointer))
+  (%object-unref (object-pointer object)))
+
+(export 'object-unref)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_object_ref_sink ()                                   not exported
