@@ -56,7 +56,7 @@
 ;;;
 ;;;     g_application_get_dbus_connection
 ;;;     g_application_get_dbus_object_path
-;;;     g_application_set_action_group                     deprecated 2.32
+;;;     g_application_set_action_group                     Deprecated 2.32
 ;;;     g_application_register
 ;;;     g_application_hold
 ;;;     g_application_release
@@ -69,8 +69,8 @@
 ;;;
 ;;;     g_application_run
 ;;;
-;;;     g_application_add_main_option_entries
 ;;;     g_application_add_main_option
+;;;     g_application_add_main_option_entries
 ;;;     g_application_add_option_group
 ;;;     g_application_set_option_context_parameter_string
 ;;;     g_application_set_option_context_summary
@@ -1333,6 +1333,8 @@ lambda (application)    :run-first
 ;;; g_application_add_main_option_entries ()
 ;;; ----------------------------------------------------------------------------
 
+;; TODO: Improve the documentation for the arg-data field.
+
 (cffi:defcfun ("g_application_add_main_option_entries"
                 %application-add-main-option-entries) :void
   (application (gobject:object application))
@@ -1342,16 +1344,14 @@ lambda (application)    :run-first
 
 (defun application-add-main-option-entries (application entries)
  #+liber-documentation
- "@version{2023-7-8}
+ "@version{2024-3-26}
   @argument[application]{a @class{g:application} instance}
-  @argument[entries]{a list of option entries}
+  @argument[entries]{a list of option entries, see the
+    @fun{g:option-context-add-main-entries} function for a documentation of
+    option entries}
   @begin{short}
     Adds main option entries to be handled by the application.
   @end{short}
-
-  See the @fun{g:option-context-add-main-entries} function for a
-  documentation of the list of option entries.
-
   After the command line arguments are parsed, the
   @code{\"handle-local-options\"} signal will be emitted. At this point, the
   application can inspect the values pointed to by the @code{arg-data} field in
@@ -1476,25 +1476,26 @@ lambda (application)    :run-first
     :void
   (application (gobject:object application))
   (long :string)
-  (short :char)
+  (short glib:unichar)
   (flags glib:option-flags)
   (arg glib:option-arg)
   (desc :string)
-  (arg-desc :string))
+  (argdesc :string))
 
 (defun application-add-main-option (application
-                                    long short flags arg desc arg-desc)
+                                    long short flags arg desc argdesc)
  #+liber-documentation
- "@version{#2023-12-19}
+ "@version{2024-3-26}
   @argument[application]{a @class{g:application} instance}
   @argument[long]{a string with the long name of an option used to specify it
     in a command line}
-  @argument[short]{a printable ASCII character with the short name of an option}
-  @argument[flags]{the @symbol{g:option-flags} flags}
+  @argument[short]{a printable ASCII @type{g:unichar} character with the short
+    name of an option}
+  @argument[flags]{a @symbol{g:option-flags} value for the flags}
   @argument[arg]{a @symbol{g:option-arg} value for the type of the option}
   @argument[desc]{a string with the description for the option in
     @code{--help} output}
-  @argument[arg-desc]{a string with the placeholder to use for the extra
+  @argument[argdesc]{a string with the placeholder to use for the extra
     argument parsed by the option in @code{--help} output}
   @begin{short}
     Adds an option to be handled by the application.
@@ -1515,6 +1516,7 @@ lambda (application)    :run-first
   @see-class{g:variant-dict}
   @see-symbol{g:option-flags}
   @see-symbol{g:option-arg}
+  @see-type{g:unichar}
   @see-function{g:option-group-add-entries}
   @see-function{g:application-add-main-option-entries}"
   (%application-add-main-option application
@@ -1522,8 +1524,8 @@ lambda (application)    :run-first
                                 short
                                 flags
                                 arg
-                                (if desc desc (cffi:null-pointer))
-                                (if arg-desc arg-desc (cffi:null-pointer))))
+                                (or desc (cffi:null-pointer))
+                                (or argdesc (cffi:null-pointer))))
 
 (export 'application-add-main-option)
 
