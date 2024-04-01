@@ -1,6 +1,7 @@
 Content from the GIO Reference Manual for Version 2.68
 
     *   - needs update
+    +   - work needed
     %   - not fully implemented
     &   - objects and structures are implemented, some functions are missing
    (**) - deprecated
@@ -61,7 +62,7 @@ Permissions
 
 Data Models
 
-  gio.list-model.lisp          - GListModel                         - GIO 2.76
+  gio.list-model.lisp          - GListModel                         - GIO 2.76 +
   gio.list-store.lisp          - GListStore                         - GIO 2.76
 
 Application support

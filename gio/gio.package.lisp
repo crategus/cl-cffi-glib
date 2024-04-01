@@ -455,10 +455,9 @@
       @about-class{list-store}
       @about-function{list-store-item-type}
       @about-generic{list-store-n-items}
-      @about-symbol{compare-data-func}
-      @about-symbol{equal-func-full}
       @about-function{list-store-new}
       @about-function{list-store-insert}
+      @about-symbol{compare-data-func}
       @about-function{list-store-insert-sorted}
       @about-function{list-store-append}
       @about-function{list-store-remove}
@@ -466,6 +465,7 @@
       @about-function{list-store-splice}
       @about-function{list-store-sort}
       @about-function{list-store-find}
+      @about-symbol{equal-func-full}
       @about-function{list-store-find-with-equal-func}
     @end{subsection}
   @end{section}

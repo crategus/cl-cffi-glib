@@ -77,7 +77,7 @@
 (setf (liber:alias-for-class 'list-model)
       "Interface"
       (documentation 'list-model 'type)
- "@version{2023-8-15}
+ "@version{2024-3-31}
   @begin{short}
     The @class{g:list-model} interface is an interface that represents a mutable
     list of @class{g:object} instances.
@@ -125,83 +125,80 @@
   @begin[Signal Details]{dictionary}
     @subheading{The \"items-changed\" signal}
       @begin{pre}
-lambda (list position removed added)    :run-last
+lambda (model pos removed added)    :run-last
       @end{pre}
       This signal is emitted whenever items were added to or removed from
-      @arg{list}. At @arg{position}, removed items were removed and added items
+      @arg{model}. At @arg{pos}, removed items were removed and added items
       were added in their place. Note: If @arg{removed} is not equal
       @arg{added}, the positions of all later items in the model change.
       @begin[code]{table}
-        @entry[list]{The @class{g:list-model} instance that changed.}
-        @entry[position]{An unsigned integer with the position at which
-          @arg{list} changed.}
-        @entry[removed]{An unsigned integer with the number of items removed.}
-        @entry[added]{An unsigned integer with the number of items addes.}
+        @entry[model]{The @class{g:list-model} instance that changed.}
+        @entry[pos]{The unsigned integer with the position at which @arg{model}
+          changed.}
+        @entry[removed]{The unsigned integer with the number of items removed.}
+        @entry[added]{The unsigned integer with the number of items addes.}
       @end{table}
   @end{dictionary}
   @see-class{g:list-store}")
 
 ;;; ----------------------------------------------------------------------------
 ;;; GListModelInterface
+;;;
+;;; struct GioListModelInterface {
+;;;   GTypeInterface g_iface;
+;;;   GType (* get_item_type) (
+;;;     GListModel* list
+;;;   );
+;;;
+;;;   guint (* get_n_items) (
+;;;     GListModel* list
+;;;   );
+;;;   GObject* (* get_item) (
+;;;     GListModel* list,
+;;;     guint position
+;;;   );
+;;; }
+;;;
+;;; The virtual function table for GListModel.
+;;;
+;;; Interface members
+;;;
+;;; g_iface
+;;; GTypeInterface
+;;;
+;;; Parent GTypeInterface.
+;;;
+;;; get_item_type
+;;; GType (* get_item_type) (GListModel* list)
+;;;
+;;; No description available.
+;;;
+;;; get_n_items
+;;; guint (* get_n_items) (GListModel* list)
+;;;
+;;; No description available.
+;;;
+;;; get_item
+;;;
+;;; GObject* (* get_item) (GListModel* list, guint position)
+;;;
+;;; No description available.
+;;;
+;;; Virtual methods
+;;;
+;;; Gio.ListModel.get_item
+;;;
+;;; Get the item at position. If position is greater than the number of items
+;;; in list, NULL is returned.
+;;;
+;;; Gio.ListModel.get_item_type
+;
+;;; Gets the type of the items in list.
+;;;
+;;; Gio.ListModel.get_n_items
+;;;
+;;; Gets the number of items in list.
 ;;; ----------------------------------------------------------------------------
-
-#|
-Interface structure
-struct GioListModelInterface {
-  GTypeInterface g_iface;
-  GType (* get_item_type) (
-    GListModel* list
-  );
-  guint (* get_n_items) (
-    GListModel* list
-  );
-  GObject* (* get_item) (
-    GListModel* list,
-    guint position
-  );
-  
-}
-The virtual function table for GListModel.
-
-Interface members
-g_iface	
-GTypeInterface
- 	
-Parent GTypeInterface.
-
-get_item_type	
-GType (* get_item_type) (
-    GListModel* list
-  )
- 	No description available.
-get_n_items	
-guint (* get_n_items) (
-    GListModel* list
-  )
- 	No description available.
-get_item	
-GObject* (* get_item) (
-    GListModel* list,
-    guint position
-  )
- 	No description available.
-
-Virtual methods 
-Gio.ListModel.get_item
-Get the item at position. If position is greater than the number of items in list, NULL is returned.
-
-since: 2.44
-
-Gio.ListModel.get_item_type
-Gets the type of the items in list.
-
-since: 2.44
-
-Gio.ListModel.get_n_items
-Gets the number of items in list.
-
-since: 2.44
-|#
 
 (gobject:define-vtable ("GListModel" list-model)
   (:skip parent-instance (:struct gobject:type-interface))
@@ -216,12 +213,12 @@ since: 2.44
 (export 'list-model-get-item-impl)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_list_model_get_item_type () -> list-model-item-type
+;;; g_list_model_get_item_type ()
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_list_model_get_item_type" list-model-item-type) gobject:type-t
  #+liber-documentation
- "@version{2023-9-7}
+ "@version{2024-3-31}
   @argument[model]{a @class{g:list-model} object}
   @return{The @class{g:type-t} type of the items contained in @arg{model}.}
   @begin{short}
@@ -237,19 +234,19 @@ since: 2.44
 (export 'list-model-item-type)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_list_model_get_n_items () -> list-model-n-items
+;;; g_list_model_get_n_items ()
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_list_model_get_n_items" list-model-n-items) :uint
  #+liber-documentation
- "@version{2023-9-7}
+ "@version{2024-3-31}
   @argument[model]{a @class{g:list-model} object}
-  @return{An integer with the number of items in @arg{model}.}
+  @return{The integer with the number of items in @arg{model}.}
   @begin{short}
     Gets the number of items in the list model.
   @end{short}
-  Depending on the model implementation, calling this function may be less
-  efficient than iterating the list model with increasing values for position
+  Depending on the list model implementation, calling this function may be less
+  efficient than iterating the list model with increasing values for @arg{pos}
   until the @fun{g:list-model-item} functions returns the @code{null-pointer}
   value.
   @see-class{g:list-model}
@@ -259,59 +256,58 @@ since: 2.44
 (export 'list-model-n-items)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_list_model_get_item () -> list-model-item
+;;; g_list_model_get_item ()
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_list_model_get_item" list-model-item) :pointer
  #+liber-documentation
- "@version{2023-9-7}
+ "@version{2024-3-31}
   @argument[model]{a @class{g:list-model} object}
-  @argument[position]{an unsigned integer with the position of the item to
-    fetch}
-  @return{A pointer with the item at @arg{position}.}
+  @argument[pos]{an unsigned integer with the position of the item to fetch}
+  @return{The pointer for the item at @arg{pos}.}
   @begin{short}
-    Get the item at @arg{position} in the list model.
+    Get the pointer for the item at @arg{pos} in the list model.
   @end{short}
-  If the @arg{position} argument is greater than the number of items in the
-  list model, the @code{null-pointer} value is returned. The @code{null-pointer}
+  If the @arg{pos} argument is greater than the number of items in the list
+  model, the @code{null-pointer} value is returned. The @code{null-pointer}
   value is never returned for an index that is smaller than the length of the
   list model. See the @fun{g:list-model-n-items} function.
   @begin[Note]{dictionary}
     This function returns a pointer which can be translated to the
     corresponding object with the @code{cffi:convert-from-foreign} function:
     @begin{pre}
-(cffi:convert-from-foreign (g:list-model-item model position) 'g:object)
+(cffi:convert-from-foreign (g:list-model-item model pos) 'g:object)
     @end{pre}
     In the Lisp implementation, the @fun{g:list-model-object} function is more
-    useful, which directly returns the object at @arg{position}.
+    useful, which directly returns the object at @arg{pos}.
   @end{dictionary}
   @see-class{g:list-model}
   @see-function{g:list-model-n-items}
   @see-function{g:list-model-object}"
   (model (gobject:object list-model))
-  (position :uint))
+  (pos :uint))
 
 (export 'list-model-item)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_list_model_get_object () -> list-model-object
+;;; g_list_model_get_object ()
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_list_model_get_object" list-model-object) gobject:object
  #+liber-documentation
- "@version{2023-8-15}
+ "@version{2024-3-31}
   @argument[model]{a @class{g:list-model} object}
-  @argument[position]{an unsigned integer with the position of the item to
-    fetch}
-  @return{The @class{g:object} instance at @arg{position}.}
+  @argument[pos]{an unsigned integer with the position of the item to fetch}
+  @return{The @class{g:object} instance at @arg{pos}.}
   @begin{short}
-    Get the item at @arg{position}.
+    Get the item at @arg{pos}.
   @end{short}
-  If the @arg{position} argument is greater than the number of items in the
-  list model, @code{nil} is returned. The @code{nil} value is never returned
-  for an index that is smaller than the length of the list model. See the
+  If the @arg{pos} argument is greater than the number of items in the list
+  model, @code{nil} is returned. The @code{nil} value is never returned for an
+  index that is smaller than the length of the list model. See the
   @fun{g:list-model-n-items} function.
   @see-class{g:list-model}
+  @see-class{g:object}
   @see-function{g:list-model-n-items}"
   (model (gobject:object list-model))
   (position :uint))
@@ -324,10 +320,10 @@ since: 2.44
 
 (cffi:defcfun ("g_list_model_items_changed" list-model-items-changed) :void
  #+liber-documentation
- "@version{#2023-8-15}
+ "@version{#2024-3-31}
   @argument[model]{a @class{g:list-model} object}
-  @argument[position]{an unsigned integer with the position at which
-    @arg{model} changed}
+  @argument[pos]{an unsigned integer with the position at which @arg{model}
+    changed}
   @argument[removed]{an unsigned integer with the number of items removed}
   @argument[added]{an unsigned integer with the number of items added}
   @begin{short}
@@ -353,7 +349,7 @@ since: 2.44
   @see-class{g:list-model}
   @see-class{g:list-store}"
   (model (gobject:object list-model))
-  (position :uint)
+  (pos :uint)
   (removed :uint)
   (added :uint))
 

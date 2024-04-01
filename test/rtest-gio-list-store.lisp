@@ -149,7 +149,7 @@
                                 (g:simple-action-name b))
                        1
                        -1))))))
-    (g:list-store-splice store 5 2 nil)
+    (g:list-store-splice store 5 2)
     (is (equal '("Action 0" "Action 1" "Action 2" "Action 3" "Action 4"
                  "Action 7" "Action 8" "Action 9")
                (iter (for i from 0 below (g:list-store-n-items store))
@@ -171,12 +171,9 @@
                        1
                        -1))))))
     (g:list-store-splice store 5 2
-                         (list (make-instance 'g:simple-action
-                                              :name "action")
-                               (make-instance 'g:simple-action
-                                              :name "action")
-                               (make-instance 'g:simple-action
-                                              :name "action")))
+                         (make-instance 'g:simple-action :name "action")
+                         (make-instance 'g:simple-action :name "action")
+                         (make-instance 'g:simple-action :name "action"))
     (is (equal '("Action 0" "Action 1" "Action 2" "Action 3" "Action 4"
                  "action" "action" "action" "Action 7" "Action 8" "Action 9")
                (iter (for i from 0 below (g:list-store-n-items store))
@@ -271,5 +268,4 @@
                      (string= (g:simple-action-name a)
                               (g:simple-action-name b))))))))
 
-;;; --- 2023-9-4 ---------------------------------------------------------------
-
+;;; 2024-3-31

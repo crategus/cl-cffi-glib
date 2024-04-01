@@ -6,7 +6,7 @@
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
 ;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2021 - 2023 Dieter Kaiser
+;;; Copyright (C) 2021 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -37,11 +37,9 @@
 ;;;
 ;;; Functions
 ;;;
-;;;     GCompareDataFunc
-;;;     GEqualFuncFull
-;;;
 ;;;     g_list_store_new
 ;;;     g_list_store_insert
+;;;     GCompareDataFunc
 ;;;     g_list_store_insert_sorted
 ;;;     g_list_store_append
 ;;;     g_list_store_remove
@@ -49,6 +47,7 @@
 ;;;     g_list_store_splice
 ;;;     g_list_store_sort
 ;;;     g_list_store_find                                  Since 2.64
+;;;     GEqualFuncFull
 ;;;     g_list_store_find_with_equal_func                  Since 2.64
 ;;;     g_list_store_find_with_equal_func_full             Since 2.74
 ;;;
@@ -88,23 +87,25 @@
 
 #+liber-documentation
 (setf (documentation 'list-store 'type)
- "@version{2023-9-5}
+ "@version{2024-3-31}
   @begin{short}
     The @class{g:list-store} object is an implementation of the
     @class{g:list-model} interface that stores all items in memory.
   @end{short}
   It provides insertions, deletions, and lookups in logarithmic time with a
-  fast path for the common case of iterating the list linearly.
+  fast path for the common case of iterating the list linearly. Items must be
+  subclasses of the @class{g:object} class.
   @see-constructor{g:list-store-new}
   @see-slot{g:list-store-item-type}
   @see-slot{g:list-store-n-items}
-  @see-class{g:list-model}")
+  @see-class{g:list-model}
+  @see-class{g:object}")
 
 ;;; ----------------------------------------------------------------------------
 ;;; Property and Accessor Details
 ;;; ----------------------------------------------------------------------------
 
-;;; --- list-store-item-type ---------------------------------------------------
+;;; --- g:list-store-item-type -------------------------------------------------
 
 ;; Note: We define the accessor with the interface function. This way we get
 ;; the expected GType for ITEM-TYPE. The accessor %LIST-STORE-ITEM-TYPE returns
@@ -126,8 +127,8 @@
 (setf (liber:alias-for-function 'list-store-item-type)
       "Accessor"
       (documentation 'list-store-item-type 'function)
- "@version{2023-9-5}
-  @syntax[]{(g:list-store-item-type object) => gtype}
+ "@version{2024-3-31}
+  @syntax{(g:list-store-item-type object) => gtype}
   @argument[object]{a @class{g:list-store} object}
   @argument[gtype]{a @class{g:type-t} type}
   @begin{short}
@@ -144,7 +145,7 @@
   @see-class{g:object}
   @see-function{g:list-model-item-type}")
 
-;;; --- list-store-n-items -----------------------------------------------------
+;;; --- g:list-store-n-items ---------------------------------------------------
 
 #+(and glib-2-74 liber-documentation)
 (setf (documentation (liber:slot-documentation "n-items" 'list-store) t)
@@ -156,8 +157,8 @@
 (setf (liber:alias-for-function 'list-store-n-items)
       "Accessor"
       (documentation 'list-store-n-items 'function)
- "@version{2023-9-5}
-  @syntax[]{(g:list-store-n-items object) => n-items}
+ "@version{2024-3-31}
+  @syntax{(g:list-store-n-items object) => n-items}
   @argument[object]{a @class{g:list-store} object}
   @argument[n-items]{an unsigned integer with the number of items contained in
     the list store}
@@ -170,82 +171,6 @@
   @see-class{g:list-store}")
 
 ;;; ----------------------------------------------------------------------------
-;;; GCompareDataFunc
-;;; ----------------------------------------------------------------------------
-
-(cffi:defcallback compare-data-func :int
-    ((a gobject:object)
-     (b gobject:object)
-     (data :pointer))
-  (let ((fn (glib:get-stable-pointer-value data)))
-    (restart-case
-      (funcall fn a b)
-      (return-from-compare-data-func () nil))))
-
-#+liber-documentation
-(setf (liber:alias-for-symbol 'compare-data-func)
-      "Callback"
-      (liber:symbol-documentation 'compare-data-func)
- "@version{2023-9-5}
-  @begin{short}
-    Specifies the type of a comparison function used to compare two values.
-  @end{short}
-  The function should return a negative integer if the first value comes before
-  the second, 0 if they are equal, or a positive integer if the first value
-  comes after the second.
-  @begin{pre}
-lambda (a b)
-  @end{pre}
-  @begin[code]{table}
-    @entry[a]{a @class{g:object} value}
-    @entry[b]{a @class{g:object} value to compare with}
-    @entry[Return]{Negative integer value if @code{a < b}, zero if @code{a = b},
-      positive integer value if @code{a > b}.}
-  @end{table}
-  @see-function{g:list-store-insert-sorted}")
-
-(export 'compare-data-func)
-
-;;; ----------------------------------------------------------------------------
-;;; GEqualFuncFull
-;;; ----------------------------------------------------------------------------
-
-#+glib-2-74
-(cffi:defcallback equal-func-full :boolean
-    ((a gobject:object)
-     (b gobject:object)
-     (data :pointer))
-  (let ((fn (glib:get-stable-pointer-value data)))
-    (restart-case
-      (funcall fn a b)
-      (return-from-equal-func-full () nil))))
-
-#+glib-2-74
-#+liber-documentation
-(setf (liber:alias-for-symbol 'equal-func-full)
-      "Callback"
-      (liber:symbol-documentation 'equal-func-full)
- "@version{2023-9-5}
-  @begin{short}
-    Specifies the type of a function used to test two values for equality.
-  @end{short}
-  The function should return @em{true} if both values are equal and @em{false}
-  otherwise.
-  @begin{pre}
-lambda (a b)
-  @end{pre}
-  @begin[code]{table}
-    @entry[a]{A @class{g:object} value.}
-    @entry[b]{A @class{g:object} value to compare with.}
-    @entry[Return]{@em{True} if @code{a = b}, @em{false} otherwise.}
-  @end{table}
-  Since 2.74
-  @see-function{g:list-store-find-with-equal-func}")
-
-#+glib-2-74
-(export 'equal-func-full)
-
-;;; ----------------------------------------------------------------------------
 ;;; g_list_store_new ()
 ;;; ----------------------------------------------------------------------------
 
@@ -254,9 +179,9 @@ lambda (a b)
 
 (cffi:defcfun ("g_list_store_new" list-store-new) (gobject:object list-store)
  #+liber-documentation
- "@version{2023-9-5}
+ "@version{2024-3-31}
   @argument[gtype]{a @class{g:type-t} type for the items in the list}
-  @return{A new @class{g:list-store} object.}
+  @return{The new @class{g:list-store} object.}
   @begin{short}
     Creates a new list store with items of @arg{gtype} type.
   @end{short}
@@ -274,17 +199,17 @@ lambda (a b)
 
 (cffi:defcfun ("g_list_store_insert" list-store-insert) :void
  #+liber-documentation
- "@version{2023-9-5}
+ "@version{2024-3-31}
   @argument[store]{a @class{g:list-store} object}
-  @argument[position]{an unsigned integer with the position at which to insert
-    the new item}
-  @argument[item]{a @class{g:object} object with the new item}
+  @argument[pos]{an unsigned integer with the position at which to insert the
+    new item}
+  @argument[item]{a @class{g:object} instance for the new item}
   @begin{short}
-    Inserts the item into the list store at @arg{position}.
+    Inserts the item into the list store at @arg{pos}.
   @end{short}
-  The item must be of type @slot[g:list-store]{item-type} type or derived from
-  it. The @arg{position} argument must be smaller than the length of the list
-  store, or equal to it to append.
+  The item must be of @slot[g:list-store]{item-type} type or derived from it.
+  The @arg{pos} argument must be smaller than the length of the list store, or
+  equal to it to append.
 
   Use the @fun{g:list-store-splice} function to insert multiple items at the
   same time efficiently.
@@ -293,10 +218,45 @@ lambda (a b)
   @see-function{g:list-store-item-type}
   @see-function{g:list-store-splice}"
   (store (gobject:object list-store))
-  (position :uint)
+  (pos :uint)
   (item gobject:object))
 
 (export 'list-store-insert)
+
+;;; ----------------------------------------------------------------------------
+;;; GCompareDataFunc
+;;; ----------------------------------------------------------------------------
+
+(cffi:defcallback compare-data-func :int
+    ((a gobject:object)
+     (b gobject:object)
+     (data :pointer))
+  (let ((func (glib:get-stable-pointer-value data)))
+    (restart-case
+      (funcall func a b)
+      (return< () :report "Return -1" -1)
+      (return= () :report "Return  0" 0)
+      (return> () :report "Return  1" 1))))
+
+#+liber-documentation
+(setf (liber:alias-for-symbol 'compare-data-func)
+      "Callback"
+      (liber:symbol-documentation 'compare-data-func)
+ "@version{2024-3-31}
+  @syntax{lambda (a b) => result}
+  @argument[a]{a @class{g:object} instance}
+  @argument[b]{a @class{g:object} instance to compare with}
+  @argument[result]{negative integer value if @code{a < b}, zero if
+    @code{a = b}, positive integer value if @code{a > b}}
+  @begin{short}
+    Specifies the type of a comparison function used to compare two values.
+  @end{short}
+  The function should return a negative integer if the first value comes before
+  the second, 0 if they are equal, or a positive integer if the first value
+  comes after the second.
+  @see-function{g:list-store-insert-sorted}")
+
+(export 'compare-data-func)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_list_store_insert_sorted ()
@@ -310,11 +270,11 @@ lambda (a b)
 
 (defun list-store-insert-sorted (store item func)
  #+liber-documentation
- "@version{2023-9-5}
+ "@version{2024-3-31}
   @argument[store]{a @class{g:list-store} object}
   @argument[item]{a @class{g:object} object}
   @argument[func]{a @symbol{g:compare-data-func} callback function}
-  @return{An unsigned integer with the position at which @arg{item} was
+  @return{The unsigned integer with the position at which @arg{item} was
     inserted.}
   @begin{short}
     Inserts the item into the list store at a position to be determined by the
@@ -324,11 +284,13 @@ lambda (a b)
   result is undefined. Usually you would approach this by only ever inserting
   items by way of this function.
   @see-class{g:list-store}
+  @see-class{g:object}
   @see-symbol{g:compare-data-func}"
-  (%list-store-insert-sorted store
-                             item
-                             (cffi:callback compare-data-func)
-                             (glib:allocate-stable-pointer func)))
+  (glib:with-stable-pointer (ptr func)
+    (%list-store-insert-sorted store
+                               item
+                               (cffi:callback compare-data-func)
+                               ptr)))
 
 (export 'list-store-insert-sorted)
 
@@ -338,13 +300,13 @@ lambda (a b)
 
 (cffi:defcfun ("g_list_store_append" list-store-append) :void
  #+liber-documentation
- "@version{2023-9-5}
-  @argument[list]{a @class{g:list-store} object}
+ "@version{2024-3-31}
+  @argument[store]{a @class{g:list-store} object}
   @argument[item]{a @class{g:object} object with the new item}
   @begin{short}
     Appends the item to the list store.
   @end{short}
-  The item must be of type @slot[g:list-store]{item-type} type. Use the
+  The item must be of @slot[g:list-store]{item-type} type. Use the
   @fun{g:list-store-splice} function to append multiple items at the same time
   efficiently.
   @see-class{g:list-store}
@@ -362,20 +324,20 @@ lambda (a b)
 
 (cffi:defcfun ("g_list_store_remove" list-store-remove) :void
  #+liber-documentation
- "@version{2023-9-5}
-  @argument[list]{a @class{g:list-store} object}
-  @argument[position]{an unsigned integer with the position of the item that
-    is to be removed}
+ "@version{2024-3-31}
+  @argument[store]{a @class{g:list-store} object}
+  @argument[pos]{an unsigned integer with the position of the item that is to
+    be removed}
   @begin{short}
-    Removes the item from the list store that is at @arg{position}.
+    Removes the item from the list store that is at @arg{pos}.
   @end{short}
-  The @arg{position} argument must be smaller than the current length of the
-  list store. Use the @fun{g:list-store-splice} function to remove multiple
-  items at the same time efficiently.
+  The @arg{pos} argument must be smaller than the current length of the list
+  store. Use the @fun{g:list-store-splice} function to remove multiple items at
+  the same time efficiently.
   @see-class{g:list-store}
   @see-function{g:list-store-splice}"
-  (list (gobject:object list-store))
-  (position :uint))
+  (store (gobject:object list-store))
+  (pos :uint))
 
 (export 'list-store-remove)
 
@@ -385,11 +347,11 @@ lambda (a b)
 
 (cffi:defcfun ("g_list_store_remove_all" list-store-remove-all) :void
  #+liber-documentation
- "@version{2023-9-5}
-  @argument[list]{a @class{g:list-store} object}
+ "@version{2024-3-31}
+  @argument[store]{a @class{g:list-store} object}
   @short{Removes all items from the list store.}
   @see-class{g:list-store}"
-  (list (gobject:object list-store)))
+  (store (gobject:object list-store)))
 
 (export 'list-store-remove-all)
 
@@ -399,31 +361,31 @@ lambda (a b)
 
 (cffi:defcfun ("g_list_store_splice" %list-store-splice) :void
   (store (gobject:object list-store))
-  (position :uint)
-  (n-removals :uint)
+  (pos :uint)
+  (n :uint)
   (additions :pointer)
   (n-additions :uint))
 
-(defun list-store-splice (store position n-removals additions)
+(defun list-store-splice (store pos n &rest additions)
  #+liber-documentation
- "@version{2023-9-5}
+ "@version{2024-3-31}
   @argument[store]{a @class{g:list-store} object}
-  @argument[position]{an unsigned integer with the position at which to make
+  @argument[pos]{an unsigned integer with the position at which to make
     the change}
-  @argument[n-removals]{an unsigned integer with the number of items to remove}
-  @argument[additions]{a list with @class{g:object} objects to add}
+  @argument[n]{an unsigned integer with the number of items to remove}
+  @argument[additions]{@class{g:object} instances to add}
   @begin{short}
-    Changes the list store by removing @arg{n_removals} items and adding
-    @arg{additions} to it.
+    Changes the list store by removing @arg{n} items and adding @arg{additions}
+    to it.
   @end{short}
   The @arg{additions} argument must contain items of the
   @slot[g:list-store]{item-type} type. This function is more efficient than the
   @fun{g:list-store-insert} and @fun{g:list-store-remove} functions, because it
   only emits the @code{\"items-changed\"} signal once for the change.
 
-  The @arg{position} and @arg{n-removals} arguments must be correct, i.e.
-  @arg{position} + @arg{n-removals} must be less than or equal to the length of
-  the list at the time this function is called.
+  The @arg{pos} and @arg{n} arguments must be correct, i.e. @arg{pos} + @arg{n}
+  must be less than or equal to the length of the list store at the time this
+  function is called.
   @see-class{g:list-store}
   @see-class{g:object}
   @see-function{g:list-store-insert}
@@ -437,7 +399,7 @@ lambda (a b)
                   (if addition
                       (gobject:object-pointer addition)
                       (cffi:null-pointer))))
-      (%list-store-splice store position n-removals additions-ar n-additions))))
+      (%list-store-splice store pos n additions-ar n-additions))))
 
 (export 'list-store-splice)
 
@@ -452,7 +414,7 @@ lambda (a b)
 
 (defun list-store-sort (store func)
  #+liber-documentation
- "@version{2023-9-5}
+ "@version{2024-3-31}
   @argument[store]{a @class{g:list-store} object}
   @argument[func]{a @symbol{g:compare-data-func} callback function for sorting}
   @begin{short}
@@ -460,9 +422,10 @@ lambda (a b)
   @end{short}
   @see-class{g:list-store}
   @see-symbol{g:compare-data-func}"
-  (%list-store-sort store
-                    (cffi:callback compare-data-func)
-                    (glib:allocate-stable-pointer func)))
+  (glib:with-stable-pointer (ptr func)
+    (%list-store-sort store
+                      (cffi:callback compare-data-func)
+                      ptr)))
 
 (export 'list-store-sort)
 
@@ -474,15 +437,15 @@ lambda (a b)
 (cffi:defcfun ("g_list_store_find" %list-store-find) :boolean
   (store (gobject:object list-store))
   (item gobject:object)
-  (position (:pointer :uint)))
+  (pos (:pointer :uint)))
 
 #+glib-2-64
 (defun list-store-find (store item)
  #+liber-documentation
- "@version{2023-9-5}
-  @argument[list]{a @class{g:list-store} object}
+ "@version{2024-3-31}
+  @argument[store]{a @class{g:list-store} object}
   @argument[item]{a @class{g:object} item}
-  @return{An unsigned integer with the first position of the item, if it was
+  @return{The unsigned integer with the first position of the item, if it was
     found, otherwise @code{nil}.}
   @begin{short}
     Looks up the given item in the list store by looping over the items until
@@ -493,18 +456,58 @@ lambda (a b)
 
   If you need to compare the two items with a custom comparison function, use
   the @fun{g:list-store-find-with-equal-func} function with a custom
-  @code{GEqualFunc} instead.
+  @symbol{g:equal-func-full} callback function instead.
 
   Since 2.64
   @see-class{g:list-store}
   @see-class{g:object}
+  @see-symbol{g:equal-func-full}
   @see-function{g:list-store-find-with-equal-func}"
-  (cffi:with-foreign-object (position :uint)
-    (when (%list-store-find store item position)
-      (cffi:mem-ref position :uint))))
+  (cffi:with-foreign-object (pos :uint)
+    (when (%list-store-find store item pos)
+      (cffi:mem-ref pos :uint))))
 
 #+glib-2-64
 (export 'list-store-find)
+
+;;; ----------------------------------------------------------------------------
+;;; GEqualFuncFull
+;;; ----------------------------------------------------------------------------
+
+#+glib-2-74
+(cffi:defcallback equal-func-full :boolean
+    ((a gobject:object)
+     (b gobject:object)
+     (data :pointer))
+  (let ((func (glib:get-stable-pointer-value data)))
+    (restart-case
+      (funcall func a b)
+      (return-true () :report "Return t" t)
+      (return-false () :report "Return NIL" nil))))
+
+#+glib-2-74
+#+liber-documentation
+(setf (liber:alias-for-symbol 'equal-func-full)
+      "Callback"
+      (liber:symbol-documentation 'equal-func-full)
+ "@version{2024-3-31}
+  @syntax{lambda (a b) => result}
+  @argument[a]{a @class{g:object} instance}
+  @argument[b]{a @class{g:object} instance to compare with}
+  @argument[result]{@em{true} if @code{a = b}, @em{false} otherwise}
+  @begin{short}
+    Specifies the type of a callback function used to test two values for
+    equality.
+  @end{short}
+  The function should return @em{true} if both values are equal and @em{false}
+  otherwise.
+
+  Since 2.74
+  @see-class{g:object}
+  @see-function{g:list-store-find-with-equal-func}")
+
+#+glib-2-74
+(export 'equal-func-full)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_list_store_find_with_equal_func ()
@@ -513,11 +516,11 @@ lambda (a b)
 #+glib-2-74
 (defun list-store-find-with-equal-func (store item func)
  #+liber-documentation
- "@version{2023-9-5}
+ "@version{2024-3-31}
   @argument[store]{a @class{g:list-store} object}
   @argument[item]{a @class{g:object} object}
   @argument[func]{a @symbol{g:equal-func-full} callback function}
-  @return{An unsigned integer with the first position of the item, if it was
+  @return{The unsigned integer with the first position of the item, if it was
     found, otherwise @code{nil}.}
   @begin{short}
     Looks up the given item in the list store by looping over the items and
@@ -530,14 +533,15 @@ lambda (a b)
   @see-class{g:list-store}
   @see-class{g:object}
   @see-symbol{g:equal-func-full}"
-  (cffi:with-foreign-object (pos :uint)
-    (when (%list-store-find-with-equal-func-full
-                  store
-                  item
-                  (cffi:callback equal-func-full)
-                  (glib:allocate-stable-pointer func)
-                  pos)
-      (cffi:mem-ref pos :uint))))
+  (glib:with-stable-pointer (ptr func)
+    (cffi:with-foreign-object (pos :uint)
+      (when (%list-store-find-with-equal-func-full
+                    store
+                    item
+                    (cffi:callback equal-func-full)
+                    ptr
+                    pos)
+        (cffi:mem-ref pos :uint)))))
 
 #+glib-2-74
 (export 'list-store-find-with-equal-func)
@@ -556,6 +560,6 @@ lambda (a b)
   (item gobject:object)
   (func :pointer)
   (data :pointer)
-  (position (:pointer :uint)))
+  (pos (:pointer :uint)))
 
 ;;; --- End of file gio.list-store.lisp ----------------------------------------
