@@ -6,7 +6,7 @@
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
 ;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2011 - 2023 Dieter Kaiser
+;;; Copyright (C) 2011 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -177,29 +177,29 @@
 ;;; G_PRIORITY_HIGH
 ;;; ----------------------------------------------------------------------------
 
-(defconstant +g-priority-high+ -100
+(defconstant +priority-high+ -100
  #+liber-documentation
- "@version{2022-11-21}
+ "@version{2024-4-2}
   @variable-value{-100}
   @begin{short}
     Use this for high priority event sources.
   @end{short}
   It is not used within GLib or GTK.
-  @see-variable{+g-priority-default+}
-  @see-variable{+g-priority-low+}")
+  @see-variable{g:+priority-default+}
+  @see-variable{g:+priority-low+}")
 
 #+liber-documentation
-(setf (liber:alias-for-variable '+g-priority-high+) "Constant")
+(setf (liber:alias-for-variable '+priority-high+) "Constant")
 
-(export '+g-priority-high+)
+(export '+priority-high+)
 
 ;;; ----------------------------------------------------------------------------
 ;;; G_PRIORITY_DEFAULT
 ;;; ----------------------------------------------------------------------------
 
-(defconstant +g-priority-default+ 0
+(defconstant +priority-default+ 0
  #+liber-documentation
- "@version{2022-11-21}
+ "@version{2024-4-2}
   @variable-value{0}
   @begin{short}
     Use this for default priority event sources.
@@ -207,85 +207,85 @@
   In GLib this priority is used when adding timeout functions with the
   @fun{g:timeout-add} function. In GDK this priority is used for events from
   the X server.
-  @see-variable{+g-priority-high+}
-  @see-variable{+g-priority-low+}
+  @see-variable{g:+priority-high+}
+  @see-variable{g:+priority-low+}
   @see-function{g:timeout-add}")
 
 #+liber-documentation
-(setf (liber:alias-for-variable '+g-priority-default+) "Constant")
+(setf (liber:alias-for-variable '+priority-default+) "Constant")
 
-(export '+g-priority-default+)
+(export '+priority-default+)
 
 ;;; ----------------------------------------------------------------------------
 ;;; G_PRIORITY_HIGH_IDLE
 ;;; ----------------------------------------------------------------------------
 
-(defconstant +g-priority-high-idle+ 100
+(defconstant +priority-high-idle+ 100
  #+liber-documentation
- "@version{2022-11-21}
+ "@version{2024-4-2}
   @variable-value{100}
   @begin{short}
     Use this for high priority idle functions.
   @end{short}
-  GTK uses the @sym{+g-priority-high-idle+} + 10 value for resizing operations,
-  and the @sym{+g-priority-high-idle+} + 20 value for redrawing operations. This
+  GTK uses the @sym{g:+priority-high-idle+} + 10 value for resizing operations,
+  and the @sym{g:+priority-high-idle+} + 20 value for redrawing operations. This
   is done to ensure that any pending resizes are processed before any pending
   redraws, so that widgets are not redrawn twice unnecessarily.
-  @see-variable{+g-priority-default-idle+}")
+  @see-variable{g:+priority-default-idle+}")
 
 #+liber-documentation
-(setf (liber:alias-for-variable '+g-priority-high-idle+) "Constant")
+(setf (liber:alias-for-variable '+priority-high-idle+) "Constant")
 
-(export '+g-priority-high-idle+)
+(export '+priority-high-idle+)
 
 ;;; ----------------------------------------------------------------------------
 ;;; G_PRIORITY_DEFAULT_IDLE
 ;;; ----------------------------------------------------------------------------
 
-(defconstant +g-priority-default-idle+ 200
+(defconstant +priority-default-idle+ 200
  #+liber-documentation
- "@version{2022-11-21}
+ "@version{2024-4-2}
   @variable-value{200}
   @begin{short}
     Use this for default priority idle functions.
   @end{short}
   In GLib this priority is used when adding idle functions with the
   @fun{g:idle-add} function.
-  @see-variable{+g-priority-high-idle+}
+  @see-variable{g:+priority-high-idle+}
   @see-function{g:idle-add}")
 
 #+liber-documentation
-(setf (liber:alias-for-variable '+g-priority-default-idle+) "Constant")
+(setf (liber:alias-for-variable '+priority-default-idle+) "Constant")
 
-(export '+g-priority-default-idle+)
+(export '+priority-default-idle+)
 
 ;;; ----------------------------------------------------------------------------
 ;;; G_PRIORITY_LOW
 ;;; ----------------------------------------------------------------------------
 
-(defconstant +g-priority-low+ 300
+(defconstant +priority-low+ 300
  #+liber-documentation
- "@version{2022-11-21}
+ "@version{2024-4-2}
   @variable-value{300}
   @begin{short}
     Use this for very low priority background tasks.
   @end{short}
   It is not used within GLib or GTK.
-  @see-variable{+g-priority-default+}
-  @see-variable{+g-priority-high+}")
+  @see-variable{g:+priority-default+}
+  @see-variable{g:+priority-high+}")
 
 #+liber-documentation
-(setf (liber:alias-for-variable '+g-priority-low+) "Constant")
+(setf (liber:alias-for-variable '+priority-low+) "Constant")
 
-(export '+g-priority-low+)
+(export '+priority-low+)
 
 ;;; ----------------------------------------------------------------------------
 ;;; G_SOURCE_CONTINUE
 ;;; ----------------------------------------------------------------------------
 
-(defconstant +g-source-continue+ t
+(defconstant +source-continue+ t
  #+liber-documentation
- "@version{2022-11-21}
+ "@version{2024-4-2}
   @variable-value{@em{true}}
   @begin{short}
     Use this constant as the return value of a @symbol{g:source-func} callback
@@ -293,20 +293,20 @@
   @end{short}
   @see-type{g:source}
   @see-symbol{g:source-func}
-  @see-variable{+g-source-remove+}")
+  @see-variable{g:+source-remove+}")
 
 #+liber-documentation
-(setf (liber:alias-for-variable '+g-source-continue+) "Constant")
+(setf (liber:alias-for-variable '+source-continue+) "Constant")
 
-(export '+g-source-continue+)
+(export '+source-continue+)
 
 ;;; ----------------------------------------------------------------------------
 ;;; G_SOURCE_REMOVE
 ;;; ----------------------------------------------------------------------------
 
-(defconstant +g-source-remove+ nil
+(defconstant +source-remove+ nil
  #+liber-documentation
- "@version{2022-11-21}
+ "@version{2024-4-2}
   @variable-value{@em{false}}
   @begin{short}
     Use this constant as the return value of a @symbol{g:source-func} callback
@@ -314,12 +314,12 @@
   @end{short}
   @see-type{g:source}
   @see-symbol{g:source-func}
-  @see-variable{+g-source-continue+}")
+  @see-variable{g:+source-continue+}")
 
 #+liber-documentation
-(setf (liber:alias-for-variable '+g-source-remove+) "Constant")
+(setf (liber:alias-for-variable '+source-remove+) "Constant")
 
-(export '+g-source-remove+)
+(export '+source-remove+)
 
 ;;; ----------------------------------------------------------------------------
 ;;; GMainLoop
@@ -348,7 +348,7 @@
   functions which operate on a @type{g:main-context} instance or a built-in
   @type{g:source} instance are thread-safe.
 
-  Each event source is assigned a priority. The @var{+g-priority-default+}
+  Each event source is assigned a priority. The @var{g:+priority-default+}
   default priority, is 0. Values less than 0 denote higher priorities.
   Values greater than 0 denote lower priorities. Events from high priority
   sources are always processed before events from lower priority sources.
@@ -1680,20 +1680,20 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 ;;; g_timeout_add ()
 ;;; ----------------------------------------------------------------------------
 
-(defun timeout-add (interval func &key (priority +g-priority-default+))
+(defun timeout-add (interval func &key (priority +priority-default+))
  #+liber-documentation
  "@version{2022-11-22}
   @argument[interval]{an integer with the time between calls to @arg{func},
     in milliseconds}
   @argument[func]{a @symbol{g:source-func} callback function to call}
   @argument[priority]{an integer with the priority of the timeout source,
-    typically this will be in the range between the @var{+g-priority-default+}
-    and @var{+g-priority-high+} values}
+    typically this will be in the range between the @var{g:+priority-default+}
+    and @var{g:+priority-high+} values}
   @return{The unsigned integer ID greater than 0 of the event source.}
   @begin{short}
     Sets a function to be called at regular intervals, with @arg{priority}.
   @end{short}
-  The default value is @var{+g-priority-default+}. The function is called
+  The default value is @var{g:+priority-default+}. The function is called
   repeatedly until it returns @em{false}, at which point the timeout is
   automatically destroyed and the function will not be called again. The first
   call to the function will be at the end of the first interval.
@@ -1733,8 +1733,8 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
  #+liber-documentation
  "@version{#2013-7-20}
   @argument[priority]{the priority of the timeout source. Typically this will
-    be in the range between @var{+g-priority-default+} and
-    @var{+g-priority-high+}.}
+    be in the range between @var{g:+priority-default+} and
+    @var{g:+priority-high+}.}
   @argument[interval]{the time between calls to the function, in milliseconds
     (1/1000ths of a second)}
   @argument[function]{function to call}
@@ -1773,20 +1773,20 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 ;;; ----------------------------------------------------------------------------
 
 (defun timeout-add-seconds (interval func
-                            &key (priority +g-priority-default+))
+                            &key (priority +priority-default+))
  #+liber-documentation
  "@version{2023-1-6}
   @argument[interval]{an unsigned integer with the time between calls to
     @arg{func}, in seconds}
   @argument[func]{a @symbol{g:source-func} callback function to call}
   @argument[priority]{an integer with the priority of the timeout source,
-    typically this will be in the range between @var{+g-priority-default+} and
-    @var{+g-priority-high+} values}
+    typically this will be in the range between @var{g:+priority-default+} and
+    @var{g:+priority-high+} values}
   @return{The unsigned integer ID greater than 0 of the event source.}
   @begin{short}
     Sets a function to be called at regular intervals with @arg{priority}.
   @end{short}
-  The default value is @var{+g-priority-default+}. The function is called
+  The default value is @var{g:+priority-default+}. The function is called
   repeatedly until it returns @em{false}, at which point the timeout is
   automatically destroyed and the function will not be called again.
 
@@ -1818,8 +1818,8 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
  #+liber-documentation
  "@version{#2013-01-17}
   @argument[priority]{the priority of the timeout source. Typically this will
-    be in the range between @var{+g-priority-default+} and
-    @var{+g-priority-high+}.}
+    be in the range between @var{g:+priority-default+} and
+    @var{g:+priority-high+}.}
   @argument[interval]{the time between calls to the function, in seconds}
   @argument[function]{function to call}
   @argument[data]{data to pass to function}
@@ -1883,8 +1883,8 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
   The source will not initially be associated with any context and must be
   added to one with the @fun{g:source-attach} function before it will be
   executed. Note that the default priority for idle sources is
-  @var{+g-priority-default-idle+}, as compared to other sources which have
-  a default priority of @var{+g-priority-default+}.
+  @var{g:+priority-default-idle+}, as compared to other sources which have
+  a default priority of @var{g:+priority-default+}.
   @see-type{g:source}
   @see-function{g:source-attach}")
 
@@ -1894,19 +1894,19 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 ;;; g_idle_add ()
 ;;; ----------------------------------------------------------------------------
 
-(defun idle-add (func &key (priority +g-priority-default-idle+))
+(defun idle-add (func &key (priority +priority-default-idle+))
  #+liber-documentation
  "@version{2022-11-22}
   @argument[func]{a @symbol{g:source-func} callback function to call}
   @argument[priority]{an integer with the priority of the idle source, typically
-    this will be in the range between @var{+g-priority-default-idle+} and
-    @var{+g-priority-high-idle+}}
+    this will be in the range between @var{g:+priority-default-idle+} and
+    @var{g:+priority-high-idle+}}
   @return{The unsigned integer ID greater than 0 of the event source.}
   @begin{short}
     Adds a function to be called whenever there are no higher priority events
     pending to the default main loop.
   @end{short}
-  The @arg{priority} keyword argument has the @var{+g-priority-default-idle+}
+  The @arg{priority} keyword argument has the @var{g:+priority-default-idle+}
   default value. If the function returns @em{false} it is automatically removed
   from the list of event sources and will not be called again.
 
@@ -2568,7 +2568,7 @@ lambda ()
   @end{pre}
   @begin[code]{table}
     @entry[Returns]{@em{False} if the source should be removed. The constants
-      @var{+g-source-continue+} and @var{+g-source-remove+} are memorable names
+      @var{g:+source-continue+} and @var{g:+source-remove+} are memorable names
       for the return value.}
   @end{table}
   @begin[Example]{dictionary}
@@ -2585,9 +2585,9 @@ lambda ()
           ;; Stop the main loop from running
           (g:main-loop-quit loop)
           ;; Stop the source
-          +g-source-remove+)
+          g:+source-remove+)
         ;; Continue the source
-        +g-source-continue+)))
+        g:+source-continue+)))
 
 (defun example-timeout-source ()
   (let* ((context (g:main-context-new))

@@ -52,13 +52,13 @@
            #:with-catching-to-g-error
 
            ;; Symbols from glib.main-loop.lisp
-           #:+g-priority-high+
-           #:+g-priority-default+
-           #:+g-priority-high-idle+
-           #:+g-priority-default-idle+
-           #:+g-priority-low+
-           #:+g-source-continue+
-           #:+g-source-remove+
+           #:+priority-high+
+           #:+priority-default+
+           #:+priority-high-idle+
+           #:+priority-default-idle+
+           #:+priority-low+
+           #:+source-continue+
+           #:+source-remove+
            #:main-loop
            #:main-loop-new
            #:main-loop-ref

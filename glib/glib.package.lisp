@@ -136,13 +136,13 @@
   @end{section}
   @begin[The Main Event Loop]{section}
     The Main Event Loop manages all available sources of events.
-    @about-variable{+g-priority-high+}
-    @about-variable{+g-priority-default+}
-    @about-variable{+g-priority-high-idle+}
-    @about-variable{+g-priority-default-idle+}
-    @about-variable{+g-priority-low+}
-    @about-variable{+g-source-continue+}
-    @about-variable{+g-source-remove+}
+    @about-variable{+priority-high+}
+    @about-variable{+priority-default+}
+    @about-variable{+priority-high-idle+}
+    @about-variable{+priority-default-idle+}
+    @about-variable{+priority-low+}
+    @about-variable{+source-continue+}
+    @about-variable{+source-remove+}
     @about-type{main-loop}
     @about-function{main-loop-new}
     @about-function{main-loop-ref}
