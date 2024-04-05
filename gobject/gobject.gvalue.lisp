@@ -212,7 +212,7 @@
   (let* ((gtype (value-type gvalue))
          (fundamental-type (type-fundamental gtype)))
     (ev-case fundamental-type
-      ((glib:gtype +g-type-invalid+)
+      ((glib:gtype +type-invalid+)
        (error "GValue is of invalid type (~A)" (glib:gtype-name gtype)))
       ((glib:gtype "void") nil)
       ((glib:gtype "gchar") (value-char gvalue))
@@ -324,7 +324,7 @@
   (when init-gvalue (value-init gvalue gtype))
   (let ((fundamental-type (type-fundamental gtype)))
     (ev-case fundamental-type
-      ((glib:gtype +g-type-invalid+) (error "Invalid type (~A)" gtype))
+      ((glib:gtype +type-invalid+) (error "Invalid type (~A)" gtype))
       ((glib:gtype "void") nil)
       ((glib:gtype "gchar") (setf (value-char gvalue) value))
       ((glib:gtype "guchar") (setf (value-uchar gvalue) value))

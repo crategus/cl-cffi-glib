@@ -31,13 +31,13 @@
 
 (defun get-g-type-definition (gtype &optional lisp-name-package)
   (maybe-call-type-init gtype)
-  (cond ((type-is-a gtype (glib:gtype +g-type-enum+))
+  (cond ((type-is-a gtype (glib:gtype +type-enum+))
          (get-g-enum-definition gtype lisp-name-package))
-        ((type-is-a gtype (glib:gtype +g-type-flags+))
+        ((type-is-a gtype (glib:gtype +type-flags+))
          (get-g-flags-definition gtype lisp-name-package))
-        ((type-is-a gtype (glib:gtype +g-type-interface+))
+        ((type-is-a gtype (glib:gtype +type-interface+))
          (get-g-interface-definition gtype lisp-name-package))
-        ((type-is-a gtype (glib:gtype +g-type-object+))
+        ((type-is-a gtype (glib:gtype +type-object+))
          (get-g-class-definition gtype lisp-name-package))
         (t
          (error "Do not know how to generate type definition for ~A type ~A"
@@ -91,7 +91,7 @@
 ;;     a list of enum-item objects
 
 (defun get-enum-items (gtype)
-  (assert (type-is-a gtype +g-type-enum+))
+  (assert (type-is-enum gtype))
   (let ((gclass (type-class-ref gtype)))
     (unwind-protect
       (loop
@@ -154,7 +154,7 @@
 ;; Returns a list of flags-item objects
 
 (defun get-flags-items (gtype)
-  (assert (type-is-a gtype +g-type-flags+))
+  (assert (type-is-flags gtype))
   (let ((gclass (type-class-ref gtype)))
     (unwind-protect
       (loop
@@ -277,7 +277,7 @@
 ;; integer or a string specifying the GType
 
 (defun interface-properties (gtype)
-  (assert (type-is-a gtype +g-type-interface+))
+  (assert (type-is-interface gtype))
   (let ((iface (type-default-interface-ref gtype)))
     (unwind-protect
       (cffi:with-foreign-object (n-props :uint)
@@ -348,7 +348,7 @@
 ;; integer or a string specifying the GType
 
 (defun class-properties (gtype)
-  (assert (type-is-a gtype +g-type-object+))
+  (assert (type-is-object gtype))
   (let ((class (type-class-ref gtype)))
     (unwind-protect
       (cffi:with-foreign-object (n-props :uint)
@@ -505,7 +505,7 @@
   (setf fund-type (glib:gtype fund-type))
   (remove-if-not
    (lambda (gtype)
-     (equal (type-fundamental (glib:gtype gtype)) fund-type))
+     (eq (type-fundamental (glib:gtype gtype)) fund-type))
    types))
 
 ;;; ----------------------------------------------------------------------------
@@ -523,10 +523,9 @@
 
 (defun class-or-interface-properties (gtype)
   (setf gtype (glib:gtype gtype))
-  (cond
-    ((gtype= (type-fundamental gtype) (glib:gtype +g-type-object+))
-     (class-properties gtype))
-    ((gtype= (type-fundamental gtype) (glib:gtype +g-type-interface+))
-     (interface-properties gtype))))
+  (cond ((type-is-object gtype)
+         (class-properties gtype))
+        ((type-is-interface gtype)
+         (interface-properties gtype))))
 
 ;;; --- End of file gobject.utils.lisp -----------------------------------------

@@ -92,7 +92,7 @@
 ;; GTYPE-ID replaces the accessor GTYPE-%ID
 
 (defun gtype-id (gtype)
-  (cond ((null gtype) 0) ; for +g-type-invalid+
+  (cond ((null gtype) 0) ; for gobject:+type-invalid+
         ((gtype-%id gtype) (gtype-%id gtype))
         (t
          (bt:with-lock-held (*gtype-lock*)

@@ -64,7 +64,7 @@
 
 (test g-resource-boxed
   ;; Type check
-  (is (g:type-is-a (g:gtype "GResource") gobject:+g-type-boxed+))
+  (is (g:type-is-boxed "GResource"))
   ;; Check the type initializer
   (is (eq (g:gtype "GResource")
           (g:gtype (cffi:foreign-funcall "g_resource_get_type" :size))))

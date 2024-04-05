@@ -1033,8 +1033,8 @@ lambda (object pspec)    :no-hooks
     @end{pre}
   @end{dictionary}
   @see-class{g:type-t}"
-  (and (not (type-is-a gtype (glib:gtype +g-type-interface+)))
-       (type-is-a gtype (glib:gtype +g-type-object+))))
+  (and (not (type-is-a gtype (glib:gtype +type-interface+)))
+       (type-is-a gtype (glib:gtype +type-object+))))
 
 (export 'type-is-object)
 
@@ -1071,7 +1071,7 @@ lambda (object pspec)    :no-hooks
   @end{dictionary}
   @see-class{g:object}
   @see-symbol{g:type-instance}"
-  (type-check-instance-type object +g-type-object+))
+  (type-check-instance-type object +type-object+))
 
 (export 'is-object)
 
@@ -1097,7 +1097,7 @@ lambda (object pspec)    :no-hooks
   @argument[class]{a foreign pointer to a @symbol{object-class} instance}
   @begin{short}
     Checks whether the @arg{class} argument is a @symbol{object-class}
-    instance of type @var{+g-type-object+} or derived.
+    instance of type @var{g:+type-object+} or derived.
   @end{short}
   @begin[Examples]{dictionary}
     @begin{pre}
@@ -1108,8 +1108,8 @@ lambda (object pspec)    :no-hooks
   @end{dictionary}
   @see-class{g:object}
   @see-symbol{object-class}
-  @see-variable{+g-type-object+}"
-  (type-check-class-type class +g-type-object+))
+  @see-variable{g:+type-object+}"
+  (type-check-class-type class +type-object+))
 
 ;;; ----------------------------------------------------------------------------
 ;;; G_OBJECT_GET_CLASS() -> object-class                 not exported
@@ -1539,7 +1539,7 @@ lambda (object pspec)    :no-hooks
   @end{dictionary}
   @see-class{g:type-t}
   @see-symbol{g:param-spec}"
-  (assert (type-is-a gtype +g-type-interface+)
+  (assert (type-is-interface gtype)
           nil
           "G:OBJECT-INTERFACE-FIND-PROPERTY: ~a is not a GInterface type"
           gtype)
@@ -1581,7 +1581,7 @@ lambda (object pspec)    :no-hooks
   @end{dictionary}
   @see-class{g:type-t}
   @see-symbol{g:param-spec}"
-  (assert (type-is-a gtype +g-type-interface+)
+  (assert (type-is-interface gtype)
           nil
           "G:OBJECT-INTERFACE-LIST-PROPERTIES: ~a is not a GInterface type"
           gtype)

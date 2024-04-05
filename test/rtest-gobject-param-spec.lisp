@@ -95,7 +95,7 @@
 (test g-param-value-set-default
   (let ((param (g:param-spec-int "Integer" "int" "Doku" 10 50 25 '())))
     (cffi:with-foreign-object (value '(:struct g:value))
-      (g:value-init value gobject:+g-type-int+)
+      (g:value-init value gobject:+type-int+)
       (is-false (g:param-value-set-default param value))
       (is (= 25 (gobject:parse-g-value value))))))
 
@@ -104,7 +104,7 @@
 (test g-param-value-defaults
   (let ((param (g:param-spec-int "Integer" "int" "Doku" 10 50 25 '())))
     (cffi:with-foreign-object (value '(:struct g:value))
-      (g:value-init value gobject:+g-type-int+)
+      (g:value-init value gobject:+type-int+)
       (is-false (g:param-value-defaults param value))
       (is-false (g:param-value-set-default param value))
       (is-true  (g:param-value-defaults param value)))))
@@ -114,13 +114,13 @@
 (test g-param-value-validate
   (let ((param (g:param-spec-int "Integer" "int" "Doku" 10 50 25 '())))
     (cffi:with-foreign-object (value '(:struct g:value))
-      (g:value-init value gobject:+g-type-int+)
+      (g:value-init value gobject:+type-int+)
       (is-true (g:param-value-validate param value))
       (is (= 10 (gobject:parse-g-value value)))
-      (gobject:set-g-value value 100 gobject:+g-type-int+)
+      (gobject:set-g-value value 100 gobject:+type-int+)
       (is-true (g:param-value-validate param value))
       (is (= 50 (gobject:parse-g-value value)))
-      (gobject:set-g-value value 25 gobject:+g-type-int+)
+      (gobject:set-g-value value 25 gobject:+type-int+)
       (is-false (g:param-value-validate param value))
       (is (= 25 (gobject:parse-g-value value))))))
 

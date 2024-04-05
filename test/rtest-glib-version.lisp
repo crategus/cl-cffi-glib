@@ -15,11 +15,11 @@
   (is (member :glib-2-72 *features*))
   (is (member :glib-2-74 *features*))
   (is (member :glib-2-76 *features*)))
-  
+
 (test g-check-version
-  (is-true (integerp glib:+glib-major-version+))
-  (is-true (integerp glib:+glib-minor-version+))
-  (is-true (integerp glib:+glib-micro-version+))
+  (is-true (integerp glib:+major-version+))
+  (is-true (integerp glib:+minor-version+))
+  (is-true (integerp glib:+micro-version+))
   (is-false (glib:check-version 2 72 0))
   (is (string= "GLib version too old (micro mismatch)"
                (glib:check-version 2 99 0))))

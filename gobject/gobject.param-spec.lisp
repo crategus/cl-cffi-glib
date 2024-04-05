@@ -302,12 +302,12 @@
  "@version{2022-12-29}
   @argument[gtype]{a @class{g:type-t} ID}
   @begin{short}
-    Checks whether @arg{gtype} \"is a\" @var{+g-type-param+}.
+    Checks whether @arg{gtype} \"is a\" @var{g:+type-param+}.
   @end{short}
   @see-symbol{g:param-spec}
   @see-class{g:type-t}
-  @see-variable{+g-type-param+}"
-  (= +g-type-param+ (glib:gtype-id (type-fundamental gtype))))
+  @see-variable{g:+type-param+}"
+  (eq (type-fundamental gtype) (glib:gtype "GParam")))
 
 (export 'type-is-param)
 
@@ -334,10 +334,10 @@
   @argument[pspec]{a @symbol{g:param-spec} instance}
   @begin{short}
     Checks whether @arg{pspec} \"is a\" valid @symbol{g:param-spec} instance
-    of type @var{+g-type-param+} or derived.
+    of type @var{g:+type-param+} or derived.
   @end{short}
   @see-symbol{g:param-spec}
-  @see-variable{+g-type-param+}"
+  @see-variable{g:+type-param+}"
   (type-is-param (type-from-instance pspec)))
 
 (export 'is-param-spec)
@@ -860,7 +860,7 @@
  #+liber-documentation
  "@version{2022-12-29}
   @argument[param-type]{the @class{g:type-t} for the property, must be derived
-    from @var{+g-type-param+}}
+    from @var{g:+type-param+}}
   @argument[name]{a string with the canonical name of the property}
   @argument[nick]{a string with the nickname of the property}
   @argument[blurb]{a string with a short description of the property}
@@ -895,7 +895,7 @@
   @see-symbol{g:param-spec}
   @see-symbol{g:param-flags}
   @see-class{g:type-t}
-  @see-variable{+g-type-param+}"
+  @see-variable{g:+type-param+}"
   (param-type type-t)
   (name :string)
   (nick :string)

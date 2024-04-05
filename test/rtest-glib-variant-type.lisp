@@ -14,7 +14,7 @@
 
 (test g-variant-type-struct
   ;; Type check
-  (is (g:type-is-a (g:gtype "GVariantType") gobject:+g-type-boxed+))
+  (is (g:type-is-boxed "GVariantType"))
   ;; Check the type initializer
   (is (eq (g:gtype "GVariantType")
           (g:gtype (cffi:foreign-funcall "g_variant_type_get_gtype" :size)))))

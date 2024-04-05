@@ -98,6 +98,23 @@
 (in-package :gobject)
 
 ;;; ----------------------------------------------------------------------------
+
+(declaim (inline type-is-boxed))
+
+(defun type-is-boxed (gtype)
+ #+liber-documentation
+ "@version{2024-4-6}
+  @argument[gtype]{a @class{g:type-t} ID}
+  @return{@em{True} if @arg{gtype} is a \"GBoxed\" type.}
+  @begin{short}
+    Checks whether @arg{gtype} is a \"GBoxed\" type.
+  @end{short}
+  @see-class{g:type-t}"
+  (eq (type-fundamental gtype) (glib:gtype "GBoxed")))
+
+(export 'type-is-boxed)
+
+;;; ----------------------------------------------------------------------------
 ;;; GBoxedCopyFunc ()
 ;;;
 ;;; gpointer (*GBoxedCopyFunc) (gpointer boxed);
@@ -176,9 +193,9 @@
   @argument[name]{name of the new boxed type}
   @argument[copy-fn]{boxed structure copy function}
   @argument[free-fn]{boxed structure free function}
-  @return{New @var{+g-type-boxed+} derived type ID for @arg{name}.}
+  @return{New @var{g:+type-boxed+} derived type ID for @arg{name}.}
   @begin{short}
-    This function creates a new @var{+g-type-boxed+} derived type ID for
+    This function creates a new @var{g:+type-boxed+} derived type ID for
     a new boxed type with name @arg{name}.
   @end{short}
   Boxed type handling functions have to be provided to copy and free opaque
@@ -198,9 +215,11 @@
  #+liber-documentation
  "@version{#2013-6-10}
   @argument[name]{the name of the new pointer type}
-  @return{A new @var{+g-type-pointer+} derived type ID for @arg{name}.}
-  Creates a new @var{+g-type-pointer+} derived type ID for a new pointer type
-  with name @arg{name}."
+  @return{The new @var{g:+type-pointer+} derived type ID for @arg{name}.}
+  @begin{short}
+    Creates a new @var{g:+type-pointer+} derived type ID for a new pointer type
+    with name @arg{name}.
+  @end{short}"
   (name :string))
 
 ;;; ----------------------------------------------------------------------------

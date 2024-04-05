@@ -414,12 +414,12 @@
     specification.}
   @begin{short}
     Creates a new parameter specification instance specifying a property of
-    type @var{+g-type-boolean+}.
+    type @var{g:+type-boolean+}.
   @end{short}
   See the @fun{g:param-spec-internal} function for details on property names.
   @see-symbol{g:param-spec-boolean}
   @see-symbol{g:param-flags}
-  @see-variable{+g-type-boolean+}
+  @see-variable{g:+type-boolean+}
   @see-function{g:param-spec-internal}"
   (name :string)
   (nick :string)
@@ -446,16 +446,16 @@
  "@version{#2022-12-31}
   @syntax[]{(g:value-boolean gvalue) => value}
   @syntax[]{(setf (g:value-boolan gvalue) value)}
-  @argument[gvalue]{a @symbol{g:value} of type @var{+g-type-boolean+}}
+  @argument[gvalue]{a @symbol{g:value} of type @var{g:+type-boolean+}}
   @argument[value]{a boolean value}
   @begin{short}
     Boolean contents of @arg{gvalue}.
   @end{short}
   The @sym{g:value-boolean} function gets the contents of a @symbol{g:value}
-  of type @var{+g-type-boolean+}. The @sym{(setf g:value-boolean)} function
+  of type @var{g:+type-boolean+}. The @sym{(setf g:value-boolean)} function
   sets the contents of the @symbol{g:value} to @arg{value}.
   @see-symbol{g:value}
-  @see-variable{+g-type-boolean+}"
+  @see-variable{g:+type-boolean+}"
   (gvalue (:pointer (:struct value))))
 
 (export 'value-boolean)
@@ -566,11 +566,11 @@
   @return{A newly created @symbol{g:param-spec-char} parameter specification.}
   @begin{short}
     Creates a new parameter specification instance specifying a property of
-    type @var{+g-type-char+}.
+    type @var{g:+type-char+}.
   @end{short}
   @see-symbol{g:param-spec-char}
   @see-symbol{g:param-flags}
-  @see-variable{+g-type-char+}"
+  @see-variable{g:+type-char+}"
   (name :string)
   (nick :string)
   (blurb :string)
@@ -598,13 +598,13 @@
  "@version{#2022-12-31}
   @syntax[]{(g:value-char gvalue) => value}
   @syntax[]{(setf (g:value-char gvalue) value)}
-  @argument[gvalue]{a @symbol{g:value} of type @var{+g-type-char+}}
+  @argument[gvalue]{a @symbol{g:value} of type @var{g:+type-char+}}
   @argument[value]{an 8-bit integer with the character value}
   @begin{short}
      Character contents of @arg{gvalue}.
   @end{short}
   The @sym{g:value-char} function gets the contents of a @symbol{g:value}
-  of type @var{+g-type-char+}. The @sym{(setf g:value-char)} function sets the
+  of type @var{g:+type-char+}. The @sym{(setf g:value-char)} function sets the
   contents of a @symbol{g:value} to @arg{value}.
   @begin[Warning]{dictionary}
     The @sym{g:value-char} function has been deprecated since version 2.32 and
@@ -612,7 +612,7 @@
     broken, see the @fun{g:value-schar} function.
   @end{dictionary}
   @see-symbol{g:value}
-  @see-variable{+g-type-char+}
+  @see-variable{g:+type-char+}
   @see-function{g:value-schar}"
   (gvalue (:pointer (:struct value))))
 
@@ -635,18 +635,18 @@
  "@version{#2022-12-31}
   @syntax[]{(g:value-schar gvalue) => value}
   @syntax[]{(setf (g:value-schar gvalue) value)}
-  @argument[gvalue]{a @symbol{g:value} of type @var{+g-type-char+}}
+  @argument[gvalue]{a @symbol{g:value} of type @var{g:+type-char+}}
   @argument[value]{an integer with the character value}
   @begin{short}
     Signed 8-bit integer contents of @arg{gvalue}.
   @end{short}
   The @fun{g:value-schar} function gets the contents of a @symbol{g:value}
-  of type @var{+g-type-char+}. The @sym{(setf g:value-schar)} function sets
+  of type @var{g:+type-char+}. The @sym{(setf g:value-schar)} function sets
   the contents of a @symbol{g:value} to @arg{value}.
 
   Since 2.32
   @see-symbol{g:value}
-  @see-variable{+g-type-char+}"
+  @see-variable{g:+type-char+}"
   (gvalue (:pointer (:struct value))))
 
 (export 'value-schar)
@@ -757,12 +757,12 @@
   @return{A newly created @symbol{g:param-spec-uchar} parameter specification.}
   @begin{short}
     Creates a new parameter specification instance specifying a property of
-    type @var{+g-type-uchar+}.
+    type @var{g:+type-uchar+}.
   @end{short}
   See the @fun{g:param-spec-internal} function for details on property names.
   @see-symbol{g:param-spec-uchar}
   @see-symbol{g:param-flags}
-  @see-variable{+g-type-uchar+}
+  @see-variable{g:+type-uchar+}
   @see-function{g:param-spec-internal}"
   (name :string)
   (nick :string)
@@ -791,16 +791,16 @@
  "@version{#2022-12-31}
   @syntax[]{(g:value-uchar gvalue) => value}
   @syntax[]{(setf (g:value-uchar gvalue) value)}
-  @argument[gvalue]{a @symbol{g:value} of type @var{+g-type-uchar+}}
+  @argument[gvalue]{a @symbol{g:value} of type @var{g:+type-uchar+}}
   @argument[value]{an unsigned 8-bit integer with the unsigned character value}
   @begin{short}
     Unsigned character contents of @arg{gvalue}.
   @end{short}
   The @sym{g:value-uchar} function gets the contents of a @symol{g:value} of
-  type @var{+g-type-uchar+}. The @sym{(setf g:value-uchar)} function sets the
+  type @var{g:+type-uchar+}. The @sym{(setf g:value-uchar)} function sets the
   contents of a @symbol{g:value} to @arg{value}.
   @see-symbol{g:value}
-  @see-variable{+g-type-uchar+}"
+  @see-variable{g:+type-uchar+}"
   (gvalue (:pointer (:struct value))))
 
 (export 'value-uchar)
@@ -911,12 +911,12 @@
   @return{A newly created @symbol{g:param-spec-int} parameter specification.}
   @begin{short}
     Creates a new parameter specification instance specifying a property
-    of type @var{+g-type-int+}.
+    of type @var{g:+type-int+}.
   @end{short}
   See the @fun{g:param-spec-internal} function for details on property names.
   @see-symbol{g:param-spec-int}
   @see-symbol{g:param-flags}
-  @see-variable{+g-type-int+}
+  @see-variable{g:+type-int+}
   @see-function{g:param-spec-internal}"
   (name :string)
   (nick :string)
@@ -945,16 +945,16 @@
  "@version{#2022-12-31}
   @syntax[]{(g:value-int gvalue) => value}
   @syntax[]{(setf (g:value-int gvalue) value)}
-  @argument[gvalue]{a @symbol{g:value} of type @var{+g-type-int+}}
+  @argument[gvalue]{a @symbol{g:value} of type @var{g:+type-int+}}
   @argument[value]{an integer value}
   @begin{short}
     Integer contents of @arg{gvalue}.
   @end{short}
   The @sym{g:value-int} function gets the contents of a @symbol{g:value} of
-  type @var{+g-type-int+}. The @sym{(setf value-int)} function sets the
+  type @var{g:+type-int+}. The @sym{(setf value-int)} function sets the
   contents of a @symbol{g:value} to @arg{value}.
   @see-symbol{g:value}
-  @see-variable{+g-type-int+}"
+  @see-variable{g:+type-int+}"
   (gvalue (:pointer (:struct value))))
 
 (export 'value-int)
@@ -1062,12 +1062,12 @@
   @return{A newly created @symbol{g:param-spec-uint} parameter specification.}
   @begin{short}
     Creates a new parameter specificaton instance specifying a property
-    of type @var{+g-type-uint+}.
+    of type @var{g:+type-uint+}.
   @end{short}
   See the @fun{g:param-spec-internal} function for details on property names.
   @see-symbol{parm-spec-uint}
   @see-symbol{g:param-flags}
-  @see-variable{+g-type-uint}
+  @see-variable{g:+type-uint}
   @see-function{g:param-spec-internal}"
   (name :string)
   (nick :string)
@@ -1096,16 +1096,16 @@
  "@version{#2022-12-31}
   @syntax[]{(g:value-uint gvalue) => value}
   @syntax[]{(setf (g:value-uint gvalue) value)}
-  @argument[gvalue]{a @symbol{g:value} of type @var{+g-type-uint+}}
+  @argument[gvalue]{a @symbol{g:value} of type @var{g:+type-uint+}}
   @argument[value]{an unsigned integer value}
   @begin{short}
     Unsigned integer contents of @arg{gvalue}.
   @end{short}
   The @sym{g:value-uint} function gets the contents of a @symbol{g:value}
-  of type @var{+g-type-uint+}. The @sym{(setf value-uint)} function sets the
+  of type @var{g:+type-uint+}. The @sym{(setf value-uint)} function sets the
   contents of a @symbol{g:value} to @arg{value}.
   @see-symbol{g:value}
-  @see-variable{+g-type-uint+}"
+  @see-variable{g:+type-uint+}"
   (gvalue (:pointer (:struct value))))
 
 (export 'value-uint)
@@ -1216,12 +1216,12 @@
   @return{A newly created @symbol{g:param-spec-long} parameter specification.}
   @begin{short}
     Creates a new parameter specification instance specifying a property
-    of type @var{+g-type-long+}.
+    of type @var{g:+type-long+}.
   @end{short}
   See the @fun{g:param-spec-internal} function for details on property names.
   @see-symbol{g:param-spec-long}
   @see-symbol{g:param-flags}
-  @see-variable{+g-type-long+}
+  @see-variable{g:+type-long+}
   @see-function{g:param-spec-internal}"
   (name :string)
   (nick :string)
@@ -1250,16 +1250,16 @@
  "@version{#2022-12-31}
   @syntax[]{(g:value-long gvalue) => value}
   @syntax[]{(setf (g:value-long gvalue) value)}
-  @argument[gvalue]{a @symbol{g:value} of type @var{+g-type-long+}}
+  @argument[gvalue]{a @symbol{g:value} of type @var{g:+type-long+}}
   @argument[value]{a long integer value}
   @begin{short}
     Long integer contents of @arg{gvalue}.
   @end{short}
   The @sym{g:value-long} function gets the contents of a @symbol{g:value}
-  of type @var{+g-type-long+}. The @sym{(setf value-long)} function sets the
+  of type @var{g:+type-long+}. The @sym{(setf value-long)} function sets the
   contents of a @symbol{g:value} to @arg{value}.
   @see-symbol{g:value}
-  @see-variable{+g-type-long+}"
+  @see-variable{g:+type-long+}"
   (gvalue (:pointer (:struct value))))
 
 (export 'value-long)
@@ -1370,12 +1370,12 @@
   @return{A newly created @symbol{g:param-spec-ulong} parameter specification.}
   @begin{short}
     Creates a new parameter specification instance specifying a property
-    of type @var{+g-type-ulong+}.
+    of type @var{g:+type-ulong+}.
   @end{short}
   See the @fun{g:param-spec-internal} function for details on property names.
   @see-symbol{g:param-spec-ulong}
   @see-symbol{g:param-flags}
-  @see-variable{+g-type-ulong+}
+  @see-variable{g:+type-ulong+}
   @see-function{g:param-spec-internal}"
   (name :string)
   (nick :string)
@@ -1404,16 +1404,16 @@
  "@version{#2022-12-31}
   @syntax[]{(g:value-ulong gvalue) => value}
   @syntax[]{(setf (g:value-ulong gvalue) value)}
-  @argument[gvalue]{a @symbol{g:value} of type @var{+g-type-ulong+}}
+  @argument[gvalue]{a @symbol{g:value} of type @var{g:+type-ulong+}}
   @argument[value]{an unsigned long integer value}
   @begin{short}
     Unsigned long integer contents of @arg{gvalue}.
   @end{short}
   The @sym{g:value-ulong} function gets the contents of a @symbol{g:value}
-  of type @var{+g-type-ulong+}. The @sym{(setf value-ulong)} function sets
+  of type @var{g:+type-ulong+}. The @sym{(setf value-ulong)} function sets
   the contents of a @symbol{g:value} to @arg{value}.
   @see-symbol{g:value}
-  @see-variable{+g-type-ulong+}"
+  @see-variable{g:+type-ulong+}"
   (gvalue (:pointer (:struct value))))
 
 (export 'value-ulong)
@@ -1524,12 +1524,12 @@
   @return{A newly created @symbol{g:param-spec-int64} parameter specification.}
   @begin{short}
     Creates a new parameter specification instance specifying a property
-    of type @var{+g-type-int64+}.
+    of type @var{g:+type-int64+}.
   @end{short}
   See the @fun{g:param-spec-internal} function for details on property names.
   @see-symbol{g:param-spec-int64}
   @see-symbol{g:param-flags}
-  @see-variable{+g-type-int64+}
+  @see-variable{g:+type-int64+}
   @see-function{g:param-spec-internal}"
   (name :string)
   (nick :string)
@@ -1558,16 +1558,16 @@
  "@version{#2022-12-31}
   @syntax[]{(g:value-int64 gvalue) => value}
   @syntax[]{(setf (g:value-int64 gvalue) value)}
-  @argument[gvalue]{a @symbol{g:value} instance of type @var{+g-type-int64+}}
+  @argument[gvalue]{a @symbol{g:value} instance of type @var{g:+type-int64+}}
   @argument[value]{a 64-bit integer value}
   @begin{short}
     The 64-bit integer contents of @arg{gvalue}.
   @end{short}
   The @sym{g:value-int64} function gets the contents of a @symbol{g:value}
-  instance of type @var{+g-type-int64+}. The @sym{(setf value-int64)} function
+  instance of type @var{g:+type-int64+}. The @sym{(setf value-int64)} function
   set the contents of a @symbol{g:value} instance to @arg{value}.
   @see-symbol{g:value}
-  @see-variable{+g-type-int64+}"
+  @see-variable{g:+type-int64+}"
   (gvalue (:pointer (:struct value))))
 
 (export 'value-int64)
@@ -1678,12 +1678,12 @@
   @return{A newly created @symbol{g:param-spec-uint64} parameter specification.}
   @begin{short}
     Creates a new parameter specification instance specifying a property
-    of type @var{+g-type-uint64+}.
+    of type @var{g:+type-uint64+}.
   @end{short}
   See the @fun{g:param-spec-internal} function for details on property names.
   @see-symbol{g:param-spec-uint64}
   @see-symbol{g:param-flags}
-  @see-variable{+g-type-uint64+}
+  @see-variable{g:+type-uint64+}
   @see-function{g:param-spec-internal}"
   (name :string)
   (nick :string)
@@ -1712,16 +1712,16 @@
  "@version{#2022-12-31}
   @syntax[]{(g:value-uint64 gvalue) => value}
   @syntax[]{(setf (g:value-uint64 gvalue) value)}
-  @argument[gvalue]{a @symbol{g:value} of type @var{+g-type-uint64}}
+  @argument[gvalue]{a @symbol{g:value} of type @var{g:+type-uint64}}
   @argument[value]{an unsigned 64-bit integer value}
   @begin{short}
     Unsigned 64-bit integer contents of @arg{gvalue}.
   @end{short}
   The @sym{g:value-uint64} function gets the contents of a @symbol{g:value}
-  of type @var{+g-type-uint64+}. The @sym{(setf value-uint64)} function sets
+  of type @var{g:+type-uint64+}. The @sym{(setf value-uint64)} function sets
   the contents of a @symbol{g:value} to @arg{value}.
   @see-symbol{g:value}
-  @see-variable{+g-type-uint64+}"
+  @see-variable{g:+type-uint64+}"
   (gvalue (:pointer (:struct value))))
 
 (export 'value-uint64)
@@ -1836,12 +1836,12 @@
   @return{A newly created @symbol{g:param-spec-float} parameter specification.}
   @begin{short}
     Creates a new parameter specification instance specifying a property
-    of type @var{+g-type-float+}.
+    of type @var{g:+type-float+}.
   @end{short}
   See the @fun{g:param-spec-internal} function for details on property names.
   @see-symbol{g:param-spec-float}
   @see-symbol{g:param-flags}
-  @see-variable{+g-type-float+}
+  @see-variable{g:+type-float+}
   @see-function{g:param-spec-internal}"
   (name :string)
   (nick :string)
@@ -1870,16 +1870,16 @@
  "@version{#2022-12-31}
   @syntax[]{(g:value-float gvalue) => value}
   @syntax[]{(setf (g:value-float gvalue) value)}
-  @argument[gvalue]{a @symbol{g:value} of type @var{+g-type-float+}}
+  @argument[gvalue]{a @symbol{g:value} of type @var{g:+type-float+}}
   @argument[value]{a float value}
   @begin{short}
     Float contents of @arg{gvalue}.
   @end{short}
   The @sym{g:value-float} function gets the contents of a @symbol{g:value}
-  of type @var{+g-type-float+}. The @sym{(setf value-float)} function sets
+  of type @var{g:+type-float+}. The @sym{(setf value-float)} function sets
   the contents of a @symbol{g:value} to @arg{value}.
   @see-symbol{g:value}
-  @see-variable{+g-type-float+}"
+  @see-variable{g:+type-float+}"
   (gvalue (:pointer (:struct value))))
 
 (export 'value-float)
@@ -1994,12 +1994,12 @@
   @return{A newly created @symbol{g:param-spec-double} parameter specification.}
   @begin{short}
     Creates a new parameter specification instance specifying a property
-    of type @var{+g-type-double+} property.
+    of type @var{g:+type-double+} property.
   @end{short}
   See the @fun{g:param-spec-internal} function for details on property names.
   @see-symbol{g:param-spec-double}
   @see-symbol{g:param-flags}
-  @see-variable{+g-type-double+}
+  @see-variable{g:+type-double+}
   @see-function{g:param-spec-internal}"
   (name :string)
   (nick :string)
@@ -2028,16 +2028,16 @@
  "@version{#2022-12-31}
   @syntax[]{(g:value-double gvalue) => value}
   @syntax[]{(setf (g:value-double gvalue) value)}
-  @argument[gvalue]{a @symbol{g:value} of type @var{+g-type-double+}}
+  @argument[gvalue]{a @symbol{g:value} of type @var{g:+type-double+}}
   @argument[value]{a double float value}
   @begin{short}
     Double float contents of @arg{gvalue}.
   @end{short}
   The @sym{g:value-double} function gets the contents of a @symbol{g:value}
-  of type @var{+g-type-double+}. The @sym{(setf value-double)} function sets
+  of type @var{g:+type-double+}. The @sym{(setf value-double)} function sets
   the contents of a @symbol{g:value} to @arg{value}.
   @see-symbol{g:value}
-  @see-variable{+g-type-double+}"
+  @see-variable{g:+type-double+}"
   (gvalue (:pointer (:struct value))))
 
 (export 'value-double)
@@ -2143,18 +2143,18 @@
   @argument[name]{a string with the canonical name}
   @argument[nick]{a string with the nick name}
   @argument[blurb]{a string with the description}
-  @argument[gtype]{a @class{g:type-t} type derived from @var{+g-type-enum+}}
+  @argument[gtype]{a @class{g:type-t} type derived from @var{g:+type-enum+}}
   @argument[default]{an integer with the default value}
   @argument[flags]{a @symbol{g:param-flags} value}
   @return{A newly created @symbol{g:param-spec-enum} parameter specification.}
   @begin{short}
     Creates a new parameter specification instance specifying a property
-    of type @var{+g-type-enum+}.
+    of type @var{g:+type-enum+}.
   @end{short}
   See the @fun{g:param-spec-internal} function for details on property names.
   @see-symbol{g:param-spec-enum}
   @see-symbol{g:param-flags}
-  @see-variable{+g-type-enum+}
+  @see-variable{g:+type-enum+}
   @see-function{g:param-spec-internal}"
   (name :string)
   (nick :string)
@@ -2187,16 +2187,16 @@
   @syntax[]{(g:value-enum gvalue) => value}
   @syntax[]{(setf (g:value-enum gvalue) value)}
   @argument[gvalue]{a @symbol{g:value} whose type is derived from
-    @var{+g-type-enum+}}
+    @var{g:+type-enum+}}
   @argument[value]{an integer wiht the enumeration value}
   @begin{short}
     Enumeration value contents of @arg{gvalue}.
   @end{short}
   The @sym{g:value-enum} function gets the contents of a @symbol{g:value}
-  of type @var{+g-type-enum+}. The @sym{(setf value-enum)} function sets the
+  of type @var{g:+type-enum+}. The @sym{(setf value-enum)} function sets the
   contents of a @symbol{g:value} to @arg{value}.
   @see-symbol{g:value}
-  @see-variable{+g-type-enum+}"
+  @see-variable{g:+type-enum+}"
   (gvalue (:pointer (:struct value))))
 
 (export 'value-enum)
@@ -2298,18 +2298,18 @@
   @argument[name]{a string with the canonical name}
   @argument[nick]{a string with the nick name}
   @argument[blurb]{a string with the description}
-  @argument[gtype]{a @class{g:type-t} type derived from @var{+g-type-flags+}}
+  @argument[gtype]{a @class{g:type-t} type derived from @var{g:+type-flags+}}
   @argument[default]{an unsigned integer with the default value}
   @argument[flags]{a @symbol{g:param-flags} value}
   @return{A newly created @symbol{g:param-spec-flags} parameter specification.}
   @begin{short}
     Creates a new parameter specification instance specifying a property
-    of type @var{+g-type-flags+}.
+    of type @var{g:+type-flags+}.
   @end{short}
   See the @fun{g:param-spec-internal} function for details on property names.
   @see-symbol{g:param-spec-flags}
   @see-symbol{g:param-flags}
-  @see-variable{+g-type-flags+}
+  @see-variable{g:+type-flags+}
   @see-function{g:param-spec-internal}"
   (name :string)
   (nick :string)
@@ -2338,16 +2338,16 @@
   @syntax[]{(g:value-flags gvalue) => value}
   @syntax[]{(setf (g:value-flags gvalue) value)}
   @argument[gvalue]{a @symbol{g:value} whose type is derived from
-    @var{+g-type-flags+}}
+    @var{g:+type-flags+}}
   @argument[value]{an unsigned integer with the flags value}
   @begin{short}
     Flags contents of @arg{gvalue}.
   @end{short}
   The @sym{g:value-flags} function gets the contents of a @symbol{g:value}
-  of type @var{+g-type-flags+}. The @sym{(setf value-flags)} function sets
+  of type @var{g:+type-flags+}. The @sym{(setf value-flags)} function sets
   the contents of a @symbol{g:value} to @arg{value}.
   @see-symbol{g:value}
-  @see-variable{+g-type-flags+}"
+  @see-variable{g:+type-flags+}"
   (gvalue (:pointer (:struct value))))
 
 (export 'value-flags)
@@ -2546,7 +2546,7 @@
   See the @fun{g:param-spec-internal} function for details on property names.
   @see-symbol{g:param-spec-string}
   @see-symbol{g:param-flags}
-  @see-variable{+g-type-string+}
+  @see-variable{g:+type-string+}
   @see-function{g:param-spec-internal}"
   (name :string)
   (nick :string)
@@ -2583,7 +2583,7 @@
   of type \"gchararray\". The @sym{(setf value-string)} function sets
   the contents of a @symbol{g:value} to @arg{value}.
   @see-symbol{g:value}
-  @see-variable{+g-type-string+}"
+  @see-variable{g:+type-string+}"
   (gvalue (:pointer (:struct value))))
 
 (export 'value-string)
@@ -2738,7 +2738,7 @@
  "@version{#2022-12-31}
   @begin{short}
     A @symbol{g:param-spec} derived structure that contains the meta data for
-    properties of type @var{+g-type-param+}.
+    properties of type @var{g:+type-param+}.
   @end{short}
   @begin{pre}
 (cffi:defcstruct param-spec-param
@@ -2763,17 +2763,17 @@
   @argument[name]{a string with the canonical name}
   @argument[nick]{a string with the nick name}
   @argument[blurb]{a string with the description}
-  @argument[gtype]{a @class{g:type-t} type derived from @var{+g-type-param+}}
+  @argument[gtype]{a @class{g:type-t} type derived from @var{g:+type-param+}}
   @argument[flags]{a @symbol{g:param-flags} value}
   @return{A newly created @symbol{g:param-spec-param} parameter specification.}
   @begin{short}
     Creates a new parameter specification instance specifying a property
-    of type @var{+g-type-param+}.
+    of type @var{g:+type-param+}.
   @end{short}
   See the @fun{g:param-spec-internal} function for details on property names.
   @see-symbol{g:param-spec-param}
   @see-symbol{g:param-flags}
-  @see-variable{+g-type-param+}
+  @see-variable{g:+type-param+}
   @see-function{g:param-spec-internal}"
   (name :string)
   (nick :string)
@@ -2807,10 +2807,10 @@
     The @symbol{g:param-spec} content of @arg{gvalue}.
   @end{short}
   The @sym{g:value-param} function gets the contents of a @symbol{g:value}
-  of type @var{+g-type-param+}. The @sym{(setf value-param)} function sets
+  of type @var{g:+type-param+}. The @sym{(setf value-param)} function sets
   the contents of a @symbol{g:value} to @arg{value}.
   @see-symbol{g:value}
-  @see-variable{+g-type-param+}"
+  @see-variable{g:+type-param+}"
   (gvalue (:pointer (:struct value))))
 
 (export 'value-param)
@@ -2958,17 +2958,17 @@
   @argument[name]{a string with the canonical name}
   @argument[nick]{a string with the nick name}
   @argument[blurb]{a string with the description}
-  @argument[gtype]{a @var{+g-type-boxed+} derived type of this property}
+  @argument[gtype]{a @var{g:+type-boxed+} derived type of this property}
   @argument[flags]{a @symbol{g:param-flags} value}
   @return{A newly created @symbol{g:param-spec-boxed} parameter specification.}
   @begin{short}
     Creates a new parameter specification instance specifying a property
-    derived of type @var{+g-type-boxed+}.
+    derived of type @var{g:+type-boxed+}.
   @end{short}
   See the @fun{g:param-spec-internal} function for details on property names.
   @see-symbol{g:param-spec-boxed}
   @see-symbol{g:param-flags}
-  @see-variable{+g-type-boxed+}
+  @see-variable{g:+type-boxed+}
   @see-function{g:param-spec-internal}"
   (name :string)
   (nick :string)
@@ -3001,10 +3001,10 @@
     Boxed contents of @arg{gvalue}.
   @end{short}
   The @sym{g:value-boxed} function gets the contents of a @symbol{g:value}
-  derived of the @var{+g-type-boxed+} type. The @sym{(setf g:value-boxed)}
+  derived of the @var{g:+type-boxed+} type. The @sym{(setf g:value-boxed)}
   function sets the contents of a @symbol{g:value} instance to @arg{value}.
   @see-symbol{g:value}
-  @see-variable{+g-type-boxed+}"
+  @see-variable{g:+type-boxed+}"
   (gvalue (:pointer (:struct value))))
 
 (export 'value-boxed)
@@ -3177,12 +3177,12 @@
     specification.}
   @begin{short}
     Creates a new parameter specification instance specifying a property
-    of type @var{+g-type-pointer+}.
+    of type @var{g:+type-pointer+}.
   @end{short}
   See the @fun{g:param-spec-internal} function for details on property names.
   @see-symbol{g:param-spec-pointer}
   @see-symbol{g:param-flags}
-  @see-variable{+g-type-pointer+}
+  @see-variable{g:+type-pointer+}
   @see-function{g:param-spec-internal}"
   (name :string)
   (nick :string)
@@ -3214,10 +3214,10 @@
     Pointer contents of @arg{gvalue}.
   @end{short}
   The @sym{g:value-pointer} function gets the contents of a @symbol{g:value}
-  of type @var{+g-type-pointer+}. The @sym{(setf value-pointer)} function
+  of type @var{g:+type-pointer+}. The @sym{(setf value-pointer)} function
   sets the contents of a @symbol{g:value} to @arg{value}.
   @see-symbol{g:value}
-  @see-variable{+g-type-pointer+}"
+  @see-variable{g:+type-pointer+}"
   (gvalue (:pointer (:struct value))))
 
 (export 'value-pointer)
@@ -3313,17 +3313,17 @@
   @argument[name]{a string with the canonical name}
   @argument[nick]{a string with the nick name}
   @argument[blurb]{a string with the description}
-  @argument[gtype]{a @var{+g-type-object+} derived type of this property}
+  @argument[gtype]{a @var{g:+type-object+} derived type of this property}
   @argument[flags]{a @symbol{g:param-flags} value}
   @return{A newly created @symbol{g:param-spec-object} parameter specification.}
   @begin{short}
     Creates a new parameter specification instance specifying a property
-    of a dervived type @var{+g-type-object+}.
+    of a dervived type @var{g:+type-object+}.
   @end{short}
   See the @fun{g:param-spec-internal} function for details on property names.
   @see-symbol{g:param-spec-object}
   @see-symbol{g:param-flags}
-  @see-variable{+g-type-object+}
+  @see-variable{g:+type-object+}
   @see-function{g:param-spec-internal}"
   (name :string)
   (nick :string)
@@ -3357,14 +3357,14 @@
  "@version{#2022-12-31}
   @syntax[]{(g:value-object gvalue) => value}
   @syntax[]{(setf (g:value-object gvalue) value)}
-  @argument[gvalue]{a valid @symbol{g:value} of @var{+g-type-object+}
+  @argument[gvalue]{a valid @symbol{g:value} of @var{g:+type-object+}
     derived type}
-  @argument[value]{object value of derived type @var{+g-type-object+}}
+  @argument[value]{object value of derived type @var{g:+type-object+}}
   @begin{short}
     Object contents of @arg{gvalue}.
   @end{short}
   The @sym{g:value-object} function gets the contents of a @symbol{g:value}
-  of a derived type @var{+g-type-object+}. The @sym{(setf value-object)}
+  of a derived type @var{g:+type-object+}. The @sym{(setf value-object)}
   function sets the contents of a @symbol{g:value} to @arg{value}.
 
   The @sym{(setf value-object)} function increases the reference count of
@@ -3377,7 +3377,7 @@
   either its own, or one it has taken, to ensure that the object will not be
   destroyed while the @symbol{g:value} still exists).
   @see-symbol{g:value}
-  @see-variable{+g-type-object+}"
+  @see-variable{g:+type-object+}"
   (get-g-object-for-pointer (%value-get-object gvalue)))
 
 (export 'value-object)
@@ -4024,7 +4024,7 @@
  "@version{#2022-12-31}
   @syntax[]{(g:value-variant gvalue) => value}
   @syntax[]{(setf (g:value-variant gvalue) value)}
-  @argument[gvalue]{a @symbol{g:value} of type @var{+g-type-variant+}}
+  @argument[gvalue]{a @symbol{g:value} of type @var{g:+type-variant+}}
   @argument[value]{a @symbol{g:variant} value}
   @begin{short}
     Variant contents of @arg{gvalue}.

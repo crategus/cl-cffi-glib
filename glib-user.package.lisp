@@ -27,9 +27,9 @@
   (:use :glib :gobject :gio :common-lisp)
   (:shadow #:error)
   (:export ;; Symbols from glib.version.lisp
-           #:+glib+major-version+
-           #:+glib-minor-version+
-           #:+glib-micro-version+
+           #:+major-version+
+           #:+minor-version+
+           #:+micro-version+
            #:check-version
            #:cl-cffi-glib-build-info
 
@@ -302,30 +302,30 @@
            #:bytes-unref-to-array
 
            ;; Symbols from gobject.type-info.lisp
-           #:+g-type-invalid+
-           #:+g-type-none+
-           #:+g-type-interface+
-           #:+g-type-char+
-           #:+g-type-uchar+
-           #:+g-type-boolean+
-           #:+g-type-int+
-           #:+g-type-uint+
-           #:+g-type-long+
-           #:+g-type-ulong+
-           #:+g-type-int64+
-           #:+g-type-uint64+
-           #:+g-type-enum+
-           #:+g-type-flags+
-           #:+g-type-float+
-           #:+g-type-double+
-           #:+g-type-string+
-           #:+g-type-pointer+
-           #:+g-type-boxed+
-           #:+g-type-param+
-           #:+g-type-object+
-           #:+g-type-gtype+
-           #:+g-type-variant+
-           #:+g-type-checksum+
+           #:+type-invalid+
+           #:+type-none+
+           #:+type-interface+
+           #:+type-char+
+           #:+type-uchar+
+           #:+type-boolean+
+           #:+type-int+
+           #:+type-uint+
+           #:+type-long+
+           #:+type-ulong+
+           #:+type-int64+
+           #:+type-uint64+
+           #:+type-enum+
+           #:+type-flags+
+           #:+type-float+
+           #:+type-double+
+           #:+type-string+
+           #:+type-pointer+
+           #:+type-boxed+
+           #:+type-param+
+           #:+type-object+
+           #:+type-gtype+
+           #:+type-variant+
+           #:+type-checksum+
            #:type-t
            #:gtype                               ; TODO: Change the name?
            #:type-interface
@@ -395,6 +395,7 @@
 
            ;; Symbols from gobject.boxed.lisp
            #:boxed
+           #:type-is-boxed
            #:boxed-copy
            #:boxed-free
            #:boxed-type-register-static

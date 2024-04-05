@@ -319,12 +319,12 @@
  "@version{#2020-10-16}
   @argument[class]{a @symbol{enum-class} structure}
   @begin{short}
-    Checks whether class is a valid @symbol{enum-class} structure of type
-    @var{+g-type-enum+} or derived.
+    Checks whether class is a valid @symbol{g:enum-class} structure of type
+    @var{g:+type-enum+} or derived.
   @end{short}
-  @see-symbol{enum-class}
-  @see-variable{+g-type-enum+}"
-  (type-check-class-type class +g-type-enum+))
+  @see-symbol{g:enum-class}
+  @see-variable{g:+type-enum+}"
+  (type-check-class-type class +type-enum+))
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_enum_get_value ()
@@ -587,11 +587,11 @@
   @argument[class]{a @symbol{flags-class} structure}
   @begin{short}
     Checks whether @arg{class} is a valid @symbol{flags-class} structure
-    of type @var{+g-type-flags+} or derived.
+    of type @var{g:+type-flags+} or derived.
   @end{short}
   @see-symbol{flags-class}
-  @see-variable{+g-type-flags+}"
-  (type-check-class-type class +g-type-flags+))
+  @see-variable{g:+type-flags+}"
+  (type-check-class-type class +type-flags+))
 
 ;;; ----------------------------------------------------------------------------
 ;;; G_FLAGS_CLASS_TYPE                                     not exported

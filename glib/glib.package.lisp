@@ -86,9 +86,9 @@
   GTK in Lisp.
   @begin[Version Information]{section}
     Variables and functions to check the GLib version.
-    @about-symbol{+glib-major-version+}
-    @about-symbol{+glib-minor-version+}
-    @about-symbol{+glib-micro-version+}
+    @about-symbol{+major-version+}
+    @about-symbol{+minor-version+}
+    @about-symbol{+micro-version+}
     @about-function{check-version}
     @about-function{cl-cffi-glib-build-info}
   @end{section}

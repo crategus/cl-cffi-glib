@@ -53,12 +53,12 @@
 ;;; glib_major_version
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcvar ("glib_major_version" +glib-major-version+ :read-only t) :uint)
+(cffi:defcvar ("glib_major_version" +major-version+ :read-only t) :uint)
 
 #+liber-documentation
-(setf (liber:alias-for-symbol '+glib-major-version+)
+(setf (liber:alias-for-symbol '+major-version+)
       "Constant"
-      (liber:symbol-documentation '+glib-major-version+)
+      (liber:symbol-documentation '+major-version+)
  "@version{2022-11-21}
   @begin{short}
     The major version number of the GLib C library the Lisp binding is running
@@ -66,18 +66,18 @@
   @end{short}
   @see-function{glib:check-version}")
 
-(export '+glib-major-version+)
+(export '+major-version+)
 
 ;;; ----------------------------------------------------------------------------
 ;;; glib_minor_version
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcvar ("glib_minor_version" +glib-minor-version+ :read-only t) :uint)
+(cffi:defcvar ("glib_minor_version" +minor-version+ :read-only t) :uint)
 
 #+liber-documentation
-(setf (liber:alias-for-symbol '+glib-minor-version+)
+(setf (liber:alias-for-symbol '+minor-version+)
       "Constant"
-      (liber:symbol-documentation '+glib-minor-version+)
+      (liber:symbol-documentation '+minor-version+)
  "@version{2022-11-21}
   @begin{short}
     The minor version number of the GLib C library the Lisp binding is running
@@ -85,18 +85,18 @@
   @end{short}
   @see-function{glib:check-version}")
 
-(export '+glib-minor-version+)
+(export '+minor-version+)
 
 ;;; ----------------------------------------------------------------------------
 ;;; glib_micro_version
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcvar ("glib_micro_version" +glib-micro-version+ :read-only t) :uint)
+(cffi:defcvar ("glib_micro_version" +micro-version+ :read-only t) :uint)
 
 #+liber-documentation
-(setf (liber:alias-for-symbol '+glib-micro-version+)
+(setf (liber:alias-for-symbol '+micro-version+)
       "Constant"
-      (liber:symbol-documentation '+glib-micro-version+)
+      (liber:symbol-documentation '+micro-version+)
  "@version{2022-11-21}
   @begin{short}
     The micro version number of the GLib C library the Lisp binding is running
@@ -104,7 +104,7 @@
   @end{short}
   @see-function{glib:check-version}")
 
-(export '+glib-micro-version+)
+(export '+micro-version+)
 
 ;;; ----------------------------------------------------------------------------
 ;;; glib_binary_age                                        not implemented
@@ -172,9 +172,9 @@ Lisp implementation version: 2.1.11.debian
 NIL
     @end{pre}
   @end{dictionary}
-  @see-symbol{+glib-major-version+}
-  @see-symbol{+glib-minor-version+}
-  @see-symbol{+glib-micro-version+}
+  @see-symbol{glib:+major-version+}
+  @see-symbol{glib:+minor-version+}
+  @see-symbol{glib:+micro-version+}
   @see-function{glib:check-version}"
   (format out "cl-cffi-glib build date: ~a:~a ~a/~a/~a~%"
           (third *cl-cffi-glib-build-time*)
@@ -183,9 +183,9 @@ NIL
           (fourth *cl-cffi-glib-build-time*)
           (sixth *cl-cffi-glib-build-time*))
   (format out "GLIB version: ~a.~a.~a~%"
-              +glib-major-version+
-              +glib-minor-version+
-              +glib-micro-version+)
+              +major-version+
+              +minor-version+
+              +micro-version+)
   (format out "Machine type: ~a~%" (machine-type))
   (format out "Machine version: ~a~%" (machine-version))
   (format out "Software type: ~a~%" (software-type))

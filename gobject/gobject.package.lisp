@@ -120,36 +120,36 @@
     characters long. There is no upper length limit. The first character needs
     to be a letter (a-z or A-Z) or an underscore '_'. Subsequent characters can
     be letters, numbers or any of '-_+'.
-    @about-variable{+g-type-invalid+}
-    @about-variable{+g-type-none+}
-    @about-variable{+g-type-interface+}
-    @about-variable{+g-type-char+}
-    @about-variable{+g-type-uchar+}
-    @about-variable{+g-type-boolean+}
-    @about-variable{+g-type-int+}
-    @about-variable{+g-type-uint+}
-    @about-variable{+g-type-long+}
-    @about-variable{+g-type-ulong+}
-    @about-variable{+g-type-int64+}
-    @about-variable{+g-type-uint64+}
-    @about-variable{+g-type-enum+}
-    @about-variable{+g-type-flags+}
-    @about-variable{+g-type-float+}
-    @about-variable{+g-type-double+}
-    @about-variable{+g-type-string+}
-    @about-variable{+g-type-pointer+}
-    @about-variable{+g-type-boxed+}
-    @about-variable{+g-type-param+}
-    @about-variable{+g-type-object+}
-    @about-variable{+g-type-gtype+}
-    @about-variable{+g-type-variant+}
-    @about-variable{+g-type-checksum+}
-    @about-variable{+g-type-reserved-glib-first+}
-    @about-variable{+g-type-reserved-glib-last+}
-    @about-variable{+g-type-reserved-bse-first+}
-    @about-variable{+g-type-reserved-bse-last+}
-    @about-variable{+g-type-reserved-user-first+}
-    @about-variable{+g-type-fundamental-max+}
+    @about-variable{+type-invalid+}
+    @about-variable{+type-none+}
+    @about-variable{+type-interface+}
+    @about-variable{+type-char+}
+    @about-variable{+type-uchar+}
+    @about-variable{+type-boolean+}
+    @about-variable{+type-int+}
+    @about-variable{+type-uint+}
+    @about-variable{+type-long+}
+    @about-variable{+type-ulong+}
+    @about-variable{+type-int64+}
+    @about-variable{+type-uint64+}
+    @about-variable{+type-enum+}
+    @about-variable{+type-flags+}
+    @about-variable{+type-float+}
+    @about-variable{+type-double+}
+    @about-variable{+type-string+}
+    @about-variable{+type-pointer+}
+    @about-variable{+type-boxed+}
+    @about-variable{+type-param+}
+    @about-variable{+type-object+}
+    @about-variable{+type-gtype+}
+    @about-variable{+type-variant+}
+    @about-variable{+type-checksum+}
+    @about-variable{+type-reserved-glib-first+}
+    @about-variable{+type-reserved-glib-last+}
+    @about-variable{+type-reserved-bse-first+}
+    @about-variable{+type-reserved-bse-last+}
+    @about-variable{+type-reserved-user-first+}
+    @about-variable{+type-fundamental-max+}
     @about-class{type-t}
     @about-symbol{type-interface}
     @about-symbol{type-instance}
@@ -299,6 +299,7 @@
     as the @code{GBoxedFreeFunc}. For example, for @code{GBytes}, the
     @code{GBoxedCopyFunc} is @code{g_bytes_ref()}, and the
     @code{GBoxedFreeFunc} is @code{g_bytes_unref()}.
+    @about-function{type-is-boxed}
     @about-function{boxed-copy}
     @about-function{boxed-free}
     @about-function{boxed-type-register-static}

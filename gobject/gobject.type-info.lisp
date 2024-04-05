@@ -199,18 +199,18 @@
 
 ;; This constant is not exported.
 (eval-when (:execute :compile-toplevel :load-toplevel)
-  (defconstant +g-type-fundamental-shift+ 2))
+  (defconstant +type-fundamental-shift+ 2))
 
 ;;; ----------------------------------------------------------------------------
 ;;; G_TYPE_INVALID
 ;;; ----------------------------------------------------------------------------
 
-(defconstant +g-type-invalid+ #.(ash 0 +g-type-fundamental-shift+))
+(defconstant +type-invalid+ #.(ash 0 +type-fundamental-shift+))
 
 #+liber-documentation
-(setf (liber:alias-for-variable '+g-type-invalid+)
+(setf (liber:alias-for-variable '+type-invalid+)
       "Constant"
-      (documentation '+g-type-invalid+ 'variable)
+      (documentation '+type-invalid+ 'variable)
  "@version{2022-12-29}
   @variable-value{0}
   @begin{short}
@@ -219,18 +219,18 @@
   @end{short}
   @see-class{g:type-t}")
 
-(export '+g-type-invalid+)
+(export '+type-invalid+)
 
 ;;; ----------------------------------------------------------------------------
 ;;; G_TYPE_NONE
 ;;; ----------------------------------------------------------------------------
 
-(defconstant +g-type-none+ #.(ash 1 +g-type-fundamental-shift+))
+(defconstant +type-none+ #.(ash 1 +type-fundamental-shift+))
 
 #+liber-documentation
-(setf (liber:alias-for-variable '+g-type-none+)
+(setf (liber:alias-for-variable '+type-none+)
       "Constant"
-      (documentation '+g-type-none+ 'variable)
+      (documentation '+type-none+ 'variable)
  "@version{2022-12-29}
   @variable-value{4}
   @begin{short}
@@ -239,18 +239,18 @@
   @end{short}
   @see-class{g:type-t}")
 
-(export '+g-type-none+)
+(export '+type-none+)
 
 ;;; ----------------------------------------------------------------------------
 ;;; G_TYPE_INTERFACE
 ;;; ----------------------------------------------------------------------------
 
-(defconstant +g-type-interface+ #.(ash 2 +g-type-fundamental-shift+))
+(defconstant +type-interface+ #.(ash 2 +type-fundamental-shift+))
 
 #+liber-documentation
-(setf (liber:alias-for-variable '+g-type-interface+)
+(setf (liber:alias-for-variable '+type-interface+)
       "Constant"
-      (documentation '+g-type-interface+ 'variable)
+      (documentation '+type-interface+ 'variable)
  "@version{2022-12-29}
   @variable-value{8}
   @begin{short}
@@ -258,18 +258,18 @@
   @end{short}
   @see-class{g:type-t}")
 
-(export '+g-type-interface+)
+(export '+type-interface+)
 
 ;;; ----------------------------------------------------------------------------
 ;;; G_TYPE_CHAR
 ;;; ----------------------------------------------------------------------------
 
-(defconstant +g-type-char+ #.(ash 3 +g-type-fundamental-shift+))
+(defconstant +type-char+ #.(ash 3 +type-fundamental-shift+))
 
 #+liber-documentation
-(setf (liber:alias-for-variable '+g-type-char+)
+(setf (liber:alias-for-variable '+type-char+)
       "Constant"
-      (documentation '+g-type-char+ 'variable)
+      (documentation '+type-char+ 'variable)
  "@version{2022-12-29}
   @variable-value{12}
   @begin{short}
@@ -279,18 +279,18 @@
   integer. This may or may not be the same type as the C type @code{gchar}.
   @see-class{g:type-t}")
 
-(export '+g-type-char+)
+(export '+type-char+)
 
 ;;; ----------------------------------------------------------------------------
 ;;; G_TYPE_UCHAR
 ;;; ----------------------------------------------------------------------------
 
-(defconstant +g-type-uchar+ #.(ash 4 +g-type-fundamental-shift+))
+(defconstant +type-uchar+ #.(ash 4 +type-fundamental-shift+))
 
 #+liber-documentation
-(setf (liber:alias-for-variable '+g-type-uchar+)
+(setf (liber:alias-for-variable '+type-uchar+)
       "Constant"
-      (documentation '+g-type-uchar+ 'variable)
+      (documentation '+type-uchar+ 'variable)
  "@version{2022-12-29}
   @variable-value{16}
   @begin{short}
@@ -298,18 +298,18 @@
   @end{short}
   @see-class{g:type-t}")
 
-(export '+g-type-uchar+)
+(export '+type-uchar+)
 
 ;;; ----------------------------------------------------------------------------
 ;;; G_TYPE_BOOLEAN
 ;;; ----------------------------------------------------------------------------
 
-(defconstant +g-type-boolean+ #.(ash 5 +g-type-fundamental-shift+))
+(defconstant +type-boolean+ #.(ash 5 +type-fundamental-shift+))
 
 #+liber-documentation
-(setf (liber:alias-for-variable '+g-type-boolean+)
+(setf (liber:alias-for-variable '+type-boolean+)
       "Constant"
-      (documentation '+g-type-boolean+ 'variable)
+      (documentation '+type-boolean+ 'variable)
  "@version{2022-12-29}
   @variable-value{20}
   @begin{short}
@@ -317,18 +317,18 @@
   @end{short}
   @see-class{g:type-t}")
 
-(export '+g-type-boolean+)
+(export '+type-boolean+)
 
 ;;; ----------------------------------------------------------------------------
 ;;; G_TYPE_INT
 ;;; ----------------------------------------------------------------------------
 
-(defconstant +g-type-int+ #.(ash 6 +g-type-fundamental-shift+))
+(defconstant +type-int+ #.(ash 6 +type-fundamental-shift+))
 
 #+liber-documentation
-(setf (liber:alias-for-variable '+g-type-int+)
+(setf (liber:alias-for-variable '+type-int+)
       "Constant"
-      (documentation '+g-type-int+ 'variable)
+      (documentation '+type-int+ 'variable)
  "@version{2022-12-29}
   @variable-value{24}
   @begin{short}
@@ -336,18 +336,18 @@
   @end{short}
   @see-class{g:type-t}")
 
-(export '+g-type-int+)
+(export '+type-int+)
 
 ;;; ----------------------------------------------------------------------------
 ;;; G_TYPE_UINT
 ;;; ----------------------------------------------------------------------------
 
-(defconstant +g-type-uint+ #.(ash 7 +g-type-fundamental-shift+))
+(defconstant +type-uint+ #.(ash 7 +type-fundamental-shift+))
 
 #+liber-documentation
-(setf (liber:alias-for-variable '+g-type-uint+)
+(setf (liber:alias-for-variable '+type-uint+)
       "Constant"
-      (documentation '+g-type-uint+ 'variable)
+      (documentation '+type-uint+ 'variable)
  "@version{2022-12-29}
   @variable-value{28}
   @begin{short}
@@ -355,18 +355,18 @@
   @end{short}
   @see-class{g:type-t}")
 
-(export '+g-type-uint+)
+(export '+type-uint+)
 
 ;;; ----------------------------------------------------------------------------
 ;;; G_TYPE_LONG
 ;;; ----------------------------------------------------------------------------
 
-(defconstant +g-type-long+ #.(ash 8 +g-type-fundamental-shift+))
+(defconstant +type-long+ #.(ash 8 +type-fundamental-shift+))
 
 #+liber-documentation
-(setf (liber:alias-for-variable '+g-type-long+)
+(setf (liber:alias-for-variable '+type-long+)
       "Constant"
-      (documentation '+g-type-long+ 'variable)
+      (documentation '+type-long+ 'variable)
  "@version{2022-12-29}
   @variable-value{32}
   @begin{short}
@@ -374,18 +374,18 @@
   @end{short}
   @see-class{g:type-t}")
 
-(export '+g-type-long+)
+(export '+type-long+)
 
 ;;; ----------------------------------------------------------------------------
 ;;; G_TYPE_ULONG
 ;;; ----------------------------------------------------------------------------
 
-(defconstant +g-type-ulong+ #.(ash 9 +g-type-fundamental-shift+))
+(defconstant +type-ulong+ #.(ash 9 +type-fundamental-shift+))
 
 #+liber-documentation
-(setf (liber:alias-for-variable '+g-type-ulong+)
+(setf (liber:alias-for-variable '+type-ulong+)
       "Constant"
-      (documentation '+g-type-ulong+ 'variable)
+      (documentation '+type-ulong+ 'variable)
  "@version{2022-12-29}
   @variable-value{36}
   @begin{short}
@@ -393,18 +393,18 @@
   @end{short}
   @see-class{g:type-t}")
 
-(export '+g-type-ulong+)
+(export '+type-ulong+)
 
 ;;; ----------------------------------------------------------------------------
 ;;; G_TYPE_INT64
 ;;; ----------------------------------------------------------------------------
 
-(defconstant +g-type-int64+ #.(ash 10 +g-type-fundamental-shift+))
+(defconstant +type-int64+ #.(ash 10 +type-fundamental-shift+))
 
 #+liber-documentation
-(setf (liber:alias-for-variable '+g-type-int64+)
+(setf (liber:alias-for-variable '+type-int64+)
       "Constant"
-      (documentation '+g-type-int64+ 'variable)
+      (documentation '+type-int64+ 'variable)
  "@version{2022-12-29}
   @variable-value{40}
   @begin{short}
@@ -412,18 +412,18 @@
   @end{short}
   @see-class{g:type-t}")
 
-(export '+g-type-int64+)
+(export '+type-int64+)
 
 ;;; ----------------------------------------------------------------------------
 ;;; G_TYPE_UINT64
 ;;; ----------------------------------------------------------------------------
 
-(defconstant +g-type-uint64+ #.(ash 11 +g-type-fundamental-shift+))
+(defconstant +type-uint64+ #.(ash 11 +type-fundamental-shift+))
 
 #+liber-documentation
-(setf (liber:alias-for-variable '+g-type-uint64+)
+(setf (liber:alias-for-variable '+type-uint64+)
       "Constant"
-      (documentation '+g-type-uint64+ 'variable)
+      (documentation '+type-uint64+ 'variable)
  "@version{2022-12-29}
   @variable-value{44}
   @begin{short}
@@ -431,18 +431,18 @@
   @end{short}
   @see-class{g:type-t}")
 
-(export '+g-type-uint64+)
+(export '+type-uint64+)
 
 ;;; ----------------------------------------------------------------------------
 ;;; G_TYPE_ENUM
 ;;; ----------------------------------------------------------------------------
 
-(defconstant +g-type-enum+ #.(ash 12 +g-type-fundamental-shift+))
+(defconstant +type-enum+ #.(ash 12 +type-fundamental-shift+))
 
 #+liber-documentation
-(setf (liber:alias-for-variable '+g-type-enum+)
+(setf (liber:alias-for-variable '+type-enum+)
       "Constant"
-      (documentation '+g-type-enum+ 'variable)
+      (documentation '+type-enum+ 'variable)
  "@version{2022-12-29}
   @variable-value{48}
   @begin{short}
@@ -450,18 +450,18 @@
   @end{short}
   @see-class{g:type-t}")
 
-(export '+g-type-enum+)
+(export '+type-enum+)
 
 ;;; ----------------------------------------------------------------------------
 ;;; G_TYPE_FLAGS
 ;;; ----------------------------------------------------------------------------
 
-(defconstant +g-type-flags+ #.(ash 13 +g-type-fundamental-shift+))
+(defconstant +type-flags+ #.(ash 13 +type-fundamental-shift+))
 
 #+liber-documentation
-(setf (liber:alias-for-variable '+g-type-flags+)
+(setf (liber:alias-for-variable '+type-flags+)
       "Constant"
-      (documentation '+g-type-flags+ 'variable)
+      (documentation '+type-flags+ 'variable)
  "@version{2022-12-29}
   @variable-value{52}
   @begin{short}
@@ -469,18 +469,18 @@
   @end{short}
   @see-class{g:type-t}")
 
-(export '+g-type-flags+)
+(export '+type-flags+)
 
 ;;; ----------------------------------------------------------------------------
 ;;; G_TYPE_FLOAT
 ;;; ----------------------------------------------------------------------------
 
-(defconstant +g-type-float+ #.(ash 14 +g-type-fundamental-shift+))
+(defconstant +type-float+ #.(ash 14 +type-fundamental-shift+))
 
 #+liber-documentation
-(setf (liber:alias-for-variable '+g-type-float+)
+(setf (liber:alias-for-variable '+type-float+)
       "Constant"
-      (documentation '+g-type-float+ 'variable)
+      (documentation '+type-float+ 'variable)
  "@version{2022-12-29}
   @variable-value{56}
   @begin{short}
@@ -488,18 +488,18 @@
   @end{short}
   @see-class{g:type-t}")
 
-(export '+g-type-float+)
+(export '+type-float+)
 
 ;;; ----------------------------------------------------------------------------
 ;;; G_TYPE_DOUBLE
 ;;; ----------------------------------------------------------------------------
 
-(defconstant +g-type-double+ #.(ash 15 +g-type-fundamental-shift+))
+(defconstant +type-double+ #.(ash 15 +type-fundamental-shift+))
 
 #+liber-documentation
-(setf (liber:alias-for-variable '+g-type-double+)
+(setf (liber:alias-for-variable '+type-double+)
       "Constant"
-      (documentation '+g-type-double+ 'variable)
+      (documentation '+type-double+ 'variable)
  "@version{2022-12-29}
   @variable-value{60}
   @begin{short}
@@ -507,18 +507,18 @@
   @end{short}
   @see-class{g:type-t}")
 
-(export '+g-type-double+)
+(export '+type-double+)
 
 ;;; ----------------------------------------------------------------------------
 ;;; G_TYPE_STRING
 ;;; ----------------------------------------------------------------------------
 
-(defconstant +g-type-string+ #.(ash 16 +g-type-fundamental-shift+))
+(defconstant +type-string+ #.(ash 16 +type-fundamental-shift+))
 
 #+liber-documentation
-(setf (liber:alias-for-variable '+g-type-string+)
+(setf (liber:alias-for-variable '+type-string+)
       "Constant"
-      (documentation '+g-type-string+ 'variable)
+      (documentation '+type-string+ 'variable)
  "@version{2022-12-29}
   @variable-value{64}
   @begin{short}
@@ -526,18 +526,18 @@
   @end{short}
   @see-class{g:type-t}")
 
-(export '+g-type-string+)
+(export '+type-string+)
 
 ;;; ----------------------------------------------------------------------------
 ;;; G_TYPE_POINTER
 ;;; ----------------------------------------------------------------------------
 
-(defconstant +g-type-pointer+ #.(ash 17 +g-type-fundamental-shift+))
+(defconstant +type-pointer+ #.(ash 17 +type-fundamental-shift+))
 
 #+liber-documentation
-(setf (liber:alias-for-variable '+g-type-pointer+)
+(setf (liber:alias-for-variable '+type-pointer+)
       "Constant"
-      (documentation '+g-type-pointer+ 'variable)
+      (documentation '+type-pointer+ 'variable)
  "@version{2022-12-29}
   @variable-value{68}
   @begin{short}
@@ -545,18 +545,18 @@
   @end{short}
   @see-class{g:type-t}")
 
-(export '+g-type-pointer+)
+(export '+type-pointer+)
 
 ;;; ----------------------------------------------------------------------------
 ;;; G_TYPE_BOXED
 ;;; ----------------------------------------------------------------------------
 
-(defconstant +g-type-boxed+ #.(ash 18 +g-type-fundamental-shift+))
+(defconstant +type-boxed+ #.(ash 18 +type-fundamental-shift+))
 
 #+liber-documentation
-(setf (liber:alias-for-variable '+g-type-boxed+)
+(setf (liber:alias-for-variable '+type-boxed+)
       "Constant"
-      (documentation '+g-type-boxed+ 'variable)
+      (documentation '+type-boxed+ 'variable)
  "@version{2022-12-29}
   @variable-value{72}
   @begin{short}
@@ -564,38 +564,38 @@
   @end{short}
   @see-class{g:type-t}")
 
-(export '+g-type-boxed+)
+(export '+type-boxed+)
 
 ;;; ----------------------------------------------------------------------------
 ;;; G_TYPE_PARAM
 ;;; ----------------------------------------------------------------------------
 
-(defconstant +g-type-param+ #.(ash 19 +g-type-fundamental-shift+))
+(defconstant +type-param+ #.(ash 19 +type-fundamental-shift+))
 
 #+liber-documentation
-(setf (liber:alias-for-variable '+g-type-param+)
+(setf (liber:alias-for-variable '+type-param+)
       "Constant"
-      (documentation '+g-type-param+ 'variable)
+      (documentation '+type-param+ 'variable)
  "@version{2022-12-29}
   @variable-value{76}
   @begin{short}
     The fundamental type from which all @code{GParamSpec} types are derived.
   @end{short}
   @see-class{g:type-t}
-  @see-symbol{param-spec}")
+  @see-symbol{g:param-spec}")
 
-(export '+g-type-param+)
+(export '+type-param+)
 
 ;;; ----------------------------------------------------------------------------
 ;;; G_TYPE_OBJECT
 ;;; ----------------------------------------------------------------------------
 
-(defconstant +g-type-object+ #.(ash 20 +g-type-fundamental-shift+))
+(defconstant +type-object+ #.(ash 20 +type-fundamental-shift+))
 
 #+liber-documentation
-(setf (liber:alias-for-variable '+g-type-object+)
+(setf (liber:alias-for-variable '+type-object+)
       "Constant"
-      (documentation '+g-type-object+ 'variable)
+      (documentation '+type-object+ 'variable)
  "@version{2022-12-29}
   @variable-value{80}
   @begin{short}
@@ -604,7 +604,7 @@
   @see-class{g:type-t}
   @see-class{g:object}")
 
-(export '+g-type-object+)
+(export '+type-object+)
 
 ;;; ----------------------------------------------------------------------------
 ;;; G_TYPE_GTYPE
@@ -613,30 +613,30 @@
 (glib-init:at-init ()
   (cffi:foreign-funcall "g_gtype_get_type" :size))
 
-(defconstant +g-type-gtype+ (cffi:foreign-funcall "g_gtype_get_type" :size))
+(defconstant +type-gtype+ (cffi:foreign-funcall "g_gtype_get_type" :size))
 
 #+liber-documentation
-(setf (liber:alias-for-variable '+g-type-gtype+)
+(setf (liber:alias-for-variable '+type-gtype+)
       "Constant"
-      (documentation '+g-type-gtype+ 'variable)
+      (documentation '+type-gtype+ 'variable)
  "@version{2022-12-29}
   @begin{short}
     The fundamental type for @code{GType}.
   @end{short}
   @see-class{g:type-t}")
 
-(export '+g-type-gtype+)
+(export '+type-gtype+)
 
 ;;; ----------------------------------------------------------------------------
 ;;; G_TYPE_VARIANT
 ;;; ----------------------------------------------------------------------------
 
-(defconstant +g-type-variant+ #.(ash 21 +g-type-fundamental-shift+))
+(defconstant +type-variant+ #.(ash 21 +type-fundamental-shift+))
 
 #+liber-documentation
-(setf (liber:alias-for-variable '+g-type-variant+)
+(setf (liber:alias-for-variable '+type-variant+)
       "Constant"
-      (documentation '+g-type-variant+ 'variable)
+      (documentation '+type-variant+ 'variable)
  "@version{2022-12-29}
   @variable-value{84}
   @short{The fundamental type corresponding to @code{GVariant}.}
@@ -647,7 +647,7 @@
   @see-class{g:type-t}
   @see-type{g:variant}")
 
-(export '+g-type-variant+)
+(export '+type-variant+)
 
 ;;; ----------------------------------------------------------------------------
 ;;; G_TYPE_CHECKSUM
@@ -656,31 +656,31 @@
 (glib-init:at-init ()
   (cffi:foreign-funcall "g_checksum_get_type" :size))
 
-(defconstant +g-type-checksum+
+(defconstant +type-checksum+
              (cffi:foreign-funcall "g_checksum_get_type" :size))
 
 #+liber-documentation
-(setf (liber:alias-for-variable '+g-type-checksum+)
+(setf (liber:alias-for-variable '+type-checksum+)
       "Constant"
-      (documentation '+g-type-checksum+ 'variable)
+      (documentation '+type-checksum+ 'variable)
  "@version{2022-12-29}
   @begin{short}
     The @class{g:type-t} type ID for a boxed type holding a @code{GChecksum}.
   @end{short}
   @see-class{g:type-t}")
 
-(export '+g-type-checksum+)
+(export '+type-checksum+)
 
 ;;; ----------------------------------------------------------------------------
 ;;; G_TYPE_RESERVED_GLIB_FIRST                             not exported
 ;;; ----------------------------------------------------------------------------
 
-(defconstant +g-type-reserved-glib-first+ 22)
+(defconstant +type-reserved-glib-first+ 22)
 
 #+liber-documentation
-(setf (liber:alias-for-variable '+g-type-reserved-glib-first+)
+(setf (liber:alias-for-variable '+type-reserved-glib-first+)
       "Constant"
-      (documentation '+g-type-reserved-glib-first+ 'variable)
+      (documentation '+type-reserved-glib-first+ 'variable)
  "@version{#2022-12-31}
   @variable-value{22}
   @begin{short}
@@ -693,12 +693,12 @@
 ;;; G_TYPE_RESERVED_GLIB_LAST                              not exported
 ;;; ----------------------------------------------------------------------------
 
-(defconstant +g-type-reserved-glib-last+ 31)
+(defconstant +type-reserved-glib-last+ 31)
 
 #+liber-documentation
-(setf (liber:alias-for-variable '+g-type-reserved-glib-last+)
+(setf (liber:alias-for-variable '+type-reserved-glib-last+)
       "Constant"
-      (documentation '+g-type-reserved-glib-last+ 'variable)
+      (documentation '+type-reserved-glib-last+ 'variable)
  "@version{#2022-12-31}
   @variable-value{31}
   @begin{short}
@@ -710,12 +710,12 @@
 ;;; G_TYPE_RESERVED_BSE_FIRST                              not exported
 ;;; ----------------------------------------------------------------------------
 
-(defconstant +g-type-reserved-bse-first+ 32)
+(defconstant +type-reserved-bse-first+ 32)
 
 #+liber-documentation
-(setf (liber:alias-for-variable '+g-type-reserved-bse-first+)
+(setf (liber:alias-for-variable '+type-reserved-bse-first+)
       "Constant"
-      (documentation '+g-type-reserved-bse-first+ 'variable)
+      (documentation '+type-reserved-bse-first+ 'variable)
  "@version{#2022-12-31}
   @variable-value{32}
   @begin{short}
@@ -729,12 +729,12 @@
 ;;; G_TYPE_RESERVED_BSE_LAST                               not exported
 ;;; ----------------------------------------------------------------------------
 
-(defconstant +g-type-reserved-bse-last+ 48)
+(defconstant +type-reserved-bse-last+ 48)
 
 #+liber-documentation
-(setf (liber:alias-for-variable '+g-type-reserved-bse-last+)
+(setf (liber:alias-for-variable '+type-reserved-bse-last+)
       "Constant"
-      (documentation '+g-type-reserved-bse-last+ 'variable)
+      (documentation '+type-reserved-bse-last+ 'variable)
  "@version{#2022-12-31}
   @variable-value{48}
   @begin{short}
@@ -746,12 +746,12 @@
 ;;; G_TYPE_RESERVED_USER_FIRST                             not exported
 ;;; ----------------------------------------------------------------------------
 
-(defconstant +g-type-reserved-user-first+ 49)
+(defconstant +type-reserved-user-first+ 49)
 
 #+liber-documentation
-(setf (liber:alias-for-variable '+g-type-reserved-user-first+)
+(setf (liber:alias-for-variable '+type-reserved-user-first+)
       "Constant"
-      (documentation '+g-type-reserved-user-first+ 'variable)
+      (documentation '+type-reserved-user-first+ 'variable)
  "@version{#2022-12-31}
   @variable-value{49}
   @begin{short}
@@ -765,8 +765,8 @@
 ;;; G_TYPE_FUNDAMENTAL_MAX                                 not exported
 ;;; ----------------------------------------------------------------------------
 
-(defconstant +g-type-fundamental-max+
-             #.(ash 255 +g-type-fundamental-shift+)
+(defconstant +type-fundamental-max+
+             #.(ash 255 +type-fundamental-shift+)
  #+liber-documentation
  "@version{#2013-3-31}
   @variable-value{1020}
@@ -778,7 +778,7 @@
 ;; Check for equality of types. This is faster than the function type-is-a.
 
 ;; TODO: There is a bug. The function type-t= is used to check against the type
-;;       +g-type-invalid+. But this does not work.
+;;       g:+type-invalid+. But this does not work.
 
 (defun gtype= (gtype1 gtype2)
   (eq (glib:gtype gtype1) (glib:gtype gtype2)))
@@ -813,8 +813,8 @@
      identifier of a @class{g:type-t} type ID does not change.
      @begin[Examples]{dictionary}
        @begin{pre}
-+g-type-double+ => 60
-(g:type-name +g-type-double+) => \"gdouble\"
+g:+type-double+ => 60
+(g:type-name g:+type-double+) => \"gdouble\"
 (g:type-from-name \"gdouble\") => #<GTYPE :name \"gdouble\" :id 60>
        @end{pre}
      @end{dictionary}
@@ -1470,7 +1470,7 @@
   @end{dictionary}
   @see-class{type-t}
   @see-function{type-fundamental-next}"
-  (ash x +g-type-fundamental-shift+))
+  (ash x +type-fundamental-shift+))
 
 ;;; ----------------------------------------------------------------------------
 ;;; G_TYPE_IS_ABSTRACT()
@@ -1524,7 +1524,7 @@
   @end{dictionary}
   @see-class{g:type-t}
   @see-function{g:type-is-fundamental}"
-  (> (glib:gtype-id (glib:gtype gtype)) +g-type-fundamental-max+))
+  (> (glib:gtype-id (glib:gtype gtype)) +type-fundamental-max+))
 
 (export 'type-is-derived)
 
@@ -1549,7 +1549,7 @@
   @end{dictionary}
   @see-class{g:type-t}
   @see-function{g:type-is-derived}"
-  (<= (glib:gtype-id (glib:gtype gtype)) +g-type-fundamental-max+))
+  (<= (glib:gtype-id (glib:gtype gtype)) +type-fundamental-max+))
 
 (export 'type-is-fundamental)
 
@@ -1704,7 +1704,7 @@
   @end{dictionary}
   @see-class{g:type-t}
   @see-symbol{g:type-interface}"
-  (eq (glib:gtype +g-type-interface+) (type-fundamental gtype)))
+  (eq (glib:gtype +type-interface+) (type-fundamental gtype)))
 
 (export 'type-is-interface)
 
@@ -2114,9 +2114,9 @@
 ;;; g_type_name ()
 ;;; ----------------------------------------------------------------------------
 
-;; TODO: The type +g-type-invalid+ is special handled in gtype-id. gtype-id
+;; TODO: The type g:+type-invalid+ is special handled in gtype-id. gtype-id
 ;; returns nil and not an integer. Therefore this function does not accept
-;; +g-type-invalid+ as an argument like the C function.
+;; g:+type-invalid+ as an argument like the C function.
 
 (declaim (inline type-name))
 
@@ -2133,8 +2133,8 @@
   lead to a crash.
   @begin[Examples]{dictionary}
     @begin{pre}
-(g:type-name +g-type-double+) => \"gdouble\"
-(g:type-name +g-type-enum+) => \"GEnum\"
+(g:type-name g:+type-double+) => \"gdouble\"
+(g:type-name g:+type-enum+) => \"GEnum\"
 (g:type-name (g:gtype \"GtkButton\")) => \"GtkButton\"
     @end{pre}
   @end{dictionary}
@@ -2304,15 +2304,15 @@
   If @arg{is-a-type} is an interface, check whether @arg{gtype} conforms to it.
   @begin[Examples]{dictionary}
     @begin{pre}
-(g:type-is-a \"gboolean\" +g-type-boolean+) => T
-(g:type-is-a \"GtkTextIter\" +g-type-boxed+) => T
-(g:type-is-a \"GtkWindowType\" +g-type-enum+) => T
-(g:type-is-a \"GtkApplicationInhibitFlags\" +g-type-flags+) => T
-(g:type-is-a \"GtkActionable\" +g-type-interface+) => T
-(g:type-is-a \"unknown\" +g-type-invalid+) => T
-(g:type-is-a \"GtkApplication\" +g-type-object+) => T
-(g:type-is-a \"GParamBoolean\" +g-type-param+) => T
-(g:type-is-a \"GVariant\" +g-type-variant+) => T
+(g:type-is-a \"gboolean\" g:+type-boolean+) => T
+(g:type-is-a \"GtkTextIter\" g:+type-boxed+) => T
+(g:type-is-a \"GtkWindowType\" g:+type-enum+) => T
+(g:type-is-a \"GtkApplicationInhibitFlags\" g:+type-flags+) => T
+(g:type-is-a \"GtkActionable\" g:+type-interface+) => T
+(g:type-is-a \"unknown\" g:+type-invalid+) => T
+(g:type-is-a \"GtkApplication\" g:+type-object+) => T
+(g:type-is-a \"GParamBoolean\" g:+type-param+) => T
+(g:type-is-a \"GVariant\" g:+type-variant+) => T
     @end{pre}
   @end{dictionary}
   @see-class{g:type-t}"
