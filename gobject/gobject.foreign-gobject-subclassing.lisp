@@ -26,6 +26,35 @@
 
 ;;; ----------------------------------------------------------------------------
 
+;; Structure to store the definition of a subclass
+(defstruct subclass-info
+  gname
+  class
+  parent
+  interfaces
+  properties)
+
+;; Stores the subclasses as SUBCLASS-INFO instances
+(let ((subclass-infos (make-hash-table :test 'equal)))
+
+  (defun get-subclass-info (gtype)
+    (let ((gname (if (stringp gtype)
+                     gtype
+                     (glib:gtype-name (glib:gtype gtype)))))
+      (gethash gname subclass-infos)))
+
+  (defun (setf get-subclass-info) (value gtype)
+    (let ((gname (if (stringp gtype)
+                     gtype
+                     (glib:gtype-name (glib:gtype gtype)))))
+      (setf (gethash gname subclass-infos) value)))
+
+  (defun print-subclass-infos ()
+    (maphash (lambda (key value) (format t "~a ~a~%" key value))
+             subclass-infos)))
+
+;;; ----------------------------------------------------------------------------
+
 ;; Definition of a vtable for subclassing an interface
 
 (defstruct vtable-info
@@ -203,35 +232,6 @@
                             (v)
                             :interactive
                             (lambda () (list (eval (read)))) v))))))))
-
-;;; ----------------------------------------------------------------------------
-
-;; Structure to store the definition of a subclass
-(defstruct subclass-info
-  gname
-  class
-  parent
-  interfaces
-  properties)
-
-;; Stores the subclasses as SUBCLASS-INFO instances
-(let ((subclass-infos (make-hash-table :test 'equal)))
-
-  (defun get-subclass-info (gtype)
-    (let ((gname (if (stringp gtype)
-                     gtype
-                     (glib:gtype-name (glib:gtype gtype)))))
-      (gethash gname subclass-infos)))
-
-  (defun (setf get-subclass-info) (value gtype)
-    (let ((gname (if (stringp gtype)
-                     gtype
-                     (glib:gtype-name (glib:gtype gtype)))))
-      (setf (gethash gname subclass-infos) value)))
-
-  (defun print-subclass-infos ()
-    (maphash (lambda (key value) (format t "~a ~a~%" key value))
-             subclass-infos)))
 
 ;;; ----------------------------------------------------------------------------
 
@@ -672,9 +672,9 @@
                              ,(package-name (symbol-package name))))
                  (mapcar (lambda (property)
                            `(export ',(intern (format nil "~A-~A"
-                                                         (symbol-name name)
-                                                         (property-name property))
-                                                (symbol-package name))
+                                                      (symbol-name name)
+                                                      (property-name property))
+                                              (symbol-package name))
                                      (find-package
                                        ,(package-name (symbol-package name)))))
                           props)))
