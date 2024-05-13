@@ -1,7 +1,7 @@
 ;;; ----------------------------------------------------------------------------
 ;;; cl-cffi-glib-init.asd
 ;;;
-;;; Copyright (C) 2023 Dieter Kaiser
+;;; Copyright (C) 2023 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -30,7 +30,8 @@
   :author "Dieter Kaiser"
   :license "MIT"
   :serial t
-  :components ((:file "cl-cffi-glib-init"))
+  :components ((:file "cl-cffi-glib-init")
+               (:file "cl-cffi-glib-sys"))
   :depends-on (:cffi
                :trivial-features))
 
