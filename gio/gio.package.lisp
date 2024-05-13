@@ -403,11 +403,12 @@
     @end{subsection}
   @end{section}
   @begin[Resources]{section}
-    Resource framework.
     @about-symbol{resource-flags}
     @about-symbol{resource-lookup-flags}
     @about-class{resource}
     @about-macro{with-g-resources}
+    @about-macro{with-resource}
+    @about-macro{with-resources}
     @about-function{resource-load}
     @about-function{resource-new-from-data}
     @about-function{resource-ref}

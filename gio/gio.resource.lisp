@@ -78,34 +78,8 @@
 
 (in-package :gio)
 
-(defmacro with-g-resources ((resource path) &body body)
- #+liber-documentation
- "@version{2023-4-22}
-  @syntax[]{(with-g-resources (resource path) body) => result}
-  @argument[resource]{a @class{g:resource} instance to create and register}
-  @argument[path]{a pathname or namestring with the path of a file to load}
-  @begin{short}
-    The @sym{with-g-resources} macro allocates a new @class{g:resource}
-    instance, loads the resource from a file, register the resource with the
-    process-global set of resources and executes the body that uses the
-    resources.
-  @end{short}
-  After execution of the body the resource is unregistered from the
-  process-global set of resources.
-  @see-class{g:resource}
-  @see-function{g:resource-load}
-  @see-function{g:resources-register}
-  @see-function{g:resources-unregister}"
-  `(let ((,resource (resource-load ,path)))
-     (resources-register ,resource)
-     (unwind-protect
-       (progn ,@body)
-       (resources-unregister ,resource))))
-
-(export 'with-g-resources)
-
 ;;; ----------------------------------------------------------------------------
-;;; enum GResourceFlags
+;;; GResourceFlags
 ;;; ----------------------------------------------------------------------------
 
 (gobject:define-g-flags "GResourceFlags" resource-flags
@@ -118,26 +92,28 @@
 (setf (liber:alias-for-symbol 'resource-flags)
       "GFlags"
       (liber:symbol-documentation 'resource-flags)
- "@version{2023-1-26}
-  @begin{short}
-    The @sym{g:resource-flags} flags give information about a particular file
-    inside a resource bundle.
-  @end{short}
-  @begin{pre}
+ "@version{2024-5-12}
+  @begin{declaration}
 (gobject:define-g-flags \"GResourceFlags\" resource-flags
   (:export t
    :type-initializer \"g_resource_flags_get_type\")
   (:none 0)
   (:compressed #.(ash 1 0)))
-  @end{pre}
-  @begin[code]{table}
-    @entry[:none]{No flags set.}
-    @entry[:compressed]{The file is compressed.}
-  @end{table}
+  @end{declaration}
+  @begin{values}
+    @begin[code]{table}
+      @entry[:none]{No flags set.}
+      @entry[:compressed]{The file is compressed.}
+    @end{table}
+  @end{values}
+  @begin{short}
+    The @symbol{g:resource-flags} flags give information about a particular
+    file inside a resource bundle.
+  @end{short}
   @see-class{g:resource}")
 
 ;;; ----------------------------------------------------------------------------
-;;; enum GResourceLookupFlags
+;;; GResourceLookupFlags
 ;;; ----------------------------------------------------------------------------
 
 (gobject:define-g-flags "GResourceLookupFlags" resource-lookup-flags
@@ -149,20 +125,22 @@
 (setf (liber:alias-for-symbol 'resource-lookup-flags)
       "GFlags"
       (liber:symbol-documentation 'resource-lookup-flags)
- "@version{2023-1-26}
-  @begin{short}
-    The @sym{g:resource-lookup-flags} flags determine how resource path lookups
-    are handled.
-  @end{short}
-  @begin{pre}
+ "@version{2024-5-12}
+  @begin{declaration}
 (gobject:define-g-flags \"GResourceLookupFlags\" resource-lookup-flags
   (:export t
    :type-initializer \"g_resource_lookup_flags_get_type\")
   (:none 0))
-  @end{pre}
-  @begin[code]{table}
-    @entry[:none]{No flags set.}
-  @end{table}
+  @end{declaration}
+  @begin{values}
+    @begin[code]{table}
+      @entry[:none]{No flags set.}
+    @end{table}
+  @end{values}
+  @begin{short}
+    The @symbol{g:resource-lookup-flags} flags determine how resource path
+    lookups are handled.
+  @end{short}
   @see-class{g:resource}")
 
 ;;; ----------------------------------------------------------------------------
@@ -201,15 +179,24 @@
 ;;; GResource
 ;;; ----------------------------------------------------------------------------
 
+;; TODO: Rework the documentation for use in the Lisp library
+
 (glib:define-g-boxed-opaque resource "GResource"
+  :export t
   :type-initializer "g_resource_get_type"
-  :alloc (error "GResource cannot be created from the Lisp side."))
+  :alloc (error "GResource cannot be created from the Lisp side"))
 
 #+liber-documentation
 (setf (liber:alias-for-class 'resource)
       "GBoxed"
       (documentation 'resource 'type)
- "@version{2023-1-26}
+ "@version{2024-5-12}
+  @begin{declaration}
+(glib:define-g-boxed-opaque resource \"GResource\"
+  :export t
+  :type-initializer \"g_resource_get_type\"
+  :alloc (error \"GResource cannot be created from the Lisp side\"))
+  @end{declaration}
   @begin{short}
     Applications and libraries often contain binary or textual data that is
     really part of the application, rather than user data.
@@ -219,14 +206,14 @@
   files in @code{$datadir/appname}, or manually included as literal strings in
   the code.
 
-  The @sym{g:resource} API and the @code{glib-compile-resources} program provide
-  a convenient and efficient alternative to this which has some nice properties.
-  You maintain the files as normal files, so its easy to edit them, but during
-  the build the files are combined into a binary bundle that is linked into the
-  executable. This means that loading the resource files are efficient, as they
-  are already in memory, shared with other instances, and simple, no need to
-  check for things like I/O errors or locate the files in the filesystem. It
-  also makes it easier to create relocatable applications.
+  The @class{g:resource} API and the @code{glib-compile-resources} program
+  provide a convenient and efficient alternative to this which has some nice
+  properties. You maintain the files as normal files, so its easy to edit them,
+  but during the build the files are combined into a binary bundle that is
+  linked into the executable. This means that loading the resource files are
+  efficient, as they are already in memory, shared with other instances, and
+  simple, no need to check for things like I/O errors or locate the files in
+  the filesystem. It also makes it easier to create relocatable applications.
 
   Resource files can also be marked as compressed. Such files will be included
   in the resource bundle in a compressed form, but will be automatically
@@ -254,7 +241,7 @@
       executable. Otherwise the resource compiler will abort.
     @end{item}
   @end{itemize}
-  Resource files will be exported in the @sym{g:resource} namespace using the
+  Resource files will be exported in the @class{g:resource} namespace using the
   combination of the given prefix and the filename from the file element. The
   alias attribute can be used to alter the filename to expose them at a
   different location in the resource namespace. Typically, this is used to
@@ -295,13 +282,13 @@
   @code{register_resource()} and @code{unregister_resource()} functions,
   prefixed by the @code{--c-name} argument passed to
   @code{glib-compile-resources}. The @code{get_resource()} function returns the
-  generated @sym{g:resource} instance. The register and unregister functions
+  generated @class{g:resource} instance. The register and unregister functions
   register the resource so its files can be accessed using the
   @fun{g:resources-lookup-data} function.
 
-  Once a @sym{g:resource} instance has been created and registered all the data
-  in it can be accessed globally in the process by using API calls like the
-  @code{g_resources_open_stream()} function to stream the data or the
+  Once a @class{g:resource} instance has been created and registered all the
+  data in it can be accessed globally in the process by using API calls like
+  the @code{g_resources_open_stream()} function to stream the data or the
   @fun{g:resources-lookup-data} function to get a direct pointer to the data.
   You can also use URIs like
   @code{\"resource:///org/gtk/Example/data/splashscreen.png\"} with
@@ -313,12 +300,13 @@
 
   There are two forms of the generated source, the default version uses the
   compiler support for constructor and destructor functions, where available,
-  to automatically create and register the @sym{g:resource} instance on startup
-  or library load time. If you pass @code{--manual-register}, two functions to
-  register/unregister the resource are created instead. This requires an
-  explicit initialization call in your application/library, but it works on all
-  platforms, even on the minor ones where constructors are not supported.
-  Constructor support is available for at least Win32, Mac OS and Linux.
+  to automatically create and register the @class{g:resource} instance on
+  startup or library load time. If you pass @code{--manual-register}, two
+  functions to register/unregister the resource are created instead. This
+  requires an explicit initialization call in your application/library, but it
+  works on all platforms, even on the minor ones where constructors are not
+  supported. Constructor support is available for at least Win32, Mac OS and
+  Linux.
 
   Note that resource data can point directly into the data segment of e.g. a
   library, so if you are unloading libraries during runtime you need to be very
@@ -345,8 +333,8 @@
   equivalent names.
 
   In the example above, if an application tried to load a resource with the
-  resource path @code{/org/gtk/libgtk/ui/gtkdialog.ui} then the @sym{g:resource}
-  instance would check the filesystem path
+  resource path @code{/org/gtk/libgtk/ui/gtkdialog.ui} then the
+  @class{g:resource} instance would check the filesystem path
   @code{/home/desrt/gtk-overlay/ui/gtkdialog.ui}. If a file was found there, it
   would be used instead. This is an overlay, not an outright replacement, which
   means that if a file is not found at that path, the built-in version will be
@@ -361,7 +349,96 @@
 (export 'resource)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_resource_load ()
+
+;; TODO: Remove the WITH-G-RESOURCES implementation, it is replaced with
+;; WITH-RESOURCE and WITH-RESOURCES
+
+(defmacro with-g-resources ((resource path) &body body)
+ #+liber-documentation
+ "@version{2023-4-22}
+  @syntax[]{(with-g-resources (resource path) body) => result}
+  @argument[resource]{a @class{g:resource} instance to create and register}
+  @argument[path]{a pathname or namestring with the path of a file to load}
+  @begin{short}
+    The @macro{g:with-g-resources} macro allocates a new @class{g:resource}
+    instance, loads the resource from a file, register the resource with the
+    process-global set of resources and executes the body that uses the
+    resources.
+  @end{short}
+  After execution of the body the resource is unregistered from the
+  process-global set of resources.
+  @begin[Warning]{dictionary}
+    This macro has been deprecated and will no longer be available in the near
+    future. Use the @macro{g:with-resource} macro.
+  @end{dictionary}
+  @see-class{g:resource}
+  @see-function{g:resource-load}
+  @see-function{g:resources-register}
+  @see-function{g:resources-unregister}"
+  `(let ((,resource (resource-load ,path)))
+     (resources-register ,resource)
+     (unwind-protect
+       (progn ,@body)
+       (resources-unregister ,resource))))
+
+(export 'with-g-resources)
+
+;;; ----------------------------------------------------------------------------
+
+(defmacro with-resource ((resource path) &body body)
+ #+liber-documentation
+ "@version{2024-5-12}
+  @syntax{(g:with-resource (resource path) body) => result}
+  @argument[resource]{a @class{g:resource} instance to create and register}
+  @argument[path]{a pathname or namestring with the path of a file to load}
+  @argument[body]{a body that uses the binding @arg{resource}}
+  @begin{short}
+    The @macro{g:with-resource} macro allocates a new @class{g:resource}
+    instance, loads the resource from a file, register the resource with the
+    process-global set of resources and executes the body that uses the
+    resources.
+  @end{short}
+  After execution of the body the resource is unregistered from the
+  process-global set of resources.
+  @see-class{g:resource}
+  @see-function{g:resource-load}
+  @see-function{g:resources-register}
+  @see-function{g:resources-unregister}"
+  `(let ((,resource (resource-load ,path)))
+     (resources-register ,resource)
+     (unwind-protect
+       (progn ,@body)
+       (resources-unregister ,resource))))
+
+(export 'with-resource)
+
+(defmacro with-resources (vars &body body)
+ #+liber-documentation
+ "@version{2024-5-12}
+  @syntax{(g:with-resources ((resource1 path1) ... (resourcen pathn)) body)
+    => result}
+  @argument[resource1 ... resourcen]{newly created @class{g:resource} instances}
+  @argument[path1 ... pathn]{pathnames or namestrings with the path of a file
+    to load}
+  @argument[body]{a body that uses the bindings @arg{resource1 ... resourcen}}
+  @begin{short}
+    The @fun{g:with-resources} macro creates new variable bindings and
+    executes the body that use these bindings.
+  @end{short}
+  The macro performs the bindings sequentially, like the @sym{let*} macro.
+  See also the @fun{g:with-resource} documentation.
+  @see-macro{g:with-resource}"
+  (if vars
+      (let ((var (glib-sys:mklist (first vars))))
+        `(with-resource ,var
+           (with-resources ,(rest vars)
+             ,@body)))
+      `(progn ,@body)))
+
+(export 'with-resources)
+
+;;; ----------------------------------------------------------------------------
+;;; g_resource_load
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_resource_load" %resource-load) (glib:boxed resource :return)
@@ -370,10 +447,10 @@
 
 (defun resource-load (path)
  #+liber-documentation
- "@version{2023-1-26}
+ "@version{2024-5-12}
   @argument[path]{a pathname or namestring with the path of a file to load, in
     the GLib filenname encoding}
-  @return{A new @class{g:resource} instance.}
+  @return{The new @class{g:resource} instance.}
   @begin{short}
     Loads a binary resource bundle and creates a @class{g:resource} instance
     representation of it, allowing you to query it for data.
@@ -420,7 +497,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_resource_ref ()                                      not needed
+;;; g_resource_ref                                          not needed
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_resource_ref" resource-ref) (glib:boxed resource)
@@ -436,7 +513,7 @@
   (resource (glib:boxed resource)))
 
 ;;; ----------------------------------------------------------------------------
-;;; g_resource_unref ()                                    not needed
+;;; g_resource_unref                                        not needed
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_resource_unref" resource-unref) :void
@@ -452,7 +529,7 @@
   (resource (glib:boxed resource)))
 
 ;;; ----------------------------------------------------------------------------
-;;; g_resource_lookup_data ()
+;;; g_resource_lookup_data
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_resource_lookup_data" %resource-lookup-data) :pointer
@@ -463,11 +540,11 @@
 
 (defun resource-lookup-data (resource path lookup)
  #+liber-documentation
- "@version{2023-1-26}
+ "@version{2024-5-12}
   @argument[resource]{a @class{g:resource} instance}
   @argument[path]{a string with a pathname inside the resource}
   @argument[lookup]{a @symbol{g:resource-lookup-flags} value}
-  @return{A pointer to the data, @code{null-pointer} on error.}
+  @return{The pointer to the data, @code{cffi:null-pointer} on error.}
   @begin{short}
     Looks for a file at the specified path in the resource and returns a pointer
     that lets you directly access the data in memory.
@@ -523,7 +600,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_resource_enumerate_children ()
+;;; g_resource_enumerate_children
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_resource_enumerate_children" %resource-enumerate-children)
@@ -535,11 +612,11 @@
 
 (defun resource-enumerate-children (resource path lookup)
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2024-5-12}
   @argument[resource]{a @class{g:resource} instance}
   @argument[path]{a string with a pathname inside the resource}
   @argument[lookup]{a @symbol{g:resource-lookup-flags} value}
-  @return{A list of strings.}
+  @return{The list of strings.}
   @begin{short}
     Returns all the names of children at the specified path in the resource.
   @end{short}
@@ -553,7 +630,7 @@
 (export 'resource-enumerate-children)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_resource_get_info () -> resource-info
+;;; g_resource_get_info
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_resource_get_info" %resource-info) :boolean
@@ -566,7 +643,7 @@
 
 (defun resource-info (resource path lookup)
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2024-5-12}
   @argument[resource]{a @class{g:resource} instance}
   @argument[path]{a string with a pathname inside the resource}
   @argument[lookup]{a @symbol{g:resource-lookup-flags} value}
@@ -645,12 +722,12 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_resources_register ()
+;;; g_resources_register
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_resources_register" resources-register) :void
  #+liber-documentation
- "@version{2022-12-30}
+ "@version{2024-5-12}
   @argument[resource]{a @class{g:resource} instance}
   @begin{short}
     Registers the resource with the process-global set of resources.
@@ -665,12 +742,12 @@
 (export 'resources-register)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_resources_unregister ()
+;;; g_resources_unregister
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_resources_unregister" resources-unregister) :void
  #+liber-documentation
- "@version{2022-12-30}
+ "@version{2024-5-12}
   @argument[resource]{a @class{g:resource} instance}
   @begin{short}
     Unregisters the resource from the process-global set of resources.
@@ -692,11 +769,11 @@
 
 (defun resources-lookup-data (path &optional (lookup :none))
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2024-5-12}
   @argument[path]{a string with a pathname inside the resource}
   @argument[lookup]{an optional @symbol{g:resource-lookup-flags} value,
     the default value is @code{:none}}
-  @return{A pointer or @code{null-pointer}.}
+  @return{The pointer or @code{cffi:null-pointer}.}
   @begin{short}
     Looks for a file at the specified path in the set of globally registered
     resources and returns a pointer that lets you directly access the data in
@@ -748,7 +825,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_resources_enumerate_children ()
+;;; g_resources_enumerate_children
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_resources_enumerate_children" %resources-enumerate-children)
@@ -759,10 +836,10 @@
 
 (defun resources-enumerate-children (path lookup)
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2024-5-12}
   @argument[path]{a string with a pathname inside the resource}
   @argument[lookup]{a @symbol{g:resource-lookup-flags} value}
-  @return{A list of strings.}
+  @return{The list of strings.}
   @begin{short}
     Returns all the names of children at the specified path in the set of
     globally registered resources.
@@ -776,7 +853,7 @@
 (export 'resources-enumerate-children)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_resources_get_info () -> resources-info
+;;; g_resources_get_info
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_resources_get_info" %resources-info) :boolean
@@ -788,7 +865,7 @@
 
 (defun resources-info (path lookup)
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2024-5-12}
   @argument[path]{a string with a pathname inside the resource}
   @argument[lookup]{a @symbol{g:resource-lookup-flags} value}
   @begin{return}

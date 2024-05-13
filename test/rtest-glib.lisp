@@ -10,6 +10,9 @@
 
 (defvar *first-run-glib-test* t)
 
+;; Set the current package for the testsuite
+(setf (glib-sys:get-current-package) "cl-cffi-glib")
+
 (def-suite glib-test)
 (def-suite glib-suite :in glib-test)
 (def-suite gobject-suite :in glib-test)

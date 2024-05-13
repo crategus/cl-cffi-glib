@@ -3,29 +3,35 @@
 (def-suite gio-resource :in gio-suite)
 (in-suite gio-resource)
 
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (glib-sys:check-and-create-resources "test/resource/rtest-gio-resource.xml"
+                                       "cl-cffi-glib"
+                                       "test/resource/"
+                                       :verbose t))
+
 ;;; --- Types and Values -------------------------------------------------------
 
 ;;;     GResourceFlags
 
 (test g-resource-flags
-  ;; Check the type
+  ;; Check type
   (is (g:type-is-flags "GResourceFlags"))
-  ;; Check the registered symbol
+  ;; Check registered symbol
   (is (eq 'g:resource-flags
           (glib:symbol-for-gtype "GResourceFlags")))
-  ;; Check the type initializer
+  ;; Check type initializer
   (is (eq (g:gtype "GResourceFlags")
           (g:gtype (cffi:foreign-funcall "g_resource_flags_get_type" :size))))
-  ;; Check the names
+  ;; Check names
   (is (equal '("G_RESOURCE_FLAGS_NONE" "G_RESOURCE_FLAGS_COMPRESSED")
              (list-flags-item-name "GResourceFlags")))
-  ;; Check the values
+  ;; Check values
   (is (equal '(0 1)
              (list-flags-item-value "GResourceFlags")))
-  ;; Check the nick names
+  ;; Check nick names
   (is (equal '("none" "compressed")
              (list-flags-item-nick "GResourceFlags")))
-  ;; Check the flags definition
+  ;; Check flags definition
   (is (equal '(GOBJECT:DEFINE-G-FLAGS "GResourceFlags" G-RESOURCE-FLAGS
                                       (:EXPORT T)
                                       (:NONE 0)
@@ -35,25 +41,25 @@
 ;;;     GResourceLookupFlags
 
 (test g-resource-lookup-flags
-  ;; Check the type
+  ;; Check type
   (is (g:type-is-flags "GResourceLookupFlags"))
-  ;; Check the registered symbol
+  ;; Check registered symbol
   (is (eq 'g:resource-lookup-flags
           (glib:symbol-for-gtype "GResourceLookupFlags")))
-  ;; Check the type initializer
+  ;; Check type initializer
   (is (eq (g:gtype "GResourceLookupFlags")
           (g:gtype (cffi:foreign-funcall "g_resource_lookup_flags_get_type"
                                          :size))))
-  ;; Check the names
+  ;; Check names
   (is (equal '("G_RESOURCE_LOOKUP_FLAGS_NONE")
              (list-flags-item-name "GResourceLookupFlags")))
-  ;; Check the values
+  ;; Check values
   (is (equal '(0)
              (list-flags-item-value "GResourceLookupFlags")))
-  ;; Check the nick names
+  ;; Check nick names
   (is (equal '("none")
              (list-flags-item-nick "GResourceLookupFlags")))
-  ;; Check the flags definition
+  ;; Check flags definition
   (is (equal '(GOBJECT:DEFINE-G-FLAGS "GResourceLookupFlags"
                                       G-RESOURCE-LOOKUP-FLAGS
                                       (:EXPORT T)
@@ -63,12 +69,12 @@
 ;;;     GResource
 
 (test g-resource-boxed
-  ;; Type check
+  ;; Check type
   (is (g:type-is-boxed "GResource"))
-  ;; Check the type initializer
+  ;; Check type initializer
   (is (eq (g:gtype "GResource")
           (g:gtype (cffi:foreign-funcall "g_resource_get_type" :size))))
-  ;; Check the registered name
+  ;; Check registered name
   (is (eq 'g:resource
           (glib:symbol-for-gtype "GResource"))))
 
@@ -81,8 +87,8 @@
 ;;;     g_resource_load
 
 (test g-resource-load.1
-  (let ((resource (g:resource-load
-                      (sys-path "resource/rtest-gio-resource.gresource"))))
+  (let* ((path (glib-sys:sys-path "test/resource/rtest-gio-resource.gresource"))
+         (resource (g:resource-load path)))
     (is (typep resource 'g:resource))))
 
 (test g-resource-load.2
@@ -95,15 +101,15 @@
 ;;;     g_resource_lookup_data
 
 (test g-resource-lookup-data
-  (let ((path (sys-path "resource/rtest-gio-resource.gresource")))
-    (gio:with-g-resources (resource path)
+  (let ((path (glib-sys:sys-path "test/resource/rtest-gio-resource.gresource")))
+    (g:with-resource (resource path)
       (is (cffi:pointerp
               (g:resource-lookup-data resource
                                       "/com/crategus/test/ducky.png"
                                       :none)))
       (is (cffi:pointerp
           (g:resource-lookup-data resource
-                                  "/com/crategus/test/rtest-dialog.ui"
+                                  "/com/crategus/test/dialog.ui"
                                   :none))))))
 
 ;;;     g_resource_open_stream
@@ -111,10 +117,10 @@
 ;;;     g_resource_enumerate_children
 
 (test g-resource-enumerate-children
-  (let ((path (sys-path "resource/rtest-gio-resource.gresource")))
-    (gio:with-g-resources (resource path)
-      (is (equal '("ducky.png" "floppybuddy.gif" "gtk-logo-24.png"
-                   "rtest-application.ui" "rtest-dialog.ui" "rtest-dialog2.ui")
+  (let ((path (glib-sys:sys-path "test/resource/rtest-gio-resource.gresource")))
+    (g:with-resource (resource path)
+      (is (equal '("application.ui" "dialog.ui" "dialog2.ui" "ducky.png"
+                   "floppybuddy.gif" "gtk-logo-24.png")
                  (sort (g:resource-enumerate-children resource
                                                       "/com/crategus/test"
                                                       :none)
@@ -123,8 +129,8 @@
 ;;;     g_resource_get_info
 
 (test g-resource-info
-  (let ((path (sys-path "resource/rtest-gio-resource.gresource")))
-    (gio:with-g-resources (resource path)
+  (let ((path (glib-sys:sys-path "test/resource/rtest-gio-resource.gresource")))
+    (g:with-resource (resource path)
       (is (equal '(248546 0)
                  (multiple-value-list
                      (g:resource-info resource
@@ -135,10 +141,10 @@
                      (g:resource-info resource
                                       "/com/crategus/test/floppybuddy.gif"
                                       :none))))
-      (is (equal '(1703 0)
+      (is (equal '(1528 0)
                  (multiple-value-list
                      (g:resource-info resource
-                                      "/com/crategus/test/rtest-application.ui"
+                                      "/com/crategus/test/application.ui"
                                       :none)))))))
 
 ;;;     g_static_resource_init
@@ -151,13 +157,13 @@
 ;;;     g_resources_lookup_data
 
 (test g-resources-lookup-data
-  (let ((path (sys-path "resource/rtest-gio-resource.gresource")))
-    (gio:with-g-resources (resource path)
+  (let ((path (glib-sys:sys-path "test/resource/rtest-gio-resource.gresource")))
+    (g:with-resource (resource path)
       (is (cffi:pointerp
               (g:resources-lookup-data "/com/crategus/test/ducky.png"
                                        :none)))
       (is (cffi:pointerp
-              (g:resources-lookup-data "/com/crategus/test/rtest-dialog.ui"
+              (g:resources-lookup-data "/com/crategus/test/dialog.ui"
                                        :none))))))
 
 ;;;     g_resources_open_stream
@@ -165,10 +171,10 @@
 ;;;     g_resources_enumerate_children
 
 (test g-resources-enumerate-children
-  (let ((path (sys-path "resource/rtest-gio-resource.gresource")))
-    (gio:with-g-resources (resource path)
-      (is (equal '("ducky.png" "floppybuddy.gif" "gtk-logo-24.png"
-                   "rtest-application.ui" "rtest-dialog.ui" "rtest-dialog2.ui")
+  (let ((path (glib-sys:sys-path "test/resource/rtest-gio-resource.gresource")))
+    (g:with-resource (resource path)
+      (is (equal '("application.ui" "dialog.ui" "dialog2.ui" "ducky.png"
+                   "floppybuddy.gif" "gtk-logo-24.png")
                  (sort (g:resources-enumerate-children "/com/crategus/test"
                                                        :none)
                        #'string<))))))
@@ -176,8 +182,8 @@
 ;;;     g_resources_get_info
 
 (test g-resources-info
-  (let ((path (sys-path "resource/rtest-gio-resource.gresource")))
-    (gio:with-g-resources (resource path)
+  (let ((path (glib-sys:sys-path "test/resource/rtest-gio-resource.gresource")))
+    (g:with-resource (resource path)
       (is (equal '(248546 0)
                  (multiple-value-list
                      (g:resources-info "/com/crategus/test/ducky.png"
@@ -186,9 +192,9 @@
                  (multiple-value-list
                      (g:resources-info "/com/crategus/test/floppybuddy.gif"
                                        :none))))
-      (is (equal '(1703 0)
+      (is (equal '(1528 0)
                  (multiple-value-list
-                     (g:resources-info "/com/crategus/test/rtest-application.ui"
+                     (g:resources-info "/com/crategus/test/application.ui"
                                        :none)))))))
 
-;;; --- 2023-10-20 -------------------------------------------------------------
+;;; 2024-5-12

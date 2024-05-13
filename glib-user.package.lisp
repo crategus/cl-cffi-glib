@@ -706,6 +706,9 @@
            #:resource
            #:resource-flags
            #:resource-lookup-flags
+           #:with-g-resources
+           #:with-resource
+           #:with-resources
            #:resource-load
            #:resource-new-from-data
            #:resource-ref
@@ -720,7 +723,6 @@
            #:resources-open-stream
            #:resources-enumerate-children
            #:resources-info
-           #:with-g-resources
 
            ;; Symbols from gio.permission.lisp
            #:permission
