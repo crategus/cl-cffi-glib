@@ -538,6 +538,7 @@
            #:object-freeze-notify
            #:object-thaw-notify
            #:object-data
+           #:destroy-notify
            #:object-set-data-full
            #:object-object-steal-data
            #:object-property

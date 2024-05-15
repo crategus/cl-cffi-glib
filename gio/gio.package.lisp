@@ -57,7 +57,6 @@
   higher-level, document-centric interfaces.
   @begin[File Operations]{section}
     @begin[GFile]{subsection}
-      File and Directory Handling.
       @about-symbol{file-query-info-flags}
       @about-symbol{file-create-flags}
       @about-symbol{file-copy-flags}
@@ -204,7 +203,6 @@
   @end{section}
   @begin[Asynchronous I/O]{section}
     @begin[GCancellable]{subsection}
-      Thread-safe Operation Cancellation Stack.
       @about-class{cancellable}
       @about-symbol{cancellable-source-func}
       @about-function{cancellable-new}
@@ -223,7 +221,6 @@
       @about-function{cancellable-cancel\}
     @end{subsection}
     @begin[GAsyncResult]{subsection}
-      Asynchronous Function Results.
       @about-class{async-result}
       @about-symbol{async-ready-callback}
       @about-function{async-result-user-data}
@@ -232,7 +229,6 @@
       @about-function{async-result-legacy-propagate-error}
     @end{subsection}
     @begin[GTask]{subsection}
-      Cancellable synchronous or asynchronous task and result.
       @about-class{task}
       @about-generic{task-completed}
       @about-function{task-new}
@@ -292,7 +288,6 @@
       @about-function{content-types-registered}
     @end{subsection}
     @begin[GAppInfo]{subsection}
-      Application information and launch contexts.
       @about-symbol{app-info-create-flags}
       @about-class{app-info}
       @about-symbol{app-info-iface}
@@ -348,7 +343,6 @@
   @end{section}
   @begin[Icons]{section}
     @begin[GIcon]{subsection}
-      Interface for icons.
       @about-class{icon}
       @about-function{icon-hash}
       @about-function{icon-equal}
@@ -358,20 +352,17 @@
       @about-function{icon-deserialize}
     @end{subsection}
     @begin[GFileIcon]{subsection}
-      Icons pointing to an image file.
       @about-class{file-icon}
       @about-generic{file-icon-file}
       @about-function{file-icon-new}
     @end{subsection}
     @begin[GLoadableIcon]{subsection}
-      Loadable Icons.
       @about-class{loadable-icon}
       @about-function{loadable-icon-load}
       @about-function{loadable-icon-load-async}
       @about-function{loadable-icon-load-finish}
     @end{subsection}
     @begin[GThemedIcon]{subsection}
-      Icon theming support.
       @about-class{themed-icon}
       @about-generic{themed-icon-name}
       @about-generic{themed-icon-names}
@@ -383,7 +374,6 @@
       @about-function{themed-icon-append-name}
     @end{subsection}
     @begin[GEmblemedIcon]{subsection}
-      An implementation of GIcon for icons with emblems.
       @about-class{emblemed-icon}
       @about-generic{emblemed-icon-gicon}
       @about-function{emblemed-icon-new}
@@ -393,7 +383,6 @@
       @about-function{emblemed-icon-clear-emblems}
     @end{subsection}
     @begin[GEmblem]{subsection}
-      An object for emblems.
       @about-symbol{emblem-origin}
       @about-class{emblem}
       @about-generic{emblem-icon}
@@ -472,7 +461,6 @@
   @end{section}
   @begin[Application support]{section}
     @begin[GApplication]{subsection}
-      Core application class.
       @about-symbol{application-flags}
       @about-class{application}
       @about-generic{application-action-group}
@@ -510,7 +498,6 @@
       @about-function{application-unbind-busy-property}
     @end{subsection}
     @begin[GApplicationCommandLine]{subsection}
-      A command line invocation of an application.
       @about-class{application-command-line}
       @about-generic{application-command-line-arguments}
       @about-generic{application-command-line-is-remote}
@@ -529,7 +516,6 @@
       @about-function{application-command-line-printerr}
     @end{subsection}
     @begin[GActionGroup]{subsection}
-      A group of actions.
       @about-class{action-group}
       @about-function{action-group-list-actions}
       @about-function{action-group-query-action}
@@ -547,7 +533,6 @@
       @about-function{action-group-action-state-changed}
     @end{subsection}
     @begin[GActionMap]{subsection}
-      Interface for action containers.
       @about-class{action-map}
       @about-function{action-map-lookup-action}
       @about-function{action-map-add-action-entries}
@@ -555,7 +540,6 @@
       @about-function{action-map-remove-action}
     @end{subsection}
     @begin[GSimpleActionGroup]{subsection}
-      A simple @class{g:action-group} implementation.
       @about-class{simple-action-group}
       @about-function{simple-action-group-new}
       @about-function{simple-action-group-lookup}
@@ -564,7 +548,6 @@
       @about-function{simple-action-group-add-entries}
     @end{subsection}
     @begin[GAction]{subsection}
-      An action interface.
       @about-class{action}
       @about-generic{action-enabled}
       @about-generic{action-name}
@@ -579,7 +562,6 @@
       @about-function{action-print-detailed-name}
     @end{subsection}
     @begin[GSimpleAction]{subsection}
-      An implementation of the @class{g:action} interface.
       @about-class{simple-action}
       @about-generic{simple-action-enabled}
       @about-generic{simple-action-name}
@@ -591,7 +573,6 @@
       @about-function{simple-action-set-state-hint}
     @end{subsection}
     @begin[GPropertyAction]{subsection}
-      A @class{g:action} object reflecting a @class{g:object} property.
       @about-class{property-action}
       @about-generic{property-action-enabled}
       @about-generic{property-action-invert-boolean}
@@ -604,7 +585,6 @@
       @about-function{property-action-new}
     @end{subsection}
     @begin[GMenuModel]{subsection}
-      An abstract class representing the contents of a menu.
       @about-class{menu-model}
       @about-function{menu-model-is-mutable}
       @about-function{menu-model-n-items}
@@ -626,7 +606,6 @@
       @about-function{menu-link-iter-next}
     @end{subsection}
     @begin[GMenu]{subsection}
-      An implementation of the abstract @class{g:menu-model} class.
       @about-class{menu}
       @about-function{menu-new}
       @about-function{menu-freeze}
@@ -661,7 +640,6 @@
       @about-function{menu-item-link}
     @end{subsection}
     @begin[GNotification]{subsection}
-      User Notifications, pop up messages.
       @about-symbol{notification-priority}
       @about-class{notification}
       @about-function{notification-new}

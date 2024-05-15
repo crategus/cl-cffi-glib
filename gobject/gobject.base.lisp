@@ -2475,8 +2475,8 @@ lambda (object pspec)    :no-hooks
 (export 'object-thaw-notify)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_object_get_data ()
-;;; g_object_set_data () -> object-data
+;;; g_object_get_data
+;;; g_object_set_data
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_object_set_data" %object-set-data) :void
@@ -2505,9 +2505,9 @@ lambda (object pspec)    :no-hooks
 
 (defun object-data (object key)
  #+liber-documentation
- "@version{2023-10-17}
-  @syntax[]{(g:object-data object key) => data}
-  @syntax[]{(setf (g:object-data object key) data)}
+ "@version{2024-5-13}
+  @syntax{(g:object-data object key) => data}
+  @syntax{(setf (g:object-data object key) data)}
   @argument[object]{a @class{g:object} instance containing the associations}
   @argument[key]{a string with the name of the key}
   @argument[data]{any Lisp object as data to associate with that key}
@@ -2518,7 +2518,7 @@ lambda (object pspec)    :no-hooks
   associations. The @setf{g:object-data} function sets an association. If the
   object already had an association with that name, the old association will be
   destroyed.
-  @begin[Examples]{dictionary}
+  @begin{examples}
     @begin{pre}
 (defvar item (make-instance 'g:menu-item)) => ITEM
 ;; Set an integer
@@ -2536,7 +2536,7 @@ lambda (object pspec)    :no-hooks
 (setf (g:object-data item \"prop\") nil) => nil
 (g:object-data item \"prop\") => nil
     @end{pre}
-  @end{dictionary}
+  @end{examples}
   @see-class{g:object}"
   (let ((ptr (%object-get-data object key)))
     (when (not (cffi:null-pointer-p ptr))
@@ -2545,7 +2545,7 @@ lambda (object pspec)    :no-hooks
 (export 'object-data)
 
 ;;; ----------------------------------------------------------------------------
-;;; GDestroyNotify ()
+;;; GDestroyNotify
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcallback destroy-notify :void
@@ -2559,7 +2559,8 @@ lambda (object pspec)    :no-hooks
 (setf (liber:alias-for-symbol 'destroy-notify)
       "Callback"
       (liber:symbol-documentation 'destroy-notify)
- "@version{2023-12-2}
+ "@version{2024-5-13}
+  @syntax{lambda ()}
   @begin{short}
     Specifies the type of function which is called when a data element is
     destroyed.
@@ -2571,10 +2572,8 @@ lambda (object pspec)    :no-hooks
 (export 'destroy-notify)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_object_set_data_full ()
+;;; g_object_set_data_full
 ;;; ----------------------------------------------------------------------------
-
-;; TODO: The implementation has changed. Create a new example.
 
 (cffi:defcfun ("g_object_set_data_full" %object-set-data-full) :void
   (object object)
@@ -2584,8 +2583,8 @@ lambda (object pspec)    :no-hooks
 
 (defun object-set-data-full (object key func)
  #+liber-documentation
- "@version{2023-12-2}
-  @argument[object]{@class{g:object} instance containing the associations}
+ "@version{2024-5-13}
+  @argument[object]{a @class{g:object} instance containing the associations}
   @argument[key]{a string with the name of the key}
   @argument[func]{a @symbol{g:destroy-notify} callback function}
   @begin{short}
@@ -2593,9 +2592,19 @@ lambda (object pspec)    :no-hooks
     when the association is destroyed, either by setting it to a different
     value or when the object is destroyed.
   @end{short}
-  Note that the @arg{destroy} callback function is not called if the @arg{data}
+  Note that the @arg{func} callback function is not called if the @arg{data}
   argument is @code{nil}.
+  @begin{examples}
+    Set a destroy notify callback function for a window. This function is
+    called when the window is destroyed or when the data is set to @code{nil}.
+    @begin{pre}
+(g:object-set-data-full window \"about\"
+                        (lambda ()
+                          (gtk:window-destroy about)))
+    @end{pre}
+  @end{examples}
   @see-class{g:object}
+  @see-symbol{g:destroy-notify}
   @see-function{g:object-data}"
   (%object-set-data-full object
                          key

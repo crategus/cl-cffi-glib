@@ -72,7 +72,7 @@
 (setf (liber:alias-for-class 'action-map)
       "Interface"
       (documentation 'action-map 'type)
- "@version{2023-12-23}
+ "@version{2024-5-14}
   @begin{short}
     The @class{g:action-map} interface is implemented by @class{g:action-group}
     implementations that operate by containing a number of named
@@ -80,14 +80,15 @@
   @end{short}
 
   One useful application of this interface is to map the names of actions from
-  various action groups to unique, prefixed names, e.g. by prepending \"app.\"
-  or \"win.\". This is the motivation for the 'map' part of the interface name.
+  various action groups to unique, prefixed names, e.g. by prepending
+  @code{\"app.\"} or @code{\"win.\"}. This is the motivation for the 'map' part
+  of the interface name.
   @see-class{g:action}
   @see-class{g:action-group}
   @see-class{g:simple-action-group}")
 
 ;;; ----------------------------------------------------------------------------
-;;; g_action_map_lookup_action ()
+;;; g_action_map_lookup_action
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_action_map_lookup_action" action-map-lookup-action)
@@ -115,23 +116,22 @@
 ;; This structure is not used in the Lisp implementation
 
 ;;; ----------------------------------------------------------------------------
-;;; g_action_map_add_action_entries ()
+;;; g_action_map_add_action_entries
 ;;; ----------------------------------------------------------------------------
 
 (defun action-map-add-action-entries (map entries)
  #+liber-documentation
- "@version{2023-12-23}
+ "@version{2024-5-14}
   @argument[map]{a @class{g:action-map} object}
   @argument[entries]{a list of descriptions for the actions}
   @begin{short}
     A convenience function for creating multiple @class{g:simple-action}
     instances and adding them to a @class{g:action-map} object.
   @end{short}
-
   Each action in the @arg{entries} list is constructed from the following
   parameters:
   @begin[code]{table}
-    @entry[name]{A string with the name of the action.}
+    @entry[name]{The string with the name of the action.}
     @entry[activate]{The callback function to connect to the @code{\"activate\"}
       signal of the action. This can be @code{nil} for stateful actions, in
       which case the default handler is used. For boolean-stated actions with
@@ -150,9 +150,8 @@
       @code{\"change-state\"} signal of the action. All stateful actions should
       provide a handler here, stateless actions should not.}
   @end{table}
-  All values after name are optional. Additional optional fields may be added
-  in the future.
-  @begin[Example]{dictionary}
+  All values after name are optional.
+  @begin{examples}
     Using the @fun{g:action-map-add-action-entries} function:
     @begin{pre}
 (defun activate-quit (action parameter)
@@ -171,7 +170,7 @@
     (g:action-map-add-action-entries group entries)
     group))
     @end{pre}
-  @end{dictionary}
+  @end{examples}
   @see-class{g:action-map}
   @see-class{g:simple-action}
   @see-type{g:variant}
@@ -196,16 +195,12 @@
 (export 'action-map-add-action-entries)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_action_map_add_action ()
+;;; g_action_map_add_action
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcfun ("g_action_map_add_action" %action-map-add-action) :void
-  (map :pointer)
-  (action :pointer))
-
-(defun action-map-add-action (map action)
+(cffi:defcfun ("g_action_map_add_action" action-map-add-action) :void
  #+liber-documentation
- "@version{2023-3-19}
+ "@version{2024-5-14}
   @argument[map]{a @class{g:action-map} object}
   @argument[action]{a @class{g:action} object}
   @begin{short}
@@ -216,13 +211,13 @@
   @see-class{g:action}
   @see-class{g:action-map}
   @see-function{g:action-map-remove-action}"
-  (%action-map-add-action (gobject:object-pointer map)
-                          (gobject:object-pointer action)))
+  (map gobject:object)
+  (action gobject:object))
 
 (export 'action-map-add-action)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_action_map_remove_action ()
+;;; g_action_map_remove_action
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_action_map_remove_action" action-map-remove-action) :void

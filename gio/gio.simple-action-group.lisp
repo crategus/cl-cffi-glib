@@ -6,7 +6,7 @@
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
 ;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2012 - 2023 Dieter Kaiser
+;;; Copyright (C) 2012 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -80,18 +80,16 @@
   @see-class{g:action-group}")
 
 ;;; ----------------------------------------------------------------------------
-;;; g_simple_action_group_new ()
+;;; g_simple_action_group_new
 ;;; ----------------------------------------------------------------------------
 
 (declaim (inline simple-action-group-new))
 
 (defun simple-action-group-new ()
  #+liber-documentation
- "@version{#2022-12-31}
-  @return{A new @class{g:simple-action-group} object.}
-  @begin{short}
-    Creates a new, empty, action group.
-  @end{short}
+ "@version{2024-5-13}
+  @return{The new @class{g:simple-action-group} object.}
+  @short{Creates a new, empty, action group.}
   @see-class{g:simple-action-group}"
   (make-instance 'simple-action-group))
 

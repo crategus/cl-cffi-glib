@@ -1677,7 +1677,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 (export 'timeout-source-new-seconds)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_timeout_add ()
+;;; g_timeout_add
 ;;; ----------------------------------------------------------------------------
 
 (defun timeout-add (interval func &key (priority +priority-default+))
@@ -2912,14 +2912,14 @@ lambda ()
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_source_remove ()
+;;; g_source_remove
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_source_remove" source-remove) :boolean
  #+liber-documentation
- "@version{2023-1-5}
+ "@version{2024-5-13}
   @argument[source]{an unsigned integer ID for the source to remove}
-  @return{@em{True} if the source was found and removed.}
+  @return{@em{True} if @arg{source} was found and removed.}
   @begin{short}
     Removes the source with the given ID from the default main context.
   @end{short}
