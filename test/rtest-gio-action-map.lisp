@@ -8,21 +8,21 @@
 ;;;     GActionMap
 
 (test g-action-map-class
-  ;; Type check
+  ;; Check type
   (is-true (g:type-is-interface "GActionMap"))
-  ;; Check the registered symbol
+  ;; Check registered symbol
   (is (eq 'g:action-map
           (glib:symbol-for-gtype "GActionMap")))
-  ;; Check the interface prerequisites
+  ;; Check interface prerequisites
   (is (equal '("GObject")
              (list-interface-prerequisites "GActionMap")))
-  ;; Get the names of the interface properties.
+  ;; Check interface properties.
   (is (equal '()
              (list-interface-properties "GActionMap")))
-  ;; Check the list of signals
+  ;; Check signals
   (is (equal '()
              (list-signals "GActionMap")))
-  ;; Get the interface definition
+  ;; Check interface definition
   (is (equal '(GOBJECT:DEFINE-G-INTERFACE "GActionMap"
                                   G-ACTION-MAP
                                   (:EXPORT T))
@@ -87,4 +87,4 @@
     (g:action-map-remove-action group "quit")
     (is-false (g:action-map-lookup-action group "quit"))))
 
-;;; 2023-12-23
+;;; 2024-5-14

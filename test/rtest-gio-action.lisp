@@ -10,18 +10,18 @@
 ;;;     GAction
 
 (test g-action-interface
-  ;; Type check
+  ;; Check type
   (is-true (g:type-is-interface "GAction"))
-  ;; Check the registered symbol
+  ;; Check registered symbol
   (is (eq 'g:action
           (glib:symbol-for-gtype "GAction")))
-  ;; Get the names of the interface properties.
+  ;; Check interface properties.
   (is (equal '("enabled" "name" "parameter-type" "state" "state-type")
              (list-interface-properties "GAction")))
-  ;; Check the list of signals
+  ;; Check signals
   (is (equal '()
              (list-signals "GAction")))
-  ;; Get the interface definition
+  ;; Check interface definition
   (is (equal '(GOBJECT:DEFINE-G-INTERFACE "GAction" G-ACTION
                                   (:EXPORT T)
                                   (ENABLED G-ACTION-ENABLED
@@ -183,4 +183,4 @@
   (is (string= "test(12)"
                (g:action-print-detailed-name "test" (g:variant-new-int32 12)))))
 
-;;; --- 2023-7-9 ---------------------------------------------------------------
+;;; 2024-5-14
