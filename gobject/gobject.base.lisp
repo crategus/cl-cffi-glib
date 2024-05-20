@@ -2053,7 +2053,9 @@ lambda (object pspec)    :no-hooks
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcallback toggle-notify :void
-    ((data :pointer) (object :pointer) (is-last-ref :boolean))
+    ((data :pointer)
+     (object :pointer)
+     (is-last-ref :boolean))
   (declare (ignore data))
   (log-for :gc "~A is now ~A with ~A refs~%"
            object
@@ -2072,14 +2074,17 @@ lambda (object pspec)    :no-hooks
             (progn
               (log-for :gc "GObject at ~A has no lisp-side (strong) reference"
                         object)
-              (warn "GObject at ~A has no lisp-side (strong) reference"
-                    object))))
+              (warn "GObject at ~A (~a) type has no lisp-side (strong) reference"
+                    object
+                    (type-name (type-from-instance object))))))
       (let* ((obj-adr (cffi:pointer-address object))
              (obj (gethash obj-adr *foreign-gobjects-weak*)))
         (unless obj
           (log-for :gc "GObject at ~A has no lisp-side (weak) reference"
                    object)
-          (warn "GObject at ~A has no lisp-side (weak) reference" object))
+          (warn "GObject at ~A (~a) has no lisp-side (weak) reference"
+                object
+                (type-name (type-from-instance object))))
         (remhash obj-adr *foreign-gobjects-weak*)
         (setf (gethash obj-adr *foreign-gobjects-strong*) obj))))
 
