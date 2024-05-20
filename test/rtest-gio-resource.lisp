@@ -5,8 +5,8 @@
 
 (eval-when (:compile-toplevel :load-toplevel :execute)
   (glib-sys:check-and-create-resources "test/resource/rtest-gio-resource.xml"
-                                       "cl-cffi-glib"
-                                       "test/resource/"
+                                       :package "cl-cffi-glib"
+                                       :sourcedir "test/resource/"
                                        :verbose t))
 
 ;;; --- Types and Values -------------------------------------------------------

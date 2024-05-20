@@ -23,7 +23,7 @@
 ;;; ----------------------------------------------------------------------------
 
 (defpackage :glib-sys
-  (:use :cl)
+  (:use :common-lisp)
   (:export #:mklist
            #:get-current-package
            #:sys-path
@@ -51,10 +51,9 @@
 
   ;; Check for RESOURCE in PACKAGE, create or update it when neccessary and
   ;; return the pathname of TARGET
-  (defun check-and-create-resources (resource
-                                     &optional (package current-package)
-                                               (sourcedir nil)
-                                     &key (verbose nil))
+  (defun check-and-create-resources (resource &key (package current-package)
+                                                   (sourcedir nil)
+                                                   (verbose nil))
     (let* ((source (sys-path resource package))
            (sourcedir (directory-namestring (sys-path sourcedir package)))
            (target (sys-path (make-pathname :name (pathname-name resource)
