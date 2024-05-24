@@ -6,7 +6,7 @@
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
 ;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2012 - 2023 Dieter Kaiser
+;;; Copyright (C) 2012 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -402,7 +402,7 @@
 (export 'variant)
 
 ;;; ----------------------------------------------------------------------------
-;;; enum GVariantClass
+;;; GVariantClass
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcenum variant-class
@@ -508,7 +508,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; struct GVariantDict
+;;; GVariantDict
 ;;; ----------------------------------------------------------------------------
 
 (define-g-boxed-opaque variant-dict "GVariantDict"
@@ -647,7 +647,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_variant_unref ()
+;;; g_variant_unref
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_variant_unref" variant-unref) :void
@@ -666,7 +666,7 @@
 (export 'variant-unref)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_variant_ref ()
+;;; g_variant_ref
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_variant_ref" variant-ref) (:pointer (:struct variant))
@@ -683,7 +683,7 @@
 (export 'variant-ref)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_variant_ref_sink ()
+;;; g_variant_ref_sink
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_variant_ref_sink" variant-ref-sink)
@@ -724,7 +724,7 @@
 (export 'variant-ref-sink)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_variant_is_floating ()
+;;; g_variant_is_floating
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_variant_is_floating" variant-is-floating) :boolean
@@ -750,7 +750,7 @@
 (export 'variant-is-floating)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_variant_take_ref ()
+;;; g_variant_take_ref
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_variant_take_ref" variant-take-ref) (boxed variant-type)
@@ -797,7 +797,7 @@
 (export 'variant-take-ref)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_variant_get_type () -> variant-type
+;;; g_variant_get_type
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_variant_get_type" variant-type) (boxed variant-type)
@@ -816,7 +816,7 @@
 (export 'variant-type)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_variant_get_type_string () -> variant-type-string
+;;; g_variant_get_type_string
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_variant_get_type_string" variant-type-string) :string
@@ -839,7 +839,7 @@
 (export 'variant-type-string)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_variant_is_of_type ()
+;;; g_variant_is_of_type
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_variant_is_of_type" variant-is-of-type) :boolean
@@ -860,7 +860,7 @@
 (export 'variant-is-of-type)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_variant_is_container ()
+;;; g_variant_is_container
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_variant_is_container" variant-is-container) :boolean
@@ -877,7 +877,7 @@
 (export 'variant-is-container)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_variant_compare ()
+;;; g_variant_compare
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_variant_compare" variant-compare) :int
@@ -914,7 +914,7 @@
 (export 'variant-compare)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_variant_classify ()
+;;; g_variant_classify
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_variant_classify" variant-classify) variant-class
@@ -1120,7 +1120,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_variant_new_boolean ()
+;;; g_variant_new_boolean
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_variant_new_boolean" variant-new-boolean)
@@ -1146,7 +1146,7 @@
 (export 'variant-new-boolean)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_variant_new_byte ()
+;;; g_variant_new_byte
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_variant_new_byte" variant-new-byte)
@@ -1162,7 +1162,7 @@
 (export 'variant-new-byte)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_variant_new_int16 ()
+;;; g_variant_new_int16
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_variant_new_int16" variant-new-int16)
@@ -1178,7 +1178,7 @@
 (export 'variant-new-int16)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_variant_new_uint16 ()
+;;; g_variant_new_uint16
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_variant_new_uint16" variant-new-uint16)
@@ -1194,7 +1194,7 @@
 (export 'variant-new-uint16)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_variant_new_int32 ()
+;;; g_variant_new_int32
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_variant_new_int32" variant-new-int32)
@@ -1210,7 +1210,7 @@
 (export 'variant-new-int32)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_variant_new_uint32 ()
+;;; g_variant_new_uint32
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_variant_new_uint32" variant-new-uint32)
@@ -1226,7 +1226,7 @@
 (export 'variant-new-uint32)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_variant_new_int64 ()
+;;; g_variant_new_int64
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_variant_new_int64" variant-new-int64)
@@ -1242,7 +1242,7 @@
 (export 'variant-new-int64)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_variant_new_uint64 ()
+;;; g_variant_new_uint64
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_variant_new_uint64" variant-new-uint64)
@@ -1258,7 +1258,7 @@
 (export 'variant-new-uint64)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_variant_new_handle ()
+;;; g_variant_new_handle
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_variant_new_handle" variant-new-handle)
@@ -1277,7 +1277,7 @@
 (export 'variant-new-handle)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_variant_new_double ()
+;;; g_variant_new_double
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_variant_new_double" variant-new-double)
@@ -1293,7 +1293,7 @@
 (export 'variant-new-double)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_variant_new_string ()
+;;; g_variant_new_string
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_variant_new_string" variant-new-string)
@@ -1371,7 +1371,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_variant_new_object_path ()
+;;; g_variant_new_object_path
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_variant_new_object_path" variant-new-object-path)
@@ -1393,7 +1393,7 @@
 (export 'variant-new-object-path)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_variant_is_object_path ()
+;;; g_variant_is_object_path
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_variant_is_object_path" variant-is-object-path) :boolean
@@ -1418,7 +1418,7 @@
 (export 'variant-is-object-path)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_variant_new_signature ()
+;;; g_variant_new_signature
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_variant_new_signature" variant-new-signature)
@@ -1440,7 +1440,7 @@
 (export 'variant-new-signature)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_variant_is_signature ()
+;;; g_variant_is_signature
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_variant_is_signature" variant-is-signature) :boolean
@@ -1464,7 +1464,7 @@
 (export 'variant-is-signature)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_variant_new_variant ()
+;;; g_variant_new_variant
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_variant_new_variant" variant-new-variant)
@@ -1569,12 +1569,12 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_variant_get_boolean () -> variant-boolean
+;;; g_variant_get_boolean
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_variant_get_boolean" variant-boolean) :boolean
  #+liber-documentation
- "@version{#2022-12-29}
+ "@version{2024-5-24}
   @argument[value]{a @type{g:variant} instance with a boolean value}
   @return{The boolean values @em{true} or @em{false}.}
   @short{Returns the boolean value of @arg{value}.}
@@ -1593,7 +1593,7 @@
 (export 'variant-boolean)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_variant_get_byte () -> variant-byte
+;;; g_variant_get_byte
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_variant_get_byte" variant-byte) :uchar
@@ -1611,7 +1611,7 @@
 (export 'variant-byte)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_variant_get_int16 () -> variant-int16
+;;; g_variant_get_int16
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_variant_get_int16" variant-int16) :int16
@@ -1629,7 +1629,7 @@
 (export 'variant-int16)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_variant_get_uint16 () -> variant-uint16
+;;; g_variant_get_uint16
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_variant_get_uint16" variant-uint16) :uint16
@@ -1647,7 +1647,7 @@
 (export 'variant-uint16)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_variant_get_int32 () -> variant-int32
+;;; g_variant_get_int32
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_variant_get_int32" variant-int32) :int32
@@ -1665,7 +1665,7 @@
 (export 'variant-int32)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_variant_get_uint32 () -> variant-uint32
+;;; g_variant_get_uint32
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_variant_get_uint32" variant-uint32) :uint32
@@ -1683,7 +1683,7 @@
 (export 'variant-uint32)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_variant_get_int64 () -> variant-int64
+;;; g_variant_get_int64
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_variant_get_int64" variant-int64) :int64
@@ -1701,7 +1701,7 @@
 (export 'variant-int64)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_variant_get_uint64 () -> variant-uint64
+;;; g_variant_get_uint64
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_variant_get_uint64" variant-uint64) :uint64
@@ -1719,7 +1719,7 @@
 (export 'variant-uint64)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_variant_get_handle () -> variant-handle
+;;; g_variant_get_handle
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_variant_get_handle" variant-handle) :int32
@@ -1741,7 +1741,7 @@
 (export 'variant-handle)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_variant_get_double () -> variant-double
+;;; g_variant_get_double
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_variant_get_double" variant-double) :double
@@ -1759,7 +1759,7 @@
 (export 'variant-double)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_variant_get_string () -> variant-string
+;;; g_variant_get_string
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_variant_get_string" %variant-string) :string
@@ -2724,7 +2724,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_variant_equal ()
+;;; g_variant_equal
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_variant_equal" variant-equal) :boolean
@@ -2743,7 +2743,7 @@
 (export 'variant-equal)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_variant_print ()
+;;; g_variant_print
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_variant_print" %variant-print) (:string :free-from-foreign t)
@@ -3478,7 +3478,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_variant_dict_new ()
+;;; g_variant_dict_new
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_variant_dict_new" %variant-dict-new) :pointer
@@ -3559,7 +3559,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_variant_dict_contains ()
+;;; g_variant_dict_contains
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_variant_dict_contains" variant-dict-contains) :boolean
@@ -3616,7 +3616,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_variant_dict_lookup_value ()
+;;; g_variant_dict_lookup_value
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_variant_dict_lookup_value" %variant-dict-lookup-value)
@@ -3648,7 +3648,6 @@
                    (variant-type-new vtype)
                    vtype)))
     (%variant-dict-lookup-value dict key vtype)))
-
 
 (export 'variant-dict-lookup-value)
 
@@ -3682,7 +3681,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_variant_dict_insert_value ()
+;;; g_variant_dict_insert_value
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_variant_dict_insert_value" variant-dict-insert-value) :void
@@ -3703,7 +3702,7 @@
 (export 'variant-dict-insert-value)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_variant_dict_remove ()
+;;; g_variant_dict_remove
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_variant_dict_remove" variant-dict-remove) :boolean
@@ -3723,7 +3722,7 @@
 (export 'variant-dict-remove)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_variant_dict_end ()
+;;; g_variant_dict_end
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_variant_dict_end" variant-dict-end)
@@ -3746,7 +3745,7 @@
 (export 'variant-dict-end)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_variant_parse ()
+;;; g_variant_parse
 ;;; ----------------------------------------------------------------------------
 
 ;; FIXME: Does not work for an argument non-nil for VTYPE

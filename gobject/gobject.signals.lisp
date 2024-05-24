@@ -362,7 +362,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; enum GSignalFlags
+;;; GSignalFlags
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defbitfield signal-flags
@@ -428,7 +428,7 @@
 (export 'signal-flags)
 
 ;;; ----------------------------------------------------------------------------
-;;; enum GSignalMatchType
+;;; GSignalMatchType
 ;;; ----------------------------------------------------------------------------
 
 ;; Only the value :id is used in the function signal-handler-find
@@ -475,7 +475,7 @@
   @see-function{g:signal-handlers-disconnect-matched}")
 
 ;;; ----------------------------------------------------------------------------
-;;; struct GSignalQuery
+;;; GSignalQuery
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcstruct %signal-query
@@ -548,7 +548,7 @@
 ;;; Accessor details
 ;;; ----------------------------------------------------------------------------
 
-;;; --- signal-query-signal-id -------------------------------------------------
+;;; --- g:signal-query-signal-id -----------------------------------------------
 
 #+liber-documentation
 (setf (liber:alias-for-function 'signal-query-signal-id)
@@ -568,7 +568,7 @@
 
 (export 'signal-query-signal-id)
 
-;;; --- signal-query-signal-name -----------------------------------------------
+;;; --- g:signal-query-signal-name ---------------------------------------------
 
 #+liber-documentation
 (setf (liber:alias-for-function 'signal-query-signal-name)
@@ -587,7 +587,7 @@
 
 (export 'signal-query-signal-name)
 
-;;; --- signal-query-owner-type ------------------------------------------------
+;;; --- g:signal-query-owner-type ----------------------------------------------
 
 #+liber-documentation
 (setf (liber:alias-for-function 'signal-query-owner-type)
@@ -608,7 +608,7 @@
 
 (export 'signal-query-owner-type)
 
-;;; --- signal-query-signal-flags ----------------------------------------------
+;;; --- g:signal-query-signal-flags --------------------------------------------
 
 #+liber-documentation
 (setf (liber:alias-for-function 'signal-query-signal-flags)
@@ -628,7 +628,7 @@
 
 (export 'signal-query-signal-flags)
 
-;;; --- signal-query-return-type -----------------------------------------------
+;;; --- g:signal-query-return-type ---------------------------------------------
 
 #+liber-documentation
 (setf (liber:alias-for-function 'signal-query-return-type)
@@ -647,7 +647,7 @@
 
 (export 'signal-query-return-type)
 
-;;; --- signal-query-param-types -----------------------------------------------
+;;; --- g:signal-query-param-types ---------------------------------------------
 
 #+liber-documentation
 (setf (liber:alias-for-function 'signal-query-param-types)
@@ -667,7 +667,7 @@
 
 (export 'signal-query-param-types)
 
-;;; --- signal-query-signal-detail ---------------------------------------------
+;;; --- g:signal-query-signal-detail -------------------------------------------
 
 #+liber-documentation
 (setf (liber:alias-for-function 'signal-query-signal-detail)
@@ -687,7 +687,7 @@
 (export 'signal-query-signal-detail)
 
 ;;; ----------------------------------------------------------------------------
-;;; enum GConnectFlags
+;;; GConnectFlags
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defbitfield connect-flags
@@ -897,7 +897,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_signal_newv ()
+;;; g_signal_newv
 ;;; ----------------------------------------------------------------------------
 
 ;; This function is not used in the cl-cffi-gtk library. We dot not export
@@ -1028,7 +1028,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_signal_query ()
+;;; g_signal_query
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_signal_query" %signal-query) :void
@@ -1129,7 +1129,7 @@
 (export 'signal-query)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_signal_lookup ()
+;;; g_signal_lookup
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_signal_lookup" signal-lookup) :uint
@@ -1165,7 +1165,7 @@
 (export 'signal-lookup)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_signal_name ()
+;;; g_signal_name
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_signal_name" signal-name) :string
@@ -1202,7 +1202,7 @@
 (export 'signal-name)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_signal_list_ids ()
+;;; g_signal_list_ids
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_signal_list_ids" %signal-list-ids) (:pointer :uint)
@@ -1241,7 +1241,7 @@
 (export 'signal-list-ids)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_signal_emit ()
+;;; g_signal_emit
 ;;; ----------------------------------------------------------------------------
 
 (defun signal-emit (instance detailed &rest args)
@@ -1335,7 +1335,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_signal_emitv ()
+;;; g_signal_emitv
 ;;; ----------------------------------------------------------------------------
 
 ;; Called from signal-emit. For internal use and not exported.
@@ -1393,12 +1393,12 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_signal_connect()
+;;; g_signal_connect
 ;;; ----------------------------------------------------------------------------
 
 (defun signal-connect (instance signal handler &key after)
  #+liber-documentation
- "@version{2023-12-26}
+ "@version{2024-5-24}
   @argument[instance]{a @class{g:object} instance to connect to}
   @argument[signal]{a string of the form \"signal-name::detail\"}
   @argument[handler]{a Lisp callback function to connect}
@@ -1416,7 +1416,7 @@
     and is equivalent to this function with a @em{true} value  for the
     @arg{after} keyword argument.
   @end{dictionary}
-  @begin[Example]{dictionary}
+  @begin{examples}
     Connect a Lisp lambda function to the signal \"toggled\" of a toggle button:
     @begin{pre}
 (g:signal-connect button \"toggled\"
@@ -1444,7 +1444,7 @@
     @begin{pre}
 (g:signal-connect window \"destroy\" #'separate-event-handler)
     @end{pre}
-  @end{dictionary}
+  @end{examples}
   @see-class{g:object}
   @see-function{g:signal-connect-after}"
   (%signal-connect-closure (object-pointer instance)
@@ -1455,7 +1455,7 @@
 (export 'signal-connect)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_signal_connect_after()
+;;; g_signal_connect_after
 ;;; ----------------------------------------------------------------------------
 
 (declaim (inline signal-connect-after))
@@ -1597,7 +1597,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_signal_connect_closure ()
+;;; g_signal_connect_closure
 ;;; ----------------------------------------------------------------------------
 
 ;; Called from signal-connect. For internal use and not exported.
@@ -1655,7 +1655,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_signal_handler_block ()
+;;; g_signal_handler_block
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_signal_handler_block" signal-handler-block) :void
@@ -1683,7 +1683,7 @@
 (export 'signal-handler-block)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_signal_handler_unblock ()
+;;; g_signal_handler_unblock
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_signal_handler_unblock" signal-handler-unblock) :void
@@ -1716,7 +1716,7 @@
 (export 'signal-handler-unblock)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_signal_handler_disconnect ()
+;;; g_signal_handler_disconnect
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_signal_handler_disconnect" signal-handler-disconnect) :void
@@ -1743,7 +1743,7 @@
 (export 'signal-handler-disconnect)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_signal_handler_find ()
+;;; g_signal_handler_find
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_signal_handler_find" %signal-handler-find) :ulong
@@ -1920,7 +1920,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_signal_handler_is_connected ()
+;;; g_signal_handler_is_connected
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_signal_handler_is_connected" signal-handler-is-connected)
@@ -2021,7 +2021,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_signal_has_handler_pending ()
+;;; g_signal_has_handler_pending
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_signal_has_handler_pending" signal-has-handler-pending)
@@ -2063,7 +2063,7 @@
 (export 'signal-has-handler-pending)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_signal_stop_emission ()
+;;; g_signal_stop_emission
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_signal_stop_emission" signal-stop-emission) :void
@@ -2093,7 +2093,7 @@
 (export 'signal-stop-emission)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_signal_stop_emission_by_name ()
+;;; g_signal_stop_emission_by_name
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_signal_stop_emission_by_name" signal-stop-emission-by-name)

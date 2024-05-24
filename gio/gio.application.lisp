@@ -122,7 +122,7 @@
 (in-package :gio)
 
 ;;; ----------------------------------------------------------------------------
-;;; enum GApplicationFlags
+;;; GApplicationFlags
 ;;; ----------------------------------------------------------------------------
 
 (gobject:define-g-flags "GApplicationFlags" application-flags
@@ -148,11 +148,8 @@
 (setf (liber:alias-for-symbol 'application-flags)
       "GFlags"
       (liber:symbol-documentation 'application-flags)
- "@version{2023-4-23}
-  @begin{short}
-    Flags used to define the behaviour of a @class{g:application} instance.
-  @end{short}
-  @begin{pre}
+ "@version{2024-5-24}
+  @begin{declaration}
 (gobject:define-g-flags \"GApplicationFlags\" application-flags
   (:export t
    :type-initializer \"g_application_flags_get_type\")
@@ -171,42 +168,49 @@
   (:allow-replacement 128)
   #+glib-2-60
   (:replace 256))
-  @end{pre}
-  @begin[code]{table}
-    @entry[:flags-none]{Default flags, deprecated since 2.74.}
-    @entry[:default-flags]{Default flags. Since 2.74}
-    @entry[:is-service]{Run as a service. In this mode, registration fails if
-      the service is already running, and the application will initially wait
-      up to 10 seconds for an initial activation message to arrive.}
-    @entry[:is-launcher]{Do not try to become the primary instance.}
-    @entry[:handles-open]{This application handles opening files in the primary
-      instance. Note that this flag only affects the default implementation of
-      the @code{local_command_line()} virtual function, and has no effect if
-      the @code{:handles-command-line} flag is given. See the
-      @fun{g:application-run} function for details.}
-    @entry[:handles-command-line]{This application handles command line
-      arguments in the primary instance. Note that this flag only affect the
-      default implementation of the @code{local_command_line()} virtual
-      function. See the @fun{g:application-run} function for details.}
-    @entry[:send-enviroment]{Send the environment of the launching process to
-      the primary instance. Set this flag if your application is expected to
-      behave differently depending on certain environment variables. For
-      instance, an editor might be expected to use the @code{GIT_COMMITTER_NAME}
-      environment variable when editing a GIT commit message. The environment
-      is available to the @code{\"command-line\"} signal handler via the
-      @fun{g:application-command-line-getenv} function.}
-    @entry[:non-unique]{Make no attempts to do any of the typical
-      single-instance application negotiation. The application neither attempts
-      to become the owner of the application ID nor does it check if an
-      existing owner already exists. Everything occurs in the local process.}
-    @entry[:can-override-app-id]{Allow users to override the application ID
-      from the command line with the @code{--gapplication-app-id} option.}
-    @entry[:allow-replacement]{Allow another instance to take over the bus
-      name. Since 2.60}
-    @entry[:replace]{Take over from another instance. This flag is usually set
-      by passing the @code{--gapplication-replace} option on the command line.
-      Since 2.60}
-  @end{table}
+  @end{declaration}
+  @begin{values}
+    @begin[code]{table}
+      @entry[:flags-none]{Default flags, deprecated since 2.74.}
+      @entry[:default-flags]{Default flags. Since 2.74}
+      @entry[:is-service]{Run as a service. In this mode, registration fails if
+        the service is already running, and the application will initially wait
+        up to 10 seconds for an initial activation message to arrive.}
+      @entry[:is-launcher]{Do not try to become the primary instance.}
+      @entry[:handles-open]{This application handles opening files in the
+        primary instance. Note that this flag only affects the default
+        implementation of the @code{local_command_line()} virtual function, and
+        has no effect if the @code{:handles-command-line} flag is given. See
+        the @fun{g:application-run} function for details.}
+      @entry[:handles-command-line]{This application handles command line
+        arguments in the primary instance. Note that this flag only affect the
+        default implementation of the @code{local_command_line()} virtual
+        function. See the @fun{g:application-run} function for details.}
+      @entry[:send-enviroment]{Send the environment of the launching process to
+        the primary instance. Set this flag if your application is expected to
+        behave differently depending on certain environment variables. For
+        instance, an editor might be expected to use the
+        @code{GIT_COMMITTER_NAME} environment variable when editing a GIT commit
+        message. The environment is available to the @code{\"command-line\"}
+        signal handler via the @fun{g:application-command-line-getenv}
+        function.}
+      @entry[:non-unique]{Make no attempts to do any of the typical
+        single-instance application negotiation. The application neither
+        attempts to become the owner of the application ID nor does it check if
+        an existing owner already exists. Everything occurs in the local
+        process.}
+      @entry[:can-override-app-id]{Allow users to override the application ID
+        from the command line with the @code{--gapplication-app-id} option.}
+      @entry[:allow-replacement]{Allow another instance to take over the bus
+        name. Since 2.60}
+      @entry[:replace]{Take over from another instance. This flag is usually set
+        by passing the @code{--gapplication-replace} option on the command line.
+        Since 2.60}
+    @end{table}
+  @end{values}
+  @begin{short}
+    Flags used to define the behaviour of a @class{g:application} instance.
+  @end{short}
   @see-class{g:application}
   @see-function{g:application-run}
   @see-function{g:application-command-line-getenv}")
@@ -829,7 +833,7 @@ lambda (application)    :run-first
 (setf (liber:alias-for-function 'application-resource-base-path)
       "Accessor"
       (documentation 'application-resource-base-path 'function)
- "@version{2023-4-23}
+ "@version{2024-5-24}
   @syntax[]{(g:application-resource-base-path object) => path}
   @syntax[]{(setf (g:application-resource-base-path object) path)}
   @argument[object]{a @class{g:application} instance}
@@ -851,14 +855,14 @@ lambda (application)    :run-first
   application ID after that point will not have an impact on the resource base
   path.
 
-  As an example, if the application has an ID of \"org.example.app\" then the
-  default resource base path will be \"/org/example/app\". If this is a
-  @class{gtk:application} instance, and you have not manually changed the
-  resource base path, then GTK will then search for the menus of the application
-  at \"/org/example/app/gtk/menus.ui\". See the @class{g:resource} documentation
-  for more information about adding resources to your application. You can
-  disable automatic resource loading functionality by setting the resource base
-  path to @code{nil}.
+  As an example, if the application has an ID of @file{\"org.example.app\"}
+  then the default resource base path will be @file{\"/org/example/app\"}. If
+  this is a @class{gtk:application} instance, and you have not manually changed
+  the resource base path, then GTK will then search for the menus of the
+  application at @file{\"/org/example/app/gtk/menus.ui\"}. See the
+  @class{g:resource} documentation for more information about adding resources
+  to your application. You can disable automatic resource loading functionality
+  by setting the resource base path to @code{nil}.
 
   Changing the resource base path once the application is running is not
   recommended. The point at which the resource base path is consulted for
@@ -870,7 +874,7 @@ lambda (application)    :run-first
   @see-class{gtk:application}")
 
 ;;; ----------------------------------------------------------------------------
-;;; g_application_id_is_valid ()
+;;; g_application_id_is_valid
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_application_id_is_valid" application-id-is-valid) :boolean
@@ -910,7 +914,7 @@ lambda (application)    :run-first
 (export 'application-id-is-valid)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_application_new ()
+;;; g_application_new
 ;;; ----------------------------------------------------------------------------
 
 (declaim (inline application-new))
@@ -994,7 +998,7 @@ lambda (application)    :run-first
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_application_register ()
+;;; g_application_register
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_application_register" %application-register) :boolean
@@ -1037,7 +1041,7 @@ lambda (application)    :run-first
 (export 'application-register)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_application_hold ()
+;;; g_application_hold
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_application_hold" application-hold) :void
@@ -1058,7 +1062,7 @@ lambda (application)    :run-first
 (export 'application-hold)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_application_release ()
+;;; g_application_release
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_application_release" application-release) :void
@@ -1078,7 +1082,7 @@ lambda (application)    :run-first
 (export 'application-release)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_application_quit ()
+;;; g_application_quit
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_application_quit" application-quit) :void
@@ -1099,7 +1103,7 @@ lambda (application)    :run-first
 (export 'application-quit)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_application_activate ()
+;;; g_application_activate
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_application_activate" application-activate) :void
@@ -1118,7 +1122,7 @@ lambda (application)    :run-first
 (export 'application-activate)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_application_open ()
+;;; g_application_open
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_application_open" %application-open) :void
@@ -1163,7 +1167,7 @@ lambda (application)    :run-first
 (export 'application-open)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_application_send_notification ()
+;;; g_application_send_notification
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_application_send_notification" application-send-notification)
@@ -1203,7 +1207,7 @@ lambda (application)    :run-first
 (export 'application-send-notification)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_application_withdraw_notification ()
+;;; g_application_withdraw_notification
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_application_withdraw_notification"
@@ -1233,7 +1237,7 @@ lambda (application)    :run-first
 (export 'application-withdraw-notification)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_application_run ()
+;;; g_application_run
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_application_run" %application-run) :int
@@ -1330,7 +1334,7 @@ lambda (application)    :run-first
 (export 'application-run)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_application_add_main_option_entries ()
+;;; g_application_add_main_option_entries
 ;;; ----------------------------------------------------------------------------
 
 ;; TODO: Improve the documentation for the arg-data field.
@@ -1469,7 +1473,7 @@ lambda (application)    :run-first
 (export 'application-add-main-option-entries)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_application_add_main_option ()
+;;; g_application_add_main_option
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_application_add_main_option" %application-add-main-option)
@@ -1530,7 +1534,7 @@ lambda (application)    :run-first
 (export 'application-add-main-option)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_application_add_option_group ()
+;;; g_application_add_option_group
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_application_add_option_group" application-add-option-group)
@@ -1577,7 +1581,7 @@ lambda (application)    :run-first
 (export 'application-add-option-group)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_application_set_option_context_parameter_string ()
+;;; g_application_set_option_context_parameter_string
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_application_set_option_context_parameter_string"
@@ -1606,7 +1610,7 @@ lambda (application)    :run-first
 (export 'application-set-option-context-parameter-string)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_application_set_option_context_summary ()
+;;; g_application_set_option_context_summary
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_application_set_option_context_summary"
@@ -1628,7 +1632,7 @@ lambda (application)    :run-first
 (export 'application-set-option-context-summary)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_application_set_option_context_description ()
+;;; g_application_set_option_context_description
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_application_set_option_context_description"
@@ -1650,8 +1654,8 @@ lambda (application)    :run-first
 (export 'application-set-option-context-description)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_application_set_default ()
-;;; g_application_get_default () -> application-default
+;;; g_application_set_default
+;;; g_application_get_default
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf application-default) (application)
@@ -1685,7 +1689,7 @@ lambda (application)    :run-first
 (export 'application-default)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_application_mark_busy ()
+;;; g_application_mark_busy
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_application_mark_busy" application-mark-busy) :void
@@ -1707,7 +1711,7 @@ lambda (application)    :run-first
 (export 'application-mark-busy)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_application_unmark_busy ()
+;;; g_application_unmark_busy
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_application_unmark_busy" application-unmark-busy) :void
@@ -1727,7 +1731,7 @@ lambda (application)    :run-first
 (export 'application-unmark-busy)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_application_bind_busy_property ()
+;;; g_application_bind_busy_property
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_application_bind_busy_property"
@@ -1754,7 +1758,7 @@ lambda (application)    :run-first
 (export 'application-bind-busy-property)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_application_unbind_busy_property ()
+;;; g_application_unbind_busy_property
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_application_unbind_busy_property"

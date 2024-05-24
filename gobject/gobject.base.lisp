@@ -162,7 +162,7 @@
       (gethash (cffi:pointer-address pointer) *foreign-gobjects-weak*)))
 
 ;;; ----------------------------------------------------------------------------
-;;; struct GParameter                                      not exported
+;;; GParameter                                              not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcstruct %parameter
@@ -170,7 +170,7 @@
   (value (:struct value)))
 
 ;;; ----------------------------------------------------------------------------
-;;; struct GObject
+;;; GObject
 ;;;
 ;;; All the fields in the GObject structure are private to the GObject
 ;;; implementation and should never be accessed directly.
@@ -800,7 +800,7 @@ lambda (object pspec)    :no-hooks
                                                       'value)))))))
 
 ;;; ----------------------------------------------------------------------------
-;;; struct GObjectClass                                    not exported
+;;; GObjectClass                                            not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcstruct object-class
@@ -906,7 +906,7 @@ lambda (object pspec)    :no-hooks
         value))
 
 ;;; ----------------------------------------------------------------------------
-;;; struct GObjectConstructParam                           not exported
+;;; GObjectConstructParam                                   not exported
 ;;; ----------------------------------------------------------------------------
 
 ;; This structure is not needed in the implementation of the Lisp library
@@ -1008,7 +1008,7 @@ lambda (object pspec)    :no-hooks
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; G_TYPE_IS_OBJECT()
+;;; G_TYPE_IS_OBJECT
 ;;; ----------------------------------------------------------------------------
 
 (defun type-is-object (gtype)
@@ -1053,7 +1053,7 @@ lambda (object pspec)    :no-hooks
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; G_IS_OBJECT()
+;;; G_IS_OBJECT
 ;;; ----------------------------------------------------------------------------
 
 (defun is-object (object)
@@ -1088,7 +1088,7 @@ lambda (object pspec)    :no-hooks
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; G_IS_OBJECT_CLASS()                                    not exported
+;;; G_IS_OBJECT_CLASS                                       not exported
 ;;; ----------------------------------------------------------------------------
 
 (defun is-object-class (class)
@@ -1112,7 +1112,7 @@ lambda (object pspec)    :no-hooks
   (type-check-class-type class +type-object+))
 
 ;;; ----------------------------------------------------------------------------
-;;; G_OBJECT_GET_CLASS() -> object-class                 not exported
+;;; G_OBJECT_GET_CLASS                                      not exported
 ;;; ----------------------------------------------------------------------------
 
 (defun object-class (object)
@@ -1132,7 +1132,7 @@ lambda (object pspec)    :no-hooks
   (type-instance-class object))
 
 ;;; ----------------------------------------------------------------------------
-;;; G_OBJECT_TYPE()
+;;; G_OBJECT_TYPE
 ;;; ----------------------------------------------------------------------------
 
 (defun object-type (object)
@@ -1163,7 +1163,7 @@ lambda (object pspec)    :no-hooks
 (export 'object-type)
 
 ;;; ----------------------------------------------------------------------------
-;;; G_OBJECT_TYPE_NAME()
+;;; G_OBJECT_TYPE_NAME
 ;;; ----------------------------------------------------------------------------
 
 (defun object-type-name (object)
@@ -1196,7 +1196,7 @@ lambda (object pspec)    :no-hooks
 (export 'object-type-name)
 
 ;;; ----------------------------------------------------------------------------
-;;; G_OBJECT_CLASS_TYPE()                                  not exported
+;;; G_OBJECT_CLASS_TYPE                                     not exported
 ;;; ----------------------------------------------------------------------------
 
 (defun object-class-type (class)
@@ -1217,7 +1217,7 @@ lambda (object pspec)    :no-hooks
   (type-from-class class))
 
 ;;; ----------------------------------------------------------------------------
-;;; G_OBJECT_CLASS_NAME()                                  not exported
+;;; G_OBJECT_CLASS_NAME                                     not exported
 ;;; ----------------------------------------------------------------------------
 
 (defun object-class-name (class)
@@ -1236,7 +1236,7 @@ lambda (object pspec)    :no-hooks
   (type-name (type-from-class class)))
 
 ;;; ----------------------------------------------------------------------------
-;;; g_object_class_install_property ()                     not exported
+;;; g_object_class_install_property                         not exported
 ;;; ----------------------------------------------------------------------------
 
 ;; For internal use and not exported.
@@ -1335,7 +1335,7 @@ lambda (object pspec)    :no-hooks
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_object_class_find_property ()
+;;; g_object_class_find_property
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_object_class_find_property" %object-class-find-property)
@@ -1384,7 +1384,7 @@ lambda (object pspec)    :no-hooks
 (export 'object-class-find-property)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_object_class_list_properties ()
+;;; g_object_class_list_properties
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_object_class_list_properties" %object-class-list-properties)
@@ -1431,7 +1431,7 @@ lambda (object pspec)    :no-hooks
 (export 'object-class-list-properties)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_object_class_override_property ()                    not exported
+;;; g_object_class_override_property                        not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_object_class_override_property"
@@ -1470,7 +1470,7 @@ lambda (object pspec)    :no-hooks
   (name :string))
 
 ;;; ----------------------------------------------------------------------------
-;;; g_object_interface_install_property ()                 not exported
+;;; g_object_interface_install_property                     not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_object_interface_install_property"
@@ -1504,7 +1504,7 @@ lambda (object pspec)    :no-hooks
   (pspec (:pointer (:struct param-spec))))
 
 ;;; ----------------------------------------------------------------------------
-;;; g_object_interface_find_property ()
+;;; g_object_interface_find_property
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_object_interface_find_property"
@@ -1552,7 +1552,7 @@ lambda (object pspec)    :no-hooks
 (export 'object-interface-find-property)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_object_interface_list_properties ()
+;;; g_object_interface_list_properties
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_object_interface_list_properties"
@@ -1599,7 +1599,7 @@ lambda (object pspec)    :no-hooks
 (export 'object-interface-list-properties)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_object_new ()
+;;; g_object_new
 ;;; ----------------------------------------------------------------------------
 
 (defun object-new (gtype &rest args)
@@ -1669,7 +1669,7 @@ lambda (object pspec)    :no-hooks
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_object_newv ()                                       not exported
+;;; g_object_newv                                           not exported
 ;;; ----------------------------------------------------------------------------
 
 ;; This function is called internally in the Lisp library to create an object
@@ -1681,7 +1681,7 @@ lambda (object pspec)    :no-hooks
   (parameters :pointer))
 
 ;;; ----------------------------------------------------------------------------
-;;; g_object_ref ()
+;;; g_object_ref
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_object_ref" %object-ref) :pointer
@@ -1699,7 +1699,7 @@ lambda (object pspec)    :no-hooks
 (export 'object-ref)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_object_unref ()
+;;; g_object_unref
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_object_unref" %object-unref) :void
@@ -1719,7 +1719,7 @@ lambda (object pspec)    :no-hooks
 (export 'object-unref)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_object_ref_sink ()                                   not exported
+;;; g_object_ref_sink                                       not exported
 ;;; ----------------------------------------------------------------------------
 
 ;; The memory management is done in the Lisp library. We do not export this
@@ -1815,7 +1815,7 @@ lambda (object pspec)    :no-hooks
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_object_is_floating ()                                not exported
+;;; g_object_is_floating                                    not exported
 ;;; ----------------------------------------------------------------------------
 
 ;; The memory management is done in the Lisp library. We do not export this
@@ -1833,7 +1833,7 @@ lambda (object pspec)    :no-hooks
   (object :pointer))
 
 ;;; ----------------------------------------------------------------------------
-;;; g_object_force_floating ()                             not exported
+;;; g_object_force_floating                                 not exported
 ;;; ----------------------------------------------------------------------------
 
 ;; The memory management is done in the Lisp library. We do not export this
@@ -1874,7 +1874,7 @@ lambda (object pspec)    :no-hooks
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_object_weak_ref ()                                   not exported
+;;; g_object_weak_ref                                       not exported
 ;;; ----------------------------------------------------------------------------
 
 ;; The memory management is done in the Lisp library. We do not export this
@@ -1906,7 +1906,7 @@ lambda (object pspec)    :no-hooks
   (data :pointer))
 
 ;;; ----------------------------------------------------------------------------
-;;; g_object_weak_unref ()                                 not exported
+;;; g_object_weak_unref                                     not exported
 ;;; ----------------------------------------------------------------------------
 
 ;; The memory management is done in the Lisp library. We do not export this
@@ -2089,7 +2089,7 @@ lambda (object pspec)    :no-hooks
         (setf (gethash obj-adr *foreign-gobjects-strong*) obj))))
 
 ;;; ----------------------------------------------------------------------------
-;;; g_object_add_toggle_ref ()                             not exported
+;;; g_object_add_toggle_ref                                 not exported
 ;;; ----------------------------------------------------------------------------
 
 ;; The memory management is done in the Lisp library. We do not export this
@@ -2137,7 +2137,7 @@ lambda (object pspec)    :no-hooks
   (data :pointer))
 
 ;;; ----------------------------------------------------------------------------
-;;; g_object_remove_toggle_ref ()                          not exported
+;;; g_object_remove_toggle_ref                              not exported
 ;;; ----------------------------------------------------------------------------
 
 ;; The memory management is done in the Lisp library. We do not export this
@@ -2371,7 +2371,7 @@ lambda (object pspec)    :no-hooks
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_object_notify ()
+;;; g_object_notify
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_object_notify" object-notify) :void
@@ -2437,7 +2437,7 @@ lambda (object pspec)    :no-hooks
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_object_freeze_notify ()
+;;; g_object_freeze_notify
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_object_freeze_notify" object-freeze-notify) :void
@@ -2459,7 +2459,7 @@ lambda (object pspec)    :no-hooks
 (export 'object-freeze-notify)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_object_thaw_notify ()
+;;; g_object_thaw_notify
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_object_thaw_notify" object-thaw-notify) :void
@@ -2619,7 +2619,7 @@ lambda (object pspec)    :no-hooks
 (export 'object-set-data-full)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_object_steal_data ()                                 not exported
+;;; g_object_steal_data                                     not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_object_steal_data" object-steal-data) :pointer
@@ -2918,8 +2918,8 @@ lambda (object pspec)    :no-hooks
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_object_set_property ()
-;;; g_object_get_property () -> object-property
+;;; g_object_set_property
+;;; g_object_get_property
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_object_set_property" %object-set-property) :void

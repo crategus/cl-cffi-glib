@@ -431,7 +431,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; struct GPollFD                                         not exported
+;;; GPollFD                                                 not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcstruct poll-fd
@@ -475,7 +475,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; struct GSource
+;;; GSource
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcstruct source
@@ -508,7 +508,7 @@
 (export 'source)
 
 ;;; ----------------------------------------------------------------------------
-;;; struct GSourceFuncs                                    not exported
+;;; GSourceFuncs                                            not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcstruct source-funcs
@@ -590,7 +590,7 @@
   @see-function{source-set-callback}")
 
 ;;; ----------------------------------------------------------------------------
-;;; struct GSourceCallbackFuncs                            not exported
+;;; GSourceCallbackFuncs                                    not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcstruct source-callback-funcs
@@ -619,7 +619,7 @@
   @end{table}")
 
 ;;; ----------------------------------------------------------------------------
-;;; g_main_loop_new ()
+;;; g_main_loop_new
 ;;; ----------------------------------------------------------------------------
 
 (defun main-loop-new (context is-running)
@@ -653,7 +653,7 @@
 (export 'main-loop-new)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_main_loop_ref ()
+;;; g_main_loop_ref
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_main_loop_ref" main-loop-ref) (:pointer (:struct main-loop))
@@ -669,7 +669,7 @@
 (export 'main-loop-ref)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_main_loop_unref ()
+;;; g_main_loop_unref
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_main_loop_unref" main-loop-unref) :void
@@ -687,7 +687,7 @@
 (export 'main-loop-unref)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_main_loop_run ()
+;;; g_main_loop_run
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_main_loop_run" main-loop-run) :void
@@ -707,7 +707,7 @@
 (export 'main-loop-run)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_main_loop_quit ()
+;;; g_main_loop_quit
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_main_loop_quit" main-loop-quit) :void
@@ -727,7 +727,7 @@
 (export 'main-loop-quit)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_main_loop_is_running ()
+;;; g_main_loop_is_running
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_main_loop_is_running" main-loop-is-running) :boolean
@@ -746,7 +746,7 @@
 (export 'main-loop-is-running)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_main_loop_get_context () -> main-loop-context
+;;; g_main_loop_get_context
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_main_loop_get_context" main-loop-context)
@@ -763,7 +763,7 @@
 (export 'main-loop-context)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_main_context_new ()
+;;; g_main_context_new
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_main_context_new" main-context-new)
@@ -777,7 +777,7 @@
 (export 'main-context-new)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_main_context_ref ()
+;;; g_main_context_ref
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_main_context_ref" main-context-ref)
@@ -794,7 +794,7 @@
 (export 'main-context-ref)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_main_context_unref ()
+;;; g_main_context_unref
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_main_context_unref" main-context-unref) :void
@@ -812,7 +812,7 @@
 (export 'main-context-unref)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_main_context_default ()
+;;; g_main_context_default
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_main_context_default" main-context-default)
@@ -830,7 +830,7 @@
 (export 'main-context-default)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_main_context_iteration ()
+;;; g_main_context_iteration
 ;;; ----------------------------------------------------------------------------
 
 (defun main-context-iteration (context block)
@@ -865,7 +865,7 @@
 (export 'main-context-iteration)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_main_context_pending ()
+;;; g_main_context_pending
 ;;; ----------------------------------------------------------------------------
 
 (defun main-context-pending (context)
@@ -884,7 +884,7 @@
 (export 'main-context-pending)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_main_context_find_source_by_id ()
+;;; g_main_context_find_source_by_id
 ;;; ----------------------------------------------------------------------------
 
 (defun main-context-find-source-by-id (context source)
@@ -923,7 +923,7 @@
 (export 'main-context-find-source-by-id)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_main_context_find_source_by_user_data ()             not exported
+;;; g_main_context_find_source_by_user_data                 not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_main_context_find_source_by_user_data"
@@ -943,7 +943,7 @@
   (user-data :pointer))
 
 ;;; ----------------------------------------------------------------------------
-;;; g_main_context_find_source_by_funcs_user_data ()       not exported
+;;; g_main_context_find_source_by_funcs_user_data           not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_main_context_find_source_by_funcs_user_data"
@@ -967,7 +967,7 @@
   (user-data :pointer))
 
 ;;; ----------------------------------------------------------------------------
-;;; g_main_context_wakeup ()                               not exported
+;;; g_main_context_wakeup                                   not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_main_context_wakeup" main-context-wakeup) :void
@@ -1008,7 +1008,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
   (context (:pointer (:struct main-context))))
 
 ;;; ----------------------------------------------------------------------------
-;;; g_main_context_acquire ()                              not exported
+;;; g_main_context_acquire                                  not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_main_context_acquire" main-context-acquire) :boolean
@@ -1029,7 +1029,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
   (context (:pointer (:struct main-context))))
 
 ;;; ----------------------------------------------------------------------------
-;;; g_main_context_release ()                              not exported
+;;; g_main_context_release                                  not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_main_context_release" main-context-release) :void
@@ -1048,7 +1048,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
   (context (:pointer (:struct main-context))))
 
 ;;; ----------------------------------------------------------------------------
-;;; g_main_context_is_owner ()
+;;; g_main_context_is_owner
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_main_context_is_owner" main-context-is-owner) :boolean
@@ -1100,7 +1100,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_main_context_prepare ()                              not exported
+;;; g_main_context_prepare                                  not exported
 ;;; ----------------------------------------------------------------------------
 
 ;; TODO: priority is a foreign integer, return this value
@@ -1125,7 +1125,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
   (priority (:pointer :int)))
 
 ;;; ----------------------------------------------------------------------------
-;;; g_main_context_query ()                                not exported
+;;; g_main_context_query                                    not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_main_context_query" main-context-query) :int
@@ -1153,7 +1153,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
   (n-fds :int))
 
 ;;; ----------------------------------------------------------------------------
-;;; g_main_context_check ()                                not exported
+;;; g_main_context_check                                    not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_main_context_check" main-context-check) :int
@@ -1180,7 +1180,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
   (n-fds :int))
 
 ;;; ----------------------------------------------------------------------------
-;;; g_main_context_dispatch ()                             not exported
+;;; g_main_context_dispatch                                 not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_main_context_dispatch" main-context-dispatch) :void
@@ -1197,7 +1197,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
   (context (:pointer (:struct main-context))))
 
 ;;; ----------------------------------------------------------------------------
-;;; g_main_context_set_poll_func ()                        not exported
+;;; g_main_context_set_poll_func                            not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_main_context_set_poll_func" main-context-set-poll-func) :void
@@ -1219,7 +1219,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
   (func :pointer))
 
 ;;; ----------------------------------------------------------------------------
-;;; g_main_context_get_poll_func ()                        not exported
+;;; g_main_context_get_poll_func                            not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_main_context_get_poll_func" main-context-get-poll-func)
@@ -1259,7 +1259,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_main_context_add_poll ()                             not exported
+;;; g_main_context_add_poll                                 not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_main_context_add_poll" main-context-add-poll) :void
@@ -1288,7 +1288,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
   (priority :int))
 
 ;;; ----------------------------------------------------------------------------
-;;; g_main_context_remove_poll ()                          not exported
+;;; g_main_context_remove_poll                              not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_main_context_remove_poll" main-context-remove-poll) :void
@@ -1308,7 +1308,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
   (fd (:pointer (:struct poll-fd))))
 
 ;;; ----------------------------------------------------------------------------
-;;; g_main_depth ()                                        not exported
+;;; g_main_depth                                            not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_main_depth" main-depth) :int
@@ -1350,7 +1350,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
   @see-function{gtk-widget-sensitive}")
 
 ;;; ----------------------------------------------------------------------------
-;;; g_main_current_source ()                               not exported
+;;; g_main_current_source                                   not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_main_current_source" main-current-source)
@@ -1526,7 +1526,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_main_context_get_thread_default ()                   not exported
+;;; g_main_context_get_thread_default                       not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_main_context_get_thread_default" main-context-thread-default)
@@ -1554,7 +1554,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
   @see-function{main-context-ref-thread-default}")
 
 ;;; ----------------------------------------------------------------------------
-;;; g_main_context_ref_thread_default ()                   not exported
+;;; g_main_context_ref_thread_default                       not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_main_context_ref_thread_default"
@@ -1631,7 +1631,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_timeout_source_new ()
+;;; g_timeout_source_new
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_timeout_source_new" timeout-source-new)
@@ -1653,7 +1653,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 (export 'timeout-source-new)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_timeout_source_new_seconds ()
+;;; g_timeout_source_new_seconds
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_timeout_source_new_seconds" timeout-source-new-seconds)
@@ -1726,7 +1726,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 (export 'timeout-add)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_timeout_add_full ()                                  not exported
+;;; g_timeout_add_full                                      not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_timeout_add_full" %timeout-add-full) :uint
@@ -1769,7 +1769,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
   (destroy-notify :pointer))
 
 ;;; ----------------------------------------------------------------------------
-;;; g_timeout_add_seconds ()
+;;; g_timeout_add_seconds
 ;;; ----------------------------------------------------------------------------
 
 (defun timeout-add-seconds (interval func
@@ -1811,7 +1811,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 (export 'timeout-add-seconds)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_timeout_add_seconds_full ()                          not exported
+;;; g_timeout_add_seconds_full                              not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_timeout_add_seconds_full" %timeout-add-seconds-full) :uint
@@ -1870,7 +1870,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
   (destroy-notify :pointer))
 
 ;;; ----------------------------------------------------------------------------
-;;; g_idle_source_new ()
+;;; g_idle_source_new
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_idle_source_new" idle-source-new) (:pointer (:struct source))
@@ -1891,7 +1891,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 (export 'idle-source-new)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_idle_add ()
+;;; g_idle_add
 ;;; ----------------------------------------------------------------------------
 
 (defun idle-add (func &key (priority +priority-default-idle+))
@@ -1925,7 +1925,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 (export 'idle-add)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_idle_add_full ()                                     not exported
+;;; g_idle_add_full                                         not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_idle_add_full" %idle-add-full) :uint
@@ -1953,7 +1953,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
   (notify :pointer))
 
 ;;; ----------------------------------------------------------------------------
-;;; g_idle_remove_by_data ()                               not exported
+;;; g_idle_remove_by_data                                   not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_idle_remove_by_data" idle-remove-by-data) :boolean
@@ -2169,7 +2169,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_source_new ()                                        not exported
+;;; g_source_new                                            not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_source_new" source-new) (:pointer (:struct source))
@@ -2195,7 +2195,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
   (struct-size :uint))
 
 ;;; ----------------------------------------------------------------------------
-;;; g_source_ref ()                                        not exported
+;;; g_source_ref                                            not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_source_ref" source-ref) (:pointer (:struct source))
@@ -2209,7 +2209,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
   (source (:pointer (:struct source))))
 
 ;;; ----------------------------------------------------------------------------
-;;; g_source_unref ()                                      not exported
+;;; g_source_unref                                          not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_source_unref" source-unref) :void
@@ -2226,7 +2226,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
   (source (:pointer (:struct source))))
 
 ;;; ----------------------------------------------------------------------------
-;;; g_source_set_funcs ()                                  not exported
+;;; g_source_set_funcs                                      not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_source_set_funcs" source-set-funcs) :void
@@ -2277,7 +2277,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_source_attach ()
+;;; g_source_attach
 ;;; ----------------------------------------------------------------------------
 
 (defun source-attach (source context)
@@ -2305,7 +2305,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 (export 'source-attach)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_source_destroy ()
+;;; g_source_destroy
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_source_destroy" source-destroy) :void
@@ -2324,7 +2324,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 (export 'source-destroy)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_source_is_destroyed ()
+;;; g_source_is_destroyed
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_source_is_destroyed" source-is-destroyed) :boolean
@@ -2344,8 +2344,8 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 (export 'source-is-destroyed)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_source_get_priority ()
-;;; g_source_set_priority () -> source-priority
+;;; g_source_get_priority
+;;; g_source_set_priority
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf source-priority) (priority source)
@@ -2375,8 +2375,8 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 (export 'source-priority)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_source_get_can_recurse ()
-;;; g_source_set_can_recurse () -> source-can-recursive
+;;; g_source_get_can_recurse
+;;; g_source_set_can_recurse
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf source-can-recurse) (can-recurse source)
@@ -2408,7 +2408,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 (export 'source-can-recurse)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_source_get_id () -> source-id
+;;; g_source_get_id
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_source_get_id" source-id) :uint
@@ -2429,8 +2429,8 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 (export 'source-id)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_source_get_name ()
-;;; g_source_set_name () -> source-name
+;;; g_source_get_name
+;;; g_source_set_name
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf source-name) (name source)
@@ -2467,7 +2467,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 (export 'source-name)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_source_set_name_by_id ()
+;;; g_source_set_name_by_id
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_source_set_name_by_id" source-set-name-by-id) :void
@@ -2490,7 +2490,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 (export 'source-set-name-by-id)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_source_get_context () -> source-context
+;;; g_source_get_context
 ;;; ----------------------------------------------------------------------------
 
 (defun source-context (source)
@@ -2517,7 +2517,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 (export 'source-context)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_source_set_callback ()
+;;; g_source_set_callback
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_source_set_callback" %source-set-callback) :void
@@ -2547,7 +2547,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 (export 'source-set-callback)
 
 ;;; ----------------------------------------------------------------------------
-;;; GSourceFunc ()
+;;; GSourceFunc
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcallback source-func :boolean
@@ -2636,8 +2636,8 @@ lambda ()
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_source_set_ready_time ()
-;;; g_source_get_ready_time () -> source-ready-time
+;;; g_source_set_ready_time
+;;; g_source_get_ready_time
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf source-ready-time) (time source)
@@ -2789,7 +2789,7 @@ lambda ()
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_source_add_poll ()                                   not exported
+;;; g_source_add_poll                                       not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_source_add_poll" source-add-poll) :void
@@ -2813,7 +2813,7 @@ lambda ()
   (fd (:pointer (:struct poll-fd))))
 
 ;;; ----------------------------------------------------------------------------
-;;; g_source_remove_poll ()                                not exported
+;;; g_source_remove_poll                                    not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_source_remove_poll" source-remove-poll) :void
@@ -2872,7 +2872,7 @@ lambda ()
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_source_get_time () -> source-time
+;;; g_source_get_time
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_source_get_time" source-time) :uint64
@@ -2938,7 +2938,7 @@ lambda ()
 (export 'source-remove)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_source_remove_by_funcs_user_data ()                  not exported
+;;; g_source_remove_by_funcs_user_data                      not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_source_remove_by_funcs_user_data"
@@ -2959,7 +2959,7 @@ lambda ()
   (user-data :pointer))
 
 ;;; ----------------------------------------------------------------------------
-;;; g_source_remove_by_user_data ()                        not exported
+;;; g_source_remove_by_user_data                            not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_source_remove_by_user_data" source-remove-by-user-data)
