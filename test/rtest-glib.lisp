@@ -10,21 +10,19 @@
 
 (defvar *first-run-glib-test* t)
 
-;; Set the current package for the testsuite
-(setf (glib-sys:get-current-package) "cl-cffi-glib")
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  ;; Set the current package for the testsuite
+  (setf (glib-sys:get-current-package) "cl-cffi-glib")
+  ;; We set a PRGNAME to avoid side effects when running the tests a second time
+  (setf (glib:prgname) "glib-test")
+  ;; Ensure directory for the output of test results
+  (ensure-directories-exist
+      (asdf:system-relative-pathname :cl-cffi-glib "test/out/")))
 
 (def-suite glib-test)
 (def-suite glib-suite :in glib-test)
 (def-suite gobject-suite :in glib-test)
 (def-suite gio-suite :in glib-test)
-
-;; We set a PRGNAME to avoid side effects when running the tests a second time.
-(setf (glib:prgname) "glib-test")
-
-;; Ensure directory for the output of test results
-(eval-when (:compile-toplevel :load-toplevel :execute)
-  (ensure-directories-exist
-      (asdf:system-relative-pathname :cl-cffi-glib "test/out/")))
 
 ;; Get the pathname for a file in the testsuite
 (defun sys-path (filename &optional (system :cl-cffi-glib))
