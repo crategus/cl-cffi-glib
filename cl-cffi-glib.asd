@@ -24,7 +24,7 @@
 
 (defsystem :cl-cffi-glib
   :name "cl-cffi-glib"
-  :version "0.5.0"
+  :version "0.6.0"
   :author "Dieter Kaiser"
   :license "MIT"
   :serial t
@@ -127,7 +127,7 @@
 
 (defsystem :cl-cffi-glib/test
   :name "cl-cffi-glib/test"
-  :version "0.5.0"
+  :version "0.6.0"
   :author "Dieter Kaiser"
   :license "MIT"
   :components

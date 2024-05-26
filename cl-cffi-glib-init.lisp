@@ -1,7 +1,7 @@
 ;;; ----------------------------------------------------------------------------
 ;;; glib.init.lisp
 ;;;
-;;; Copyright (C) 2011 - 2023 Dieter Kaiser
+;;; Copyright (C) 2011 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -202,7 +202,6 @@
 (push-library-version-features glib
                                +glib-init-major-version+
                                +glib-init-minor-version+
-  2 58    ; Since 2018-09-03
   2 60    ; Since 2019-03-04
   2 62    ; Since 2019-09-05
   2 64    ; Since 2020-02-27
@@ -213,9 +212,10 @@
   2 74    ; Since 2022-09-17
   2 76    ; Since 2023-03-10
   2 78    ; Since 2023-09-08
+  2 80    ; Since 2024-03-07
 )
 
-(require-library-version "GLib" 2 58
+(require-library-version "GLib" 2 60
                          +glib-init-major-version+
                          +glib-init-minor-version+)
 

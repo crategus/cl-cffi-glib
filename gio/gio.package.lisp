@@ -6,7 +6,7 @@
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
 ;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2012 - 2023 Dieter Kaiser
+;;; Copyright (C) 2012 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -471,6 +471,7 @@
       @about-generic{application-is-registered}
       @about-generic{application-is-remote}
       @about-generic{application-resource-base-path}
+      @about-generic{application-version}
       @about-function{application-id-is-valid}
       @about-function{application-new}
       @about-function{application-get-dbus-connection}

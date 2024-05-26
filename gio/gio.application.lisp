@@ -2,7 +2,7 @@
 ;;; gio.application.lisp
 ;;;
 ;;; The documentation of this file is taken from the GIO Reference Manual
-;;; Version 2.76 and modified to document the Lisp binding to the GIO library.
+;;; Version 2.80 and modified to document the Lisp binding to the GIO library.
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
 ;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
@@ -48,6 +48,8 @@
 ;;;     g_application_set_resource_base_path
 ;;;     g_application_get_is_registered
 ;;;     g_application_get_is_remote
+;;;     g_application_get_version                           Since 2.80
+;;;     g_application_set_version                           Since 2.80
 ;;;
 ;;; Functions
 ;;;
@@ -95,6 +97,7 @@
 ;;;     is-registered
 ;;;     is-remote
 ;;;     resource-base-path
+;;;     version                                             Since 2.80
 ;;;
 ;;; Signals
 ;;;
@@ -248,11 +251,15 @@
     "is-remote" "gboolean" t nil)
    (resource-base-path
     application-resource-base-path
-    "resource-base-path" "gchararray" t t)))
+    "resource-base-path" "gchararray" t t)
+   #+glib-2-80
+   (version
+    application-version
+    "version" "gchararray" t t)))
 
 #+liber-documentation
 (setf (documentation 'application 'type)
- "@version{2023-4-23}
+ "@version{2024-5-25}
   @begin{short}
     The @class{g:application} class is the foundation of an application.
   @end{short}
@@ -597,6 +604,7 @@ lambda (application)    :run-first
   @see-slot{g:application-is-registered}
   @see-slot{g:application-is-remote}
   @see-slot{g:application-resource-base-path}
+  @see-slot{g:application-version}
   @see-class{gtk:application}
   @see-class{g:action-group}
   @see-class{g:action-map}
@@ -620,7 +628,7 @@ lambda (application)    :run-first
       "Accessor"
       (documentation 'application-action-group 'function)
  "@version{2023-4-23}
-  @syntax[]{(setf (g:application-action-group object) group)}
+  @syntax{(setf (g:application-action-group object) group)}
   @argument[object]{a @class{g:application} instance}
   @argument[group]{a @class{g:action-group} object, or @code{nil}}
   @begin{short}
@@ -655,8 +663,8 @@ lambda (application)    :run-first
       "Accessor"
       (documentation 'application-application-id 'function)
  "@version{2023-4-23}
-  @syntax[]{(g:application-application-id object) => id}
-  @syntax[]{(setf (g:application-application-id object) id)}
+  @syntax{(g:application-application-id object) => id}
+  @syntax{(setf (g:application-application-id object) id)}
   @argument[object]{a @class{g:application} instance}
   @argument[id]{a string with the identifier of the application}
   @begin{short}
@@ -686,8 +694,8 @@ lambda (application)    :run-first
       "Accessor"
       (documentation 'application-flags 'function)
  "@version{2023-4-23}
-  @syntax[]{(g:application-flags object) => flags}
-  @syntax[]{(setf (g:application-flags object) flags)}
+  @syntax{(g:application-flags object) => flags}
+  @syntax{(setf (g:application-flags object) flags)}
   @argument[object]{a @class{g:application} instance}
   @argument[flags]{a @symbol{g:application-flags} value for the application}
   @begin{short}
@@ -717,8 +725,8 @@ lambda (application)    :run-first
       "Accessor"
       (documentation 'application-inactivity-timeout 'function)
  "@version{2023-4-23}
-  @syntax[]{(g:application-inactivity-timeout object) => timeout}
-  @syntax[]{(setf (g:application-inactivity-timeout object) timeout)}
+  @syntax{(g:application-inactivity-timeout object) => timeout}
+  @syntax{(setf (g:application-inactivity-timeout object) timeout)}
   @argument[object]{a @class{g:application} instance}
   @argument[timeout]{an unsigned integer with the timeout in milliseconds}
   @begin{short}
@@ -750,7 +758,7 @@ lambda (application)    :run-first
       "Accessor"
       (documentation 'application-is-busy 'function)
  "@version{2023-4-23}
-  @syntax[]{(g:application-is-busy object) => setting}
+  @syntax{(g:application-is-busy object) => setting}
   @argument[object]{a @class{g:application} instance}
   @argument[setting]{@em{true} if the application is currenty marked as busy}
   @begin{short}
@@ -777,7 +785,7 @@ lambda (application)    :run-first
       "Accessor"
       (documentation 'application-is-registered 'function)
  "@version{2023-4-23}
-  @syntax[]{(g:application-is-registered object) => setting}
+  @syntax{(g:application-is-registered object) => setting}
   @argument[object]{a @class{g:application} instance}
   @argument[setting]{@em{true} if the application is registered}
   @begin{short}
@@ -802,7 +810,7 @@ lambda (application)    :run-first
       "Accessor"
       (documentation 'application-is-remote 'function)
  "@version{2023-4-23}
-  @syntax[]{(g:application-is-remote object) => setting}
+  @syntax{(g:application-is-remote object) => setting}
   @argument[object]{a @class{g:application} instance}
   @argument[setting]{@em{true} if the application is remote}
   @begin{short}
@@ -834,8 +842,8 @@ lambda (application)    :run-first
       "Accessor"
       (documentation 'application-resource-base-path 'function)
  "@version{2024-5-24}
-  @syntax[]{(g:application-resource-base-path object) => path}
-  @syntax[]{(setf (g:application-resource-base-path object) path)}
+  @syntax{(g:application-resource-base-path object) => path}
+  @syntax{(setf (g:application-resource-base-path object) path)}
   @argument[object]{a @class{g:application} instance}
   @argument[path]{a string with the resource base path to use}
   @begin{short}
@@ -872,6 +880,35 @@ lambda (application)    :run-first
   call this function during the instance initialization.
   @see-class{g:application}
   @see-class{gtk:application}")
+
+;;; --- g:application-version --------------------------------------------------
+
+#+(and glib-2-80 liber-documentation)
+(setf (documentation (liber:slot-documentation "version" 'application) t)
+ "The @code{version} property of type @code{:string} (Read / Write) @br{}
+  The human-readable version number of the application.")
+
+#+(and glib-2-80 liber-documentation)
+(setf (liber:alias-for-function 'application-version)
+      "Accessor"
+      (documentation 'application-version 'function)
+ "@version{2024-5-25}
+  @syntax{(g:application-version object) => version}
+  @syntax{(setf (g:application-version object) version)}
+  @argument[object]{a @class{g:application} instance}
+  @argument[version]{a string with the version number of the application}
+  @begin{short}
+    Accessor of the @slot[g:application]{version} slot of the
+    @class{g:application} class.
+  @end{short}
+  The @fun{g:application-version} function gets the version of the application.
+  The @setf{g:application-version} function sets the version number of the
+  application. This will be used to implement a @code{--version} command line
+  argument. The application version can only be modified if the application has
+  not yet been registered.
+
+  Since 2.80
+  @see-class{g:application}")
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_application_id_is_valid
@@ -1668,8 +1705,8 @@ lambda (application)    :run-first
     (gobject:object application)
  #+liber-documentation
  "@version{#2022-12-30}
-  @syntax[]{(g:application-default) => application}
-  @syntax[]{(setf (g:application-default) application)}
+  @syntax{(g:application-default) => application}
+  @syntax{(setf (g:application-default) application)}
   @argument[application]{the @class{g:application} instance to set as default,
     or @code{nil}}
   @begin{short}

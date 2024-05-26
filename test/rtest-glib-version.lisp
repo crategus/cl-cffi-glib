@@ -5,7 +5,6 @@
 
 (test push-library-version-features
   (is (member :glib      *features*))
-  (is (member :glib-2-58 *features*))
   (is (member :glib-2-60 *features*))
   (is (member :glib-2-62 *features*))
   (is (member :glib-2-64 *features*))
@@ -14,7 +13,12 @@
   (is (member :glib-2-70 *features*))
   (is (member :glib-2-72 *features*))
   (is (member :glib-2-74 *features*))
-  (is (member :glib-2-76 *features*)))
+  (is (member :glib-2-76 *features*))
+  (is (member :glib-2-80 *features*)))
+
+(test check-glib-version
+  (is (= 2 glib:+major-version+))
+  (is (= 80 glib:+minor-version+)))
 
 (test g-check-version
   (is-true (integerp glib:+major-version+))
@@ -32,4 +36,4 @@
       (is-false (glib:cl-cffi-glib-build-info s))
       (is (stringp result)))))
 
-;;; --- 2023-7-9 ---------------------------------------------------------------
+;;; 2024-5-25

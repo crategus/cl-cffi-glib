@@ -847,6 +847,7 @@
            #:application-is-registered
            #:application-is-remote
            #:application-resource-base-path
+           #:application-version
            #:application-id-is-valid
            #:application-new
            #:application-dbus-connection
