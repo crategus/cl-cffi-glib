@@ -1,7 +1,7 @@
 ;;; ----------------------------------------------------------------------------
 ;;; glib.boxed-type.lisp
 ;;;
-;;; Copyright (C) 2011 - 2023 Dieter Kaiser
+;;; Copyright (C) 2011 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -26,6 +26,12 @@
 
 ;; TODO: More work needed to rework the implementation of GBoxed.
 
+;; TYPE-INITIALIZER is a string specifying a C function to initialize the
+;; GType, or a function designator specifying a Lisp function.
+;; TODO: This function is called by the macros that initialize a GBoxed type
+;; or a GEnum and GFlags type. There is a second implementation
+;; INITIAlIZE-GOBJECT-CLASS-G-TYPE that could use this function to avoid the
+;; duplication of code and functionality.
 (defun type-initializer-call (type-initializer)
   (etypecase type-initializer
     (string `(if (cffi:foreign-symbol-pointer ,type-initializer)
@@ -36,7 +42,6 @@
                  (warn "Type initializer '~A' is not available"
                        ,type-initializer)))
     (symbol `(funcall ',type-initializer))))
-
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_boxed_copy ()

@@ -1,7 +1,7 @@
 ;;; ----------------------------------------------------------------------------
 ;;; glib.stable-pointer.lisp
 ;;;
-;;; Copyright (C) 2011 - 2023 Dieter Kaiser
+;;; Copyright (C) 2011 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -28,7 +28,6 @@
 ;; can be dereferenced with get-stable-pointer-value and freed with
 ;; free-stable-pointer. Stable pointers are used to pass references to lisp
 ;; objects to foreign code. thing is any object. The return value is an integer.
-
 (let ((stable-pointers (make-array 0 :adjustable t :fill-pointer t))
       (stable-pointers-length 0)
       (stable-pointers-counter 0))
@@ -53,14 +52,12 @@
     (allocate-stable-pointer (cffi:null-pointer)))
 
   ;; Frees the stable pointer previously allocated by allocate-stable-pointer
-
   (defun free-stable-pointer (stable-pointer)
     (decf stable-pointers-counter)
     (setf (aref stable-pointers (cffi:pointer-address stable-pointer)) nil))
 
   ;; Returns the objects that is referenced by stable pointer previously
   ;; allocated by allocate-stable-pointer. May be called any number of times.
-
   (defun get-stable-pointer-value (pointer)
     (let ((ptrid (cffi:pointer-address pointer)))
       (when (<= 0 ptrid stable-pointers-length)
@@ -72,7 +69,6 @@
         (setf (aref stable-pointers ptrid) data))))
 
   ;; The following functions are for debugging and inspecting.
-
   (defun get-stable-pointers-length ()
     stable-pointers-length)
 
@@ -84,13 +80,11 @@
           (collect (aref stable-pointers i))))
 
   (defun get-stable-pointers-array ()
-    stable-pointers)
-)
+    stable-pointers))
 
 ;; Executes body with ptr bound to the stable pointer to result of evaluating
 ;; expr. ptr is a symbol naming the variable which will hold the stable pointer
 ;; value and expr is an expression
-
 (defmacro with-stable-pointer ((ptr expr) &body body)
   `(let ((,ptr (allocate-stable-pointer ,expr)))
      (unwind-protect
@@ -98,7 +92,6 @@
        (free-stable-pointer ,ptr))))
 
 ;; Callback function to free a pointer
-
 (cffi:defcallback stable-pointer-destroy-notify :void
     ((data :pointer))
   (free-stable-pointer data))

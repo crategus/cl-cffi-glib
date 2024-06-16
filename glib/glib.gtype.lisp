@@ -44,6 +44,40 @@
   name
   %id)
 
+#+liber-documentation
+(setf (liber:alias-for-symbol 'gtype)
+      "Struct"
+      (liber:symbol-documentation 'gtype)
+ "@version{2024-6-11}
+  @begin{short}
+    The @symbol{g:gtype} structure represents the unique identifier of a
+    registered @code{GType} type.
+  @end{short}
+  In the C library a @code{GType} type is represented as an integer.
+  @see-constructor{g:gtype}
+  @see-slot{g:gtype-name}
+  @see-slot{g:gtype-id}
+  @see-class{g:type-t}")
+
+#+liber-documentation
+(setf (documentation 'gtype-name 'function)
+ "@version{2024-6-11}
+  @argument[instance]{a @symbol{g:gtype} instance}
+  @return{The string with the name of the @code{GType} type.}
+  @begin{short}
+    Returns the name of the @code{GType} type.
+  @end{short}
+  The @arg{instance} argument must be a valid @symbol{g:gtype} instance.
+  @begin{examples}
+    @begin{pre}
+(g:gtype-name (g:gtype \"gboolean\")) => \"gboolean\"
+(g:gtype-name (g:gtype \"GObject\")) => \"GObject\"
+(g:gtype-name (g:gtype \"GSimpleAction\")) => \"GSimpleAction\"
+    @end{pre}
+  @end{examples}
+  @see-symbol{g:gtype}
+  @see-function{g:gtype-id}")
+
 (defmethod print-object ((instance gtype) stream)
   (if *print-readably*
       (call-next-method)
@@ -56,9 +90,9 @@
 
 ;; Global hash tables to store names and ids of foreign GTypes
 
+(defvar *gtype-lock* (bt:make-lock "gtype lock"))
 (defvar *name-to-gtype* (make-hash-table :test 'equal))
 (defvar *id-to-gtype* (make-hash-table))
-(defvar *gtype-lock* (bt:make-lock "gtype lock"))
 
 (defun invalidate-gtypes ()
   (bt:with-lock-held (*gtype-lock*)
@@ -91,18 +125,38 @@
 
 ;; GTYPE-ID replaces the accessor GTYPE-%ID
 
-(defun gtype-id (gtype)
-  (cond ((null gtype) 0) ; for gobject:+type-invalid+
-        ((gtype-%id gtype) (gtype-%id gtype))
+(defun gtype-id (instance)
+ #+liber-documentation
+ "@version{2024-6-11}
+  @argument[instance]{a @symbol{g:gtype} instance}
+  @return{The integer for the unique identifier of the @code{GType} type.}
+  @begin{short}
+    Returns the unique identifiert for the @code{GType} type.
+  @end{short}
+  The function returns 0 for a @code{nil} value. This represents an invalid
+  @code{GType} type.
+  @begin{examples}
+    @begin{pre}
+(g:gtype-id (g:gtype \"gboolean\")) => 20
+(g:gtype-id (g:gtype \"GObject\")) => 80
+(g:gtype-id (g:gtype \"GAction\")) => 95376336284736
+(g:gtype-id (g:gtype \"GSimpleAction\")) => 95376336285744
+(g:gtype-id nil) => 0
+    @end{pre}
+  @end{examples}
+  @see-symbol{g:gtype}
+  @see-function{g:gtype-name}"
+  (cond ((null instance) 0) ; for an invalid type
+        ((gtype-%id instance) (gtype-%id instance))
         (t
          (bt:with-lock-held (*gtype-lock*)
-           (let ((id (%g-type-from-name (gtype-name gtype))))
+           (let ((id (%g-type-from-name (gtype-name instance))))
              (if (zerop id)
                  ;; No valid ID, print a warning
-                 (warn-unknown-gtype (gtype-name gtype))
+                 (warn-unknown-gtype (gtype-name instance))
                  ;; Store the valid ID
-                 (setf (gtype-%id gtype) id
-                       (gethash id *id-to-gtype*) gtype))
+                 (setf (gtype-%id instance) id
+                       (gethash id *id-to-gtype*) instance))
              id)))))
 
 ;;; ----------------------------------------------------------------------------
@@ -182,25 +236,48 @@
       `(load-time-value (gtype1 ,thing))
       whole))
 
+#+liber-documentation
+(setf (documentation 'gtype 'function)
+ "@version{2024-6-11}
+  @argument[thing]{a string, an integer, or an @symbol{g:gtype} instance}
+  @return{The @symbol{g:gtype} instance for @arg{thing}.}
+  @begin{short}
+    Returns a @symbol{g:gtype} instance for @arg{thing}.
+  @end{short}
+  If the string or the integer does not represent a valid @code{GType} type the
+  @code{nil} value is returned and a warning is printed.
+  @begin{examples}
+    @begin{pre}
+(g:gtype 20) => #<GTYPE :name \"gboolean\" :id 20>
+(g:gtype \"gboolean\") => #<GTYPE :name \"gboolean\" :id 20>
+(g:gtype (g:gtype 20)) => #<GTYPE :name \"gboolean\" :id 20>
+
+(g:gtype \"unknown\")
+=> WARNING: unknown is not known to the GType system
+=> NIL
+    @end{pre}
+  @end{examples}
+  @see-symbol{g:gtype}")
+
 (export 'gtype)
 
 ;; -----------------------------------------------------------------------------
 
 ;; Global hash table for storing the corresponding symbol names for GType names
-;; e.g. "GtkButton" -> 'button
+;; for example, "GtkButton" -> 'button
 
-(defvar *symbol-for-gtype* (make-hash-table :test 'equal))
+(let ((symbol-for-gtype (make-hash-table :test 'equal)))
 
-(defun symbol-for-gtype (name-or-gtype)
-  (let ((key (if (stringp name-or-gtype)
-                 name-or-gtype
-                 (gtype-name (gtype name-or-gtype)))))
-  (gethash key *symbol-for-gtype*)))
+  (defun symbol-for-gtype (name-or-gtype)
+    (let ((key (if (stringp name-or-gtype)
+                   name-or-gtype
+                   (gtype-name (gtype name-or-gtype)))))
+    (gethash key symbol-for-gtype)))
 
-(defun (setf symbol-for-gtype) (symbol name-or-gtype)
-  (let ((key (if (stringp name-or-gtype)
-                 name-or-gtype
-                 (gtype-name (gtype name-or-gtype)))))
-  (setf (gethash key *symbol-for-gtype*) symbol)))
+  (defun (setf symbol-for-gtype) (symbol name-or-gtype)
+    (let ((key (if (stringp name-or-gtype)
+                   name-or-gtype
+                   (gtype-name (gtype name-or-gtype)))))
+    (setf (gethash key symbol-for-gtype) symbol))))
 
 ;;; --- End of file glib.gtype.lisp --------------------------------------------

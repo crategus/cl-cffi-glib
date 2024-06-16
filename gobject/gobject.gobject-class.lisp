@@ -216,7 +216,7 @@
                     (class-name class)
                     (gobject-class-initializer class))
               (progn
-                (when (eq (glib:gtype +type-invalid+) gtype)
+                (unless gtype
                   (warn "Declared GType name '~A' for class '~A' is invalid ~
                         ('~A' returned 0)"
                         (gobject-class-direct-gname class)

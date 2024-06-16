@@ -28,12 +28,12 @@
                                    (gtype (eql (glib:gtype "GBoxed")))
                                    kind)
   (declare (ignore kind))
-  (cond ((gtype= (value-type gvalue) (type-strv))
+  (cond ((eq (value-type gvalue) (type-strv))
          ;; Handle a GStrv type
          (cffi:convert-from-foreign (value-boxed gvalue)
                                     '(glib:strv-t :free-from-foreign nil)))
         ;; Handle a GValue type
-        ((gtype= (value-type gvalue) (type-value))
+        ((eq (value-type gvalue) (type-value))
          (value-boxed gvalue))
         (t
          (let ((info (glib:get-boxed-info (value-type gvalue))))
@@ -58,13 +58,13 @@
 (defmethod set-g-value-for-type (gvalue
                                  (gtype (eql (glib:gtype "GBoxed")))
                                  value)
-  (cond ((gtype= (value-type gvalue) (type-strv))
+  (cond ((eq (value-type gvalue) (type-strv))
          ;; Handle a GStrv type
          (setf (value-boxed gvalue)
                (cffi:convert-to-foreign value
                                         '(glib:strv-t :free-from-foreign nil))))
         ;; Handle a GValue type
-        ((gtype= (value-type gvalue) (type-value))
+        ((eq (value-type gvalue) (type-value))
          (setf (value-boxed gvalue) value))
         (t
          (let ((info (glib:get-boxed-info (value-type gvalue))))
