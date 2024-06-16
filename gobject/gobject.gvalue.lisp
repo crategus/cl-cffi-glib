@@ -212,7 +212,8 @@
   (let* ((gtype (value-type gvalue))
          (fundamental-type (type-fundamental gtype)))
     (ev-case fundamental-type
-      ((glib:gtype +type-invalid+)
+      ;; TODO: Do we need a nil value?!
+      (nil
        (error "GValue is of invalid type (~A)" (glib:gtype-name gtype)))
       ((glib:gtype "void") nil)
       ((glib:gtype "gchar") (value-char gvalue))
@@ -224,8 +225,8 @@
       ((glib:gtype "gulong") (value-ulong gvalue))
       ((glib:gtype "gint64") (value-int64 gvalue))
       ((glib:gtype "guint64") (value-uint64 gvalue))
-      ((glib:gtype "GEnum") (parse-g-value-enum gvalue))
-      ((glib:gtype "GFlags") (parse-g-value-flags gvalue))
+      ((glib:gtype "GEnum") (value-enum gvalue))
+      ((glib:gtype "GFlags") (value-flags gvalue))
       ((glib:gtype "gfloat") (value-float gvalue))
       ((glib:gtype "gdouble") (value-double gvalue))
       ((glib:gtype "gchararray") (value-string gvalue))
@@ -324,7 +325,8 @@
   (when init-gvalue (value-init gvalue gtype))
   (let ((fundamental-type (type-fundamental gtype)))
     (ev-case fundamental-type
-      ((glib:gtype +type-invalid+) (error "Invalid type (~A)" gtype))
+      ;; TODO: Do we need a nil value?!
+      (nil (error "Invalid type (~A)" gtype))
       ((glib:gtype "void") nil)
       ((glib:gtype "gchar") (setf (value-char gvalue) value))
       ((glib:gtype "guchar") (setf (value-uchar gvalue) value))
@@ -335,8 +337,8 @@
       ((glib:gtype "gulong") (setf (value-ulong gvalue) value))
       ((glib:gtype "gint64") (setf (value-int64 gvalue) value))
       ((glib:gtype "guint64") (setf (value-uint64 gvalue) value))
-      ((glib:gtype "GEnum") (set-g-value-enum gvalue value))
-      ((glib:gtype "GFlags") (set-g-value-flags gvalue value))
+      ((glib:gtype "GEnum") (setf (value-enum gvalue) value))
+      ((glib:gtype "GFlags") (setf (value-flags gvalue) value))
       ((glib:gtype "gfloat")
        (unless (realp value) (error "~A is not a real number" value))
        (setf (value-float gvalue) (coerce value 'single-float)))
