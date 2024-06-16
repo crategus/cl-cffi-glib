@@ -2,7 +2,7 @@
 ;;; gobject.type-info.lisp
 ;;;
 ;;; The documentation of this file is taken from the GObject Reference Manual
-;;; Version 2.76 and modified to document the Lisp binding to the GObject
+;;; Version 2.80 and modified to document the Lisp binding to the GObject
 ;;; library. See <http://www.gtk.org>. The API documentation of the Lisp
 ;;; binding is available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
@@ -33,30 +33,6 @@
 ;;;
 ;;; Types and Values
 ;;;
-;;;     G_TYPE_INVALID
-;;;     G_TYPE_NONE
-;;;     G_TYPE_INTERFACE
-;;;     G_TYPE_CHAR
-;;;     G_TYPE_UCHAR
-;;;     G_TYPE_BOOLEAN
-;;;     G_TYPE_INT
-;;;     G_TYPE_UINT
-;;;     G_TYPE_LONG
-;;;     G_TYPE_ULONG
-;;;     G_TYPE_INT64
-;;;     G_TYPE_UINT64
-;;;     G_TYPE_ENUM
-;;;     G_TYPE_FLAGS
-;;;     G_TYPE_FLOAT
-;;;     G_TYPE_DOUBLE
-;;;     G_TYPE_STRING
-;;;     G_TYPE_POINTER
-;;;     G_TYPE_BOXED
-;;;     G_TYPE_PARAM
-;;;     G_TYPE_OBJECT
-;;;     G_TYPE_GTYPE
-;;;     G_TYPE_VARIANT
-;;;     G_TYPE_CHECKSUM
 ;;;     G_TYPE_RESERVED_GLIB_FIRST                         not exported
 ;;;     G_TYPE_RESERVED_GLIB_LAST                          not exported
 ;;;     G_TYPE_RESERVED_BSE_FIRST                          not exported
@@ -169,6 +145,7 @@
 ;;;
 ;;;     g_type_value_table_peek
 ;;;     g_type_ensure
+;;;
 ;;;     g_type_get_type_registration_serial                not implemented
 ;;;     g_type_get_instance_count                          not implemented
 ;;;
@@ -202,474 +179,22 @@
   (defconstant +type-fundamental-shift+ 2))
 
 ;;; ----------------------------------------------------------------------------
-;;; G_TYPE_INVALID
-;;; ----------------------------------------------------------------------------
-
-(defconstant +type-invalid+ #.(ash 0 +type-fundamental-shift+))
-
-#+liber-documentation
-(setf (liber:alias-for-variable '+type-invalid+)
-      "Constant"
-      (documentation '+type-invalid+ 'variable)
- "@version{2022-12-29}
-  @variable-value{0}
-  @begin{short}
-    An invalid type used as error return value in some functions which return
-    a @class{g:type-t} type ID.
-  @end{short}
-  @see-class{g:type-t}")
-
-(export '+type-invalid+)
-
-;;; ----------------------------------------------------------------------------
-;;; G_TYPE_NONE
-;;; ----------------------------------------------------------------------------
-
-(defconstant +type-none+ #.(ash 1 +type-fundamental-shift+))
-
-#+liber-documentation
-(setf (liber:alias-for-variable '+type-none+)
-      "Constant"
-      (documentation '+type-none+ 'variable)
- "@version{2022-12-29}
-  @variable-value{4}
-  @begin{short}
-    A fundamental type which is used as a replacement for the C @code{void}
-    return type.
-  @end{short}
-  @see-class{g:type-t}")
-
-(export '+type-none+)
-
-;;; ----------------------------------------------------------------------------
-;;; G_TYPE_INTERFACE
-;;; ----------------------------------------------------------------------------
-
-(defconstant +type-interface+ #.(ash 2 +type-fundamental-shift+))
-
-#+liber-documentation
-(setf (liber:alias-for-variable '+type-interface+)
-      "Constant"
-      (documentation '+type-interface+ 'variable)
- "@version{2022-12-29}
-  @variable-value{8}
-  @begin{short}
-    The fundamental type from which all interface types are derived.
-  @end{short}
-  @see-class{g:type-t}")
-
-(export '+type-interface+)
-
-;;; ----------------------------------------------------------------------------
-;;; G_TYPE_CHAR
-;;; ----------------------------------------------------------------------------
-
-(defconstant +type-char+ #.(ash 3 +type-fundamental-shift+))
-
-#+liber-documentation
-(setf (liber:alias-for-variable '+type-char+)
-      "Constant"
-      (documentation '+type-char+ 'variable)
- "@version{2022-12-29}
-  @variable-value{12}
-  @begin{short}
-    The fundamental type corresponding to @code{gchar}.
-  @end{short}
-  The type designated by @code{G_TYPE_CHAR} is unconditionally an 8-bit signed
-  integer. This may or may not be the same type as the C type @code{gchar}.
-  @see-class{g:type-t}")
-
-(export '+type-char+)
-
-;;; ----------------------------------------------------------------------------
-;;; G_TYPE_UCHAR
-;;; ----------------------------------------------------------------------------
-
-(defconstant +type-uchar+ #.(ash 4 +type-fundamental-shift+))
-
-#+liber-documentation
-(setf (liber:alias-for-variable '+type-uchar+)
-      "Constant"
-      (documentation '+type-uchar+ 'variable)
- "@version{2022-12-29}
-  @variable-value{16}
-  @begin{short}
-    The fundamental type corresponding to @code{guchar}.
-  @end{short}
-  @see-class{g:type-t}")
-
-(export '+type-uchar+)
-
-;;; ----------------------------------------------------------------------------
-;;; G_TYPE_BOOLEAN
-;;; ----------------------------------------------------------------------------
-
-(defconstant +type-boolean+ #.(ash 5 +type-fundamental-shift+))
-
-#+liber-documentation
-(setf (liber:alias-for-variable '+type-boolean+)
-      "Constant"
-      (documentation '+type-boolean+ 'variable)
- "@version{2022-12-29}
-  @variable-value{20}
-  @begin{short}
-    The fundamental type corresponding to @code{gboolean}.
-  @end{short}
-  @see-class{g:type-t}")
-
-(export '+type-boolean+)
-
-;;; ----------------------------------------------------------------------------
-;;; G_TYPE_INT
-;;; ----------------------------------------------------------------------------
-
-(defconstant +type-int+ #.(ash 6 +type-fundamental-shift+))
-
-#+liber-documentation
-(setf (liber:alias-for-variable '+type-int+)
-      "Constant"
-      (documentation '+type-int+ 'variable)
- "@version{2022-12-29}
-  @variable-value{24}
-  @begin{short}
-    The fundamental type corresponding to @code{gint}.
-  @end{short}
-  @see-class{g:type-t}")
-
-(export '+type-int+)
-
-;;; ----------------------------------------------------------------------------
-;;; G_TYPE_UINT
-;;; ----------------------------------------------------------------------------
-
-(defconstant +type-uint+ #.(ash 7 +type-fundamental-shift+))
-
-#+liber-documentation
-(setf (liber:alias-for-variable '+type-uint+)
-      "Constant"
-      (documentation '+type-uint+ 'variable)
- "@version{2022-12-29}
-  @variable-value{28}
-  @begin{short}
-    The fundamental type corresponding to @code{guint}.
-  @end{short}
-  @see-class{g:type-t}")
-
-(export '+type-uint+)
-
-;;; ----------------------------------------------------------------------------
-;;; G_TYPE_LONG
-;;; ----------------------------------------------------------------------------
-
-(defconstant +type-long+ #.(ash 8 +type-fundamental-shift+))
-
-#+liber-documentation
-(setf (liber:alias-for-variable '+type-long+)
-      "Constant"
-      (documentation '+type-long+ 'variable)
- "@version{2022-12-29}
-  @variable-value{32}
-  @begin{short}
-    The fundamental type corresponding to @code{glong}.
-  @end{short}
-  @see-class{g:type-t}")
-
-(export '+type-long+)
-
-;;; ----------------------------------------------------------------------------
-;;; G_TYPE_ULONG
-;;; ----------------------------------------------------------------------------
-
-(defconstant +type-ulong+ #.(ash 9 +type-fundamental-shift+))
-
-#+liber-documentation
-(setf (liber:alias-for-variable '+type-ulong+)
-      "Constant"
-      (documentation '+type-ulong+ 'variable)
- "@version{2022-12-29}
-  @variable-value{36}
-  @begin{short}
-    The fundamental type corresponding to @code{gulong}.
-  @end{short}
-  @see-class{g:type-t}")
-
-(export '+type-ulong+)
-
-;;; ----------------------------------------------------------------------------
-;;; G_TYPE_INT64
-;;; ----------------------------------------------------------------------------
-
-(defconstant +type-int64+ #.(ash 10 +type-fundamental-shift+))
-
-#+liber-documentation
-(setf (liber:alias-for-variable '+type-int64+)
-      "Constant"
-      (documentation '+type-int64+ 'variable)
- "@version{2022-12-29}
-  @variable-value{40}
-  @begin{short}
-    The fundamental type corresponding to @code{gint64}.
-  @end{short}
-  @see-class{g:type-t}")
-
-(export '+type-int64+)
-
-;;; ----------------------------------------------------------------------------
-;;; G_TYPE_UINT64
-;;; ----------------------------------------------------------------------------
-
-(defconstant +type-uint64+ #.(ash 11 +type-fundamental-shift+))
-
-#+liber-documentation
-(setf (liber:alias-for-variable '+type-uint64+)
-      "Constant"
-      (documentation '+type-uint64+ 'variable)
- "@version{2022-12-29}
-  @variable-value{44}
-  @begin{short}
-    The fundamental type corresponding to @code{guint64}.
-  @end{short}
-  @see-class{g:type-t}")
-
-(export '+type-uint64+)
-
-;;; ----------------------------------------------------------------------------
-;;; G_TYPE_ENUM
-;;; ----------------------------------------------------------------------------
-
-(defconstant +type-enum+ #.(ash 12 +type-fundamental-shift+))
-
-#+liber-documentation
-(setf (liber:alias-for-variable '+type-enum+)
-      "Constant"
-      (documentation '+type-enum+ 'variable)
- "@version{2022-12-29}
-  @variable-value{48}
-  @begin{short}
-    The fundamental type from which all enumeration types are derived.
-  @end{short}
-  @see-class{g:type-t}")
-
-(export '+type-enum+)
-
-;;; ----------------------------------------------------------------------------
-;;; G_TYPE_FLAGS
-;;; ----------------------------------------------------------------------------
-
-(defconstant +type-flags+ #.(ash 13 +type-fundamental-shift+))
-
-#+liber-documentation
-(setf (liber:alias-for-variable '+type-flags+)
-      "Constant"
-      (documentation '+type-flags+ 'variable)
- "@version{2022-12-29}
-  @variable-value{52}
-  @begin{short}
-    The fundamental type from which all flags types are derived.
-  @end{short}
-  @see-class{g:type-t}")
-
-(export '+type-flags+)
-
-;;; ----------------------------------------------------------------------------
-;;; G_TYPE_FLOAT
-;;; ----------------------------------------------------------------------------
-
-(defconstant +type-float+ #.(ash 14 +type-fundamental-shift+))
-
-#+liber-documentation
-(setf (liber:alias-for-variable '+type-float+)
-      "Constant"
-      (documentation '+type-float+ 'variable)
- "@version{2022-12-29}
-  @variable-value{56}
-  @begin{short}
-    The fundamental type corresponding to @code{gfloat}.
-  @end{short}
-  @see-class{g:type-t}")
-
-(export '+type-float+)
-
-;;; ----------------------------------------------------------------------------
-;;; G_TYPE_DOUBLE
-;;; ----------------------------------------------------------------------------
-
-(defconstant +type-double+ #.(ash 15 +type-fundamental-shift+))
-
-#+liber-documentation
-(setf (liber:alias-for-variable '+type-double+)
-      "Constant"
-      (documentation '+type-double+ 'variable)
- "@version{2022-12-29}
-  @variable-value{60}
-  @begin{short}
-    The fundamental type corresponding to @code{gdouble}.
-  @end{short}
-  @see-class{g:type-t}")
-
-(export '+type-double+)
-
-;;; ----------------------------------------------------------------------------
-;;; G_TYPE_STRING
-;;; ----------------------------------------------------------------------------
-
-(defconstant +type-string+ #.(ash 16 +type-fundamental-shift+))
-
-#+liber-documentation
-(setf (liber:alias-for-variable '+type-string+)
-      "Constant"
-      (documentation '+type-string+ 'variable)
- "@version{2022-12-29}
-  @variable-value{64}
-  @begin{short}
-    The fundamental type corresponding to nul-terminated C strings.
-  @end{short}
-  @see-class{g:type-t}")
-
-(export '+type-string+)
-
-;;; ----------------------------------------------------------------------------
-;;; G_TYPE_POINTER
-;;; ----------------------------------------------------------------------------
-
-(defconstant +type-pointer+ #.(ash 17 +type-fundamental-shift+))
-
-#+liber-documentation
-(setf (liber:alias-for-variable '+type-pointer+)
-      "Constant"
-      (documentation '+type-pointer+ 'variable)
- "@version{2022-12-29}
-  @variable-value{68}
-  @begin{short}
-    The fundamental type corresponding to @code{gpointer}.
-  @end{short}
-  @see-class{g:type-t}")
-
-(export '+type-pointer+)
-
-;;; ----------------------------------------------------------------------------
-;;; G_TYPE_BOXED
-;;; ----------------------------------------------------------------------------
-
-(defconstant +type-boxed+ #.(ash 18 +type-fundamental-shift+))
-
-#+liber-documentation
-(setf (liber:alias-for-variable '+type-boxed+)
-      "Constant"
-      (documentation '+type-boxed+ 'variable)
- "@version{2022-12-29}
-  @variable-value{72}
-  @begin{short}
-    The fundamental type from which all boxed types are derived.
-  @end{short}
-  @see-class{g:type-t}")
-
-(export '+type-boxed+)
-
-;;; ----------------------------------------------------------------------------
-;;; G_TYPE_PARAM
-;;; ----------------------------------------------------------------------------
-
-(defconstant +type-param+ #.(ash 19 +type-fundamental-shift+))
-
-#+liber-documentation
-(setf (liber:alias-for-variable '+type-param+)
-      "Constant"
-      (documentation '+type-param+ 'variable)
- "@version{2022-12-29}
-  @variable-value{76}
-  @begin{short}
-    The fundamental type from which all @code{GParamSpec} types are derived.
-  @end{short}
-  @see-class{g:type-t}
-  @see-symbol{g:param-spec}")
-
-(export '+type-param+)
-
-;;; ----------------------------------------------------------------------------
-;;; G_TYPE_OBJECT
-;;; ----------------------------------------------------------------------------
-
-(defconstant +type-object+ #.(ash 20 +type-fundamental-shift+))
-
-#+liber-documentation
-(setf (liber:alias-for-variable '+type-object+)
-      "Constant"
-      (documentation '+type-object+ 'variable)
- "@version{2022-12-29}
-  @variable-value{80}
-  @begin{short}
-    The fundamental type for @code{GObject}.
-  @end{short}
-  @see-class{g:type-t}
-  @see-class{g:object}")
-
-(export '+type-object+)
-
-;;; ----------------------------------------------------------------------------
 ;;; G_TYPE_GTYPE
 ;;; ----------------------------------------------------------------------------
 
+;; TODO: Is this necessary!?
+
 (glib-init:at-init ()
   (cffi:foreign-funcall "g_gtype_get_type" :size))
-
-(defconstant +type-gtype+ (cffi:foreign-funcall "g_gtype_get_type" :size))
-
-#+liber-documentation
-(setf (liber:alias-for-variable '+type-gtype+)
-      "Constant"
-      (documentation '+type-gtype+ 'variable)
- "@version{2022-12-29}
-  @begin{short}
-    The fundamental type for @code{GType}.
-  @end{short}
-  @see-class{g:type-t}")
-
-(export '+type-gtype+)
-
-;;; ----------------------------------------------------------------------------
-;;; G_TYPE_VARIANT
-;;; ----------------------------------------------------------------------------
-
-(defconstant +type-variant+ #.(ash 21 +type-fundamental-shift+))
-
-#+liber-documentation
-(setf (liber:alias-for-variable '+type-variant+)
-      "Constant"
-      (documentation '+type-variant+ 'variable)
- "@version{2022-12-29}
-  @variable-value{84}
-  @short{The fundamental type corresponding to @code{GVariant}.}
-
-  All floating @code{GVariant} instances passed through the @code{GType} system
-  are consumed. Note that callbacks in closures, and signal handlers for signals
-  of return type @code{GVariant}, must never return floating variants.
-  @see-class{g:type-t}
-  @see-type{g:variant}")
-
-(export '+type-variant+)
 
 ;;; ----------------------------------------------------------------------------
 ;;; G_TYPE_CHECKSUM
 ;;; ----------------------------------------------------------------------------
 
+;; TODO: Is this necessary!?
+
 (glib-init:at-init ()
   (cffi:foreign-funcall "g_checksum_get_type" :size))
-
-(defconstant +type-checksum+
-             (cffi:foreign-funcall "g_checksum_get_type" :size))
-
-#+liber-documentation
-(setf (liber:alias-for-variable '+type-checksum+)
-      "Constant"
-      (documentation '+type-checksum+ 'variable)
- "@version{2022-12-29}
-  @begin{short}
-    The @class{g:type-t} type ID for a boxed type holding a @code{GChecksum}.
-  @end{short}
-  @see-class{g:type-t}")
-
-(export '+type-checksum+)
 
 ;;; ----------------------------------------------------------------------------
 ;;; G_TYPE_RESERVED_GLIB_FIRST                             not exported
@@ -775,22 +300,6 @@
 
 ;;; ----------------------------------------------------------------------------
 
-;; Check for equality of types. This is faster than the function type-is-a.
-
-;; TODO: There is a bug. The function type-t= is used to check against the type
-;;       g:+type-invalid+. But this does not work.
-
-(defun gtype= (gtype1 gtype2)
-  (eq (glib:gtype gtype1) (glib:gtype gtype2)))
-
-(defun gtype/= (gtype1 gtype2)
-  (not (eq (glib:gtype gtype1) (glib:gtype gtype2))))
-
-;;; ----------------------------------------------------------------------------
-
-;; type-t converts automatically between the Lisp type gtype,
-;; an integer or a string and the foreign type GType
-
 (cffi:define-foreign-type type-t ()
   ((mangled-p :initarg :mangled-p
               :reader gtype-mangled-p
@@ -798,30 +307,86 @@
               :documentation
               "Whether the type designator is mangled with
                the @code{G_SIGNAL_TYPE_STATIC_SCOPE} flag."))
-  (:documentation
-    "@version{#2023-9-19}
-     @begin{short}
-       Values of this CFFI foreign @class{g:type-t} type ID identify the C
-       GType.
-     @end{short}
-     The @class{g:type-t} type ID is designated by its name, a string, or a
-     numeric identifier. Functions accept @class{g:type-t} type ID designators
-     as a string or integer and return them as a string. The @fun{g:type-name}
-     and @fun{g:type-from-name} functions are used to convert between the name
-     and the numeric identifier. Numeric identifier of the @class{g:type-t}
-     type ID may be different between different program runs. But string
-     identifier of a @class{g:type-t} type ID does not change.
-     @begin[Examples]{dictionary}
-       @begin{pre}
-g:+type-double+ => 60
-(g:type-name g:+type-double+) => \"gdouble\"
-(g:type-from-name \"gdouble\") => #<GTYPE :name \"gdouble\" :id 60>
-       @end{pre}
-     @end{dictionary}
-     @see-function{g:type-name}
-     @see-function{g:type-from-name}")
   (:actual-type :size)
   (:simple-parser type-t))
+
+#+liber-documentation
+(setf (liber:alias-for-class 'type-t)
+      "Type"
+      (documentation 'type-t 'type)
+ "@version{2024-6-11}
+  @begin{short}
+    The @class{g:type-t} type specifier represents the unique @code{GType}
+    identifier of a registered type.
+  @end{short}
+  The @class{g:type-t} type specifier is identified by its @symbol{g:gtype}
+  representation, a string for the name, or a numeric identifier. Functions
+  accept @class{g:type-t} type specifiers as a @symbol{g:gtype} instance, a
+  string or an integer and return a @symbol{g:gtype} instance. Use the
+  @fun{g:gtype} function to create a @symbol{g:gtype} instance. You can get the
+  name or the numeric identifier with the @fun{g:gtype-name} and
+  @fun{g:gtype-id} functions.
+  @begin[Fundamental types]{dictionary}
+    The fundamental types known to GObject and the types of values that
+    correspond to the CFFI interface und Common Lisp.
+    @begin{pre}
+ID     NAME               CFFI type      Lisp type
+------------------------------------------------------------
+ 4     \"void\"           :void            NULL
+ 8     \"GInterface\"     :pointer
+12     \"gchar\"          :char
+16     \"guchar\"         :uchar
+20     \"gboolean\"       :boolean         boolean
+24     \"gint\"           :int
+28     \"guint\"          :uint
+32     \"glong\"          :long
+36     \"gulong\"         :ulong
+40     \"gint64\"         :int64
+44     \"guint64\"        :uint64
+48     \"GEnum\"                           keyword
+52     \"GFlags\"                          list of keywords
+56     \"gfloat\"         :float           single-float
+60     \"gdouble\"        :double          double-float
+64     \"gchararray\"     :string
+68     \"gpointer\"       :pointer
+72     \"GBoxed\"         :pointer         g:boxed
+76     \"GParam\"         :pointer
+80     \"GObject\"        :pointer         g:object
+84     \"GVariant\"       :pointer
+    @end{pre}
+  @end{dictionary}
+  @begin{examples}
+    Create a @symbol{g:gtype} instance from a string or a numeric identifier.
+    @begin{pre}
+(g:gtype \"gdouble\") => #<GTYPE :name \"gdouble\" :id 60>
+(g:gtype 60) => #<GTYPE :name \"gdouble\" :id 60>
+    @end{pre}
+    Get the name and the numeric identifier from a @symbol{g:gtype} instance.
+    @begin{pre}
+(glib:gtype-id (g:gtype \"gdouble\")) => 60
+(glib:gtype-name (g:gtype \"gdouble\")) => \"gdouble\"
+    @end{pre}
+    Convert from foreign.
+    @begin{pre}
+(cffi:convert-from-foreign 60 'g:type-t)
+=> #<GTYPE :name \"gdouble\" :id 60>
+(cffi:convert-from-foreign \"gdouble\" 'g:type-t)
+=> #<GTYPE :name \"gdouble\" :id 60>
+(cffi:convert-from-foreign (g:gtype \"gdouble\") 'g:type-t)
+=> #<GTYPE :name \"gdouble\" :id 60>
+    @end{pre}
+    Convert to foreign.
+    @begin{pre}
+(cffi:convert-to-foreign 60 'g:type-t) => 60
+(cffi:convert-to-foreign \"gdouble\" 'g:type-t) => 60
+(cffi:convert-to-foreign (g:gtype \"gdouble\") 'g:type-t) => 60
+    @end{pre}
+  @end{examples}
+  @see-function{g:gtype}
+  @see-function{g:gtype-name}
+  @see-function{g:gtype-id}")
+
+;;; ----------------------------------------------------------------------------
 
 (defun gtype-unmangle (gtype)
   (logxor gtype (ldb (byte 1 0) gtype)))
@@ -837,7 +402,30 @@ g:+type-double+ => 60
 (export 'type-t)
 
 ;;; ----------------------------------------------------------------------------
-;;; struct GTypeInterface
+;;; GTypeClass
+;;; ----------------------------------------------------------------------------
+
+(cffi:defcstruct type-class
+  (:type type-t))
+
+#+liber-documentation
+(setf (liber:alias-for-symbol 'type-class)
+      "CStruct"
+      (liber:symbol-documentation 'type-class)
+ "@version{2024-6-11}
+  @begin{declaration}
+(cffi:defcstruct type-class
+  (:type type-t))
+  @end{declaration}
+  @short{An opaque structure used as the base of all classes.}
+  @see-class{g:type-t}
+  @see-symbol{g:type-interface}
+  @see-symbol{g:type-instance}")
+
+(export 'type-class)
+
+;;; ----------------------------------------------------------------------------
+;;; GTypeInterface
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcstruct type-interface
@@ -848,13 +436,13 @@ g:+type-double+ => 60
 (setf (liber:alias-for-symbol 'type-interface)
       "CStruct"
       (liber:symbol-documentation 'type-interface)
- "@version{2022-12-29}
-  @short{An opaque structure used as the base of all interface types.}
-  @begin{pre}
+ "@version{2024-6-11}
+  @begin{declaration}
 (cffi:defcstruct type-interface
   (:type type-t)
   (:instance-type type-t))
-  @end{pre}
+  @end{declaration}
+  @short{An opaque structure used as the base of all interface types.}
   @see-class{g:type-t}
   @see-symbol{g:type-class}
   @see-symbol{g:type-instance}
@@ -863,30 +451,7 @@ g:+type-double+ => 60
 (export 'type-interface)
 
 ;;; ----------------------------------------------------------------------------
-;;; struct GTypeClass
-;;; ----------------------------------------------------------------------------
-
-(cffi:defcstruct type-class
-  (:type type-t))
-
-#+liber-documentation
-(setf (liber:alias-for-symbol 'type-class)
-      "CStruct"
-      (liber:symbol-documentation 'type-class)
- "@version{2022-12-29}
-  @short{An opaque structure used as the base of all classes.}
-  @begin{pre}
-(cffi:defcstruct type-class
-  (:type type-t))
-  @end{pre}
-  @see-class{g:type-t}
-  @see-symbol{g:type-interface}
-  @see-symbol{g:type-instance}")
-
-(export 'type-class)
-
-;;; ----------------------------------------------------------------------------
-;;; struct GTypeInstance
+;;; GTypeInstance
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcstruct type-instance
@@ -896,12 +461,12 @@ g:+type-double+ => 60
 (setf (liber:alias-for-symbol 'type-instance)
       "CStruct"
       (liber:symbol-documentation 'type-instance)
- "@version{2022-12-29}
-  @short{An opaque structure used as the base of all type instances.}
-  @begin{pre}
+ "@version{2024-6-11}
+  @begin{declaration}
 (cffi:defcstruct type-instance
   (:class (:pointer (:struct type-class))))
-  @end{pre}
+  @end{declaration}
+  @short{An opaque structure used as the base of all type instances.}
   @see-class{g:type-t}
   @see-symbol{g:type-class}
   @see-symbol{g:type-interface}")
@@ -909,7 +474,7 @@ g:+type-double+ => 60
 (export 'type-instance)
 
 ;;; ----------------------------------------------------------------------------
-;;; struct GTypeInfo                                       not exported
+;;; GTypeInfo                                               not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcstruct type-info
@@ -1002,7 +567,7 @@ g:+type-double+ => 60
   @see-function{type-register-static}")
 
 ;;; ----------------------------------------------------------------------------
-;;; enum GTypeFundamentalFlags                             not exported
+;;; GTypeFundamentalFlags                                   not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defbitfield type-fundamental-flags
@@ -1043,7 +608,7 @@ g:+type-double+ => 60
   @see-function{type-is-deep-derivable}")
 
 ;;; ----------------------------------------------------------------------------
-;;; struct GTypeFundamentalInfo                            not exported
+;;; GTypeFundamentalInfo                                    not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcstruct type-fundamental-info
@@ -1069,7 +634,7 @@ g:+type-double+ => 60
   @see-symbol{type-fundamental-flags}")
 
 ;;; ----------------------------------------------------------------------------
-;;; struct GInterfaceInfo                                  not exported
+;;; GInterfaceInfo                                          not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcstruct interface-info
@@ -1102,7 +667,7 @@ g:+type-double+ => 60
   @see-symbol{type-interface}")
 
 ;;; ----------------------------------------------------------------------------
-;;; struct GTypeValueTable                                 not exported
+;;; GTypeValueTable                                         not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcstruct type-value-table
@@ -1346,7 +911,7 @@ g:+type-double+ => 60
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; struct GTypeQuery                                      not exported
+;;; GTypeQuery                                              not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcstruct type-query
@@ -1383,7 +948,7 @@ g:+type-double+ => 60
   @see-function{type-query}")
 
 ;;; ----------------------------------------------------------------------------
-;;; enum GTypeFlags                                        not exported
+;;; GTypeFlags                                              not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defbitfield type-flags
@@ -1417,7 +982,7 @@ g:+type-double+ => 60
   @see-function{type-is-value-abstract}")
 
 ;;; ----------------------------------------------------------------------------
-;;; G_TYPE_FUNDAMENTAL()
+;;; G_TYPE_FUNDAMENTAL
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_type_fundamental" type-fundamental) type-t
@@ -1430,20 +995,20 @@ g:+type-double+ => 60
   @end{short}
   Fundamental types are types that serve as ultimate bases for the derived
   types, thus they are the roots of distinct inheritance hierarchies.
-  @begin[Examples]{dictionary}
+  @begin{examples}
     @begin{pre}
-(g:type-fundamental \"GtkButton\") => #<GTYPE :name \"GObject\" :id 80>
-(g:type-fundamental \"GtkOrientable\") => #<GTYPE :name \"GInterface\" :id 8>
-(g:type-fundamental \"GtkWindowType\") => #<GTYPE :name \"GEnum\" :id 48>
+(g:type-fundamental \"GSimpleAction\") => #<GTYPE :name \"GObject\" :id 80>
+(g:type-fundamental \"GAction\") => #<GTYPE :name \"GInterface\" :id 8>
+(g:type-fundamental \"GBytes\") => #<GTYPE :name \"GBoxed\" :id 72>
     @end{pre}
-  @end{dictionary}
+  @end{examples}
   @see-class{g:type-t}"
   (gtype type-t))
 
 (export 'type-fundamental)
 
 ;;; ----------------------------------------------------------------------------
-;;; G_TYPE_MAKE_FUNDAMENTAL()                              not exported
+;;; G_TYPE_MAKE_FUNDAMENTAL                                 not exported
 ;;; ----------------------------------------------------------------------------
 
 (defun type-make-fundamental (x)
@@ -1460,20 +1025,20 @@ g:+type-double+ => 60
     The @fun{g:type-make-fundamental} function does not return a Lisp
     @class{type-t} value, but the ID number of the @class{type-t}.
   @end{dictionary}
-  @begin[Examples]{dictionary}
+  @begin{examples}
     @begin{pre}
 (g:type-make-fundamental 5)
 => 20
 (gtype (g:type-make-fundamental 5))
 => <GTYPE :name \"gboolean\" :id 20>
     @end{pre}
-  @end{dictionary}
+  @end{examples}
   @see-class{type-t}
   @see-function{type-fundamental-next}"
   (ash x +type-fundamental-shift+))
 
 ;;; ----------------------------------------------------------------------------
-;;; G_TYPE_IS_ABSTRACT()
+;;; G_TYPE_IS_ABSTRACT
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_type_test_flags" %type-test-flags) :boolean
@@ -1482,7 +1047,7 @@ g:+type-double+ => 60
 
 (defun type-is-abstract (gtype)
  #+liber-documentation
- "@version{2022-12-29}
+ "@version{2024-6-11}
   @argument[gtype]{a @class{g:type-t} type ID}
   @return{@em{True} if @arg{gtype} is an abstract type.}
   @begin{short}
@@ -1490,24 +1055,24 @@ g:+type-double+ => 60
   @end{short}
   An abstract type cannot be instantiated and is normally used as an abstract
   base class for derived classes.
-  @begin[Examples]{dictionary}
+  @begin{examples}
     @begin{pre}
 (g:type-is-abstract \"GtkWidget\") => T
 (g:type-is-abstract \"GtkButton\") => NIL
     @end{pre}
-  @end{dictionary}
+  @end{examples}
   @see-class{g:type-t}"
   (%type-test-flags gtype :abstract))
 
 (export 'type-is-abstract)
 
 ;;; ----------------------------------------------------------------------------
-;;; G_TYPE_IS_DERIVED()
+;;; G_TYPE_IS_DERIVED
 ;;; ----------------------------------------------------------------------------
 
 (defun type-is-derived (gtype)
  #+liber-documentation
- "@version{2022-12-29}
+ "@version{2024-6-11}
   @argument[gtype]{a @class{g:type-t} type ID}
   @return{@em{True} if @arg{gtype} is a dervied type.}
   @begin{short}
@@ -1515,13 +1080,13 @@ g:+type-double+ => 60
     inherited from another type.
   @end{short}
   This holds true for all non-fundamental types.
-  @begin[Examples]{dictionary}
+  @begin{examples}
     @begin{pre}
 (g:type-is-derived \"gboolean\") => NIL
 (g:type-is-derived \"GObject\") => NIL
 (g:type-is-derived \"GtkWidget\") => T
     @end{pre}
-  @end{dictionary}
+  @end{examples}
   @see-class{g:type-t}
   @see-function{g:type-is-fundamental}"
   (> (glib:gtype-id (glib:gtype gtype)) +type-fundamental-max+))
@@ -1529,24 +1094,24 @@ g:+type-double+ => 60
 (export 'type-is-derived)
 
 ;;; ----------------------------------------------------------------------------
-;;; G_TYPE_IS_FUNDAMENTAL()
+;;; G_TYPE_IS_FUNDAMENTAL
 ;;; ----------------------------------------------------------------------------
 
 (defun type-is-fundamental (gtype)
  #+liber-documentation
- "@version{2022-12-29}
+ "@version{2024-6-11}
   @argument[gtype]{a @class{g:type-t} type ID}
   @return{@em{True} if @arg{gtype} is a fundamental type.}
   @begin{short}
     Checks if @arg{gtype} is a fundamental type.
   @end{short}
-  @begin[Examples]{dictionary}
+  @begin{examples}
     @begin{pre}
 (g:type-is-fundamental \"gboolean\") => T
 (g:type-is-fundamental \"GObject\") => T
 (g:type-is-fundamental \"GtkWidget\") => NIL
     @end{pre}
-  @end{dictionary}
+  @end{examples}
   @see-class{g:type-t}
   @see-function{g:type-is-derived}"
   (<= (glib:gtype-id (glib:gtype gtype)) +type-fundamental-max+))
@@ -1554,7 +1119,7 @@ g:+type-double+ => 60
 (export 'type-is-fundamental)
 
 ;;; ----------------------------------------------------------------------------
-;;; G_TYPE_IS_VALUE_TYPE()
+;;; G_TYPE_IS_VALUE_TYPE
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_type_check_is_value_type" %type-check-is-value-type) :boolean
@@ -1562,20 +1127,20 @@ g:+type-double+ => 60
 
 (defun type-is-value-type (gtype)
  #+liber-documentation
- "@version{2022-12-29}
+ "@version{2024-6-11}
   @argument[gtype]{a @class{g:type-t} type ID}
   @return{@em{True} if @arg{gtype} is a value type.}
   @begin{short}
-    Checks if @arg{gtype} is a value type and can be used with the function
-    @fun{value-init}.
+    Checks if @arg{gtype} is a value type and can be used with the
+    @fun{g:value-init} function.
   @end{short}
-  @begin[Examples]{dictionary}
+  @begin{examples}
     @begin{pre}
 (g:type-is-value-type \"gint\") => T
 (g:type-is-value-type \"GObject\") => T
 (g:type-is-value-type \"GEnum\") => NIL
     @end{pre}
-  @end{dictionary}
+  @end{examples}
   @see-class{g:type-t}
   @see-symbol{g:value}
   @see-function{g:value-init}"
@@ -1584,7 +1149,7 @@ g:+type-double+ => 60
 (export 'type-is-value-type)
 
 ;;; ----------------------------------------------------------------------------
-;;; G_TYPE_HAS_VALUE_TABLE()                               not exported
+;;; G_TYPE_HAS_VALUE_TABLE                                  not exported
 ;;; ----------------------------------------------------------------------------
 
 (defun type-has-value-table (gtype)
@@ -1603,7 +1168,7 @@ g:+type-double+ => 60
   (not (cffi:null-pointer-p (type-value-table-peek gtype))))
 
 ;;; ----------------------------------------------------------------------------
-;;; G_TYPE_IS_CLASSED()
+;;; G_TYPE_IS_CLASSED
 ;;; ----------------------------------------------------------------------------
 
 ;; We need this second variant of the function g_type_test_flags(), because
@@ -1616,7 +1181,7 @@ g:+type-double+ => 60
 
 (defun type-is-classed (gtype)
  #+liber-documentation
- "@version{2022-12-29}
+ "@version{2024-6-11}
   @argument[gtype]{a @class{g:type-t} type ID}
   @return{@em{True} if @arg{gtype} is a classed type.}
   @short{Checks if @arg{gtype} is a classed type.}
@@ -1627,7 +1192,7 @@ g:+type-double+ => 60
 (export 'type-is-classed)
 
 ;;; ----------------------------------------------------------------------------
-;;; G_TYPE_IS_INSTANTIATABLE()                             not exported
+;;; G_TYPE_IS_INSTANTIATABLE                                not exported
 ;;; ----------------------------------------------------------------------------
 
 (defun type-is-instantiatable (gtype)
@@ -1643,7 +1208,7 @@ g:+type-double+ => 60
   (%type-test-fundamental-flags gtype :instantiatable))
 
 ;;; ----------------------------------------------------------------------------
-;;; G_TYPE_IS_DERIVABLE()                                  not exported
+;;; G_TYPE_IS_DERIVABLE                                     not exported
 ;;; ----------------------------------------------------------------------------
 
 (defun type-is-derivable (gtype)
@@ -1661,7 +1226,7 @@ g:+type-double+ => 60
   (%type-test-fundamental-flags gtype :derivable))
 
 ;;; ----------------------------------------------------------------------------
-;;; G_TYPE_IS_DEEP_DERIVABLE()                             not exported
+;;; G_TYPE_IS_DEEP_DERIVABLE                                not exported
 ;;; ----------------------------------------------------------------------------
 
 (defun type-is-deep-derivable (gtype)
@@ -1679,12 +1244,12 @@ g:+type-double+ => 60
   (%type-test-fundamental-flags gtype :deep-derivable))
 
 ;;; ----------------------------------------------------------------------------
-;;; G_TYPE_IS_INTERFACE()
+;;; G_TYPE_IS_INTERFACE
 ;;; ----------------------------------------------------------------------------
 
 (defun type-is-interface (gtype)
  #+liber-documentation
- "@version{2022-12-29}
+ "@version{2024-6-11}
   @argument[gtype]{a @class{g:type-t} type ID}
   @return{@em{True} if @arg{gtype} is an interface type.}
   @begin{short}
@@ -1695,26 +1260,26 @@ g:+type-double+ => 60
   GLib interfaces are somewhat analogous to Java interfaces and C++ classes
   containing only pure virtual functions, with the difference that GType
   interfaces are not derivable.
-  @begin[Examples]{dictionary}
+  @begin{examples}
     @begin{pre}
 (g:type-is-interface \"GAction\") => T
 (g:type-is-interface (g:gtype \"GAction\")) => T
 (g:type-is-interface \"GSimpleAction\") => NIL
     @end{pre}
-  @end{dictionary}
+  @end{examples}
   @see-class{g:type-t}
   @see-symbol{g:type-interface}"
-  (eq (glib:gtype +type-interface+) (type-fundamental gtype)))
+  (eq (glib:gtype "GInterface") (type-fundamental gtype)))
 
 (export 'type-is-interface)
 
 ;;; ----------------------------------------------------------------------------
-;;; G_TYPE_FROM_INSTANCE()
+;;; G_TYPE_FROM_INSTANCE
 ;;; ----------------------------------------------------------------------------
 
 (defun type-from-instance (instance)
  #+liber-documentation
- "@version{2022-12-29}
+ "@version{2024-6-11}
   @argument[instance]{a valid @symbol{g:type-instance} instance}
   @return{The @class{g:type-t} type ID of @arg{instance}.}
   @short{Get the type identifier from a given instance.}
@@ -1723,16 +1288,18 @@ g:+type-double+ => 60
     Signals an error if the @arg{instance} argument is not a valid
     @symbol{g:type-instance} instance.
   @end{dictionary}
-  @begin[Examples]{dictionary}
+  @begin{examples}
     @begin{pre}
-(g:type-from-instance (make-instance 'gtk-button))
-=> #<GTYPE :name \"GtkButton\" :id 134914152>
+(g:type-from-instance (make-instance 'g:simple-action))
+=> #<GTYPE :name \"GSimpleAction\" :id 97556076810288>
     @end{pre}
-  @end{dictionary}
+  @end{examples}
   @see-class{g:type-t}
   @see-symbol{g:type-instance}
   @see-function{g:type-from-class}"
-  (let ((ptr (if (cffi:pointerp instance) instance (object-pointer instance))))
+  (let ((ptr (if (cffi:pointerp instance)
+                 instance
+                 (object-pointer instance))))
     (type-from-class (cffi:foreign-slot-value ptr
                                               '(:struct type-instance)
                                               :class))))
@@ -1740,22 +1307,22 @@ g:+type-double+ => 60
 (export 'type-from-instance)
 
 ;;; ----------------------------------------------------------------------------
-;;; G_TYPE_FROM_CLASS()
+;;; G_TYPE_FROM_CLASS
 ;;; ----------------------------------------------------------------------------
 
 (defun type-from-class (class)
  #+liber-documentation
- "@version{2023-11-14}
+ "@version{2024-6-11}
   @argument[class]{a valid @symbol{g:type-class} instance}
   @return{The @class{g:type-t} type ID of @arg{class}.}
   @short{Get the type identifier from a given class instance.}
   This function should only be used in type implementations.
-  @begin[Examples]{dictionary}
+  @begin{examples}
     @begin{pre}
 (g:type-from-class (g:type-class-ref \"GObject\"))
 => #<GTYPE :name \"GObject\" :id 80>
     @end{pre}
-  @end{dictionary}
+  @end{examples}
   @see-class{g:type-t}
   @see-symbol{g:type-class}
   @see-function{g:type-from-instance}
@@ -1765,22 +1332,22 @@ g:+type-double+ => 60
 (export 'type-from-class)
 
 ;;; ----------------------------------------------------------------------------
-;;; G_TYPE_FROM_INTERFACE()
+;;; G_TYPE_FROM_INTERFACE
 ;;; ----------------------------------------------------------------------------
 
 (defun type-from-interface (iface)
  #+liber-documentation
- "@version{2022-12-29}
+ "@version{2024-6-11}
   @argument[iface]{a valid @symbol{g:type-interface} instance}
   @return{The @class{g:type-t} type ID of @arg{iface}.}
   @short{Get the type identifier from a given interface instance.}
   This function should only be used in type implementations.
-  @begin[Examples]{dictionary}
+  @begin{examples}
     @begin{pre}
 (g:type-from-interface (g:type-default-interface-ref \"GtkOrientable\"))
 => #<GTYPE :name \"GtkOrientable\" :id 134920864>
     @end{pre}
-  @end{dictionary}
+  @end{examples}
   @see-class{g:type-t}
   @see-symbol{g:type-interface}
   @see-function{g:type-from-instance}
@@ -1790,26 +1357,26 @@ g:+type-double+ => 60
 (export 'type-from-interface)
 
 ;;; ----------------------------------------------------------------------------
-;;; G_TYPE_INSTANCE_GET_CLASS() -> type-instance-class
+;;; G_TYPE_INSTANCE_GET_CLASS
 ;;; ----------------------------------------------------------------------------
 
 (defun type-instance-class (instance)
  #+liber-documentation
- "@version{2022-12-29}
+ "@version{2024-6-11}
   @argument[instance]{a @symbol{g:type-instance} instance}
   @return{The @symbol{g:type-class} instance of @arg{instance}.}
   @begin{short}
-    Get the class structure of a given instance structure.
+    Get the class structure of a given @arg{instance}.
   @end{short}
   This function should only be used in type implementations.
-  @begin[Examples]{dictionary}
+  @begin{examples}
     @begin{pre}
-(g:type-instance-class (make-instance 'gtk-button))
-=> #.(SB-SYS:INT-SAP #X0813E608)
+(g:type-instance-class (make-instance 'g:simple-action))
+=> #.(SB-SYS:INT-SAP #X58BA0B4DF320)
 (g:type-from-class *)
-=> #<GTYPE :name \"GtkButton\" :id 134914160>
+=> #<GTYPE :name \"GSimpleAction\" :id 97556076810288>
     @end{pre}
-  @end{dictionary}
+  @end{examples}
   @see-symbol{g:type-instance}
   @see-symbol{g:type-class}"
   (let ((ptr (if (cffi:pointerp instance) instance (object-pointer instance))))
@@ -1936,12 +1503,12 @@ g:+type-double+ => 60
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; G_TYPE_CHECK_INSTANCE_TYPE()
+;;; G_TYPE_CHECK_INSTANCE_TYPE
 ;;; ----------------------------------------------------------------------------
 
 (defun type-check-instance-type (instance gtype)
  #+liber-documentation
- "@version{2022-12-29}
+ "@version{2024-6-11}
   @argument[instance]{a @symbol{g:type-instance} instance}
   @argument[gtype]{a @class{g:type-t} type ID to be checked}
   @return{@em{True} on success.}
@@ -1950,12 +1517,16 @@ g:+type-double+ => 60
     @arg{gtype} or derived.
   @end{short}
   This function should only be used in type implementations.
-  @begin[Examples]{dictionary}
+  @begin{examples}
     @begin{pre}
-(g:type-check-instance-type (make-instance 'gtk-button) \"GObject\") => T
-(g:type-check-instance-type (make-instance 'gtk-button) \"GtkWindow\") => NIL
+(g:type-check-instance-type (make-instance 'g:simple-action) \"GObject\")
+=> T
+(g:type-check-instance-type (make-instance 'g:simple-action) \"gboolean\")
+=> NIL
+(g:type-check-instance-type (make-instance 'g:simple-action) \"GAction\")
+=> T
     @end{pre}
-  @end{dictionary}
+  @end{examples}
   @see-class{g:type-t}
   @see-symbol{g:type-instance}
   @see-function{g:type-check-class-type}"
@@ -2007,7 +1578,7 @@ g:+type-double+ => 60
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; G_TYPE_CHECK_CLASS_TYPE()
+;;; G_TYPE_CHECK_CLASS_TYPE
 ;;; ----------------------------------------------------------------------------
 
 (defun type-check-class-type (class gtype)
@@ -2021,12 +1592,12 @@ g:+type-double+ => 60
     @arg{gtype} or derived.
   @end{short}
   This function should only be used in type implementations.
-  @begin[Examples]{dictionary}
+  @begin{examples}
     @begin{pre}
 (g:type-check-class-type (g:type-class-ref \"GtkButton\") \"GObject\") => T
 (g:type-check-class-type (g:type-class-ref \"GtkButton\") \"GtkWindow\") => NIL
     @end{pre}
-  @end{dictionary}
+  @end{examples}
   @see-class{g:type-t}
   @see-symbol{g:type-class}
   @see-function{g:type-check-instance-type}"
@@ -2111,7 +1682,7 @@ g:+type-double+ => 60
 ;;; * deprecated *
 
 ;;; ----------------------------------------------------------------------------
-;;; g_type_name ()
+;;; g_type_name
 ;;; ----------------------------------------------------------------------------
 
 ;; TODO: The type g:+type-invalid+ is special handled in gtype-id. gtype-id
@@ -2122,7 +1693,7 @@ g:+type-double+ => 60
 
 (defun type-name (gtype)
  #+liber-documentation
- "@version{2022-12-29}
+ "@version{2024-6-11}
   @argument[gtype]{a @class{g:type-t} type ID to return the type name for}
   @return{The string with the type name.}
   @begin{short}
@@ -2131,13 +1702,13 @@ g:+type-double+ => 60
   Note that this function, like all other GType API, cannot cope with invalid
   type IDs. Randomized type IDs should not be passed in and will most likely
   lead to a crash.
-  @begin[Examples]{dictionary}
+  @begin{examples}
     @begin{pre}
-(g:type-name g:+type-double+) => \"gdouble\"
-(g:type-name g:+type-enum+) => \"GEnum\"
-(g:type-name (g:gtype \"GtkButton\")) => \"GtkButton\"
+(g:type-name 60) => \"gdouble\"
+(g:type-name \"gdouble\") => \"gdouble\"
+(g:type-name (g:gtype \"gdouble\")) => \"gdouble\"
     @end{pre}
-  @end{dictionary}
+  @end{examples}
   @see-class{g:type-t}
   @see-function{g:type-from-name}"
   (glib:gtype-name (glib:gtype gtype)))
@@ -2145,7 +1716,7 @@ g:+type-double+ => 60
 (export 'type-name)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_type_qname ()                                        not exported
+;;; g_type_qname                                            not exported
 ;;; ----------------------------------------------------------------------------
 
 ;; This function is not exported. In the Lisp binding there is no difference
@@ -2160,17 +1731,18 @@ g:+type-double+ => 60
   (gtype type-t))
 
 ;;; ----------------------------------------------------------------------------
-;;; g_type_from_name ()
+;;; g_type_from_name
 ;;; ----------------------------------------------------------------------------
 
-;; TODO: Handle the ID 0 more consistent as an invalid GType.
+;; TODO: Implemented with the G:GTYPE function and does not use the
+;; C function. Should we change the implemenation?
 
 (cffi:defcfun ("g_type_from_name" %type-from-name) :size
   (name :string))
 
 (defun type-from-name (name)
  #+liber-documentation
- "@version{2022-12-29}
+ "@version{2024-6-11}
   @argument[name]{a string with the type name to lookup}
   @return{Corresponding @class{g:type-t} type ID for @arg{name}.}
   @begin{short}
@@ -2178,15 +1750,13 @@ g:+type-double+ => 60
   @end{short}
   This is the preferred method to find out by name whether a specific type has
   been registered yet.
-  @begin[Example]{dictionary}
+  @begin{examples}
     @begin{pre}
 (g:type-from-name \"gdouble\") => #<GTYPE :name \"gdouble\" :id 60>
-(g:type-from-name \"GtkContainer\")
-=> #<GTYPE :name \"GtkContainer\" :id 94893595931264>
-(g:type-from-name \"GtkCheckButton\")
-=> #<GTYPE :name \"GtkCheckButton\" :id 94893595969952>
+(g:type-from-name \"GAction\")
+=> #<GTYPE :name \"GAction\" :id 102395834702912>
     @end{pre}
-  @end{dictionary}
+  @end{examples}
   @see-class{g:type-t}
   @see-function{g:type-name}"
   (glib:gtype name))
@@ -2194,29 +1764,28 @@ g:+type-double+ => 60
 (export 'type-from-name)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_type_parent ()
+;;; g_type_parent
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_type_parent" type-parent) type-t
  #+liber-documentation
- "@version{2022-12-29}
+ "@version{2024-6-11}
   @argument[gtype]{a derived @class{g:type-t} type ID}
   @return{The parent type of @arg{gtype}.}
   @begin{short}
-    Returns the direct parent type of the passed in GType.
+    Returns the direct parent type of the passed in @arg{gtype}.
   @end{short}
-  If the passed in GType has no parent, i.e. is a fundamental type, @code{nil}
-  is returned.
-  @begin[Examples]{dictionary}
+  If the passed in @arg{gtype} has no parent, for example, is a fundamental
+  type, @code{nil} is returned.
+  @begin{examples}
     @begin{pre}
-(g:type-parent \"GtkDialog\") => #<GTYPE :name \"GtkWindow\" :id 94209734228256>
 (g:type-parent \"GtkWindow\") => #<GTYPE :name \"GtkWidget\" :id 94209734120944>
 (g:type-parent \"GApplication\") => #<GTYPE :name \"GObject\" :id 80>
 (g:type-parent \"GtkActionable\") => #<GTYPE :name \"GInterface\" :id 8>
 (g:type-parent \"GObject\") => NIL
 (g:type-parent \"gdouble\") => NIL
     @end{pre}
-  @end{dictionary}
+  @end{examples}
   @see-class{g:type-t}
   @see-function{g:type-children}"
   (gtype type-t))
@@ -2224,36 +1793,70 @@ g:+type-double+ => 60
 (export 'type-parent)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_type_depth ()
+;;; g_type_children
+;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("g_type_children" %type-children) (:pointer :size)
+  (gtype type-t)
+  (n-children (:pointer :uint)))
+
+(defun type-children (gtype)
+ #+liber-documentation
+ "@version{2024-6-11}
+  @argument[gtype]{a @class{g:type-t} parent type ID}
+  @return{The list of @class{g:type-t} child types.}
+  @short{Returns a list of type IDs, listing the child types of @arg{gtype}.}
+  @begin{examples}
+    @begin{pre}
+(g:type-children \"GtkButton\")
+=> (#<GTYPE :name \"GtkToggleButton\" :id 94069209378496>
+    #<GTYPE :name \"GtkLinkButton\" :id 94069209378816>
+    #<GTYPE :name \"GtkLockButton\" :id 94069209383872>)
+    @end{pre}
+  @end{examples}
+  @see-class{g:type-t}
+  @see-function{g:type-parent}"
+  (cffi:with-foreign-object (n-children :uint)
+    (let ((ptr (%type-children gtype n-children)))
+      (prog1
+        (iter (for count from 0 below (cffi:mem-ref n-children :uint))
+              (collect (cffi:mem-aref ptr 'type-t count)))
+        (glib:free ptr)))))
+
+(export 'type-children)
+
+;;; ----------------------------------------------------------------------------
+;;; g_type_depth
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_type_depth" type-depth) :uint
  #+liber-documentation
- "@version{#2022-12-29}
+ "@version{2024-6-11}
   @argument[gtype]{a @class{g:type-t} type ID}
   @return{The unsigned integer with the depth of @arg{gtype}.}
   @begin{short}
-    Returns the length of the ancestry of the passed in GType.
+    Returns the length of the ancestry of the passed in @arg{gtype}.
   @end{short}
-  This includes the GType itself, so that e.g. a fundamental type has depth 1.
-  @begin[Examples]{dictionary}
+  This includes @arg{gtype} itself, so that, for example, a fundamental type
+  has depth 1.
+  @begin{examples}
     @begin{pre}
 (g:type-depth \"gdouble\") => 1
-(g:type-depth \"GtkButton\") => 6
+(g:type-depth \"GtkButton\") => 4
     @end{pre}
-  @end{dictionary}
+  @end{examples}
   @see-class{g:type-t}"
   (gtype type-t))
 
 (export 'type-depth)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_type_next_base ()
+;;; g_type_next_base
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_type_next_base" type-next-base) type-t
  #+liber-documentation
- "@version{#2022-12-29}
+ "@version{2024-6-11}
   @argument[leaf]{descendant of @arg{root} and the type to be returned}
   @argument[root]{immediate parent of the returned type}
   @begin{return}
@@ -2268,14 +1871,12 @@ g:+type-double+ => 60
   from @arg{root} which is also a base class of @arg{leaf}. Given a root type
   and a leaf type, this function can be used to determine the types and order
   in which the leaf type is descended from the root type.
-  @begin[Examples]{dictionary}
+  @begin{examples}
     @begin{pre}
-(g:type-next-base \"GtkButton\" \"GtkContainer\")
-=> #<GTYPE :name \"GtkBin\" :id 94872974765408>
-(g:type-next-base \"GtkButton\" \"GtkWidget\")
-=> #<GTYPE :name \"GtkContainer\" :id 94872974765040>
+(g:type-next-base \"GtkToggleButton\" \"GtkWidget\")
+=> #<GTYPE :name \"GtkButton\" :id 94607001843920>
     @end{pre}
-  @end{dictionary}
+  @end{examples}
   @see-class{g:type-t}"
   (leaf type-t)
   (root type-t))
@@ -2302,7 +1903,7 @@ g:+type-double+ => 60
     @arg{gtype} argument is a descendant of @arg{is-a-type}.
   @end{short}
   If @arg{is-a-type} is an interface, check whether @arg{gtype} conforms to it.
-  @begin[Examples]{dictionary}
+  @begin{examples}
     @begin{pre}
 (g:type-is-a \"gboolean\" g:+type-boolean+) => T
 (g:type-is-a \"GtkTextIter\" g:+type-boxed+) => T
@@ -2314,7 +1915,7 @@ g:+type-double+ => 60
 (g:type-is-a \"GParamBoolean\" g:+type-param+) => T
 (g:type-is-a \"GVariant\" g:+type-variant+) => T
     @end{pre}
-  @end{dictionary}
+  @end{examples}
   @see-class{g:type-t}"
   (let ((*warn-unknown-gtype* nil)) ; no warnings for the test function
     (%type-is-a gtype is-a-type)))
@@ -2341,7 +1942,7 @@ g:+type-double+ => 60
   @end{short}
   This function will create the class instance if it does not exist already.
   Returns @code{nil} when @arg{gtype} is not a valid type ID for classed type.
-  @begin[Examples]{dictionary}
+  @begin{examples}
     @begin{pre}
 (g:type-class-ref \"GApplication\") => #.(SB-SYS:INT-SAP #X55FA5306FE40)
 (g:type-from-class *) => #<GTYPE :name \"GApplication\" :id 94533623145984>
@@ -2349,7 +1950,7 @@ g:+type-double+ => 60
 (g:type-class-ref \"gdouble\") => NIL
 (g:type-class-ref \"unknown\") => NIL
     @end{pre}
-  @end{dictionary}
+  @end{examples}
   @see-class{g:type-t}
   @see-symbol{g:type-class}
   @see-function{g:type-class-peek}
@@ -2385,7 +1986,7 @@ g:+type-double+ => 60
   @end{short}
   As a consequence, this function may return @code{nil} if the class of the
   type passed in does not currently exist (has not been referenced before).
-  @begin[Examples]{dictionary}
+  @begin{examples}
     @begin{pre}
 (g:type-class-peek \"GSimpleAction\") => #.(SB-SYS:INT-SAP #X55FA5306FE40)
 (g:type-from-class *) => #<GTYPE :name \"GSimpleAction\" :id 94533623145984>
@@ -2393,7 +1994,7 @@ g:+type-double+ => 60
 (g:type-class-peek \"gdouble\") => NIL
 (g:type-class-peek \"unknown\") => NIL
     @end{pre}
-  @end{dictionary}
+  @end{examples}
   @see-class{g:type-t}
   @see-symbol{g:type-class}
   @see-function{g:type-class-ref}"
@@ -2407,7 +2008,7 @@ g:+type-double+ => 60
 (export 'type-class-peek)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_type_class_peek_static ()                            not exported
+;;; g_type_class_peek_static                                not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_type_class_peek_static" type-class-peek-static)
@@ -2589,14 +2190,14 @@ g:+type-double+ => 60
     Returns the interface structure of an interface to which the passed in
     @arg{instance-class} conforms.
   @end{short}
-  @begin[Examples]{dictionary}
+  @begin{examples}
     @begin{pre}
 (g:type-interface-peek (g:type-class-ref \"GtkBox\") \"GtkOrientable\")
 => #.(SB-SYS:INT-SAP #X080C6858)
 (g:type-from-interface *)
 => #S(GTYPE :NAME \"GtkOrientable\" :%ID 134887472)
     @end{pre}
-  @end{dictionary}
+  @end{examples}
   @see-class{g:type-t}
   @see-symbol{g:type-class}
   @see-symbol{g:type-interface}"
@@ -2651,7 +2252,7 @@ g:+type-double+ => 60
   and default @code{vtable} init functions for the type. Calling this function
   is useful when you want to make sure that signals and properties for an
   interface have been installed.
-  @begin[Examples]{dictionary}
+  @begin{examples}
     @begin{pre}
 (g:type-default-interface-ref \"GAction\") => #.(SB-SYS:INT-SAP #X55D446D53DE0)
 (g:type-from-interface *) => #<GTYPE :name \"GAction\" :id 94370208235568>
@@ -2659,7 +2260,7 @@ g:+type-double+ => 60
 (g:type-default-interface-ref \"gdouble\") => NIL
 (g:type-default-interface-ref \"unknown\") => NIL
     @end{pre}
-  @end{dictionary}
+  @end{examples}
   @see-class{g:type-t}
   @see-function{g:type-default-interface-unref}"
   (let ((*warn-unknown-gtype* nil))
@@ -2726,39 +2327,6 @@ g:+type-double+ => 60
 (export 'type-default-interface-unref)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_type_children ()
-;;; ----------------------------------------------------------------------------
-
-(cffi:defcfun ("g_type_children" %type-children) (:pointer :size)
-  (gtype type-t)
-  (n-children (:pointer :uint)))
-
-(defun type-children (gtype)
- #+liber-documentation
- "@version{2023-7-29}
-  @argument[gtype]{a @class{g:type-t} parent type ID}
-  @return{The list of @class{g:type-t} child types.}
-  @short{Returns a list of type IDs, listing the child types of @arg{gtype}.}
-  @begin[Examples]{dictionary}
-    @begin{pre}
-(g:type-children \"GtkButton\")
-=> (#<GTYPE :name \"GtkToggleButton\" :id 94069209378496>
-    #<GTYPE :name \"GtkLinkButton\" :id 94069209378816>
-    #<GTYPE :name \"GtkLockButton\" :id 94069209383872>)
-    @end{pre}
-  @end{dictionary}
-  @see-class{g:type-t}
-  @see-function{g:type-parent}"
-  (cffi:with-foreign-object (n-children :uint)
-    (let ((ptr (%type-children gtype n-children)))
-      (prog1
-        (iter (for count from 0 below (cffi:mem-ref n-children :uint))
-              (collect (cffi:mem-aref ptr 'type-t count)))
-        (glib:free ptr)))))
-
-(export 'type-children)
-
-;;; ----------------------------------------------------------------------------
 ;;; g_type_interfaces ()
 ;;; ----------------------------------------------------------------------------
 
@@ -2775,7 +2343,7 @@ g:+type-double+ => 60
     Returns a list of type IDs, listing the interface types that @arg{gtype}
     conforms to.
   @end{short}
-  @begin[Examples]{dictionary}
+  @begin{examples}
     @begin{pre}
 (g:type-interfaces \"GtkButton\")
 => (#<GTYPE :name \"GtkAccessible\" :id 94209734120256>
@@ -2783,7 +2351,7 @@ g:+type-double+ => 60
     #<GTYPE :name \"GtkConstraintTarget\" :id 94209734121424>
     #<GTYPE :name \"GtkActionable\" :id 94209734120688>)
     @end{pre}
-  @end{dictionary}
+  @end{examples}
   @see-class{g:type-t}"
   (cffi:with-foreign-object (n-interfaces :uint)
     (let ((ptr (%type-interfaces gtype n-interfaces)))
@@ -2814,12 +2382,12 @@ g:+type-double+ => 60
   @begin{short}
     Returns the prerequisites of an interfaces type.
   @end{short}
-  @begin[Examples]{dictionary}
+  @begin{examples}
     @begin{pre}
 (g:type-interface-prerequisites \"GtkOrientable\")
 => (#<GTYPE :name \"GObject\" :id 80>)
     @end{pre}
-  @end{dictionary}
+  @end{examples}
   @see-class{g:type-t}"
   (cffi:with-foreign-object (n-prerequisites :uint)
     (let ((ptr (%type-interface-prerequisites itype n-prerequisites)))
@@ -2874,7 +2442,7 @@ g:+type-double+ => 60
 
   Note that this does not take subtyping into account. Data attached to one
   type cannot be retrieved from a subtype.
-  @begin[Examples]{dictionary}
+  @begin{examples}
     @begin{pre}
 (setf (g:type-qdata \"gboolean\" \"mydata\") \"a string\") => \"a string\"
 (g:type-qdata \"gboolean\" \"mydata\") => \"a string\"
@@ -2883,7 +2451,7 @@ g:+type-double+ => 60
 (setf (g:type-qdata \"gboolean\" \"mydata\") nil) => NIL
 (g:type-qdata \"gboolean\" \"mydata\") => NIL
     @end{pre}
-  @end{dictionary}
+  @end{examples}
   @see-class{g:type-t}
   @see-type{g:quark-as-string}"
   (let ((ptr (%type-get-qdata gtype quark)))
@@ -3567,622 +3135,158 @@ g:+type-double+ => 60
   (gtype type-t))
 
 ;;; ----------------------------------------------------------------------------
-;;; g_type_ensure ()
+;;; g_type_ensure
 ;;; ----------------------------------------------------------------------------
 
+#+nil
 (cffi:defcfun ("g_type_ensure" %type-ensure) :void
   (gtype type-t))
 
 (defun type-ensure (gtype)
  #+liber-documentation
- "@version{2023-11-12}
+ "@version{2024-6-13}
   @argument[gtype]{a @class{g:type-t} type ID}
-  @return{@em{True} if @arg{gtype} is a valid type ID, otherwise @em{false}.}
+  @return{The @arg{gtype} type ID, or @code{nil}.}
   @begin{short}
     Ensures that the indicated @arg{gtype} has been registered with the type
     system, and its initializer method has been run.
   @end{short}
+  If the @arg{gtype} argument is a string and @arg{gtype} is not already
+  registered, the type initializer is called. On success, the @arg{gtype} type
+  ID is returned, otherwise @code{nil}.
   @see-class{g:type-t}"
-  (let ((*warn-unknown-gtype* nil))
-    (let ((gtype (glib:gtype gtype)))
-      (when gtype
-        (%type-ensure gtype)
-        t))))
+  (maybe-call-type-initializer gtype))
 
 (export 'type-ensure)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_type_get_type_registration_serial ()
-;;;
-;;; guint g_type_get_type_registration_serial (void);
+;;; g_type_get_type_registration_serial
 ;;;
 ;;; Returns an opaque serial number that represents the state of the set of
 ;;; registered types. Any time a type is registred this serial changes, which
 ;;; means you can cache information based on type lookups (such as
 ;;; g_type_from_name) and know if the cache is still valid at a later time by
 ;;; comparing the current serial with the one at the type lookup.
-;;;
-;;; Returns :
-;;;     An unsigned int, representing the state of type registrations.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_type_get_instance_count ()
-;;;
-;;; int
-;;; g_type_get_instance_count (GType type);
+;;; g_type_get_instance_count
 ;;;
 ;;; Returns the number of instances allocated of the particular type; this is
 ;;; only available if GLib is built with debugging support and the
 ;;; instance_count debug flag is set (by setting the GOBJECT_DEBUG variable to
 ;;; include instance-count).
-;;;
-;;; type:
-;;;     a GType
-;;;
-;;; Returns:
-;;;     the number of instances allocated of the given type; if instance counts
-;;;     are not available, returns 0.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; G_DECLARE_FINAL_TYPE()
-;;;
-;;; #define G_DECLARE_FINAL_TYPE
-;;;         (ModuleObjName, module_obj_name, MODULE, OBJ_NAME, ParentName)
+;;; G_DECLARE_FINAL_TYPE
 ;;;
 ;;; A convenience macro for emitting the usual declarations in the header file
 ;;; for a type which is not (at the present time) intended to be subclassed.
-;;;
-;;; You might use it in a header as follows:
-;;;
-;;; #ifndef _myapp_window_h_
-;;; #define _myapp_window_h_
-;;;
-;;; #include <gtk/gtk.h>
-;;;
-;;; #define MY_APP_TYPE_WINDOW my_app_window_get_type ()
-;;; G_DECLARE_FINAL_TYPE (MyAppWindow, my_app_window, MY_APP, WINDOW, GtkWindow)
-;;;
-;;; MyAppWindow *    my_app_window_new    (void);
-;;;
-;;; ...
-;;;
-;;; #endif
-;;;
-;;; This results in the following things happening:
-;;;
-;;; the usual my_app_window_get_type() function is declared with a return type
-;;; of GType
-;;;
-;;; the MyAppWindow types is defined as a typedef of struct _MyAppWindow. The
-;;; struct itself is not defined and should be defined from the .c file before
-;;; G_DEFINE_TYPE() is used.
-;;;
-;;; the MY_APP_WINDOW() cast is emitted as static inline function along with
-;;; the MY_APP_IS_WINDOW() type checking function
-;;;
-;;; the MyAppWindowClass type is defined as a struct containing GtkWindowClass.
-;;; This is done for the convenience of the person defining the type and should
-;;; not be considered to be part of the ABI. In particular, without a firm
-;;; declaration of the instance structure, it is not possible to subclass the
-;;; type and therefore the fact that the size of the class structure is exposed
-;;; is not a concern and it can be freely changed at any point in the future.
-;;;
-;;; g_autoptr() support being added for your type, based on the type of your
-;;; parent class
-;;;
-;;; You can only use this function if your parent type also supports
-;;; g_autoptr().
-;;;
-;;; Because the type macro (MY_APP_TYPE_WINDOW in the above example) is not a
-;;; callable, you must continue to manually define this as a macro for yourself.
-;;;
-;;; The declaration of the _get_type() function is the first thing emitted by
-;;; the macro. This allows this macro to be used in the usual way with export
-;;; control and API versioning macros.
-;;;
-;;; If you want to declare your own class structure, use
-;;; G_DECLARE_DERIVABLE_TYPE().
-;;;
-;;; If you are writing a library, it is important to note that it is possible
-;;; to convert a type from using G_DECLARE_FINAL_TYPE() to
-;;; G_DECLARE_DERIVABLE_TYPE() without breaking API or ABI. As a precaution,
-;;; you should therefore use G_DECLARE_FINAL_TYPE() until you are sure that it
-;;; makes sense for your class to be subclassed. Once a class structure has
-;;; been exposed it is not possible to change its size or remove or reorder
-;;; items without breaking the API and/or ABI.
-;;;
-;;; ModuleObjName:
-;;;     The name of the new type, in camel case (like GtkWidget)
-;;;
-;;; module_obj_name:
-;;;     The name of the new type in lowercase, with words separated by '_'
-;;;     (like 'gtk_widget')
-;;;
-;;; MODULE:
-;;;     The name of the module, in all caps (like 'GTK')
-;;;
-;;; OBJ_NAME:
-;;;     The bare name of the type, in all caps (like 'WIDGET')
-;;;
-;;; ParentName:
-;;;     the name of the parent type, in camel case (like GtkWidget)
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; G_DECLARE_DERIVABLE_TYPE()
-;;;
-;;; #define G_DECLARE_DERIVABLE_TYPE
-;;;         (ModuleObjName, module_obj_name, MODULE, OBJ_NAME, ParentName)
+;;; G_DECLARE_DERIVABLE_TYPE
 ;;;
 ;;; A convenience macro for emitting the usual declarations in the header file
 ;;; for a type which is intended to be subclassed.
-;;;
-;;; You might use it in a header as follows:
-;;;
-;;; #ifndef _gtk_frobber_h_
-;;; #define _gtk_frobber_h_
-;;;
-;;; #define GTK_TYPE_FROBBER gtk_frobber_get_type ()
-;;; GDK_AVAILABLE_IN_3_12
-;;; G_DECLARE_DERIVABLE_TYPE (GtkFrobber, gtk_frobber, GTK, FROBBER, GtkWidget)
-;;;
-;;; struct _GtkFrobberClass
-;;; {
-;;;   GtkWidgetClass parent_class;
-;;;
-;;;   void (* handle_frob)  (GtkFrobber *frobber,
-;;;                          guint       n_frobs);
-;;;
-;;;   gpointer padding[12];
-;;; };
-;;;
-;;; GtkWidget *    gtk_frobber_new   (void);
-;;;
-;;; ...
-;;;
-;;; #endif
-;;;
-;;; This results in the following things happening:
-;;;
-;;; the usual gtk_frobber_get_type() function is declared with a return type of
-;;; GType
-;;;
-;;; the GtkFrobber struct is created with GtkWidget as the first and only item.
-;;; You are expected to use a private structure from your .c file to store your
-;;; instance variables.
-;;;
-;;; the GtkFrobberClass type is defined as a typedef to struct _GtkFrobberClass,
-;;; which is left undefined. You should do this from the header file directly
-;;; after you use the macro.
-;;;
-;;; the GTK_FROBBER() and GTK_FROBBER_CLASS() casts are emitted as static inline
-;;; functions along with the GTK_IS_FROBBER() and GTK_IS_FROBBER_CLASS() type
-;;; checking functions and GTK_FROBBER_GET_CLASS() function.
-;;;
-;;; g_autoptr() support being added for your type, based on the type of your
-;;; parent class
-;;;
-;;; You can only use this function if your parent type also supports
-;;; g_autoptr().
-;;;
-;;; Because the type macro (GTK_TYPE_FROBBER in the above example) is not a
-;;; callable, you must continue to manually define this as a macro for yourself.
-;;;
-;;; The declaration of the _get_type() function is the first thing emitted by
-;;; the macro. This allows this macro to be used in the usual way with export
-;;; control and API versioning macros.
-;;;
-;;; If you are writing a library, it is important to note that it is possible to
-;;; convert a type from using G_DECLARE_FINAL_TYPE() to
-;;; G_DECLARE_DERIVABLE_TYPE() without breaking API or ABI. As a precaution, you
-;;; should therefore use G_DECLARE_FINAL_TYPE() until you are sure that it makes
-;;; sense for your class to be subclassed. Once a class structure has been
-;;; exposed it is not possible to change its size or remove or reorder items
-;;; without breaking the API and/or ABI. If you want to declare your own class
-;;; structure, use G_DECLARE_DERIVABLE_TYPE(). If you want to declare a class
-;;; without exposing the class or instance structures, use
-;;; G_DECLARE_FINAL_TYPE().
-;;;
-;;; If you must use G_DECLARE_DERIVABLE_TYPE() you should be sure to include
-;;; some padding at the bottom of your class structure to leave space for the
-;;; addition of future virtual functions.
-;;;
-;;; ModuleObjName:
-;;;     The name of the new type, in camel case (like GtkWidget)
-;;;
-;;; module_obj_name:
-;;;     The name of the new type in lowercase, with words separated by '_'
-;;;     (like 'gtk_widget')
-;;;
-;;; MODULE:
-;;;     The name of the module, in all caps (like 'GTK')
-;;;
-;;; OBJ_NAME:
-;;;     The bare name of the type, in all caps (like 'WIDGET')
-;;;
-;;; ParentName:
-;;;     the name of the parent type, in camel case (like GtkWidget)
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; G_DECLARE_INTERFACE()
-;;;
-;;; #define G_DECLARE_INTERFACE
-;;;         (ModuleObjName, module_obj_name, MODULE, OBJ_NAME, PrerequisiteName)
+;;; G_DECLARE_INTERFACE
 ;;;
 ;;; A convenience macro for emitting the usual declarations in the header file
 ;;; for a GInterface type.
-;;;
-;;; You might use it in a header as follows:
-;;;
-;;; #ifndef _my_model_h_
-;;; #define _my_model_h_
-;;;
-;;; #define MY_TYPE_MODEL my_model_get_type ()
-;;; GDK_AVAILABLE_IN_3_12
-;;; G_DECLARE_INTERFACE (MyModel, my_model, MY, MODEL, GObject)
-;;;
-;;; struct _MyModelInterface
-;;; {
-;;;   GTypeInterface g_iface;
-;;;
-;;;   gpointer (* get_item)  (MyModel *model);
-;;; };
-;;;
-;;; gpointer my_model_get_item (MyModel *model);
-;;;
-;;; ...
-;;;
-;;; #endif
-;;;
-;;; This results in the following things happening:
-;;;
-;;; the usual my_model_get_type() function is declared with a return type of
-;;; GType
-;;;
-;;; the MyModelInterface type is defined as a typedef to struct
-;;; _MyModelInterface, which is left undefined. You should do this from the
-;;; header file directly after you use the macro.
-;;;
-;;; the MY_MODEL() cast is emitted as static inline functions along with the
-;;; MY_IS_MODEL() type checking function and MY_MODEL_GET_IFACE() function.
-;;;
-;;; g_autoptr() support being added for your type, based on your prerequisite
-;;; type.
-;;;
-;;; You can only use this function if your prerequisite type also supports
-;;; g_autoptr().
-;;;
-;;; Because the type macro (MY_TYPE_MODEL in the above example) is not a
-;;; callable, you must continue to manually define this as a macro for yourself.
-;;;
-;;; The declaration of the _get_type() function is the first thing emitted by
-;;; the macro. This allows this macro to be used in the usual way with export
-;;; control and API versioning macros.
-;;;
-;;; ModuleObjName:
-;;;     The name of the new type, in camel case (like GtkWidget)
-;;;
-;;; module_obj_name:
-;;;     The name of the new type in lowercase, with words separated by '_'
-;;;     (like 'gtk_widget')
-;;;
-;;; MODULE:
-;;;     The name of the module, in all caps (like 'GTK')
-;;;
-;;; OBJ_NAME:
-;;;     The bare name of the type, in all caps (like 'WIDGET')
-;;;
-;;; PrerequisiteName:
-;;;     the name of the prerequisite type, in camel case (like GtkWidget)
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; G_DEFINE_TYPE()
-;;;
-;;; #define G_DEFINE_TYPE(TN, t_n, T_P)
-;;;         G_DEFINE_TYPE_EXTENDED (TN, t_n, T_P, 0, {})
+;;; G_DEFINE_TYPE
 ;;;
 ;;; A convenience macro for type implementations, which declares a class
 ;;; initialization function, an instance initialization function (see GTypeInfo
 ;;; for information about these) and a static variable named t_n_parent_class
 ;;; pointing to the parent class. Furthermore, it defines a *_get_type()
-;;; function. See G_DEFINE_TYPE_EXTENDED() for an example.
-;;;
-;;; TN :
-;;;     The name of the new type, in Camel case.
-;;;
-;;; t_n :
-;;;     The name of the new type, in lowercase, with words separated by '_'.
-;;;
-;;; T_P :
-;;;     The GType of the parent type.
+;;; function.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; G_DEFINE_TYPE_WITH_PRIVATE()
-;;;
-;;; #define G_DEFINE_TYPE_WITH_PRIVATE(TN, t_n, T_P)
-;;;         G_DEFINE_TYPE_EXTENDED (TN, t_n, T_P, 0, G_ADD_PRIVATE (TN))
+;;; G_DEFINE_TYPE_WITH_PRIVATE
 ;;;
 ;;; A convenience macro for type implementations, which declares a class
 ;;; initialization function, an instance initialization function (see GTypeInfo
 ;;; for information about these), a static variable named t_n_parent_class
 ;;; pointing to the parent class, and adds private instance data to the type.
-;;; Furthermore, it defines a *_get_type() function. See
-;;; G_DEFINE_TYPE_EXTENDED() for an example.
-;;;
-;;; Note that private structs added with this macros must have a struct name of
-;;; the form TN Private.
-;;;
-;;; The private instance data can be retrieved using the automatically generated
-;;; getter function t_n_get_instance_private().
-;;;
-;;; See also: G_ADD_PRIVATE()
-;;;
-;;; TN:
-;;;     The name of the new type, in Camel case.
-;;;
-;;; t_n:
-;;;     The name of the new type, in lowercase, with words separated by '_'.
-;;;
-;;; T_P:
-;;;     The GType of the parent type.
+;;; Furthermore, it defines a *_get_type() function.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; G_DEFINE_TYPE_WITH_CODE()
-;;;
-;;; #define G_DEFINE_TYPE_WITH_CODE(TN, t_n, T_P, _C_)
-;;;        _G_DEFINE_TYPE_EXTENDED_BEGIN (TN, t_n, T_P, 0) {_C_;}
-;;;        _G_DEFINE_TYPE_EXTENDED_END()
+;;; G_DEFINE_TYPE_WITH_CODE
 ;;;
 ;;; A convenience macro for type implementations. Similar to G_DEFINE_TYPE(),
 ;;; but allows you to insert custom code into the *_get_type() function, e.g.
-;;; interface implementations via G_IMPLEMENT_INTERFACE(). See
-;;; G_DEFINE_TYPE_EXTENDED() for an example.
-;;;
-;;; TN :
-;;;     The name of the new type, in Camel case.
-;;;
-;;; t_n :
-;;;     The name of the new type in lowercase, with words separated by '_'.
-;;;
-;;; T_P :
-;;;     The GType of the parent type.
-;;;
-;;; _C_ :
-;;;     Custom code that gets inserted in the *_get_type() function.
+;;; interface implementations via G_IMPLEMENT_INTERFACE().
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; G_DEFINE_ABSTRACT_TYPE()
-;;;
-;;; #define G_DEFINE_ABSTRACT_TYPE(TN, t_n, T_P)
-;;;         G_DEFINE_TYPE_EXTENDED (TN, t_n, T_P, G_TYPE_FLAG_ABSTRACT, {})
+;;; G_DEFINE_ABSTRACT_TYPE
 ;;;
 ;;; A convenience macro for type implementations. Similar to G_DEFINE_TYPE(),
-;;; but defines an abstract type. See G_DEFINE_TYPE_EXTENDED() for an example.
-;;;
-;;; TN :
-;;;     The name of the new type, in Camel case.
-;;;
-;;; t_n :
-;;;     The name of the new type, in lowercase, with words separated by '_'.
-;;;
-;;; T_P :
-;;;     The GType of the parent type.
+;;; but defines an abstract type.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; G_DEFINE_ABSTRACT_TYPE_WITH_PRIVATE()
+;;; G_DEFINE_ABSTRACT_TYPE_WITH_PRIVATE
 ;;;
-;;; #define G_DEFINE_ABSTRACT_TYPE_WITH_PRIVATE(TN, t_n, T_P)
-;;;         G_DEFINE_TYPE_EXTENDED (TN, t_n, T_P, G_TYPE_FLAG_ABSTRACT,
-;;;                                 G_ADD_PRIVATE (TN))
-;;;
-;;; Similar to G_DEFINE_TYPE_WITH_PRIVATE(), but defines an abstract type. See
-;;; G_DEFINE_TYPE_EXTENDED() for an example.
-;;;
-;;; TN:
-;;;     The name of the new type, in Camel case.
-;;;
-;;; t_n:
-;;;     The name of the new type, in lowercase, with words separated by '_'.
-;;;
-;;; T_P:
-;;;     The GType of the parent type.
+;;; Similar to G_DEFINE_TYPE_WITH_PRIVATE(), but defines an abstract type.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; G_DEFINE_ABSTRACT_TYPE_WITH_CODE()
-;;;
-;;; #define G_DEFINE_ABSTRACT_TYPE_WITH_CODE(TN, t_n, T_P, _C_)
-;;;        _G_DEFINE_TYPE_EXTENDED_BEGIN (TN, t_n, T_P, G_TYPE_FLAG_ABSTRACT) {_C_;}
-;;;        _G_DEFINE_TYPE_EXTENDED_END()
+;;; G_DEFINE_ABSTRACT_TYPE_WITH_CODE
 ;;;
 ;;; A convenience macro for type implementations. Similar to
 ;;; G_DEFINE_TYPE_WITH_CODE(), but defines an abstract type and allows you to
 ;;; insert custom code into the *_get_type() function, e.g. interface
-;;; implementations via G_IMPLEMENT_INTERFACE(). See G_DEFINE_TYPE_EXTENDED()
-;;; for an example.
-;;;
-;;; TN :
-;;;     The name of the new type, in Camel case.
-;;;
-;;; t_n :
-;;;     The name of the new type, in lowercase, with words separated by '_'.
-;;;
-;;; T_P :
-;;;     The GType of the parent type.
-;;;
-;;; _C_ :
-;;;     Custom code that gets inserted in the type_name_get_type() function.
+;;; implementations via G_IMPLEMENT_INTERFACE().
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; G_ADD_PRIVATE()
-;;;
-;;; #define G_ADD_PRIVATE(TypeName)
+;;; G_ADD_PRIVATE
 ;;;
 ;;; A convenience macro to ease adding private data to instances of a new type
 ;;; in the _C_ section of G_DEFINE_TYPE_WITH_CODE() or
 ;;; G_DEFINE_ABSTRACT_TYPE_WITH_CODE().
-;;;
-;;; For instance:
-;;;
-;;; typedef struct _MyObject MyObject;
-;;; typedef struct _MyObjectClass MyObjectClass;
-;;;
-;;; typedef struct {
-;;;   gint foo;
-;;;   gint bar;
-;;; } MyObjectPrivate;
-;;;
-;;; G_DEFINE_TYPE_WITH_CODE (MyObject, my_object, G_TYPE_OBJECT,
-;;;                          G_ADD_PRIVATE (MyObject))
-;;;
-;;; Will add MyObjectPrivate as the private data to any instance of the MyObject
-;;; type.
-;;;
-;;; G_DEFINE_TYPE_* macros will automatically create a private function based on
-;;; the arguments to this macro, which can be used to safely retrieve the
-;;; private data from an instance of the type; for instance:
-;;;
-;;; gint
-;;; my_object_get_foo (MyObject *obj)
-;;; {
-;;;   MyObjectPrivate *priv = my_object_get_instance_private (obj);
-;;;
-;;;   g_return_val_if_fail (MY_IS_OBJECT (obj), 0);
-;;;
-;;;   return priv->foo;
-;;; }
-;;;
-;;; void
-;;; my_object_set_bar (MyObject *obj,
-;;;                    gint      bar)
-;;; {
-;;;   MyObjectPrivate *priv = my_object_get_instance_private (obj);
-;;;
-;;;   g_return_if_fail (MY_IS_OBJECT (obj));
-;;;
-;;;   if (priv->bar != bar)
-;;;     priv->bar = bar;
-;;; }
-;;;
-;;; Note that this macro can only be used together with the G_DEFINE_TYPE_*
-;;; macros, since it depends on variable names from those macros.
-;;;
-;;; Also note that private structs added with these macros must have a struct
-;;; name of the form TypeNamePrivate.
-;;;
-;;; It is safe to call the _get_instance_private function on NULL or invalid
-;;; objects since it's only adding an offset to the instance pointer. In that
-;;; case the returned pointer must not be dereferenced.
-;;;
-;;; TypeName:
-;;;     the name of the type in CamelCase
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; G_PRIVATE_OFFSET()
-;;;
-;;; #define G_PRIVATE_OFFSET(TypeName, field)
+;;; G_PRIVATE_OFFSET
 ;;;
 ;;; Evaluates to the offset of the field inside the instance private data
 ;;; structure for TypeName .
-;;;
-;;; Note that this macro can only be used together with the G_DEFINE_TYPE_* and
-;;; G_ADD_PRIVATE() macros, since it depends on variable names from those
-;;; macros.
-;;;
-;;; TypeName:
-;;;     the name of the type in CamelCase
-;;;
-;;; field:
-;;;     the name of the field in the private data structure
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; G_PRIVATE_FIELD()
-;;;
-;;; #define G_PRIVATE_FIELD(TypeName, inst, field_type, field_name)
+;;; G_PRIVATE_FIELD
 ;;;
 ;;; Evaluates to the field_name inside the inst private data structure for
 ;;; TypeName .
-;;;
-;;; Note that this macro can only be used together with the G_DEFINE_TYPE_* and
-;;; G_ADD_PRIVATE() macros, since it depends on variable names from those
-;;; macros.
-;;;
-;;; TypeName:
-;;;     the name of the type in CamelCase
-;;;
-;;; inst:
-;;;     the instance of TypeName you wish to access
-;;;
-;;; field_type:
-;;;     the type of the field in the private data structure
-;;;
-;;; field_name:
-;;;     the name of the field in the private data structure
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; G_PRIVATE_FIELD_P()
-;;;
-;;; #define G_PRIVATE_FIELD_P(TypeName, inst, field_name)
+;;; G_PRIVATE_FIELD_P
 ;;;
 ;;; Evaluates to a pointer to the field_name inside the inst private data
 ;;; structure for TypeName .
-;;;
-;;; Note that this macro can only be used together with the G_DEFINE_TYPE_* and
-;;; G_ADD_PRIVATE() macros, since it depends on variable names from those
-;;; macros.
-;;;
-;;; TypeName:
-;;;     the name of the type in CamelCase
-;;;
-;;; inst:
-;;;     the instance of TypeName you wish to access
-;;;
-;;; field_name:
-;;;     the name of the field in the private data structure
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; G_DEFINE_INTERFACE()
-;;;
-;;; #define G_DEFINE_INTERFACE(TN, t_n, T_P)
-;;;         G_DEFINE_INTERFACE_WITH_CODE(TN, t_n, T_P, ;)
+;;; G_DEFINE_INTERFACE
 ;;;
 ;;; A convenience macro for GTypeInterface definitions, which declares a default
 ;;; vtable initialization function and defines a *_get_type() function.
-;;;
-;;; The macro expects the interface initialization function to have the name
-;;; t_n ## _default_init, and the interface structure to have the name
-;;; TN ## Interface.
-;;;
-;;; TN :
-;;;     The name of the new type, in Camel case.
-;;;
-;;; t_n :
-;;;     The name of the new type, in lowercase, with words separated by '_'.
-;;;
-;;; T_P :
-;;;     The GType of the prerequisite type for the interface, or 0
-;;;     (G_TYPE_INVALID) for no prerequisite type.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; G_DEFINE_INTERFACE_WITH_CODE()
-;;;
-;;; #define G_DEFINE_INTERFACE_WITH_CODE(TN, t_n, T_P, _C_)
-;;;        _G_DEFINE_INTERFACE_EXTENDED_BEGIN(TN, t_n, T_P) {_C_;}
-;;;        _G_DEFINE_INTERFACE_EXTENDED_END()
+;;; G_DEFINE_INTERFACE_WITH_CODE
 ;;;
 ;;; A convenience macro for GTypeInterface definitions. Similar to
 ;;; G_DEFINE_INTERFACE(), but allows you to insert custom code into the
@@ -4190,205 +3294,51 @@ g:+type-double+ => 60
 ;;; G_IMPLEMENT_INTERFACE(), or additional prerequisite types. See
 ;;; G_DEFINE_TYPE_EXTENDED() for a similar example using
 ;;; G_DEFINE_TYPE_WITH_CODE().
-;;;
-;;; TN :
-;;;     The name of the new type, in Camel case.
-;;;
-;;; t_n :
-;;;     The name of the new type, in lowercase, with words separated by '_'.
-;;;
-;;; T_P :
-;;;     The GType of the prerequisite type for the interface, or 0
-;;;     (G_TYPE_INVALID) for no prerequisite type.
-;;;
-;;; _C_ :
-;;;     Custom code that gets inserted in the *_get_type() function.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; G_IMPLEMENT_INTERFACE()
-;;;
-;;; #define G_IMPLEMENT_INTERFACE(TYPE_IFACE, iface_init)
+;;; G_IMPLEMENT_INTERFACE
 ;;;
 ;;; A convenience macro to ease interface addition in the _C_ section of
-;;; G_DEFINE_TYPE_WITH_CODE() or G_DEFINE_ABSTRACT_TYPE_WITH_CODE(). See
-;;; G_DEFINE_TYPE_EXTENDED() for an example.
-;;;
-;;; Note that this macro can only be used together with the
-;;; G_DEFINE_TYPE_* macros, since it depends on variable names from those
-;;; macros.
-;;;
-;;; TYPE_IFACE :
-;;;     The GType of the interface to add
-;;;
-;;; iface_init :
-;;;     The interface init function
+;;; G_DEFINE_TYPE_WITH_CODE() or G_DEFINE_ABSTRACT_TYPE_WITH_CODE().
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; G_DEFINE_TYPE_EXTENDED()
-;;;
-;;; #define G_DEFINE_TYPE_EXTENDED(TN, t_n, T_P, _f_, _C_)
-;;;        _G_DEFINE_TYPE_EXTENDED_BEGIN (TN, t_n, T_P, _f_) {_C_;}
-;;;        _G_DEFINE_TYPE_EXTENDED_END()
+;;; G_DEFINE_TYPE_EXTENDED
 ;;;
 ;;; The most general convenience macro for type implementations, on which
 ;;; G_DEFINE_TYPE(), etc are based.
-;;;
-;;;   G_DEFINE_TYPE_EXTENDED (GtkGadget,
-;;;                           gtk_gadget,
-;;;                           GTK_TYPE_WIDGET,
-;;;                           0,
-;;;                           G_IMPLEMENT_INTERFACE (TYPE_GIZMO,
-;;;                                                  gtk_gadget_gizmo_init));
-;;;
-;;; expands to
-;;;
-;;;   static void     gtk_gadget_init       (GtkGadget      *self);
-;;;   static void     gtk_gadget_class_init (GtkGadgetClass *klass);
-;;;   static gpointer gtk_gadget_parent_class = NULL;
-;;;   static void     gtk_gadget_class_intern_init (gpointer klass)
-;;;   {
-;;;     gtk_gadget_parent_class = g_type_class_peek_parent (klass);
-;;;     gtk_gadget_class_init ((GtkGadgetClass*) klass);
-;;;   }
-;;;
-;;;   GType
-;;;   gtk_gadget_get_type (void)
-;;;   {
-;;;     static volatile gsize g_define_type_id__volatile = 0;
-;;;     if (g_once_init_enter (&g_define_type_id__volatile))
-;;;       {
-;;;         GType g_define_type_id =
-;;;           g_type_register_static_simple
-;;;                              (GTK_TYPE_WIDGET,
-;;;                               g_intern_static_string ("GtkGadget"),
-;;;                               sizeof (GtkGadgetClass),
-;;;                               (GClassInitFunc) gtk_gadget_class_intern_init,
-;;;                               sizeof (GtkGadget),
-;;;                               (GInstanceInitFunc) gtk_gadget_init,
-;;;                               (GTypeFlags) flags);
-;;;         {
-;;;           const GInterfaceInfo g_implement_interface_info = {
-;;;             (GInterfaceInitFunc) gtk_gadget_gizmo_init
-;;;           };
-;;;           g_type_add_interface_static (g_define_type_id,
-;;;                                        TYPE_GIZMO,
-;;;                                        &g_implement_interface_info);
-;;;         }
-;;;         g_once_init_leave (&g_define_type_id__volatile, g_define_type_id);
-;;;       }
-;;;     return g_define_type_id__volatile;
-;;;   }
-;;;
-;;; The only pieces which have to be manually provided are the definitions of
-;;; the instance and class structure and the definitions of the instance and
-;;; class init functions.
-;;;
-;;; TN :
-;;;     The name of the new type, in Camel case.
-;;;
-;;; t_n :
-;;;     The name of the new type, in lowercase, with words separated by '_'.
-;;;
-;;; T_P :
-;;;     The GType of the parent type.
-;;;
-;;; _f_ :
-;;;     GTypeFlags to pass to g_type_register_static()
-;;;
-;;; _C_ :
-;;;     Custom code that gets inserted in the *_get_type() function.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; G_DEFINE_BOXED_TYPE()
-;;;
-;;; #define G_DEFINE_BOXED_TYPE(TypeName, type_name, copy_func, free_func)
-;;;         G_DEFINE_BOXED_TYPE_WITH_CODE (TypeName,
-;;;                                        type_name,
-;;;                                        copy_func,
-;;;                                        free_func, {})
+;;; G_DEFINE_BOXED_TYPE
 ;;;
 ;;; A convenience macro for boxed type implementations, which defines a
 ;;; type_name_get_type() function registering the boxed type.
-;;;
-;;; TypeName :
-;;;     The name of the new type, in Camel case.
-;;;
-;;; type_name :
-;;;     The name of the new type, in lowercase, with words separated by '_'.
-;;;
-;;; copy_func :
-;;;     the GBoxedCopyFunc for the new type
-;;;
-;;; free_func :
-;;;     the GBoxedFreeFunc for the new type
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; G_DEFINE_BOXED_TYPE_WITH_CODE()
-;;;
-;;; #define G_DEFINE_BOXED_TYPE_WITH_CODE(TypeName, type_name, copy_func, free_func, _C_)
-;;;        _G_DEFINE_BOXED_TYPE_BEGIN (TypeName, type_name, copy_func, free_func) {_C_;}
-;;;        _G_DEFINE_TYPE_EXTENDED_END()
+;;; G_DEFINE_BOXED_TYPE_WITH_CODE
 ;;;
 ;;; A convenience macro for boxed type implementations. Similar to
 ;;; G_DEFINE_BOXED_TYPE(), but allows to insert custom code into the
 ;;; type_name_get_type() function, e.g. to register value transformations with
 ;;; g_value_register_transform_func().
-;;;
-;;; TypeName :
-;;;     The name of the new type, in Camel case.
-;;;
-;;; type_name :
-;;;     The name of the new type, in lowercase, with words separated by '_'.
-;;;
-;;; copy_func :
-;;;     the GBoxedCopyFunc for the new type
-;;;
-;;; free_func :
-;;;     the GBoxedFreeFunc for the new type
-;;;
-;;; _C_ :
-;;;     Custom code that gets inserted in the *_get_type() function.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; G_DEFINE_POINTER_TYPE()
-;;;
-;;; #define G_DEFINE_POINTER_TYPE(TypeName, type_name)
-;;;         G_DEFINE_POINTER_TYPE_WITH_CODE (TypeName, type_name, {})
+;;; G_DEFINE_POINTER_TYPE
 ;;;
 ;;; A convenience macro for pointer type implementations, which defines a
 ;;; type_name_get_type() function registering the pointer type.
-;;;
-;;; TypeName :
-;;;     The name of the new type, in Camel case.
-;;;
-;;; type_name :
-;;;     The name of the new type, in lowercase, with words separated by '_'.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; G_DEFINE_POINTER_TYPE_WITH_CODE()
-;;;
-;;; #define G_DEFINE_POINTER_TYPE_WITH_CODE(TypeName, type_name, _C_)
-;;;        _G_DEFINE_POINTER_TYPE_BEGIN (TypeName, type_name) {_C_;}
-;;;        _G_DEFINE_TYPE_EXTENDED_END()
+;;; G_DEFINE_POINTER_TYPE_WITH_CODE
 ;;;
 ;;; A convenience macro for pointer type implementations. Similar to
 ;;; G_DEFINE_POINTER_TYPE(), but allows to insert custom code into the
 ;;; type_name_get_type() function.
-;;;
-;;; TypeName :
-;;;     The name of the new type, in Camel case.
-;;;
-;;; type_name :
-;;;     The name of the new type, in lowercase, with words separated by '_'.
-;;;
-;;; _C_ :
-;;;     Custom code that gets inserted in the *_get_type() function.
 ;;; ----------------------------------------------------------------------------
 
 ;;; --- End of file gobject.type-info.lisp -------------------------------------
