@@ -23,11 +23,12 @@
 ;;; ----------------------------------------------------------------------------
 
 (defpackage :glib-sys
-  (:use :common-lisp)
+  (:use :iterate :common-lisp)
   (:export #:mklist
            #:get-current-package
            #:sys-path
-           #:check-and-create-resources))
+           #:check-and-create-resources
+           #:flatten))
 
 (in-package :glib-sys)
 
@@ -36,6 +37,8 @@
   (if (listp obj)
       obj
       (list obj)))
+
+;;; ----------------------------------------------------------------------------
 
 (let ((current-package nil))
 
@@ -50,17 +53,22 @@
     (setf current-package value))
 
   ;; Check for RESOURCE in PACKAGE, create or update it when neccessary and
-  ;; return the pathname of TARGET
+  ;; return the pathname of TARGET.
   (defun check-and-create-resources (resource &key (package current-package)
                                                    (sourcedir nil)
                                                    (verbose nil))
     (let* ((source (sys-path resource package))
            (sourcedir (directory-namestring (sys-path sourcedir package)))
-           (target (sys-path (make-pathname :name (pathname-name resource)
+           (name1 (pathname-name resource))
+           (name (if (string= "gresource" (pathname-type name1))
+                     (pathname-name name1)
+                     name1))
+           (target (sys-path (make-pathname :name name
                                             :directory
                                             (pathname-directory resource)
                                             :type "gresource")
                              package)))
+
       (unless (and (probe-file target)
                    (> (file-write-date target)
                       (file-write-date source)))
@@ -68,6 +76,7 @@
           (format t "Run GLIB-COMPILE-RESOUCRES~%")
           (format t "    source : ~a~%" source)
           (format t " sourcedir : ~a~%" sourcedir)
+          (format t "      name : ~a~%" name)
           (format t "    target : ~a~%" target))
         (uiop:run-program (list "glib-compile-resources"
                                 "--sourcedir"
@@ -75,5 +84,19 @@
                                 (namestring source))))
       target))
 )
+
+;;; ----------------------------------------------------------------------------
+
+(defun flatten (tree)
+  (let (lst)
+    (labels ((traverse (subtree)
+               (when subtree
+                 (if (consp subtree)
+                     (progn
+                       (traverse (car subtree))
+                       (traverse (cdr subtree)))
+                     (push subtree lst)))))
+      (traverse tree))
+    (nreverse lst)))
 
 ;;; --- End of file c-cffi-glib-sys.lisp ---------------------------------------
