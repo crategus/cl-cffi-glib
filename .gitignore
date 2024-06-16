@@ -6,3 +6,4 @@ doc/**/*.ico
 doc/**/*.xml
 test/rtest-templates.lisp
 TODO
+test/report/*.html

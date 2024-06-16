@@ -57,6 +57,7 @@
            #:with-g-boxed-array
            #:pointer
            #:cleanup-translated-object-for-callback
+           #:type-initializer-call
            ;; Symbols from glib.error.lisp
            #:error
            #:with-g-error

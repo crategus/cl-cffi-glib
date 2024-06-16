@@ -120,40 +120,14 @@
     characters long. There is no upper length limit. The first character needs
     to be a letter (a-z or A-Z) or an underscore '_'. Subsequent characters can
     be letters, numbers or any of '-_+'.
-    @about-variable{+type-invalid+}
-    @about-variable{+type-none+}
-    @about-variable{+type-interface+}
-    @about-variable{+type-char+}
-    @about-variable{+type-uchar+}
-    @about-variable{+type-boolean+}
-    @about-variable{+type-int+}
-    @about-variable{+type-uint+}
-    @about-variable{+type-long+}
-    @about-variable{+type-ulong+}
-    @about-variable{+type-int64+}
-    @about-variable{+type-uint64+}
-    @about-variable{+type-enum+}
-    @about-variable{+type-flags+}
-    @about-variable{+type-float+}
-    @about-variable{+type-double+}
-    @about-variable{+type-string+}
-    @about-variable{+type-pointer+}
-    @about-variable{+type-boxed+}
-    @about-variable{+type-param+}
-    @about-variable{+type-object+}
-    @about-variable{+type-gtype+}
-    @about-variable{+type-variant+}
-    @about-variable{+type-checksum+}
-    @about-variable{+type-reserved-glib-first+}
-    @about-variable{+type-reserved-glib-last+}
-    @about-variable{+type-reserved-bse-first+}
-    @about-variable{+type-reserved-bse-last+}
-    @about-variable{+type-reserved-user-first+}
-    @about-variable{+type-fundamental-max+}
+    @about-symbol{glib:gtype}
+    @about-function{glib:gtype}
+    @about-function{glib:gtype-name}
+    @about-function{glib:gtype-id}
     @about-class{type-t}
+    @about-symbol{type-class}
     @about-symbol{type-interface}
     @about-symbol{type-instance}
-    @about-symbol{type-class}
     @about-symbol{type-info}
     @about-symbol{type-fundamental-info}
     @about-symbol{interface-info}
@@ -195,6 +169,7 @@
     @about-function{type-qname}
     @about-function{type-from-name}
     @about-function{type-parent}
+    @about-function{type-children}
     @about-function{type-depth}
     @about-function{type-next-base}
     @about-function{type-is-a}
@@ -210,7 +185,6 @@
     @about-function{type-default-interface-ref}
     @about-function{type-default-interface-peek}
     @about-function{type-default-interface-unref}
-    @about-function{type-children}
     @about-function{type-interfaces}
     @about-function{type-interface-prerequisites}
     @about-function{type-qdata}
@@ -270,11 +244,11 @@
     type is registered with the GLib type system, it can be used as value type
     for object properties, using the @fun{g:param-spec-enum} or
     @fun{g:param-spec-flags} functions.
-    @about-symbol{enum-value}
     @about-symbol{enum-class}
+    @about-symbol{enum-value}
     @about-function{type-is-enum}
-    @about-symbol{flags-value}
     @about-symbol{flags-class}
+    @about-symbol{flags-value}
     @about-function{type-is-flags}
   @end{section}
   @begin[Boxed Types]{section}

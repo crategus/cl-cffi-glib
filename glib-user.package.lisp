@@ -302,32 +302,10 @@
            #:bytes-unref-to-array
 
            ;; Symbols from gobject.type-info.lisp
-           #:+type-invalid+
-           #:+type-none+
-           #:+type-interface+
-           #:+type-char+
-           #:+type-uchar+
-           #:+type-boolean+
-           #:+type-int+
-           #:+type-uint+
-           #:+type-long+
-           #:+type-ulong+
-           #:+type-int64+
-           #:+type-uint64+
-           #:+type-enum+
-           #:+type-flags+
-           #:+type-float+
-           #:+type-double+
-           #:+type-string+
-           #:+type-pointer+
-           #:+type-boxed+
-           #:+type-param+
-           #:+type-object+
-           #:+type-gtype+
-           #:+type-variant+
-           #:+type-checksum+
            #:type-t
            #:gtype                               ; TODO: Change the name?
+           #:gtype-name
+           #:gtype-id
            #:type-interface
            #:type-class
            #:type-instance
