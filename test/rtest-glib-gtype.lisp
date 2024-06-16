@@ -3,15 +3,34 @@
 (def-suite glib-gtype :in glib-suite)
 (in-suite glib-gtype)
 
-(test list-name-to-gtypes
+(defparameter glib-gtype
+              '(glib:symbol-for-gtype
+                glib:gtype
+                glib:gtype-id
+                glib:gtype-name
+                glib::invalidate-gtypes
+                glib::gtype-from-id
+                glib::gtype-from-name))
+
+(export 'glib-gtype)
+
+;;; ----------------------------------------------------------------------------
+
+(test glib-get-name-to-gtypes
   (is (every #'stringp
              (iter (for (name gtype) in-hashtable glib::*name-to-gtype*)
-                   (collect name)))))
+                   (collect name))))
+  (is (every #'stringp
+             (glib::get-name-to-gtypes))))
 
-(test list-id-to-gtypes
+(test glib-get-id-to-gtypes
   (is (every #'integerp
              (iter (for (id gtype) in-hashtable glib::*id-to-gtype*)
-                   (collect id)))))
+                   (collect id))))
+  (is (every #'integerp
+             (mapcar #'car (glib::get-id-to-gtypes)))))
+
+;;; ----------------------------------------------------------------------------
 
 (test gtype-from-name.1
   (let ((gtype (glib::gtype-from-name "void")))
@@ -50,10 +69,11 @@
   (is (eq 'glib:bytes (glib:symbol-for-gtype "GBytes")))
   (is-false (glib:symbol-for-gtype "unknown")))
 
-(test list-symbol-for-gtypes
-  (let ((names (iter (for (name sym) in-hashtable glib::*symbol-for-gtype*)
-                     (collect name))))
-    (is (every #'symbolp
-               (mapcar #'glib:symbol-for-gtype names)))))
+;;; ----------------------------------------------------------------------------
 
-;;; --- 2023-5-29 --------------------------------------------------------------
+(test glib-warn-unkown-gtype
+ (is-false (glib::warn-unknown-gtype "gdouble"))
+ (is-false (glib::warn-unknown-gtype (g:gtype-id (g:gtype "gdouble"))))
+ (is-false (glib::warn-unknown-gtype (g:gtype "gdouble"))))
+
+;;; 2024-6-15

@@ -33,7 +33,10 @@
              (list-signals "GPropertyAction")))
   ;; Check the class definition
   (is (equal '(GOBJECT:DEFINE-G-OBJECT-CLASS "GPropertyAction" G-PROPERTY-ACTION
-                       (:SUPERCLASS G-OBJECT :EXPORT T :INTERFACES ("GAction"))
+                       (:SUPERCLASS G-OBJECT
+                        :EXPORT T
+                        :INTERFACES ("GAction")
+                        :TYPE-INITIALIZER "g_property_action_get_type")
                        ((ENABLED G-PROPERTY-ACTION-ENABLED "enabled" "gboolean"
                          T NIL)
                         (INVERT-BOOLEAN G-PROPERTY-ACTION-INVERT-BOOLEAN
@@ -130,4 +133,4 @@
     (is (typep (g:property-action-new "action" icon "name")
                 'g:property-action))))
 
-;;; --- 2023-7-9 ---------------------------------------------------------------
+;;; 2024-6-12

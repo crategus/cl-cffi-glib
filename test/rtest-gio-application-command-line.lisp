@@ -30,7 +30,10 @@
   ;; Check the class definition
   (is (equal '(GOBJECT:DEFINE-G-OBJECT-CLASS "GApplicationCommandLine"
                                       G-APPLICATION-COMMAND-LINE
-                       (:SUPERCLASS G-OBJECT :EXPORT T :INTERFACES NIL)
+                       (:SUPERCLASS G-OBJECT
+                        :EXPORT T
+                        :INTERFACES NIL
+                        :TYPE-INITIALIZER "g_application_command_line_get_type")
                        ((ARGUMENTS G-APPLICATION-COMMAND-LINE-ARGUMENTS
                          "arguments" "GVariant" NIL NIL)
                         (IS-REMOTE G-APPLICATION-COMMAND-LINE-IS-REMOTE
@@ -97,4 +100,4 @@
 ;;;     g_application_command_line_print
 ;;;     g_application_command_line_printerr
 
-;;; --- 2023-7-12 --------------------------------------------------------------
+;;; 2024-6-12

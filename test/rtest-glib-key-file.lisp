@@ -82,7 +82,7 @@
 
 (test g-key-file-load-from-file
   (glib:with-g-key-file (keyfile)
-    (let ((path (sys-path "resource/rtest-glib-key-file.ini")))
+    (let ((path (glib-sys:sys-path "test/resource/rtest-glib-key-file.ini")))
       (is-true (g:key-file-load-from-file keyfile path :none))
       (is (= 161 (length (g:key-file-to-data keyfile)))))))
 
@@ -116,14 +116,14 @@
 
 (test g-key-file-to-data.2
   (glib:with-g-key-file (keyfile)
-    (let ((path (sys-path "resource/rtest-glib-key-file.ini")))
+    (let ((path (glib-sys:sys-path "test/resource/rtest-glib-key-file.ini")))
       (is-true (g:key-file-load-from-file keyfile path :none))
       (is (= 161 (second (multiple-value-list (g:key-file-to-data keyfile))))))))
 
 ;;;     g_key_file_save_to_file
 
 (test g-key-file-to-file
-  (let ((path (sys-path "out/rtest-glib-key-file.tmp")))
+  (let ((path (glib-sys:sys-path "test/out/rtest-glib-key-file.tmp")))
     (glib:with-g-key-file (keyfile)
       (is-true (g:key-file-load-from-data keyfile *key-values* :none))
       (is-true (g:key-file-save-to-file keyfile path)))
@@ -221,7 +221,7 @@
 
 (test g-key-file-string-list.1
   (glib:with-g-key-file (keyfile)
-    (let ((path (sys-path "resource/rtest-glib-key-file.ini")))
+    (let ((path (glib-sys:sys-path "test/resource/rtest-glib-key-file.ini")))
       (is-true (g:key-file-load-from-file keyfile path :none))
       (is (equal '("2" "20" "-200" "0")
                  (g:key-file-string-list keyfile "Another Group" "Numbers"))))))
@@ -285,7 +285,7 @@
   (glib:with-g-key-file (keyfile)
     ;; Load a key file
     (unless (g:key-file-load-from-file keyfile
-                                       (sys-path "resource/rtest-glib-key-file.ini")
+                                       (glib-sys:sys-path "test/resource/rtest-glib-key-file.ini")
                                        :none)
       (error "Error loading the key file: RTEST-GLIB-KEY-FILE.INI"))
     ;; Read a string from the key file
@@ -298,13 +298,13 @@
   (glib:with-g-key-file (keyfile)
     ;; Load existing key file
     (g:key-file-load-from-file keyfile
-                               (sys-path "resource/rtest-glib-key-file.ini")
+                               (glib-sys:sys-path "test/resource/rtest-glib-key-file.ini")
                                :none)
     ;; Add a string to the First Group
     (setf (g:key-file-string keyfile "First Group" "SomeKey") "New Value")
     ;; Save to a file
     (unless (g:key-file-save-to-file keyfile
-                                     (sys-path "out/rtest-glib-key-file.tmp"))
+                                     (glib-sys:sys-path "test/out/rtest-glib-key-file.tmp"))
       (error "Error saving key file."))
     ;; Or save to data for use elsewhere
     (let ((data (g:key-file-to-data keyfile)))
@@ -312,4 +312,4 @@
         (error "Error saving key file."))
       (is (stringp data)))))
 
-;;; --- 2023-11-4 --------------------------------------------------------------
+;;; 2024-6-14

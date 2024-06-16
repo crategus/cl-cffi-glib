@@ -32,7 +32,9 @@
   ;; Check the flags definition
   (is (equal '(GOBJECT:DEFINE-G-FLAGS "GAppInfoCreateFlags"
                               G-APP-INFO-CREATE-FLAGS
-                              (:EXPORT T)
+                              (:EXPORT T
+                               :TYPE-INITIALIZER
+                               "g_app_info_create_flags_get_type")
                               (:NONE 0)
                               (:NEEDS-TERMINAL 1)
                               (:SUPPORTS-URIS 2)
@@ -57,7 +59,10 @@
   (is (equal '()
              (list-signals "GAppInfo")))
   ;; Get the interface definition
-  (is (equal '(GOBJECT:DEFINE-G-INTERFACE "GAppInfo" G-APP-INFO (:EXPORT T))
+  (is (equal '(GOBJECT:DEFINE-G-INTERFACE "GAppInfo" G-APP-INFO
+                                          (:EXPORT T
+                                           :TYPE-INITIALIZER
+                                           "g_app_info_get_type"))
              (gobject:get-g-type-definition "GAppInfo"))))
 
 ;;;     GAppLaunchContext
@@ -92,7 +97,9 @@
                                      G-APP-LAUNCH-CONTEXT
                                      (:SUPERCLASS G-OBJECT
                                       :EXPORT T
-                                      :INTERFACES NIL)
+                                      :INTERFACES NIL
+                                      :TYPE-INITIALIZER
+                                      "g_app_launch_context_get_type")
                                      NIL)
              (gobject:get-g-type-definition "GAppLaunchContext"))))
 
@@ -311,4 +318,4 @@
 ;;;     g_app_launch_context_get_startup_notify_id
 ;;;     g_app_launch_context_launch_failed
 
-;;; --- 2023-11-4 --------------------------------------------------------------
+;;; 2024-6-12

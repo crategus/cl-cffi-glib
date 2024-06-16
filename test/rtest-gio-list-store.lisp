@@ -33,8 +33,10 @@
              (list-signals "GListStore")))
   ;; Check the class definition
   (is (equal '(GOBJECT:DEFINE-G-OBJECT-CLASS "GListStore" G-LIST-STORE
-                       (:SUPERCLASS G-OBJECT :EXPORT T :INTERFACES
-                        ("GListModel"))
+                       (:SUPERCLASS G-OBJECT
+                        :EXPORT T
+                        :INTERFACES ("GListModel")
+                        :TYPE-INITIALIZER "g_list_store_get_type")
                        ((ITEM-TYPE G-LIST-STORE-ITEM-TYPE "item-type" "GType" T
                          NIL)
                         (N-ITEMS G-LIST-STORE-N-ITEMS "n-items" "guint" T NIL)))
@@ -268,4 +270,4 @@
                      (string= (g:simple-action-name a)
                               (g:simple-action-name b))))))))
 
-;;; 2024-3-31
+;;; 2024-6-12

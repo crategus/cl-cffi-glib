@@ -39,7 +39,8 @@
   (is (equal '(GOBJECT:DEFINE-G-OBJECT-CLASS "GEmblemedIcon" G-EMBLEMED-ICON
                        (:SUPERCLASS G-OBJECT
                         :EXPORT T
-                        :INTERFACES ("GIcon"))
+                        :INTERFACES ("GIcon")
+                        :TYPE-INITIALIZER "g_emblemed_icon_get_type")
                        ((GICON G-EMBLEMED-ICON-GICON "gicon" "GIcon" T NIL)))
              (gobject:get-g-type-definition "GEmblemedIcon"))))
 
@@ -55,4 +56,4 @@
 ;;;     g_emblemed_icon_add_emblem
 ;;;     g_emblemed_icon_clear_emblems
 
-;;; --- 2023-7-9 ---------------------------------------------------------------
+;;; 2024-6-12

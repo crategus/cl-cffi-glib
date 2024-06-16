@@ -33,7 +33,9 @@
              (list-flags-item-nick "GResourceFlags")))
   ;; Check flags definition
   (is (equal '(GOBJECT:DEFINE-G-FLAGS "GResourceFlags" G-RESOURCE-FLAGS
-                                      (:EXPORT T)
+                                      (:EXPORT T
+                                       :TYPE-INITIALIZER
+                                       "g_resource_flags_get_type")
                                       (:NONE 0)
                                       (:COMPRESSED 1))
              (gobject:get-g-type-definition "GResourceFlags"))))
@@ -62,7 +64,9 @@
   ;; Check flags definition
   (is (equal '(GOBJECT:DEFINE-G-FLAGS "GResourceLookupFlags"
                                       G-RESOURCE-LOOKUP-FLAGS
-                                      (:EXPORT T)
+                                      (:EXPORT T
+                                       :TYPE-INITIALIZER
+                                       "g_resource_lookup_flags_get_type")
                                       (:NONE 0))
              (gobject:get-g-type-definition "GResourceLookupFlags"))))
 

@@ -3,6 +3,19 @@
 (def-suite glib-stable-pointer :in glib-suite)
 (in-suite glib-stable-pointer)
 
+(defparameter glib-stable-pointer
+              '(glib::allocate-stable-pointer
+                glib::free-stable-pointer
+                glib::get-stable-pointer-value
+                glib::get-stable-pointers-length
+                glib::get-stable-pointers-counter
+                glib::get-stable-pointers
+                glib::get-stable-pointers-array))
+
+(export 'glib-stable-pointer)
+
+;;; ----------------------------------------------------------------------------
+
 (test glib-stable-pointer-value
   (let* ((length (glib::get-stable-pointers-length))
          (counter (glib::get-stable-pointers-counter))
@@ -26,7 +39,14 @@
                                (functionp x)))
                  (glib::get-stable-pointers)))))
 
-(test with-stable-pointer
+(test glib-stable-poiner-array
+  (let ((pointers (glib::get-stable-pointers)))
+    (iter (for ptr in pointers)
+          (for i from 0)
+          (is (equal ptr
+                     (aref (glib::get-stable-pointers-array) i))))))
+
+(test glib-with-stable-pointer
   (flet ((func () 888))
     (let ((length (glib::get-stable-pointers-length))
           (counter (glib::get-stable-pointers-counter)))
@@ -37,4 +57,4 @@
       (is (<= counter length))
       (is (= counter (glib::get-stable-pointers-counter))))))
 
-;;; --- 2023-11-11 -------------------------------------------------------------
+;;; 2024-6-15

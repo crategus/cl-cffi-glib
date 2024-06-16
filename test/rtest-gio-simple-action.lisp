@@ -35,7 +35,10 @@
              (list-signals "GSimpleAction")))
   ;; Check the class definition
   (is (equal '(GOBJECT:DEFINE-G-OBJECT-CLASS "GSimpleAction" G-SIMPLE-ACTION
-                       (:SUPERCLASS G-OBJECT :EXPORT T :INTERFACES ("GAction"))
+                        (:SUPERCLASS G-OBJECT
+                         :EXPORT T
+                         :INTERFACES ("GAction")
+                         :TYPE-INITIALIZER "g_simple_action_get_type")
                        ((ENABLED G-SIMPLE-ACTION-ENABLED "enabled" "gboolean" T
                          T)
                         (NAME G-SIMPLE-ACTION-NAME "name" "gchararray" T NIL)
@@ -249,4 +252,4 @@
     ;; The state has not changed.
     (is (= 10 (g:variant-int32 (g:action-state action))))))
 
-;;; --- 2023-7-9 ---------------------------------------------------------------
+;;; 2024-6-12

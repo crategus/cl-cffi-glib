@@ -35,7 +35,8 @@
   (is (equal '(GOBJECT:DEFINE-G-OBJECT-CLASS "GFileIcon" G-FILE-ICON
                        (:SUPERCLASS G-OBJECT
                         :EXPORT T
-                        :INTERFACES ("GIcon" "GLoadableIcon"))
+                        :INTERFACES ("GIcon" "GLoadableIcon")
+                        :TYPE-INITIALIZER "g_file_icon_get_type")
                        ((FILE G-FILE-ICON-FILE "file" "GFile" T NIL)))
              (gobject:get-g-type-definition "GFileIcon"))))
 
@@ -48,11 +49,11 @@
 ;;;     g_file_icon_new
 
 (test g-file-icon-new
-  (let* ((path (sys-path "resource/gtk-logo-24.png"))
+  (let* ((path (glib-sys:sys-path "test/resource/gtk-logo-24.png"))
          (file (g:file-new-for-path path))
          (icon (g:file-icon-new file)))
     (is (typep icon 'g:file-icon))
     (is (string= "gtk-logo-24.png"
                  (g:file-basename (g:file-icon-file icon))))))
 
-;;; --- 2023-7-9 ---------------------------------------------------------------
+;;; 2024-6-14

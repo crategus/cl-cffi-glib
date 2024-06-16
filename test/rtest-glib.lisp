@@ -4,7 +4,9 @@
   (:import-from :glib)
   (:import-from :gobject)
   (:import-from :gio)
-  (:export #:run!))
+  (:import-from :glib-sys #:profile #:unprofile #:report #:reset)
+  (:export #:run!
+           #:profile #:unprofile #:report #:reset))
 
 (in-package :glib-test)
 
@@ -13,7 +15,7 @@
 (eval-when (:compile-toplevel :load-toplevel :execute)
   ;; Set the current package for the testsuite
   (setf (glib-sys:get-current-package) "cl-cffi-glib")
-  ;; We set a PRGNAME to avoid side effects when running the tests a second time
+  ;; Set a PRGNAME to avoid side effects when running the tests a second time
   (setf (glib:prgname) "glib-test")
   ;; Ensure directory for the output of test results
   (ensure-directories-exist
@@ -23,11 +25,6 @@
 (def-suite glib-suite :in glib-test)
 (def-suite gobject-suite :in glib-test)
 (def-suite gio-suite :in glib-test)
-
-;; Get the pathname for a file in the testsuite
-(defun sys-path (filename &optional (system :cl-cffi-glib))
-  (asdf:system-relative-pathname system
-                                 (concatenate 'string "test/" filename)))
 
 (defun list-children (gtype)
   (sort (mapcar #'g:type-name (g:type-children gtype))
@@ -83,4 +80,4 @@
   (mapcar #'gobject:enum-item-value
           (gobject:get-enum-items gtype)))
 
-;;; --- 2023-5-4 ---------------------------------------------------------------
+;;; 2024-6-14

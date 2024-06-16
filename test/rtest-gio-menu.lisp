@@ -33,7 +33,10 @@
   ;; Check the class definition
   (is (equal '(GOBJECT:DEFINE-G-OBJECT-CLASS "GMenu" G-MENU
                        (:SUPERCLASS G-MENU-MODEL
-                        :EXPORT T :INTERFACES NIL) NIL)
+                        :EXPORT T
+                        :INTERFACES NIL
+                        :TYPE-INITIALIZER "g_menu_get_type")
+                       NIL)
              (gobject:get-g-type-definition "GMenu"))))
 
 ;;;     GMenuItem
@@ -60,8 +63,8 @@
              (list-properties "GMenuItem")))
   ;; Check the class definition
   (is (equal '(GOBJECT:DEFINE-G-OBJECT-CLASS "GMenuItem" G-MENU-ITEM
-                       (:SUPERCLASS G-OBJECT
-                        :EXPORT T :INTERFACES NIL) NIL)
+                       (:SUPERCLASS G-OBJECT :EXPORT T :INTERFACES NIL
+                                :TYPE-INITIALIZER "g_menu_item_get_type") NIL)
              (gobject:get-g-type-definition "GMenuItem"))))
 
 ;;; --- Functions --------------------------------------------------------------
@@ -290,4 +293,4 @@
     (is (typep (setf (g:menu-item-link item "submenu") submenu) 'g:menu-model))
     (is (typep (g:menu-item-link item "submenu") 'g:menu-model))))
 
-;;; --- 2023-7-9 ---------------------------------------------------------------
+;;; 2024-6-12

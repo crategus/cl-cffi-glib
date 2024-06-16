@@ -22,7 +22,8 @@
              (list-signals "GIcon")))
   ;; Get the interface definition
   (is (equal '(GOBJECT:DEFINE-G-INTERFACE "GIcon" G-ICON
-                       (:EXPORT T))
+                                          (:EXPORT T
+                                           :TYPE-INITIALIZER "g_icon_get_type"))
              (gobject:get-g-type-definition "GIcon"))))
 
 ;;;   g_icon_hash

@@ -32,20 +32,21 @@
                "non-unique" "can-override-app-id" "allow-replacement" "replace")
              (list-flags-item-nick "GApplicationFlags")))
   ;; Check flags definition
-  (is (equal '(GOBJECT:DEFINE-G-FLAGS "GApplicationFlags"
-                              G-APPLICATION-FLAGS
-                              (:EXPORT T)
-                              (:FLAGS-NONE 0)
-                              (:DEFAULT-FLAGS 0)
-                              (:IS-SERVICE 1)
-                              (:IS-LAUNCHER 2)
-                              (:HANDLES-OPEN 4)
-                              (:HANDLES-COMMAND-LINE 8)
-                              (:SEND-ENVIRONMENT 16)
-                              (:NON-UNIQUE 32)
-                              (:CAN-OVERRIDE-APP-ID 64)
-                              (:ALLOW-REPLACEMENT 128)
-                              (:REPLACE 256))
+  (is (equal '(GOBJECT:DEFINE-G-FLAGS "GApplicationFlags" G-APPLICATION-FLAGS
+                                      (:EXPORT T
+                                       :TYPE-INITIALIZER
+                                       "g_application_flags_get_type")
+                                      (:FLAGS-NONE 0)
+                                      (:DEFAULT-FLAGS 0)
+                                      (:IS-SERVICE 1)
+                                      (:IS-LAUNCHER 2)
+                                      (:HANDLES-OPEN 4)
+                                      (:HANDLES-COMMAND-LINE 8)
+                                      (:SEND-ENVIRONMENT 16)
+                                      (:NON-UNIQUE 32)
+                                      (:CAN-OVERRIDE-APP-ID 64)
+                                      (:ALLOW-REPLACEMENT 128)
+                                      (:REPLACE 256))
              (gobject:get-g-type-definition "GApplicationFlags"))))
 
 ;;;     GApplication
@@ -74,8 +75,10 @@
              (list-signals "GApplication")))
   ;; Check class definition
   (is (equal '(GOBJECT:DEFINE-G-OBJECT-CLASS "GApplication" G-APPLICATION
-                               (:SUPERCLASS G-OBJECT :EXPORT T :INTERFACES
-                                ("GActionGroup" "GActionMap"))
+                               (:SUPERCLASS G-OBJECT
+                                :EXPORT T
+                                :INTERFACES ("GActionGroup" "GActionMap")
+                                :TYPE-INITIALIZER "g_application_get_type")
                                ((ACTION-GROUP G-APPLICATION-ACTION-GROUP
                                  "action-group" "GActionGroup" NIL T)
                                 (APPLICATION-ID G-APPLICATION-APPLICATION-ID
@@ -316,4 +319,4 @@
 ;;;     g_application_bind_busy_property
 ;;;     g_application_unbind_busy_property
 
-;;; 2024-5-25
+;;; 2024-6-12

@@ -33,7 +33,10 @@
              (list-signals "GPermission")))
   ;; Check the class definition
   (is (equal '(GOBJECT:DEFINE-G-OBJECT-CLASS "GPermission" G-PERMISSION
-                       (:SUPERCLASS G-OBJECT :EXPORT T :INTERFACES NIL)
+                       (:SUPERCLASS G-OBJECT
+                        :EXPORT T
+                        :INTERFACES NIL
+                        :TYPE-INITIALIZER "g_permission_get_type")
                        ((ALLOWED G-PERMISSION-ALLOWED "allowed" "gboolean" T
                          NIL)
                         (CAN-ACQUIRE G-PERMISSION-CAN-ACQUIRE "can-acquire"
@@ -71,7 +74,10 @@
   ;; Check the class definition
   (is (equal '(GOBJECT:DEFINE-G-OBJECT-CLASS "GSimplePermission"
                                              G-SIMPLE-PERMISSION
-                       (:SUPERCLASS G-PERMISSION :EXPORT T :INTERFACES NIL) NIL)
+                               (:SUPERCLASS G-PERMISSION :EXPORT T :INTERFACES
+                                NIL :TYPE-INITIALIZER
+                                "g_simple_permission_get_type")
+                               NIL)
              (gobject:get-g-type-definition "GSimplePermission"))))
 
 ;;; --- Properties -------------------------------------------------------------
@@ -102,4 +108,4 @@
 ;;;     g_permission_release_finish
 ;;;     g_permission_impl_update
 
-;;; --- 2023-7-9 ---------------------------------------------------------------
+;;; 2024-6-12

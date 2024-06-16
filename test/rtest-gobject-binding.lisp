@@ -27,13 +27,14 @@
   (is (equal '("default" "bidirectional" "sync-create" "invert-boolean")
              (list-flags-item-nick "GBindingFlags")))
   ;; Check the flags definition
-  (is (equal '(GOBJECT:DEFINE-G-FLAGS "GBindingFlags"
-                              G-BINDING-FLAGS
-                              (:EXPORT T)
-                              (:DEFAULT 0)
-                              (:BIDIRECTIONAL 1)
-                              (:SYNC-CREATE 2)
-                              (:INVERT-BOOLEAN 4))
+  (is (equal '(GOBJECT:DEFINE-G-FLAGS "GBindingFlags" G-BINDING-FLAGS
+                                      (:EXPORT T
+                                       :TYPE-INITIALIZER
+                                       "g_binding_flags_get_type")
+                                      (:DEFAULT 0)
+                                      (:BIDIRECTIONAL 1)
+                                      (:SYNC-CREATE 2)
+                                      (:INVERT-BOOLEAN 4))
              (gobject:get-g-type-definition "GBindingFlags"))))
 
 ;;;     GBinding
@@ -63,7 +64,10 @@
              (list-signals "GBinding")))
   ;; Check the class definition
   (is (equal '(GOBJECT:DEFINE-G-OBJECT-CLASS "GBinding" G-BINDING
-                       (:SUPERCLASS G-OBJECT :EXPORT T :INTERFACES NIL)
+                       (:SUPERCLASS G-OBJECT
+                        :EXPORT T
+                        :INTERFACES NIL
+                        :TYPE-INITIALIZER "g_binding_get_type")
                        ((FLAGS G-BINDING-FLAGS "flags" "GBindingFlags" T NIL)
                         (SOURCE G-BINDING-SOURCE "source" "GObject" T NIL)
                         (SOURCE-PROPERTY G-BINDING-SOURCE-PROPERTY
@@ -117,4 +121,4 @@
 ;;;     g_object_bind_property_full
 ;;;     g_object_bind_property_with_closures
 
-;;; --- 2023-7-9 ---------------------------------------------------------------
+;;; 2024-6-12

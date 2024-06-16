@@ -48,9 +48,10 @@
                "action-state-changed")
              (list-signals "GActionGroup")))
   ;; Get the interface definition
-  (is (equal '(GOBJECT:DEFINE-G-INTERFACE "GActionGroup"
-                                  G-ACTION-GROUP
-                                  (:EXPORT T))
+  (is (equal '(GOBJECT:DEFINE-G-INTERFACE "GActionGroup" G-ACTION-GROUP
+                                          (:EXPORT T
+                                           :TYPE-INITIALIZER
+                                           "g_action_group_get_type"))
              (gobject:get-g-type-definition "GActionGroup"))))
 
 ;;; --- Signals ----------------------------------------------------------------
@@ -203,4 +204,4 @@
 ;;;     g_action_group_action_enabled_changed
 ;;;     g_action_group_action_state_changed
 
-;;; --- 2023-7-9 ---------------------------------------------------------------
+;;; 2024-6-12

@@ -24,7 +24,9 @@
              (list-signals "GLoadableIcon")))
   ;; Get the interface definition
   (is (equal '(GOBJECT:DEFINE-G-INTERFACE "GLoadableIcon" G-LOADABLE-ICON
-                                  (:EXPORT T))
+                                          (:EXPORT T
+                                           :TYPE-INITIALIZER
+                                           "g_loadable_icon_get_type"))
              (gobject:get-g-type-definition "GLoadableIcon"))))
 
 ;;; --- Functions --------------------------------------------------------------
@@ -33,4 +35,4 @@
 ;;;     g_loadable_icon_load_async
 ;;;     g_loadable_icon_load_finish
 
-;;; --- 2023-7-9 ---------------------------------------------------------------
+;;; 2024-6-12

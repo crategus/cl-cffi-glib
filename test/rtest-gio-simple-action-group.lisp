@@ -30,8 +30,10 @@
   ;; Check the class definition
   (is (equal '(GOBJECT:DEFINE-G-OBJECT-CLASS "GSimpleActionGroup"
                                              G-SIMPLE-ACTION-GROUP
-                       (:SUPERCLASS G-OBJECT :EXPORT T :INTERFACES
-                        ("GActionGroup" "GActionMap"))
+                       (:SUPERCLASS G-OBJECT
+                        :EXPORT T
+                        :INTERFACES ("GActionGroup" "GActionMap")
+                        :TYPE-INITIALIZER "g_simple_action_group_get_type")
                        NIL)
              (gobject:get-g-type-definition "GSimpleActionGroup"))))
 
@@ -85,4 +87,4 @@
     (is (typep (g:simple-action-group-lookup group "copy") 'g:simple-action))
     (is (typep (g:simple-action-group-lookup group "paste") 'g:simple-action))))
 
-;;; --- 2023-7-9 ---------------------------------------------------------------
+;;; 2024-6-12

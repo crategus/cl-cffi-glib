@@ -23,7 +23,8 @@
              (list-signals "GAction")))
   ;; Check interface definition
   (is (equal '(GOBJECT:DEFINE-G-INTERFACE "GAction" G-ACTION
-                                  (:EXPORT T)
+                                  (:EXPORT T
+                                   :TYPE-INITIALIZER "g_action_get_type")
                                   (ENABLED G-ACTION-ENABLED
                                    "enabled" "gboolean" T NIL)
                                   (NAME G-ACTION-NAME

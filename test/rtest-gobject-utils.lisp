@@ -18,7 +18,8 @@
 (test get-g-enum-definition
   (is (equal '(GOBJECT:DEFINE-G-ENUM "GEmblemOrigin"
                              G-EMBLEM-ORIGIN
-                             (:EXPORT T)
+                             (:EXPORT T
+                              :TYPE-INITIALIZER "g_emblem_origin_get_type")
                              (:UNKNOWN 0)
                              (:DEVICE 1)
                              (:LIVEMETADATA 2)
@@ -46,7 +47,8 @@
 (test get-g-flags-definition
  (is (equal '(GOBJECT:DEFINE-G-FLAGS "GApplicationFlags"
                              G-APPLICATION-FLAGS
-                             (:EXPORT T)
+                             (:EXPORT T
+                              :TYPE-INITIALIZER "g_application_flags_get_type")
                              (:FLAGS-NONE 0)
                              (:DEFAULT-FLAGS 0)
                              (:IS-SERVICE 1)
@@ -60,4 +62,4 @@
                              (:REPLACE 256))
             (gobject:get-g-flags-definition "GApplicationFlags"))))
 
-;;; --- 2023-7-9 ---------------------------------------------------------------
+;;; 2024-6-12

@@ -815,11 +815,11 @@
 (test g-value-enum
   (cffi:with-foreign-object (value '(:struct g:value))
     (g:value-init value "GEmblemOrigin")
-    (is (= 0 (setf (g:value-enum value) 0)))
-    (is (= 0 (g:value-enum value)))
+    (is (= 0 (setf (gobject::%value-enum value) 0)))
+    (is (= 0 (gobject::%value-enum value)))
     ;; Accepts any integer, must not be valid
-    (is (= 2 (setf (g:value-enum value) 2)))
-    (is (= 2 (g:value-enum value)))
+    (is (= 2 (setf (gobject::%value-enum value) 2)))
+    (is (= 2 (gobject::%value-enum value)))
     (g:value-unset value)))
 
 ;;;     G_IS_PARAM_SPEC_FLAGS
@@ -879,11 +879,11 @@
 (test g-value-flags
   (cffi:with-foreign-object (value '(:struct g:value))
     (g:value-init value "GApplicationFlags")
-    (is (= 0 (setf (g:value-flags value) 0)))
-    (is (= 0 (g:value-flags value)))
+    (is (= 0 (setf (gobject::%value-flags value) 0)))
+    (is (= 0 (gobject::%value-flags value)))
     ;; Accepts any integer, must not be valid
-    (is (= 99 (setf (g:value-flags value) 99)))
-    (is (= 99 (g:value-flags value)))
+    (is (= 99 (setf (gobject::%value-flags value) 99)))
+    (is (= 99 (gobject::%value-flags value)))
     (g:value-unset value)))
 
 ;;;     G_IS_PARAM_SPEC_STRING
@@ -1150,4 +1150,4 @@
 ;;;     g_value_set_variant
 ;;;     g_value_take_variant
 
-;;; --- 2023-7-9 ---------------------------------------------------------------
+;;; 2024-6-9

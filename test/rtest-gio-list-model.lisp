@@ -26,9 +26,10 @@
   (is (equal '("items-changed")
              (list-signals "GListModel")))
   ;; Get the interface definition
-  (is (equal '(GOBJECT:DEFINE-G-INTERFACE "GListModel"
-                                  G-LIST-MODEL
-                                  (:EXPORT T))
+  (is (equal '(GOBJECT:DEFINE-G-INTERFACE "GListModel" G-LIST-MODEL
+                                          (:EXPORT T
+                                           :TYPE-INITIALIZER
+                                           "g_list_model_get_type"))
              (gobject:get-g-type-definition "GListModel"))))
 
 ;;; --- Signals ----------------------------------------------------------------
@@ -91,5 +92,4 @@
 
 ;;;     g_list_model_items_changed
 
-;;; --- 2023-11-30 -------------------------------------------------------------
-
+;;; 2024-6-12

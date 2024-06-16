@@ -27,13 +27,14 @@
   (is (equal '("unknown" "device" "livemetadata" "tag")
              (list-enum-item-nick "GEmblemOrigin")))
   ;; Check the enum definition
-  (is (equal '(GOBJECT:DEFINE-G-ENUM "GEmblemOrigin"
-                             G-EMBLEM-ORIGIN
-                             (:EXPORT T)
-                             (:UNKNOWN 0)
-                             (:DEVICE 1)
-                             (:LIVEMETADATA 2)
-                             (:TAG 3))
+  (is (equal '(GOBJECT:DEFINE-G-ENUM "GEmblemOrigin" G-EMBLEM-ORIGIN
+                                     (:EXPORT T
+                                      :TYPE-INITIALIZER
+                                      "g_emblem_origin_get_type")
+                                     (:UNKNOWN 0)
+                                     (:DEVICE 1)
+                                     (:LIVEMETADATA 2)
+                                     (:TAG 3))
              (gobject:get-g-type-definition "GEmblemOrigin"))))
 
 ;;;     GEmblem
@@ -66,7 +67,8 @@
   (is (equal '(GOBJECT:DEFINE-G-OBJECT-CLASS "GEmblem" G-EMBLEM
                        (:SUPERCLASS G-OBJECT
                         :EXPORT T
-                        :INTERFACES ("GIcon"))
+                        :INTERFACES ("GIcon")
+                        :TYPE-INITIALIZER "g_emblem_get_type")
                        ((ICON G-EMBLEM-ICON "icon" "GObject" T NIL)
                         (ORIGIN G-EMBLEM-ORIGIN "origin" "GEmblemOrigin"
                          T NIL)))
@@ -79,4 +81,4 @@
 ;;;     g_emblem_get_icon
 ;;;     g_emblem_get_origin
 
-;;; --- 2023-7-9 ---------------------------------------------------------------
+;;; 2024-6-12

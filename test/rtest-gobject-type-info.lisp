@@ -3,56 +3,128 @@
 (def-suite gobject-type-info :in gobject-suite)
 (in-suite gobject-type-info)
 
+(g:type-ensure "GChecksum")
+
+;;; ----------------------------------------------------------------------------
+
+(defparameter profile-gobject-type-info
+  '(g:gtype
+    g:gtype-name
+    g:gtype-id
+    g:type-fundamental
+    g:type-is-abstract
+    g:type-is-derived
+    g:type-is-fundamental
+    g:type-is-value-type
+    g:type-is-classed
+    g:type-is-interface
+    g:type-from-instance
+    g:type-from-class
+    g:type-from-interface
+    g:type-instance-class
+    g:type-check-instance-type
+    g:type-check-class-type
+    g:type-name
+    g:type-from-name
+    g:type-parent
+    g:type-children
+    g:type-depth
+    g:type-next-base
+    g:type-is-a
+    g:type-class-ref
+    g:type-class-peek
+    g:type-class-unref
+    g:type-interface-peek
+    g:type-default-interface-ref
+    g:type-default-interface-unref
+    g:type-interfaces
+    g:type-interface-prerequisites
+    g:type-qdata
+    g:type-ensure
+    ))
+
+(export 'profile-gobject-type-info)
+
 ;;; --- Types and Values -------------------------------------------------------
 
 (test g-type-constants.1
-  (is (= (ash  0 2) gobject:+type-invalid+))
-  (is (= (ash  1 2) gobject:+type-none+))
-  (is (= (ash  2 2) gobject:+type-interface+))
-  (is (= (ash  3 2) gobject:+type-char+))
-  (is (= (ash  4 2) gobject:+type-uchar+))
-  (is (= (ash  5 2) gobject:+type-boolean+))
-  (is (= (ash  6 2) gobject:+type-int+))
-  (is (= (ash  7 2) gobject:+type-uint+))
-  (is (= (ash  8 2) gobject:+type-long+))
-  (is (= (ash  9 2) gobject:+type-ulong+))
-  (is (= (ash 10 2) gobject:+type-int64+))
-  (is (= (ash 11 2) gobject:+type-uint64+))
-  (is (= (ash 12 2) gobject:+type-enum+))
-  (is (= (ash 13 2) gobject:+type-flags+))
-  (is (= (ash 14 2) gobject:+type-float+))
-  (is (= (ash 15 2) gobject:+type-double+))
-  (is (= (ash 16 2) gobject:+type-string+))
-  (is (= (ash 17 2) gobject:+type-pointer+))
-  (is (= (ash 18 2) gobject:+type-boxed+))
-  (is (= (ash 19 2) gobject:+type-param+))
-  (is (= (ash 20 2) gobject:+type-object+))
-  (is (= (ash 21 2) gobject:+type-variant+)))
+  (is (= (ash  1 2) (glib:gtype-id (g:gtype "void"))))
+  (is (= (ash  2 2) (glib:gtype-id (g:gtype "GInterface"))))
+  (is (= (ash  3 2) (glib:gtype-id (g:gtype "gchar"))))
+  (is (= (ash  4 2) (glib:gtype-id (g:gtype "guchar"))))
+  (is (= (ash  5 2) (glib:gtype-id (g:gtype "gboolean"))))
+  (is (= (ash  6 2) (glib:gtype-id (g:gtype "gint"))))
+  (is (= (ash  7 2) (glib:gtype-id (g:gtype "guint"))))
+  (is (= (ash  8 2) (glib:gtype-id (g:gtype "glong"))))
+  (is (= (ash  9 2) (glib:gtype-id (g:gtype "gulong"))))
+  (is (= (ash 10 2) (glib:gtype-id (g:gtype "gint64"))))
+  (is (= (ash 11 2) (glib:gtype-id (g:gtype "guint64"))))
+  (is (= (ash 12 2) (glib:gtype-id (g:gtype "GEnum"))))
+  (is (= (ash 13 2) (glib:gtype-id (g:gtype "GFlags"))))
+  (is (= (ash 14 2) (glib:gtype-id (g:gtype "gfloat"))))
+  (is (= (ash 15 2) (glib:gtype-id (g:gtype "gdouble"))))
+  (is (= (ash 16 2) (glib:gtype-id (g:gtype "gchararray"))))
+  (is (= (ash 17 2) (glib:gtype-id (g:gtype "gpointer"))))
+  (is (= (ash 18 2) (glib:gtype-id (g:gtype "GBoxed"))))
+  (is (= (ash 19 2) (glib:gtype-id (g:gtype "GParam"))))
+  (is (= (ash 20 2) (glib:gtype-id (g:gtype "GObject"))))
+  (is (= (ash 21 2) (glib:gtype-id (g:gtype "GVariant")))))
 
 (test g-type-constants.2
-  (is (eq (g:gtype "void") (g:gtype gobject:+type-none+)))
-  (is (eq (g:gtype "GInterface") (g:gtype gobject:+type-interface+)))
-  (is (eq (g:gtype "gchar") (g:gtype gobject:+type-char+)))
-  (is (eq (g:gtype "guchar") (g:gtype gobject:+type-uchar+)))
-  (is (eq (g:gtype "gboolean") (g:gtype gobject:+type-boolean+)))
-  (is (eq (g:gtype "gint") (g:gtype gobject:+type-int+)))
-  (is (eq (g:gtype "guint") (g:gtype gobject:+type-uint+)))
-  (is (eq (g:gtype "glong") (g:gtype gobject:+type-long+)))
-  (is (eq (g:gtype "gulong") (g:gtype gobject:+type-ulong+)))
-  (is (eq (g:gtype "gint64") (g:gtype gobject:+type-int64+)))
-  (is (eq (g:gtype "guint64") (g:gtype gobject:+type-uint64+)))
-  (is (eq (g:gtype "GEnum") (g:gtype gobject:+type-enum+)))
-  (is (eq (g:gtype "GFlags") (g:gtype gobject:+type-flags+)))
-  (is (eq (g:gtype "gfloat") (g:gtype gobject:+type-float+)))
-  (is (eq (g:gtype "gdouble") (g:gtype gobject:+type-double+)))
-  (is (eq (g:gtype "gchararray") (g:gtype gobject:+type-string+)))
-  (is (eq (g:gtype "gpointer") (g:gtype gobject:+type-pointer+)))
-  (is (eq (g:gtype "GBoxed") (g:gtype gobject:+type-boxed+)))
-  (is (eq (g:gtype "GParam") (g:gtype gobject:+type-param+)))
-  (is (eq (g:gtype "GObject") (g:gtype gobject:+type-object+)))
-  (is (eq (g:gtype "GType") (g:gtype gobject:+type-gtype+)))
-  (is (eq (g:gtype "GVariant") (g:gtype gobject:+type-variant+)))
-  (is (eq (g:gtype "GChecksum") (g:gtype gobject:+type-checksum+))))
+  (let ((types '("void" "GInterface")))
+    (is (equal types
+               (mapcar #'g:gtype-name
+                       (mapcar #'g:gtype types)))))
+  (is (string= "void" (glib:gtype-name (funcall #'g:gtype "void"))))
+  (is (string= "GInterface" (glib:gtype-name (g:gtype "GInterface"))))
+  (is (string= "gchar" (glib:gtype-name (g:gtype "gchar"))))
+  (is (string= "guchar" (glib:gtype-name (g:gtype "guchar"))))
+  (is (string= "gboolean" (glib:gtype-name (g:gtype "gboolean"))))
+  (is (string= "gint" (glib:gtype-name (g:gtype "gint"))))
+  (is (string= "guint" (glib:gtype-name (g:gtype "guint"))))
+  (is (string= "glong" (glib:gtype-name (g:gtype "glong"))))
+  (is (string= "gulong" (glib:gtype-name (g:gtype "gulong"))))
+  (is (string= "gint64" (glib:gtype-name (g:gtype "gint64"))))
+  (is (string= "guint64" (glib:gtype-name (g:gtype "guint64"))))
+  (is (string= "GEnum" (glib:gtype-name (g:gtype "GEnum"))))
+  (is (string= "GFlags" (glib:gtype-name (g:gtype "GFlags"))))
+  (is (string= "gfloat" (glib:gtype-name (g:gtype "gfloat"))))
+  (is (string= "gdouble" (glib:gtype-name (g:gtype "gdouble"))))
+  (is (string= "gchararray" (glib:gtype-name (g:gtype "gchararray"))))
+  (is (string= "gpointer" (glib:gtype-name (g:gtype "gpointer"))))
+  (is (string= "GBoxed" (glib:gtype-name (g:gtype "GBoxed"))))
+  (is (string= "GParam" (glib:gtype-name (g:gtype "GParam"))))
+  (is (string= "GObject" (glib:gtype-name (g:gtype "GObject"))))
+  (is (string= "GVariant" (glib:gtype-name (g:gtype "GVariant")))))
+
+(test g-type-fundamentals
+  (let* ((glib::*warn-unknown-gtype* nil)
+         (nmax (cffi:foreign-funcall "g_type_fundamental_next" :size))
+         (gtypes (iter (for x from 1 below nmax)
+                       (for gtype = (g:gtype (ash x 2)))
+                       (when gtype (collect gtype)))))
+  (is (equal '("void"
+               "GInterface"
+               "gchar"
+               "guchar"
+               "gboolean"
+               "gint"
+               "guint"
+               "glong"
+               "gulong"
+               "gint64"
+               "guint64"
+               "GEnum"
+               "GFlags"
+               "gfloat"
+               "gdouble"
+               "gchararray"
+               "gpointer"
+               "GBoxed"
+               "GParam"
+               "GObject"
+               "GVariant")
+             (mapcar #'glib:gtype-name gtypes)))))
 
 ;;;     GType
 
@@ -69,7 +141,8 @@
                                      '(:struct g:type-interface) :type)))
     (is-false (cffi:foreign-slot-value interface
                                        '(:struct g:type-interface)
-                                       :instance-type))))
+                                       :instance-type))
+    (is-false (g:type-default-interface-unref interface))))
 
 ;;;     GTypeInstance
 
@@ -84,11 +157,12 @@
 ;;;     GTypeClass
 
 (test g-type-class-structure
-  (let ((class (g:type-class-ref "GSimpleAction")))
+  (let ((gclass (g:type-class-ref "GSimpleAction")))
     (is (= 8 (cffi:foreign-type-size '(:struct g:type-class))))
     (is (equal '(:type) (cffi:foreign-slot-names '(:struct g:type-class))))
     (is (eq (g:gtype "GSimpleAction")
-            (cffi:foreign-slot-value class '(:struct g:type-class) :type)))))
+            (cffi:foreign-slot-value gclass '(:struct g:type-class) :type)))
+    (is-false (g:type-class-unref gclass))))
 
 ;;;     GTypeInfo
 ;;;     GTypeFundamentalInfo
@@ -116,30 +190,30 @@
 ;;;   g_type_is_abstract
 
 (test g-type-is-abstract
-  (is-false (g:type-is-abstract gobject:+type-invalid+))
-  (is-false (g:type-is-abstract gobject:+type-none+))
-  (is-false (g:type-is-abstract gobject:+type-interface+))
-  (is-false (g:type-is-abstract gobject:+type-char+))
-  (is-false (g:type-is-abstract gobject:+type-uchar+))
-  (is-false (g:type-is-abstract gobject:+type-boolean+))
-  (is-false (g:type-is-abstract gobject:+type-int+))
-  (is-false (g:type-is-abstract gobject:+type-uint+))
-  (is-false (g:type-is-abstract gobject:+type-long+))
-  (is-false (g:type-is-abstract gobject:+type-ulong+))
-  (is-false (g:type-is-abstract gobject:+type-int64+))
-  (is-false (g:type-is-abstract gobject:+type-uint64+))
-  (is-true  (g:type-is-abstract gobject:+type-enum+))
-  (is-true  (g:type-is-abstract gobject:+type-flags+))
-  (is-false (g:type-is-abstract gobject:+type-float+))
-  (is-false (g:type-is-abstract gobject:+type-double+))
-  (is-false (g:type-is-abstract gobject:+type-string+))
-  (is-false (g:type-is-abstract gobject:+type-pointer+))
-  (is-true  (g:type-is-abstract gobject:+type-boxed+))
-  (is-true  (g:type-is-abstract gobject:+type-param+))
-  (is-false (g:type-is-abstract gobject:+type-object+))
-  (is-false (g:type-is-abstract gobject:+type-gtype+))
-  (is-false (g:type-is-abstract gobject:+type-variant+))
-  (is-false (g:type-is-abstract gobject:+type-checksum+))
+  (is-false (g:type-is-abstract (g:gtype "void")))
+  (is-false (g:type-is-abstract (g:gtype "GInterface")))
+  (is-false (g:type-is-abstract (g:gtype "gchar")))
+  (is-false (g:type-is-abstract (g:gtype "guchar")))
+  (is-false (g:type-is-abstract (g:gtype "gboolean")))
+  (is-false (g:type-is-abstract (g:gtype "gint")))
+  (is-false (g:type-is-abstract (g:gtype "guint")))
+  (is-false (g:type-is-abstract (g:gtype "glong")))
+  (is-false (g:type-is-abstract (g:gtype "gulong")))
+  (is-false (g:type-is-abstract (g:gtype "gint64")))
+  (is-false (g:type-is-abstract (g:gtype "guint64")))
+  (is-true  (g:type-is-abstract (g:gtype "GEnum")))
+  (is-true  (g:type-is-abstract (g:gtype "GFlags")))
+  (is-false (g:type-is-abstract (g:gtype "gfloat")))
+  (is-false (g:type-is-abstract (g:gtype "gdouble")))
+  (is-false (g:type-is-abstract (g:gtype "gchararray")))
+  (is-false (g:type-is-abstract (g:gtype "gpointer")))
+  (is-true  (g:type-is-abstract (g:gtype "GBoxed")))
+  (is-true  (g:type-is-abstract (g:gtype "GParam")))
+  (is-false (g:type-is-abstract (g:gtype "GObject")))
+  (is-false (g:type-is-abstract (g:gtype "GType")))
+  (is-false (g:type-is-abstract (g:gtype "GVariant")))
+  (is-false (g:type-is-abstract (g:gtype "GChecksum")))
+
   (is-false (g:type-is-abstract "GApplication"))
   (is-false (g:type-is-abstract "GAction"))
   (is-false (g:type-is-abstract "GSimpleAction"))
@@ -150,30 +224,29 @@
 ;;;   g_type_is_dervied
 
 (test g-type-is-derived
-  (is-false (g:type-is-derived gobject:+type-invalid+))
-  (is-false (g:type-is-derived gobject:+type-none+))
-  (is-false (g:type-is-derived gobject:+type-interface+))
-  (is-false (g:type-is-derived gobject:+type-char+))
-  (is-false (g:type-is-derived gobject:+type-uchar+))
-  (is-false (g:type-is-derived gobject:+type-boolean+))
-  (is-false (g:type-is-derived gobject:+type-int+))
-  (is-false (g:type-is-derived gobject:+type-uint+))
-  (is-false (g:type-is-derived gobject:+type-long+))
-  (is-false (g:type-is-derived gobject:+type-ulong+))
-  (is-false (g:type-is-derived gobject:+type-int64+))
-  (is-false (g:type-is-derived gobject:+type-uint64+))
-  (is-false (g:type-is-derived gobject:+type-enum+))
-  (is-false (g:type-is-derived gobject:+type-flags+))
-  (is-false (g:type-is-derived gobject:+type-float+))
-  (is-false (g:type-is-derived gobject:+type-double+))
-  (is-false (g:type-is-derived gobject:+type-string+))
-  (is-false (g:type-is-derived gobject:+type-pointer+))
-  (is-false (g:type-is-derived gobject:+type-boxed+))
-  (is-false (g:type-is-derived gobject:+type-param+))
-  (is-false (g:type-is-derived gobject:+type-object+))
-  (is-true  (g:type-is-derived gobject:+type-gtype+))
-  (is-false (g:type-is-derived gobject:+type-variant+))
-  (is-true  (g:type-is-derived gobject:+type-checksum+))
+  (is-false (g:type-is-derived "void"))
+  (is-false (g:type-is-derived "GInterface"))
+  (is-false (g:type-is-derived "gchar"))
+  (is-false (g:type-is-derived "guchar"))
+  (is-false (g:type-is-derived "gboolean"))
+  (is-false (g:type-is-derived "gint"))
+  (is-false (g:type-is-derived "guint"))
+  (is-false (g:type-is-derived "glong"))
+  (is-false (g:type-is-derived "gulong"))
+  (is-false (g:type-is-derived "gint64"))
+  (is-false (g:type-is-derived "guint"))
+  (is-false (g:type-is-derived "GEnum"))
+  (is-false (g:type-is-derived "GFlags"))
+  (is-false (g:type-is-derived "gfloat"))
+  (is-false (g:type-is-derived "gdouble"))
+  (is-false (g:type-is-derived "gchararray"))
+  (is-false (g:type-is-derived "gpointer"))
+  (is-false (g:type-is-derived "GBoxed"))
+  (is-false (g:type-is-derived "GParam"))
+  (is-false (g:type-is-derived "GObject"))
+  (is-true  (g:type-is-derived "GType"))
+  (is-false (g:type-is-derived "GVariant"))
+  (is-true  (g:type-is-derived "GChecksum"))
   (is-true  (g:type-is-derived "GApplication"))
   (is-true  (g:type-is-derived "GAction"))
   (is-true  (g:type-is-derived "GSimpleAction"))
@@ -184,30 +257,29 @@
 ;;;   g_type_is_fundamental
 
 (test g-type-is-fundamental
-  (is-true  (g:type-is-fundamental gobject:+type-invalid+))
-  (is-true  (g:type-is-fundamental gobject:+type-none+))
-  (is-true  (g:type-is-fundamental gobject:+type-interface+))
-  (is-true  (g:type-is-fundamental gobject:+type-char+))
-  (is-true  (g:type-is-fundamental gobject:+type-uchar+))
-  (is-true  (g:type-is-fundamental gobject:+type-boolean+))
-  (is-true  (g:type-is-fundamental gobject:+type-int+))
-  (is-true  (g:type-is-fundamental gobject:+type-uint+))
-  (is-true  (g:type-is-fundamental gobject:+type-long+))
-  (is-true  (g:type-is-fundamental gobject:+type-ulong+))
-  (is-true  (g:type-is-fundamental gobject:+type-int64+))
-  (is-true  (g:type-is-fundamental gobject:+type-uint64+))
-  (is-true  (g:type-is-fundamental gobject:+type-enum+))
-  (is-true  (g:type-is-fundamental gobject:+type-flags+))
-  (is-true  (g:type-is-fundamental gobject:+type-float+))
-  (is-true  (g:type-is-fundamental gobject:+type-double+))
-  (is-true  (g:type-is-fundamental gobject:+type-string+))
-  (is-true  (g:type-is-fundamental gobject:+type-pointer+))
-  (is-true  (g:type-is-fundamental gobject:+type-boxed+))
-  (is-true  (g:type-is-fundamental gobject:+type-param+))
-  (is-true  (g:type-is-fundamental gobject:+type-object+))
-  (is-false (g:type-is-fundamental gobject:+type-gtype+))
-  (is-true  (g:type-is-fundamental gobject:+type-variant+))
-  (is-false (g:type-is-fundamental gobject:+type-checksum+))
+  (is-true  (g:type-is-fundamental (g:gtype "void")))
+  (is-true  (g:type-is-fundamental (g:gtype "GInterface")))
+  (is-true  (g:type-is-fundamental (g:gtype "gchar")))
+  (is-true  (g:type-is-fundamental (g:gtype "guchar")))
+  (is-true  (g:type-is-fundamental (g:gtype "gboolean")))
+  (is-true  (g:type-is-fundamental (g:gtype "gint")))
+  (is-true  (g:type-is-fundamental (g:gtype "guint")))
+  (is-true  (g:type-is-fundamental (g:gtype "glong")))
+  (is-true  (g:type-is-fundamental (g:gtype "gulong")))
+  (is-true  (g:type-is-fundamental (g:gtype "gint64")))
+  (is-true  (g:type-is-fundamental (g:gtype "guint64")))
+  (is-true  (g:type-is-fundamental (g:gtype "GEnum")))
+  (is-true  (g:type-is-fundamental (g:gtype "GFlags")))
+  (is-true  (g:type-is-fundamental (g:gtype "gfloat")))
+  (is-true  (g:type-is-fundamental (g:gtype "gdouble")))
+  (is-true  (g:type-is-fundamental (g:gtype "gchararray")))
+  (is-true  (g:type-is-fundamental (g:gtype "gpointer")))
+  (is-true  (g:type-is-fundamental (g:gtype "GBoxed")))
+  (is-true  (g:type-is-fundamental (g:gtype "GParam")))
+  (is-true  (g:type-is-fundamental (g:gtype "GObject")))
+  (is-false (g:type-is-fundamental (g:gtype "GType")))
+  (is-true  (g:type-is-fundamental (g:gtype "GVariant")))
+  (is-false (g:type-is-fundamental (g:gtype "GChecksum")))
   (is-false (g:type-is-fundamental "GApplication"))
   (is-false (g:type-is-fundamental "GAction"))
   (is-false (g:type-is-fundamental "GSimpleAction"))
@@ -218,30 +290,29 @@
 ;;;   g_type_is_value_type
 
 (test g-type-is-value-type
-  (is-false (g:type-is-value-type gobject:+type-invalid+))
-  (is-false (g:type-is-value-type gobject:+type-none+))
-  (is-false (g:type-is-value-type gobject:+type-interface+))
-  (is-true  (g:type-is-value-type gobject:+type-char+))
-  (is-true  (g:type-is-value-type gobject:+type-uchar+))
-  (is-true  (g:type-is-value-type gobject:+type-boolean+))
-  (is-true  (g:type-is-value-type gobject:+type-int+))
-  (is-true  (g:type-is-value-type gobject:+type-uint+))
-  (is-true  (g:type-is-value-type gobject:+type-long+))
-  (is-true  (g:type-is-value-type gobject:+type-ulong+))
-  (is-true  (g:type-is-value-type gobject:+type-int64+))
-  (is-true  (g:type-is-value-type gobject:+type-uint64+))
-  (is-false (g:type-is-value-type gobject:+type-enum+))
-  (is-false (g:type-is-value-type gobject:+type-flags+))
-  (is-true  (g:type-is-value-type gobject:+type-float+))
-  (is-true  (g:type-is-value-type gobject:+type-double+))
-  (is-true  (g:type-is-value-type gobject:+type-string+))
-  (is-true  (g:type-is-value-type gobject:+type-pointer+))
-  (is-false (g:type-is-value-type gobject:+type-boxed+))
-  (is-true  (g:type-is-value-type gobject:+type-param+))
-  (is-true  (g:type-is-value-type gobject:+type-object+))
-  (is-true  (g:type-is-value-type gobject:+type-gtype+))
-  (is-true  (g:type-is-value-type gobject:+type-variant+))
-  (is-true  (g:type-is-value-type gobject:+type-checksum+))
+  (is-false (g:type-is-value-type "void"))
+  (is-false (g:type-is-value-type "GInterface"))
+  (is-true  (g:type-is-value-type "gchar"))
+  (is-true  (g:type-is-value-type "guchar"))
+  (is-true  (g:type-is-value-type "gboolean"))
+  (is-true  (g:type-is-value-type "gint"))
+  (is-true  (g:type-is-value-type "guint"))
+  (is-true  (g:type-is-value-type "glong"))
+  (is-true  (g:type-is-value-type "gulong"))
+  (is-true  (g:type-is-value-type "gint64"))
+  (is-true  (g:type-is-value-type "guint64"))
+  (is-false (g:type-is-value-type "GEnum"))
+  (is-false (g:type-is-value-type "GFlags"))
+  (is-true  (g:type-is-value-type "gfloat"))
+  (is-true  (g:type-is-value-type "gdouble"))
+  (is-true  (g:type-is-value-type "gchararray"))
+  (is-true  (g:type-is-value-type "gpointer"))
+  (is-false (g:type-is-value-type "GBoxed"))
+  (is-true  (g:type-is-value-type "GParam"))
+  (is-true  (g:type-is-value-type "GObject"))
+  (is-true  (g:type-is-value-type "GType"))
+  (is-true  (g:type-is-value-type "GVariant"))
+  (is-true  (g:type-is-value-type "GChecksum"))
   (is-true  (g:type-is-value-type "GApplication"))
   (is-true  (g:type-is-value-type "GAction"))
   (is-true  (g:type-is-value-type "GSimpleAction"))
@@ -254,28 +325,27 @@
 ;;;   g_type_is_classed
 
 (test g-type-is-classed
-  (is-false (g:type-is-classed gobject:+type-invalid+))
-  (is-false (g:type-is-classed gobject:+type-none+))
-  (is-false (g:type-is-classed gobject:+type-interface+))
-  (is-false (g:type-is-classed gobject:+type-char+))
-  (is-false (g:type-is-classed gobject:+type-uchar+))
-  (is-false (g:type-is-classed gobject:+type-boolean+))
-  (is-false (g:type-is-classed gobject:+type-int+))
-  (is-false (g:type-is-classed gobject:+type-uint+))
-  (is-false (g:type-is-classed gobject:+type-long+))
-  (is-false (g:type-is-classed gobject:+type-ulong+))
-  (is-false (g:type-is-classed gobject:+type-int64+))
-  (is-false (g:type-is-classed gobject:+type-uint64+))
-  (is-true  (g:type-is-classed gobject:+type-enum+))
-  (is-true  (g:type-is-classed gobject:+type-flags+))
-  (is-false (g:type-is-classed gobject:+type-float+))
-  (is-false (g:type-is-classed gobject:+type-double+))
-  (is-false (g:type-is-classed gobject:+type-string+))
-  (is-false (g:type-is-classed gobject:+type-pointer+))
-  (is-false (g:type-is-classed gobject:+type-boxed+))
-  (is-true  (g:type-is-classed gobject:+type-param+))
-  (is-true  (g:type-is-classed gobject:+type-object+))
-  (is-false (g:type-is-classed gobject:+type-variant+))
+  (is-false (g:type-is-classed "void"))
+  (is-false (g:type-is-classed "GInterface"))
+  (is-false (g:type-is-classed "gchar"))
+  (is-false (g:type-is-classed "guchar"))
+  (is-false (g:type-is-classed "gboolean"))
+  (is-false (g:type-is-classed "gint"))
+  (is-false (g:type-is-classed "guint"))
+  (is-false (g:type-is-classed "glong"))
+  (is-false (g:type-is-classed "gulong"))
+  (is-false (g:type-is-classed "gint64"))
+  (is-false (g:type-is-classed "guint64"))
+  (is-true  (g:type-is-classed "GEnum"))
+  (is-true  (g:type-is-classed "GFlags"))
+  (is-false (g:type-is-classed "gfloat"))
+  (is-false (g:type-is-classed "gdouble"))
+  (is-false (g:type-is-classed "gchararray"))
+  (is-false (g:type-is-classed "gpointer"))
+  (is-false (g:type-is-classed "GBoxed"))
+  (is-true  (g:type-is-classed "GParam"))
+  (is-true  (g:type-is-classed "GObject"))
+  (is-false (g:type-is-classed "GVariant"))
   (is-true  (g:type-is-classed "GApplication"))
   (is-false (g:type-is-classed "GAction"))
   (is-true  (g:type-is-classed "GSimpleAction"))
@@ -290,28 +360,27 @@
 ;;; g_type_is_interface
 
 (test g-type-is-interface
-  (is-false (g:type-is-interface gobject:+type-invalid+))
-  (is-false (g:type-is-interface gobject:+type-none+))
-  (is-true  (g:type-is-interface gobject:+type-interface+))
-  (is-false (g:type-is-interface gobject:+type-char+))
-  (is-false (g:type-is-interface gobject:+type-uchar+))
-  (is-false (g:type-is-interface gobject:+type-boolean+))
-  (is-false (g:type-is-interface gobject:+type-int+))
-  (is-false (g:type-is-interface gobject:+type-uint+))
-  (is-false (g:type-is-interface gobject:+type-long+))
-  (is-false (g:type-is-interface gobject:+type-ulong+))
-  (is-false (g:type-is-interface gobject:+type-int64+))
-  (is-false (g:type-is-interface gobject:+type-uint64+))
-  (is-false (g:type-is-interface gobject:+type-enum+))
-  (is-false (g:type-is-interface gobject:+type-flags+))
-  (is-false (g:type-is-interface gobject:+type-float+))
-  (is-false (g:type-is-interface gobject:+type-double+))
-  (is-false (g:type-is-interface gobject:+type-string+))
-  (is-false (g:type-is-interface gobject:+type-pointer+))
-  (is-false (g:type-is-interface gobject:+type-boxed+))
-  (is-false (g:type-is-interface gobject:+type-param+))
-  (is-false (g:type-is-interface gobject:+type-object+))
-  (is-false (g:type-is-interface gobject:+type-variant+))
+  (is-false (g:type-is-interface "void"))
+  (is-true  (g:type-is-interface "GInterface"))
+  (is-false (g:type-is-interface "gchar"))
+  (is-false (g:type-is-interface "guchar"))
+  (is-false (g:type-is-interface "gboolean"))
+  (is-false (g:type-is-interface "gint"))
+  (is-false (g:type-is-interface "guint"))
+  (is-false (g:type-is-interface "glong"))
+  (is-false (g:type-is-interface "gulong"))
+  (is-false (g:type-is-interface "gint64"))
+  (is-false (g:type-is-interface "guint64"))
+  (is-false (g:type-is-interface "GEnum"))
+  (is-false (g:type-is-interface "GFlags"))
+  (is-false (g:type-is-interface "gfloat"))
+  (is-false (g:type-is-interface "gdouble"))
+  (is-false (g:type-is-interface "gchararray"))
+  (is-false (g:type-is-interface "gpointer"))
+  (is-false (g:type-is-interface "GBoxed"))
+  (is-false (g:type-is-interface "GParam"))
+  (is-false (g:type-is-interface "GObject"))
+  (is-false (g:type-is-interface "GVariant"))
   (is-false (g:type-is-interface "GApplication"))
   (is-true  (g:type-is-interface "GAction"))
   (is-false (g:type-is-interface "GSimpleAction"))
@@ -329,24 +398,24 @@
 ;;;   G_TYPE_FROM_CLASS
 
 (test g-type-from-class
-  (let ((class nil))
+  (let ((gclass nil))
     (is (eq (g:gtype "GApplication")
-            (g:type-from-class (setf class
+            (g:type-from-class (setf gclass
                                      (g:type-class-ref "GApplication")))))
-    (is-false (g:type-class-unref class))
+    (is-false (g:type-class-unref gclass))
     (is (eq (g:gtype "GSimpleAction")
-            (g:type-from-class (setf class
+            (g:type-from-class (setf gclass
                                      (g:type-class-ref "GSimpleAction")))))
-    (is-false (g:type-class-unref class))))
+    (is-false (g:type-class-unref gclass))))
 
 ;;;   G_TYPE_FROM_INTERFACE
 
 (test g-type-from-interface
-  (let ((class nil))
+  (let ((gclass nil))
     (is (eq (g:gtype "GAction")
             (g:type-from-interface
-                (setf class (g:type-default-interface-ref "GAction")))))
-    (is-false (g:type-default-interface-unref class))))
+                (setf gclass (g:type-default-interface-ref "GAction")))))
+    (is-false (g:type-default-interface-unref gclass))))
 
 ;;;     g-type-instance-class
 
@@ -373,8 +442,11 @@
 ;;;   G_TYPE_CHECK_CLASS_TYPE
 
 (test g-type-check-class-type
-  (is-true  (g:type-check-class-type (g:type-class-ref "GSimpleAction")
-                                     "GObject")))
+  (let ((gclass nil))
+    (is-true  (g:type-check-class-type (setf gclass
+                                             (g:type-class-ref "GSimpleAction"))
+                                       "GObject"))
+    (is-false (g:type-class-unref gclass))))
 
 ;;;     G_TYPE_CHECK_VALUE                                 not implemented
 ;;;     G_TYPE_CHECK_VALUE_TYPE                            not implemented
@@ -385,9 +457,9 @@
 ;;;   g_type_name
 
 (test g-type-name
-  (is (equal "gdouble" (g:type-name gobject:+type-double+)))
-  (is (equal "GBoxed" (g:type-name gobject:+type-boxed+)))
-  (is (equal "GApplication" (g:type-name (g:gtype "GApplication")))))
+  (is (string= "gdouble" (g:type-name (g:gtype "gdouble"))))
+  (is (string= "GBoxed" (g:type-name (g:gtype "GBoxed"))))
+  (is (string= "GApplication" (g:type-name (g:gtype "GApplication")))))
 
 ;;;     g_type_qname
 
@@ -399,66 +471,80 @@
   (is (eq (g:gtype "GApplication") (g:type-from-name "GApplication"))))
 
 ;;;     g_type_parent
+
+(test g-type-parent
+  (is (eq (g:gtype "GObject") (g:type-parent "GSimpleAction"))))
+
 ;;;     g_type_depth
+
+(test g-type-depth
+  (is (= 2 (g:type-depth (g:gtype "GSimpleAction"))))
+  (is (= 2 (g:type-depth (g:gtype "GBytes"))))
+  (is (= 1 (g:type-depth (g:gtype "gboolean")))))
+
 ;;;     g_type_next_base
+
+(test g-type-next-base
+  (is (eq (g:gtype "GThemedIcon") (g:type-next-base "GThemedIcon" "GObject")))
+)
 
 ;;;     g_type_is_a
 
 (test g-type-is-a
-  (is-true (g:type-is-a "gboolean" gobject:+type-boolean+))
-  (is-true (g:type-is-a "GResource" gobject:+type-boxed+))
-  (is-true (g:type-is-a "gchar" gobject:+type-char+))
-  (is-true (g:type-is-a "GChecksum" gobject:+type-checksum+))
-  (is-true (g:type-is-a "gdouble" gobject:+type-double+))
-  (is-true (g:type-is-a "GEmblemOrigin" gobject:+type-enum+))
-  (is-true (g:type-is-a "GApplicationFlags" gobject:+type-flags+))
-  (is-true (g:type-is-a "gfloat" gobject:+type-float+))
-  (is-true (g:type-is-a "GType" gobject:+type-gtype+))
-  (is-true (g:type-is-a "gint" gobject:+type-int+))
-  (is-true (g:type-is-a "gint64" gobject:+type-int64+))
-  (is-true (g:type-is-a "unknown" gobject:+type-invalid+))
-  (is-true (g:type-is-a "glong" gobject:+type-long+))
-  (is-true (g:type-is-a "void" gobject:+type-none+))
-  (is-true (g:type-is-a "GApplication" gobject:+type-object+))
-  (is-true (g:type-is-a "GParamBoolean" gobject:+type-param+))
-  (is-true (g:type-is-a "gpointer" gobject:+type-pointer+))
-  (is-true (g:type-is-a "gchararray" gobject:+type-string+))
-  (is-true (g:type-is-a "guchar" gobject:+type-uchar+))
-  (is-true (g:type-is-a "guint" gobject:+type-uint+))
-  (is-true (g:type-is-a "guint64" gobject:+type-uint64+))
-  (is-true (g:type-is-a "gulong" gobject:+type-ulong+))
-  (is-true (g:type-is-a "GVariant" gobject:+type-variant+)))
+  (is-true (g:type-is-a "gboolean" (g:gtype "gboolean")))
+  (is-true (g:type-is-a "GResource" (g:gtype "GBoxed")))
+  (is-true (g:type-is-a "gchar" (g:gtype "gchar")))
+  (is-true (g:type-is-a "GChecksum" (g:gtype "GChecksum")))
+  (is-true (g:type-is-a "gdouble" (g:gtype "gdouble")))
+  (is-true (g:type-is-a "GEmblemOrigin" (g:gtype "GEnum")))
+  (is-true (g:type-is-a "GApplicationFlags" (g:gtype "GFlags")))
+  (is-true (g:type-is-a "gfloat" (g:gtype "gfloat")))
+  (is-true (g:type-is-a "GType" (g:gtype "GType")))
+  (is-true (g:type-is-a "gint" (g:gtype "gint")))
+  (is-true (g:type-is-a "gint64" (g:gtype "gint64")))
+  (is-true (g:type-is-a "glong" (g:gtype "glong")))
+  (is-true (g:type-is-a "void" (g:gtype "void")))
+  (is-true (g:type-is-a "GApplication" (g:gtype "GObject")))
+  (is-true (g:type-is-a "GParamBoolean" (g:gtype "GParam")))
+  (is-true (g:type-is-a "gpointer" (g:gtype "gpointer")))
+  (is-true (g:type-is-a "gchararray" (g:gtype "gchararray")))
+  (is-true (g:type-is-a "guchar" (g:gtype "guchar")))
+  (is-true (g:type-is-a "guint" (g:gtype "guint")))
+  (is-true (g:type-is-a "guint64" (g:gtype "guint64")))
+  (is-true (g:type-is-a "gulong" (g:gtype "gulong")))
+  (is-true (g:type-is-a "GVariant" (g:gtype "GVariant"))))
 
 ;;;     g_type_class_ref
 ;;;     g_type_class_unref
 ;;;     g_type_class_peek
 
 (test g-type-class-ref/unref/peek
-  (let ((class nil))
+  (let ((gclass nil))
     ;; GTYPE is a string
-    (is (cffi:pointerp (setf class (g:type-class-ref "GSimpleAction"))))
-    (is (eq (g:gtype "GSimpleAction") (g:type-from-class class)))
-    (is (cffi:pointer-eq class
+    (is (cffi:pointerp (setf gclass (g:type-class-ref "GSimpleAction"))))
+    (is (eq (g:gtype "GSimpleAction") (g:type-from-class gclass)))
+    (is (cffi:pointer-eq gclass
                          (g:type-class-peek "GSimpleAction")))
-    (is-false (g:type-class-unref class))
+    (is-false (g:type-class-unref gclass))
 
     ;; GTYPE is an integer ID
-    (is (cffi:pointerp (setf class
+    (is (cffi:pointerp (setf gclass
                              (g:type-class-ref
                                (glib::gtype-id (g:gtype "GSimpleAction"))))))
-    (is (eq (g:gtype "GSimpleAction") (g:type-from-class class)))
-    (is (cffi:pointer-eq class
+    (is (eq (g:gtype "GSimpleAction") (g:type-from-class gclass)))
+    (is (cffi:pointer-eq gclass
                          (g:type-class-peek
                            (glib:gtype-id (glib:gtype "GSimpleAction")))))
-    (is-false (g:type-class-unref class))
+    (is-false (g:type-class-unref gclass))
 
     ;; GTYPE is a g:type-t type ID
-    (is (cffi:pointerp (setf class
+    (is (cffi:pointerp (setf gclass
                              (g:type-class-ref (g:gtype "GSimpleAction")))))
-    (is (eq (g:gtype "GSimpleAction") (g:type-from-class class)))
-    (is (cffi:pointer-eq class
+    (is (eq (g:gtype "GSimpleAction") (g:type-from-class gclass)))
+    (is (cffi:pointer-eq gclass
                          (g:type-class-peek (glib:gtype "GSimpleAction"))))
-    (is-false (g:type-class-unref class))
+    (is-false (g:type-class-unref gclass))
+
     ;; GTYPE is not classed
     (is-false (g:type-class-ref "gboolean"))
     (is-false (g:type-class-ref "GAction"))
@@ -469,7 +555,16 @@
 ;;;     g_type_class_peek_parent
 ;;;     g_type_class_add_private
 ;;;     g_type_add_class_private                           not implemented
+
 ;;;     g_type_interface_peek
+
+(test g-type-interface-peek
+  (let ((gclass (g:type-class-ref "GThemedIcon"))
+        (iface nil))
+    (is (cffi:pointerp (setf iface (g:type-interface-peek gclass "GIcon"))))
+    (is (eq (g:gtype "GIcon") (g:type-from-interface iface)))
+    (is-false (g:type-class-unref gclass))))
+
 ;;;     g_type_interface_peek_parent                       not implemented
 
 ;;;     g_type_default_interface_ref
@@ -578,19 +673,17 @@
 ;;;     g_type_ensure
 
 (test g-type-ensure
-  (is-true (g:type-ensure "GAction"))
-  (is-true (g:type-ensure "GSimpleAction"))
-  (if *first-run-glib-test*
-    ;; After loading the library the gtype is not known
-    (is-false (g:type-ensure "GSimpleAsyncResult"))
-    ;; The second or more run of the testsuite
+  (is (eq (g:gtype "GAction") (g:type-ensure "GAction")))
+      (is-true (g:type-ensure "GSimpleAction"))
+  (when *first-run-glib-test*
+;    (is-false (g:gtype "GSimpleAsyncResult"))
     (is-true (g:type-ensure "GSimpleAsyncResult")))
-  (is-true (g:type-ensure "gboolean"))
-  (is-true (g:type-ensure "GEnum"))
+  (is (eq (g:gtype "gboolean") (g:type-ensure "gboolean")))
   ;; GTYPE is not known
   (is-false (g:type-ensure "unknown")))
 
 ;;;     g_type_get_type_registration_serial                not implemented
+;;;     g_type_get_instance_count                          not implemented
 ;;;     G_DEFINE_TYPE                                      not implemented
 ;;;     G_DEFINE_TYPE_WITH_CODE                            not implemented
 ;;;     G_DEFINE_ABSTRACT_TYPE                             not implemented
@@ -604,4 +697,4 @@
 ;;;     G_DEFINE_POINTER_TYPE                              not implemented
 ;;;     G_DEFINE_POINTER_TYPE_WITH_CODE                    not implemented
 
-;;; --- 2023-11-12 -------------------------------------------------------------
+;;; 2024-6-14

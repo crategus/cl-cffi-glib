@@ -31,7 +31,9 @@
   ;; Check the enum definition
   (is (equal '(GOBJECT:DEFINE-G-ENUM "GFilesystemPreviewType"
                              G-FILESYSTEM-PREVIEW-TYPE
-                             (:EXPORT T)
+                             (:EXPORT T
+                              :TYPE-INITIALIZER
+                              "g_filesystem_preview_type_get_type")
                              (:IF-ALWAYS 0)
                              (:IF-LOCAL 1)
                              (:NEVER 2))
@@ -52,7 +54,9 @@
   (is (equal '()
              (list-interface-properties "GFile")))
   ;; Get the interface definition
-  (is (equal '(GOBJECT:DEFINE-G-INTERFACE "GFile" G-FILE (:EXPORT T))
+  (is (equal '(GOBJECT:DEFINE-G-INTERFACE "GFile" G-FILE
+                                          (:EXPORT T
+                                           :TYPE-INITIALIZER "g_file_get_type"))
              (gobject:get-g-type-definition "GFile"))))
 
 ;;;     GFileQueryInfoFlags
@@ -332,4 +336,4 @@
 ;;;     g_file_replace_readwrite_finish
 ;;;     g_file_supports_thread_contexts
 
-;;; --- 2023-7-9 ---------------------------------------------------------------
+;;; 2024-6-12

@@ -32,7 +32,10 @@
              (list-signals "GThemedIcon")))
   ;; Check the class definition
   (is (equal '(GOBJECT:DEFINE-G-OBJECT-CLASS "GThemedIcon" G-THEMED-ICON
-                       (:SUPERCLASS G-OBJECT :EXPORT T :INTERFACES ("GIcon"))
+                       (:SUPERCLASS G-OBJECT
+                        :EXPORT T
+                        :INTERFACES ("GIcon")
+                        :TYPE-INITIALIZER "g_themed_icon_get_type")
                        ((NAME G-THEMED-ICON-NAME "name" "gchararray" NIL NIL)
                         (NAMES G-THEMED-ICON-NAMES "names" "GStrv" T NIL)
                         (USE-DEFAULT-FALLBACKS
@@ -86,4 +89,4 @@
     (is (= (g:icon-hash icon1) (g:icon-hash icon2)))
     (is-true (g:icon-equal icon1 icon2))))
 
-;;; 2023-12-26
+;;; 2024-6-12
