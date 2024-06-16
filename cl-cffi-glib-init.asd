@@ -33,6 +33,7 @@
   :components ((:file "cl-cffi-glib-init")
                (:file "cl-cffi-glib-sys"))
   :depends-on (:cffi
+               :iterate
                :trivial-features))
 
 ;;; --- End of file cl-cffi-glib-init.lisp -------------------------------------
