@@ -4,8 +4,20 @@
   (:import-from :glib)
   (:import-from :gobject)
   (:import-from :gio)
-  (:import-from :glib-sys #:profile #:unprofile #:report #:reset)
+  (:import-from :glib-sys)
   (:export #:run!
+           #:list-children
+           #:list-interfaces
+           #:list-properties
+           #:list-interface-prerequisites
+           #:list-interface-properties
+           #:list-signals
+           #:list-enum-item-name
+           #:list-enum-item-value
+           #:list-enum-item-nick
+           #:list-flags-item-name
+           #:list-flags-item-value
+           #:list-flags-item-nick
            #:profile #:unprofile #:report #:reset))
 
 (in-package :glib-test)
@@ -25,6 +37,30 @@
 (def-suite glib-suite :in glib-test)
 (def-suite gobject-suite :in glib-test)
 (def-suite gio-suite :in glib-test)
+
+;;; ----------------------------------------------------------------------------
+
+(defun profile (&rest args)
+  (let ((symbols (glib-sys:flatten args)))
+    (if symbols
+        (dolist (sym symbols)
+          (eval `(sb-profile:profile ,sym)))
+        (sb-profile:profile))))
+
+(defun report ()
+  (sb-profile:report))
+
+(defun unprofile (&rest args)
+  (let ((symbols (glib-sys:flatten args)))
+    (if symbols
+        (dolist (sym symbols)
+          (eval `(sb-profile:unprofile ,sym)))
+        (sb-profile:unprofile))))
+
+(defun reset ()
+  (sb-profile:reset))
+
+;;; ----------------------------------------------------------------------------
 
 (defun list-children (gtype)
   (sort (mapcar #'g:type-name (g:type-children gtype))
@@ -80,4 +116,4 @@
   (mapcar #'gobject:enum-item-value
           (gobject:get-enum-items gtype)))
 
-;;; 2024-6-14
+;;; 2024-6-16
