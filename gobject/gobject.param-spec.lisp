@@ -294,19 +294,18 @@
   @end{table}")
 
 ;;; ----------------------------------------------------------------------------
-;;; G_TYPE_IS_PARAM()
+;;; G_TYPE_IS_PARAM
 ;;; ----------------------------------------------------------------------------
 
 (defun type-is-param (gtype)
  #+liber-documentation
- "@version{2022-12-29}
-  @argument[gtype]{a @class{g:type-t} ID}
+ "@version{2024-6-10}
+  @argument[gtype]{a @class{g:type-t} type ID}
   @begin{short}
-    Checks whether @arg{gtype} \"is a\" @var{g:+type-param+}.
+    Checks whether @arg{gtype} \"is a\" @code{\"GParam\"} type.
   @end{short}
   @see-symbol{g:param-spec}
-  @see-class{g:type-t}
-  @see-variable{g:+type-param+}"
+  @see-class{g:type-t}"
   (eq (type-fundamental gtype) (glib:gtype "GParam")))
 
 (export 'type-is-param)
@@ -325,19 +324,18 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; G_IS_PARAM_SPEC()
+;;; G_IS_PARAM_SPEC
 ;;; ----------------------------------------------------------------------------
 
 (defun is-param-spec (pspec)
  #+liber-documentation
- "@version{2022-12-29}
+ "@version{2024-6-10}
   @argument[pspec]{a @symbol{g:param-spec} instance}
   @begin{short}
     Checks whether @arg{pspec} \"is a\" valid @symbol{g:param-spec} instance
-    of type @var{g:+type-param+} or derived.
+    of @code{\"GParam\"} type or derived.
   @end{short}
-  @see-symbol{g:param-spec}
-  @see-variable{g:+type-param+}"
+  @see-symbol{g:param-spec}"
   (type-is-param (type-from-instance pspec)))
 
 (export 'is-param-spec)
@@ -853,19 +851,19 @@
   (pspec (:pointer (:struct param-spec))))
 
 ;;; ----------------------------------------------------------------------------
-;;; g_param_spec_internal ()
+;;; g_param_spec_internal
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_param_spec_internal" param-spec-internal) :pointer
  #+liber-documentation
- "@version{2022-12-29}
-  @argument[param-type]{the @class{g:type-t} for the property, must be derived
-    from @var{g:+type-param+}}
+ "@version{2024-6-10}
+  @argument[param-type]{a @class{g:type-t} type ID for the property, must be
+    derived from the @code{\"GParam\"} type}
   @argument[name]{a string with the canonical name of the property}
   @argument[nick]{a string with the nickname of the property}
   @argument[blurb]{a string with a short description of the property}
   @argument[flags]{a combination of flags of type @symbol{g:param-flags}}
-  @return{A newly allocated @symbol{g:param-spec} instance.}
+  @return{The newly allocated @symbol{g:param-spec} instance.}
   @begin{short}
     Creates a new parameter specification instance.
   @end{short}
@@ -894,8 +892,7 @@
   @end{dictionary}
   @see-symbol{g:param-spec}
   @see-symbol{g:param-flags}
-  @see-class{g:type-t}
-  @see-variable{g:+type-param+}"
+  @see-class{g:type-t}"
   (param-type type-t)
   (name :string)
   (nick :string)

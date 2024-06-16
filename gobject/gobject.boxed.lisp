@@ -193,10 +193,10 @@
   @argument[name]{name of the new boxed type}
   @argument[copy-fn]{boxed structure copy function}
   @argument[free-fn]{boxed structure free function}
-  @return{New @var{g:+type-boxed+} derived type ID for @arg{name}.}
+  @return{The new @code{\"GBoxed\"} derived type ID for @arg{name}.}
   @begin{short}
-    This function creates a new @var{g:+type-boxed+} derived type ID for
-    a new boxed type with name @arg{name}.
+    This function creates a new @code{\"GBoxed\"} derived type ID for a new
+    boxed type with name @arg{name}.
   @end{short}
   Boxed type handling functions have to be provided to copy and free opaque
   boxed structures of this type."
@@ -215,9 +215,9 @@
  #+liber-documentation
  "@version{#2013-6-10}
   @argument[name]{the name of the new pointer type}
-  @return{The new @var{g:+type-pointer+} derived type ID for @arg{name}.}
+  @return{The new @code{\"gpointer\"} derived type ID for @arg{name}.}
   @begin{short}
-    Creates a new @var{g:+type-pointer+} derived type ID for a new pointer type
+    Creates a new @code{\"gpointer\"} derived type ID for a new pointer type
     with name @arg{name}.
   @end{short}"
   (name :string))

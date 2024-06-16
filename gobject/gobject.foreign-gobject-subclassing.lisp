@@ -276,11 +276,11 @@
           (flags (append (when property-get-fn (list :readable))
                          (when property-set-fn (list :writable)))))
       (ev-case (type-fundamental property-gtype)
-        ((glib:gtype +type-invalid+)
+        (nil
          (error "GValue is of invalid type ~A (~A)"
                 property-gtype (glib:gtype-name property-gtype)))
-        ((glib:gtype +type-none+) nil)
-        ((glib:gtype +type-char+)
+        ((glib:gtype "void") nil)
+        ((glib:gtype "gchar")
          (param-spec-char property-name
                           property-name
                           property-name
@@ -288,7 +288,7 @@
                           (maximum-foreign-integer :char)
                           0
                           flags))
-        ((glib:gtype +type-uchar+)
+        ((glib:gtype "guchar")
          (param-spec-uchar property-name
                            property-name
                            property-name
@@ -296,13 +296,13 @@
                            (maximum-foreign-integer :uchar nil)
                            0
                            flags))
-        ((glib:gtype +type-boolean+)
+        ((glib:gtype "gboolean")
          (param-spec-boolean property-name
                              property-name
                              property-name
                              nil
                              flags))
-        ((glib:gtype +type-int+)
+        ((glib:gtype "gint")
          (param-spec-int property-name
                          property-name
                          property-name
@@ -310,7 +310,7 @@
                          (maximum-foreign-integer :int)
                          0
                          flags))
-        ((glib:gtype +type-uint+)
+        ((glib:gtype "guint")
          (param-spec-uint property-name
                           property-name
                           property-name
@@ -318,7 +318,7 @@
                           (maximum-foreign-integer :uint nil)
                           0
                           flags))
-        ((glib:gtype +type-long+)
+        ((glib:gtype "glong")
          (param-spec-long property-name
                           property-name
                           property-name
@@ -326,7 +326,7 @@
                           (maximum-foreign-integer :long)
                           0
                           flags))
-        ((glib:gtype +type-ulong+)
+        ((glib:gtype "gulong")
          (param-spec-ulong property-name
                            property-name
                            property-name
@@ -334,7 +334,7 @@
                            (maximum-foreign-integer :ulong nil)
                            0
                            flags))
-        ((glib:gtype +type-int64+)
+        ((glib:gtype "gint64")
          (param-spec-int64 property-name
                            property-name
                            property-name
@@ -342,7 +342,7 @@
                            (maximum-foreign-integer :int64)
                            0
                            flags))
-        ((glib:gtype +type-uint64+)
+        ((glib:gtype "guint64")
          (param-spec-uint64 property-name
                             property-name
                             property-name
@@ -350,7 +350,7 @@
                             (maximum-foreign-integer :uint64 t)
                             0
                             flags))
-        ((glib:gtype +type-enum+)
+        ((glib:gtype "GEnum")
          (param-spec-enum property-name
                           property-name
                           property-name
@@ -358,7 +358,7 @@
                           (enum-item-value
                             (first (get-enum-items property-gtype)))
                           flags))
-        ((glib:gtype +type-flags+)
+        ((glib:gtype "GFlags")
          (param-spec-enum property-name
                           property-name
                           property-name
@@ -366,7 +366,7 @@
                           (flags-item-value
                             (first (get-flags-items property-gtype)))
                           flags))
-        ((glib:gtype +type-float+)
+        ((glib:gtype "gfloat")
          (param-spec-float property-name
                            property-name
                            property-name
@@ -374,7 +374,7 @@
                            most-positive-single-float
                            0.0
                            flags))
-        ((glib:gtype +type-double+)
+        ((glib:gtype "gdouble")
          (param-spec-double property-name
                             property-name
                             property-name
@@ -382,24 +382,24 @@
                             most-positive-double-float
                             0.0d0
                             flags))
-        ((glib:gtype +type-string+)
+        ((glib:gtype "gchararray")
          (param-spec-string property-name
                             property-name
                             property-name
                             ""
                             flags))
-        ((glib:gtype +type-pointer+)
+        ((glib:gtype "gpointer")
          (param-spec-pointer property-name
                              property-name
                              property-name
                              flags))
-        ((glib:gtype +type-boxed+)
+        ((glib:gtype "GBoxed")
          (param-spec-boxed property-name
                            property-name
                            property-name
                            property-gtype
                            flags))
-        ((glib:gtype +type-object+)
+        ((glib:gtype "GObject")
          (param-spec-object property-name
                             property-name
                             property-name

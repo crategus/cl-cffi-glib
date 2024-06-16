@@ -1033,8 +1033,8 @@ lambda (object pspec)    :no-hooks
     @end{pre}
   @end{dictionary}
   @see-class{g:type-t}"
-  (and (not (type-is-a gtype (glib:gtype +type-interface+)))
-       (type-is-a gtype (glib:gtype +type-object+))))
+  (and (not (type-is-a gtype (glib:gtype "GInterface")))
+       (type-is-a gtype (glib:gtype "GObject"))))
 
 (export 'type-is-object)
 
@@ -1071,7 +1071,7 @@ lambda (object pspec)    :no-hooks
   @end{dictionary}
   @see-class{g:object}
   @see-symbol{g:type-instance}"
-  (type-check-instance-type object +type-object+))
+  (type-check-instance-type object (glib:gtype "GObject")))
 
 (export 'is-object)
 
@@ -1097,7 +1097,7 @@ lambda (object pspec)    :no-hooks
   @argument[class]{a foreign pointer to a @symbol{object-class} instance}
   @begin{short}
     Checks whether the @arg{class} argument is a @symbol{object-class}
-    instance of type @var{g:+type-object+} or derived.
+    instance of type @code{\"GObject\"} or derived.
   @end{short}
   @begin[Examples]{dictionary}
     @begin{pre}
@@ -1107,9 +1107,8 @@ lambda (object pspec)    :no-hooks
     @end{pre}
   @end{dictionary}
   @see-class{g:object}
-  @see-symbol{object-class}
-  @see-variable{g:+type-object+}"
-  (type-check-class-type class +type-object+))
+  @see-symbol{object-class}"
+  (type-check-class-type class (glib:gtype "GObject")))
 
 ;;; ----------------------------------------------------------------------------
 ;;; G_OBJECT_GET_CLASS                                      not exported

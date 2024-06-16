@@ -918,7 +918,7 @@
   @argument[accu-data]{user data for the accumulator}
   @argument[c-marshaller]{the function to translate arrays of parameter values
     to signal emissions into C language callback invocations or @code{nil}}
-  @argument[return-type]{the type of return value, or @var{g:+type-none+} for
+  @argument[return-type]{the type of return value, or @code{\"void\"} for
     a signal without a return value}
   @argument[n-params]{the length of @arg{param-types}}
   @argument[param-types]{an array of types, one for each parameter}
@@ -1285,7 +1285,7 @@
                            gtype
                            :zero-gvalue t))
         (prog1
-          (if (eq (signal-query-return-type query) (glib:gtype +type-none+))
+          (if (eq (signal-query-return-type query) (glib:gtype "void"))
               ;; Emit a signal which has no return value
               (let ((detail (signal-query-signal-detail query)))
                 (%signal-emitv params
