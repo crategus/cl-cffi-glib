@@ -3,6 +3,55 @@
 (def-suite gobject-base :in gobject-suite)
 (in-suite gobject-base)
 
+(defparameter gobject-base
+              '(gobject::ref-count
+
+                g:object-pointer
+                g:object-has-reference
+                g:object-signal-handlers
+
+                gobject::get-gobject-for-pointer
+                gobject::get-gobject-for-pointer-strong
+                gobject::get-gobject-for-pointer-weak
+                gobject::rem-gobject-for-pointer-strong
+                gobject::rem-gobject-for-pointer-weak
+
+                gobject::release
+                gobject::dispose-carefully
+                gobject::activate-gc-hooks
+                gobject::register-gobject-for-gc
+                gobject::should-ref-sink-at-creation
+                gobject::register-gobject
+                gobject::get-or-create-gobject-for-pointer
+                gobject::create-gobject-from-pointer
+                gobject::class-property-pspec
+                gobject::class-property-type
+                gobject::create-gobject-from-class
+                gobject::call-gobject-constructor
+                gobject::object-class-get-property
+                gobject::object-class-set-property
+
+                g:type-is-object
+                g:is-object
+                g:object-type
+                g:object-type-name
+                g:object-class-find-property
+                g:object-class-list-properties
+                g:object-interface-find-property
+                g:object-interface-list-properties
+                g:object-new
+                g:object-ref
+                g:object-unref
+                g:object-notify
+                g:object-freeze-notify
+                g:object-thaw-notify
+                g:object-data
+                g:object-set-data-full
+                g:object-property
+              ))
+
+(export 'gobject-base)
+
 ;;; --- Lisp functions ---------------------------------------------------------
 
 ;;;     class-property-pspec
@@ -251,6 +300,15 @@
 
 ;;;     g_object_ref
 ;;;     g_object_unref
+
+(test g-object-ref/unref
+  (let ((action (make-instance 'g:simple-action)))
+    (is (= 1 (gobject::ref-count action)))
+    (is (eq action (g:object-ref action)))
+    (is (= 2 (gobject::ref-count action)))
+    (is-false (g:object-unref action))
+    (is (= 1 (gobject::ref-count action)))))
+
 ;;;     g_object_ref_sink
 ;;;     g_clear_object
 

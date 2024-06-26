@@ -3,6 +3,16 @@
 (def-suite glib-error :in glib-suite)
 (in-suite glib-error)
 
+(test g-error-boxed
+  ;; Check type
+  (is (g:type-is-boxed "GError"))
+  ;; Check type initializer
+  (is (eq (g:gtype "GError")
+          (g:gtype (cffi:foreign-funcall "g_error_get_type" :size))))
+  ;; Check registered name
+  (is (eq 'glib:error
+          (glib:symbol-for-gtype "GError"))))
+
 ;;;     with-g-error
 
 (test with-g-error
@@ -45,4 +55,4 @@
 ;; TODO: The WITH-CATCHING-TO-G-ERROR is for usage in callback functions which
 ;; have an error argument. We have no example at this time.
 
-;;; 2024-6-14
+;;; 2024-6-22

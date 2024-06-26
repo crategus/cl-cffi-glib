@@ -19,15 +19,15 @@
    (:NO -9)
    (:APPLY -10)
    (:HELP -11))
- (EVAL-WHEN (:COMPILE-TOPLEVEL :LOAD-TOPLEVEL :EXECUTE)
-   (SETF (GLIB:SYMBOL-FOR-GTYPE "GtkResponseType") 'GTK-RESPONSE-TYPE))
  (EXPORT 'GTK-RESPONSE-TYPE (FIND-PACKAGE "GLIB-TEST"))
  (GLIB-INIT:AT-INIT NIL
    (IF (CFFI:FOREIGN-SYMBOL-POINTER "gtk_response_type_get_type")
        (CFFI:FOREIGN-FUNCALL-POINTER
         (CFFI:FOREIGN-SYMBOL-POINTER "gtk_response_type_get_type") NIL :SIZE)
        (WARN "Type initializer '~A' is not available"
-             "gtk_response_type_get_type"))))
+             "gtk_response_type_get_type")))
+ (EVAL-WHEN (:COMPILE-TOPLEVEL :LOAD-TOPLEVEL :EXECUTE)
+   (SETF (GLIB:SYMBOL-FOR-GTYPE "GtkResponseType") 'GTK-RESPONSE-TYPE)))
               (macroexpand '(gobject:define-g-enum "GtkResponseType"
                                                    gtk-response-type
                              (:export t
@@ -54,15 +54,15 @@
    (:LINK 8)
    (:PRIVATE 16)
    (:ASK 32))
- (EVAL-WHEN (:COMPILE-TOPLEVEL :LOAD-TOPLEVEL :EXECUTE)
-   (SETF (GLIB:SYMBOL-FOR-GTYPE "GdkDragAction") 'GDK-DRAG-ACTION))
  (EXPORT 'GDK-DRAG-ACTION (FIND-PACKAGE "GLIB-TEST"))
  (GLIB-INIT:AT-INIT NIL
    (IF (CFFI:FOREIGN-SYMBOL-POINTER "gdk_drag_action_get_type")
        (CFFI:FOREIGN-FUNCALL-POINTER
         (CFFI:FOREIGN-SYMBOL-POINTER "gdk_drag_action_get_type") NIL :SIZE)
        (WARN "Type initializer '~A' is not available"
-             "gdk_drag_action_get_type"))))
+             "gdk_drag_action_get_type")))
+ (EVAL-WHEN (:COMPILE-TOPLEVEL :LOAD-TOPLEVEL :EXECUTE)
+   (SETF (GLIB:SYMBOL-FOR-GTYPE "GdkDragAction") 'GDK-DRAG-ACTION)))
              (macroexpand '(gobject:define-g-flags "GdkDragAction"
                                                    gdk-drag-action
                             (:export t

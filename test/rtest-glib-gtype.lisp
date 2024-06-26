@@ -38,7 +38,8 @@
     (is (string= "void" (glib::gtype-name gtype)))))
 
 (test gtype-from-name.2
-  (is-false (glib::gtype-from-name "unknown")))
+  (let ((glib:*warn-unknown-gtype* nil))
+    (is-false (glib::gtype-from-name "unknown"))))
 
 (test gtype-from-name.3
   (let ((gtypes (iter (for (name gtype) in-hashtable glib::*name-to-gtype*)

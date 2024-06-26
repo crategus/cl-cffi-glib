@@ -3,30 +3,46 @@
 (def-suite gobject-binding :in gobject-suite)
 (in-suite gobject-binding)
 
+(defvar *verbose-gobject-binding* t)
+
+(defparameter gobject-binding
+              '(g:binding-flags
+                g:binding-source
+                g:binding-source-property
+                g:binding-target
+                g:binding-target-property
+                g:binding-dup-source
+                g:binding-dup-target
+                g:binding-unbind
+                g:object-bind-property
+                g:object-bind-property-full))
+
+(export 'gobject-binding)
+
 ;;; --- Types and Values -------------------------------------------------------
 
 ;;;     GBindingFlags
 
 (test g-binding-flags
-  ;; Check the type
+  ;; Check type
   (is (g:type-is-flags "GBindingFlags"))
-  ;; Check the registered symbol
+  ;; Check registered symbol
   (is (eq 'g:binding-flags
           (glib:symbol-for-gtype "GBindingFlags")))
-  ;; Check the type initializer
+  ;; Check type initializer
   (is (eq (g:gtype "GBindingFlags")
           (g:gtype (cffi:foreign-funcall "g_binding_flags_get_type" :size))))
-  ;; Check the names
+  ;; Check names
   (is (equal '("G_BINDING_DEFAULT" "G_BINDING_BIDIRECTIONAL"
                "G_BINDING_SYNC_CREATE" "G_BINDING_INVERT_BOOLEAN")
-             (list-flags-item-name "GBindingFlags")))
-  ;; Check the values
+             (glib-test:list-flags-item-name "GBindingFlags")))
+  ;; Check values
   (is (equal '(0 1 2 4)
-             (list-flags-item-value "GBindingFlags")))
-  ;; Check the nick names
+             (glib-test:list-flags-item-value "GBindingFlags")))
+  ;; Check nick names
   (is (equal '("default" "bidirectional" "sync-create" "invert-boolean")
-             (list-flags-item-nick "GBindingFlags")))
-  ;; Check the flags definition
+             (glib-test:list-flags-item-nick "GBindingFlags")))
+  ;; Check flags definition
   (is (equal '(GOBJECT:DEFINE-G-FLAGS "GBindingFlags" G-BINDING-FLAGS
                                       (:EXPORT T
                                        :TYPE-INITIALIZER
@@ -40,29 +56,29 @@
 ;;;     GBinding
 
 (test g-binding-class
-  ;; Type check
+  ;; Check type
   (is (g:type-is-object "GBinding"))
-  ;; Check the registered symbol
+  ;; Check registered symbol
   (is (eq 'g:binding
           (glib:symbol-for-gtype "GBinding")))
-  ;; Check the type initializer
+  ;; Check type initializer
   (is (eq (g:gtype "GBinding")
           (g:gtype (cffi:foreign-funcall "g_binding_get_type" :size))))
-  ;; Check the parent
+  ;; Check parent
   (is (eq (g:gtype "GObject") (g:type-parent "GBinding")))
-  ;; Check the children
+  ;; Check children
   (is (equal '()
-             (list-children "GBinding")))
-  ;; Check the interfaces
+             (glib-test:list-children "GBinding")))
+  ;; Check interfaces
   (is (equal '()
-             (list-interfaces "GBinding")))
-  ;; Check the class properties
+             (glib-test:list-interfaces "GBinding")))
+  ;; Check class properties
   (is (equal '("flags" "source" "source-property" "target" "target-property")
-             (list-properties "GBinding")))
-  ;; Check the list of signals
+             (glib-test:list-properties "GBinding")))
+  ;; Check signals
   (is (equal '()
-             (list-signals "GBinding")))
-  ;; Check the class definition
+             (glib-test:list-signals "GBinding")))
+  ;; Check class definition
   (is (equal '(GOBJECT:DEFINE-G-OBJECT-CLASS "GBinding" G-BINDING
                        (:SUPERCLASS G-OBJECT
                         :EXPORT T
@@ -79,46 +95,174 @@
 
 ;;; --- Properties -------------------------------------------------------------
 
-#+nil
-(test g-binding-properties
-  (let* ((toggle (make-instance 'gtk:toggle-button))
-         (revealer (make-instance 'gtk:revealer))
-         (binding (g:object-bind-property toggle "active"
-                                          revealer "reveal-child"
-                                          :default)))
-    (is (equal '() (g:binding-flags binding)))
-    (is (eq (g:gtype "GtkToggleButton")
+(test g-binding-properties.1
+  (let* ((action1 (make-instance 'g:simple-action))
+         (action2 (make-instance 'g:simple-action))
+         (binding (g:object-bind-property action1 "enabled"
+                                          action2 "enabled"
+                                          :bidirectional)))
+    (is-false (setf (g:simple-action-enabled action1) nil))
+    (is (eq (g:simple-action-enabled action1) (g:simple-action-enabled action2)))
+    (is-true (setf (g:simple-action-enabled action2) t))
+    (is (eq (g:simple-action-enabled action1) (g:simple-action-enabled action2)))
+    (is (equal '(:bidirectional) (g:binding-flags binding)))
+    (is (eq (g:gtype "GSimpleAction")
             (g:object-type (g:binding-source binding))))
-    (is (string= "active" (g:binding-source-property binding)))
-    (is (eq (g:gtype "GtkRevealer") (g:object-type (g:binding-target binding))))
-    (is (string= "reveal-child" (g:binding-target-property binding)))))
+    (is (string= "enabled" (g:binding-source-property binding)))
+    (is (eq (g:gtype "GSimpleAction") (g:object-type (g:binding-target binding))))
+    (is (string= "enabled" (g:binding-target-property binding)))
+    (is-false (g:binding-unbind binding))))
+
+(test g-binding-properties.2
+  (let* ((action1 (make-instance 'g:simple-action))
+         (action2 (make-instance 'g:simple-action))
+         (binding (g:object-bind-property action1 "enabled"
+                                          action2 "enabled"
+                                          :invert-boolean)))
+    (is-false (setf (g:simple-action-enabled action1) nil))
+    (is (eq (g:simple-action-enabled action1) (not (g:simple-action-enabled action2))))
+    (is-true (setf (g:simple-action-enabled action2) t))
+    (is (eq (g:simple-action-enabled action1) (not (g:simple-action-enabled action2))))
+    (is (equal '(:invert-boolean) (g:binding-flags binding)))
+    (is (eq (g:gtype "GSimpleAction")
+            (g:object-type (g:binding-source binding))))
+    (is (string= "enabled" (g:binding-source-property binding)))
+    (is (eq (g:gtype "GSimpleAction") (g:object-type (g:binding-target binding))))
+    (is (string= "enabled" (g:binding-target-property binding)))
+    (is-false (g:binding-unbind binding))))
 
 ;;; --- Functions --------------------------------------------------------------
 
-;;;     g-binding-unbind
-;;;     g-object-bind-property
+;;;     g_binding_dup_source
+;;;     g_binding_dup_target
 
-#+nil
+(test g-binding-dup-source/target
+  (let* ((action1 (make-instance 'g:simple-action))
+         (action2 (make-instance 'g:simple-action))
+         (binding (g:object-bind-property action1 "enabled"
+                                          action2 "enabled"
+                                          :default)))
+    (is (eq action1 (g:binding-dup-source binding)))
+    (is (eq action2 (g:binding-dup-target binding)))))
+
+;;;     g_binding_unbind
+;;;     g_object_bind_property
+
 (test g-object-bind-property
-  (let* ((toggle (make-instance 'gtk:toggle-button))
-         (revealer (make-instance 'gtk:revealer))
-         (binding (g:object-bind-property toggle "active"
-                                          revealer "reveal-child"
+  (let* ((action1 (make-instance 'g:simple-action))
+         (action2 (make-instance 'g:simple-action))
+         (binding (g:object-bind-property action1 "enabled"
+                                          action2 "enabled"
                                           :sync-create)))
     (is (eq (g:gtype "GBinding") (g:object-type binding)))
     (is (equal '(:sync-create) (g:binding-flags binding)))
-    ;; Default values are false
-    (is-false (gtk:toggle-button-active toggle))
-    (is-false (gtk:revealer-reveal-child revealer))
-    ;; Set toogle active true
-    (is-true (setf (gtk:toggle-button-active toggle) t))
-    ;; reveal-child is true
-    (is-true (gtk:revealer-reveal-child revealer))
+    ;; Default values are true
+    (is-true (g:simple-action-enabled action1))
+    (is-true (g:simple-action-enabled action2))
+    ;; Set action1 to false
+    (is-false (setf (g:simple-action-enabled action1) nil))
+    ;; enabled is nil for action2
+    (is-false (g:simple-action-enabled action2))
     ;; Unbind the binding
     (is-false (g:binding-unbind binding))))
 
 ;;;     GBindingTransformFunc
 ;;;     g_object_bind_property_full
-;;;     g_object_bind_property_with_closures
 
-;;; 2024-6-12
+(test g-object-bind-property-full.1
+  (let* ((action1 (make-instance 'g:simple-action))
+         (action2 (make-instance 'g:simple-action))
+         binding)
+  (is (typep (setf binding
+                   (g:object-bind-property-full
+                           action1 "enabled"
+                           action2 "enabled"
+                           :default
+                           ;; TRANSFORM-TO function
+                           (lambda (binding from to)
+                             (g:value-set to (g:value-get from) "gboolean")
+                             (when *verbose-gobject-binding*
+                               (format t "~%")
+                               (format t " binding: ~a~%" binding)
+                               (format t "    from: ~a~%" (g:value-get from))
+                               (format t "      to: ~a~%" (g:value-get to)))
+                             t)
+                           ;; TRANSFORM-FROM function
+                           nil))
+             'g:binding))
+  ;; Default values
+  (is-true (g:simple-action-enabled action1))
+  (is-true (g:simple-action-enabled action2))
+  ;; Set action1 NL
+  (is-false (setf (g:simple-action-enabled action1) nil))
+  (is-false (g:simple-action-enabled action1))
+  (is-false (g:simple-action-enabled action2))
+  ;;S Set action1 T
+  (is-true (setf (g:simple-action-enabled action1) t))
+  (is-true (g:simple-action-enabled action1))
+  (is-true (g:simple-action-enabled action2))))
+
+(test g-object-bind-property-full.2
+  (let* ((action1 (make-instance 'g:simple-action))
+         (action2 (make-instance 'g:simple-action))
+         binding)
+  (is (typep (setf binding
+                   (g:object-bind-property-full action1 "enabled"
+                                                action2 "enabled"
+                                                :default
+                                                 nil
+                                                 nil))
+             'g:binding))
+  ;; Default values
+  (is-true (g:simple-action-enabled action1))
+  (is-true (g:simple-action-enabled action2))
+  ;; Set action1 NL
+  (is-false (setf (g:simple-action-enabled action1) nil))
+  (is-false (g:simple-action-enabled action1))
+  (is-false (g:simple-action-enabled action2))
+  ;;S Set action1 T
+  (is-true (setf (g:simple-action-enabled action1) t))
+  (is-true (g:simple-action-enabled action1))
+  (is-true (g:simple-action-enabled action2))))
+
+(test g-object-bind-property-full.3
+  (let* ((action1 (make-instance 'g:simple-action))
+         (action2 (make-instance 'g:simple-action))
+         binding)
+  (is (typep (setf binding
+                   (g:object-bind-property-full
+                           action1 "enabled"
+                           action2 "enabled"
+                           :bidirectional
+                           ;; TRANSFORM-TO function
+                           (lambda (binding from to)
+                             (g:value-set to (g:value-get from) "gboolean")
+                             (when *verbose-gobject-binding*
+                               (format t "~&in TRANSFORM-TO~%")
+                               (format t " binding: ~a~%" binding)
+                               (format t "    from: ~a~%" (g:value-get from))
+                               (format t "      to: ~a~%" (g:value-get to)))
+                             t)
+                           ;; TRANSFORM-FROM function
+                           (lambda (binding from to)
+                             (g:value-set to (g:value-get from) "gboolean")
+                             (when *verbose-gobject-binding*
+                               (format t "~&in TRANSFORM-FROM~%")
+                               (format t " binding: ~a~%" binding)
+                               (format t "    from: ~a~%" (g:value-get from))
+                               (format t "      to: ~a~%" (g:value-get to)))
+                             t)))
+             'g:binding))
+  ;; Default values
+  (is-true (g:simple-action-enabled action1))
+  (is-true (g:simple-action-enabled action2))
+  ;; Set action2 NIL
+  (is-false (setf (g:simple-action-enabled action2) nil))
+  (is-false (g:simple-action-enabled action1))
+  (is-false (g:simple-action-enabled action2))
+  ;; Set action2 T
+  (is-true (setf (g:simple-action-enabled action2) t))
+  (is-true (g:simple-action-enabled action1))
+  (is-true (g:simple-action-enabled action2))))
+
+;;; 2024-6-17

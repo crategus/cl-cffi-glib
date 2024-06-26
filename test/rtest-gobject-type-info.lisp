@@ -7,7 +7,7 @@
 
 ;;; ----------------------------------------------------------------------------
 
-(defparameter profile-gobject-type-info
+(defparameter gobject-type-info
   '(g:gtype
     g:gtype-name
     g:gtype-id
@@ -40,10 +40,10 @@
     g:type-interfaces
     g:type-interface-prerequisites
     g:type-qdata
-    g:type-ensure
-    ))
+    g:type-ensure))
 
-(export 'profile-gobject-type-info)
+(export 'gobject-type-info)
+
 
 ;;; --- Types and Values -------------------------------------------------------
 

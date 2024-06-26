@@ -3,10 +3,34 @@
 (def-suite gobject-signals :in gobject-suite)
 (in-suite gobject-signals)
 
-(defvar *verbose-gobject-signals* nil)
+(defvar *verbose-gobject-signals* t)
 
-;; TODO: These tests only works after performing the tests for GApplication
-;; and GSimpleAction.
+(defparameter gobject-signals
+              '(gobject::create-closure
+                gobject::save-handler-to-object
+                gobject::parse-closure-arguments
+                gobject::retrieve-handler-from-object
+                gobject::call-with-restarts
+                gobject::finalize-lisp-closure
+                gobject::delete-handler-from-object
+                gobject::signal-parse-name
+
+                g:signal-query
+                g:signal-lookup
+                g:signal-name
+                g:signal-list-ids
+                g:signal-emit
+                g:signal-connect
+                g:signal-handler-block
+                g:signal-handler-unblock
+                g:signal-handler-disconnect
+                g:signal-handler-find
+                g:signal-handler-is-connected
+                g:signal-has-handler-pending
+                g:signal-stop-emission
+               ))
+
+(export 'gobject-signals)
 
 ;;; --- Types and Values -------------------------------------------------------
 
@@ -32,8 +56,10 @@
 ;;;     g-signal-query
 
 (test g-signal-query
-  (let* ((signal-id (g:signal-lookup "activate" "GSimpleAction"))
+  (let* ((action (make-instance 'g:simple-action)) ; ensure type is loaded
+         (signal-id (g:signal-lookup "activate" "GSimpleAction"))
          (query (g:signal-query signal-id)))
+      (is (typep action 'g:simple-action))
       (is (= signal-id (g:signal-query-signal-id query)))
       (is (string= "activate" (g:signal-query-signal-name query)))
       (is (string= "GSimpleAction"
@@ -62,6 +88,7 @@
 ;;;     g_signal_list_ids
 
 (test g-signal-list-ids
+  (make-instance 'g:application) ; ensure type is loaded
   (is (equal '()
              (mapcar #'g:signal-name (g:signal-list-ids "gboolean"))))
   (is (equal '()
@@ -164,7 +191,9 @@
 ;;;     g_signal_emit_by_name
 ;;;     g_signal_emitv
 ;;;     g_signal_emit_valist
+
 ;;;     g_signal_connect
+
 ;;;     g_signal_connect_after
 ;;;     g_signal_connect_swapped
 ;;;     g_signal_connect_object
@@ -205,8 +234,6 @@
                                            t))))
 
 ;;;     g-signal-handler-disconnect
-
-;; TODO: Implement the g:signal-handler-disconnect function
 
 (test g-signal-handler-disconnect
   (let* ((action (make-instance 'g:simple-action))
@@ -251,7 +278,7 @@
 
 ;;;     g-signal-has-handler-pending
 
-(test g-signal-has-handler-pending
+(test g-signal-has-handler-pending.1
   (let* ((action (make-instance 'g:simple-action))
          (signal-id (g:signal-lookup "activate" "GSimpleAction"))
          (handler-id (g:signal-connect action "activate"
@@ -262,11 +289,11 @@
     ;; We have a signal handler for the signal "activate"
     (is-true (g:signal-has-handler-pending action
                                            signal-id
-                                           (cffi:null-pointer)
+                                           nil
                                            t))
     (is-true (g:signal-has-handler-pending action
                                            signal-id
-                                           (cffi:null-pointer)
+                                           nil
                                            nil))
     ;; We have no signal handler for the signal "change-state"
     (is-false (g:signal-has-handler-pending action
@@ -277,11 +304,73 @@
     (is-false (g:signal-has-handler-pending action
                                             (g:signal-lookup "change-state"
                                             "GSimpleAction")
-                                            (cffi:null-pointer)
+                                            nil
                                             nil))))
+
+(test g-signal-has-handler-pending.2
+  (let* ((action (make-instance 'g:simple-action))
+         (signal-id (g:signal-lookup "notify" "GSimpleAction"))
+         handler-id)
+
+    ;; No signal handler for the signal "notify::enabled"
+    (is-false (g:signal-has-handler-pending action
+                                            signal-id
+                                            "enabled"
+                                            t))
+    ;; Install a handler for the signal
+    (is (integerp (setf handler-id
+                        (g:signal-connect action "notify::enabled"
+                                          (lambda (object pspec)
+                                            (declare (ignore object pspec))
+                                            t)))))
+
+    ;; Signal handler for the signal "notify::enabled"
+    (is-true (g:signal-has-handler-pending action
+                                           signal-id
+                                           "enabled"
+                                           t))
+    (is-true (g:signal-has-handler-pending action
+                                           signal-id
+                                           "enabled"
+                                           nil))))
 
 ;;;     g_signal_stop_emission
 ;;;     g_signal_stop_emission_by_name
+
+;; TODO: This is not a real test for g:signal-stop-emission, it is sufficent
+;; to block the handler.
+
+(test g-signal-stop-emission
+  (let ((message nil)
+        (action (make-instance 'g:simple-action))
+        handler-id)
+    ;; Connect a signal handler
+    (setf handler-id
+          (g:signal-connect action "notify::enabled"
+                  (lambda (object pspec)
+                    (declare (ignore pspec))
+                    (when *verbose-gobject-signals*
+                      (format t "~&Signal notify::enabled for action~%"))
+                    ;; Block the handler
+                    (g:signal-handler-block object handler-id)
+                    ;; Force nil value, this would cause an infinite loop
+                    ;; if we do not block the handler
+                    (setf (g:simple-action-enabled object) nil)
+                    ;; Stop the emission
+                    (is-false (g:signal-stop-emission object
+                                                      "notify::enabled"))
+                    ;; Unblock the handler
+                    (g:signal-handler-unblock object handler-id)
+                    (setf message "Signal notify::enabled for action")
+                    nil)))
+    ;; The signal handler writes a message in the variable MESSAGE.
+    ;; We emit the signal and check the value of MESSAGE.
+    (is-false (setf message nil))
+    (is-true (setf (g:simple-action-enabled action) t))
+    ;; The property has not changed
+    (is-false (g:simple-action-enabled action))
+    (is (string= "Signal notify::enabled for action" message))))
+
 ;;;     g_signal_override_class_closure
 ;;;     g_signal_chain_from_overridden
 ;;;     g_signal_new_class_handler
@@ -297,4 +386,4 @@
 ;;;     g_signal_accumulator_true_handled
 ;;;     g_clear_signal_handler
 
-;;; --- 2023-7-9 ---------------------------------------------------------------
+;;; 2024-6-20
