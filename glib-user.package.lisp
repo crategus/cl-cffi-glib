@@ -545,7 +545,6 @@
            #:signal-list-ids
            #:signal-emit
            #:signal-connect
-           #:signal-connect-after
            #:signal-handler-block
            #:signal-handler-unblock
            #:signal-handler-disconnect
@@ -562,8 +561,12 @@
            #:binding-source-property
            #:binding-target
            #:binding-target-property
+           #:binding-dup-source
+           #:binding-dup-target
            #:binding-unbind
            #:object-bind-property
+           #:binding-transform-func
+           #:object-bind-property-full
 
            ;; Symbols from gio.content-type.lisp
            #:content-type-equals

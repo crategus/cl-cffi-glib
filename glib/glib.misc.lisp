@@ -326,7 +326,7 @@
 
 (defmethod cffi:translate-to-foreign (value (type quark-type))
   (cffi:foreign-funcall "g_quark_from_string"
-                        :string (if value value (cffi:null-pointer))
+                        :string (or value (cffi:null-pointer))
                         :uint32))
 
 (defmethod cffi:translate-from-foreign (value (type quark-type))
@@ -336,19 +336,20 @@
 
 #+liber-documentation
 (setf (documentation 'quark-as-string 'type)
- "@version{2023-9-18}
+ "@version{2024-6-20}
   @begin{short}
     Quarks are associations between strings and integer identifiers.
   @end{short}
   Given either the string or the @code{GQuark} identifier it is possible to
   retrieve the other.
   @begin[Lisp binding]{dictionary}
-    In the Lisp binding the @type{g:quark-as-string} type translates a string
-    argument to the corresponding @code{GQuark} identifier and a @code{GQuark}
-    return value is translated to the corresponding Lisp string. No further
-    functions are implemented for the @type{g:quark-as-string} type.
+    In the Lisp binding the @type{g:quark-as-string} type specifier translates
+    a string argument to the corresponding @code{GQuark} identifier and a
+    @code{GQuark} return value is translated to the corresponding Lisp string.
+    No further functions are implemented for the @type{g:quark-as-string}
+    type specifier.
 
-    If the Lisp string does not currently have an associated @code{GQuark}, a
+    If the Lisp string does not currently has an associated @code{GQuark}, a
     new @code{GQuark} is created. A @code{GQuark} value of zero is associated
     to @code{nil} in Lisp.
 
@@ -358,7 +359,7 @@
   @begin[Examples]{dictionary}
     Translate a Lisp String to a @code{GQuark} identifier:
     @begin{pre}
-(cff:convert-to-foreign \"GtkWidget\" 'g:quark-as-string) => 91
+(cffi:convert-to-foreign \"GtkWidget\" 'g:quark-as-string) => 91
 (cffi:convert-to-foreign \"gboolean\" 'g:quark-as-string) => 9
 (cffi:convert-to-foreign nil 'g:quark-as-string) => 0
      @end{pre}

@@ -264,7 +264,7 @@
 ;; -----------------------------------------------------------------------------
 
 ;; Global hash table for storing the corresponding symbol names for GType names
-;; for example, "GtkButton" -> 'button
+;; for example, "GtkButton" -> 'gtk:button
 
 (let ((symbol-for-gtype (make-hash-table :test 'equal)))
 
@@ -278,6 +278,11 @@
     (let ((key (if (stringp name-or-gtype)
                    name-or-gtype
                    (gtype-name (gtype name-or-gtype)))))
-    (setf (gethash key symbol-for-gtype) symbol))))
+    (setf (gethash key symbol-for-gtype) symbol)))
+
+    ;; For debugging purposes
+    (defun list-symbol-for-gtype ()
+      (iter (for (key symbol) in-hashtable symbol-for-gtype)
+            (collect symbol))))
 
 ;;; --- End of file glib.gtype.lisp --------------------------------------------

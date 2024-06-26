@@ -110,6 +110,7 @@
 ;;; ----------------------------------------------------------------------------
 
 (define-g-boxed-opaque variant-type "GVariantType"
+  :export t
   :type-initializer "g_variant_type_get_gtype"
   :alloc (cl:error "GVariantType cannot be created from the Lisp side."))
 

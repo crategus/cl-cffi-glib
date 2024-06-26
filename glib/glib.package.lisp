@@ -42,6 +42,7 @@
            #:gtype-name
            #:gtype-id
            #:symbol-for-gtype
+           #:*warn-unknown-gtype*
            ;; Symbols from glib.boxed-type.lisp
            #:boxed-opaque-info
            #:boxed-opaque-pointer

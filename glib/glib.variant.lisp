@@ -512,6 +512,7 @@
 ;;; ----------------------------------------------------------------------------
 
 (define-g-boxed-opaque variant-dict "GVariantDict"
+  :export t
   :type-initializer "g_variant_dict_get_type"
   :alloc (%variant-dict-new (cffi:null-pointer)))
 

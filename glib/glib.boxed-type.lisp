@@ -275,6 +275,13 @@
              (setf (boxed-opaque-pointer ,instance) ,native-copy)
              (tg:finalize ,instance
                           (make-boxed-free-finalizer ,native-copy ,info)))))
+       ;; Change 2023-1-24:
+       ;; Add call to the type initializer, when available
+       ,@(when type-initializer
+           (list `(glib-init:at-init ()
+;                     (eval-when (:compile-toplevel :load-toplevel :execute)
+                       ,(type-initializer-call type-initializer))))
+;                       )
        (eval-when (:compile-toplevel :load-toplevel :execute)
          ;; Register the Lisp symbol NAME for GTYPE
          (setf (symbol-for-gtype ,gtype) ',name)
@@ -282,11 +289,6 @@
          (setf (get-boxed-info ',name)
                (make-boxed-opaque-info :name ',name
                                        :gtype ,gtype)))
-       ;; Change 2023-1-24:
-       ;; Add call to the type initializer, when available
-       ,@(when type-initializer
-           (list `(glib-init:at-init ()
-                     ,(type-initializer-call type-initializer))))
        ,@(when export
            (list `(export ',name
                           (find-package

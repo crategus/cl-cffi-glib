@@ -48,6 +48,8 @@
 ;; when getting a GError as argument.
 
 (define-g-boxed-opaque error "GError"
+  :export t
+  :type-initializer "g_error_get_type"
   :alloc (cl:error "GError cannot be created from the Lisp side."))
 
 #+liber-documentation
