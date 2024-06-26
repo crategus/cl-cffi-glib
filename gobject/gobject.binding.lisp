@@ -2,7 +2,7 @@
 ;;; gobject.binding.lisp
 ;;;
 ;;; The documentation of this file is taken from the GObject Reference Manual
-;;; Version 2.76 and modified to document the Lisp binding to the GObject
+;;; Version 2.80 and modified to document the Lisp binding to the GObject
 ;;; library. See <http://www.gtk.org>. The API documentation of the Lisp
 ;;; binding is available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
@@ -36,15 +36,21 @@
 ;;;     GBinding
 ;;;     GBindingFlags
 ;;;
-;;; Functions
+;;; Accessors
 ;;;
-;;;     g_binding_get_source
+;;;     g_binding_get_source                                Deprecated 2.68
 ;;;     g_binding_get_source_property
-;;;     g_binding_get_target
+;;;     g_binding_get_target                                Deprecated 2.68
 ;;;     g_binding_get_target_property
 ;;;     g_binding_get_flags
+;;;
+;;; Functions
+;;;
+;;;     g_binding_dup_source                                Since 2.68
+;;;     g_binding_dup_target                                Since 2.68
 ;;;     g_binding_unbind
 ;;;     g_object_bind_property
+;;;
 ;;;     GBindingTransformFunc
 ;;;     g_object_bind_property_full
 ;;;     g_object_bind_property_with_closures
@@ -68,7 +74,9 @@
 
 (in-package :gobject)
 
-;;; --- g:binding-flags --------------------------------------------------------
+;;; ----------------------------------------------------------------------------
+;;; GBindingFlags
+;;; ----------------------------------------------------------------------------
 
 (define-g-flags "GBindingFlags" binding-flags
   (:export t
@@ -82,13 +90,8 @@
 (setf (liber:alias-for-symbol 'binding-flags)
       "GFlags"
       (liber:symbol-documentation 'binding-flags)
- "@version{2024-1-1}
-  @begin{short}
-    Flags to be passed to the @fun{g:object-bind-property} or
-    @fun{g:object-bind-property-full} functions.
-  @end{short}
-  This enumeration can be extended at later date.
-  @begin{pre}
+ "@version{2024-6-18}
+  @begin{declaration}
 (define-g-flags \"GBindingFlags\" binding-flags
   (:export t
    :type-initializer \"g_binding_flags_get_type\")
@@ -96,26 +99,34 @@
   (:bidirectional 1)
   (:sync-create 2)
   (:invert-boolean 4))
-  @end{pre}
-  @begin[code]{table}
-    @entry[:default]{The default binding. If the source property changes, the
-      target property is updated with its value.}
-    @entry[:bidirectional]{Bidirectional binding. If either the property of the
-      source or the property of the target changes, the other is updated.}
-    @entry[:sync-create]{Synchronize the values of the source and target
-      properties when creating the binding. The direction of the synchronization
-      is always from the source to the target.}
-    @entry[:invert-bool]{If the two properties being bound are booleans, setting
-      one to @em{true} will result in the other being set to @em{false} and
-      vice versa. This flag will only work for boolean properties, and cannot
-      be used when passing custom transformation functions to the
-      @fun{g:object-bind-property-full} function.}
-  @end{table}
+  @end{declaration}
+  @begin{values}
+    @begin[code]{table}
+      @entry[:default]{The default binding. If the source property changes, the
+        target property is updated with its value.}
+      @entry[:bidirectional]{Bidirectional binding. If either the property of
+        the source or the property of the target changes, the other is updated.}
+      @entry[:sync-create]{Synchronize the values of the source and target
+        properties when creating the binding. The direction of the
+        synchronization is always from the source to the target.}
+      @entry[:invert-boolean]{If the two properties being bound are booleans,
+        setting one to @em{true} will result in the other being set to
+        @em{false} and vice versa. This flag will only work for boolean
+        properties, and cannot be used when passing custom transformation
+        functions to the @fun{g:object-bind-property-full} function.}
+    @end{table}
+  @end{values}
+  @begin{short}
+    Flags to be passed to the @fun{g:object-bind-property} or
+    @fun{g:object-bind-property-full} functions.
+  @end{short}
   @see-class{g:binding}
   @see-function{g:object-bind-property}
   @see-function{g:object-bind-property-full}")
 
-;;; --- g:binding --------------------------------------------------------------
+;;; ----------------------------------------------------------------------------
+;;; GBinding
+;;; ----------------------------------------------------------------------------
 
 (define-g-object-class "GBinding" binding
   (:superclass object
@@ -140,7 +151,7 @@
 
 #+liber-documentation
 (setf (documentation 'binding 'type)
- "@version{#2022-12-29}
+ "@version{2024-6-18}
   @begin{short}
     The @class{g:binding} object is the representation of a binding between a
     property on a @class{g:object} instance, or source, and another property on
@@ -149,21 +160,22 @@
   Whenever the source property changes, the same value is applied to the target
   property. For instance, the following binding:
   @begin{pre}
-g_object_bind_property (object1, \"property-a\",
-                        object2, \"property-b\",
-                        G_BINDING_DEFAULT);
+(g:object-bind-property object1 \"property-a\"
+                        object2 \"property-b\"
+                        :default)
   @end{pre}
   will cause the property named @code{property-b} of @code{object2} to be
-  updated every time the @fun{g:object-set} function or the specific accessor
-  changes the value of the property @code{property-a} of @code{object1}.
+  updated every time the @fun{g:object-property} function or the specific
+  accessor changes the value of the property @code{property-a} of
+  @code{object1}.
 
   It is possible to create a bidirectional binding between two properties of two
   @class{g:object} instances, so that if either property changes, the other is
   updated as well, for instance:
   @begin{pre}
-g_object_bind_property (object1, \"property-a\",
-                        object2, \"property-b\",
-                        G_BINDING_BIDIRECTIONAL);
+(g:object-bind-property object1 \"property-a\"
+                        object2 \"property-b\"
+                        :bidirectional)
   @end{pre}
   will keep the two properties in sync.
 
@@ -172,23 +184,20 @@ g_object_bind_property (object1, \"property-a\",
   transformation from the source value to the target value before applying it.
   For instance, the following binding:
   @begin{pre}
-g_object_bind_property_full (adjustment1, \"value\",
-                             adjustment2, \"value\",
-                             G_BINDING_BIDIRECTIONAL,
-                             celsius_to_fahrenheit,
-                             fahrenheit_to_celsius,
-                             NULL, NULL);
+(g:object-bind-property-full adjustment1 \"value\"
+                             adjustment2 \"value\"
+                             :bidirectional
+                             #'celsius-to-fahrenheit
+                             #'fahrenheit-to-celsius)
   @end{pre}
   will keep the @code{value} property of the two adjustments in sync. The
-  @code{celsius_to_fahrenheit} function will be called whenever the @code{value}
-  property of @code{adjustment1} changes and will transform the current value of
-  the property before applying it to the @code{value} property of
-  @code{adjustment2}.
-
-  Vice versa, the @code{fahrenheit_to_celsius} function will be called whenever
-  the @code{value} property of @code{adjustment2} changes, and will transform
-  the current value of the property before applying it to the @code{value}
-  property of @code{adjustment1}.
+  @code{celsius-to-fahrenheit} function will be called whenever the @code{value}
+  property of @code{adjustment1} changes and will transform the current value
+  of the property before applying it to the @code{value} property of
+  @code{adjustment2}. Vice versa, the @code{fahrenheit-to-celsius} function
+  will be called whenever the @code{value} property of @code{adjustment2}
+  changes, and will transform the current value of the property before applying
+  it to the @code{value} property of @code{adjustment1}.
 
   Note that the @class{g:binding} object does not resolve cycles by itself. A
   cycle like
@@ -206,17 +215,17 @@ object3:propertyC -> object1:propertyA
 
   A binding will be severed, and the resources it allocates freed, whenever
   either one of the @class{g:object} instances it refers to are finalized, or
-  when the @class{g:binding} instance loses its last reference.
-
-  Bindings for languages with garbage collection can use the
-  @fun{g:binding-unbind} function to explicitly release a binding between the
-  source and target properties, instead of relying on the last reference on the
-  binding, source, and target instances to drop.
+  when the @class{g:binding} object loses its last reference. Bindings for
+  languages with garbage collection can use the @fun{g:binding-unbind} function
+  to explicitly release a binding between the source and target properties,
+  instead of relying on the last reference on the binding, source, and target
+  instances to drop.
   @see-slot{g:binding-flags}
   @see-slot{g:binding-source}
   @see-slot{g:binding-source-property}
   @see-slot{g:binding-target}
-  @see-slot{g:binding-target-poperty}")
+  @see-slot{g:binding-target-poperty}
+  @see-class{g:object}")
 
 ;;; ----------------------------------------------------------------------------
 ;;; Propery and Accessor Details
@@ -234,10 +243,10 @@ object3:propertyC -> object1:propertyA
 (setf (liber:alias-for-function 'binding-flags)
       "Accessor"
       (documentation 'binding-flags 'function)
- "@version{#2022-12-29}
+ "@version{2024-6-18}
   @syntax[]{(g:binding-flags object) => flags}
   @argument[object]{a @class{g:binding} object}
-  @argument[flags]{the @symbol{g:binding-flags} value used by the binding}
+  @argument[flags]{a @symbol{g:binding-flags} value used by the binding}
   @begin{short}
     Accessor of the @slot[g:binding]{flags} slot of the @class{g:binding} class.
   @end{short}
@@ -257,17 +266,22 @@ object3:propertyC -> object1:propertyA
 (setf (liber:alias-for-function 'binding-source)
       "Accessor"
       (documentation 'binding-source 'function)
- "@version{#2022-12-29}
+ "@version{2024-6-18}
   @syntax[]{(g:binding-source object) => source}
   @argument[object]{a @class{g:binding} object}
-  @argument[source]{a @class{g:object} source}
+  @argument[source]{a @class{g:object} source instance}
   @begin{short}
     Accessor of the @slot[g:binding]{source} slot of the @class{g:binding}
     class.
   @end{short}
   Retrieves the @class{g:object} instance used as the source of the binding.
+  @begin[Warning]{dictionary}
+    This function is deprecated since 2.68. Use the @fun{g:binding-dup-source}
+    function for a safer version of this function.
+  @end{dictionary}
   @see-class{g:binding}
-  @see-class{g:object}")
+  @see-class{g:object}
+  @see-function{g:binding-dup-source}")
 
 ;;; --- g:binding-source-property ----------------------------------------------
 
@@ -276,17 +290,17 @@ object3:propertyC -> object1:propertyA
  "The @code{source-property} property of type @code{:string}
   (Read / Write / Construct Only) @br{}
   The name of the property of the source that should be used as the source of
-  the binding.
+  the binding. @br{}
   Default value: @code{nil}")
 
 #+liber-documentation
 (setf (liber:alias-for-function 'binding-source-property)
       "Accessor"
       (documentation 'binding-source-property 'function)
- "@version{#2022-12-29}
-  @syntax[]{(g:binding-source-property object) => source-property}
+ "@version{2024-6-18}
+  @syntax[]{(g:binding-source-property object) => property}
   @argument[object]{a @class{g:binding} object}
-  @argument[source-property]{a string with the name of the source property}
+  @argument[property]{a string with the name of the source property}
   @begin{short}
     Accessor of the @slot[g:binding]{source-property} slot of the
     @class{g:binding} class.
@@ -306,17 +320,22 @@ object3:propertyC -> object1:propertyA
 (setf (liber:alias-for-function 'binding-target)
       "Accessor"
       (documentation 'binding-target 'function)
- "@version{#2022-12-29}
+ "@version{2024-6-18}
   @syntax[]{(g:binding-target object) => target}
   @argument[object]{a @class{g:binding} object}
-  @argument[target]{a @class{g:object} target}
+  @argument[target]{a @class{g:object} target instance}
   @begin{short}
     Accessor of the @slot[g:binding]{target} slot of the @class{g:binding}
     class.
   @end{short}
   Retrieves the @class{g:object} instance used as the target of the binding.
+  @begin[Warning]{dictionary}
+    This function is deprecated since 2.68. Use the @fun{g:binding-dup-target}
+    function for a safer version of this function.
+  @end{dictionary}
   @see-class{g:binding}
-  @see-class{g:object}")
+  @see-class{g:object}
+  @see-function{g:binding-dup-target}")
 
 ;;; --- g:binding-target-property ----------------------------------------------
 
@@ -332,10 +351,10 @@ object3:propertyC -> object1:propertyA
 (setf (liber:alias-for-function 'binding-target-property)
       "Accessor"
       (documentation 'binding-target-property 'function)
- "@version{#2022-12-21}
-  @syntax[]{(g:binding-target-property object) => target}
+ "@version{2024-6-18}
+  @syntax[]{(g:binding-target-property object) => property}
   @argument[object]{a @class{g:binding} object}
-  @argument[target-property]{a string with the name of the target property}
+  @argument[property]{a string with the name of the target property}
   @begin{short}
     Accessor of the @slot[g:binding]{target-property} slot of the
     @class{g:binding} class.
@@ -344,36 +363,85 @@ object3:propertyC -> object1:propertyA
   @see-class{g:binding}")
 
 ;;; ----------------------------------------------------------------------------
-;;; g_binding_unbind ()
+;;; g_binding_dup_source
+;;; ----------------------------------------------------------------------------
+
+#+glib-2-68
+(cffi:defcfun ("g_binding_dup_source" binding-dup-source)
+    (object binding :already-referenced t)
+ #+liber-documentation
+ "@version{2024-6-18}
+  @argument[binding]{a @class{g:binding} object}
+  @return{The @class{g:object} source instance, or @code{nil} if the source
+    does not exist any more.}
+  @begin{short}
+    Retrieves the @class{g:object} instance used as the source of the binding.
+  @end{short}
+  A @class{g:binding} object can outlive the @class{g:object} source instance
+  as the binding does not hold a strong reference to the source. If the source
+  is destroyed before the binding then this function will return @code{nil}.
+
+  Since 2.68
+  @see-class{g:binding}
+  @see-class{g:object}"
+  (binding (object binding)))
+
+(export 'binding-dup-source)
+
+;;; ----------------------------------------------------------------------------
+;;; g_binding_dup_target
+;;; ----------------------------------------------------------------------------
+
+#+glib-2-68
+(cffi:defcfun ("g_binding_dup_target" binding-dup-target)
+    (object binding :already-referenced t)
+ #+liber-documentation
+ "@version{2024-6-18}
+  @argument[binding]{a @class{g:binding} object}
+  @return{The @class{g:object} target instance, or @code{nil} if the target
+    does not exist any more.}
+  @begin{short}
+    Retrieves the @class{g:object} instance used as the target of the binding.
+  @end{short}
+  A @class{g:binding} object can outlive the @class{g:object} target instance
+  as the binding does not hold a strong reference to the target. If the target
+  is destroyed before the binding then this function will return @code{nil}.
+
+  Since 2.68
+  @see-class{g:binding}
+  @see-class{g:object}"
+  (binding (object binding)))
+
+(export 'binding-dup-target)
+
+;;; ----------------------------------------------------------------------------
+;;; g_binding_unbind
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_binding_unbind" binding-unbind) :void
  #+liber-documentation
- "@version{#2022-12-29}
+ "@version{2024-6-18}
   @argument[binding]{a @class{g:binding} object}
   @begin{short}
     Explicitly releases the binding between the source and the target property
-    expressed by binding .
+    expressed by @arg{binding}.
   @end{short}
-  This function will release the reference that is being held on the binding
-  instance. If you want to hold on to the @class{g:binding} instance after
-  calling the @fun{g:binding-unbind} function, you will need to hold a reference
-  to it.
+  This function will release the reference that is being held on the
+  @arg{binding} instance. If you want to hold on to the @arg{binding} instance
+  after calling the @fun{g:binding-unbind} function, you will need to hold a
+  reference to it.
   @see-class{g:binding}"
   (binding (object binding)))
 
 (export 'binding-unbind)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_object_bind_property ()
+;;; g_object_bind_property
 ;;; ----------------------------------------------------------------------------
-
-;; TODO: Consider exporting the g:object-ref and g:object-unref functions
-;; to handle cases like the one in this function.
 
 (cffi:defcfun ("g_object_bind_property" object-bind-property) (object binding)
  #+liber-documentation
- "@version{2024-1-1}
+ "@version{2024-6-18}
   @argument[source]{a @class{g:object} source instance}
   @argument[source-prop]{a string with the property on @arg{source} to bind}
   @argument[target]{a @class{g:object} target instance}
@@ -402,8 +470,8 @@ object3:propertyC -> object1:propertyA
 
   The binding will automatically be removed when either the source or the
   target instances are finalized. To remove the binding without affecting the
-  source and the target you can just call the @code{g_object_unref()} function
-  on the returned @class{g:binding} instance.
+  source and the target you can just call the @fun{g:object-unref} function on
+  the returned @class{g:binding} object.
 
   A @class{g:object} instance can have multiple bindings.
   @see-class{g:binding}
@@ -418,163 +486,118 @@ object3:propertyC -> object1:propertyA
 (export 'object-bind-property)
 
 ;;; ----------------------------------------------------------------------------
-;;; GBindingTransformFunc ()
-;;;
-;;; gboolean (*GBindingTransformFunc) (GBinding *binding,
-;;;                                    const GValue *from_value,
-;;;                                    GValue *to_value,
-;;;                                    gpointer user_data);
-;;;
-;;; A function to be called to transform from_value to to_value . If this is the
-;;; transform_to function of a binding, then from_value is the source_property
-;;; on the source object, and to_value is the target_property on the target
-;;; object. If this is the transform_from function of a G_BINDING_BIDIRECTIONAL
-;;; binding, then those roles are reversed.
-;;;
-;;; binding :
-;;;     a GBinding
-;;;
-;;; from_value :
-;;;     the GValue containing the value to transform
-;;;
-;;; to_value :
-;;;     the GValue in which to store the transformed value
-;;;
-;;; user_data :
-;;;     data passed to the transform function
-;;;
-;;; Returns :
-;;;     TRUE if the transformation was successful, and FALSE otherwise
-;;;
-;;; Since 2.26
+;;; GBindingTransformFunc
 ;;; ----------------------------------------------------------------------------
 
-;;; ----------------------------------------------------------------------------
-;;; g_object_bind_property_full ()
-;;;
-;;; GBinding *
-;;; g_object_bind_property_full (gpointer source,
-;;;                              const gchar *source_property,
-;;;                              gpointer target,
-;;;                              const gchar *target_property,
-;;;                              GBindingFlags flags,
-;;;                              GBindingTransformFunc transform_to,
-;;;                              GBindingTransformFunc transform_from,
-;;;                              gpointer user_data,
-;;;                              GDestroyNotify notify);
-;;;
-;;; Complete version of g_object_bind_property().
-;;;
-;;; Creates a binding between source_property on source and target_property on
-;;; target , allowing you to set the transformation functions to be used by the
-;;; binding.
-;;;
-;;; If flags contains G_BINDING_BIDIRECTIONAL then the binding will be mutual:
-;;; if target_property on target changes then the source_property on source will
-;;; be updated as well. The transform_from function is only used in case of
-;;; bidirectional bindings, otherwise it will be ignored
-;;;
-;;; The binding will automatically be removed when either the source or the
-;;; target instances are finalized. This will release the reference that is
-;;; being held on the GBinding instance; if you want to hold on to the GBinding
-;;; instance, you will need to hold a reference to it.
-;;;
-;;; To remove the binding, call g_binding_unbind().
-;;;
-;;; A GObject can have multiple bindings.
-;;;
-;;; The same user_data parameter will be used for both transform_to and
-;;; transform_from transformation functions; the notify function will be called
-;;; once, when the binding is removed. If you need different data for each
-;;; transformation function, please use g_object_bind_property_with_closures()
-;;; instead.
-;;;
-;;; source :
-;;;     the source GObject.
-;;;
-;;; source_property :
-;;;     the property on source to bind
-;;;
-;;; target :
-;;;     the target GObject.
-;;;
-;;; target_property :
-;;;     the property on target to bind
-;;;
-;;; flags :
-;;;     flags to pass to GBinding
-;;;
-;;; transform_to :
-;;;     the transformation function from the source to the target , or NULL to
-;;;     use the default.
-;;;
-;;; transform_from :
-;;;     the transformation function from the target to the source , or NULL to
-;;;     use the default.
-;;;
-;;; user_data :
-;;;     custom data to be passed to the transformation functions, or NULL
-;;;
-;;; notify :
-;;;     a function to call when disposing the binding, to free resources used by
-;;;     the transformation functions, or NULL if not required.
-;;;
-;;; Returns :
-;;;     the GBinding instance representing the binding between the two GObject
-;;;     instances. The binding is released whenever the GBinding reference count
-;;;     reaches zero.
-;;;
-;;; Since 2.26
-;;; ----------------------------------------------------------------------------
+#+nil
+(cffi:defcallback binding-transform-func :boolean
+    ((binding (object binding))
+     (from-value (:pointer (:struct value)))
+     (to-value (:pointer (:struct value)))
+     (data :pointer))
+  (let ((func (glib:get-stable-pointer-value data)))
+      (funcall func binding from-value to-value)))
+
+#+liber-documentation
+(setf (liber:alias-for-symbol 'binding-transform-func)
+      "Callback"
+      (liber:symbol-documentation 'binding-transform-func)
+ "@version{2024-6-18}
+  @syntax{lambda (binding from to) => result}
+  @argument[binding]{a @class{g:binding} object}
+  @argument[from]{a @symbol{g:value} instance in which to store the value to
+    transform}
+  @argument[to]{a @symbol{g:value} instance in which to store the transformed
+    value}
+  @argument[result]{@em{True} if the transformation was successful,
+    and @em{false} otherwise.}
+  @begin{short}
+    A function to be called to transform @arg{from} to @arg{to}.
+  @end{short}
+  If this is the @code{transform-to} function of a binding, then @arg{from} is
+  the source property on the source object, and @arg{to} is the target property
+  on the target object. If this is the @code{transform-from} function of a
+  @code{:bidirectional} binding, then those roles are reversed.
+  @see-class{g:binding}
+  @see-function{g:bind-property-full}")
+
+(export 'binding-transform-func)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_object_bind_property_with_closures ()
-;;;
-;;; GBinding *
-;;; g_object_bind_property_with_closures (gpointer source,
-;;;                                       const gchar *source_property,
-;;;                                       gpointer target,
-;;;                                       const gchar *target_property,
-;;;                                       GBindingFlags flags,
-;;;                                       GClosure *transform_to,
-;;;                                       GClosure *transform_from);
-;;;
-;;; Creates a binding between source_property on source and target_property on
-;;; target , allowing you to set the transformation functions to be used by the
-;;; binding.
-;;;
-;;; This function is the language bindings friendly version o
-;;; g_object_bind_property_full(), using GClosures instead of function pointers.
-;;;
-;;; source :
-;;;     the source GObject.
-;;;
-;;; source_property :
-;;;     the property on source to bind
-;;;
-;;; target :
-;;;     the target GObject.
-;;;
-;;; target_property :
-;;;     the property on target to bind
-;;;
-;;; flags :
-;;;     flags to pass to GBinding
-;;;
-;;; transform_to :
-;;;     a GClosure wrapping the transformation function from the source to the
-;;;     target , or NULL to use the default
-;;;
-;;; transform_from :
-;;;     a GClosure wrapping the transformation function from the target to the
-;;;     source , or NULL to use the default
-;;;
-;;; Returns :
-;;;     the GBinding instance representing the binding between the two GObject
-;;;     instances. The binding is released whenever the GBinding reference count
-;;;     reaches zero.
-;;;
-;;; Since 2.26
+;;; g_object_bind_property_with_closures                    internal use only
 ;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("g_object_bind_property_with_closures"
+               %object-bind-property-with-closures) (object binding)
+  (source object)
+  (source-prop :string)
+  (target object)
+  (target-prop :string)
+  (flags binding-flags)
+  (transform-to :pointer)
+  (transfrom-from :pointer))
+
+;;; ----------------------------------------------------------------------------
+;;; g_object_bind_property_full
+;;; ----------------------------------------------------------------------------
+
+(defun object-bind-property-full (source
+                                  source-prop
+                                  target
+                                  target-prop
+                                  flags
+                                  transform-to
+                                  transform-from)
+ #+liber-documentation
+ "@version{2024-6-18}
+  @argument[source]{a @class{g:object} source instance}
+  @argument[source-prop]{a string with the property on @arg{source} to bind}
+  @argument[target]{a @class{g:object} target instance}
+  @argument[target-prop]{a string with the property on @arg{target} to bind}
+  @argument[flags]{a @symbol{g:binding-flags} value to pass to the binding}
+  @argument[transform-to]{a @symbol{g:binding-transform-func} callback function
+    from the source to the target, or @code{nil} to use the default}
+  @argument[transform-form]{a @symbol{g:binding-transform-func} callback
+    function from the target to the source, or @code{nil} to use the default}
+  @return{The @class{g:binding} object representing the binding between the two
+    @class{g:object} instances. The binding is released whenever the
+    @class{g:binding} object reference count reaches zero.}
+  @begin{short}
+    Complete version of the @fun{g:object-bind-property} function.
+  @end{short}
+  Creates a binding between @arg{source-prop} on @arg{source} and
+  @arg{target-prop} on @arg{target}, allowing you to set the transformation
+  functions to be used by the binding.
+
+  If @arg{flags} contains the @code{:birectional} value then the binding will
+  be mutual: if @arg{target-prop} on @arg{target} changes then the
+  @arg{source-prop} on @arg{source} will be updated as well. The
+  @arg{transform-from} function is only used in case of bidirectional bindings,
+  otherwise it will be ignored.
+
+  The binding will automatically be removed when either the source or the target
+  instances are finalized. This will release the reference that is being held on
+  the @class{g:binding} object. If you want to hold on to the @class{g:binding}
+  object, you will need to hold a reference to it.
+
+  To remove the binding, call the @fun{g:binding-unbind} function.
+  A @class{g:object} instance can have multiple bindings.
+  @see-class{g:binding}
+  @see-class{g:object}
+  @see-symbol{g:binding-transform-func}"
+  (%object-bind-property-with-closures
+          source
+          source-prop
+          target
+          target-prop
+          flags
+          (if transform-to
+              (create-closure source transform-to)
+              (cffi:null-pointer))
+          (if transform-from
+              (create-closure source transform-from)
+              (cffi:null-pointer))))
+
+(export 'object-bind-property-full)
 
 ;;; --- gobject.binding.lisp ---------------------------------------------------

@@ -173,7 +173,7 @@
                               kind)))
 
 (defmethod parse-g-value-for-type
-    (gvalue(glib:gtype (eql (glib:gtype "gpointer"))) kind)
+    (gvalue (glib:gtype (eql (glib:gtype "gpointer"))) kind)
   (declare (ignore kind))
   (value-pointer gvalue))
 

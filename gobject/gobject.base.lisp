@@ -157,9 +157,28 @@
         *currently-making-object-p* nil))
 
 ;; Access the hashtables with functions
-(defun get-gobject-for-pointer (pointer)
-  (or (gethash (cffi:pointer-address pointer) *foreign-gobjects-strong*)
-      (gethash (cffi:pointer-address pointer) *foreign-gobjects-weak*)))
+
+(defun get-gobject-for-pointer-strong (ptr)
+  (gethash (cffi:pointer-address ptr) *foreign-gobjects-strong*))
+
+(defun (setf get-gobject-for-pointer-strong) (value ptr)
+  (setf (gethash (cffi:pointer-address ptr) *foreign-gobjects-strong*) value))
+
+(defun rem-gobject-for-pointer-strong (ptr)
+  (remhash (cffi:pointer-address ptr) *foreign-gobjects-strong*))
+
+(defun get-gobject-for-pointer-weak (ptr)
+  (gethash (cffi:pointer-address ptr) *foreign-gobjects-weak*))
+
+(defun (setf get-gobject-for-pointer-weak) (value ptr)
+  (setf (gethash (cffi:pointer-address ptr) *foreign-gobjects-weak*) value))
+
+(defun rem-gobject-for-pointer-weak (ptr)
+  (remhash (cffi:pointer-address ptr) *foreign-gobjects-weak*))
+
+(defun get-gobject-for-pointer (ptr)
+  (or (gethash (cffi:pointer-address ptr) *foreign-gobjects-strong*)
+      (gethash (cffi:pointer-address ptr) *foreign-gobjects-weak*)))
 
 ;;; ----------------------------------------------------------------------------
 ;;; GParameter                                              not exported
@@ -217,7 +236,8 @@
 (export 'object-signal-handlers)
 
 ;; Add object to the global Hash table for registered types
-(setf (glib:symbol-for-gtype "GObject") 'object)
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (setf (glib:symbol-for-gtype "GObject") 'object))
 
 ;;; ----------------------------------------------------------------------------
 
@@ -420,23 +440,22 @@ lambda (object pspec)    :no-hooks
 
 ;;; ----------------------------------------------------------------------------
 
-(defmethod release ((obj object))
-  (tg:cancel-finalization obj)
-  (let ((p (object-pointer obj)))
-    (setf (object-pointer obj) nil)
-    (dispose-carefully p)))
-
 (defun dispose-carefully (pointer)
   (handler-case
-      (register-gobject-for-gc pointer)
+    (register-gobject-for-gc pointer)
     (error (e)
-      (log-for :gc  "Error in dispose: ~A~%" e)
-      (format t "Error in dispose: ~A~%" e))))
+      (format t "Error in DISPOSE-CAREFULLY: ~A~%" e))))
+
+(defmethod release ((obj object))
+  (tg:cancel-finalization obj)
+  (let ((ptr (object-pointer obj)))
+    (setf (object-pointer obj) nil)
+    (dispose-carefully ptr)))
 
 (defun activate-gc-hooks ()
   (bt:with-recursive-lock-held (*gobject-gc-hooks-lock*)
     (when *gobject-gc-hooks*
-      (log-for :gc "activating gc hooks for objects: ~A~%" *gobject-gc-hooks*)
+      (log-for :gc "~&ACTIVATE-GC-HOOKS for: ~A~%" *gobject-gc-hooks*)
       (iter (for pointer in *gobject-gc-hooks*)
             (%object-remove-toggle-ref pointer
                                        (cffi:callback toggle-notify)
@@ -449,44 +468,8 @@ lambda (object pspec)    :no-hooks
     (let ((locks-were-present (not (null *gobject-gc-hooks*))))
       (push pointer *gobject-gc-hooks*)
       (unless locks-were-present
-        (log-for :gc "adding idle-gc-hook to main loop~%")
+        (log-for :gc "~&REGISTER-GOBJECT-FOR-GC: ~a~%" pointer)
         (glib:idle-add #'activate-gc-hooks)))))
-
-;(cffi:defcallback g-idle-gc-hook :boolean ((data :pointer))
-;  (declare (ignore data))
-;  (format t "~%~%IN G-IDLE-GC-HOOKS~%~%")
-;  (activate-gc-hooks)
-;  nil)
-
-;;; ----------------------------------------------------------------------------
-
-(defmethod initialize-instance :around ((obj object) &key)
-  (when *currently-making-object-p*
-    (setf *currently-making-object-p* t))
-  (let ((*current-creating-object* obj))
-    (log-for :subclass
-             ":subclass INITIALIZE-INSTANCE :around ~
-              *current-creating-object* is ~A~%" obj)
-    (call-next-method)))
-
-(defmethod initialize-instance :after ((obj object) &key &allow-other-keys)
-  (unless (slot-boundp obj 'pointer)
-    (error "Pointer slot is not initialized for ~A" obj))
-  (let* ((pointer (object-pointer obj))
-         (s (format nil "~A" obj)))
-    (tg:finalize obj
-                 (lambda ()
-                   (log-for :gc "~A ~A is queued for GC (having ~A refs)~%"
-                            (type-from-instance pointer)
-                            pointer
-                            (ref-count pointer))
-                   (handler-case
-                     (dispose-carefully pointer)
-                     (error (e)
-                       (log-for :gc "Error in finalizer for ~A: ~A~%" s e)
-                       (format t "Error in finalizer for ~A: ~A~%" s e))))))
-  (register-g-object obj)
-  (activate-gc-hooks))
 
 ;;; ----------------------------------------------------------------------------
 
@@ -499,7 +482,7 @@ lambda (object pspec)    :no-hooks
 (defun should-ref-sink-at-creation (object)
   (let ((r (cond ;; not new objects should be ref_sunk
                  ((equal *current-object-from-pointer* (object-pointer object))
-                  (log-for :gc "*cur-obj-from-ptr* ")
+                  (log-for :gc "~&SHOULD-REF-SINK: object is from pointer~%")
                   t)
                  ;; g_object_new returns objects with ref=1,
                  ;; we should save this ref
@@ -507,28 +490,53 @@ lambda (object pspec)    :no-hooks
                   ;; but GInitiallyUnowned objects should be ref_sunk
                   (typep object 'initially-unowned))
                  (t t))))
-    (log-for :gc "(should-ref-sink-at-creation ~A) => ~A~%" object r)
+    (log-for :gc "~&SHOULD-REF-SINK: ~a => ~a~%" object r)
     r))
+
+(defun register-gobject (object)
+  (let ((pointer (object-pointer object)))
+    (log-for :gc "~&REGISTER-GOBJECT: ~a, refcount: ~a ~a~%"
+             object
+             (ref-count object)
+             (if (%object-is-floating pointer) "(floating)" ""))
+    (when (should-ref-sink-at-creation object)
+      (log-for :gc "~&REGISTER-GOBJECT: g:object-ref-sink ~a~%" object)
+      (%object-ref-sink pointer))
+    (setf (object-has-reference object) t)
+    (setf (get-gobject-for-pointer-strong pointer) object)
+    (%object-add-toggle-ref pointer
+                            (cffi:callback toggle-notify)
+                            (cffi:null-pointer))
+    (%object-unref pointer)))
 
 ;;; ----------------------------------------------------------------------------
 
-(defun register-g-object (obj)
-  (log-for :gc "registered GObject ~A (~A) with initial ref-count ~A ~A~%"
-           (object-pointer obj)
-           obj
-           (ref-count obj)
-           (if (%object-is-floating (object-pointer obj)) "(floating)" ""))
-  (when (should-ref-sink-at-creation obj)
-    (log-for :gc "g_object_ref_sink(~A)~%" (object-pointer obj))
-    (%object-ref-sink (object-pointer obj)))
-  (setf (object-has-reference obj) t)
-  (setf (gethash (cffi:pointer-address (object-pointer obj))
-                 *foreign-gobjects-strong*)
-        obj)
-  (%object-add-toggle-ref (object-pointer obj)
-                          (cffi:callback toggle-notify)
-                          (cffi:null-pointer))
-  (%object-unref (object-pointer obj)))
+(defmethod initialize-instance :around ((obj object) &key)
+  (when *currently-making-object-p*
+    (setf *currently-making-object-p* t))
+  (let ((*current-creating-object* obj))
+    (log-for :subclass
+             ":subclass INITIALIZE-INSTANCE :around creating ~a~%" obj)
+    (call-next-method)))
+
+(defmethod initialize-instance :after ((obj object) &key &allow-other-keys)
+  (unless (slot-boundp obj 'pointer)
+    (error "INITIALIZE-INIT: Pointer slot is not initialized for ~a" obj))
+  (let* ((pointer (object-pointer obj))
+         (s (format nil "~a" obj)))
+    (tg:finalize obj
+                 (lambda ()
+                   (log-for :gc
+                            "~&FINALIZE: ~a ~a queued for GC, refcount: ~a~%"
+                            (type-name (type-from-instance pointer))
+                            pointer
+                            (ref-count pointer))
+                   (handler-case
+                     (dispose-carefully pointer)
+                     (error (e)
+                       (format t "Error in finalizer for ~A: ~A~%" s e))))))
+  (register-gobject obj)
+  (activate-gc-hooks))
 
 ;;; ----------------------------------------------------------------------------
 
@@ -537,17 +545,51 @@ lambda (object pspec)    :no-hooks
 (cffi:defcallback gobject-weak-ref-finalized :void
     ((data :pointer) (pointer :pointer))
   (declare (ignore data))
-  (log-for :gc "~A is weak-ref-finalized with ~A refs~%"
+  (log-for :gc "~&~A is weak-ref-finalized with ~A refs~%"
            pointer (ref-count pointer))
   (remhash (cffi:pointer-address pointer) *foreign-gobjects-weak*)
-  (when (gethash (cffi:pointer-address pointer) *foreign-gobjects-strong*)
+  (when (get-gobject-for-pointer-strong pointer)
+;       (gethash (cffi:pointer-address pointer) *foreign-gobjects-strong*)
     (warn "GObject at ~A was weak-ref-finalized while still holding lisp-side ~
            strong reference to it"
           pointer)
-    (log-for :gc "GObject at ~A was weak-ref-finalized while still holding ~
+    (log-for :gc "~&GObject at ~A was weak-ref-finalized while still holding ~
                   lisp-side strong reference to it"
              pointer))
-  (remhash (cffi:pointer-address pointer) *foreign-gobjects-strong*))
+;  (remhash (cffi:pointer-address pointer) *foreign-gobjects-strong*)
+   (rem-gobject-for-pointer-strong pointer)
+  )
+
+;;; ----------------------------------------------------------------------------
+
+;; Translate a pointer to the corresponding Lisp object. If a Lisp object does
+;; not exist, create the Lisp object.
+(defun get-or-create-gobject-for-pointer (pointer)
+  (log-for :gc "~&GET-OR-CREATE-GOBJECT-FOR-POINTER: ~A~%" pointer)
+  (unless (cffi:null-pointer-p pointer)
+    (or (get-gobject-for-pointer pointer)
+        (create-gobject-from-pointer pointer))))
+
+;;; ----------------------------------------------------------------------------
+
+;; Create a Lisp object from a C pointer to an existing C object.
+
+(defun create-gobject-from-pointer (pointer)
+  (flet (;; Get the corresponing lisp type for a GType
+         (get-gobject-lisp-type (gtype)
+            (iter (while (not (null gtype)))
+                  (for lisp-type = (glib:symbol-for-gtype
+                                       (glib:gtype-name gtype)))
+                  (when lisp-type (return lisp-type))
+                  (setf gtype (type-parent gtype)))))
+    (let* ((gtype (type-from-instance pointer))
+           (lisp-type (get-gobject-lisp-type gtype)))
+      (log-for :gc "~&CREATE-GOBJECR-FROM-POINTER: ~a~%" pointer)
+      (unless lisp-type
+        (error "Type ~A is not registered with REGISTER-OBJECT-TYPE"
+               (glib:gtype-name gtype)))
+      (let ((*current-object-from-pointer* pointer))
+        (make-instance lisp-type :pointer pointer)))))
 
 ;;; ----------------------------------------------------------------------------
 
@@ -571,59 +613,27 @@ lambda (object pspec)    :no-hooks
                    :already-referenced already-referenced)))
 
 (defmethod cffi:translate-to-foreign (object (type foreign-g-object-type))
-  (cond
-    ((null object)
-     (cffi:null-pointer))
-    ((cffi:pointerp object) object)
-    ((null (object-pointer object))
-     (error "Object ~A has been disposed" object))
-    ((typep object 'object)
-     (when (sub-type type)
-       (assert (typep object (sub-type type))
-               nil
-               "Object ~A is not a subtype of ~A" object (sub-type type)))
-     (object-pointer object))
-    (t (error "Object ~A is not translatable as GObject*" object))))
+  (let ((pointer nil))
+    (cond ((null object)
+           (cffi:null-pointer))
+          ((cffi:pointerp object)
+           object)
+          ((null (setf pointer (object-pointer object)))
+           (error "Object ~A has been disposed" object))
+          ((typep object 'object)
+           (when (sub-type type)
+             (assert (typep object (sub-type type))
+                      nil
+                      "Object ~A is not a subtype of ~A" object (sub-type type)))
+           pointer)
+          (t (error "Object ~A is not translatable as GObject*" object)))))
 
 (defmethod cffi:translate-from-foreign (pointer (type foreign-g-object-type))
-  (let ((object (get-g-object-for-pointer pointer)))
+  (let ((object (get-or-create-gobject-for-pointer pointer)))
     (when (and object
                (foreign-g-object-type-already-referenced type))
       (%object-unref (object-pointer object)))
     object))
-
-;; Translate a pointer to a C object to the corresponding Lisp object.
-;; If a correpondig Lisp object does not exist, create the Lisp object.
-;; TODO: Consider to rename this function, we have introduced the function
-;; get-gobject-for-pointer that gets the Lisp object, if it exists and
-;; returns nil otherwise
-(defun get-g-object-for-pointer (pointer)
-  (unless (cffi:null-pointer-p pointer)
-    (or (gethash (cffi:pointer-address pointer) *foreign-gobjects-strong*)
-        (gethash (cffi:pointer-address pointer) *foreign-gobjects-weak*)
-        (progn
-          (log-for :gc "Now creating object for ~A~%" pointer)
-          (create-gobject-from-pointer pointer)))))
-
-;;; ----------------------------------------------------------------------------
-
-;; Create a Lisp object from a C pointer to an existing C object.
-
-(defun create-gobject-from-pointer (pointer)
-  (flet (;; Get the corresponing lisp type for a GType
-         (get-gobject-lisp-type (gtype)
-            (iter (while (not (null gtype)))
-                  (for lisp-type = (glib:symbol-for-gtype
-                                       (glib:gtype-name gtype)))
-                  (when lisp-type (return lisp-type))
-                  (setf gtype (type-parent gtype)))))
-    (let* ((gtype (type-from-instance pointer))
-           (lisp-type (get-gobject-lisp-type gtype)))
-      (unless lisp-type
-        (error "Type ~A is not registered with REGISTER-OBJECT-TYPE"
-               (glib:gtype-name gtype)))
-      (let ((*current-object-from-pointer* pointer))
-        (make-instance lisp-type :pointer pointer)))))
 
 ;;; ----------------------------------------------------------------------------
 
@@ -2056,36 +2066,26 @@ lambda (object pspec)    :no-hooks
      (object :pointer)
      (is-last-ref :boolean))
   (declare (ignore data))
-  (log-for :gc "~A is now ~A with ~A refs~%"
-           object
+  (log-for :gc "~&TOGGLE-NOTIFY: ~A is now ~A with ~A refs~%"
+           (get-gobject-for-pointer object)
            (if is-last-ref "weak pointer" "strong pointer")
            (ref-count object))
-  (log-for :gc "obj: ~A~%"
-           (or (gethash (cffi:pointer-address object) *foreign-gobjects-strong*)
-               (gethash (cffi:pointer-address object) *foreign-gobjects-weak*)))
   (if is-last-ref
-      (let* ((obj-adr (cffi:pointer-address object))
-             (obj (gethash obj-adr *foreign-gobjects-strong*)))
+      (let ((obj (get-gobject-for-pointer-strong object)))
         (if obj
             (progn
-              (remhash obj-adr *foreign-gobjects-strong*)
-              (setf (gethash obj-adr *foreign-gobjects-weak*) obj))
-            (progn
-              (log-for :gc "GObject at ~A has no lisp-side (strong) reference"
-                        object)
-              (warn "GObject at ~A (~a) type has no lisp-side (strong) reference"
-                    object
-                    (type-name (type-from-instance object))))))
-      (let* ((obj-adr (cffi:pointer-address object))
-             (obj (gethash obj-adr *foreign-gobjects-weak*)))
+              (rem-gobject-for-pointer-strong object)
+              (setf (get-gobject-for-pointer-weak object) obj))
+            (warn "TOGGLE-NOTIFY: ~a at ~a has no lisp-side (strong) reference"
+                  (type-name (type-from-instance object))
+                  object)))
+      (let ((obj (get-gobject-for-pointer-weak object)))
         (unless obj
-          (log-for :gc "GObject at ~A has no lisp-side (weak) reference"
-                   object)
-          (warn "GObject at ~A (~a) has no lisp-side (weak) reference"
-                object
-                (type-name (type-from-instance object))))
-        (remhash obj-adr *foreign-gobjects-weak*)
-        (setf (gethash obj-adr *foreign-gobjects-strong*) obj))))
+          (warn "TOGGLE-NOTIFY: ~a at ~a has no lisp-side (weak) reference"
+                (type-name (type-from-instance object))
+                object))
+        (rem-gobject-for-pointer-weak object)
+        (setf (get-gobject-for-pointer-strong object) obj))))
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_object_add_toggle_ref                                 not exported

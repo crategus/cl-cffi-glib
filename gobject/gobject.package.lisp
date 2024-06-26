@@ -2,11 +2,11 @@
 ;;; gobject.package.lisp
 ;;;
 ;;; The documentation of this file is taken from the GObject Reference Manual
-;;; Version 2.76 and modified to document the Lisp binding to the GObject
+;;; Version 2.80 and modified to document the Lisp binding to the GObject
 ;;; library. See <http://www.gtk.org>. The API documentation of the Lisp binding
 ;;; is available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2011 - 2023 Dieter Kaiser
+;;; Copyright (C) 2011 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -211,97 +211,74 @@
     @about-function{type-get-type-registration-serial}
     @about-function{type-get-instance-count}
   @end{section}
-  @begin[GObject]{section}
-    The base object type.
-    @about-class{object}
-    @about-generic{object-has-reference}
-    @about-generic{object-pointer}
-    @about-generic{object-signal-handlers}
-    @about-function{type-is-object}
-    @about-function{is-object}
-    @about-function{object-type}
-    @about-function{object-type-name}
-    @about-function{object-class-find-property}
-    @about-function{object-class-list-properties}
-    @about-function{object-interface-find-property}
-    @about-function{object-interface-list-properties}
-    @about-function{object-new}
-    @about-function{object-ref}
-    @about-function{object-unref}
-    @about-function{object-notify}
-    @about-function{object-freeze-notify}
-    @about-function{object-thaw-notify}
-    @about-function{object-data}
-    @about-symbol{destroy-notify}
-    @about-function{object-set-data-full}
-    @about-function{object-property}
-  @end{section}
-  @begin[Enumeration and Flag Types]{section}
-    The GLib type system provides fundamental types for enumeration and flags
-    types. Flags types are like enumerations, but allow their values to be
-    combined by bitwise OR. A registered enumeration or flags type associates a
-    name and a nickname with each allowed value. When an enumeration or flags
-    type is registered with the GLib type system, it can be used as value type
-    for object properties, using the @fun{g:param-spec-enum} or
-    @fun{g:param-spec-flags} functions.
-    @about-symbol{enum-class}
-    @about-symbol{enum-value}
-    @about-function{type-is-enum}
-    @about-symbol{flags-class}
-    @about-symbol{flags-value}
-    @about-function{type-is-flags}
-  @end{section}
-  @begin[Boxed Types]{section}
-    A mechanism to wrap opaque C structures registered by the type system
+  @begin[Various types and functions]{section}
+    @begin[Enumeration and Flag Types]{subsection}
+      The GLib type system provides fundamental types for enumeration and flags
+      types. Flags types are like enumerations, but allow their values to be
+      combined by bitwise OR. A registered enumeration or flags type associates
+      a name and a nickname with each allowed value. When an enumeration or
+      flags type is registered with the GLib type system, it can be used as
+      value type for object properties, using the @fun{g:param-spec-enum} or
+      @fun{g:param-spec-flags} functions.
+      @about-symbol{enum-class}
+      @about-symbol{enum-value}
+      @about-function{type-is-enum}
+      @about-symbol{flags-class}
+      @about-symbol{flags-value}
+      @about-function{type-is-flags}
+    @end{subsection}
+    @begin[Boxed Types]{subsection}
+      A mechanism to wrap opaque C structures registered by the type system
 
-    GBoxed is a generic wrapper mechanism for arbitrary C structures. The only
-    thing the type system needs to know about the structures is how to copy and
-    free them, beyond that they are treated as opaque chunks of memory.
+      GBoxed is a generic wrapper mechanism for arbitrary C structures. The only
+      thing the type system needs to know about the structures is how to copy
+      and free them, beyond that they are treated as opaque chunks of memory.
 
-    Boxed types are useful for simple value-holder structures like rectangles or
-    points. They can also be used for wrapping structures defined in non-GObject
-    based libraries. They allow arbitrary structures to be handled in a uniform
-    way, allowing uniform copying (or referencing) and freeing
-    (or unreferencing) of them, and uniform representation of the type of the
-    contained structure. In turn, this allows any type which can be boxed to be
-    set as the data in a GValue, which allows for polymorphic handling of a much
-    wider range of data types, and hence usage of such types as GObject property
-    values.
+      Boxed types are useful for simple value-holder structures like rectangles
+      or points. They can also be used for wrapping structures defined in
+      non-GObject based libraries. They allow arbitrary structures to be handled
+      in a uniform way, allowing uniform copying (or referencing) and freeing
+      (or unreferencing) of them, and uniform representation of the type of the
+      contained structure. In turn, this allows any type which can be boxed to
+      be set as the data in a GValue, which allows for polymorphic handling of
+      a much wider range of data types, and hence usage of such types as GObject
+      property values.
 
-    GBoxed is designed so that reference counted types can be boxed. Use the
-    type’s ‘ref’ function as the @code{GBoxedCopyFunc}, and its ‘unref’ function
-    as the @code{GBoxedFreeFunc}. For example, for @code{GBytes}, the
-    @code{GBoxedCopyFunc} is @code{g_bytes_ref()}, and the
-    @code{GBoxedFreeFunc} is @code{g_bytes_unref()}.
-    @about-function{type-is-boxed}
-    @about-function{boxed-copy}
-    @about-function{boxed-free}
-    @about-function{boxed-type-register-static}
-    @about-function{pointer-type-register-static}
-    @about-function{type-hash-table}
-    @about-function{type-date}
-    @about-function{type-gstring}
-    @about-function{type-strv}
-    @about-function{type-regex}
-    @about-function{type-match-info}
-    @about-function{type-array}
-    @about-function{type-byte-array}
-    @about-function{type-ptr-array}
-    @about-function{type-bytes}
-    @about-function{type-variant-type}
-    @about-function{type-error}
-    @about-function{type-date-time}
-    @about-function{type-time-zone}
-    @about-function{type-io-channel}
-    @about-function{type-io-condition}
-    @about-function{type-variant-builder}
-    @about-function{type-key-file}
-    @about-function{type-main-context}
-    @about-function{type-main-loop}
-    @about-function{type-markup-parse-context}
-    @about-function{type-source}
-    @about-function{type-polled}
-    @about-function{type-thread}
+      GBoxed is designed so that reference counted types can be boxed. Use the
+      type’s ‘ref’ function as the @code{GBoxedCopyFunc}, and its ‘unref’
+      function as the @code{GBoxedFreeFunc}. For example, for @code{GBytes},
+      the @code{GBoxedCopyFunc} is @code{g_bytes_ref()}, and the
+      @code{GBoxedFreeFunc} is @code{g_bytes_unref()}.
+      @about-function{type-is-boxed}
+      @about-function{boxed-copy}
+      @about-function{boxed-free}
+      @about-function{boxed-type-register-static}
+      @about-function{pointer-type-register-static}
+      @about-function{type-hash-table}
+      @about-function{type-date}
+      @about-function{type-gstring}
+      @about-function{type-strv}
+      @about-function{type-regex}
+      @about-function{type-match-info}
+      @about-function{type-array}
+      @about-function{type-byte-array}
+      @about-function{type-ptr-array}
+      @about-function{type-bytes}
+      @about-function{type-variant-type}
+      @about-function{type-error}
+      @about-function{type-date-time}
+      @about-function{type-time-zone}
+      @about-function{type-io-channel}
+      @about-function{type-io-condition}
+      @about-function{type-variant-builder}
+      @about-function{type-key-file}
+      @about-function{type-main-context}
+      @about-function{type-main-loop}
+      @about-function{type-markup-parse-context}
+      @about-function{type-source}
+      @about-function{type-polled}
+      @about-function{type-thread}
+    @end{subsection}
   @end{section}
   @begin[Generic Values]{section}
     A polymorphic type that can hold values of any other type.
@@ -477,237 +454,160 @@
     @about-function{param-spec-pool-list}
     @about-function{param-spec-pool-list-owned}
   @end{section}
-  @begin[Signals]{section}
-    A means for customization of object behaviour and a general purpose
-    notification mechanism.
-
-    The basic concept of the signal system is that of the emission of a signal.
-    Signals are introduced per-type and are identified through strings. Signals
-    introduced for a parent type are available in derived types as well, so
-    basically they are a per-type facility that is inherited.
-
-    A signal emission mainly involves invocation of a certain set of callbacks
-    in precisely defined manner. There are two main categories of such
-    callbacks, per-object ones and user provided ones. (Although signals can
-    deal with any kind of instantiatable type, I am referring to those types as
-    \"object types\" in the following, simply because that is the context most
-    users will encounter signals in.) The per-object callbacks are most often
-    referred to as \"object method handler\" or \"default (signal) handler\",
-    while user provided callbacks are usually just called \"signal handler\".
-
-    The object method handler is provided at signal creation time (this most
-    frequently happens at the end of an object class' creation), while user
-    provided handlers are frequently connected and disconnected to/from a
-    certain signal on certain object instances.
-
-    A signal emission consists of five stages, unless prematurely stopped:
-    @begin{enumerate}
-      @begin{item}
-        Invocation of the object method handler for @code{:run-first} signals.
-      @end{item}
-      @begin{item}
-        Invocation of normal user-provided signal handlers (where the after
-        flag is not set).
-      @end{item}
-      @begin{item}
-        Invocation of the object method handler for @code{:run-last} signals.
-      @end{item}
-      @begin{item}
-        Invocation of user provided signal handlers (where the after flag is
-        set).
-      @end{item}
-      @begin{item}
-        Invocation of the object method handler for @code{:run-cleanup} signals.
-      @end{item}
-    @end{enumerate}
-    The user-provided signal handlers are called in the order they were
-    connected in.
-
-    All handlers may prematurely stop a signal emission, and any number of
-    handlers may be connected, disconnected, blocked or unblocked during a
-    signal emission.
-
-    There are certain criteria for skipping user handlers in stages 2 and 4 of
-    a signal emission.
-
-    First, user handlers may be blocked. Blocked handlers are omitted during
-    callback invocation, to return from the blocked state, a handler has to get
-    unblocked exactly the same amount of times it has been blocked before.
-
-    Second, upon emission of a @code{:detailed} signal, an additional detail
-    argument passed in to the @fun{g:signal-emit} function has to match the
-    detail argument of the signal handler currently subject to invocation.
-    Specification of no detail argument for signal handlers (omission of the
-    detail part of the signal specification upon connection) serves as a
-    wildcard and matches any detail argument passed in to emission.
-
-    While the detail argument is typically used to pass an object property name
-    (as with \"notify\"), no specific format is mandated for the detail string,
-    other than that it must be non-empty.
-
-    @subheading{Memory management of signal handlers}
-    If you are connecting handlers to signals and using a @class{g:object}
-    instance as your signal handler user data, you should remember to pair calls
-    to the @fun{g:signal-connect} function with calls to the
-    @fun{g:signal-handler-disconnect} function. While signal handlers are
-    automatically disconnected when the object emitting the signal is finalised,
-    they are not automatically disconnected when the signal handler user data is
-    destroyed. If this user data is a @class{g:object} instance, using it from a
-    signal handler after it has been finalised is an error.
-
-    There are two strategies for managing such user data. The first is to
-    disconnect the signal handler (using the @fun{g:signal-handler-disconnect}
-    function) when the user data (object) is finalised; this has to be
-    implemented manually. For non-threaded programs, the
-    @code{g_signal_connect_object()} function can be used to implement this
-    automatically. Currently, however, it is unsafe to use in threaded programs.
-
-    The second is to hold a strong reference on the user data until after the
-    signal is disconnected for other reasons. This can be implemented
-    automatically using the @code{g_signal_connect_data()} function.
-
-    The first approach is recommended, as the second approach can result in
-    effective memory leaks of the user data if the signal handler is never
-    disconnected for some reason.
-    @about-symbol{signal-invocation-hint}
-    @about-symbol{signal-cmarshaller}
-    @about-symbol{signal-cvamarshaller}
-    @about-symbol{signal-flags}
-    @about-symbol{signal-match-type}
-    @about-struct{signal-query}
-    @about-function{signal-query-signal-id}
-    @about-function{signal-query-signal-name}
-    @about-function{signal-query-owner-type}
-    @about-function{signal-query-signal-flags}
-    @about-function{signal-query-return-type}
-    @about-function{signal-query-param-types}
-    @about-function{signal-query-signal-detail}
-    @about-symbol{connect-flags}
-    @about-function{signal-new}
-    @about-function{signal-newv}
-    @about-function{signal-new-valist}
-    @about-function{signal-set-va-marshaller}
-    @about-function{signal-query}
-    @about-function{signal-lookup}
-    @about-function{signal-name}
-    @about-function{signal-list-ids}
-    @about-function{signal-emit}
-    @about-function{signal-emit-by-name}
-    @about-function{signal-emitv}
-    @about-function{signal-emit-valist}
-    @about-function{signal-connect}
-    @about-function{signal-connect-after}
-    @about-function{signal-connect-swapped}
-    @about-function{signal-connect-object}
-    @about-function{signal-connect-data}
-    @about-function{signal-connect-closure}
-    @about-function{signal-connect-closure-by-id}
-    @about-function{signal-handler-block}
-    @about-function{signal-handler-unblock}
-    @about-function{signal-handler-disconnect}
-    @about-function{signal-handler-find}
-    @about-function{signal-handlers-block-matched}
-    @about-function{signal-handlers-unblock-matched}
-    @about-function{signal-handlers-disconnect-matched}
-    @about-function{signal-handler-is-connected}
-    @about-function{signal-handlers-block-by-func}
-    @about-function{signal-handlers-unblock-by-func}
-    @about-function{signal-handlers-disconnect-by-func}
-    @about-function{signal-handlers-disconnect-by-data}
-    @about-function{signal-has-handler-pending}
-    @about-function{signal-stop-emission}
-    @about-function{signal-stop-emission-by-name}
-    @about-function{signal-override-class-closure}
-    @about-function{signal-chain-from-overridden}
-    @about-function{signal-new-class-handler}
-    @about-function{signal-override-class-handler}
-    @about-function{signal-chain-from-overridden-handler}
-    @about-function{signal-add-emission-hook}
-    @about-function{signal-remove-emission-hook}
-    @about-function{signal-is-valid-name}
-    @about-function{signal-parse-name}
-    @about-function{signal-get-invocation-hint}
-    @about-function{signal-type-cclosure-new}
-    @about-function{signal-accumulator-first-wins}
-    @about-function{signal-accumulator-true-handled}
-    @about-function{clear-signal-handler}
+  @begin[GObject]{section}
+    @about-class{object}
+    @about-generic{object-has-reference}
+    @about-generic{object-pointer}
+    @about-generic{object-signal-handlers}
+    @about-function{type-is-object}
+    @about-function{is-object}
+    @about-function{object-type}
+    @about-function{object-type-name}
+    @about-function{object-class-find-property}
+    @about-function{object-class-list-properties}
+    @about-function{object-interface-find-property}
+    @about-function{object-interface-list-properties}
+    @about-function{object-new}
+    @about-function{object-ref}
+    @about-function{object-unref}
+    @about-function{object-notify}
+    @about-function{object-freeze-notify}
+    @about-function{object-thaw-notify}
+    @about-function{object-data}
+    @about-symbol{destroy-notify}
+    @about-function{object-set-data-full}
+    @about-function{object-property}
   @end{section}
-  @begin[Closures]{section}
-    Functions as first-class objects
+  @begin[Signals]{section}
+    @begin[Introduction to signals]{subsection}
+      The basic concept of the signal system is that of the emission of a
+      signal. Signals are introduced per-type and are identified through
+      strings. Signals introduced for a parent type are available in derived
+      types as well, so basically they are a per-type facility that is
+      inherited.
 
-    A GClosure represents a callback supplied by the programmer. It will
-    generally comprise a function of some kind and a marshaller used to call it.
-    It is the reponsibility of the marshaller to convert the arguments for the
-    invocation from GValues into a suitable form, perform the callback on the
-    converted arguments, and transform the return value back into a GValue.
+      A signal emission mainly involves invocation of a certain set of callbacks
+      in precisely defined manner. There are two main categories of such
+      callbacks, per-object ones and user provided ones. The per-object
+      callbacks are most often referred to as \"object method handler\" or
+      \"default (signal) handler\", while user provided callbacks are usually
+      just called \"signal handler\".
 
-    In the case of C programs, a closure usually just holds a pointer to a
-    function and maybe a data argument, and the marshaller converts between
-    GValue and native C types. The GObject library provides the GCClosure type
-    for this purpose. Bindings for other languages need marshallers which
-    convert between GValues and suitable representations in the runtime of the
-    language in order to use functions written in that languages as callbacks.
+      The object method handler is provided at signal creation time, this most
+      frequently happens at the end of an object class' creation, while user
+      provided handlers are frequently connected and disconnected to/from a
+      certain signal on certain object instances.
 
-    Within GObject, closures play an important role in the implementation of
-    signals. When a signal is registered, the c_marshaller argument to
-    g_signal_new() specifies the default C marshaller for any closure which is
-    connected to this signal. GObject provides a number of C marshallers for
-    this purpose, see the g_cclosure_marshal_*() functions. Additional C
-    marshallers can be generated with the glib-genmarshal utility. Closures can
-    be explicitly connected to signals with g_signal_connect_closure(), but it
-    usually more convenient to let GObject create a closure automatically by
-    using one of the g_signal_connect_*() functions which take a callback
-    function/user data pair.
+      A signal emission consists of five stages, unless prematurely stopped:
+      @begin{enumerate}
+        @begin{item}
+          Invocation of the object method handler for @code{:run-first} signals.
+        @end{item}
+        @begin{item}
+          Invocation of normal user-provided signal handlers (where the after
+          flag is not set).
+        @end{item}
+        @begin{item}
+          Invocation of the object method handler for @code{:run-last} signals.
+        @end{item}
+        @begin{item}
+          Invocation of user provided signal handlers (where the after flag is
+          set).
+        @end{item}
+        @begin{item}
+          Invocation of the object method handler for @code{:run-cleanup}
+          signals.
+        @end{item}
+      @end{enumerate}
+      The user-provided signal handlers are called in the order they were
+      connected in.
 
-    Using closures has a number of important advantages over a simple callback
-    function/data pointer combination:
-    @begin{itemize}
-      @begin{item}
-        Closures allow the callee to get the types of the callback parameters,
-        which means that language bindings don't have to write individual glue
-        for each callback type.
-      @end{item}
-      @begin{item}
-        The reference counting of GClosure makes it easy to handle reentrancy
-        right; if a callback is removed while it is being invoked, the closure
-        and its parameters won't be freed until the invocation finishes.
-      @end{item}
-      @begin{item}
-        g_closure_invalidate() and invalidation notifiers allow callbacks to be
-        automatically removed when the objects they point to go away.
-      @end{item}
-    @end{itemize}
-    @about-symbol{G_CLOSURE_NEEDS_MARSHAL}
-    @about-symbol{G_CLOSURE_N_NOTIFIERS}
-    @about-symbol{G_CCLOSURE_SWAP_DATA}
-    @about-symbol{G_CALLBACK}
-    @about-symbol{closure}
-    @about-function{type-closure}
-    @about-symbol{cclosure}
-    @about-function{cclosure-new}
-    @about-function{cclosure-new-swap}
-    @about-function{cclosure-new-object}
-    @about-function{cclosure-new-object-swap}
-    @about-function{cclosure-marshal-generic}
-    @about-function{closure-new-object}
-    @about-function{closure-ref}
-    @about-function{closure-sink}
-    @about-function{closure-unref}
-    @about-function{closure-invoke}
-    @about-function{closure-invalidate}
-    @about-function{closure-add-finalize-notifier}
-    @about-function{closure-add-invalidate-notifier}
-    @about-function{closure-remove-finalize-notifier}
-    @about-function{closure-remove-invalidate-notifier}
-    @about-function{closure-new-simple}
-    @about-function{closure-set-marshal}
-    @about-function{closure-add-marshal-guards}
-    @about-function{closure-set-meta-marshal}
-    @about-function{closure-set-closure}
-    @about-function{closure-set-dummy-callback}
+      All handlers may prematurely stop a signal emission, and any number of
+      handlers may be connected, disconnected, blocked or unblocked during a
+      signal emission.
+
+      There are certain criteria for skipping user handlers in stages 2 and 4 of
+      a signal emission. First, user handlers may be blocked. Blocked handlers
+      are omitted during callback invocation, to return from the blocked state,
+      a handler has to get unblocked exactly the same amount of times it has
+      been blocked before. Second, upon emission of a @code{:detailed} signal,
+      an additional detail argument passed in to the @fun{g:signal-emit}
+      function has to match the detail argument of the signal handler currently
+      subject to invocation. Specification of no detail argument for signal
+      handlers (omission of the detail part of the signal specification upon
+      connection) serves as a wildcard and matches any detail argument passed
+      in to emission.
+
+      While the detail argument is typically used to pass an object property
+      name, as with @code{\"notify\"}, no specific format is mandated for the
+      detail string, other than that it must be non-empty.
+    @end{subsection}
+    @begin[Types and functions for signals]{subsection}
+      @about-symbol{signal-invocation-hint}
+      @about-symbol{signal-cmarshaller}
+      @about-symbol{signal-cvamarshaller}
+      @about-symbol{signal-flags}
+      @about-symbol{signal-match-type}
+      @about-struct{signal-query}
+      @about-function{signal-query-signal-id}
+      @about-function{signal-query-signal-name}
+      @about-function{signal-query-owner-type}
+      @about-function{signal-query-signal-flags}
+      @about-function{signal-query-return-type}
+      @about-function{signal-query-param-types}
+      @about-function{signal-query-signal-detail}
+      @about-symbol{connect-flags}
+      @about-function{signal-new}
+      @about-function{signal-newv}
+      @about-function{signal-new-valist}
+      @about-function{signal-set-va-marshaller}
+      @about-function{signal-query}
+      @about-function{signal-lookup}
+      @about-function{signal-name}
+      @about-function{signal-list-ids}
+      @about-function{signal-emit}
+      @about-function{signal-emit-by-name}
+      @about-function{signal-emitv}
+      @about-function{signal-emit-valist}
+      @about-function{signal-connect}
+      @about-function{signal-connect-after}
+      @about-function{signal-connect-swapped}
+      @about-function{signal-connect-object}
+      @about-function{signal-connect-data}
+      @about-function{signal-connect-closure}
+      @about-function{signal-connect-closure-by-id}
+      @about-function{signal-handler-block}
+      @about-function{signal-handler-unblock}
+      @about-function{signal-handler-disconnect}
+      @about-function{signal-handler-find}
+      @about-function{signal-handlers-block-matched}
+      @about-function{signal-handlers-unblock-matched}
+      @about-function{signal-handlers-disconnect-matched}
+      @about-function{signal-handler-is-connected}
+      @about-function{signal-handlers-block-by-func}
+      @about-function{signal-handlers-unblock-by-func}
+      @about-function{signal-handlers-disconnect-by-func}
+      @about-function{signal-handlers-disconnect-by-data}
+      @about-function{signal-has-handler-pending}
+      @about-function{signal-stop-emission}
+      @about-function{signal-stop-emission-by-name}
+      @about-function{signal-override-class-closure}
+      @about-function{signal-chain-from-overridden}
+      @about-function{signal-new-class-handler}
+      @about-function{signal-override-class-handler}
+      @about-function{signal-chain-from-overridden-handler}
+      @about-function{signal-add-emission-hook}
+      @about-function{signal-remove-emission-hook}
+      @about-function{signal-is-valid-name}
+      @about-function{signal-parse-name}
+      @about-function{signal-get-invocation-hint}
+      @about-function{signal-type-cclosure-new}
+      @about-function{signal-accumulator-first-wins}
+      @about-function{signal-accumulator-true-handled}
+      @about-function{clear-signal-handler}
+      @end{subsection}
   @end{section}
   @begin[GBinding]{section}
-    Bind two object properties.
     @about-symbol{binding-flags}
     @about-class{binding}
     @about-generic{binding-flags}
@@ -715,10 +615,12 @@
     @about-generic{binding-source-property}
     @about-generic{binding-target}
     @about-generic{binding-target-property}
+    @about-function{binding-dup-source}
+    @about-function{binding-dup-target}
     @about-function{binding-unbind}
     @about-function{object-bind-property}
+    @about-symbol{binding-transform-func}
     @about-function{object-bind-property-full}
-    @about-function{object-bind-property-with-closures}
-  @end{section} ")
+  @end{section}")
 
 ;;; --- End of file gobject.package.lisp ---------------------------------------

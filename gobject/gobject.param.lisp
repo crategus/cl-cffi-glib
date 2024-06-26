@@ -3376,7 +3376,7 @@
   either its own, or one it has taken, to ensure that the object will not be
   destroyed while the @symbol{g:value} still exists).
   @see-symbol{g:value}"
-  (get-g-object-for-pointer (%value-get-object gvalue)))
+  (get-or-create-gobject-for-pointer (%value-get-object gvalue)))
 
 (export 'value-object)
 

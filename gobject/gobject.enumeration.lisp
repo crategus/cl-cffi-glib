@@ -131,14 +131,14 @@
      (cffi:defcenum (,name ,base-type
                            :allow-undeclared-values ,allow-undeclared-values)
                ,@values)
-     (eval-when (:compile-toplevel :load-toplevel :execute)
-       (setf (glib:symbol-for-gtype ,gtype) ',name))
      ,@(when export
          (list `(export ',name
                         (find-package ,(package-name (symbol-package name))))))
      ,@(when type-initializer
          (list `(glib-init:at-init ()
-                   ,(glib:type-initializer-call type-initializer))))))
+                   ,(glib:type-initializer-call type-initializer))))
+     (eval-when (:compile-toplevel :load-toplevel :execute)
+       (setf (glib:symbol-for-gtype ,gtype) ',name))))
 
 (export 'define-g-enum)
 
@@ -364,14 +364,14 @@
                                       &body values)
   `(progn
      (cffi:defbitfield ,name ,base-type ,@values)
-     (eval-when (:compile-toplevel :load-toplevel :execute)
-       (setf (glib:symbol-for-gtype ,gtype) ',name))
      ,@(when export
          (list `(export ',name
                         (find-package ,(package-name (symbol-package name))))))
      ,@(when type-initializer
-         (list `(glib-init::at-init ()
-                   ,(glib:type-initializer-call type-initializer))))))
+         (list `(glib-init:at-init ()
+                   ,(glib:type-initializer-call type-initializer))))
+     (eval-when (:compile-toplevel :load-toplevel :execute)
+       (setf (glib:symbol-for-gtype ,gtype) ',name))))
 
 (export 'define-g-flags)
 

@@ -81,9 +81,8 @@
 
 (defun release* (&rest objects)
   (declare (dynamic-extent objects))
-  (loop
-     for object in objects
-     do (release object)))
+  (iter (for object in objects)
+        (release object)))
 
 (defmacro using ((var &optional (expr var)) &body body)
   `(let ((,var ,expr))

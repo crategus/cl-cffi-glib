@@ -19,6 +19,6 @@ Content from the GObject 2.66 Reference Manual
 
   * not implemented *      - Value arrays
 
-  gobject.binding.lisp     - GBinding                          - GObject 2.66
+  gobject.binding.lisp     - GBinding                          - GObject 2.80
 
-2020-10-18
+2024-6-18
