@@ -552,7 +552,6 @@
            #:signal-handler-is-connected
            #:signal-has-handler-pending
            #:signal-stop-emission
-           #:signal-stop-emission-by-name
 
            ;; Symbols from gobject.binding.lisp
            #:binding

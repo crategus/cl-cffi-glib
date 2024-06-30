@@ -1946,7 +1946,7 @@
   Prints a warning if used on a signal which is not being emitted.
   @see-class{g:object}
   @see-type{g:quark-as-string}
-  @see-function{g:signal-stop-emission-by-name}"
+  @see-function{g:signal-stop-emission}"
   (instance object)
   (signal-id :uint)
   (detail glib:quark-as-string))

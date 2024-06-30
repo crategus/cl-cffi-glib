@@ -590,7 +590,6 @@
       @about-function{signal-handlers-disconnect-by-data}
       @about-function{signal-has-handler-pending}
       @about-function{signal-stop-emission}
-      @about-function{signal-stop-emission-by-name}
       @about-function{signal-override-class-closure}
       @about-function{signal-chain-from-overridden}
       @about-function{signal-new-class-handler}
