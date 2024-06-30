@@ -8,34 +8,30 @@
 ;;;     GEmblemedIcon
 
 (test g-emblemed-icon-class
-  ;; Type check
+  ;; Check type
   (is (g:type-is-object "GEmblemedIcon"))
   ;; Check the registered symbol
   (is (eq 'gio:emblemed-icon
           (glib:symbol-for-gtype "GEmblemedIcon")))
-  ;; Check the type initializer
+  ;; Check type initializer
   (is (eq (g:gtype "GEmblemedIcon")
           (g:gtype (cffi:foreign-funcall "g_emblemed_icon_get_type" :size))))
-  ;; Check the parent
+  ;; Check parent
   (is (eq (g:gtype "GObject")
           (g:type-parent "GEmblemedIcon")))
-  ;; Check the children
-  #+gtk4
+  ;; Check children
   (is (equal '()
-             (list-children "GEmblemedIcon")))
-  #+gtk3
-  (is (equal '("GtkNumerableIcon")
-             (list-children "GEmblemedIcon")))
-  ;; Check the interfaces
+             (glib-test:list-children "GEmblemedIcon")))
+  ;; Check interfaces
   (is (equal '("GIcon")
-             (list-interfaces "GEmblemedIcon")))
-  ;; Check the class properties
+             (glib-test:list-interfaces "GEmblemedIcon")))
+  ;; Check class properties
   (is (equal '("gicon")
-             (list-properties "GEmblemedIcon")))
-  ;; Check the list of signals
+             (glib-test:list-properties "GEmblemedIcon")))
+  ;; Check signals
   (is (equal '()
-             (list-signals "GEmblemedIcon")))
-  ;; Check the class definition
+             (glib-test:list-signals "GEmblemedIcon")))
+  ;; Check class definition
   (is (equal '(GOBJECT:DEFINE-G-OBJECT-CLASS "GEmblemedIcon" G-EMBLEMED-ICON
                        (:SUPERCLASS G-OBJECT
                         :EXPORT T
@@ -56,4 +52,4 @@
 ;;;     g_emblemed_icon_add_emblem
 ;;;     g_emblemed_icon_clear_emblems
 
-;;; 2024-6-12
+;;; 2024-6-26
