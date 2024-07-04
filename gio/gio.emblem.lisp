@@ -59,7 +59,7 @@
 (in-package :gio)
 
 ;;; ----------------------------------------------------------------------------
-;;; enum GEmblemOrigin
+;;; GEmblemOrigin
 ;;; ----------------------------------------------------------------------------
 
 (gobject:define-g-enum "GEmblemOrigin" emblem-origin
@@ -75,11 +75,7 @@
       "GEnum"
       (liber:symbol-documentation 'emblem-origin)
  "@version{2022-12-29}
-  @begin{short}
-    The @sym{g:emblem-origin} enumeration is used to add information about the
-    origin of the emblem to a @class{g:emblem} object.
-  @end{short}
-  @begin{pre}
+  @begin{declaration}
 (gobject:define-g-enum \"GEmblemOrigin\" emblem-origin
   (:export t
    :type-initializer \"g_emblem_origin_get_type\")
@@ -87,14 +83,20 @@
   :device
   :livemetadata
   :tag)
-  @end{pre}
-  @begin[code]{table}
-    @entry[:unkown]{Emblem of unknown origin.}
-    @entry[:device]{Emblem adds device-specific information.}
-    @entry[:livemetadata]{Emblem depicts live metadata, such as \"readonly\".}
-    @entry[:tag]{Emblem comes from a user-defined tag, e.g. set by nautilus
-      (in the future).}
-  @end{table}
+  @end{declaration}
+  @begin{values}
+    @begin[code]{table}
+      @entry[:unkown]{Emblem of unknown origin.}
+      @entry[:device]{Emblem adds device-specific information.}
+      @entry[:livemetadata]{Emblem depicts live metadata, such as \"readonly\".}
+      @entry[:tag]{Emblem comes from a user-defined tag, e.g. set by nautilus
+        (in the future).}
+    @end{table}
+  @end{values}
+  @begin{short}
+    The @sym{g:emblem-origin} enumeration is used to add information about the
+    origin of the emblem to a @class{g:emblem} object.
+  @end{short}
   @see-class{g:emblem}")
 
 ;;; ----------------------------------------------------------------------------

@@ -63,7 +63,7 @@
 (in-package :gio)
 
 ;;; ----------------------------------------------------------------------------
-;;; enum GNotificationPriority
+;;; GNotificationPriority
 ;;; ----------------------------------------------------------------------------
 
 (gobject:define-g-enum "GNotificationPriority" notification-priority
@@ -79,10 +79,7 @@
       "GEnum"
       (liber:symbol-documentation 'notification-priority)
  "@version{#2022-12-30}
-  @begin{short}
-    Priority levels for @class{g:notification} objects.
-  @end{short}
-  @begin{pre}
+  @begin{declaration}
 (gobject:define-g-enum \"GNotificationPriority\" notification-priority
   (:export t
    :type-initializer \"g_notification_priority_get_type\")
@@ -90,21 +87,26 @@
   (:low 1)
   (:high 2)
   (:urgent 3))
-  @end{pre}
-  @begin[code]{table}
-    @entry[:normal]{The default priority, to be used for the majority of
-      notifications, for example email messages, software updates, completed
-      download/sync operations.}
-    @entry[:low]{For notifications that do not require immediate attention -
-      typically used for contextual background information, such as contact
-      birthdays or local weather.}
-    @entry[:high]{For events that require more attention, usually because
-      responses are time-sensitive, for example chat and SMS messages or
-      alarms.}
-    @entry[:urgent]{For urgent notifications, or notifications that require a
-      response in a short space of time, for example phone calls or emergency
-      warnings.}
-  @end{table}
+  @end{declaration}
+  @begin{values}
+    @begin[code]{table}
+      @entry[:normal]{The default priority, to be used for the majority of
+        notifications, for example email messages, software updates, completed
+        download/sync operations.}
+      @entry[:low]{For notifications that do not require immediate attention -
+        typically used for contextual background information, such as contact
+        birthdays or local weather.}
+      @entry[:high]{For events that require more attention, usually because
+        responses are time-sensitive, for example chat and SMS messages or
+        alarms.}
+      @entry[:urgent]{For urgent notifications, or notifications that require a
+        response in a short space of time, for example phone calls or emergency
+        warnings.}
+    @end{table}
+  @end{values}
+  @begin{short}
+    Priority levels for @class{g:notification} objects.
+  @end{short}
   @see-class{g:notification}")
 
 ;;; ----------------------------------------------------------------------------

@@ -1010,9 +1010,9 @@
 (defun menu-item-attribute-value (item attribute &optional (vtype nil))
  #+liber-documentation
  "@version{#2022-12-29}
-  @syntax[]{(g:menu-item-attribute-value item attribute) => value}
-  @syntax[]{(g:menu-item-attribute-value item attribute vtype) => value}
-  @syntax[]{(setf (g:menu-item-attribute-value item attribute) value)}
+  @syntax{(g:menu-item-attribute-value item attribute) => value}
+  @syntax{(g:menu-item-attribute-value item attribute vtype) => value}
+  @syntax{(setf (g:menu-item-attribute-value item attribute) value)}
   @argument[item]{a @class{g:menu-item} object}
   @argument[attribute]{a string with the attribute name}
   @argument[vtype]{the optional expected @class{g:variant-type} type or a type
@@ -1142,8 +1142,8 @@
     (gobject:object menu-model)
  #+liber-documentation
  "@version{#2022-12-29}
-  @syntax[]{(g:menu-item-link item link) => model}
-  @syntax[]{(setf (g:menu-item-link item link) model)}
+  @syntax{(g:menu-item-link item link) => model}
+  @syntax{(setf (g:menu-item-link item link) model)}
   @argument[item]{a @class{g:menu-item} object}
   @argument[link]{a string with the type of link to establish or unset}
   @argument[model]{the @class{g:menu-model} object to link to, or @code{nil} to

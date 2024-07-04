@@ -162,8 +162,8 @@
       "Accessor"
       (documentation 'action-enabled 'function)
  "@version{2024-5-14}
-  @syntax[]{(g:action-enabled object) => enabled}
-  @syntax[]{(setf (g:action-enabled object) enabled)}
+  @syntax{(g:action-enabled object) => enabled}
+  @syntax{(setf (g:action-enabled object) enabled)}
   @argument[object]{a @class{g:action} object}
   @argument[enabled]{a boolean whether the action is enabled}
   @begin{short}
@@ -189,7 +189,7 @@
       "Accessor"
       (documentation 'action-name 'function)
  "@version{2024-5-14}
-  @syntax[]{(g:action-name object) => name}
+  @syntax{(g:action-name object) => name}
   @argument[action]{a @class{g:action} object}
   @argument[name]{a string with the name of the action}
   @begin{short}
@@ -210,7 +210,7 @@
       "Accessor"
       (documentation 'action-parameter-type 'function)
  "@version{2024-5-14}
-  @syntax[]{(g:action-parameter-type object) => vtype}
+  @syntax{(g:action-parameter-type object) => vtype}
   @argument[object]{a @class{g:action} object}
   @argument[vtype]{a @class{g:variant-type} parameter type}
   @begin{short}
@@ -243,8 +243,8 @@
       "Accessor"
       (documentation 'action-state 'function)
  "@version{2024-5-14}
-  @syntax[]{(g:action-state object) => state}
-  @syntax[]{(setf (g:action-state object) state)}
+  @syntax{(g:action-state object) => state}
+  @syntax{(setf (g:action-state object) state)}
   @argument[object]{a @class{g:action} object}
   @argument[state]{a @type{g:variant} state of the action}
   @begin{short}
@@ -290,7 +290,7 @@
       "Accessor"
       (documentation 'action-state-type 'function)
  "@version{2024-5-14}
-  @syntax[]{(g:action-state-type object) => vtype}
+  @syntax{(g:action-state-type object) => vtype}
   @argument[object]{a @class{g:action} object}
   @argument[vtype]{a @class{g:variant-type} state type, if the action is
     stateful}

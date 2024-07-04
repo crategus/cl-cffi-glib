@@ -119,8 +119,8 @@
       "Accessor"
       (documentation 'themed-icon-name 'function)
  "@version{2023-12-26}
-  @syntax[]{(g:themed-icon-name object) => name}
-  @syntax[]{(setf (g:themed-icon-name object) name)}
+  @syntax{(g:themed-icon-name object) => name}
+  @syntax{(setf (g:themed-icon-name object) name)}
   @argument[object]{a @class{g:themed-icon} object}
   @argument[name]{a string with the icon name}
   @begin{short}
@@ -142,8 +142,8 @@
       "Accessor"
       (documentation 'themed-icon-names 'function)
  "@version{2023-12-26}
-  @syntax[]{(g:themed-icon-names object) => names}
-  @syntax[]{(setf (g:themed-icon-names object) names)}
+  @syntax{(g:themed-icon-names object) => names}
+  @syntax{(setf (g:themed-icon-names object) names)}
   @argument[object]{a @class{g:themed-icon} object}
   @argument[names]{a list of strings with icon names}
   @begin{short}
@@ -177,8 +177,8 @@
       "Accessor"
       (documentation 'themed-icon-use-default-fallbacks 'function)
  "@version{2023-12-26}
-  @syntax[]{(g:themed-icon-use-default-fallbacks object) => setting}
-  @syntax[]{(setf (g:themed-icon-use-default-fallbacks object) setting)}
+  @syntax{(g:themed-icon-use-default-fallbacks object) => setting}
+  @syntax{(setf (g:themed-icon-use-default-fallbacks object) setting)}
   @argument[object]{a @class{g:themed-icon} object}
   @argument[setting]{a boolean whether to use default fallbacks}
   @begin{short}

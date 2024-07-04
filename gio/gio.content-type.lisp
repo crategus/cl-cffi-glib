@@ -195,8 +195,8 @@
     glib:strv-t
  #+liber-documentation
  "@version{#2023-7-14}
-  @syntax[]{(g:content-type-mime-dirs) => dirs}
-  @syntax[]{(setf (g:content-type-mime-dirs) dirs)}
+  @syntax{(g:content-type-mime-dirs) => dirs}
+  @syntax{(setf (g:content-type-mime-dirs) dirs)}
   @argument[dirs]{a list of directories to load MIME data from, including any
     @file{file/} subdirectory, and with the first directory to try listed first}
   @begin{short}

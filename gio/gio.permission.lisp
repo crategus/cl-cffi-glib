@@ -121,7 +121,7 @@
       "Accessor"
       (documentation 'permission-allowed 'function)
  "@version{2023-5-5}
-  @syntax[]{(g:permission-allowed object) => allowed}
+  @syntax{(g:permission-allowed object) => allowed}
   @argument[object]{a @class{g:permission} object}
   @argument[allowed]{a boolean whether the caller currently has permission to
     perform the action}
@@ -149,7 +149,7 @@
       "Accessor"
       (documentation 'permission-can-acquire 'function)
  "@version{2023-5-5}
-  @syntax[]{(g:permission-can-acquire object) => can-acquire}
+  @syntax{(g:permission-can-acquire object) => can-acquire}
   @argument[object]{a @class{g:permission} object}
   @argument[can-acquire]{a boolean whether it is generally possible to acquire
     the permission}
@@ -177,7 +177,7 @@
       "Accessor"
       (documentation 'permission-can-release 'function)
  "@version{2023-5-5}
-  @syntax[]{(g:permission-can-release object) => can-release}
+  @syntax{(g:permission-can-release object) => can-release}
   @argument[object]{a @class{g:permission} object}
   @argument[can-release]{a boolean whether it is generally possible to release
     the permission}

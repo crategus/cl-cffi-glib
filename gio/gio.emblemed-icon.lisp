@@ -99,8 +99,8 @@
       "Accessor"
       (documentation 'emblemed-icon-gicon 'function)
  "@version{#2022-12-29}
-  @syntax[]{(g:emblemed-icon-gicon object) => gicon}
-  @syntax[]{(setf (g:emblemend-icon-gicon object) gicon)}
+  @syntax{(g:emblemed-icon-gicon object) => gicon}
+  @syntax{(setf (g:emblemend-icon-gicon object) gicon)}
   @argument[object]{a @class{g:emblemed-icon} object}
   @argument[gicon]{a @class{g:icon} object to attach emblems to}
   @begin{short}

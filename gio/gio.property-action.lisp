@@ -175,7 +175,7 @@
       "Accessor"
       (documentation 'property-action-enabled 'function)
  "@version{2022-12-26}
-  @syntax[]{(g:property-action-enabled object) => enabled}
+  @syntax{(g:property-action-enabled object) => enabled}
   @argument[object]{a @class{g:property-action} object}
   @argument[enabled]{a boolean whether the action is enabled}
   @begin{short}
@@ -205,7 +205,7 @@
       "Accessor"
       (documentation 'property-action-invert-boolean 'function)
  "@version{2022-12-26}
-  @syntax[]{(g:property-action-invert-boolean object) => invert}
+  @syntax{(g:property-action-invert-boolean object) => invert}
   @argument[object]{a @class{g:property-action} object}
   @argument[invert]{a boolean whether the state of the action will be the
     negation}
@@ -230,7 +230,7 @@
       "Accessor"
       (documentation 'property-action-name 'function)
  "@version{2022-12-26}
-  @syntax[]{(g:property-action-name object) => name}
+  @syntax{(g:property-action-name object) => name}
   @argument[object]{a @class{g:property-action} object}
   @argument[name]{a string with the name of the action}
   @begin{short}
@@ -275,7 +275,7 @@
       "Accessor"
       (documentation 'property-action-parameter-type 'function)
  "@version{2022-12-26}
-  @syntax[]{(g:property-action-parameter-type object) => type}
+  @syntax{(g:property-action-parameter-type object) => type}
   @argument[object]{a @class{g:property-action} object}
   @argument[type]{a @class{g:variant-type} of the parameter}
   @begin{short}
@@ -331,7 +331,7 @@
       "Accessor"
       (documentation 'property-action-state 'function)
  "@version{2022-12-26}
-  @syntax[]{(property-action-state object) => state}
+  @syntax{(property-action-state object) => state}
   @argument[object]{a @class{g:property-action} object}
   @argument[state]{a @type{g:variant} state of the action}
   @begin{short}
@@ -353,7 +353,7 @@
       "Accessor"
       (documentation 'property-action-state-type 'function)
  "@version{2022-12-26}
-  @syntax[]{(g:property-action-state-type object) => type}
+  @syntax{(g:property-action-state-type object) => type}
   @argument[object]{a @class{g:property-action} object}
   @argument[type]{a @class{g:variant-type} state type of the action}
   @begin{short}

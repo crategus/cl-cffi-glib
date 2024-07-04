@@ -173,8 +173,8 @@ lambda (action value)    :run-last
       "Accessor"
       (documentation 'simple-action-enabled 'function)
  "@version{2022-12-26}
-  @syntax[]{(g:simple-action-enabled object) => enabled}
-  @syntax[]{(setf (g:simple-action-enabled object) enabled)}
+  @syntax{(g:simple-action-enabled object) => enabled}
+  @syntax{(setf (g:simple-action-enabled object) enabled)}
   @argument[object]{a @class{g:simple-action} object}
   @argument[enabled]{a boolean whether the action is enabled}
   @begin{short}
@@ -202,7 +202,7 @@ lambda (action value)    :run-last
       "Accessor"
       (documentation 'simple-action-name 'function)
  "@version{2022-12-26}
-  @syntax[]{(g:simple-action-name object) => name}
+  @syntax{(g:simple-action-name object) => name}
   @argument[object]{a @class{g:simple-action} object}
   @argument[name]{a string with the name of the action}
   @begin{short}
@@ -228,7 +228,7 @@ lambda (action value)    :run-last
       "Accessor"
       (documentation 'simple-action-parameter-type 'function)
  "@version{2022-12-26}
-  @syntax[]{(g:simple-action-parameter-type object) => vtype}
+  @syntax{(g:simple-action-parameter-type object) => vtype}
   @argument[object]{a @class{g:simple-action} object}
   @argument[vtype]{a @class{g:variant-type} instance}
   @begin{short}
@@ -254,8 +254,8 @@ lambda (action value)    :run-last
       "Accessor"
       (documentation 'simple-action-state 'function)
  "@version{2022-12-26}
-  @syntax[]{(g:simple-action-state object) => value}
-  @syntax[]{(setf (g:simple-action-state object) value)}
+  @syntax{(g:simple-action-state object) => value}
+  @syntax{(setf (g:simple-action-state object) value)}
   @argument[object]{a @class{g:simple-action} object}
   @argument[value]{a @type{g:variant} value for the state}
   @begin{short}
@@ -285,7 +285,7 @@ lambda (action value)    :run-last
       "Accessor"
       (documentation 'simple-action-state-type 'function)
  "@version{2022-12-26}
-  @syntax[]{(g:simple-action-state-type object) => vtype}
+  @syntax{(g:simple-action-state-type object) => vtype}
   @argument[object]{a @class{g:simple-action} object}
   @argument[vtype]{a @class{g:variant-type} instance}
   @begin{short}

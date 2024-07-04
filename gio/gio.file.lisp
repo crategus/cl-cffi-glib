@@ -382,7 +382,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; enum GFilesystemPreviewType
+;;; GFilesystemPreviewType
 ;;; ----------------------------------------------------------------------------
 
 (gobject:define-g-enum "GFilesystemPreviewType" filesystem-preview-type
@@ -397,25 +397,28 @@
       "GEnum"
       (liber:symbol-documentation 'filesystem-preview-type)
  "@version{2022-12-27}
-  @begin{short}
-    Indicates a hint from the file system whether files should be previewed in
-    a file manager.
-  @end{short}
-  Returned as the value of the \"filesystem::use-preview\" key.
-  @begin{pre}
+  @begin{declaration}
 (gobject:define-g-enum \"GFilesystemPreviewType\" filesystem-preview-type
   (:export t
    :type-initializer \"g_filesystem_preview_type_get_type\")
   (:if-always 0)
   (:if-local 1)
   (:never 2))
-  @end{pre}
-  @begin[code]{table}
-    @entry[:if-always]{Only preview files if user has explicitly requested it.}
-    @entry[:if-local]{Preview files if user has requested preview of
-      \"local\" files.}
-    @entry[:never]{Never preview files.}
-  @end{table}
+  @end{declaration}
+  @begin{values}
+    @begin[code]{table}
+      @entry[:if-always]{Only preview files if user has explicitly requested
+        it.}
+      @entry[:if-local]{Preview files if user has requested preview of
+        \"local\" files.}
+      @entry[:never]{Never preview files.}
+    @end{table}
+  @end{values}
+  @begin{short}
+    Indicates a hint from the file system whether files should be previewed in
+    a file manager.
+  @end{short}
+  Returned as the value of the \"filesystem::use-preview\" key.
   @see-class{g:file}")
 
 ;;; ----------------------------------------------------------------------------

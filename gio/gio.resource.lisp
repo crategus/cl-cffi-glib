@@ -356,7 +356,7 @@
 (defmacro with-g-resources ((resource path) &body body)
  #+liber-documentation
  "@version{2023-4-22}
-  @syntax[]{(with-g-resources (resource path) body) => result}
+  @syntax{(with-g-resources (resource path) body) => result}
   @argument[resource]{a @class{g:resource} instance to create and register}
   @argument[path]{a pathname or namestring with the path of a file to load}
   @begin{short}

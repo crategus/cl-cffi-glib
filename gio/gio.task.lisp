@@ -632,7 +632,7 @@ baker_bake_cake_sync (Baker               *self,
       "Accessor"
       (documentation 'task-completed 'function)
  "@version{#2023-5-8}
-  @syntax[]{(setf (g:task-completed object) completed)}
+  @syntax{(setf (g:task-completed object) completed)}
   @argument[object]{a @class{g:task} object}
   @argument[completed]{a boolean whether the task has completed}
   @begin{short}
@@ -760,8 +760,8 @@ baker_bake_cake_sync (Baker               *self,
 (cffi:defcfun ("g_task_get_priority" task-priority) :int
  #+liber-documentation
  "@version{#2023-7-13}
-  @syntax[]{(g:task-priority task) => priority}
-  @syntax[]{(setf (g:task-priority task) priority)}
+  @syntax{(g:task-priority task) => priority}
+  @syntax{(setf (g:task-priority task) priority)}
   @argument[task]{a @class{g:task} instance}
   @argument[priority]{an integer with the priority of the request}
   @begin{short}
@@ -793,8 +793,8 @@ baker_bake_cake_sync (Baker               *self,
 (cffi:defcfun ("g_task_get_check_cancellable" task-check-cancellable) :boolean
  #+liber-documentation
  "@version{#2023-7-13}
-  @syntax[]{(g:task-check-cancellable task) => cancellable}
-  @syntax[]{(setf (g:task-cancellable task) cancellable)}
+  @syntax{(g:task-check-cancellable task) => cancellable}
+  @syntax{(setf (g:task-cancellable task) cancellable)}
   @argument[task]{a @class{g:task} instance}
   @argument[cancellable]{a boolean whether @arg{task} will check the state of
     its @class{g:cancellable} instance for you}

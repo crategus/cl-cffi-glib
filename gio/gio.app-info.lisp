@@ -122,7 +122,7 @@
 (in-package :gio)
 
 ;;; ----------------------------------------------------------------------------
-;;; enum GAppInfoCreateFlags
+;;; GAppInfoCreateFlags
 ;;; ----------------------------------------------------------------------------
 
 (gobject:define-g-flags "GAppInfoCreateFlags" app-info-create-flags
@@ -138,10 +138,7 @@
       "GFlags"
       (liber:symbol-documentation 'app-info-create-flags)
  "@version{2023-7-11}
-  @begin{short}
-    Flags used when creating a @class{g:app-info} instance.
-  @end{short}
-  @begin{pre}
+  @begin{declaration}
 (gobject:define-g-flags \"GAppInfoCreateFlags\" app-info-create-flags
   (:export t
    :type-initializer \"g_app_info_create_flags_get_type\")
@@ -149,14 +146,19 @@
   (:needs-terminal #.(ash 1 0))
   (:supports-uris #.(ash 1 1))
   (:supports-startup-notification #.(ash 1 2)))
-  @end{pre}
-  @begin[code]{table}
-    @entry[:none]{No flags set.}
-    @entry[:needs-terminal]{Application opens in a terminal window.}
-    @entry[:supports-uris]{Application supports URI arguments.}
-    @entry[:supports-startup-notification]{Application supports startup
-      notification.}
-  @end{table}
+  @end{declaration}
+  @begin{values}
+    @begin[code]{table}
+      @entry[:none]{No flags set.}
+      @entry[:needs-terminal]{Application opens in a terminal window.}
+      @entry[:supports-uris]{Application supports URI arguments.}
+      @entry[:supports-startup-notification]{Application supports startup
+        notification.}
+    @end{table}
+  @end{values}
+  @begin{short}
+    Flags used when creating a @class{g:app-info} instance.
+  @end{short}
   @see-class{g:app-info}")
 
 ;;; ----------------------------------------------------------------------------

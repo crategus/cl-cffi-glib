@@ -99,7 +99,7 @@
       "Accessor"
       (documentation 'file-icon-file 'function)
  "@version{2022-12-27}
-  @syntax[]{(g:file-icon-file object) => file}
+  @syntax{(g:file-icon-file object) => file}
   @argument[object]{a @class{g:file-icon} object}
   @argument[file]{a @class{g:file} object}
   @begin{short}

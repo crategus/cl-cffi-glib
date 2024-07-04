@@ -526,8 +526,8 @@
                 application-command-line-exit-status) :int
  #+liber-documentation
  "@version{#2020-12-10}
-  @syntax[]{(application-command-line-exit-status cmdline) => exit-status}
-  @syntax[]{(setf (application-command-line-exit-status cmdline) exit-status)}
+  @syntax{(application-command-line-exit-status cmdline) => exit-status}
+  @syntax{(setf (application-command-line-exit-status cmdline) exit-status)}
   @argument[cmdline]{a @class{application-command-line} instance}
   @argument[exit-status]{an integer with the exit status}
   @begin{short}
