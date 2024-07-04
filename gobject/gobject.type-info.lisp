@@ -2430,8 +2430,8 @@ ID     NAME               CFFI type      Lisp type
 (defun type-qdata (gtype quark)
  #+liber-documentation
  "@version{2022-12-29}
-  @syntax[]{(g:type-qdata type quark) => data}
-  @syntax[]{(setf (g:type-qdata type quark) data)}
+  @syntax{(g:type-qdata type quark) => data}
+  @syntax{(setf (g:type-qdata type quark) data)}
   @argument[gtype]{a @class{g:type-t} type ID}
   @argument[quark]{a @type{g:quark-as-string} ID to identify the data}
   @argument[data]{the data}

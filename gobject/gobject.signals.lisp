@@ -483,7 +483,7 @@
       "Accessor"
       (documentation 'signal-query-signal-id 'function)
  "@version{2024-6-18}
-  @syntax[]{(g:signal-query-signal-id instance) => signal-id}
+  @syntax{(g:signal-query-signal-id instance) => signal-id}
   @argument[instance]{a @struct{g:signal-query} instance}
   @argument[signal-id]{an unsigned integer with the signal ID of the signal
     being queried, or 0 if the signal to be queried was unknown}
@@ -503,7 +503,7 @@
       "Accessor"
       (documentation 'signal-query-signal-name 'function)
  "@version{2024-6-18}
-  @syntax[]{(g:signal-query-signal-name instance) => signal-name}
+  @syntax{(g:signal-query-signal-name instance) => signal-name}
   @argument[instance]{a @struct{g:signal-query} instance}
   @argument[signal-name]{a string with the signal name}
   @begin{short}
@@ -522,7 +522,7 @@
       "Accessor"
       (documentation 'signal-query-owner-type 'function)
  "@version{2024-6-18}
-  @syntax[]{(g:signal-query-owner-type instance) => owner-type}
+  @syntax{(g:signal-query-owner-type instance) => owner-type}
   @argument[instance]{a @struct{g:signal-query} instance}
   @argument[owner-type]{a @class{g:type-t} type ID that this signal can be
     emitted for}
@@ -543,7 +543,7 @@
       "Accessor"
       (documentation 'signal-query-signal-flags 'function)
  "@version{2024-6-18}
-  @syntax[]{(g:signal-query-signal-flags instance) => signal-flags}
+  @syntax{(g:signal-query-signal-flags instance) => signal-flags}
   @argument[instance]{a @struct{g:signal-query} instance}
   @argument[signal-flags]{a @symbol{g:signal-flags} value with the signal flags}
   @begin{short}
@@ -563,7 +563,7 @@
       "Accessor"
       (documentation 'signal-query-return-type 'function)
  "@version{2024-6-18}
-  @syntax[]{(g:signal-query-return-type instance) => return-type}
+  @syntax{(g:signal-query-return-type instance) => return-type}
   @argument[instance]{a @struct{g:signal-query} instance}
   @argument[return-type]{a @class{g:type-} type ID with the return type for
     user callbacks}
@@ -583,7 +583,7 @@
       "Accessor"
       (documentation 'signal-query-param-types 'function)
  "@version{2024-6-18}
-  @syntax[]{(g:signal-query-param-types instance) => param-types}
+  @syntax{(g:signal-query-param-types instance) => param-types}
   @argument[instance]{a @struct{g:signal-query} instance}
   @argument[param-types]{a list with the individual parameter @class{g:type-t}
   type IDs for user callbacks}
@@ -603,7 +603,7 @@
       "Accessor"
       (documentation 'signal-query-signal-detail 'function)
  "@version{2024-6-18}
-  @syntax[]{(g:signal-query-signal-detail instance) => signal-detail}
+  @syntax{(g:signal-query-signal-detail instance) => signal-detail}
   @argument[instance]{a @struct{g:signal-query} instance}
   @argument[signal-detail]{a string with the signal detail}
   @begin{short}

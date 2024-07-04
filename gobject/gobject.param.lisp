@@ -443,8 +443,8 @@
 (cffi:defcfun ("g_value_get_boolean" value-boolean) :boolean
  #+liber-documentation
  "@version{#2022-12-31}
-  @syntax[]{(g:value-boolean gvalue) => value}
-  @syntax[]{(setf (g:value-boolan gvalue) value)}
+  @syntax{(g:value-boolean gvalue) => value}
+  @syntax{(setf (g:value-boolan gvalue) value)}
   @argument[gvalue]{a @symbol{g:value} of @code{\"gboolean\"} type}
   @argument[value]{a boolean value}
   @begin{short}
@@ -593,8 +593,8 @@
 (cffi:defcfun ("g_value_get_char" value-char) :int8
  #+liber-documentation
  "@version{#2022-12-31}
-  @syntax[]{(g:value-char gvalue) => value}
-  @syntax[]{(setf (g:value-char gvalue) value)}
+  @syntax{(g:value-char gvalue) => value}
+  @syntax{(setf (g:value-char gvalue) value)}
   @argument[gvalue]{a @symbol{g:value} of @code{\"gchar\"} type}
   @argument[value]{an 8-bit integer with the character value}
   @begin{short}
@@ -629,8 +629,8 @@
 (cffi:defcfun ("g_value_get_schar" value-schar) :int8
  #+liber-documentation
  "@version{#2022-12-31}
-  @syntax[]{(g:value-schar gvalue) => value}
-  @syntax[]{(setf (g:value-schar gvalue) value)}
+  @syntax{(g:value-schar gvalue) => value}
+  @syntax{(setf (g:value-schar gvalue) value)}
   @argument[gvalue]{a @symbol{g:value} of @code{\"gchar\"} type}
   @argument[value]{an integer with the character value}
   @begin{short}
@@ -783,8 +783,8 @@
 (cffi:defcfun ("g_value_get_uchar" value-uchar) :uint8
  #+liber-documentation
  "@version{#2022-12-31}
-  @syntax[]{(g:value-uchar gvalue) => value}
-  @syntax[]{(setf (g:value-uchar gvalue) value)}
+  @syntax{(g:value-uchar gvalue) => value}
+  @syntax{(setf (g:value-uchar gvalue) value)}
   @argument[gvalue]{a @symbol{g:value} of @code{\"guchar\"} type}
   @argument[value]{an unsigned 8-bit integer with the unsigned character value}
   @begin{short}
@@ -935,8 +935,8 @@
 (cffi:defcfun ("g_value_get_int" value-int) :int
  #+liber-documentation
  "@version{#2022-12-31}
-  @syntax[]{(g:value-int gvalue) => value}
-  @syntax[]{(setf (g:value-int gvalue) value)}
+  @syntax{(g:value-int gvalue) => value}
+  @syntax{(setf (g:value-int gvalue) value)}
   @argument[gvalue]{a @symbol{g:value} of @code{\"gint\"} type}
   @argument[value]{an integer value}
   @begin{short}
@@ -1084,8 +1084,8 @@
 (cffi:defcfun ("g_value_get_uint" value-uint) :uint
  #+liber-documentation
  "@version{#2022-12-31}
-  @syntax[]{(g:value-uint gvalue) => value}
-  @syntax[]{(setf (g:value-uint gvalue) value)}
+  @syntax{(g:value-uint gvalue) => value}
+  @syntax{(setf (g:value-uint gvalue) value)}
   @argument[gvalue]{a @symbol{g:value} of @code{\"guint\"} type}
   @argument[value]{an unsigned integer value}
   @begin{short}
@@ -1236,8 +1236,8 @@
 (cffi:defcfun ("g_value_get_long" value-long) :long
  #+liber-documentation
  "@version{#2022-12-31}
-  @syntax[]{(g:value-long gvalue) => value}
-  @syntax[]{(setf (g:value-long gvalue) value)}
+  @syntax{(g:value-long gvalue) => value}
+  @syntax{(setf (g:value-long gvalue) value)}
   @argument[gvalue]{a @symbol{g:value} of @code{\"glong\"} type}
   @argument[value]{a long integer value}
   @begin{short}
@@ -1388,8 +1388,8 @@
 (cffi:defcfun ("g_value_get_ulong" value-ulong) :ulong
  #+liber-documentation
  "@version{#2022-12-31}
-  @syntax[]{(g:value-ulong gvalue) => value}
-  @syntax[]{(setf (g:value-ulong gvalue) value)}
+  @syntax{(g:value-ulong gvalue) => value}
+  @syntax{(setf (g:value-ulong gvalue) value)}
   @argument[gvalue]{a @symbol{g:value} of @code{\"gulong\"} type}
   @argument[value]{an unsigned long integer value}
   @begin{short}
@@ -1540,8 +1540,8 @@
 (cffi:defcfun ("g_value_get_int64" value-int64) :int64
  #+liber-documentation
  "@version{#2022-12-31}
-  @syntax[]{(g:value-int64 gvalue) => value}
-  @syntax[]{(setf (g:value-int64 gvalue) value)}
+  @syntax{(g:value-int64 gvalue) => value}
+  @syntax{(setf (g:value-int64 gvalue) value)}
   @argument[gvalue]{a @symbol{g:value} instance of @code{\"gint64\"} type}
   @argument[value]{a 64-bit integer value}
   @begin{short}
@@ -1692,8 +1692,8 @@
 (cffi:defcfun ("g_value_get_uint64" value-uint64) :uint64
  #+liber-documentation
  "@version{#2022-12-31}
-  @syntax[]{(g:value-uint64 gvalue) => value}
-  @syntax[]{(setf (g:value-uint64 gvalue) value)}
+  @syntax{(g:value-uint64 gvalue) => value}
+  @syntax{(setf (g:value-uint64 gvalue) value)}
   @argument[gvalue]{a @symbol{g:value} of @code{\"guint64\"} type}
   @argument[value]{an unsigned 64-bit integer value}
   @begin{short}
@@ -1848,8 +1848,8 @@
 (cffi:defcfun ("g_value_get_float" value-float) :float
  #+liber-documentation
  "@version{#2022-12-31}
-  @syntax[]{(g:value-float gvalue) => value}
-  @syntax[]{(setf (g:value-float gvalue) value)}
+  @syntax{(g:value-float gvalue) => value}
+  @syntax{(setf (g:value-float gvalue) value)}
   @argument[gvalue]{a @symbol{g:value} of @code{\"gfloat\"} type}
   @argument[value]{a float value}
   @begin{short}
@@ -2004,8 +2004,8 @@
 (cffi:defcfun ("g_value_get_double" value-double) :double
  #+liber-documentation
  "@version{#2022-12-31}
-  @syntax[]{(g:value-double gvalue) => value}
-  @syntax[]{(setf (g:value-double gvalue) value)}
+  @syntax{(g:value-double gvalue) => value}
+  @syntax{(setf (g:value-double gvalue) value)}
   @argument[gvalue]{a @symbol{g:value} of @code{\"gdouble\"} type}
   @argument[value]{a double float value}
   @begin{short}
@@ -2577,8 +2577,8 @@
 (cffi:defcfun ("g_value_get_string" value-string) :string
  #+liber-documentation
  "@version{#2022-12-31}
-  @syntax[]{(g:value-string gvalue) => value}
-  @syntax[]{(setf (g:value-string gvalue) value)}
+  @syntax{(g:value-string gvalue) => value}
+  @syntax{(setf (g:value-string gvalue) value)}
   @argument[gvalue]{a @symbol{g:value} of @code{\"gchararray\"} type}
   @argument[value]{caller-owned string to be duplicated for the
     @symbol{g:value}}
@@ -2803,8 +2803,8 @@
 (cffi:defcfun ("g_value_get_param" value-param) (:pointer (:struct param-spec))
  #+liber-documentation
  "@version{#2022-12-31}
-  @syntax[]{(g:value-param gvalue) => value}
-  @syntax[]{(setf (g:value-param gvalue) value)}
+  @syntax{(g:value-param gvalue) => value}
+  @syntax{(setf (g:value-param gvalue) value)}
   @argument[gvalue]{a @symbol{g:value} whose type is derived from
     @var{+value-param+}}
   @argument[value]{a @symbol{g:param-spec} value}
@@ -2996,8 +2996,8 @@
 (cffi:defcfun ("g_value_get_boxed" value-boxed) :pointer
  #+liber-documentation
  "@version{2022-12-28}
-  @syntax[]{(g:value-boxed gvalue) => value}
-  @syntax[]{(setf (g:value-boxed gvalue) value)}
+  @syntax{(g:value-boxed gvalue) => value}
+  @syntax{(setf (g:value-boxed gvalue) value)}
   @argument[gvalue]{a @symbol{g:value} instance of @code{GBoxed} type}
   @argument[value]{a boxed value}
   @begin{short}
@@ -3207,8 +3207,8 @@
 (cffi:defcfun ("g_value_get_pointer" value-pointer) :pointer
  #+liber-documentation
  "@version{#2022-12-31}
-  @syntax[]{(g:value-pointer gvalue) => value}
-  @syntax[]{(setf (g:value-pointer gvalue) value)}
+  @syntax{(g:value-pointer gvalue) => value}
+  @syntax{(setf (g:value-pointer gvalue) value)}
   @argument[gvalue]{a valid @symbol{g:value} of @code{gpointer}}
   @argument[value]{pointer value to be set}
   @begin{short}
@@ -3354,8 +3354,8 @@
 (defun value-object (gvalue)
  #+liber-documentation
  "@version{#2022-12-31}
-  @syntax[]{(g:value-object gvalue) => value}
-  @syntax[]{(setf (g:value-object gvalue) value)}
+  @syntax{(g:value-object gvalue) => value}
+  @syntax{(setf (g:value-object gvalue) value)}
   @argument[gvalue]{a valid @symbol{g:value} of @code{\"GObject\"} derived
     type}
   @argument[value]{object value of derived @code{\"GObject\"} type}
@@ -3865,8 +3865,8 @@
 (cffi:defcfun ("g_value_get_gtype" value-gtype) type-t
  #+liber-documentation
  "@version{#2022-12-31}
-  @syntax[]{(g:value-gtype gvalue) => value}
-  @syntax[]{(setf (g:value-gtype gvalue) value)}
+  @syntax{(g:value-gtype gvalue) => value}
+  @syntax{(setf (g:value-gtype gvalue) value)}
   @argument[gvalue]{a valid @symbol{g:value} instance of @class{g:type-t} type}
   @argument[value]{a @class{g:type-t} type value}
   @return{The @class{g:type-t} type stored in @arg{gvalue}.}
@@ -4020,8 +4020,8 @@
     (:pointer (:struct glib:variant))
  #+liber-documentation
  "@version{#2022-12-31}
-  @syntax[]{(g:value-variant gvalue) => value}
-  @syntax[]{(setf (g:value-variant gvalue) value)}
+  @syntax{(g:value-variant gvalue) => value}
+  @syntax{(setf (g:value-variant gvalue) value)}
   @argument[gvalue]{a @symbol{g:value} of @code{\"GVariant\"} type}
   @argument[value]{a @symbol{g:variant} value}
   @begin{short}

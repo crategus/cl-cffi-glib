@@ -73,9 +73,9 @@
 (defmacro with-g-value ((var &rest args) &body body)
  #+liber-documentation
  "@version{2023-11-7}
-  @syntax[]{gobject:with-g-value (gvalue) body) => result}
-  @syntax[]{(gobject:with-g-value (gvalue gtype) body) => result}
-  @syntax[]{(gobject:with-g-value (gvalue gtype value) body) => result}
+  @syntax{gobject:with-g-value (gvalue) body) => result}
+  @syntax{(gobject:with-g-value (gvalue gtype) body) => result}
+  @syntax{(gobject:with-g-value (gvalue gtype value) body) => result}
   @argument[gvalue]{a @symbol{g:value} instance to create and initialize}
   @argument[gtype]{an optional @symbol{g:type-t} type}
   @argument[value]{an optional value corresponding to @arg{gtype} to set}
@@ -128,7 +128,7 @@
 (defmacro with-g-values (vars &body body)
  #+liber-documentation
  "@version{2023-11-7}
-  @syntax[]{(gobject:with-g-values (gvalue1 gvalue2 ... gvaluen) body) => result}
+  @syntax{(gobject:with-g-values (gvalue1 gvalue2 ... gvaluen) body) => result}
   @argument[gvalue1 ... gvaluen]{the newly created @symbol{g:value} instances}
   @argument[body]{a body that uses the bindings @arg{gvalue1 ... gvaluen}}
   @begin{short}

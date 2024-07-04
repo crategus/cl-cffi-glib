@@ -244,7 +244,7 @@ object3:propertyC -> object1:propertyA
       "Accessor"
       (documentation 'binding-flags 'function)
  "@version{2024-6-18}
-  @syntax[]{(g:binding-flags object) => flags}
+  @syntax{(g:binding-flags object) => flags}
   @argument[object]{a @class{g:binding} object}
   @argument[flags]{a @symbol{g:binding-flags} value used by the binding}
   @begin{short}
@@ -267,7 +267,7 @@ object3:propertyC -> object1:propertyA
       "Accessor"
       (documentation 'binding-source 'function)
  "@version{2024-6-18}
-  @syntax[]{(g:binding-source object) => source}
+  @syntax{(g:binding-source object) => source}
   @argument[object]{a @class{g:binding} object}
   @argument[source]{a @class{g:object} source instance}
   @begin{short}
@@ -298,7 +298,7 @@ object3:propertyC -> object1:propertyA
       "Accessor"
       (documentation 'binding-source-property 'function)
  "@version{2024-6-18}
-  @syntax[]{(g:binding-source-property object) => property}
+  @syntax{(g:binding-source-property object) => property}
   @argument[object]{a @class{g:binding} object}
   @argument[property]{a string with the name of the source property}
   @begin{short}
@@ -321,7 +321,7 @@ object3:propertyC -> object1:propertyA
       "Accessor"
       (documentation 'binding-target 'function)
  "@version{2024-6-18}
-  @syntax[]{(g:binding-target object) => target}
+  @syntax{(g:binding-target object) => target}
   @argument[object]{a @class{g:binding} object}
   @argument[target]{a @class{g:object} target instance}
   @begin{short}
@@ -352,7 +352,7 @@ object3:propertyC -> object1:propertyA
       "Accessor"
       (documentation 'binding-target-property 'function)
  "@version{2024-6-18}
-  @syntax[]{(g:binding-target-property object) => property}
+  @syntax{(g:binding-target-property object) => property}
   @argument[object]{a @class{g:binding} object}
   @argument[property]{a string with the name of the target property}
   @begin{short}

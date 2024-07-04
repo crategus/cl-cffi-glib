@@ -310,7 +310,7 @@ lambda (object pspec)    :no-hooks
       "Accessor"
       (documentation 'object-has-reference 'function)
  "@version{2023-12-1}
-  @syntax[]{(g:object-has-reference object) => has-reference}
+  @syntax{(g:object-has-reference object) => has-reference}
   @argument[object]{a @class{g:object} instance}
   @argument[has-reference]{@em{true} when registering @arg{object}}
   @begin{short}
@@ -330,7 +330,7 @@ lambda (object pspec)    :no-hooks
       "Accessor"
       (documentation 'object-pointer 'function)
  "@version{2023-12-1}
-  @syntax[]{(g:object-pointer object) => pointer}
+  @syntax{(g:object-pointer object) => pointer}
   @argument[object]{a @class{g:object} instance}
   @argument[pointer]{a foreign pointer to the C instance of @arg{object}}
   @begin{short}
@@ -2948,8 +2948,8 @@ lambda (object pspec)    :no-hooks
 (defun object-property (object name &optional gtype)
  #+liber-documentation
  "@version{2023-7-27}
-  @syntax[]{(g:object-property object name gtype) => value}
-  @syntax[]{(setf (g:object-property object name gtype) value)}
+  @syntax{(g:object-property object name gtype) => value}
+  @syntax{(setf (g:object-property object name gtype) value)}
   @argument[object]{a @class{g:object} instance}
   @argument[name]{a string with the name of the property}
   @argument[gtype]{an optional @class{g:type-t} type ID of the property}
