@@ -2358,8 +2358,8 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 (cffi:defcfun ("g_source_get_priority" source-priority) :int
  #+liber-documentation
  "@version{2023-1-5}
-  @syntax[]{(g:source-priority source) => priority}
-  @syntax[]{(setf (g:source-priority source) => priority)}
+  @syntax{(g:source-priority source) => priority}
+  @syntax{(setf (g:source-priority source) => priority)}
   @argument[source]{a @type{g:source} instance}
   @argument[priority]{an integer with the priority}
   @begin{short}
@@ -2389,8 +2389,8 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 (cffi:defcfun ("g_source_get_can_recurse" source-can-recurse) :boolean
  #+liber-documentation
  "@version{2023-1-5}
-  @syntax[]{(g:source-can-recurse source) => can-recurse}
-  @syntax[]{(setf g:source-can-recurse source) can-recurse)}
+  @syntax{(g:source-can-recurse source) => can-recurse}
+  @syntax{(setf g:source-can-recurse source) can-recurse)}
   @argument[source]{a @type{g:source} instance}
   @argument[can-recurse]{a boolean whether recursion is allowed for this source}
   @begin{short}
@@ -2444,8 +2444,8 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 (cffi:defcfun ("g_source_get_name" source-name) :string
  #+liber-documentation
  "@version{2023-1-5}
-  @syntax[]{(g:source-name source) => name}
-  @syntax[]{(setf (g:source-name source) name)}
+  @syntax{(g:source-name source) => name}
+  @syntax{(setf (g:source-name source) name)}
   @argument[source]{a @type{g:source} instance}
   @argument[name]{a string with the debug name for the source}
   @begin{short}
@@ -2650,8 +2650,8 @@ lambda ()
 (cffi:defcfun ("g_source_get_ready_time" source-ready-time) :int64
  #+liber-documentation
  "@version{2023-1-5}
-  @syntax[]{(g:source-ready-time source) => time}
-  @syntax[]{(setf (g:source-readey-time source) time)}
+  @syntax{(g:source-ready-time source) => time}
+  @syntax{(setf (g:source-readey-time source) time)}
   @argument[source]{a @type{g:source} instance}
   @argument[time]{an integer with the monotonic time at which the source will
     be ready, 0 for \"immediately\", -1 for \"never\"}

@@ -531,8 +531,8 @@
 (cffi:defcfun ("g_get_application_name" application-name) :string
  #+liber-documentation
  "@version{2023-9-18}
-  @syntax[]{(g:application-name) => name}
-  @syntax[]{(setf (g:application-name) name)}
+  @syntax{(g:application-name) => name}
+  @syntax{(setf (g:application-name) name)}
   @argument[name]{a string with the localized name of the application}
   @begin{short}
     Accessor of a human readable name for the application.
@@ -567,8 +567,8 @@
 (cffi:defcfun ("g_get_prgname" prgname) :string
  #+liber-documentation
  "@version{2022-11-23}
-  @syntax[]{(g:prgname) => prgname}
-  @syntax[]{(setf (g:prgname) prgname)}
+  @syntax{(g:prgname) => prgname}
+  @syntax{(setf (g:prgname) prgname)}
   @argument[prgname]{a string with the name of the program}
   @begin{short}
     Accessor of the name of the program.

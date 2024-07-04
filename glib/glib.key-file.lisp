@@ -332,7 +332,7 @@ Booleans=true;false;true;true
 (defmacro with-g-key-file ((keyfile) &body body)
  #+liber-documentation
  "@version{2023-2-1}
-  @syntax[]{(with-g-key-file (keyfile) body) => result}
+  @syntax{(with-g-key-file (keyfile) body) => result}
   @argument[keyfile]{a newly allocated @type{g:key-file} instance}
   @begin{short}
     The @sym{with-g-file-key} macro allocates a new @type{g:key-file} instance
@@ -352,7 +352,7 @@ Booleans=true;false;true;true
                                      &body body)
  #+liber-documentation
  "@version{2023-6-22}
-  @syntax[]{(with-g-key-file-from-file (keyfile path flags) body) => result}
+  @syntax{(with-g-key-file-from-file (keyfile path flags) body) => result}
   @argument[keyfile]{a newly allocated @type{g:key-file} instance}
   @argument[path]{a pathname or namestring with the path of a file to load}
   @argument[flags]{an optional @symbol{g:key-file-flags} value, the default
@@ -662,7 +662,7 @@ Booleans=true;false;true;true
 (defun key-file-to-data (keyfile)
  #+liber-documentation
  "@version{2023-1-25}
-  @syntax[]{(g:key-file-to-data keyfile) => data, len}
+  @syntax{(g:key-file-to-data keyfile) => data, len}
   @argument[keyfile]{a @type{g:key-file} instance}
   @argument[data]{a string holding the contents of the key file}
   @argument[len]{an integer with the length of @arg{data}}
@@ -840,8 +840,8 @@ Booleans=true;false;true;true
 (defun key-file-value (keyfile group key)
  #+liber-documentation
  "@version{2023-1-26}
-  @syntax[]{(g:key-file-value keyfile group key) => value}
-  @syntax[]{(setf (g:key-file-value keyfile group key) value)}
+  @syntax{(g:key-file-value keyfile group key) => value}
+  @syntax{(setf (g:key-file-value keyfile group key) value)}
   @argument[keyfile]{a @type{g:key-file} instance}
   @argument[group]{a string with the group name}
   @argument[key]{a string with a key}
@@ -888,8 +888,8 @@ Booleans=true;false;true;true
 (defun key-file-string (keyfile group key)
  #+liber-documentation
  "@version{2023-1-25}
-  @syntax[]{(g:key-file-string keyfile group key) => value}
-  @syntax[]{(setf (g:key-file-string keyfile group key) value)}
+  @syntax{(g:key-file-string keyfile group key) => value}
+  @syntax{(setf (g:key-file-string keyfile group key) value)}
   @argument[keyfile]{a @type{g:key-file} instance}
   @argument[group]{a string with the group name}
   @argument[key]{a string with the key name}
@@ -1162,8 +1162,8 @@ Booleans=true;false;true;true
 (defun key-file-string-list (keyfile group key)
  #+liber-documentation
  "@version{2023-1-25}
-  @syntax[]{(g:key-file-string-list keyfile group key) => value}
-  @syntax[]{(setf (g:key-file-string-list keyfile group key) value)}
+  @syntax{(g:key-file-string-list keyfile group key) => value}
+  @syntax{(setf (g:key-file-string-list keyfile group key) value)}
   @argument[keyfile]{a @type{g:key-file} instance}
   @argument[group]{a string with the group name}
   @argument[key]{a string with the key name}
@@ -1415,8 +1415,8 @@ Booleans=true;false;true;true
 (defun key-file-comment (keyfile group key)
  #+liber-documentation
  "@version{2023-1-26}
-  @syntax[]{(g:key-file-comment keyfile group key) => value}
-  @syntax[]{(setf (g:key-file-comment keyfile group key) value)}
+  @syntax{(g:key-file-comment keyfile group key) => value}
+  @syntax{(setf (g:key-file-comment keyfile group key) value)}
   @argument[keyfile]{a @type{g:key-file} instance}
   @argument[group]{a string with the group name}
   @argument[key]{a string with the key name}

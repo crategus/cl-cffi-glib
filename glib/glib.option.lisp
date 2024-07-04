@@ -91,8 +91,8 @@
 (defmacro with-g-option-context ((context &rest args) &body body)
  #+liber-documentation
  "@version{2023-2-3}
-  @syntax[]{(with-g-option-context (context) body) => result}
-  @syntax[]{(with-g-option-context (context parameter) body) => result}
+  @syntax{(with-g-option-context (context) body) => result}
+  @syntax{(with-g-option-context (context parameter) body) => result}
   @argument[context]{a @type{g:option-context} instance to create and
     initialize}
   @argument[parameter]{an optional string which is displayed in the first line
@@ -117,7 +117,7 @@
 (defmacro with-g-option-group ((group &rest args) &body body)
  #+liber-documentation
  "@version{2023-1-6}
-  @syntax[]{with-g-option-group (group name description help-description)
+  @syntax{with-g-option-group (group name description help-description)
     body => result}
   @argument[group]{a @type{g:option-group} instance to create and initialize}
   @argument[name]{a string with the name for the option group}
@@ -608,8 +608,8 @@ Hilfeoptionen:
 (cffi:defcfun ("g_option_context_get_summary" option-context-summary) :string
  #+liber-documentation
  "@version{2022-11-24}
-  @syntax[]{(g:option-context-summary context) => summary}
-  @syntax[]{(setf (g:option-context-summary context) summary)}
+  @syntax{(g:option-context-summary context) => summary}
+  @syntax{(setf (g:option-context-summary context) summary)}
   @argument[context]{a @type{g:option-context} instance}
   @argument[summary]{a string to be shown in @code{--help} output before the
     list of options, or @code{nil}}
@@ -665,8 +665,8 @@ Hilfeoptionen:
     :string
  #+liber-documentation
  "@version{2022-11-24}
-  @syntax[]{(g:option-context-description context) => description}
-  @syntax[]{(setf (g:option-context-descripton context) description)}
+  @syntax{(g:option-context-description context) => description}
+  @syntax{(setf (g:option-context-descripton context) description)}
   @argument[context]{a @type{g:option-context} instance}
   @argument[description]{a string to be shown in @code{--help} output after the
     list of options, or @code{nil}}
@@ -946,8 +946,8 @@ lambda (str)
     :boolean
  #+liber-documentation
  "@version{#2022-11-24}
-  @syntax[]{(g:option-context-help-enabled context) => enabled}
-  @syntax[]{(setf (g:option-context-help-enabled context) enabled)}
+  @syntax{(g:option-context-help-enabled context) => enabled}
+  @syntax{(setf (g:option-context-help-enabled context) enabled)}
   @argument[context]{a @type{g:option-context} instance}
   @argument[enabled]{@em{true} to enable @code{--help} output, @em{false} to
     disable it}
@@ -980,8 +980,8 @@ lambda (str)
                 option-context-ignore-unknown-options) :boolean
  #+liber-documentation
  "@version{#2022-11-24}
-  @syntax[]{(g:option-context-ignore-unknown-options context) => ignore}
-  @syntax[]{(setf (g:option-context-ignore-unknown-options context) ignore)}
+  @syntax{(g:option-context-ignore-unknown-options context) => ignore}
+  @syntax{(setf (g:option-context-ignore-unknown-options context) ignore)}
   @argument[context]{a @type{g:option-context} instance}
   @argument[ignore]{@em{true} to ignore unknown options, @em{false} to produce
     an error when unknown options are met}
@@ -1212,8 +1212,8 @@ lambda (str)
     (:pointer (:struct option-group))
  #+liber-documentation
  "@version{2022-11-24}
-  @syntax[]{(g:option-context-main-group context) => group}
-  @syntax[]{(setf (g:option-context-main-group context) group)}
+  @syntax{(g:option-context-main-group context) => group}
+  @syntax{(setf (g:option-context-main-group context) group)}
   @argument[context]{a @type{g:option-context} instance}
   @argument[group]{a @type{g:option-group} instance}
   @begin{short}
