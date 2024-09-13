@@ -956,6 +956,53 @@
            #:file-uri
            #:file-get-parse-name
 
+           ;; Symbols from gio.file-info.lisp
+           #:file-info
+           #:file-info-new
+           #:file-info-clear-status
+           #:file-info-copy-into
+           #:file-info-dup
+           #:file-info-access-date-time
+           #:file-info-attribute-as-string
+           #:file-info-attribute-boolean
+           #:file-info-file-info-attribute-byte-string
+           #:file-info-attribute-data
+           #:file-info-attribute-file-path
+           #:file-info-attribute-int32
+           #:file-info-attribute-int64
+           #:file-infoattribute-object
+           #:file-info-attribute-status
+           #:file-info-attribute-string
+           #:file-info-attribute-stringv
+           #:file-info-attribute-type
+           #:file-info-attribute-uint32
+           #:file-info-attribute-uint64
+           #:file-info-set-attribute
+           #:file-infoset-attribute-mask
+           #:file-info-content-type
+           #:file-info-creation-date-time
+           #:file-info-deletion-date
+           #:file-info-display-name
+           #:file-info-edit-name
+           #:file-info-etag
+           #:file-info-file-type
+           #:file-info-icon
+           #:file-info-is-backup
+           #:file-info-is-hidden
+           #:file-info-is-symlink
+           #:file-info-modification-date-time
+           #:file-info-modification-time
+           #:file-info-name
+           #:file-info-size
+           #:file-info-sort-order
+           #:file-info-symbolic-icon
+           #:file-info-symlink-target
+           #:file-info-has-attribute
+           #:file-info-has-namespace
+           #:file-info-list-attributes
+           #:file-info-remove-attribute
+           #:file-info-unset-attribute-mask
+
            ;; Symbols from gio.cancellable.lisp
            #:cancellable
            #:ancellable-source-func

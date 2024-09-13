@@ -200,6 +200,53 @@
       @about-function{file-replace-readwrite-finish}
       @about-function{file-supports-thread-contexts}
     @end{subsection}
+    @begin[GFileInfo]{subsection}
+      @about-class{file-info}
+      @about-function{file-info-new}
+      @about-function{file-info-clear-status}
+      @about-function{file-info-copy-into}
+      @about-function{file-info-dup}
+      @about-function{file-info-access-date-time}
+      @about-function{file-info-attribute-as-string}
+      @about-function{file-info-attribute-boolean}
+      @about-function{file-info-attribute-byte-string}
+      @about-function{file-info-attribute-data}
+      @about-function{file-info-attribute-file-path}
+      @about-function{file-info-attribute-int32}
+      @about-function{file-info-attribute-int64}
+      @about-function{file-info-attribute-object}
+      @about-function{file-info-attribute-status}
+      @about-function{file-info-attribute-string}
+      @about-function{file-info-attribute-stringv}
+      @about-function{file-info-attribute-type}
+      @about-function{file-info-attribute-uint32}
+      @about-function{file-info-attribute-uint64}
+      @about-function{file-info-set-attribute}
+      @about-function{file-info-set-attribute-mask}
+      @about-function{file-info-content-type}
+      @about-function{file-info-creation-date-time}
+      @about-function{file-info-deletion-date}
+      @about-function{file-info-display-name}
+      @about-function{file-info-edit-name}
+      @about-function{file-info-etag}
+      @about-function{file-info-file-type}
+      @about-function{file-info-icon}
+      @about-function{file-info-is-backup}
+      @about-function{file-info-is-hidden}
+      @about-function{file-info-is-symlink}
+      @about-function{file-info-modification-date-time}
+      @about-function{file-info-modification-time}
+      @about-function{file-info-name}
+      @about-function{file-info-size}
+      @about-function{file-info-sort-order}
+      @about-function{file-info-symbolic-icon}
+      @about-function{file-info-symlink-target}
+      @about-function{file-info-has-attribute}
+      @about-function{file-info-has-namespace}
+      @about-function{file-info-list-attributes}
+      @about-function{file-info-remove-attribute}
+      @about-function{file-info-unset-attribute-mask}
+    @end{subsection}
   @end{section}
   @begin[Asynchronous I/O]{section}
     @begin[GCancellable]{subsection}
