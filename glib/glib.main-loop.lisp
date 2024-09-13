@@ -498,10 +498,10 @@
 (setf (liber:alias-for-type 'source)
       "CStruct"
       (documentation 'source 'type)
- "@version{2022-11-21}
+ "@version{2024-7-27}
   @begin{short}
-    The @sym{g:source} structure is an opaque data type representing an event
-    source.
+    The @type{g:source} structure is an opaque data type representing an
+    event source.
   @end{short}
   @see-type{g:main-loop}")
 
@@ -2434,7 +2434,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf source-name) (name source)
-  (let ((str (if name name (cffi:null-pointer))))
+  (let ((str (or name (cffi:null-pointer))))
     (cffi:foreign-funcall "g_source_set_name"
                           (:pointer (:struct source)) source
                           :string str
@@ -2443,25 +2443,26 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 
 (cffi:defcfun ("g_source_get_name" source-name) :string
  #+liber-documentation
- "@version{2023-1-5}
+ "@version{2024-7-27}
   @syntax{(g:source-name source) => name}
   @syntax{(setf (g:source-name source) name)}
   @argument[source]{a @type{g:source} instance}
   @argument[name]{a string with the debug name for the source}
   @begin{short}
-    The @sym{g:source-name} function gets a name for the source, used in
+    The @fun{g:source-name} function gets a name for the source, used in
     debugging and profiling.
   @end{short}
-  The @sym{(setf g:source-name)} function sets a name for the source. The name
-  may be @code{nil}. The source name should describe in a human readable way
-  what the source does. For example, \"X11 event queue\" or \"GTK repaint idle
-  handler\" or whatever it is.
+  The @setf{g:source-name} function sets a name for the source. The name may be
+  @code{nil}. The source name should describe in a human readable way what the
+  source does. For example, @code{\"X11 event queue\"} or
+  @code{\"GTK repaint idle handler\"} or whatever it is.
 
   It is permitted to call this function multiple times, but is not recommended
   due to the potential performance impact. For example, one could change the
-  name in the \"check\" function of a @code{GSourceFuncs} to include details
-  like the event type in the source name.
-  @see-type{g:source}"
+  name in the @symbol{g:source-func} callback function to include details like
+  the event type in the source name.
+  @see-type{g:source}
+  @see-symbol{g:source-func}"
   (source (:pointer (:struct source))))
 
 (export 'source-name)
@@ -2558,20 +2559,16 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 (setf (liber:alias-for-symbol 'source-func)
       "Callback"
       (liber:symbol-documentation 'source-func)
- "@version{2022-11-22}
+ "@version{2024-7-27}
+  @syntax{lambda() => result}
+  @argument[result]{@em{false} if the source should be removed, the
+    @var{g:+source-continue+} and @var{g:+source-remove+} constants are
+    memorable names for the return value}
   @begin{short}
     Specifies the type of callback function passed to the @fun{g:timeout-add},
     and @fun{g:idle-add} functions.
   @end{short}
-  @begin{pre}
-lambda ()
-  @end{pre}
-  @begin[code]{table}
-    @entry[Returns]{@em{False} if the source should be removed. The constants
-      @var{g:+source-continue+} and @var{g:+source-remove+} are memorable names
-      for the return value.}
-  @end{table}
-  @begin[Example]{dictionary}
+  @begin{examples}
     This example shows a timeout callback function, which runs 10 times and
     then quits the main loop.
     @begin{pre}
@@ -2604,7 +2601,7 @@ lambda ()
     (g:main-loop-run mainloop)
     (g:main-loop-unref mainloop)))
     @end{pre}
-  @end{dictionary}
+  @end{examples}
   @see-function{g:timeout-add}
   @see-function{g:idle-add}")
 
