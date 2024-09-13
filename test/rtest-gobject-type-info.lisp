@@ -594,23 +594,25 @@
                    "GSimpleActionGroup" "GApplication" "GApplicationCommandLine"
                    "GMenuModel" "GMenuItem" "GNotification" "GCancellable"
                    "GTask" "GClock1" "GClock2" "GClock3" "GClock4" "GClock5")
-                 (mapcar #'g:type-name
-                         (g:type-children "GObject"))))))
+                 (sort (mapcar #'g:type-name
+                               (g:type-children "GObject"))
+                       #'string<)))))
 
 #+windows
 (test g-type-children
   (if *first-run-glib-test*
-      (is (equal '("GWin32RegistryKey" "GWin32AppInfoApplication"
-                   "GWin32AppInfoShellVerb" "GWin32AppInfoFileExtension"
-                   "GWin32AppInfoHandler" "GThemedIcon" "GWin32AppInfoURLSchema"
-                   "GInitiallyUnowned" "GBinding" "GAppLaunchContext"
-                   "GFileIcon" "GEmblemedIcon" "GEmblem" "GPermission"
-                   "GListStore" "GSimpleAction" "GPropertyAction"
-                   "GSimpleActionGroup" "GApplication" "GApplicationCommandLine"
-                   "GMenuModel" "GMenuItem" "GNotification" "GCancellable"
-                   "GTask" "GClock1" "GClock2" "GClock3" "GClock4" "GClock5")
-                 (mapcar #'g:type-name
-                         (g:type-children "GObject"))))))
+      (is (equal '("GAppLaunchContext" "GApplication" "GApplicationCommandLine"
+                   "GBinding" "GCancellable" "GClock1" "GClock2" "GClock3"
+                   "GClock4" "GClock5" "GEmblem" "GEmblemedIcon" "GFileIcon"
+                   "GFileInfo" "GInitiallyUnowned" "GListStore" "GMenuItem"
+                   "GMenuModel" "GNotification" "GPermission" "GPropertyAction"
+                   "GSimpleAction" "GSimpleActionGroup" "GTask" "GThemedIcon"
+                   "GWin32AppInfoApplication" "GWin32AppInfoFileExtension"
+                   "GWin32AppInfoHandler" "GWin32AppInfoShellVerb"
+                   "GWin32AppInfoURLSchema" "GWin32RegistryKey")
+                 (sort (mapcar #'g:type-name
+                               (g:type-children "GObject"))
+                       #'string<)))))
 
 ;;;     g_type_interfaces
 
@@ -697,4 +699,4 @@
 ;;;     G_DEFINE_POINTER_TYPE                              not implemented
 ;;;     G_DEFINE_POINTER_TYPE_WITH_CODE                    not implemented
 
-;;; 2024-6-14
+;;; 2024-8-22
