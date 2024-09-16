@@ -298,19 +298,6 @@
 ;;;     g_value_dup_variant
 ;;;     g_value_set_variant
 ;;;     g_value_take_variant
-;;;
-;;; Description
-;;;
-;;; GValue provides an abstract container structure which can be copied,
-;;; transformed and compared while holding a value of any (derived) type, which
-;;; is registered as a GType with a GTypeValueTable in its GTypeInfo structure.
-;;; Parameter specifications for most value types can be created as GParamSpec
-;;; derived instances, to implement e.g. GObject properties which operate on
-;;; GValue containers.
-;;;
-;;; Parameter names need to start with a letter (a-z or A-Z). Subsequent
-;;; characters can be letters, numbers or a '-'. All other characters are
-;;; replaced by a '-' during construction.
 ;;; ----------------------------------------------------------------------------
 
 (in-package :gobject)
@@ -367,7 +354,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; struct GParamSpecBoolean
+;;; GParamSpecBoolean
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcstruct param-spec-boolean
@@ -378,39 +365,41 @@
 (setf (liber:alias-for-symbol 'param-spec-boolean)
       "CStruct"
       (liber:symbol-documentation 'param-spec-boolean)
- "@version{#2022-12-31}
-  @begin{short}
-    A @symbol{g;param-spec} derived structure that contains the meta data for
-    boolean properties.
-  @end{short}
-  @begin{pre}
+ "@version{2024-9-13}
+  @begin{declaration}
 (cffi:defcstruct param-spec-boolean
   (:parent-instance (:pointer (:struct param-spec)))
   (:default-value :boolean))
-  @end{pre}
-  @begin[code]{table}
-    @entry[:parent-instance]{Private @symbol{g:param-spec} portion.}
-    @entry[:default-value]{A boolean default value.}
-  @end{table}
+  @end{declaration}
+  @begin{values}
+    @begin[code]{table}
+      @entry[:parent-instance]{The private @symbol{g:param-spec} portion.}
+      @entry[:default-value]{The boolean default value.}
+    @end{table}
+  @end{values}
+  @begin{short}
+    The @symbol{g:param-spec} derived structure that contains the meta data for
+    boolean properties.
+  @end{short}
   @see-symbol{g:param-spec}
   @see-function{g:param-spec-boolean}")
 
 (export 'param-spec-boolean)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_param_spec_boolean ()
+;;; g_param_spec_boolean
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_param_spec_boolean" param-spec-boolean)
     (:pointer (:struct param-spec-boolean))
  #+liber-documentation
- "@version{#2022-12-31}
+ "@version{2024-9-13}
   @argument[name]{a string with the canonical name}
   @argument[nick]{a string with the nick name}
   @argument[blurb]{a string with the description}
   @argument[default]{a boolean with the default value}
   @argument[flags]{a @symbol{g:param-flags} value}
-  @return{A newly created @symbol{g:param-spec-boolean} parameter
+  @return{The newly created @symbol{g:param-spec-boolean} parameter
     specification.}
   @begin{short}
     Creates a new parameter specification instance specifying a property of
@@ -429,8 +418,8 @@
 (export 'param-spec-boolean)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_value_set_boolean ()
-;;; g_value_get_boolean () -> value-boolean
+;;; g_value_set_boolean
+;;; g_value_get_boolean
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf value-boolean) (value gvalue)
@@ -442,17 +431,17 @@
 
 (cffi:defcfun ("g_value_get_boolean" value-boolean) :boolean
  #+liber-documentation
- "@version{#2022-12-31}
+ "@version{2024-9-13}
   @syntax{(g:value-boolean gvalue) => value}
   @syntax{(setf (g:value-boolan gvalue) value)}
-  @argument[gvalue]{a @symbol{g:value} of @code{\"gboolean\"} type}
+  @argument[gvalue]{a @symbol{g:value} instance of @code{\"gboolean\"} type}
   @argument[value]{a boolean value}
   @begin{short}
-    Boolean contents of @arg{gvalue}.
+    The @fun{g:value-boolean} function gets the contents of a @symbol{g:value}
+    instance of @code{\"gboolean\"} type.
   @end{short}
-  The @sym{g:value-boolean} function gets the contents of a @symbol{g:value}
-  of @code{\"gboolean\"} type. The @sym{(setf g:value-boolean)} function sets
-  the contents of the @symbol{g:value} to @arg{value}.
+  The @setf{g:value-boolean} function sets the contents of the @symbol{g:value}
+  instance to @arg{value}.
   @see-symbol{g:value}"
   (gvalue (:pointer (:struct value))))
 
@@ -510,7 +499,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; struct GParamSpecChar
+;;; GParamSpecChar
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcstruct param-spec-char
@@ -523,37 +512,39 @@
 (setf (liber:alias-for-symbol 'param-spec-char)
       "CStruct"
       (liber:symbol-documentation 'param-spec-char)
- "@version{#2022-12-31}
-  @begin{short}
-    A @symbol{g:param-spec} derived structure that contains the meta data for
-    character properties.
-  @end{short}
-  @begin{pre}
+ "@version{2024-9-13}
+  @begin{declaration}
 (cffi:defcstruct param-spec-char
   (:parent-instance (:pointer (:struct param-spec)))
   (:minimum :int8)
   (:maximum :int8)
   (:default-value :int8))
-  @end{pre}
-  @begin[code]{table}
-    @entry[:parent-instance]{Private @symbol{g:param-spec} portion.}
-    @entry[:minimum]{An 8-bit integer with the minimum value.}
-    @entry[:maximum]{An 8-bit integer with the maximum value.}
-    @entry[:default-value]{An 8-bit integer with the default value.}
-  @end{table}
+  @end{declaration}
+  @begin{values}
+    @begin[code]{table}
+      @entry[:parent-instance]{The private @symbol{g:param-spec} portion.}
+      @entry[:minimum]{The 8-bit integer with the minimum value.}
+      @entry[:maximum]{The 8-bit integer with the maximum value.}
+      @entry[:default-value]{The 8-bit integer with the default value.}
+    @end{table}
+  @end{values}
+  @begin{short}
+    The @symbol{g:param-spec} derived structure that contains the meta data for
+    character properties.
+  @end{short}
   @see-symbol{g:param-spec}
   @see-function{g:param-spec-char}")
 
 (export 'param-spec-char)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_param_spec_char ()
+;;; g_param_spec_char
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_param_spec_char" param-spec-char)
     (:pointer (:struct param-spec-char))
  #+liber-documentation
- "@version{#2022-12-31}
+ "@version{2024-9-13}
   @argument[name]{a string with the canonical name}
   @argument[nick]{a string with the nick name}
   @argument[blurb]{a string with the description}
@@ -561,13 +552,15 @@
   @argument[maximum]{an 8-bit integer with the maximum value}
   @argument[default]{an 8-bit integer with the default value}
   @argument[flags]{a @symbol{g:param-flags} value}
-  @return{A newly created @symbol{g:param-spec-char} parameter specification.}
+  @return{The newly created @symbol{g:param-spec-char} parameter specification.}
   @begin{short}
     Creates a new parameter specification instance specifying a property of
     @code{\"gchar\"} type.
   @end{short}
+  See the @fun{g:param-spec-internal} function for details on property names.
   @see-symbol{g:param-spec-char}
-  @see-symbol{g:param-flags}"
+  @see-symbol{g:param-flags}
+  @see-function{g:param-spec-internal}"
   (name :string)
   (nick :string)
   (blurb :string)
@@ -579,8 +572,8 @@
 (export 'param-spec-char)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_value_set_char ()
-;;; g_value_get_char () -> value-char
+;;; g_value_set_char
+;;; g_value_get_char
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf value-char) (value gvalue)
@@ -592,19 +585,19 @@
 
 (cffi:defcfun ("g_value_get_char" value-char) :int8
  #+liber-documentation
- "@version{#2022-12-31}
+ "@version{2024-9-13}
   @syntax{(g:value-char gvalue) => value}
   @syntax{(setf (g:value-char gvalue) value)}
-  @argument[gvalue]{a @symbol{g:value} of @code{\"gchar\"} type}
+  @argument[gvalue]{a @symbol{g:value} instance of @code{\"gchar\"} type}
   @argument[value]{an 8-bit integer with the character value}
   @begin{short}
-     Character contents of @arg{gvalue}.
+    The @fun{g:value-char} function gets the contents of a @symbol{g:value}
+    instance of @code{\"gchar\"} type.
   @end{short}
-  The @sym{g:value-char} function gets the contents of a @symbol{g:value}
-  of @code{\"gchar\"} type. The @sym{(setf g:value-char)} function sets the
-  contents of a @symbol{g:value} to @arg{value}.
+  The @setf{g:value-char} function sets the contents of a @symbol{g:value}
+  instance to @arg{value}.
   @begin[Warning]{dictionary}
-    The @sym{g:value-char} function has been deprecated since version 2.32 and
+    The @fun{g:value-char} function has been deprecated since version 2.32 and
     should not be used in newly written code. The function return type is
     broken, see the @fun{g:value-schar} function.
   @end{dictionary}
@@ -615,8 +608,8 @@
 (export 'value-char)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_value_get_schar ()
-;;; g_value_set_schar () -> value-schar
+;;; g_value_get_schar
+;;; g_value_set_schar
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf value-schar) (value gvalue)
@@ -628,19 +621,17 @@
 
 (cffi:defcfun ("g_value_get_schar" value-schar) :int8
  #+liber-documentation
- "@version{#2022-12-31}
+ "@version{2024-9-13}
   @syntax{(g:value-schar gvalue) => value}
   @syntax{(setf (g:value-schar gvalue) value)}
-  @argument[gvalue]{a @symbol{g:value} of @code{\"gchar\"} type}
+  @argument[gvalue]{a @symbol{g:value} instance of @code{\"gchar\"} type}
   @argument[value]{an integer with the character value}
   @begin{short}
-    Signed 8-bit integer contents of @arg{gvalue}.
+    The @fun{g:value-schar} function gets the contents of a @symbol{g:value}
+    of @code{\"gchar\"} type.
   @end{short}
-  The @fun{g:value-schar} function gets the contents of a @symbol{g:value}
-  of @code{\"gchar\"} type. The @sym{(setf g:value-schar)} function sets the
-  contents of a @symbol{g:value} to @arg{value}.
-
-  Since 2.32
+  The @setf{g:value-schar} function sets the contents of a @symbol{g:value}
+  instance to @arg{value}.
   @see-symbol{g:value}"
   (gvalue (:pointer (:struct value))))
 
@@ -698,7 +689,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; struct GParamSpecUChar
+;;; GParamSpecUChar
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcstruct param-spec-uchar
@@ -711,37 +702,39 @@
 (setf (liber:alias-for-symbol 'param-spec-uchar)
       "CStruct"
       (liber:symbol-documentation 'param-spec-uchar)
- "@version{#2022-12-31}
-  @begin{short}
-    A @symbol{g:param-spec} derived structure that contains the meta data for
-    unsigned character properties.
-  @end{short}
-  @begin{pre}
+ "@version{2024-9-13}
+  @begin{declaration}
 (cffi:defcstruct param-spec-uchar
   (:parent-instance (:pointer (:struct param-spec)))
   (:minimum :uint8)
   (:maximum :uint8)
   (:default-value :uint8))
-  @end{pre}
-  @begin[code]{table}
-    @entry[:parent-instance]{Private @symbol{g:param-spec} portion.}
-    @entry[:minimum]{An unsigned 8-bit integer with the minimum value.}
-    @entry[:maximum]{An unsigned 8-bit integer with the maximum value.}
-    @entry[:default-value]{An unsigned 8-bit integer with the default value.}
-  @end{table}
+  @end{declaration}
+  @begin{values}
+    @begin[code]{table}
+      @entry[:parent-instance]{The private @symbol{g:param-spec} portion.}
+      @entry[:minimum]{The unsigned 8-bit integer with the minimum value.}
+      @entry[:maximum]{The unsigned 8-bit integer with the maximum value.}
+      @entry[:default-value]{The unsigned 8-bit integer with the default value.}
+    @end{table}
+  @end{values}
+  @begin{short}
+    The @symbol{g:param-spec} derived structure that contains the meta data for
+    unsigned character properties.
+  @end{short}
   @see-symbol{g:param-spec}
   @see-function{g:param-spec-uchar}")
 
 (export 'param-spec-uchar)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_param_spec_uchar ()
+;;; g_param_spec_uchar
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_param_spec_uchar" param-spec-uchar)
     (:pointer (:struct param-spec-uchar))
  #+liber-documentation
- "@version{#2022-12-31}
+ "@version{2024-9-13}
   @argument[name]{a string with the canonical name}
   @argument[nick]{a string with the nick name}
   @argument[blurb]{a string with the description}
@@ -749,7 +742,8 @@
   @argument[maximum]{an unsigned 8-bit integer with the maximum value}
   @argument[default]{an unsigned 8-bit integer with the default value}
   @argument[flags]{a @symbol{g:param-flags} value}
-  @return{A newly created @symbol{g:param-spec-uchar} parameter specification.}
+  @return{The newly created @symbol{g:param-spec-uchar} parameter
+    specification.}
   @begin{short}
     Creates a new parameter specification instance specifying a property of
     @code{\"guchar\"} type.
@@ -769,8 +763,8 @@
 (export 'param-spec-uchar)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_value_get_uchar ()
-;;; g_value_set_uchar () -> value-uchar
+;;; g_value_get_uchar
+;;; g_value_set_uchar
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf value-uchar) (value gvalue)
@@ -782,17 +776,17 @@
 
 (cffi:defcfun ("g_value_get_uchar" value-uchar) :uint8
  #+liber-documentation
- "@version{#2022-12-31}
+ "@version{2024-9-13}
   @syntax{(g:value-uchar gvalue) => value}
   @syntax{(setf (g:value-uchar gvalue) value)}
-  @argument[gvalue]{a @symbol{g:value} of @code{\"guchar\"} type}
+  @argument[gvalue]{a @symbol{g:value} instance of @code{\"guchar\"} type}
   @argument[value]{an unsigned 8-bit integer with the unsigned character value}
   @begin{short}
-    Unsigned character contents of @arg{gvalue}.
+    The @fun{g:value-uchar} function gets the contents of a @symol{g:value}
+    instance of @code{\"guchar\"} type.
   @end{short}
-  The @sym{g:value-uchar} function gets the contents of a @symol{g:value} of
-  @code{\"guchar\"} type. The @sym{(setf g:value-uchar)} function sets the
-  contents of a @symbol{g:value} to @arg{value}.
+  The @setf{g:value-uchar} function sets the contents of a @symbol{g:value}
+  instance to @arg{value}.
   @see-symbol{g:value}"
   (gvalue (:pointer (:struct value))))
 
@@ -2120,7 +2114,7 @@
   @argument[name]{a string with the canonical name}
   @argument[nick]{a string with the nick name}
   @argument[blurb]{a string with the description}
-  @argument[gtype]{a @class{g:type-t} type derived from the @code{\"GEnum\"}
+  @argument[gtype]{a @class{g:type-t} type ID derived from the @code{\"GEnum\"}
     type}
   @argument[default]{an integer with the default value}
   @argument[flags]{a @symbol{g:param-flags} value}
@@ -2287,7 +2281,7 @@
   @argument[name]{a string with the canonical name}
   @argument[nick]{a string with the nick name}
   @argument[blurb]{a string with the description}
-  @argument[gtype]{a @class{g:type-t} type derived from the @code{\"GFlags\"}
+  @argument[gtype]{a @class{g:type-t} type ID derived from the @code{\"GFlags\"}
     type}
   @argument[default]{an unsigned integer with the default value}
   @argument[flags]{a @symbol{g:param-flags} value}
@@ -2768,7 +2762,7 @@
   @argument[name]{a string with the canonical name}
   @argument[nick]{a string with the nick name}
   @argument[blurb]{a string with the description}
-  @argument[gtype]{a @class{g:type-t} type derived from the @code{\"GParam\"}
+  @argument[gtype]{a @class{g:type-t} type ID derived from the @code{\"GParam\"}
     type}
   @argument[flags]{a @symbol{g:param-flags} value}
   @return{A newly created @symbol{g:param-spec-param} parameter specification.}
@@ -3801,7 +3795,7 @@
  "@version{#2022-12-31}
   @begin{short}
     A @symbol{g:param-spec} derived structure that contains the meta data for
-    @class{g:type-t} properties.
+    @class{g:type-t} type ID properties.
   @end{short}
   @begin{pre}
 (cffi:defcstruct param-spec-gtype
@@ -3810,7 +3804,7 @@
   @end{pre}
   @begin[code]{table}
     @entry[:parent-instance]{Private @symbol{g:param-spec} portion.}
-    @entry[:is-a-type]{A @class{g:type-t} type whose subtypes can occur as
+    @entry[:is-a-type]{A @class{g:type-t} type ID whose subtypes can occur as
       values.}
   @end{table}
   @see-symbol{g:param-spec}
@@ -3829,7 +3823,7 @@
   @argument[name]{a string with the canonical name}
   @argument[nick]{a string with the nick name}
   @argument[blurb]{a string with the description}
-  @argument[is-a-type]{a @class{g:type-t} type whose subtypes are allowed as
+  @argument[is-a-type]{a @class{g:type-t} type ID whose subtypes are allowed as
     values of the property (use the \"void\" type for any type)}
   @argument[flags]{a @symbol{g:param-flags} value}
   @return{A newly created @symbol{g:param-spec-gtype} parameter specification.}
@@ -3867,12 +3861,13 @@
  "@version{#2022-12-31}
   @syntax{(g:value-gtype gvalue) => value}
   @syntax{(setf (g:value-gtype gvalue) value)}
-  @argument[gvalue]{a valid @symbol{g:value} instance of @class{g:type-t} type}
-  @argument[value]{a @class{g:type-t} type value}
-  @return{The @class{g:type-t} type stored in @arg{gvalue}.}
+  @argument[gvalue]{a valid @symbol{g:value} instance of @class{g:type-t}
+    type ID}
+  @argument[value]{a @class{g:type-t} type ID value}
+  @return{The @class{g:type-t} type ID stored in @arg{gvalue}.}
   @begin{short}
-    The @sym{g:type-gtype} function gets the contents of a @class{g:type-t} type
-    value.
+    The @sym{g:type-gtype} function gets the contents of a @class{g:type-t}
+    type ID value.
   @end{short}
   The @sym{(setf g:value-gtype)} function sets the contents.
   @see-symbol{g:value}

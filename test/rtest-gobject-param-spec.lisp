@@ -7,7 +7,41 @@
 
 ;;;     GParamSpec
 ;;;     GParamSpecClass
+
 ;;;     GParamFlags
+
+(test g-param-flags
+  (is (equal '((:READABLE)
+               (:WRITABLE)
+               (:READABLE :WRITABLE)
+               (:CONSTRUCT)
+               (:READABLE :CONSTRUCT)
+               (:WRITABLE :CONSTRUCT)
+               (:READABLE :WRITABLE :CONSTRUCT)
+               (:CONSTRUCT-ONLY)
+               (:READABLE :CONSTRUCT-ONLY)
+               (:WRITABLE :CONSTRUCT-ONLY)
+               (:READABLE :WRITABLE :CONSTRUCT-ONLY)
+               (:CONSTRUCT :CONSTRUCT-ONLY)
+               (:READABLE :CONSTRUCT :CONSTRUCT-ONLY)
+               (:WRITABLE :CONSTRUCT :CONSTRUCT-ONLY)
+               (:READABLE :WRITABLE :CONSTRUCT :CONSTRUCT-ONLY)
+               (:LAX-VALIDATION))
+             (mapcar (lambda (x)
+                       (cffi:foreign-bitfield-symbols 'g:param-flags x))
+                     '(1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16))))
+  (is (equal '(1 2 4 8 16 32 64 128 2147483648)
+             (mapcar (lambda (x)
+                       (cffi:foreign-bitfield-value 'g:param-flags x))
+                     '(:readable
+                       :writable
+                       :construct
+                       :construct-only
+                       :lax-validation
+                       :static-name
+                       :static-nick
+                       :static-blurb
+                       :deprecated)))))
 
 ;;;     G_PARAM_STATIC_STRINGS
 ;;;     G_PARAM_MASK
@@ -188,4 +222,4 @@
 ;;;     g_param_spec_pool_list
 ;;;     g_param_spec_pool_list_owned
 
-;;; --- 2023-6-24 --------------------------------------------------------------
+;;; 2024-9-13
