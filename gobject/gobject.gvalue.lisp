@@ -77,7 +77,7 @@
   @syntax{(gobject:with-g-value (gvalue gtype) body) => result}
   @syntax{(gobject:with-g-value (gvalue gtype value) body) => result}
   @argument[gvalue]{a @symbol{g:value} instance to create and initialize}
-  @argument[gtype]{an optional @symbol{g:type-t} type}
+  @argument[gtype]{an optional @symbol{g:type-t} type ID}
   @argument[value]{an optional value corresponding to @arg{gtype} to set}
   @begin{short}
     The @fun{gobject:with-g-value} macro allocates a new  @symbol{g:value}
@@ -355,7 +355,7 @@
   @argument[gvalue]{a pointer to the @symbol{g:value} instance}
   @argument[value]{a Lisp object to set as the value of the @symbol{g:value}
     instance}
-  @argument[gtype]{a @class{g:type-t} type of the @symbol{g:value} instance}
+  @argument[gtype]{a @class{g:type-t} type ID of the @symbol{g:value} instance}
   @begin{short}
     Parses the @symbol{g:value} structure and sets the corresponding Lisp
     object.
@@ -519,7 +519,7 @@
  #+liber-documentation
  "@version{2023-6-25}
   @argument[value]{a @symbol{g:value} instance}
-  @argument[gtype]{a @class{g:type-t} type}
+  @argument[gtype]{a @class{g:type-t} type ID}
   @return{@em{True} if @arg{value} holds a value of @arg{gtype} type.}
   @begin{short}
     Checks if @arg{value} holds or contains a value of @arg{gtype} type.
@@ -546,7 +546,7 @@
  #+liber-documentation
  "@version{2023-6-25}
   @argument[value]{a @symbol{g:value} instance}
-  @return{The @class{g:type-t} type of @arg{value}.}
+  @return{The @class{g:type-t} type ID of @arg{value}.}
   @begin{short}
     Get the type identifier of @arg{value}.
   @end{short}
@@ -596,7 +596,7 @@
 (defun type-is-value (gtype)
  #+liber-documentation
  "@version{2023-7-10}
-  @argument[gtype]{a @class{g:type-t}}
+  @argument[gtype]{a @class{g:type-t} type ID}
   @return{Whether @arg{gtype} is suitable as a @symbol{g:value} instance type.}
   @begin{short}
     Checks whether the passed in @arg{gtype} ID can be used for the
@@ -621,7 +621,7 @@
 (defun type-is-value-abstract (gtype)
  #+liber-documentation
  "@version{2023-7-10}
-  @argument[gtype]{a @class{g:type-t} type}
+  @argument[gtype]{a @class{g:type-t} type ID}
   @return{@em{True} if @arg{gtype} is an abstract value type.}
   @begin{short}
     Checks if the @arg{gtype} argument is an abstract value type.
@@ -702,8 +702,8 @@
  #+liber-documentation
  "@version{2023-11-7}
   @argument[value]{an uninitialized @symbol{g:value} instance}
-  @argument[gtype]{a @class{g:type-t} type the @arg{value} argument should hold
-    values of}
+  @argument[gtype]{a @class{g:type-t} type ID the @arg{value} argument should
+    hold values of}
   @return{The @symbol{g:value} instance that has been passed in.}
   @begin{short}
     Initializes @arg{value} with the @arg{gtype} type.
@@ -840,8 +840,8 @@
 (cffi:defcfun ("g_value_type_compatible" value-type-compatible) :boolean
  #+liber-documentation
  "@version{#2022-12-29}
-  @argument[src]{a @class{g:type-t} source type to be copied}
-  @argument[dest]{a @class{g:type-t} destination type for copying}
+  @argument[src]{a @class{g:type-t} source type ID to be copied}
+  @argument[dest]{a @class{g:type-t} destination type ID for copying}
   @return{@em{True} if @fun{g:value-copy} is possible with @arg{src} and
     @arg{dest}.}
   @begin{short}
@@ -863,8 +863,8 @@
 (cffi:defcfun ("g_value_type_transformable" value-type-transformable) :boolean
  #+liber-documentation
  "@version{#2022-12-29}
-  @argument[src]{a @class{g:type-t} source type}
-  @argument[dest]{a @class{g:type-t} target type}
+  @argument[src]{a @class{g:type-t} source type ID}
+  @argument[dest]{a @class{g:type-t} target type ID}
   @return{@em{True} if the transformation is possible, @em{false} otherwise.}
   @begin{short}
     Check whether the @fun{g:value-transform} function is able to transform
@@ -944,8 +944,8 @@
     :void
  #+liber-documentation
  "@version{#2022-12-29}
-  @argument[src]{a @class{g:type-t} source type}
-  @argument[dest]{a @class{g:type-t} target type}
+  @argument[src]{a @class{g:type-t} source type ID}
+  @argument[dest]{a @class{g:type-t} target type ID}
   @argument[func]{a callback function which transforms values of type
     @arg{src} into values of type @arg{dest}}
   @begin{short}

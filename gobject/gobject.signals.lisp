@@ -434,7 +434,8 @@
       @entry[owner-type]{The interface/instance @class{g:object} type that this
         signal can be emitted for.}
       @entry[signal-flags]{The signal flags of type @symbol{g:signal-flags}.}
-      @entry[return-type]{The return @class{g:type-t} for user callbacks.}
+      @entry[return-type]{The return @class{g:type-t} type ID for user
+        callbacks.}
       @entry[param-types]{The list with the individual parameter types for user
         callbacks.}
       @entry[signal-detail]{The string with the signal detail.}
@@ -586,7 +587,7 @@
   @syntax{(g:signal-query-param-types instance) => param-types}
   @argument[instance]{a @struct{g:signal-query} instance}
   @argument[param-types]{a list with the individual parameter @class{g:type-t}
-  type IDs for user callbacks}
+    type IDs for user callbacks}
   @begin{short}
     Accessor of the @slot[g:signal-query]{param-types} slot of the
     @class{g:signal-query} structure.

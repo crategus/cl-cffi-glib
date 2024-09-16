@@ -245,7 +245,7 @@
  #+liber-documentation
  "@version{#2022-12-29}
   @argument[class]{a @symbol{g:enum-class} instance}
-  @return{The @class{g:type-t} ID for @arg{class}.}
+  @return{The @class{g:type-t} type ID for @arg{class}.}
   @begin{short}
     Get the type identifier from a given @symbol{g:enum-class} instance.
   @end{short}
@@ -278,7 +278,7 @@
 (defun type-is-enum (gtype)
  #+liber-documentation
  "@version{2024-6-9}
-  @argument[gtype]{a @class{g:type-t} ID}
+  @argument[gtype]{a @class{g:type-t} type ID}
   @return{@em{True} if @arg{gtype} is a @code{\"GEnum\"} type.}
   @begin{short}
     Checks whether @arg{gtype} is a @code{\"GEnum\"} type.
@@ -474,7 +474,7 @@
 (defun type-is-flags (gtype)
  #+liber-documentation
  "@version{2024-6-9}
-  @argument[type]{a @class{g:type-t} ID}
+  @argument[type]{a @class{g:type-t} type ID}
   @return{@em{True} if @arg{type} is a @code{\"GFlags\"} type.}
   @begin{short}
     Checks whether @arg{type} is a @code{\"GFlags\"} type.

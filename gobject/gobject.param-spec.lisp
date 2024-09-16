@@ -2,11 +2,11 @@
 ;;; gobject.param-spec.lisp
 ;;;
 ;;; The documentation of this file is taken from the GObject Reference Manual
-;;; Version 2.76 and modified to document the Lisp binding to the GObject
+;;; Version 2.80 and modified to document the Lisp binding to the GObject
 ;;; library. See <http://www.gtk.org>. The API documentation of the Lisp
 ;;; binding is available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2011 - 2023 Dieter Kaiser
+;;; Copyright (C) 2011 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -90,7 +90,7 @@
 (in-package :gobject)
 
 ;;; ----------------------------------------------------------------------------
-;;; enum GParamFlags
+;;; GParamFlags
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defbitfield param-flags
@@ -108,12 +108,8 @@
 (setf (liber:alias-for-symbol 'param-flags)
       "Bitfield"
       (liber:symbol-documentation 'param-flags)
- "@version{#2022-12-29}
-  @begin{short}
-    Through the @sym{g:param-flags} flag values, certain aspects of parameters
-    can be configured.
-  @end{short}
-  @begin{pre}
+ "@version{2024-9-13}
+  @begin{declaration}
 (cffi:defbitfield param-flags
   (:readable #.(ash 1 0))
   (:writable #.(ash 1 1))
@@ -124,28 +120,33 @@
   (:static-nick #.(ash 1 6))
   (:static-blurb #.(ash 1 7))
   (:deprecated #.(ash 1 31)))
-  @end{pre}
-  @begin[code]{table}
-    @entry[:readable]{The parameter is readable.}
-    @entry[:writable]{The parameter is writable.}
-    @entry[:construct]{The parameter will be set upon object construction.}
-    @entry[:construct-only]{The parameter will only be set upon object
-      construction.}
-    @entry[:lax-validation]{Upon parameter conversion (see
-      @code{g_param_value_convert()}) strict validation is not required.}
-    @entry[:static-name]{The string used as name when constructing the parameter
-      is guaranteed to remain valid and unmodified for the lifetime of the
-      parameter.}
-    @entry[:static-nick]{The string used as nick when constructing the parameter
-      is guaranteed to remain valid and unmmodified for the lifetime of the
-      parameter.}
-    @entry[:static-blurb]{The string used as blurb when constructing the
-      parameter is guaranteed to remain valid and unmodified for the lifetime
-      of the parameter.}
-    @entry[:deprecated]{The parameter is deprecated and will be removed in a
-      future version. A warning will be generated if it is used while running
-      with @code{G_ENABLE_DIAGNOSTIC=1}.}
-  @end{table}
+  @end{declaration}
+  @begin{values}
+    @begin[code]{table}
+      @entry[:readable]{The parameter is readable.}
+      @entry[:writable]{The parameter is writable.}
+      @entry[:construct]{The parameter will be set upon object construction.}
+      @entry[:construct-only]{The parameter will only be set upon object
+        construction.}
+      @entry[:lax-validation]{Upon parameter conversion strict validation is
+        not required.}
+      @entry[:static-name]{The string used as name when constructing the
+        parameter is guaranteed to remain valid and unmodified for the lifetime
+        of the parameter.}
+      @entry[:static-nick]{The string used as nick when constructing the
+        parameter is guaranteed to remain valid and unmmodified for the
+        lifetime of the parameter.}
+      @entry[:static-blurb]{The string used as blurb when constructing the
+        parameter is guaranteed to remain valid and unmodified for the lifetime
+        of the parameter.}
+      @entry[:deprecated]{The parameter is deprecated and will be removed in a
+        future version.}
+    @end{table}
+  @end{values}
+  @begin{short}
+    Through the @symbol{g:param-flags} flag values, certain aspects of
+    parameters can be configured.
+  @end{short}
   @see-symbol{g:param-spec}")
 
 (export 'param-flags)
@@ -189,7 +190,7 @@
     @entry[:name]{Name of this parameter: always an interned string.}
     @entry[:flags]{The @symbol{g:param-flags} flags for this parameter.}
     @entry[:value-type]{The @symbol{g:value} type for this parameter.}
-    @entry[:owner-type]{The @class{g:type-t} that uses this parameter.}
+    @entry[:owner-type]{The @class{g:type-t} type ID that uses this parameter.}
   @end{table}
   @see-symbol{g:type-instance}
   @see-symbol{g:param-flags}
@@ -385,7 +386,7 @@
  #+liber-documentation
  "@version{2022-12-29}
   @argument[pspec]{a valid @symbol{g:param-spec} instance}
-  @short{Retrieves the @class{g:type-t} of this @arg{pspec}.}
+  @short{Retrieves the @class{g:type-t} type ID of this @arg{pspec}.}
   @see-symbol{g:param-spec}
   @see-class{g:type-t}"
   (type-from-instance pspec))
@@ -400,7 +401,7 @@
  #+liber-documentation
  "@version{2022-12-29}
   @argument[pspec]{a valid @symbol{g:param-spec} instance}
-  @short{Retrieves the @class{g:type-t} name of @arg{pspec}.}
+  @short{Retrieves the @class{g:type-t} type ID name of @arg{pspec}.}
   @see-symbol{g:param-spec}
   @see-class{g:type-t}"
   (type-name (param-spec-type pspec)))
@@ -415,8 +416,8 @@
  #+liber-documentation
  "@version{2022-12-29}
   @argument[pspec]{a valid @symbol{g:param-spec} instance}
-  @short{Retrieves the @class{g:type-t} to initialize a @symbol{g:value} for
-    this parameter.}
+  @short{Retrieves the @class{g:type-t} type ID to initialize a @symbol{g:value}
+    for this parameter.}
   @see-symbol{g:param-spec}
   @see-class{g:type-t}
   @see-symbol{g:value}"
@@ -856,13 +857,14 @@
 
 (cffi:defcfun ("g_param_spec_internal" param-spec-internal) :pointer
  #+liber-documentation
- "@version{2024-6-10}
-  @argument[param-type]{a @class{g:type-t} type ID for the property, must be
+ "@version{2024-9-13}
+  @argument[ptype]{a @class{g:type-t} type ID for the property, must be
     derived from the @code{\"GParam\"} type}
   @argument[name]{a string with the canonical name of the property}
   @argument[nick]{a string with the nickname of the property}
   @argument[blurb]{a string with a short description of the property}
-  @argument[flags]{a combination of flags of type @symbol{g:param-flags}}
+  @argument[flags]{a combination of flags from the @symbol{g:param-flags}
+    bitfield}
   @return{The newly allocated @symbol{g:param-spec} instance.}
   @begin{short}
     Creates a new parameter specification instance.
@@ -893,7 +895,7 @@
   @see-symbol{g:param-spec}
   @see-symbol{g:param-flags}
   @see-class{g:type-t}"
-  (param-type type-t)
+  (ptype type-t)
   (name :string)
   (nick :string)
   (blurb :string)

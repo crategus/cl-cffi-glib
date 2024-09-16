@@ -130,7 +130,7 @@
  "@version{2024-3-31}
   @syntax{(g:list-store-item-type object) => gtype}
   @argument[object]{a @class{g:list-store} object}
-  @argument[gtype]{a @class{g:type-t} type}
+  @argument[gtype]{a @class{g:type-t} type ID}
   @begin{short}
     Accessor of the @slot[g:list-store]{item-type} slot of the
     @class{g:list-store} class.
@@ -180,7 +180,7 @@
 (cffi:defcfun ("g_list_store_new" list-store-new) (gobject:object list-store)
  #+liber-documentation
  "@version{2024-3-31}
-  @argument[gtype]{a @class{g:type-t} type for the items in the list}
+  @argument[gtype]{a @class{g:type-t} type ID for the items in the list}
   @return{The new @class{g:list-store} object.}
   @begin{short}
     Creates a new list store with items of @arg{gtype} type.

@@ -354,7 +354,7 @@
     to @code{nil} in Lisp.
 
     See the @fun{g:type-qdata} function for attaching a @code{GQuark}
-    identifier to a @class{g:type-t} type.
+    identifier to a @class{g:type-t} type ID.
   @end{dictionary}
   @begin[Examples]{dictionary}
     Translate a Lisp String to a @code{GQuark} identifier:

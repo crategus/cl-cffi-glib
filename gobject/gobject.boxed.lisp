@@ -104,7 +104,7 @@
 (defun type-is-boxed (gtype)
  #+liber-documentation
  "@version{2024-4-6}
-  @argument[gtype]{a @class{g:type-t} ID}
+  @argument[gtype]{a @class{g:type-t} type ID}
   @return{@em{True} if @arg{gtype} is a \"GBoxed\" type.}
   @begin{short}
     Checks whether @arg{gtype} is a \"GBoxed\" type.
@@ -256,12 +256,12 @@
  #+liber-documentation
  "@version{#2022-12-17}
   @begin{short}
-    The @class{type-t} ID for a boxed type holding an array of strings.
+    The @class{g:type-t} type ID for a boxed type holding an array of strings.
   @end{short}
-  The @type{g:strv-t type} represents and performs automatic conversion between
+  The @type{g:strv-t} type represents and performs automatic conversion between
   a list of Lisp strings and an array of C strings.
-  @see-class{type-t}
-  @see-type{strv-t}")
+  @see-class{g:type-t}
+  @see-type{g:strv-t}")
 
 (export 'type-strv)
 

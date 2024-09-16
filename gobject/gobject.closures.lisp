@@ -271,7 +271,7 @@
  #+liber-documentation
  "@version{#2022-12-29}
   @begin{short}
-    Returns the @class{g:type-t} ID for a @symbol{g:closure} instance.
+    Returns the @class{g:type-t} type ID for a @symbol{g:closure} instance.
   @end{short}
   @see-symbol{g:closure}
   @see-class{g:type-t}")

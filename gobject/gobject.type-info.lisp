@@ -209,10 +209,10 @@
  "@version{#2022-12-31}
   @variable-value{22}
   @begin{short}
-    First fundamental type number to create a new fundamental type ID with
-    @fun{g-type-make-fundamental} reserved for GLib.
+    First fundamental type number to create a new fundamental type ID with the
+    @fun{g:type-make-fundamental} function reserved for GLib.
   @end{short}
-  @see-class{type-t}")
+  @see-class{g:type-t}")
 
 ;;; ----------------------------------------------------------------------------
 ;;; G_TYPE_RESERVED_GLIB_LAST                              not exported
@@ -227,9 +227,9 @@
  "@version{#2022-12-31}
   @variable-value{31}
   @begin{short}
-    Last fundamental type number reserved for GLib.
+    Last fundamental type ID reserved for GLib.
   @end{short}
-  @see-class{type-t}")
+  @see-class{g:type-t}")
 
 ;;; ----------------------------------------------------------------------------
 ;;; G_TYPE_RESERVED_BSE_FIRST                              not exported
@@ -244,11 +244,11 @@
  "@version{#2022-12-31}
   @variable-value{32}
   @begin{short}
-    First fundamental type number to create a new fundamental type ID with
-    @fun{g-type-make-fundamental} reserved for BSE.
+    First fundamental type ID to create a new fundamental type ID with the
+    @fun{g:type-make-fundamental} function reserved for BSE.
   @end{short}
-  @see-class{type-t}
-  @see-function{g-type-make-fundamental}")
+  @see-class{g:type-t}
+  @see-function{g:type-make-fundamental}")
 
 ;;; ----------------------------------------------------------------------------
 ;;; G_TYPE_RESERVED_BSE_LAST                               not exported
@@ -263,9 +263,9 @@
  "@version{#2022-12-31}
   @variable-value{48}
   @begin{short}
-    Last fundamental type number reserved for BSE.
+    Last fundamental type ID reserved for BSE.
   @end{short}
-  @see-class{type-t}")
+  @see-class{g:type-t}")
 
 ;;; ----------------------------------------------------------------------------
 ;;; G_TYPE_RESERVED_USER_FIRST                             not exported
@@ -280,11 +280,11 @@
  "@version{#2022-12-31}
   @variable-value{49}
   @begin{short}
-    First available fundamental type number to create new fundamental type ID
-    with @fun{g-type-make-fundamental}.
+    First available fundamental type ID to create new fundamental type ID
+    with the @fun{g-type-make-fundamental} function.
   @end{short}
-  @see-class{type-t}
-  @see-function{g-type-make-fundamental}")
+  @see-class{g:type-t}
+  @see-function{g:type-make-fundamental}")
 
 ;;; ----------------------------------------------------------------------------
 ;;; G_TYPE_FUNDAMENTAL_MAX                                 not exported
@@ -585,8 +585,9 @@ ID     NAME               CFFI type      Lisp type
     Bit masks used to check or determine specific characteristics of a
    fundamental type.
   @end{short}
-  See the functions @fun{type-is-classed}, @fun{type-is-instantiatable},
-  and @fun{type-is-deep-variable} to check a type for these flags.
+  See the @fun{g:type-is-classed}, @fun{g:type-is-instantiatable},
+  and @fun{g:type-is-deep-variable} functions to check a type ID for these
+  flags.
   @begin{pre}
 (cffi:defbitfield type-fundamental-flags
   :classed
@@ -601,11 +602,11 @@ ID     NAME               CFFI type      Lisp type
     @entry[:deep-derivable]{Indicates a deep derivable type (implies
       derivable).}
   @end{table}
-  @see-class{type-t}
-  @see-function{type-is-classed}
-  @see-function{type-is-instantiatable}
-  @see-function{type-is-derivable}
-  @see-function{type-is-deep-derivable}")
+  @see-class{g:type-t}
+  @see-function{g:type-is-classed}
+  @see-function{g:type-is-instantiatable}
+  @see-function{g:type-is-derivable}
+  @see-function{g:type-is-deep-derivable}")
 
 ;;; ----------------------------------------------------------------------------
 ;;; GTypeFundamentalInfo                                    not exported
@@ -928,7 +929,7 @@ ID     NAME               CFFI type      Lisp type
   @begin{short}
     A structure holding information for a specific type.
   @end{short}
-  It is filled in by the function @fun{type-query}.
+  It is filled in by the @fun{g:type-query} function.
   @begin{pre}
 (cffi:defcstruct type-query
   (:type type-t)
@@ -944,8 +945,8 @@ ID     NAME               CFFI type      Lisp type
     @entry[instance-size]{An unsigned integer with the size of the instance
       structure.}
   @end{table}
-  @see-class{type-t}
-  @see-function{type-query}")
+  @see-class{g:type-t}
+  @see-function{g:type-query}")
 
 ;;; ----------------------------------------------------------------------------
 ;;; GTypeFlags                                              not exported
@@ -961,8 +962,8 @@ ID     NAME               CFFI type      Lisp type
       (liber:symbol-documentation 'type-flags)
  "@version{#2022-12-31}
   @short{Bit masks used to check or determine characteristics of a type.}
-  See the function @fun{type-is-abstract} to check a type for the flag
-  @code{:abstract} and the function @fun{type-is-value-abstract} to check a
+  See the @fun{g:type-is-abstract} function to check a type for the flag
+  @code{:abstract} and the @fun{g:type-is-value-abstract} function to check a
   type for the flag @code{:value-abstract}.
   @begin{pre}
 (cffi:defbitfield type-flags
@@ -973,13 +974,13 @@ ID     NAME               CFFI type      Lisp type
     @entry[:abstract]{Indicates an abstract type. No instances can be created
       for an abstract type.}
     @entry[:value-abstract]{Indicates an abstract value type, i.e. a type that
-      introduces a value table, but can not be used for the function
-      @fun{value-init}.}
+      introduces a value table, but can not be used for the @fun{value-init}
+      function.}
   @end{table}
-  @see-class{type-t}
-  @see-function{value-init}
-  @see-function{type-is-abstract}
-  @see-function{type-is-value-abstract}")
+  @see-class{g:type-t}
+  @see-function{g:value-init}
+  @see-function{g:type-is-abstract}
+  @see-function{g:type-is-value-abstract}")
 
 ;;; ----------------------------------------------------------------------------
 ;;; G_TYPE_FUNDAMENTAL
@@ -1015,15 +1016,15 @@ ID     NAME               CFFI type      Lisp type
  #+liber-documentation
  "@version{#2020-11-1}
   @argument[x]{a fundamental type number}
-  @return{The type ID of the @class{type-t}.}
+  @return{The @class{g:type-t} type ID.}
   @begin{short}
     Get the type ID for the fundamental type number @arg{x}.
   @end{short}
-  Use the function @fun{type-fundamental-next} instead of this function to
+  Use the @fun{g:type-fundamental-next} function instead of this function to
   create new fundamental type number.
   @begin[Note]{dictionary}
     The @fun{g:type-make-fundamental} function does not return a Lisp
-    @class{type-t} value, but the ID number of the @class{type-t}.
+    @class{g:type-t} type ID, but the ID number of the @class{g:type-t} type ID.
   @end{dictionary}
   @begin{examples}
     @begin{pre}
@@ -1033,8 +1034,8 @@ ID     NAME               CFFI type      Lisp type
 => <GTYPE :name \"gboolean\" :id 20>
     @end{pre}
   @end{examples}
-  @see-class{type-t}
-  @see-function{type-fundamental-next}"
+  @see-class{g:type-t}
+  @see-function{g:type-fundamental-next}"
   (ash x +type-fundamental-shift+))
 
 ;;; ----------------------------------------------------------------------------
@@ -1155,16 +1156,16 @@ ID     NAME               CFFI type      Lisp type
 (defun type-has-value-table (gtype)
  #+liber-documentation
  "@version{#2020-11-1}
-  @argument[type]{a @class{type-t} ID}
+  @argument[type]{a @class{g:type-t} type ID}
   @return{@em{True} if @arg{gtype} has a @code{GTypeValueTable}.}
   @begin{short}
     Checks if @arg{gtype} has a @code{GTypeValueTable}.
   @end{short}
-  This function calls the function @fun{type-value-table-peek} to do the
+  This function calls the @fun{g:type-value-table-peek} function to do the
   check.
-  @see-class{type-t}
-  @see-symbol{type-value-table}
-  @see-function{type-value-table-peek}"
+  @see-class{g:type-t}
+  @see-symbol{g:type-value-table}
+  @see-function{g:type-value-table-peek}"
   (not (cffi:null-pointer-p (type-value-table-peek gtype))))
 
 ;;; ----------------------------------------------------------------------------
@@ -1198,13 +1199,13 @@ ID     NAME               CFFI type      Lisp type
 (defun type-is-instantiatable (gtype)
  #+liber-documentation
  "@version{#2020-11-13}
-  @argument[gtype]{a @class{type-t} ID}
+  @argument[gtype]{a @class{g:type-t} type ID}
   @return{@em{True} if @arg{gtype} can be instantiated.}
   @begin{short}
     Checks if @arg{gtype} can be instantiated.
   @end{short}
   Instantiation is the process of creating an instance (object) of this type.
-  @see-class{type-t}"
+  @see-class{g:type-t}"
   (%type-test-fundamental-flags gtype :instantiatable))
 
 ;;; ----------------------------------------------------------------------------
@@ -1214,15 +1215,15 @@ ID     NAME               CFFI type      Lisp type
 (defun type-is-derivable (gtype)
  #+liber-documentation
  "@version{#2020-11-1}
-  @argument[gtype]{a @class{type-t} ID}
+  @argument[gtype]{a @class{g:type-t} type ID}
   @return{@em{True} if @arg{gtype} is a derivable type.}
   @begin{short}
     Checks if @arg{gtype} is a derivable type.
   @end{short}
   A derivable type can be used as the base class of a flat (single-level) class
   hierarchy.
-  @see-class{type-t}
-  @see-function{type-is-deep-derivable}"
+  @see-class{g:type-t}
+  @see-function{g:type-is-deep-derivable}"
   (%type-test-fundamental-flags gtype :derivable))
 
 ;;; ----------------------------------------------------------------------------
@@ -1232,15 +1233,15 @@ ID     NAME               CFFI type      Lisp type
 (defun type-is-deep-derivable (gtype)
  #+liber-documentation
  "@version{#2020-11-1}
-  @argument[gtype]{a @class{type-t} ID}
+  @argument[gtype]{a @class{g:type-t} type ID}
   @return{@em{True} if @arg{gtype} is a deep derivable type.}
   @begin{short}
     Checks if @arg{gtype} is a deep derivable type.
   @end{short}
   A deep derivable type can be used as the base class of a deep (multi-level)
   class hierarchy.
-  @see-class{type-t}
-  @see-function{type-is-derivable}"
+  @see-class{g:type-t}
+  @see-function{g:type-is-derivable}"
   (%type-test-fundamental-flags gtype :deep-derivable))
 
 ;;; ----------------------------------------------------------------------------
@@ -1804,7 +1805,7 @@ ID     NAME               CFFI type      Lisp type
  #+liber-documentation
  "@version{2024-6-11}
   @argument[gtype]{a @class{g:type-t} parent type ID}
-  @return{The list of @class{g:type-t} child types.}
+  @return{The list of @class{g:type-t} child type IDs.}
   @short{Returns a list of type IDs, listing the child types of @arg{gtype}.}
   @begin{examples}
     @begin{pre}
@@ -2722,7 +2723,7 @@ ID     NAME               CFFI type      Lisp type
   @argument[type-name]{a string used as the name of the new type}
   @argument[info]{a @symbol{g:type-info} instance for this type}
   @argument[flags]{bitwise combination of @symbol{g:type-flags} values}
-  @return{The new @class{g:type-t} type ID identifier.}
+  @return{The new @class{g:type-t} type ID.}
   @begin{short}
     Registers @arg{g:type-name} as the name of a new static type derived from
     @arg{parent-type}.
@@ -2759,7 +2760,7 @@ ID     NAME               CFFI type      Lisp type
   @argument[instance-init]{a pointer with the location of the instance
     initialization function}
   @argument[flags]{bitwise combination of @symbol{g:type-flags} values}
-  @return{The new @class{g:type-t} type ID identifier.}
+  @return{The new @class{g:type-t} type ID.}
   @begin{short}
     Registers @arg{g:type-name} as the name of a new static type derived from
     @arg{parent-type}.

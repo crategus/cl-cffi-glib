@@ -1211,8 +1211,8 @@ lambda (object pspec)    :no-hooks
 (defun object-class-type (class)
  #+liber-documentation
  "@version{#2021-9-9}
-  @argument[class]{a foreign pointer to a @symbol{object-class} instance}
-  @return{The @class{type-t} type ID of the @arg{class} argument.}
+  @argument[class]{a foreign pointer to a @symbol{g:object-class} instance}
+  @return{The @class{g:type-t} type ID of the @arg{class} argument.}
   @short{Gets the type ID of a class instance.}
   @begin[Examples]{dictionary}
     @begin{pre}

@@ -220,7 +220,7 @@ lambda (model pos removed added)    :run-last
  #+liber-documentation
  "@version{2024-3-31}
   @argument[model]{a @class{g:list-model} object}
-  @return{The @class{g:type-t} type of the items contained in @arg{model}.}
+  @return{The @class{g:type-t} type ID of the items contained in @arg{model}.}
   @begin{short}
     Gets the type of the items in the list model.
   @end{short}

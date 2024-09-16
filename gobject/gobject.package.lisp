@@ -315,8 +315,8 @@
     transformed and compared while holding a value of any (derived) type, which
     is registered as a GType with a GTypeValueTable in its GTypeInfo structure.
     Parameter specifications for most value types can be created as GParamSpec
-    derived instances, to implement e.g. GObject properties which operate on
-    GValue containers.
+    derived instances, to implement, for example, GObject properties which
+    operate on GValue containers.
 
     Parameter names need to start with a letter (a-z or A-Z). Subsequent
     characters can be letters, numbers or a '-'. All other characters are
@@ -406,7 +406,6 @@
     @about-function{value-take-variant}
   @end{section}
   @begin[GParamSpec]{section}
-    Metadata for parameter specifications.
     @about-symbol{param-flags}
     @about-symbol{param-spec}
     @about-symbol{param-spec-class}
