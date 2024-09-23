@@ -142,6 +142,26 @@
 
 (export 'define-g-enum)
 
+(defmacro define-genum (gtype name (&key (export t)
+                                          (base-type :int)
+                                          (allow-undeclared-values nil)
+                                          type-initializer)
+                                    &body values)
+  `(progn
+     (cffi:defcenum (,name ,base-type
+                           :allow-undeclared-values ,allow-undeclared-values)
+               ,@values)
+     ,@(when export
+         (list `(export ',name
+                        (find-package ,(package-name (symbol-package name))))))
+     ,@(when type-initializer
+         (list `(glib-init:at-init ()
+                   ,(glib:type-initializer-call type-initializer))))
+     (eval-when (:compile-toplevel :load-toplevel :execute)
+       (setf (glib:symbol-for-gtype ,gtype) ',name))))
+
+(export 'define-genum)
+
 ;;; ----------------------------------------------------------------------------
 
 ;; Called from the gobject:value-enum function
@@ -374,6 +394,23 @@
        (setf (glib:symbol-for-gtype ,gtype) ',name))))
 
 (export 'define-g-flags)
+
+(defmacro define-gflags (gtype name (&key (export t)
+                                           (base-type :int)
+                                           type-initializer)
+                                     &body values)
+  `(progn
+     (cffi:defbitfield ,name ,base-type ,@values)
+     ,@(when export
+         (list `(export ',name
+                        (find-package ,(package-name (symbol-package name))))))
+     ,@(when type-initializer
+         (list `(glib-init:at-init ()
+                   ,(glib:type-initializer-call type-initializer))))
+     (eval-when (:compile-toplevel :load-toplevel :execute)
+       (setf (glib:symbol-for-gtype ,gtype) ',name))))
+
+(export 'define-gflags)
 
 ;;; ----------------------------------------------------------------------------
 
