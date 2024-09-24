@@ -1,4 +1,4 @@
-Content from the GObject 2.66 Reference Manual
+Content from the GObject 2.80 Reference Manual
 
   gobject.type-info.lisp   - Type Information                  - GObject 2.66
 
@@ -10,7 +10,7 @@ Content from the GObject 2.66 Reference Manual
   gobject.boxed.lisp       - Boxed Types                       - GObject 2.66
   gobject.g-value.lisp     - Generic values                    - GObject 2.66
   gobject.param.lisp       - Parameters and Values             - GObject 2.66
-  gobject.param-spec.lisp  - GParamSpec                        - GObject 2.66
+  gobject.param-spec.lisp  - GParamSpec                        - GObject 2.80 .
 
   * not implemented *      - Varargs Value Collection
 
@@ -21,4 +21,4 @@ Content from the GObject 2.66 Reference Manual
 
   gobject.binding.lisp     - GBinding                          - GObject 2.80
 
-2024-6-18
+2024-9-16
