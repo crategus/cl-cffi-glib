@@ -47,8 +47,8 @@
 ;;; Functions
 ;;;
 ;;;     G_TYPE_IS_PARAM
-;;;     G_PARAM_SPEC
 ;;;     G_IS_PARAM_SPEC
+;;;
 ;;;     G_PARAM_SPEC_CLASS
 ;;;     G_IS_PARAM_SPEC_CLASS
 ;;;     G_PARAM_SPEC_GET_CLASS
@@ -108,7 +108,7 @@
 (setf (liber:alias-for-symbol 'param-flags)
       "Bitfield"
       (liber:symbol-documentation 'param-flags)
- "@version{2024-9-13}
+ "@version{2024-9-16}
   @begin{declaration}
 (cffi:defbitfield param-flags
   (:readable #.(ash 1 0))
@@ -152,7 +152,7 @@
 (export 'param-flags)
 
 ;;; ----------------------------------------------------------------------------
-;;; struct GParamSpec
+;;; GParamSpec
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcstruct param-spec
@@ -166,32 +166,36 @@
 (setf (liber:alias-for-symbol 'param-spec)
       "CStruct"
       (liber:symbol-documentation 'param-spec)
- "@version{#2022-12-29}
-  @begin{short}
-    The @sym{g:param-spec} structure is an object structure that encapsulates
-    the metadata required to specify parameters, such as e.g. @class{g:object}
-    properties.
-  @end{short}
-
-  Parameter names need to start with a letter (a-z or A-Z). Subsequent
-  characters can be letters, numbers or a '-'. All other characters are
-  replaced by a '-' during construction. The result of this replacement is
-  called the canonical name of the parameter.
-  @begin{pre}
+ "@version{2024-9-16}
+  @begin{declaration}
 (cffi:defcstruct param-spec
   (:type-instance (:pointer (:struct type-instance)))
   (:name (:string :free-from-foreign nil :free-to-foreign nil))
   (:flags param-flags)
   (:value-type type-t)
   (:owner-type type-t))
-  @end{pre}
-  @begin[code]{table}
-    @entry[:type-instance]{Private @symbol{g:type-instance} portion.}
-    @entry[:name]{Name of this parameter: always an interned string.}
-    @entry[:flags]{The @symbol{g:param-flags} flags for this parameter.}
-    @entry[:value-type]{The @symbol{g:value} type for this parameter.}
-    @entry[:owner-type]{The @class{g:type-t} type ID that uses this parameter.}
-  @end{table}
+  @end{declaration}
+  @begin{values}
+    @begin[code]{table}
+      @entry[:type-instance]{The private @symbol{g:type-instance} portion.}
+      @entry[:name]{The name of this parameter, always an interned string.}
+      @entry[:flags]{The @symbol{g:param-flags} value for this parameter.}
+      @entry[:value-type]{The @class{g:type-t} type ID for the @symbol{g:value}
+        instance for this parameter.}
+      @entry[:owner-type]{The @class{g:type-t} type ID that uses this
+        parameter.}
+    @end{table}
+  @end{values}
+  @begin{short}
+    The @symbol{g:param-spec} structure is an object structure that encapsulates
+    the metadata required to specify parameters, such as, for example
+    @class{g:object} properties.
+  @end{short}
+
+  Parameter names need to start with a letter (a-z or A-Z). Subsequent
+  characters can be letters, numbers or a '-'. All other characters are
+  replaced by a '-' during construction. The result of this replacement is
+  called the canonical name of the parameter.
   @see-symbol{g:type-instance}
   @see-symbol{g:param-flags}
   @see-symbol{g:value}
@@ -204,8 +208,8 @@
 ;; Corresponding Lisp structure describing a property of a GObject class.
 
 ;; TODO: %PARAM-SPEC is the structure to access a GParamSpec from the Lisp side.
-;; This should be exported and not the implementatin PARAM-SPEC which
-;; corresponds to the C side
+;; Should this be exported and not the implementatin PARAM-SPEC which
+;; corresponds to the C side?
 
 (defstruct %param-spec
   name
@@ -248,9 +252,10 @@
                                            '(:struct param-spec) :owner-type))))
 
 ;;; ----------------------------------------------------------------------------
-;;; struct GParamSpecClass                                 not exported
+;;; struct GParamSpecClass                                 not implemented
 ;;; ----------------------------------------------------------------------------
 
+#+nil
 (cffi:defcstruct param-spec-class
   (:type-class (:pointer (:struct type-class)))
   (:value-type type-t)
@@ -258,41 +263,6 @@
   (:value-set-default :pointer)
   (:value-validate :pointer)
   (:values-cmp :pointer))
-
-#+liber-documentation
-(setf (liber:alias-for-symbol 'param-spec-class)
-      "CStruct"
-      (liber:symbol-documentation 'param-spec-class)
- "@version{#2013-2-7}
-  @begin{short}
-    The class structure for the @symbol{g:param-spec} type.
-  @end{short}
-  Normally, @symbol{g:param-spec} classes are filled by the
-  @fun{g:param-type-register-static} function.
-  @begin{pre}
-(cffi:defcstruct param-spec-class
-  (:type-class (:pointer (:struct type-class)))
-  (:value-type type-t)
-  (:finalize :pointer)
-  (:value-set-default :pointer)
-  (:value-validate :pointer)
-  (:values-cmp :pointer))
-  @end{pre}
-  @begin[code]{table}
-    @entry[:type-class]{the parent class}
-    @entry[:value-type]{the GValue type for this parameter}
-    @entry[:finalize]{The instance finalization function (optional), should
-      chain up to the finalize method of the parent class.}
-    @entry[:value-set-default]{Resets a value to the default value for this type
-      (recommended, the default is @fun{value-reset}), see
-      @fun{g:param-value-set-default}.}
-    @entry[:value-validate]{Ensures that the contents of value comply with the
-      specifications set out by this type (optional), see
-      @fun{g:param-value-validate}.}
-    @entry[:value-cmp]{Compares value1 with value2 according to this type
-      (recommended, the default is @code{memcmp()}), see
-      @fun{g:param-values-cmp}.}
-  @end{table}")
 
 ;;; ----------------------------------------------------------------------------
 ;;; G_TYPE_IS_PARAM
@@ -300,10 +270,10 @@
 
 (defun type-is-param (gtype)
  #+liber-documentation
- "@version{2024-6-10}
+ "@version{2024-9-16}
   @argument[gtype]{a @class{g:type-t} type ID}
   @begin{short}
-    Checks whether @arg{gtype} \"is a\" @code{\"GParam\"} type.
+    Checks whether @arg{gtype} is a @code{\"GParam\"} type.
   @end{short}
   @see-symbol{g:param-spec}
   @see-class{g:type-t}"
@@ -312,29 +282,16 @@
 (export 'type-is-param)
 
 ;;; ----------------------------------------------------------------------------
-;;; G_PARAM_SPEC()
-;;;
-;;; #define G_PARAM_SPEC(pspec)
-;;;         (G_TYPE_CHECK_INSTANCE_CAST ((pspec), G_TYPE_PARAM, GParamSpec))
-;;;
-;;; Casts a derived GParamSpec object (e.g. of type GParamSpecInt) into a
-;;; GParamSpec object.
-;;;
-;;; pspec :
-;;;     a valid GParamSpec
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
 ;;; G_IS_PARAM_SPEC
 ;;; ----------------------------------------------------------------------------
 
 (defun is-param-spec (pspec)
  #+liber-documentation
- "@version{2024-6-10}
+ "@version{2024-9-16}
   @argument[pspec]{a @symbol{g:param-spec} instance}
   @begin{short}
-    Checks whether @arg{pspec} \"is a\" valid @symbol{g:param-spec} instance
-    of @code{\"GParam\"} type or derived.
+    Checks whether @arg{pspec} is a valid @symbol{g:param-spec} instance of
+    @code{\"GParam\"} type or derived.
   @end{short}
   @see-symbol{g:param-spec}"
   (type-is-param (type-from-instance pspec)))
@@ -379,14 +336,14 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; G_PARAM_SPEC_TYPE()
+;;; G_PARAM_SPEC_TYPE
 ;;; ----------------------------------------------------------------------------
 
 (defun param-spec-type (pspec)
  #+liber-documentation
- "@version{2022-12-29}
+ "@version{2024-9-16}
   @argument[pspec]{a valid @symbol{g:param-spec} instance}
-  @short{Retrieves the @class{g:type-t} type ID of this @arg{pspec}.}
+  @short{Retrieves the @class{g:type-t} type ID of @arg{pspec}.}
   @see-symbol{g:param-spec}
   @see-class{g:type-t}"
   (type-from-instance pspec))
@@ -394,12 +351,12 @@
 (export 'param-spec-type)
 
 ;;; ----------------------------------------------------------------------------
-;;; G_PARAM_SPEC_TYPE_NAME()
+;;; G_PARAM_SPEC_TYPE_NAME
 ;;; ----------------------------------------------------------------------------
 
 (defun param-spec-type-name (pspec)
  #+liber-documentation
- "@version{2022-12-29}
+ "@version{2024-9-16}
   @argument[pspec]{a valid @symbol{g:param-spec} instance}
   @short{Retrieves the @class{g:type-t} type ID name of @arg{pspec}.}
   @see-symbol{g:param-spec}
@@ -409,15 +366,15 @@
 (export 'param-spec-type-name)
 
 ;;; ----------------------------------------------------------------------------
-;;; G_PARAM_SPEC_VALUE_TYPE()
+;;; G_PARAM_SPEC_VALUE_TYPE
 ;;; ----------------------------------------------------------------------------
 
 (defun param-spec-value-type (pspec)
  #+liber-documentation
- "@version{2022-12-29}
+ "@version{2024-9-16}
   @argument[pspec]{a valid @symbol{g:param-spec} instance}
   @short{Retrieves the @class{g:type-t} type ID to initialize a @symbol{g:value}
-    for this parameter.}
+    instance for this parameter.}
   @see-symbol{g:param-spec}
   @see-class{g:type-t}
   @see-symbol{g:value}"
@@ -467,9 +424,10 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_param_spec_unref ()                                  not exported
+;;; g_param_spec_unref ()                                  not implemented
 ;;; ----------------------------------------------------------------------------
 
+#+nil
 (cffi:defcfun ("g_param_spec_unref" %param-spec-unref) :void
  #+liber-documentation
  "@version{#2013-2-7}
@@ -494,9 +452,10 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_param_spec_ref_sink ()                               not exported
+;;; g_param_spec_ref_sink ()                               not implemented
 ;;; ----------------------------------------------------------------------------
 
+#+nil
 (cffi:defcfun ("g_param_spec_ref_sink" %param-spec-ref-sink)
     (:pointer (:struct param-spec))
  #+liber-documentation
@@ -507,15 +466,15 @@
   (pspec (:pointer (:struct param-spec))))
 
 ;;; ----------------------------------------------------------------------------
-;;; g_param_spec_get_default_value () -> param-spec-default-value
+;;; g_param_spec_get_default_value
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_param_spec_get_default_value" param-spec-default-value)
     (:pointer (:struct value))
  #+liber-documentation
- "@version{2022-12-29}
+ "@version{2024-9-16}
   @argument[pspec]{a valid @symbol{g:param-spec} instance}
-  @return{A pointer to a @symbol{g:value} instance.}
+  @return{The pointer to a @symbol{g:value} instance.}
   @begin{short}
     Gets the default value of @arg{pspec} as a pointer to a @symbol{g:value}
     instance.
@@ -527,12 +486,12 @@
 (export 'param-spec-default-value)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_param_value_set_default ()
+;;; g_param_value_set_default
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_param_value_set_default" param-value-set-default) :void
  #+liber-documentation
- "@version{2022-12-29}
+ "@version{2024-9-16}
   @argument[pspec]{a valid @symbol{g:param-spec} instance}
   @argument[value]{a @symbol{g:value} instance of correct type for @arg{pspec}}
   @short{Sets @arg{value} to its default value as specified in @arg{pspec}.}
@@ -544,16 +503,16 @@
 (export 'param-value-set-default)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_param_value_defaults ()
+;;; g_param_value_defaults
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_param_value_defaults" param-value-defaults) :boolean
  #+liber-documentation
- "@version{2022-12-29}
+ "@version{2024-9-16}
   @argument[pspec]{a valid @symbol{g:param-spec} instance}
   @argument[value]{a @symbol{g:value} instance of correct type for @arg{pspec}}
-  @return{A boolean whether @arg{value} contains the canonical default for this
-    @arg{pspec}.}
+  @return{The boolean whether @arg{value} contains the canonical default for
+     @arg{pspec}.}
   @begin{short}
     Checks whether @arg{value} contains the default value as specified in
     @arg{pspec}.
@@ -566,24 +525,24 @@
 (export 'param-value-defaults)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_param_value_validate ()
+;;; g_param_value_validate
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_param_value_validate" param-value-validate) :boolean
  #+liber-documentation
- "@version{2022-12-29}
+ "@version{2024-9-16}
   @argument[pspec]{a valid @symbol{g:param-spec} instance}
   @argument[value]{a @symbol{g:value} instance of correct type for @arg{pspec}}
-  @return{A boolean whether modifying @arg{value} was necessary to ensure
+  @return{The boolean whether modifying @arg{value} was necessary to ensure
     validity.}
   @begin{short}
     Ensures that the contents of @arg{value} comply with the specifications set
     out by @arg{pspec}.
   @end{short}
 
-  For example, a @symbol{g:param-spec-int} might require that integers stored
-  in @arg{value} may not be smaller than -42 and not be greater than +42. If
-  @arg{value} contains an integer outside of this range, it is modified
+  For example, a @symbol{g:param-spec-int} instance might require that integers
+  stored in @arg{value} may not be smaller than -42 and not be greater than +42.
+  If @arg{value} contains an integer outside of this range, it is modified
   accordingly, so the resulting value will fit into the range -42 .. +42.
   @see-symbol{g:param-spec}
   @see-symbol{g:value}
@@ -627,9 +586,10 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_param_values_cmp ()                                  not exported
+;;; g_param_values_cmp ()                                  not implemented
 ;;; ----------------------------------------------------------------------------
 
+#+nil
 (cffi:defcfun ("g_param_values_cmp" %param-values-cmp) :int
  #+liber-documentation
  "@version{#2013-5-21}
@@ -670,18 +630,18 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_param_spec_get_name () -> param-spec-name
+;;; g_param_spec_get_name
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_param_spec_get_name" param-spec-name) :string
  #+liber-documentation
- "@version{2022-12-29}
+ "@version{2024-9-16}
   @argument[pspec]{a valid @symbol{g:param-spec} instance}
-  @return{A string with the name of @arg{pspec}.}
+  @return{The string with the name of @arg{pspec}.}
   @begin{short}
     Gets the name of a @symbol{g:param-spec} instance.
   @end{short}
-  @begin[Example]{dictionary}
+  @begin{examples}
     @begin{pre}
 (mapcar #'g:param-spec-name
         (g:object-class-list-properties \"GtkApplication\"))
@@ -689,7 +649,7 @@
     \"is-remote\" \"inactivity-timeout\" \"action-group\" \"is-busy\"
     \"register-session\" \"screensaver-active\" \"menubar\" \"active-window\")
     @end{pre}
-  @end{dictionary}
+  @end{examples}
   @see-symbol{g:param-spec}"
   (pspec (:pointer (:struct param-spec))))
 
@@ -711,14 +671,14 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_param_spec_get_nick () -> param-spec-nick
+;;; g_param_spec_get_nick
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_param_spec_get_nick" param-spec-nick) :string
  #+liber-documentation
- "@version{2022-12-29}
+ "@version{2024-9-16}
   @argument[pspec]{a valid @symbol{g:param-spec} instance}
-  @return{A string with the nickname of @arg{pspec}.}
+  @return{The string with the nickname of @arg{pspec}.}
   @short{Get the nickname of a @symbol{g:param-spec} instance.}
   @see-symbol{g:param-spec}"
   (pspec (:pointer (:struct param-spec))))
@@ -726,14 +686,14 @@
 (export 'param-spec-nick)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_param_spec_get_blurb () -> param-spec-blurb
+;;; g_param_spec_get_blurb
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_param_spec_get_blurb" param-spec-blurb) :string
  #+liber-documentation
- "@version{2022-12-29}
+ "@version{2024-9-16}
   @argument[pspec]{a valid @symbol{g:param-spec} instance}
-  @return{A string with the short description of @arg{pspec}.}
+  @return{The string with the short description of @arg{pspec}.}
   @short{Gets the short description of a @symbol{g:param-spec} instance.}
   @see-symbol{g:param-spec}"
   (pspec (:pointer (:struct param-spec))))
@@ -825,9 +785,10 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_param_spec_get_redirect_target ()                    not exported
+;;; g_param_spec_get_redirect_target ()                    not implemented
 ;;; ----------------------------------------------------------------------------
 
+#+nil
 (cffi:defcfun ("g_param_spec_get_redirect_target"
                %param-spec-get-redirect-target) (:pointer (:struct param-spec))
  #+liber-documentation
@@ -857,7 +818,7 @@
 
 (cffi:defcfun ("g_param_spec_internal" param-spec-internal) :pointer
  #+liber-documentation
- "@version{2024-9-13}
+ "@version{2024-9-16}
   @argument[ptype]{a @class{g:type-t} type ID for the property, must be
     derived from the @code{\"GParam\"} type}
   @argument[name]{a string with the canonical name of the property}
@@ -882,16 +843,18 @@
   Beyond @arg{name}, @symbol{g:param-spec} instances have two more descriptive
   strings associated with them, @arg{nick}, which should be suitable for use as
   a label for the property in a property editor, and @arg{blurb}, which should
-  be a somewhat longer description, suitable for e.g. a tooltip. @arg{nick} and
-  @arg{blurb} should ideally be localized.
-  @begin[Examples]{dictionary}
+  be a somewhat longer description, suitable, for example, for a tooltip.
+  The @arg{nick} and @arg{blurb} values should ideally be localized.
+  @begin{examples}
     @begin{pre}
-(g:param-spec-internal \"GParamBoolean\" \"Boolean\" \"Bool\" \"Doku\" '(:readable :writable))
+(g:param-spec-internal \"GParamBoolean\"
+                       \"Boolean\" \"Bool\" \"Doku\"
+                       '(:readable :writable))
 => #.(SB-SYS:INT-SAP #X00933890)
 (g:param-spec-type-name *)
 => \"GParamBoolean\"
     @end{pre}
-  @end{dictionary}
+  @end{examples}
   @see-symbol{g:param-spec}
   @see-symbol{g:param-flags}
   @see-class{g:type-t}"
