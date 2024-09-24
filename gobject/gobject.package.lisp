@@ -50,16 +50,21 @@
            #:define-g-object-class
            #:define-vtable
 
-           #:get-g-type-definition
+           #:define-genum
+           #:define-gflags
+           #:define-ginterface
+           #:define-gobject
+
+           #:get-gtype-definition
 
            #:get-flags-items
-           #:get-g-flags-definition
+           #:get-gflags-definition
            #:flags-item-name
            #:flags-item-value
            #:flags-item-nick
 
            #:get-enum-items
-           #:get-g-enum-definition
+           #:get-genum-definition
            #:enum-item-name
            #:enum-item-value
            #:enum-item-nick

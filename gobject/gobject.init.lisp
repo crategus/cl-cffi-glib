@@ -1,7 +1,7 @@
 ;;; ----------------------------------------------------------------------------
 ;;; gobject.init.lisp
 ;;;
-;;; Copyright (C) 2011 - 2023 Dieter Kaiser
+;;; Copyright (C) 2011 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -24,7 +24,6 @@
 
 (in-package :gobject)
 
-(defvar *lisp-name-package* nil)
 (defvar *generated-types* nil)
 
 (defvar *gobject-debug* nil)

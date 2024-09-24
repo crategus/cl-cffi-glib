@@ -1,7 +1,7 @@
 ;;; ----------------------------------------------------------------------------
 ;;; gobject.generating.lisp
 ;;;
-;;; Copyright (C) 2011 - 2023 Dieter Kaiser
+;;; Copyright (C) 2011 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -156,38 +156,6 @@
 
 ;;; ----------------------------------------------------------------------------
 
-;; Generate the name of a slot accessor
-
-;; TODO: These functions are used in gobject.utils.lisp. Consider to move
-;; the functions to this file.
-
-(defvar *strip-prefix* "")
-
-(defun accessor-name (class-name property-name)
-  (intern (format nil "~A-~A"
-                      (symbol-name class-name)
-                      (lispify-name property-name))
-          *lisp-name-package*))
-
-(defun lispify-name (name)
-  (with-output-to-string (stream)
-    (iter (for c in-vector (strip-start name *strip-prefix*))
-          (for firstp initially t then nil)
-          (when (and (not firstp) (upper-case-p c)) (write-char #\- stream))
-          (write-char (char-upcase c) stream))))
-
-(defun strip-start (name prefix)
-  (if (starts-with name prefix)
-      (subseq name (length prefix))
-      name))
-
-(defun starts-with (name prefix)
-  (and prefix
-       (> (length name) (length prefix))
-       (string= (subseq name 0 (length prefix)) prefix)))
-
-;;; ----------------------------------------------------------------------------
-
 (defgeneric property->reader (class property))
 
 (defmethod property->reader (class (property gobject-property))
@@ -247,27 +215,6 @@
                 (error "Unknown interface ~A" interface)))))
 
 ;;; ----------------------------------------------------------------------------
-#+nil
-(defun meta-property->slot (class-name property)
-  (declare (ignorable class-name))
-  `(,(property-name property)
-     :allocation ,(if (gobject-property-p property)
-                      :gobject-property
-                      :gobject-fn)
-     :g-property-type ,(if (gobject-property-p property)
-                           (gobject-property-gtype property)
-                           (cffi-property-ctype property))
-     :accessor ,(property-accessor property)
-     ,@(when (if (gobject-property-p property)
-                 t
-                 (not (null (cffi-property-writer property))))
-         `(:initarg
-           ,(intern (string-upcase (property-name property))
-                    (find-package :keyword))))
-     ,@(if (gobject-property-p property)
-           `(:g-property-name ,(gobject-property-gname property))
-           `(:g-getter ,(cffi-property-reader property)
-             :g-setter ,(cffi-property-writer property)))))
 
 (defun property->slot (class property)
   (declare (ignorable class))
@@ -328,6 +275,38 @@
                                     ,(package-name (symbol-package name)))))
                        properties)))))
 
+(defmacro define-gobject (g-type-name name
+                          (&key (superclass 'object)
+                                (export t)
+                                interfaces
+                                type-initializer)
+                          (&rest properties))
+  (setf properties (mapcar #'parse-property properties))
+  `(progn
+     (defclass ,name (,@(when (and superclass
+                                   (not (eq superclass 'object)))
+                          (list superclass))
+                      ,@(mapcar #'interface->lisp-class-name interfaces))
+       (,@(mapcar (lambda (property)
+                     (property->slot name property))
+                   properties))
+       (:gname . ,g-type-name)
+       ,@(when type-initializer
+           (list `(:initializer . ,type-initializer)))
+       (:metaclass gobject-class))
+     ,@(when export
+         (cons `(export ',name
+                        (find-package
+                          ,(package-name (symbol-package name))))
+               (mapcar (lambda (property)
+                         `(export ',(intern (format nil "~A-~A"
+                                                    (symbol-name name)
+                                                    (property-name property))
+                                            (symbol-package name))
+                                  (find-package
+                                    ,(package-name (symbol-package name)))))
+                       properties)))))
+
 ;;; ----------------------------------------------------------------------------
 
 ;; TODO: We have added code to allow other than g:object to be a prerequiste
@@ -341,6 +320,38 @@
                                     (export t)
                                     type-initializer)
                               (&rest properties))
+  (setf properties (mapcar #'parse-property properties))
+  `(progn
+     (defclass ,name (,@(when (and superclass
+                                   (not (eq superclass 'object)))
+                          (list superclass)))
+       (,@(mapcar (lambda (property)
+                    (property->slot name property))
+                  properties))
+       (:gname . ,gtype-name)
+       ,@(when type-initializer
+           (list `(:initializer . ,type-initializer)))
+       (:interface-p . t)
+       (:metaclass gobject-class))
+     ,@(when export
+         (cons `(export ',name
+                        (find-package ,(package-name (symbol-package name))))
+               (mapcar (lambda (property)
+                         `(export ',(intern (format nil "~A-~A"
+                                                    (symbol-name name)
+                                                    (property-name property))
+                                            (symbol-package name))
+                                  (find-package
+                                    ,(package-name (symbol-package name)))))
+                       properties)))
+     (eval-when (:compile-toplevel :load-toplevel :execute)
+       (setf (gethash ,gtype-name *known-interfaces*) ',name))))
+
+(defmacro define-ginterface (gtype-name name
+                             (&key (superclass 'object)
+                                   (export t)
+                                   type-initializer)
+                             (&rest properties))
   (setf properties (mapcar #'parse-property properties))
   `(progn
      (defclass ,name (,@(when (and superclass
