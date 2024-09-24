@@ -1686,33 +1686,29 @@ ID     NAME               CFFI type      Lisp type
 ;;; g_type_name
 ;;; ----------------------------------------------------------------------------
 
-;; TODO: The type g:+type-invalid+ is special handled in gtype-id. gtype-id
-;; returns nil and not an integer. Therefore this function does not accept
-;; g:+type-invalid+ as an argument like the C function.
-
-(declaim (inline type-name))
-
 (defun type-name (gtype)
  #+liber-documentation
- "@version{2024-6-11}
+ "@version{2024-9-16}
   @argument[gtype]{a @class{g:type-t} type ID to return the type name for}
-  @return{The string with the type name.}
+  @return{The string with the type name, or @code{nil}.}
   @begin{short}
     Get the unique name that is assigned to a type ID.
   @end{short}
-  Note that this function, like all other GType API, cannot cope with invalid
-  type IDs. Randomized type IDs should not be passed in and will most likely
-  lead to a crash.
+  Note that this function returns @code{nil}, when @arg{gtype} is not known.
   @begin{examples}
     @begin{pre}
 (g:type-name 60) => \"gdouble\"
 (g:type-name \"gdouble\") => \"gdouble\"
 (g:type-name (g:gtype \"gdouble\")) => \"gdouble\"
+(g:type-name \"unknown\")
+=> WARNING: unknown is not known to the GType system
+=> NIL
     @end{pre}
   @end{examples}
   @see-class{g:type-t}
   @see-function{g:type-from-name}"
-  (glib:gtype-name (glib:gtype gtype)))
+  (let ((gtype (glib:gtype gtype)))
+    (when gtype (glib:gtype-name gtype))))
 
 (export 'type-name)
 
