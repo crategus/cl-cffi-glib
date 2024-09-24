@@ -8,40 +8,39 @@
 ;;;     GThemedIcon
 
 (test g-themed-icon-class
-  ;; Type check
+  ;; Check type
   (is (g:type-is-object "GThemedIcon"))
-  ;; Check the registered symbol
+  ;; Check registered symbol
   (is (eq 'g:themed-icon
           (glib:symbol-for-gtype "GThemedIcon")))
-  ;; Check the type initializer
+  ;; Check type initializer
   (is (eq (g:gtype "GThemedIcon")
           (g:gtype (cffi:foreign-funcall "g_themed_icon_get_type" :size))))
-  ;; Check the parent
+  ;; Check parent
   (is (eq (g:gtype "GObject") (g:type-parent "GThemedIcon")))
-  ;; Check the children
+  ;; Check children
   (is (equal '()
-             (list-children "GThemedIcon")))
-  ;; Check the interfaces
+             (glib-test:list-children "GThemedIcon")))
+  ;; Check interfaces
   (is (equal '("GIcon")
-             (list-interfaces "GThemedIcon")))
-  ;; Check the class properties
+             (glib-test:list-interfaces "GThemedIcon")))
+  ;; Check class properties
   (is (equal '("name" "names" "use-default-fallbacks")
-             (list-properties "GThemedIcon")))
-  ;; Check the list of signals
+             (glib-test:list-properties "GThemedIcon")))
+  ;; Check signals
   (is (equal '()
-             (list-signals "GThemedIcon")))
-  ;; Check the class definition
-  (is (equal '(GOBJECT:DEFINE-G-OBJECT-CLASS "GThemedIcon" G-THEMED-ICON
-                       (:SUPERCLASS G-OBJECT
+             (glib-test:list-signals "GThemedIcon")))
+  ;; Check class definition
+  (is (equal '(GOBJECT:DEFINE-GOBJECT "GThemedIcon" GIO:THEMED-ICON
+                       (:SUPERCLASS GOBJECT:OBJECT
                         :EXPORT T
                         :INTERFACES ("GIcon")
                         :TYPE-INITIALIZER "g_themed_icon_get_type")
-                       ((NAME G-THEMED-ICON-NAME "name" "gchararray" NIL NIL)
-                        (NAMES G-THEMED-ICON-NAMES "names" "GStrv" T NIL)
-                        (USE-DEFAULT-FALLBACKS
-                         G-THEMED-ICON-USE-DEFAULT-FALLBACKS
+                       ((NAME THEMED-ICON-NAME "name" "gchararray" NIL NIL)
+                        (NAMES THEMED-ICON-NAMES "names" "GStrv" T NIL)
+                        (USE-DEFAULT-FALLBACKS THEMED-ICON-USE-DEFAULT-FALLBACKS
                          "use-default-fallbacks" "gboolean" T NIL)))
-             (gobject:get-g-type-definition "GThemedIcon"))))
+             (gobject:get-gtype-definition "GThemedIcon"))))
 
 ;;; --- Functions --------------------------------------------------------------
 
@@ -89,4 +88,4 @@
     (is (= (g:icon-hash icon1) (g:icon-hash icon2)))
     (is-true (g:icon-equal icon1 icon2))))
 
-;;; 2024-6-12
+;;; 2024-9-18

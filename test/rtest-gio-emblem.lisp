@@ -8,71 +8,70 @@
 ;;;     GEmblemOrigin
 
 (test g-emblem-origin-enum
-  ;; Check the type
+  ;; Check type
   (is (g:type-is-enum "GEmblemOrigin"))
-  ;; Check the type initializer
+  ;; Check type initializer
   (is (eq (g:gtype "GEmblemOrigin")
           (g:gtype (cffi:foreign-funcall "g_emblem_origin_get_type" :size))))
-  ;; Check the registered symbol
+  ;; Check registered symbol
   (is (eq 'gio:emblem-origin
           (glib:symbol-for-gtype "GEmblemOrigin")))
-  ;; Check the names
+  ;; Check names
   (is (equal '("G_EMBLEM_ORIGIN_UNKNOWN" "G_EMBLEM_ORIGIN_DEVICE"
                "G_EMBLEM_ORIGIN_LIVEMETADATA" "G_EMBLEM_ORIGIN_TAG")
-             (list-enum-item-name "GEmblemOrigin")))
-  ;; Check the values
+             (glib-test:list-enum-item-names "GEmblemOrigin")))
+  ;; Check values
   (is (equal '(0 1 2 3)
-             (list-enum-item-value "GEmblemOrigin")))
-  ;; Check the nick names
+             (glib-test:list-enum-item-values "GEmblemOrigin")))
+  ;; Check nick names
   (is (equal '("unknown" "device" "livemetadata" "tag")
-             (list-enum-item-nick "GEmblemOrigin")))
-  ;; Check the enum definition
-  (is (equal '(GOBJECT:DEFINE-G-ENUM "GEmblemOrigin" G-EMBLEM-ORIGIN
-                                     (:EXPORT T
-                                      :TYPE-INITIALIZER
-                                      "g_emblem_origin_get_type")
-                                     (:UNKNOWN 0)
-                                     (:DEVICE 1)
-                                     (:LIVEMETADATA 2)
-                                     (:TAG 3))
-             (gobject:get-g-type-definition "GEmblemOrigin"))))
+             (glib-test:list-enum-item-nicks "GEmblemOrigin")))
+  ;; Check enum definition
+  (is (equal '(GOBJECT:DEFINE-GENUM "GEmblemOrigin" GIO:EMBLEM-ORIGIN
+                                    (:EXPORT T
+                                     :TYPE-INITIALIZER
+                                     "g_emblem_origin_get_type")
+                                    (:UNKNOWN 0)
+                                    (:DEVICE 1)
+                                    (:LIVEMETADATA 2)
+                                    (:TAG 3))
+             (gobject:get-gtype-definition "GEmblemOrigin"))))
 
 ;;;     GEmblem
 
 (test g-emblem-class
-  ;; Type check
+  ;; Check type
   (is (g:type-is-object "GEmblem"))
-  ;; Check the registered symbol
+  ;; Check registered symbol
   (is (eq 'gio:emblem
           (glib:symbol-for-gtype "GEmblem")))
-  ;; Check the type initializer
+  ;; Check type initializer
   (is (eq (g:gtype "GEmblem")
           (g:gtype (cffi:foreign-funcall "g_emblem_get_type" :size))))
-  ;; Check the parent
+  ;; Check parent
   (is (eq (g:gtype "GObject")
           (g:type-parent "GEmblem")))
-  ;; Check the children
+  ;; Check children
   (is (equal '()
-             (list-children "GEmblem")))
-  ;; Check the interfaces
+             (glib-test:list-children "GEmblem")))
+  ;; Check interfaces
   (is (equal '("GIcon")
-             (list-interfaces "GEmblem")))
-  ;; Check the class properties
+             (glib-test:list-interfaces "GEmblem")))
+  ;; Check class properties
   (is (equal '("icon" "origin")
-             (list-properties "GEmblem")))
-  ;; Check the list of signals
+             (glib-test:list-properties "GEmblem")))
+  ;; Check signals
   (is (equal '()
-             (list-signals "GEmblem")))
-  ;; Check the class definition
-  (is (equal '(GOBJECT:DEFINE-G-OBJECT-CLASS "GEmblem" G-EMBLEM
-                       (:SUPERCLASS G-OBJECT
+             (glib-test:list-signals "GEmblem")))
+  ;; Check class definition
+  (is (equal '(GOBJECT:DEFINE-GOBJECT "GEmblem" GIO:EMBLEM
+                       (:SUPERCLASS GOBJECT:OBJECT
                         :EXPORT T
                         :INTERFACES ("GIcon")
                         :TYPE-INITIALIZER "g_emblem_get_type")
-                       ((ICON G-EMBLEM-ICON "icon" "GObject" T NIL)
-                        (ORIGIN G-EMBLEM-ORIGIN "origin" "GEmblemOrigin"
-                         T NIL)))
-             (gobject:get-g-type-definition "GEmblem"))))
+                       ((ICON EMBLEM-ICON "icon" "GObject" T NIL)
+                        (ORIGIN EMBLEM-ORIGIN "origin" "GEmblemOrigin" T NIL)))
+             (gobject:get-gtype-definition "GEmblem"))))
 
 ;;; --- Functions --------------------------------------------------------------
 
@@ -81,4 +80,4 @@
 ;;;     g_emblem_get_icon
 ;;;     g_emblem_get_origin
 
-;;; 2024-6-12
+;;; 2024-9-17

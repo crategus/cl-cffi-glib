@@ -10,44 +10,43 @@
 ;;;   GSimpleAction
 
 (test g-simple-action-class
-  ;; Type check
+  ;; Check type
   (is (g:type-is-object "GSimpleAction"))
-  ;; Check the registered symbol
+  ;; Check registered symbol
   (is (eq 'g:simple-action
           (glib:symbol-for-gtype "GSimpleAction")))
-  ;; Check the type initializer
+  ;; Check type initializer
   (is (eq (g:gtype "GSimpleAction")
           (g:gtype (cffi:foreign-funcall "g_simple_action_get_type" :size))))
-  ;; Check the parent
+  ;; Check parent
   (is (eq (g:gtype "GObject")
           (g:type-parent "GSimpleAction")))
-  ;; Check the children
+  ;; Check children
   (is (equal '()
-             (list-children "GSimpleAction")))
-  ;; Check the interfaces
+             (glib-test:list-children "GSimpleAction")))
+  ;; Check interfaces
   (is (equal '("GAction")
-             (list-interfaces "GSimpleAction")))
-  ;; Check the class properties
+             (glib-test:list-interfaces "GSimpleAction")))
+  ;; Check class properties
   (is (equal '("enabled" "name" "parameter-type" "state" "state-type")
-             (list-properties "GSimpleAction")))
-  ;; Check the signals
+             (glib-test:list-properties "GSimpleAction")))
+  ;; Check signals
   (is (equal '("activate" "change-state")
-             (list-signals "GSimpleAction")))
-  ;; Check the class definition
-  (is (equal '(GOBJECT:DEFINE-G-OBJECT-CLASS "GSimpleAction" G-SIMPLE-ACTION
-                        (:SUPERCLASS G-OBJECT
-                         :EXPORT T
-                         :INTERFACES ("GAction")
-                         :TYPE-INITIALIZER "g_simple_action_get_type")
-                       ((ENABLED G-SIMPLE-ACTION-ENABLED "enabled" "gboolean" T
-                         T)
-                        (NAME G-SIMPLE-ACTION-NAME "name" "gchararray" T NIL)
-                        (PARAMETER-TYPE G-SIMPLE-ACTION-PARAMETER-TYPE
+             (glib-test:list-signals "GSimpleAction")))
+  ;; Check class definition
+  (is (equal '(GOBJECT:DEFINE-GOBJECT "GSimpleAction" GIO:SIMPLE-ACTION
+                       (:SUPERCLASS GOBJECT:OBJECT
+                        :EXPORT T
+                        :INTERFACES ("GAction")
+                        :TYPE-INITIALIZER "g_simple_action_get_type")
+                       ((ENABLED SIMPLE-ACTION-ENABLED "enabled" "gboolean" T T)
+                        (NAME SIMPLE-ACTION-NAME "name" "gchararray" T NIL)
+                        (PARAMETER-TYPE SIMPLE-ACTION-PARAMETER-TYPE
                          "parameter-type" "GVariantType" T NIL)
-                        (STATE G-SIMPLE-ACTION-STATE "state" "GVariant" T T)
-                        (STATE-TYPE G-SIMPLE-ACTION-STATE-TYPE "state-type"
-                         "GVariantType" T NIL)))
-             (gobject:get-g-type-definition "GSimpleAction"))))
+                        (STATE SIMPLE-ACTION-STATE "state" "GVariant" T T)
+                        (STATE-TYPE SIMPLE-ACTION-STATE-TYPE
+                         "state-type" "GVariantType" T NIL)))
+             (gobject:get-gtype-definition "GSimpleAction"))))
 
 ;;; --- Properties and Accessors -----------------------------------------------
 
@@ -252,4 +251,4 @@
     ;; The state has not changed.
     (is (= 10 (g:variant-int32 (g:action-state action))))))
 
-;;; 2024-6-12
+;;; 2024-9-18

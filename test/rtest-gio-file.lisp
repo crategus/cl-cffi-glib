@@ -8,56 +8,62 @@
 ;;;     GFilesystemPreviewType
 
 (test g-filesystem-preview-type
-  ;; Check the type
+  ;; Check type
   (is (g:type-is-enum "GFilesystemPreviewType"))
-  ;; Check the type initializer
+  ;; Check type initializer
   (is (eq (g:gtype "GFilesystemPreviewType")
           (g:gtype (cffi:foreign-funcall "g_filesystem_preview_type_get_type"
                                          :size))))
-  ;; Check the registered symbol
+  ;; Check registered symbol
   (is (eq 'gio:filesystem-preview-type
           (glib:symbol-for-gtype "GFilesystemPreviewType")))
-  ;; Check the names
+  ;; Check names
   (is (equal '("G_FILESYSTEM_PREVIEW_TYPE_IF_ALWAYS"
                "G_FILESYSTEM_PREVIEW_TYPE_IF_LOCAL"
                "G_FILESYSTEM_PREVIEW_TYPE_NEVER")
-             (list-enum-item-name "GFilesystemPreviewType")))
-  ;; Check the values
+             (glib-test:list-enum-item-names "GFilesystemPreviewType")))
+  ;; Check values
   (is (equal '(0 1 2)
-             (list-enum-item-value "GFilesystemPreviewType")))
-  ;; Check the nick names
+             (glib-test:list-enum-item-values "GFilesystemPreviewType")))
+  ;; Check nick names
   (is (equal '("if-always" "if-local" "never")
-             (list-enum-item-nick "GFilesystemPreviewType")))
-  ;; Check the enum definition
-  (is (equal '(GOBJECT:DEFINE-G-ENUM "GFilesystemPreviewType"
-                             G-FILESYSTEM-PREVIEW-TYPE
-                             (:EXPORT T
-                              :TYPE-INITIALIZER
-                              "g_filesystem_preview_type_get_type")
-                             (:IF-ALWAYS 0)
-                             (:IF-LOCAL 1)
-                             (:NEVER 2))
-             (gobject:get-g-type-definition "GFilesystemPreviewType"))))
+             (glib-test:list-enum-item-nicks "GFilesystemPreviewType")))
+  ;; Check enum definition
+  (is (equal '(GOBJECT:DEFINE-GENUM "GFilesystemPreviewType"
+                                    GIO:FILESYSTEM-PREVIEW-TYPE
+                                    (:EXPORT T
+                                     :TYPE-INITIALIZER
+                                     "g_filesystem_preview_type_get_type")
+                                    (:IF-ALWAYS 0)
+                                    (:IF-LOCAL 1)
+                                    (:NEVER 2))
+             (gobject:get-gtype-definition "GFilesystemPreviewType"))))
 
 ;;;     GFile
 
 (test g-file-interface
-  ;; Type check
+  ;; Check type
   (is (g:type-is-interface "GFile"))
-  ;; Check the registered symbol
+  ;; Check registered symbol
   (is (eq 'g:file
           (glib:symbol-for-gtype "GFile")))
-  ;; Check the type initializer
+  ;; Check type initializer
   (is (eq (g:gtype "GFile")
           (g:gtype (cffi:foreign-funcall "g_file_get_type" :size))))
-  ;; Get the names of the interface properties.
+  ;; Check interface prerequisites
+  (is (equal '("GObject")
+             (glib-test:list-interface-prerequisites "GFile")))
+  ;; Check interface properties
   (is (equal '()
-             (list-interface-properties "GFile")))
-  ;; Get the interface definition
-  (is (equal '(GOBJECT:DEFINE-G-INTERFACE "GFile" G-FILE
-                                          (:EXPORT T
-                                           :TYPE-INITIALIZER "g_file_get_type"))
-             (gobject:get-g-type-definition "GFile"))))
+             (glib-test:list-interface-properties "GFile")))
+  ;; Check signals
+  (is (equal '()
+             (glib-test:list-signals "GFile")))
+  ;; Check interface definition
+  (is (equal '(GOBJECT:DEFINE-GINTERFACE "GFile" GIO:FILE
+                                         (:EXPORT T
+                                          :TYPE-INITIALIZER "g_file_get_type"))
+             (gobject:get-gtype-definition "GFile"))))
 
 ;;;     GFileQueryInfoFlags
 ;;;     GFileCreateFlags
@@ -336,4 +342,4 @@
 ;;;     g_file_replace_readwrite_finish
 ;;;     g_file_supports_thread_contexts
 
-;;; 2024-6-12
+;;; 2024-9-17

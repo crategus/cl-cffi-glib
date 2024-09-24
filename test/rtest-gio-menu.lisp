@@ -8,64 +8,67 @@
 ;;;     GMenu
 
 (test g-menu-class
-  ;; Type check
+  ;; Check type
   (is (g:type-is-object "GMenu"))
-  ;; Check the registered symbol
+  ;; Check registered symbol
   (is (eq 'g:menu
           (glib:symbol-for-gtype "GMenu")))
-  ;; Check the type initializer
+  ;; Check type initializer
   (is (eq (g:gtype "GMenu")
           (g:gtype (cffi:foreign-funcall "g_menu_get_type" :size))))
-  ;; Check the parent
+  ;; Check parent
   (is (eq (g:gtype "GMenuModel") (g:type-parent "GMenu")))
-  ;; Check the children
+  ;; Check children
   (is (equal '()
-             (list-children "GMenu")))
-  ;; Check the interfaces
+             (glib-test:list-children "GMenu")))
+  ;; Check interfaces
   (is (equal '()
-             (list-interfaces "GMenu")))
-  ;; Check the class properties
+             (glib-test:list-interfaces "GMenu")))
+  ;; Check class properties
   (is (equal '()
-             (list-properties "GMenu")))
-  ;; Check the list of signals
+             (glib-test:list-properties "GMenu")))
+  ;; Check signals
   (is (equal '()
-             (list-signals "GMenu")))
-  ;; Check the class definition
-  (is (equal '(GOBJECT:DEFINE-G-OBJECT-CLASS "GMenu" G-MENU
-                       (:SUPERCLASS G-MENU-MODEL
+             (glib-test:list-signals "GMenu")))
+  ;; Check class definition
+  (is (equal '(GOBJECT:DEFINE-GOBJECT "GMenu" GIO:MENU
+                       (:SUPERCLASS GIO:MENU-MODEL
                         :EXPORT T
                         :INTERFACES NIL
                         :TYPE-INITIALIZER "g_menu_get_type")
                        NIL)
-             (gobject:get-g-type-definition "GMenu"))))
+             (gobject:get-gtype-definition "GMenu"))))
 
 ;;;     GMenuItem
 
 (test g-menu-item-class
-  ;; Type check
+  ;; Check type
   (is (g:type-is-object "GMenuItem"))
-  ;; Check the registered symbol
+  ;; Check registered symbol
   (is (eq 'g:menu-item
           (glib:symbol-for-gtype "GMenuItem")))
-  ;; Check the type initializer
+  ;; Check type initializer
   (is (eq (g:gtype "GMenuItem")
           (g:gtype (cffi:foreign-funcall "g_menu_item_get_type" :size))))
-  ;; Check the parent
+  ;; Check parent
   (is (eq (g:gtype "GObject") (g:type-parent "GMenuItem")))
-  ;; Check the children
+  ;; Check children
   (is (equal '()
-             (list-children "GMenuItem")))
-  ;; Check the interfaces
+             (glib-test:list-children "GMenuItem")))
+  ;; Check interfaces
   (is (equal '()
-             (list-interfaces "GMenuItem")))
-  ;; Check the class properties
+             (glib-test:list-interfaces "GMenuItem")))
+  ;; Check class properties
   (is (equal '()
-             (list-properties "GMenuItem")))
-  ;; Check the class definition
-  (is (equal '(GOBJECT:DEFINE-G-OBJECT-CLASS "GMenuItem" G-MENU-ITEM
-                       (:SUPERCLASS G-OBJECT :EXPORT T :INTERFACES NIL
-                                :TYPE-INITIALIZER "g_menu_item_get_type") NIL)
-             (gobject:get-g-type-definition "GMenuItem"))))
+             (glib-test:list-properties "GMenuItem")))
+  ;; Check class definition
+  (is (equal '(GOBJECT:DEFINE-GOBJECT "GMenuItem" GIO:MENU-ITEM
+                       (:SUPERCLASS GOBJECT:OBJECT
+                        :EXPORT T
+                        :INTERFACES NIL
+                        :TYPE-INITIALIZER "g_menu_item_get_type")
+                       NIL)
+             (gobject:get-gtype-definition "GMenuItem"))))
 
 ;;; --- Functions --------------------------------------------------------------
 
@@ -293,4 +296,4 @@
     (is (typep (setf (g:menu-item-link item "submenu") submenu) 'g:menu-model))
     (is (typep (g:menu-item-link item "submenu") 'g:menu-model))))
 
-;;; 2024-6-12
+;;; 2024-9-18

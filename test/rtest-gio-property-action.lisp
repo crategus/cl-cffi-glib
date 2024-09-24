@@ -8,51 +8,50 @@
 ;;;     GPropertyAction
 
 (test g-property-action-class
-  ;; Type check
+  ;; Check type
   (is (g:type-is-object "GPropertyAction"))
-  ;; Check the registered symbol
+  ;; Check registered symbol
   (is (eq 'g:property-action
           (glib:symbol-for-gtype "GPropertyAction")))
-  ;; Check the type initializer
+  ;; Check type initializer
   (is (eq (g:gtype "GPropertyAction")
           (g:gtype (cffi:foreign-funcall "g_property_action_get_type" :size))))
-  ;; Check the parent
+  ;; Check parent
   (is (eq (g:gtype "GObject")
           (g:type-parent "GPropertyAction")))
-  ;; Check the children
+  ;; Check children
   (is (equal '()
-             (list-children "GPropertyAction")))
-  ;; Check the interfaces
+             (glib-test:list-children "GPropertyAction")))
+  ;; Check interfaces
   (is (equal '("GAction")
-             (list-interfaces "GPropertyAction")))
-  ;; Check the class properties
+             (glib-test:list-interfaces "GPropertyAction")))
+  ;; Check class properties
   (is (equal '("enabled" "invert-boolean" "name" "object" "parameter-type"
                "property-name" "state" "state-type")
-             (list-properties "GPropertyAction")))
+             (glib-test:list-properties "GPropertyAction")))
   (is (equal '()
-             (list-signals "GPropertyAction")))
-  ;; Check the class definition
-  (is (equal '(GOBJECT:DEFINE-G-OBJECT-CLASS "GPropertyAction" G-PROPERTY-ACTION
-                       (:SUPERCLASS G-OBJECT
+             (glib-test:list-signals "GPropertyAction")))
+  ;; Check class definition
+  (is (equal '(GOBJECT:DEFINE-GOBJECT "GPropertyAction" GIO:PROPERTY-ACTION
+                       (:SUPERCLASS GOBJECT:OBJECT
                         :EXPORT T
                         :INTERFACES ("GAction")
                         :TYPE-INITIALIZER "g_property_action_get_type")
-                       ((ENABLED G-PROPERTY-ACTION-ENABLED "enabled" "gboolean"
-                         T NIL)
-                        (INVERT-BOOLEAN G-PROPERTY-ACTION-INVERT-BOOLEAN
+                       ((ENABLED PROPERTY-ACTION-ENABLED
+                         "enabled" "gboolean" T NIL)
+                        (INVERT-BOOLEAN PROPERTY-ACTION-INVERT-BOOLEAN
                          "invert-boolean" "gboolean" T NIL)
-                        (NAME G-PROPERTY-ACTION-NAME "name" "gchararray" T NIL)
-                        (OBJECT G-PROPERTY-ACTION-OBJECT "object" "GObject" NIL
-                         NIL)
-                        (PARAMETER-TYPE G-PROPERTY-ACTION-PARAMETER-TYPE
+                        (NAME PROPERTY-ACTION-NAME "name" "gchararray" T NIL)
+                        (OBJECT PROPERTY-ACTION-OBJECT
+                         "object" "GObject" NIL NIL)
+                        (PARAMETER-TYPE PROPERTY-ACTION-PARAMETER-TYPE
                          "parameter-type" "GVariantType" T NIL)
-                        (PROPERTY-NAME G-PROPERTY-ACTION-PROPERTY-NAME
+                        (PROPERTY-NAME PROPERTY-ACTION-PROPERTY-NAME
                          "property-name" "gchararray" NIL NIL)
-                        (STATE G-PROPERTY-ACTION-STATE "state" "GVariant" T
-                         NIL)
-                        (STATE-TYPE G-PROPERTY-ACTION-STATE-TYPE "state-type"
-                         "GVariantType" T NIL)))
-             (gobject:get-g-type-definition "GPropertyAction"))))
+                        (STATE PROPERTY-ACTION-STATE "state" "GVariant" T NIL)
+                        (STATE-TYPE PROPERTY-ACTION-STATE-TYPE
+                         "state-type" "GVariantType" T NIL)))
+             (gobject:get-gtype-definition "GPropertyAction"))))
 
 ;;; --- Properties -------------------------------------------------------------
 
@@ -133,4 +132,4 @@
     (is (typep (g:property-action-new "action" icon "name")
                 'g:property-action))))
 
-;;; 2024-6-12
+;;; 2024-9-17

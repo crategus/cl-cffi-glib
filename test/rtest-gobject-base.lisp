@@ -58,7 +58,7 @@
 
 (test class-property-pspec
   (let ((pspec nil))
-    ;; Get GParamSpec for the gname and check the values
+    ;; Get GParamSpec for the gname and check values
     (is (typep (setf pspec
                      (gobject::class-property-pspec "GApplication" "flags"))
                'gobject::%param-spec))
@@ -110,17 +110,17 @@
 ;;;     GObject
 
 (test g-object-class
-  ;; Type check
+  ;; Check type
   (is (g:type-is-object "GObject"))
-  ;; Check the registered symbol
+  ;; Check registered symbol
   (is (eq 'g:object
           (glib:symbol-for-gtype "GObject")))
-  ;; Check the type initializer
+  ;; Check type initializer
   (is (eq (g:gtype "GObject")
           (g:gtype (cffi:foreign-funcall "g_object_get_type" :size))))
-  ;; Check the list of signals
+  ;; Check signals
   (is (equal '("notify")
-             (list-signals "GObject"))))
+             (glib-test:list-signals "GObject"))))
 
 ;;; --- Properties -------------------------------------------------------------
 
@@ -372,7 +372,7 @@
     ;; Thaw the notify signal
     (setf message (append message (list "thaw")))
     (is-false (g:object-thaw-notify action))
-    ;; Check the order of the execution
+    ;; Check order of the execution
     (is (equal '("freeze" "thaw" "notify::name") message))))
 
 ;; Counter sample without g-object-freeze-notify
@@ -396,7 +396,7 @@
     ;; Thaw the notify signal
     (setf message (append message (list "thaw")))
 ;    (g-object-thaw-notify button)
-    ;; Check the order of the execution
+    ;; Check order of the execution
     (is (equal '("freeze" "notify::name" "thaw") message))))
 
 ;;;     g-object-data

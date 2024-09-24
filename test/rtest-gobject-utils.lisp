@@ -15,16 +15,15 @@
              (mapcar #'gobject:enum-item-nick
                      (gobject:get-enum-items "GEmblemOrigin")))))
 
-(test get-g-enum-definition
-  (is (equal '(GOBJECT:DEFINE-G-ENUM "GEmblemOrigin"
-                             G-EMBLEM-ORIGIN
-                             (:EXPORT T
-                              :TYPE-INITIALIZER "g_emblem_origin_get_type")
-                             (:UNKNOWN 0)
-                             (:DEVICE 1)
-                             (:LIVEMETADATA 2)
-                             (:TAG 3))
-             (gobject:get-g-enum-definition "GEmblemOrigin"))))
+(test get-genum-definition
+  (is (equal '(GOBJECT:DEFINE-GENUM "GEmblemOrigin" GIO:EMBLEM-ORIGIN
+                       (:EXPORT T
+                        :TYPE-INITIALIZER "g_emblem_origin_get_type")
+                       (:UNKNOWN 0)
+                       (:DEVICE 1)
+                       (:LIVEMETADATA 2)
+                       (:TAG 3))
+             (gobject:get-genum-definition "GEmblemOrigin"))))
 
 (test get-flags-items
   (is (equal '("G_APPLICATION_FLAGS_NONE" "G_APPLICATION_DEFAULT_FLAGS"
@@ -44,22 +43,21 @@
              (mapcar #'gobject:flags-item-nick
                      (gobject:get-flags-items "GApplicationFlags")))))
 
-(test get-g-flags-definition
- (is (equal '(GOBJECT:DEFINE-G-FLAGS "GApplicationFlags"
-                             G-APPLICATION-FLAGS
-                             (:EXPORT T
-                              :TYPE-INITIALIZER "g_application_flags_get_type")
-                             (:FLAGS-NONE 0)
-                             (:DEFAULT-FLAGS 0)
-                             (:IS-SERVICE 1)
-                             (:IS-LAUNCHER 2)
-                             (:HANDLES-OPEN 4)
-                             (:HANDLES-COMMAND-LINE 8)
-                             (:SEND-ENVIRONMENT 16)
-                             (:NON-UNIQUE 32)
-                             (:CAN-OVERRIDE-APP-ID 64)
-                             (:ALLOW-REPLACEMENT 128)
-                             (:REPLACE 256))
-            (gobject:get-g-flags-definition "GApplicationFlags"))))
+(test get-gflags-definition
+ (is (equal '(GOBJECT:DEFINE-GFLAGS "GApplicationFlags" GIO:APPLICATION-FLAGS
+                      (:EXPORT T
+                       :TYPE-INITIALIZER "g_application_flags_get_type")
+                      (:FLAGS-NONE 0)
+                      (:DEFAULT-FLAGS 0)
+                      (:IS-SERVICE 1)
+                      (:IS-LAUNCHER 2)
+                      (:HANDLES-OPEN 4)
+                      (:HANDLES-COMMAND-LINE 8)
+                      (:SEND-ENVIRONMENT 16)
+                      (:NON-UNIQUE 32)
+                      (:CAN-OVERRIDE-APP-ID 64)
+                      (:ALLOW-REPLACEMENT 128)
+                      (:REPLACE 256))
+            (gobject:get-gflags-definition "GApplicationFlags"))))
 
-;;; 2024-6-12
+;;; 2024-9-17

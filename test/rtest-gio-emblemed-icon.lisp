@@ -32,13 +32,13 @@
   (is (equal '()
              (glib-test:list-signals "GEmblemedIcon")))
   ;; Check class definition
-  (is (equal '(GOBJECT:DEFINE-G-OBJECT-CLASS "GEmblemedIcon" G-EMBLEMED-ICON
-                       (:SUPERCLASS G-OBJECT
+  (is (equal '(GOBJECT:DEFINE-GOBJECT "GEmblemedIcon" GIO:EMBLEMED-ICON
+                       (:SUPERCLASS GOBJECT:OBJECT
                         :EXPORT T
                         :INTERFACES ("GIcon")
                         :TYPE-INITIALIZER "g_emblemed_icon_get_type")
-                       ((GICON G-EMBLEMED-ICON-GICON "gicon" "GIcon" T NIL)))
-             (gobject:get-g-type-definition "GEmblemedIcon"))))
+                       ((GICON EMBLEMED-ICON-GICON "gicon" "GIcon" T NIL)))
+             (gobject:get-gtype-definition "GEmblemedIcon"))))
 
 ;;; --- Properties -------------------------------------------------------------
 
@@ -52,4 +52,4 @@
 ;;;     g_emblemed_icon_add_emblem
 ;;;     g_emblemed_icon_clear_emblems
 
-;;; 2024-6-26
+;;; 2024-9-18

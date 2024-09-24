@@ -229,7 +229,7 @@
     (is (= 99.0d0 (g:value-set value 99.0d0 "gdouble")))
     (is (= 99.0d0 (g:value-get value)))))
 
-;; Check the handling of values of GValue type
+;; Check handling of values of GValue type
 #+nil
 (test g-value-get/set.2
   (cffi:with-foreign-objects ((value1 '(:struct g:value))

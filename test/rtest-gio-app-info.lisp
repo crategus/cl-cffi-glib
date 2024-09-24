@@ -8,100 +8,100 @@
 ;;;     GAppInfoCreateFlags
 
 (test g-app-info-create-flags
-  ;; Check the type
+  ;; Check type
   (is (g:type-is-flags "GAppInfoCreateFlags"))
-  ;; Check the registered symbol
+  ;; Check registered symbol
   (is (eq 'g:app-info-create-flags
           (glib:symbol-for-gtype "GAppInfoCreateFlags")))
-  ;; Check the type initializer
+  ;; Check type initializer
   (is (eq (g:gtype "GAppInfoCreateFlags")
           (g:gtype (cffi:foreign-funcall "g_app_info_create_flags_get_type"
                                          :size))))
-  ;; Check the names
+  ;; Check names
   (is (equal '("G_APP_INFO_CREATE_NONE" "G_APP_INFO_CREATE_NEEDS_TERMINAL"
                "G_APP_INFO_CREATE_SUPPORTS_URIS"
                "G_APP_INFO_CREATE_SUPPORTS_STARTUP_NOTIFICATION")
-             (list-flags-item-name "GAppInfoCreateFlags")))
-  ;; Check the values
+             (glib-test:list-flags-item-names "GAppInfoCreateFlags")))
+  ;; Check values
   (is (equal '(0 1 2 4)
-             (list-flags-item-value "GAppInfoCreateFlags")))
-  ;; Check the nick names
+             (glib-test:list-flags-item-values "GAppInfoCreateFlags")))
+  ;; Check nick names
   (is (equal '("none" "needs-terminal" "supports-uris"
                "supports-startup-notification")
-             (list-flags-item-nick "GAppInfoCreateFlags")))
-  ;; Check the flags definition
-  (is (equal '(GOBJECT:DEFINE-G-FLAGS "GAppInfoCreateFlags"
-                              G-APP-INFO-CREATE-FLAGS
-                              (:EXPORT T
-                               :TYPE-INITIALIZER
-                               "g_app_info_create_flags_get_type")
-                              (:NONE 0)
-                              (:NEEDS-TERMINAL 1)
-                              (:SUPPORTS-URIS 2)
-                              (:SUPPORTS-STARTUP-NOTIFICATION 4))
-             (gobject:get-g-type-definition "GAppInfoCreateFlags"))))
+             (glib-test:list-flags-item-nicks "GAppInfoCreateFlags")))
+  ;; Check flags definition
+  (is (equal '(GOBJECT:DEFINE-GFLAGS "GAppInfoCreateFlags"
+                                     GIO:APP-INFO-CREATE-FLAGS
+                                     (:EXPORT T
+                                      :TYPE-INITIALIZER
+                                      "g_app_info_create_flags_get_type")
+                                     (:NONE 0)
+                                     (:NEEDS-TERMINAL 1)
+                                     (:SUPPORTS-URIS 2)
+                                     (:SUPPORTS-STARTUP-NOTIFICATION 4))
+             (gobject:get-gtype-definition "GAppInfoCreateFlags"))))
 
 ;;;     GAppInfo
 
 (test g-app-info-interface
-  ;; Type check
+  ;; Check type
   (is (g:type-is-interface "GAppInfo"))
-  ;; Check the registered symbol
+  ;; Check registered symbol
   (is (eq 'g:app-info
           (glib:symbol-for-gtype "GAppInfo")))
-  ;; Check the type initializer
+  ;; Check type initializer
   (is (eq (g:gtype "GAppInfo")
           (g:gtype (cffi:foreign-funcall "g_app_info_get_type" :size))))
-  ;; Get the names of the interface properties.
+  ;; Check interface prerequisites
+  (is (equal '("GObject")
+             (glib-test:list-interface-prerequisites "GAppInfo")))
+  ;; Check interface properties
   (is (equal '()
-             (list-interface-properties "GAppInfo")))
-  ;; Check the list of signals
+             (glib-test:list-interface-properties "GAppInfo")))
+  ;; Check signals
   (is (equal '()
-             (list-signals "GAppInfo")))
-  ;; Get the interface definition
-  (is (equal '(GOBJECT:DEFINE-G-INTERFACE "GAppInfo" G-APP-INFO
-                                          (:EXPORT T
-                                           :TYPE-INITIALIZER
-                                           "g_app_info_get_type"))
-             (gobject:get-g-type-definition "GAppInfo"))))
+             (glib-test:list-signals "GAppInfo")))
+  ;; Check interface definition
+  (is (equal '(GOBJECT:DEFINE-GINTERFACE "GAppInfo" GIO:APP-INFO
+                       (:EXPORT T
+                        :TYPE-INITIALIZER "g_app_info_get_type"))
+             (gobject:get-gtype-definition "GAppInfo"))))
 
 ;;;     GAppLaunchContext
 
 (test g-app-launch-context-class
-  ;; Type check
+  ;; Check type
   (is (g:type-is-object "GAppLaunchContext"))
-  ;; Check the registered symbol
+  ;; Check registered symbol
   (is (eq 'gio:app-launch-context
           (glib:symbol-for-gtype "GAppLaunchContext")))
-  ;; Check the type initializer
+  ;; Check type initializer
   (is (eq (g:gtype "GAppLaunchContext")
           (g:gtype (cffi:foreign-funcall "g_app_launch_context_get_type"
                                          :size))))
-  ;; Check the parent
+  ;; Check parent
   (is (eq (g:gtype "GObject")
           (g:type-parent "GAppLaunchContext")))
-  ;; Check the children
+  ;; Check children
   (is (equal '()
-             (list-children "GAppLaunchContext")))
-  ;; Check the interfaces
+             (glib-test:list-children "GAppLaunchContext")))
+  ;; Check interfaces
   (is (equal '()
-             (list-interfaces "GAppLaunchContext")))
-  ;; Check the class properties
+             (glib-test:list-interfaces "GAppLaunchContext")))
+  ;; Check class properties
   (is (equal '()
-             (list-properties "GAppLaunchContext")))
-  ;; Check the list of signals
+             (glib-test:list-properties "GAppLaunchContext")))
+  ;; Check signals
   (is (equal '("launch-failed" "launch-started" "launched")
-             (list-signals "GAppLaunchContext")))
-  ;; Check the class definition
-  (is (equal '(GOBJECT:DEFINE-G-OBJECT-CLASS "GAppLaunchContext"
-                                     G-APP-LAUNCH-CONTEXT
-                                     (:SUPERCLASS G-OBJECT
-                                      :EXPORT T
-                                      :INTERFACES NIL
-                                      :TYPE-INITIALIZER
-                                      "g_app_launch_context_get_type")
-                                     NIL)
-             (gobject:get-g-type-definition "GAppLaunchContext"))))
+             (glib-test:list-signals "GAppLaunchContext")))
+  ;; Check class definition
+  (is (equal '(GOBJECT:DEFINE-GOBJECT "GAppLaunchContext" GIO:APP-LAUNCH-CONTEXT
+                       (:SUPERCLASS GOBJECT:OBJECT
+                        :EXPORT T
+                        :INTERFACES NIL
+                        :TYPE-INITIALIZER "g_app_launch_context_get_type")
+                       NIL)
+             (gobject:get-gtype-definition "GAppLaunchContext"))))
 
 ;;; --- Signals ----------------------------------------------------------------
 
@@ -318,4 +318,4 @@
 ;;;     g_app_launch_context_get_startup_notify_id
 ;;;     g_app_launch_context_launch_failed
 
-;;; 2024-6-12
+;;; 2024-9-18

@@ -8,77 +8,77 @@
 ;;;     GPermission
 
 (test g-permission-class
-  ;; Type check
+  ;; Check type
   (is (g:type-is-object "GPermission"))
-  ;; Check the registered symbol
+  ;; Check registered symbol
   (is (eq 'g:permission
           (glib:symbol-for-gtype "GPermission")))
-  ;; Check the type initializer
+  ;; Check type initializer
   (is (eq (g:gtype "GPermission")
           (g:gtype (cffi:foreign-funcall "g_permission_get_type" :size))))
-  ;; Check the parent
+  ;; Check parent
   (is (eq (g:gtype "GObject")
           (g:type-parent "GPermission")))
-  ;; Check the children
+  ;; Check children
   (is (equal '("GSimplePermission")
-             (list-children "GPermission")))
-  ;; Check the interfaces
+             (glib-test:list-children "GPermission")))
+  ;; Check interfaces
   (is (equal '()
-             (list-interfaces "GPermission")))
-  ;; Check the class properties
+             (glib-test:list-interfaces "GPermission")))
+  ;; Check class properties
   (is (equal '("allowed" "can-acquire" "can-release")
-             (list-properties "GPermission")))
-  ;; Check the list of signals
+             (glib-test:list-properties "GPermission")))
+  ;; Check signals
   (is (equal '()
-             (list-signals "GPermission")))
-  ;; Check the class definition
-  (is (equal '(GOBJECT:DEFINE-G-OBJECT-CLASS "GPermission" G-PERMISSION
-                       (:SUPERCLASS G-OBJECT
+             (glib-test:list-signals "GPermission")))
+  ;; Check class definition
+  (is (equal '(GOBJECT:DEFINE-GOBJECT "GPermission" GIO:PERMISSION
+                       (:SUPERCLASS GOBJECT:OBJECT
                         :EXPORT T
                         :INTERFACES NIL
                         :TYPE-INITIALIZER "g_permission_get_type")
-                       ((ALLOWED G-PERMISSION-ALLOWED "allowed" "gboolean" T
-                         NIL)
-                        (CAN-ACQUIRE G-PERMISSION-CAN-ACQUIRE "can-acquire"
-                         "gboolean" T NIL)
-                        (CAN-RELEASE G-PERMISSION-CAN-RELEASE "can-release"
-                         "gboolean" T NIL)))
-             (gobject:get-g-type-definition "GPermission"))))
+                       ((ALLOWED PERMISSION-ALLOWED
+                         "allowed" "gboolean" T NIL)
+                        (CAN-ACQUIRE PERMISSION-CAN-ACQUIRE
+                         "can-acquire" "gboolean" T NIL)
+                        (CAN-RELEASE PERMISSION-CAN-RELEASE
+                         "can-release" "gboolean" T NIL)))
+             (gobject:get-gtype-definition "GPermission"))))
 
 ;;;     GSimplePermission
 
 (test g-simple-permission-class
-  ;; Type check
+  ;; Check type
   (is (g:type-is-object "GSimplePermission"))
-  ;; Check the registered symbol
+  ;; Check registered symbol
   (is (eq 'g:simple-permission
           (glib:symbol-for-gtype "GSimplePermission")))
-  ;; Check the type initializer
+  ;; Check type initializer
   (is (eq (g:gtype "GSimplePermission")
           (g:gtype (cffi:foreign-funcall "g_simple_permission_get_type" :size))))
-  ;; Check the parent
+  ;; Check parent
   (is (eq (g:gtype "GPermission")
           (g:type-parent "GSimplePermission")))
-  ;; Check the children
+  ;; Check children
   (is (equal '()
-             (list-children "GSimplePermission")))
-  ;; Check the interfaces
+             (glib-test:list-children "GSimplePermission")))
+  ;; Check interfaces
   (is (equal '()
-             (list-interfaces "GSimplePermission")))
-  ;; Check the class properties
+             (glib-test:list-interfaces "GSimplePermission")))
+  ;; Check class properties
   (is (equal '()
-             (list-properties "GSimplePermission")))
-  ;; Check the list of signals
+             (glib-test:list-properties "GSimplePermission")))
+  ;; Check signals
   (is (equal '()
-             (list-signals "GSimplePermission")))
-  ;; Check the class definition
-  (is (equal '(GOBJECT:DEFINE-G-OBJECT-CLASS "GSimplePermission"
-                                             G-SIMPLE-PERMISSION
-                               (:SUPERCLASS G-PERMISSION :EXPORT T :INTERFACES
-                                NIL :TYPE-INITIALIZER
-                                "g_simple_permission_get_type")
-                               NIL)
-             (gobject:get-g-type-definition "GSimplePermission"))))
+             (glib-test:list-signals "GSimplePermission")))
+  ;; Check class definition
+  (is (equal '(GOBJECT:DEFINE-GOBJECT "GSimplePermission" GIO:SIMPLE-PERMISSION
+                       (:SUPERCLASS GIO:PERMISSION
+                        :EXPORT T
+                        :INTERFACES NIL
+                        :TYPE-INITIALIZER "g_simple_permission_get_type")
+                       NIL)
+             (gobject:get-gtype-definition "GSimplePermission"))))
 
 ;;; --- Properties -------------------------------------------------------------
 
@@ -108,4 +108,4 @@
 ;;;     g_permission_release_finish
 ;;;     g_permission_impl_update
 
-;;; 2024-6-12
+;;; 2024-9-18

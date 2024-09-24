@@ -8,37 +8,37 @@
 ;;;     GCancellable
 
 (test g-cancellable-class
-  ;; Type check
+  ;; Check type
   (is (g:type-is-object "GCancellable"))
-  ;; Check the registered symbol
+  ;; Check registered symbol
   (is (eq 'g:cancellable
           (glib:symbol-for-gtype "GCancellable")))
-  ;; Check the type initializer
+  ;; Check type initializer
   (is (eq (g:gtype "GCancellable")
           (g:gtype (cffi:foreign-funcall "g_cancellable_get_type" :size))))
-  ;; Check the parent
+  ;; Check parent
   (is (eq (g:gtype "GObject")
           (g:type-parent "GCancellable")))
-  ;; Check the children
+  ;; Check children
   (is (equal '()
-             (list-children "GCancellable")))
-  ;; Check the interfaces
+             (glib-test:list-children "GCancellable")))
+  ;; Check interfaces
   (is (equal '()
-             (list-interfaces "GCancellable")))
-  ;; Check the class properties
+             (glib-test:list-interfaces "GCancellable")))
+  ;; Check class properties
   (is (equal '()
-             (list-properties "GCancellable")))
-  ;; Check the list of signals
+             (glib-test:list-properties "GCancellable")))
+  ;; Check signals
   (is (equal '("cancelled")
-             (list-signals "GCancellable")))
-  ;; Check the class definition
-  (is (equal '(GOBJECT:DEFINE-G-OBJECT-CLASS "GCancellable" G-CANCELLABLE
-                       (:SUPERCLASS G-OBJECT
+             (glib-test:list-signals "GCancellable")))
+  ;; Check class definition
+  (is (equal '(GOBJECT:DEFINE-GOBJECT "GCancellable" GIO:CANCELLABLE
+                       (:SUPERCLASS GOBJECT:OBJECT
                         :EXPORT T
                         :INTERFACES NIL
                         :TYPE-INITIALIZER "g_cancellable_get_type")
                        NIL)
-             (gobject:get-g-type-definition "GCancellable"))))
+             (gobject:get-gtype-definition "GCancellable"))))
 
 ;;; Signals
 
@@ -79,4 +79,4 @@
 ;;;     g_cancellable_disconnect
 ;;;     g_cancellable_cancel
 
-;;; 2024-6-12
+;;; 2024-9-18

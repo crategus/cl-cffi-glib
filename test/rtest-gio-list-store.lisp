@@ -8,39 +8,40 @@
 ;;;     GListStore
 
 (test g-list-store-class
-  ;; Type check
+  ;; Check type
   (is (g:type-is-object "GListStore"))
-  ;; Check the registered symbol
+  ;; Check registered symbol
   (is (eq 'g:list-store
           (glib:symbol-for-gtype "GListStore")))
-  ;; Check the type initializer
+  ;; Check type initializer
   (is (eq (g:gtype "GListStore")
           (g:gtype (cffi:foreign-funcall "g_list_store_get_type" :size))))
-  ;; Check the parent
+  ;; Check parent
   (is (eq (g:gtype "GObject")
           (g:type-parent "GListStore")))
-  ;; Check the children
+  ;; Check children
   (is (equal '()
-             (list-children "GListStore")))
-  ;; Check the interfaces
+             (glib-test:list-children "GListStore")))
+  ;; Check interfaces
   (is (equal '("GListModel")
-             (list-interfaces "GListStore")))
-  ;; Check the class properties
+             (glib-test:list-interfaces "GListStore")))
+  ;; Check class properties
   (is (equal '("item-type" "n-items")
-             (list-properties "GListStore")))
-  ;; Check the signals
+             (glib-test:list-properties "GListStore")))
+  ;; Check signals
   (is (equal '()
-             (list-signals "GListStore")))
-  ;; Check the class definition
-  (is (equal '(GOBJECT:DEFINE-G-OBJECT-CLASS "GListStore" G-LIST-STORE
-                       (:SUPERCLASS G-OBJECT
+             (glib-test:list-signals "GListStore")))
+  ;; Check class definition
+  (is (equal '(GOBJECT:DEFINE-GOBJECT "GListStore" GIO:LIST-STORE
+                       (:SUPERCLASS GOBJECT:OBJECT
                         :EXPORT T
                         :INTERFACES ("GListModel")
                         :TYPE-INITIALIZER "g_list_store_get_type")
-                       ((ITEM-TYPE G-LIST-STORE-ITEM-TYPE "item-type" "GType" T
-                         NIL)
-                        (N-ITEMS G-LIST-STORE-N-ITEMS "n-items" "guint" T NIL)))
-             (gobject:get-g-type-definition "GListStore"))))
+                       ((ITEM-TYPE LIST-STORE-ITEM-TYPE
+                         "item-type" "GType" T NIL)
+                        (N-ITEMS LIST-STORE-N-ITEMS
+                         "n-items" "guint" T NIL)))
+             (gobject:get-gtype-definition "GListStore"))))
 
 ;;; --- Properties -------------------------------------------------------------
 
@@ -270,4 +271,4 @@
                      (string= (g:simple-action-name a)
                               (g:simple-action-name b))))))))
 
-;;; 2024-6-12
+;;; 2024-9-17

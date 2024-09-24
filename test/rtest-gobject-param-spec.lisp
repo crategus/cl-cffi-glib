@@ -5,9 +5,6 @@
 
 ;;; --- Types and Values -------------------------------------------------------
 
-;;;     GParamSpec
-;;;     GParamSpecClass
-
 ;;;     GParamFlags
 
 (test g-param-flags
@@ -42,6 +39,9 @@
                        :static-nick
                        :static-blurb
                        :deprecated)))))
+
+;;;     GParamSpec
+;;;     GParamSpecClass
 
 ;;;     G_PARAM_STATIC_STRINGS
 ;;;     G_PARAM_MASK

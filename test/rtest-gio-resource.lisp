@@ -24,21 +24,21 @@
           (g:gtype (cffi:foreign-funcall "g_resource_flags_get_type" :size))))
   ;; Check names
   (is (equal '("G_RESOURCE_FLAGS_NONE" "G_RESOURCE_FLAGS_COMPRESSED")
-             (list-flags-item-name "GResourceFlags")))
+             (glib-test:list-flags-item-names "GResourceFlags")))
   ;; Check values
   (is (equal '(0 1)
-             (list-flags-item-value "GResourceFlags")))
+             (glib-test:list-flags-item-values "GResourceFlags")))
   ;; Check nick names
   (is (equal '("none" "compressed")
-             (list-flags-item-nick "GResourceFlags")))
+             (glib-test:list-flags-item-nicks "GResourceFlags")))
   ;; Check flags definition
-  (is (equal '(GOBJECT:DEFINE-G-FLAGS "GResourceFlags" G-RESOURCE-FLAGS
-                                      (:EXPORT T
-                                       :TYPE-INITIALIZER
-                                       "g_resource_flags_get_type")
-                                      (:NONE 0)
-                                      (:COMPRESSED 1))
-             (gobject:get-g-type-definition "GResourceFlags"))))
+  (is (equal '(GOBJECT:DEFINE-GFLAGS "GResourceFlags" GIO:RESOURCE-FLAGS
+                                     (:EXPORT T
+                                      :TYPE-INITIALIZER
+                                      "g_resource_flags_get_type")
+                                     (:NONE 0)
+                                     (:COMPRESSED 1))
+             (gobject:get-gtype-definition "GResourceFlags"))))
 
 ;;;     GResourceLookupFlags
 
@@ -54,21 +54,21 @@
                                          :size))))
   ;; Check names
   (is (equal '("G_RESOURCE_LOOKUP_FLAGS_NONE")
-             (list-flags-item-name "GResourceLookupFlags")))
+             (glib-test:list-flags-item-names "GResourceLookupFlags")))
   ;; Check values
   (is (equal '(0)
-             (list-flags-item-value "GResourceLookupFlags")))
+             (glib-test:list-flags-item-values "GResourceLookupFlags")))
   ;; Check nick names
   (is (equal '("none")
-             (list-flags-item-nick "GResourceLookupFlags")))
+             (glib-test:list-flags-item-nicks "GResourceLookupFlags")))
   ;; Check flags definition
-  (is (equal '(GOBJECT:DEFINE-G-FLAGS "GResourceLookupFlags"
-                                      G-RESOURCE-LOOKUP-FLAGS
-                                      (:EXPORT T
-                                       :TYPE-INITIALIZER
-                                       "g_resource_lookup_flags_get_type")
-                                      (:NONE 0))
-             (gobject:get-g-type-definition "GResourceLookupFlags"))))
+  (is (equal '(GOBJECT:DEFINE-GFLAGS "GResourceLookupFlags"
+                                     GIO:RESOURCE-LOOKUP-FLAGS
+                                     (:EXPORT T
+                                      :TYPE-INITIALIZER
+                                      "g_resource_lookup_flags_get_type")
+                                     (:NONE 0))
+             (gobject:get-gtype-definition "GResourceLookupFlags"))))
 
 ;;;     GResource
 
@@ -201,4 +201,4 @@
                      (g:resources-info "/com/crategus/test/application.ui"
                                        :none)))))))
 
-;;; 2024-5-12
+;;; 2024-9-17

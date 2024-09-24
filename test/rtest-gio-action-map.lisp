@@ -13,21 +13,24 @@
   ;; Check registered symbol
   (is (eq 'g:action-map
           (glib:symbol-for-gtype "GActionMap")))
+  ;; Check type initializer
+  (is (eq (g:gtype "GActionMap")
+          (g:gtype (cffi:foreign-funcall "g_action_map_get_type" :size))))
   ;; Check interface prerequisites
   (is (equal '("GObject")
-             (list-interface-prerequisites "GActionMap")))
+             (glib-test:list-interface-prerequisites "GActionMap")))
   ;; Check interface properties.
   (is (equal '()
-             (list-interface-properties "GActionMap")))
+             (glib-test:list-interface-properties "GActionMap")))
   ;; Check signals
   (is (equal '()
-             (list-signals "GActionMap")))
+             (glib-test:list-signals "GActionMap")))
   ;; Check interface definition
-  (is (equal '(GOBJECT:DEFINE-G-INTERFACE "GActionMap" G-ACTION-MAP
+  (is (equal '(GOBJECT:DEFINE-GINTERFACE "GActionMap" GIO:ACTION-MAP
                                           (:EXPORT T
                                            :TYPE-INITIALIZER
                                            "g_action_map_get_type"))
-             (gobject:get-g-type-definition "GActionMap"))))
+             (gobject:get-gtype-definition "GActionMap"))))
 
 ;;; --- Functions --------------------------------------------------------------
 
@@ -88,4 +91,4 @@
     (g:action-map-remove-action group "quit")
     (is-false (g:action-map-lookup-action group "quit"))))
 
-;;; 2024-6-12
+;;; 2024-9-17

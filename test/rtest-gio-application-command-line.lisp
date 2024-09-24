@@ -10,39 +10,39 @@
 ;;;     GApplicationCommandLine
 
 (test g-application-command-line-class
-  ;; Type check
+  ;; Check type
   (is (g:type-is-object "GApplicationCommandLine"))
-  ;; Check the registered symbol
+  ;; Check registered symbol
   (is (eq 'g:application-command-line
           (glib:symbol-for-gtype "GApplicationCommandLine")))
-  ;; Check the parent
+  ;; Check parent
   (is (eq (g:gtype "GObject")
           (g:type-parent "GApplicationCommandLine")))
-  ;; Check the children
+  ;; Check children
   (is (equal '()
-             (list-children "GApplicationCommandLine")))
-  ;; Check the interfaces
+             (glib-test:list-children "GApplicationCommandLine")))
+  ;; Check interfaces
   (is (equal '()
-             (list-interfaces "GApplicationCommandLine")))
-  ;; Check the class properties
+             (glib-test:list-interfaces "GApplicationCommandLine")))
+  ;; Check class properties
   (is (equal '("arguments" "is-remote" "options" "platform-data")
-             (list-properties "GApplicationCommandLine")))
-  ;; Check the class definition
-  (is (equal '(GOBJECT:DEFINE-G-OBJECT-CLASS "GApplicationCommandLine"
-                                      G-APPLICATION-COMMAND-LINE
-                       (:SUPERCLASS G-OBJECT
+             (glib-test:list-properties "GApplicationCommandLine")))
+  ;; Check class definition
+  (is (equal '(GOBJECT:DEFINE-GOBJECT "GApplicationCommandLine"
+                                      GIO:APPLICATION-COMMAND-LINE
+                       (:SUPERCLASS GOBJECT:OBJECT
                         :EXPORT T
                         :INTERFACES NIL
                         :TYPE-INITIALIZER "g_application_command_line_get_type")
-                       ((ARGUMENTS G-APPLICATION-COMMAND-LINE-ARGUMENTS
+                       ((ARGUMENTS APPLICATION-COMMAND-LINE-ARGUMENTS
                          "arguments" "GVariant" NIL NIL)
-                        (IS-REMOTE G-APPLICATION-COMMAND-LINE-IS-REMOTE
+                        (IS-REMOTE APPLICATION-COMMAND-LINE-IS-REMOTE
                          "is-remote" "gboolean" T NIL)
-                        (OPTIONS G-APPLICATION-COMMAND-LINE-OPTIONS "options"
-                         "GVariant" NIL NIL)
-                        (PLATFORM-DATA G-APPLICATION-COMMAND-LINE-PLATFORM-DATA
+                        (OPTIONS APPLICATION-COMMAND-LINE-OPTIONS
+                         "options" "GVariant" NIL NIL)
+                        (PLATFORM-DATA APPLICATION-COMMAND-LINE-PLATFORM-DATA
                          "platform-data" "GVariant" NIL NIL)))
-             (gobject:get-g-type-definition "GApplicationCommandLine"))))
+             (gobject:get-gtype-definition "GApplicationCommandLine"))))
 
 ;;; --- Properties and Accessors -----------------------------------------------
 
@@ -100,4 +100,4 @@
 ;;;     g_application_command_line_print
 ;;;     g_application_command_line_printerr
 
-;;; 2024-6-12
+;;; 2024-9-17

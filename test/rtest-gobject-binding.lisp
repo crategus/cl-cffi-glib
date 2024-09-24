@@ -35,23 +35,23 @@
   ;; Check names
   (is (equal '("G_BINDING_DEFAULT" "G_BINDING_BIDIRECTIONAL"
                "G_BINDING_SYNC_CREATE" "G_BINDING_INVERT_BOOLEAN")
-             (glib-test:list-flags-item-name "GBindingFlags")))
+             (glib-test:list-flags-item-names "GBindingFlags")))
   ;; Check values
   (is (equal '(0 1 2 4)
-             (glib-test:list-flags-item-value "GBindingFlags")))
+             (glib-test:list-flags-item-values "GBindingFlags")))
   ;; Check nick names
   (is (equal '("default" "bidirectional" "sync-create" "invert-boolean")
-             (glib-test:list-flags-item-nick "GBindingFlags")))
+             (glib-test:list-flags-item-nicks "GBindingFlags")))
   ;; Check flags definition
-  (is (equal '(GOBJECT:DEFINE-G-FLAGS "GBindingFlags" G-BINDING-FLAGS
-                                      (:EXPORT T
-                                       :TYPE-INITIALIZER
-                                       "g_binding_flags_get_type")
-                                      (:DEFAULT 0)
-                                      (:BIDIRECTIONAL 1)
-                                      (:SYNC-CREATE 2)
-                                      (:INVERT-BOOLEAN 4))
-             (gobject:get-g-type-definition "GBindingFlags"))))
+  (is (equal '(GOBJECT:DEFINE-GFLAGS "GBindingFlags" GOBJECT:BINDING-FLAGS
+                                     (:EXPORT T
+                                      :TYPE-INITIALIZER
+                                      "g_binding_flags_get_type")
+                                     (:DEFAULT 0)
+                                     (:BIDIRECTIONAL 1)
+                                     (:SYNC-CREATE 2)
+                                     (:INVERT-BOOLEAN 4))
+             (gobject:get-gtype-definition "GBindingFlags"))))
 
 ;;;     GBinding
 
@@ -79,19 +79,19 @@
   (is (equal '()
              (glib-test:list-signals "GBinding")))
   ;; Check class definition
-  (is (equal '(GOBJECT:DEFINE-G-OBJECT-CLASS "GBinding" G-BINDING
-                       (:SUPERCLASS G-OBJECT
+  (is (equal '(GOBJECT:DEFINE-GOBJECT "GBinding" GOBJECT:BINDING
+                       (:SUPERCLASS GOBJECT:OBJECT
                         :EXPORT T
                         :INTERFACES NIL
                         :TYPE-INITIALIZER "g_binding_get_type")
-                       ((FLAGS G-BINDING-FLAGS "flags" "GBindingFlags" T NIL)
-                        (SOURCE G-BINDING-SOURCE "source" "GObject" T NIL)
-                        (SOURCE-PROPERTY G-BINDING-SOURCE-PROPERTY
+                       ((FLAGS BINDING-FLAGS "flags" "GBindingFlags" T NIL)
+                        (SOURCE BINDING-SOURCE "source" "GObject" T NIL)
+                        (SOURCE-PROPERTY BINDING-SOURCE-PROPERTY
                          "source-property" "gchararray" T NIL)
-                        (TARGET G-BINDING-TARGET "target" "GObject" T NIL)
-                        (TARGET-PROPERTY G-BINDING-TARGET-PROPERTY
+                        (TARGET BINDING-TARGET "target" "GObject" T NIL)
+                        (TARGET-PROPERTY BINDING-TARGET-PROPERTY
                          "target-property" "gchararray" T NIL)))
-             (gobject:get-g-type-definition "GBinding"))))
+             (gobject:get-gtype-definition "GBinding"))))
 
 ;;; --- Properties -------------------------------------------------------------
 
@@ -265,4 +265,4 @@
   (is-true (g:simple-action-enabled action1))
   (is-true (g:simple-action-enabled action2))))
 
-;;; 2024-6-17
+;;; 2024-9-18

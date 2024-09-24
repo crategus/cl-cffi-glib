@@ -8,29 +8,29 @@
 ;;;     GListModel
 
 (test g-list-model-interface
-  ;; Type check
+  ;; Check type
   (is (g:type-is-interface "GListModel"))
-  ;; Check the registered symbol
+  ;; Check registered symbol
   (is (eq 'g:list-model
           (glib:symbol-for-gtype "GListModel")))
-  ;; Check the type initializer
+  ;; Check type initializer
   (is (eq (g:gtype "GListModel")
           (g:gtype (cffi:foreign-funcall "g_list_model_get_type" :size))))
-  ;; Check the interface prerequisites
+  ;; Check interface prerequisites
   (is (equal '("GObject")
-             (list-interface-prerequisites "GListModel")))
-  ;; Check the interface properties
+             (glib-test:list-interface-prerequisites "GListModel")))
+  ;; Check interface properties
   (is (equal '()
-             (list-interface-properties "GListModel")))
-  ;; Check the list of signals
+             (glib-test:list-interface-properties "GListModel")))
+  ;; Check signals
   (is (equal '("items-changed")
-             (list-signals "GListModel")))
-  ;; Get the interface definition
-  (is (equal '(GOBJECT:DEFINE-G-INTERFACE "GListModel" G-LIST-MODEL
-                                          (:EXPORT T
-                                           :TYPE-INITIALIZER
-                                           "g_list_model_get_type"))
-             (gobject:get-g-type-definition "GListModel"))))
+             (glib-test:list-signals "GListModel")))
+  ;; Check interface definition
+  (is (equal '(GOBJECT:DEFINE-GINTERFACE "GListModel" GIO:LIST-MODEL
+                                         (:EXPORT T
+                                          :TYPE-INITIALIZER
+                                          "g_list_model_get_type"))
+             (gobject:get-gtype-definition "GListModel"))))
 
 ;;; --- Signals ----------------------------------------------------------------
 
@@ -92,4 +92,4 @@
 
 ;;;     g_list_model_items_changed
 
-;;; 2024-6-12
+;;; 2024-9-17

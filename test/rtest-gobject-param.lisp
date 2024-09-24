@@ -29,19 +29,19 @@
                                                    "Documentation"
                                                    t
                                                   '(:readable :writable)))))
-    ;; Type checks
+    ;; Check type
     (is-true (g:type-is-param (g:type-from-instance pspec)))
     (is-true (g:is-param-spec pspec))
     (is (eq (g:gtype "GParamBoolean") (g:param-spec-type pspec)))
     (is (string= "GParamBoolean" (g:param-spec-type-name pspec)))
     (is (eq (g:gtype "gboolean") (g:param-spec-value-type pspec)))
-    ;; Check the default value
+    ;; Check default value
     (is (eq (g:gtype "gboolean")
             (g:value-type (g:param-spec-default-value pspec))))
     (is-true (gobject:parse-g-value (g:param-spec-default-value pspec)))
     (is-false (g:param-value-set-default pspec value))
     (is-true (gobject:parse-g-value value)) ; the default value is t
-    ;; Check the infos about the parameter
+    ;; Check infos about the parameter
     (is (string= "myBoolean" (g:param-spec-name pspec)))
     (is (string= "myBool" (g:param-spec-nick pspec)))
     (is (string= "Documentation" (g:param-spec-blurb pspec)))
@@ -88,13 +88,13 @@
                                            (char-code #\Z)
                                            (char-code #\D)
                                            '(:readable :writable)))))
-    ;; Type checks
+    ;; Check type
     (is-true (g:type-is-param (g:type-from-instance pspec)))
     (is-true (g:is-param-spec pspec))
     (is (eq (g:gtype "GParamChar") (g:param-spec-type pspec)))
     (is (string= "GParamChar" (g:param-spec-type-name pspec)))
     (is (eq (g:gtype "gchar") (g:param-spec-value-type pspec)))
-    ;; Check the default value
+    ;; Check default value
     (is (eq (g:gtype "gchar")
             (g:value-type (g:param-spec-default-value pspec))))
     (is-true (gobject:parse-g-value (g:param-spec-default-value pspec)))
@@ -112,7 +112,7 @@
     (is-false (g:param-value-defaults pspec value))
     (is-false (g:param-value-set-default pspec value))
     (is-true (g:param-value-defaults pspec value))
-    ;; Check the infos about the parameter
+    ;; Check infos about the parameter
     (is (string= "myChar" (g:param-spec-name pspec)))
     (is (string= "myChar" (g:param-spec-nick pspec)))
     (is (string= "Documentation" (g:param-spec-blurb pspec)))
@@ -167,13 +167,13 @@
                                             (char-code #\Z)
                                             (char-code #\D)
                                             '(:readable :writable)))))
-    ;; Type checks
+    ;; Check type
     (is-true (g:type-is-param (g:type-from-instance pspec)))
     (is-true (g:is-param-spec pspec))
     (is (eq (g:gtype "GParamUChar") (g:param-spec-type pspec)))
     (is (string= "GParamUChar" (g:param-spec-type-name pspec)))
     (is (eq (g:gtype "guchar") (g:param-spec-value-type pspec)))
-    ;; Check the default value
+    ;; Check default value
     (is (eq (g:gtype "guchar")
             (g:value-type (g:param-spec-default-value pspec))))
     (is-true (gobject:parse-g-value (g:param-spec-default-value pspec)))
@@ -191,7 +191,7 @@
     (is-false (g:param-value-defaults pspec value))
     (is-false (g:param-value-set-default pspec value))
     (is-true (g:param-value-defaults pspec value))
-    ;; Check the infos about the parameter
+    ;; Check infos about the parameter
     (is (string= "myUChar" (g:param-spec-name pspec)))
     (is (string= "myUChar" (g:param-spec-nick pspec)))
     (is (string= "Documentation" (g:param-spec-blurb pspec)))
@@ -236,13 +236,13 @@
                                           150
                                           100
                                           '(:readable :writable)))))
-    ;; Type checks
+    ;; Check type
     (is-true (g:type-is-param (g:type-from-instance pspec)))
     (is-true (g:is-param-spec pspec))
     (is (eq (g:gtype "GParamInt") (g:param-spec-type pspec)))
     (is (string= "GParamInt" (g:param-spec-type-name pspec)))
     (is (eq (g:gtype "gint") (g:param-spec-value-type pspec)))
-    ;; Check the default value
+    ;; Check default value
     (is (eq (g:gtype "gint")
             (g:value-type (g:param-spec-default-value pspec))))
     (is-true (gobject:parse-g-value (g:param-spec-default-value pspec)))
@@ -259,7 +259,7 @@
     (is-false (g:param-value-defaults pspec value))
     (is-false (g:param-value-set-default pspec value))
     (is-true (g:param-value-defaults pspec value))
-    ;; Check the infos about the parameter
+    ;; Check infos about the parameter
     (is (string= "myInteger" (g:param-spec-name pspec)))
     (is (string= "myInt" (g:param-spec-nick pspec)))
     (is (string= "Documentation" (g:param-spec-blurb pspec)))
@@ -304,13 +304,13 @@
                                            150
                                            100
                                            '(:readable :writable)))))
-    ;; Type checks
+    ;; Check type
     (is-true (g:type-is-param (g:type-from-instance pspec)))
     (is-true (g:is-param-spec pspec))
     (is (eq (g:gtype "GParamUInt") (g:param-spec-type pspec)))
     (is (string= "GParamUInt" (g:param-spec-type-name pspec)))
     (is (eq (g:gtype "guint") (g:param-spec-value-type pspec)))
-    ;; Check the default value
+    ;; Check default value
     (is (eq (g:gtype "guint")
             (g:value-type (g:param-spec-default-value pspec))))
     (is-true (gobject:parse-g-value (g:param-spec-default-value pspec)))
@@ -327,7 +327,7 @@
     (is-false (g:param-value-defaults pspec value))
     (is-false (g:param-value-set-default pspec value))
     (is-true (g:param-value-defaults pspec value))
-    ;; Check the infos about the parameter
+    ;; Check infos about the parameter
     (is (string= "myUnsignedInteger" (g:param-spec-name pspec)))
     (is (string= "myUInt" (g:param-spec-nick pspec)))
     (is (string= "Documentation" (g:param-spec-blurb pspec)))
@@ -375,13 +375,13 @@
                                            150
                                            100
                                            '(:readable :writable)))))
-    ;; Type checks
+    ;; Check type
     (is-true (g:type-is-param (g:type-from-instance pspec)))
     (is-true (g:is-param-spec pspec))
     (is (eq (g:gtype "GParamLong") (g:param-spec-type pspec)))
     (is (string= "GParamLong" (g:param-spec-type-name pspec)))
     (is (eq (g:gtype "glong") (g:param-spec-value-type pspec)))
-    ;; Check the default value
+    ;; Check default value
     (is (eq (g:gtype "glong")
             (g:value-type (g:param-spec-default-value pspec))))
     (is-true (gobject:parse-g-value (g:param-spec-default-value pspec)))
@@ -398,7 +398,7 @@
     (is-false (g:param-value-defaults pspec value))
     (is-false (g:param-value-set-default pspec value))
     (is-true (g:param-value-defaults pspec value))
-    ;; Check the infos about the parameter
+    ;; Check infos about the parameter
     (is (string= "myLong" (g:param-spec-name pspec)))
     (is (string= "myLong" (g:param-spec-nick pspec)))
     (is (string= "Documentation" (g:param-spec-blurb pspec)))
@@ -446,13 +446,13 @@
                                             150
                                             100
                                             '(:readable :writable)))))
-    ;; Type checks
+    ;; Check type
     (is-true (g:type-is-param (g:type-from-instance pspec)))
     (is-true (g:is-param-spec pspec))
     (is (eq (g:gtype "GParamULong") (g:param-spec-type pspec)))
     (is (string= "GParamULong" (g:param-spec-type-name pspec)))
     (is (eq (g:gtype "gulong") (g:param-spec-value-type pspec)))
-    ;; Check the default value
+    ;; Check default value
     (is (eq (g:gtype "gulong")
             (g:value-type (g:param-spec-default-value pspec))))
     (is-true (gobject:parse-g-value (g:param-spec-default-value pspec)))
@@ -469,7 +469,7 @@
     (is-false (g:param-value-defaults pspec value))
     (is-false (g:param-value-set-default pspec value))
     (is-true (g:param-value-defaults pspec value))
-    ;; Check the infos about the parameter
+    ;; Check infos about the parameter
     (is (string= "myUnsignedLong" (g:param-spec-name pspec)))
     (is (string= "myULong" (g:param-spec-nick pspec)))
     (is (string= "Documentation" (g:param-spec-blurb pspec)))
@@ -514,13 +514,13 @@
                                             150
                                             100
                                             '(:readable :writable)))))
-    ;; Type checks
+    ;; Check type
     (is-true (g:type-is-param (g:type-from-instance pspec)))
     (is-true (g:is-param-spec pspec))
     (is (eq (g:gtype "GParamInt64") (g:param-spec-type pspec)))
     (is (string= "GParamInt64" (g:param-spec-type-name pspec)))
     (is (eq (g:gtype "gint64") (g:param-spec-value-type pspec)))
-    ;; Check the default value
+    ;; Check default value
     (is (eq (g:gtype "gint64")
             (g:value-type (g:param-spec-default-value pspec))))
     (is-true (gobject:parse-g-value (g:param-spec-default-value pspec)))
@@ -537,7 +537,7 @@
     (is-false (g:param-value-defaults pspec value))
     (is-false (g:param-value-set-default pspec value))
     (is-true (g:param-value-defaults pspec value))
-    ;; Check the infos about the parameter
+    ;; Check infos about the parameter
     (is (string= "myInt64" (g:param-spec-name pspec)))
     (is (string= "myInt64" (g:param-spec-nick pspec)))
     (is (string= "Documentation" (g:param-spec-blurb pspec)))
@@ -582,13 +582,13 @@
                                              150
                                              100
                                              '(:readable :writable)))))
-    ;; Type checks
+    ;; Check type
     (is-true (g:type-is-param (g:type-from-instance pspec)))
     (is-true (g:is-param-spec pspec))
     (is (eq (g:gtype "GParamUInt64") (g:param-spec-type pspec)))
     (is (string= "GParamUInt64" (g:param-spec-type-name pspec)))
     (is (eq (g:gtype "guint64") (g:param-spec-value-type pspec)))
-    ;; Check the default value
+    ;; Check default value
     (is (eq (g:gtype "guint64")
             (g:value-type (g:param-spec-default-value pspec))))
     (is-true (gobject:parse-g-value (g:param-spec-default-value pspec)))
@@ -605,7 +605,7 @@
     (is-false (g:param-value-defaults pspec value))
     (is-false (g:param-value-set-default pspec value))
     (is-true (g:param-value-defaults pspec value))
-    ;; Check the infos about the parameter
+    ;; Check infos about the parameter
     (is (string= "myUsignedInt64" (g:param-spec-name pspec)))
     (is (string= "myUInt64" (g:param-spec-nick pspec)))
     (is (string= "Documentation" (g:param-spec-blurb pspec)))
@@ -650,7 +650,7 @@
                                             150.0
                                             100.0
                                             '(:readable :writable)))))
-    ;; Type checks
+    ;; Check type
     (is-true (g:type-is-param (g:type-from-instance pspec)))
     (is-true (g:is-param-spec pspec))
     (is (eq (g:gtype "GParamFloat") (g:param-spec-type pspec)))
@@ -673,7 +673,7 @@
     (is-false (g:param-value-defaults pspec value))
     (is-false (g:param-value-set-default pspec value))
     (is-true (g:param-value-defaults pspec value))
-    ;; Check the infos about the parameter
+    ;; Check infos about the parameter
     (is (string= "myFloat" (g:param-spec-name pspec)))
     (is (string= "myFloat" (g:param-spec-nick pspec)))
     (is (string= "Documentation" (g:param-spec-blurb pspec)))
@@ -718,13 +718,13 @@
                                              150.0d0
                                              100.0d0
                                              '(:readable :writable)))))
-    ;; Type checks
+    ;; Check type
     (is-true (g:type-is-param (g:type-from-instance pspec)))
     (is-true (g:is-param-spec pspec))
     (is (eq (g:gtype "GParamDouble") (g:param-spec-type pspec)))
     (is (string= "GParamDouble" (g:param-spec-type-name pspec)))
     (is (eq (g:gtype "gdouble") (g:param-spec-value-type pspec)))
-    ;; Check the default value
+    ;; Check default value
     (is (eq (g:gtype "gdouble")
             (g:value-type (g:param-spec-default-value pspec))))
     (is-true (gobject:parse-g-value (g:param-spec-default-value pspec)))
@@ -741,7 +741,7 @@
     (is-false (g:param-value-defaults pspec value))
     (is-false (g:param-value-set-default pspec value))
     (is-true (g:param-value-defaults pspec value))
-    ;; Check the infos about the parameter
+    ;; Check infos about the parameter
     (is (string= "myDouble" (g:param-spec-name pspec)))
     (is (string= "myDouble" (g:param-spec-nick pspec)))
     (is (string= "Documentation" (g:param-spec-blurb pspec)))
@@ -785,7 +785,7 @@
                                                 "GEmblemOrigin"
                                                 0 ; for :unkown
                                                 '(:readable :writable)))))
-    ;; Type checks
+    ;; Check type
     (is-true (g:type-is-param (g:type-from-instance pspec)))
     (is-true (g:is-param-spec pspec))
     (is (eq (g:gtype "GParamEnum") (g:param-spec-type pspec)))
@@ -849,7 +849,7 @@
                                             "GApplicationFlags"
                                             1 ; for :is-service
                                             '(:readable :writable)))))
-    ;; Type checks
+    ;; Check type
     (is-true (g:type-is-param (g:type-from-instance pspec)))
     (is-true (g:is-param-spec pspec))
     (is (eq (g:gtype "GParamFlags") (g:param-spec-type pspec)))
@@ -914,7 +914,7 @@
                                              "Documentation"
                                              "string"
                                              '(:readable :writable)))))
-    ;; Type checks
+    ;; Check type
     (is-true (g:type-is-param (g:type-from-instance pspec)))
     (is-true (g:is-param-spec pspec))
     (is (eq (g:gtype "GParamString") (g:param-spec-type pspec)))
@@ -978,7 +978,7 @@
                                             "Documentation"
                                             "GParamBoolean"
                                             '(:readable :writable)))))
-    ;; Type checks
+    ;; Check type
     (is-true (g:type-is-param (g:type-from-instance pspec)))
     (is-true (g:is-param-spec pspec))
     (is (eq (g:gtype "GParamParam") (g:param-spec-type pspec)))
@@ -1044,7 +1044,7 @@
                                                  "Documentation"
                                                  "GBytes"
                                                  '(:readable :writable)))))
-    ;; Type checks
+    ;; Check type
     (is-true (g:type-is-param (g:type-from-instance pspec)))
     (is-true (g:is-param-spec pspec))
     (is (eq (g:gtype "GParamBoxed") (g:param-spec-type pspec)))

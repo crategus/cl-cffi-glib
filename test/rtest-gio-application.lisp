@@ -22,32 +22,32 @@
                "G_APPLICATION_SEND_ENVIRONMENT" "G_APPLICATION_NON_UNIQUE"
                "G_APPLICATION_CAN_OVERRIDE_APP_ID"
                "G_APPLICATION_ALLOW_REPLACEMENT" "G_APPLICATION_REPLACE")
-             (list-flags-item-name "GApplicationFlags")))
+             (glib-test:list-flags-item-names "GApplicationFlags")))
   ;; Check values
   (is (equal '(0 0 1 2 4 8 16 32 64 128 256)
-             (list-flags-item-value "GApplicationFlags")))
+             (glib-test:list-flags-item-values "GApplicationFlags")))
   ;; Check nick names
   (is (equal '("flags-none" "default-flags" "is-service" "is-launcher"
                "handles-open" "handles-command-line" "send-environment"
                "non-unique" "can-override-app-id" "allow-replacement" "replace")
-             (list-flags-item-nick "GApplicationFlags")))
+             (glib-test:list-flags-item-nicks "GApplicationFlags")))
   ;; Check flags definition
-  (is (equal '(GOBJECT:DEFINE-G-FLAGS "GApplicationFlags" G-APPLICATION-FLAGS
-                                      (:EXPORT T
-                                       :TYPE-INITIALIZER
-                                       "g_application_flags_get_type")
-                                      (:FLAGS-NONE 0)
-                                      (:DEFAULT-FLAGS 0)
-                                      (:IS-SERVICE 1)
-                                      (:IS-LAUNCHER 2)
-                                      (:HANDLES-OPEN 4)
-                                      (:HANDLES-COMMAND-LINE 8)
-                                      (:SEND-ENVIRONMENT 16)
-                                      (:NON-UNIQUE 32)
-                                      (:CAN-OVERRIDE-APP-ID 64)
-                                      (:ALLOW-REPLACEMENT 128)
-                                      (:REPLACE 256))
-             (gobject:get-g-type-definition "GApplicationFlags"))))
+  (is (equal '(GOBJECT:DEFINE-GFLAGS "GApplicationFlags" GIO:APPLICATION-FLAGS
+                                     (:EXPORT T
+                                      :TYPE-INITIALIZER
+                                      "g_application_flags_get_type")
+                                     (:FLAGS-NONE 0)
+                                     (:DEFAULT-FLAGS 0)
+                                     (:IS-SERVICE 1)
+                                     (:IS-LAUNCHER 2)
+                                     (:HANDLES-OPEN 4)
+                                     (:HANDLES-COMMAND-LINE 8)
+                                     (:SEND-ENVIRONMENT 16)
+                                     (:NON-UNIQUE 32)
+                                     (:CAN-OVERRIDE-APP-ID 64)
+                                     (:ALLOW-REPLACEMENT 128)
+                                     (:REPLACE 256))
+             (gobject:get-gtype-definition "GApplicationFlags"))))
 
 ;;;     GApplication
 
@@ -61,45 +61,42 @@
   (is (eq (g:gtype "GObject") (g:type-parent "GApplication")))
   ;; Check children
   (is (equal '()
-             (list-children "GApplication")))
+             (glib-test:list-children "GApplication")))
   ;; Check interfaces
   (is (equal '("GActionGroup" "GActionMap")
-             (list-interfaces "GApplication")))
+             (glib-test:list-interfaces "GApplication")))
   ;; Check class properties
   (is (equal '("action-group" "application-id" "flags" "inactivity-timeout"
                "is-busy" "is-registered" "is-remote" "resource-base-path"
                "version")
-             (list-properties "GApplication")))
+             (glib-test:list-properties "GApplication")))
   (is (equal '("activate" "command-line" "handle-local-options" "name-lost"
                "open" "shutdown" "startup")
-             (list-signals "GApplication")))
+             (glib-test:list-signals "GApplication")))
   ;; Check class definition
-  (is (equal '(GOBJECT:DEFINE-G-OBJECT-CLASS "GApplication" G-APPLICATION
-                               (:SUPERCLASS G-OBJECT
-                                :EXPORT T
-                                :INTERFACES ("GActionGroup" "GActionMap")
-                                :TYPE-INITIALIZER "g_application_get_type")
-                               ((ACTION-GROUP G-APPLICATION-ACTION-GROUP
-                                 "action-group" "GActionGroup" NIL T)
-                                (APPLICATION-ID G-APPLICATION-APPLICATION-ID
-                                 "application-id" "gchararray" T T)
-                                (FLAGS G-APPLICATION-FLAGS "flags"
-                                 "GApplicationFlags" T T)
-                                (INACTIVITY-TIMEOUT
-                                 G-APPLICATION-INACTIVITY-TIMEOUT
-                                 "inactivity-timeout" "guint" T T)
-                                (IS-BUSY G-APPLICATION-IS-BUSY "is-busy"
-                                 "gboolean" T NIL)
-                                (IS-REGISTERED G-APPLICATION-IS-REGISTERED
-                                 "is-registered" "gboolean" T NIL)
-                                (IS-REMOTE G-APPLICATION-IS-REMOTE "is-remote"
-                                 "gboolean" T NIL)
-                                (RESOURCE-BASE-PATH
-                                 G-APPLICATION-RESOURCE-BASE-PATH
-                                 "resource-base-path" "gchararray" T T)
-                                (VERSION G-APPLICATION-VERSION "version"
-                                 "gchararray" T T)))
-             (gobject:get-g-type-definition "GApplication"))))
+  (is (equal '(GOBJECT:DEFINE-GOBJECT "GApplication" GIO:APPLICATION
+                       (:SUPERCLASS GOBJECT:OBJECT
+                        :EXPORT T
+                        :INTERFACES ("GActionGroup" "GActionMap")
+                        :TYPE-INITIALIZER "g_application_get_type")
+                       ((ACTION-GROUP APPLICATION-ACTION-GROUP
+                         "action-group" "GActionGroup" NIL T)
+                        (APPLICATION-ID APPLICATION-APPLICATION-ID
+                         "application-id" "gchararray" T T)
+                        (FLAGS APPLICATION-FLAGS
+                         "flags" "GApplicationFlags" T T)
+                        (INACTIVITY-TIMEOUT APPLICATION-INACTIVITY-TIMEOUT
+                         "inactivity-timeout" "guint" T T)
+                        (IS-BUSY APPLICATION-IS-BUSY "is-busy" "gboolean" T NIL)
+                        (IS-REGISTERED APPLICATION-IS-REGISTERED
+                         "is-registered" "gboolean" T NIL)
+                        (IS-REMOTE APPLICATION-IS-REMOTE
+                         "is-remote" "gboolean" T NIL)
+                        (RESOURCE-BASE-PATH APPLICATION-RESOURCE-BASE-PATH
+                         "resource-base-path" "gchararray" T T)
+                        (VERSION APPLICATION-VERSION
+                         "version" "gchararray" T T)))
+             (gobject:get-gtype-definition "GApplication"))))
 
 ;;; --- Properties and Accessors -----------------------------------------------
 
@@ -319,4 +316,4 @@
 ;;;     g_application_bind_busy_property
 ;;;     g_application_unbind_busy_property
 
-;;; 2024-6-12
+;;; 2024-9-18

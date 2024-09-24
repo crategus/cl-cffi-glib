@@ -28,17 +28,16 @@
   ;; Check class properties
   (is (equal '()
              (glib-test:list-properties "FileInfo")))
-  ;; Check list of signals
+  ;; Check signals
   (is (equal '()
              (glib-test:list-signals "FileInfo")))
   ;; Check class definition
-  (is (equal '(DEFINE-G-OBJECT-CLASS "GAppLaunchContext"
-                                     G-APP-LAUNCH-CONTEXT
-                                     (:SUPERCLASS G-OBJECT
-                                      :EXPORT T
-                                      :INTERFACES NIL)
-                                     NIL)
-             (gobject:get-g-type-definition "FileInfo"))))
+  (is (equal '(DEFINE-GOBJECT-CLASS "GFileInfo" GIO:FILE-INFO
+                                    (:SUPERCLASS GOBJECT:OBJECT
+                                     :EXPORT T
+                                     :INTERFACES NIL)
+                                    NIL)
+             (gobject:get-gtype-definition "GFileInfo"))))
 
 ;;; --- Functions --------------------------------------------------------------
 
@@ -115,4 +114,4 @@
 ;;;     g_file_info_set_symlink_target
 ;;;     g_file_info_unset_attribute_mask
 
-;;; 2024-8-22
+;;; 2024-9-17

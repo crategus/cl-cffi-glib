@@ -8,12 +8,12 @@
 ;;;     GBytes
 
 (test g-bytes-structure
-  ;; Type check
+  ;; Check type
   (is (g:type-is-a (g:gtype "GBytes") (g:gtype "GBoxed")))
-  ;; Check the type initializer
+  ;; Check type initializer
   (is (eq (g:gtype "GBytes")
           (g:gtype (cffi:foreign-funcall "g_bytes_get_type" :size))))
-  ;; Get the boxed info
+  ;; Check boxed info
   (is (eq 'glib::boxed-opaque-info
           (type-of (glib:get-boxed-info "GBytes"))))
   (is (eq 'glib::bytes (glib::boxed-info-name (glib:get-boxed-info "GBytes"))))
@@ -78,4 +78,4 @@
 ;;;     g_bytes_unref_to_data
 ;;;     g_bytes_unref_to_array
 
-;;; --- 2023-6-22 --------------------------------------------------------------
+;;; 2024-9-17

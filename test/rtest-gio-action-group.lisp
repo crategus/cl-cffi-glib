@@ -32,27 +32,29 @@
 ;;;     GActionGroup
 
 (test g-action-group-interface
-  ;; Type check
+  ;; Check type
   (is (g:type-is-interface "GActionGroup"))
-  ;; Check the registered symbol
+  ;; Check registered symbol
   (is (eq 'g:action-group
           (glib:symbol-for-gtype "GActionGroup")))
-  ;; Check the type initializer
+  ;; Check type initializer
   (is (eq (g:gtype "GActionGroup")
           (g:gtype (cffi:foreign-funcall "g_action_group_get_type" :size))))
-  ;; Get the names of the interface properties.
+  ;; Check interface prerequisites
+  (is (equal '("GObject")
+             (glib-test:list-interface-prerequisites "GActionGroup")))
+  ;; Check interface properties
   (is (equal '()
-             (list-interface-properties "GActionGroup")))
-  ;; Check the list of signals
+             (glib-test:list-interface-properties "GActionGroup")))
+  ;; Check signals
   (is (equal '("action-added" "action-enabled-changed" "action-removed"
                "action-state-changed")
-             (list-signals "GActionGroup")))
-  ;; Get the interface definition
-  (is (equal '(GOBJECT:DEFINE-G-INTERFACE "GActionGroup" G-ACTION-GROUP
-                                          (:EXPORT T
-                                           :TYPE-INITIALIZER
-                                           "g_action_group_get_type"))
-             (gobject:get-g-type-definition "GActionGroup"))))
+             (glib-test:list-signals "GActionGroup")))
+  ;; Check interface definition
+  (is (equal '(GOBJECT:DEFINE-GINTERFACE "GActionGroup" GIO:ACTION-GROUP
+                       (:EXPORT T
+                        :TYPE-INITIALIZER "g_action_group_get_type"))
+             (gobject:get-gtype-definition "GActionGroup"))))
 
 ;;; --- Signals ----------------------------------------------------------------
 
@@ -204,4 +206,4 @@
 ;;;     g_action_group_action_enabled_changed
 ;;;     g_action_group_action_state_changed
 
-;;; 2024-6-12
+;;; 2024-9-17

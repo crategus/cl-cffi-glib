@@ -46,35 +46,35 @@
                                              nil)              ; properties
 
 (test clock1-class
-  ;; Type check
+  ;; Check type
   (is (g:type-is-object "GClock1"))
-  ;; Check the registered symbol
+  ;; Check registered symbol
   (is (eq 'clock1
           (glib:symbol-for-gtype "GClock1")))
-  ;; Check the type initializer
+  ;; Check type initializer
   ;; no type initializer
-  ;; Check the parent
+  ;; Check parent
   (is (eq (g:gtype "GObject")
           (g:type-parent "GClock1")))
-  ;; Check the children
+  ;; Check children
   (is (equal '()
-             (list-children "GClock1")))
-  ;; Check the interfaces
+             (glib-test:list-children "GClock1")))
+  ;; Check interfaces
   (is (equal '()
-             (list-interfaces "GClock1")))
-  ;; Check the class properties
+             (glib-test:list-interfaces "GClock1")))
+  ;; Check class properties
   (is (equal '()
-             (list-properties "GClock1")))
-  ;; Check the list of signals
+             (glib-test:list-properties "GClock1")))
+  ;; Check signals
   (is (equal '()
-             (list-signals "GClock1")))
+             (glib-test:list-signals "GClock1")))
   ;; Check the class definition
-  (is (equal '(GOBJECT:DEFINE-G-OBJECT-CLASS "GClock1" G-CLOCK1
-                               (:SUPERCLASS G-OBJECT
-                                :EXPORT T
-                                :INTERFACES NIL)
-                               NIL)
-             (gobject:get-g-type-definition "GClock1"))))
+  (is (equal '(GOBJECT:DEFINE-GOBJECT "GClock1" CLOCK1
+                       (:SUPERCLASS GOBJECT:OBJECT
+                        :EXPORT T
+                        :INTERFACES NIL)
+                       NIL)
+             (gobject:get-gtype-definition "GClock1"))))
 
 (test register-object-type-implementation.1
   (let ((info (gobject::get-subclass-info "GClock1"))
@@ -115,34 +115,35 @@
                                                t t)))
 
 (test clock2-class
-  ;; Type check
+  ;; Check type
   (is (g:type-is-object "GClock2"))
-  ;; Check the registered symbol
+  ;; Check registered symbol
   (is (eq 'clock2
           (glib:symbol-for-gtype "GClock2")))
-  ;; Check the type initializer
+  ;; Check type initializer
   ;; no type initializer
-  ;; Check the parent
+  ;; Check parent
   (is (eq (g:gtype "GObject")
           (g:type-parent "GClock2")))
-  ;; Check the children
+  ;; Check children
   (is (equal '()
-             (list-children "GClock2")))
-  ;; Check the interfaces
+             (glib-test:list-children "GClock2")))
+  ;; Check interfaces
   (is (equal '()
-             (list-interfaces "GClock2")))
-  ;; Check the class properties
+             (glib-test:list-interfaces "GClock2")))
+  ;; Check class properties
   (is (equal '("location")
-             (list-properties "GClock2")))
-  ;; Check the list of signals
+             (glib-test:list-properties "GClock2")))
+  ;; Check signals
   (is (equal '()
-             (list-signals "GClock2")))
-  ;; Check the class definition
-  (is (equal '(GOBJECT:DEFINE-G-OBJECT-CLASS "GClock2" G-CLOCK2
-                               (:SUPERCLASS G-OBJECT :EXPORT T :INTERFACES NIL)
-                               ((LOCATION G-CLOCK2-LOCATION "location"
-                                 "gchararray" T T)))
-             (gobject:get-g-type-definition "GClock2"))))
+             (glib-test:list-signals "GClock2")))
+  ;; Check class definition
+  (is (equal '(GOBJECT:DEFINE-GOBJECT "GClock2" CLOCK2
+                       (:SUPERCLASS GOBJECT:OBJECT
+                        :EXPORT T
+                        :INTERFACES NIL)
+                       ((LOCATION CLOCK2-LOCATION "location" "gchararray" T T)))
+             (gobject:get-gtype-definition "GClock2"))))
 
 (test register-object-type-implementation.2
   (let ((info (gobject::get-subclass-info "GClock2"))
@@ -199,11 +200,11 @@
 ;;;   );
 ;;;   GVariant* (* serialize) (
 ;;;     GIcon* icon
-;;;   ); 
+;;;   );
 ;;; }
 
 ;;; We must define a vtable to use the GIcon interface in a subclass
-;;; We do not override any of the virtual functions, but define the correct 
+;;; We do not override any of the virtual functions, but define the correct
 ;;; size of the vtable.
 
 (gobject:define-vtable ("GIcon" icon)
@@ -239,35 +240,35 @@
                                                t t)))
 
 (test clock3-class
-  ;; Type check
+  ;; Check type
   (is (g:type-is-object "GClock3"))
-  ;; Check the registered symbol
+  ;; Check registered symbol
   (is (eq 'clock3
           (glib:symbol-for-gtype "GClock3")))
-  ;; Check the type initializer
+  ;; Check type initializer
   ;; no type initializer
-  ;; Check the parent
+  ;; Check parent
   (is (eq (g:gtype "GObject")
           (g:type-parent "GClock3")))
-  ;; Check the children
+  ;; Check children
   (is (equal '()
-             (list-children "GClock3")))
-  ;; Check the interfaces
+             (glib-test:list-children "GClock3")))
+  ;; Check interfaces
   (is (equal '("GIcon")
-             (list-interfaces "GClock3")))
-  ;; Check the class properties
+             (glib-test:list-interfaces "GClock3")))
+  ;; Check class properties
   (is (equal '("location")
-             (list-properties "GClock3")))
-  ;; Check the list of signals
+             (glib-test:list-properties "GClock3")))
+  ;; Check signals
   (is (equal '()
-             (list-signals "GClock3")))
-  ;; Check the class definition
-  (is (equal '(GOBJECT:DEFINE-G-OBJECT-CLASS "GClock3" G-CLOCK3
-                               (:SUPERCLASS G-OBJECT :EXPORT T :INTERFACES
-                                ("GIcon"))
-                               ((LOCATION G-CLOCK3-LOCATION "location"
-                                 "gchararray" T T)))
-             (gobject:get-g-type-definition "GClock3"))))
+             (glib-test:list-signals "GClock3")))
+  ;; Check class definition
+  (is (equal '(GOBJECT:DEFINE-GOBJECT "GClock3" CLOCK3
+                       (:SUPERCLASS GOBJECT:OBJECT
+                        :EXPORT T
+                        :INTERFACES ("GIcon"))
+                       ((LOCATION CLOCK3-LOCATION "location" "gchararray" T T)))
+             (gobject:get-gtype-definition "GClock3"))))
 
 (test register-object-type-implementation.3
   (let ((info (gobject::get-subclass-info "GClock3"))
@@ -314,35 +315,35 @@
         :accessor clock4-location)))
 
 (test clock4-class
-  ;; Type check
+  ;; Check type
   (is (g:type-is-object "GClock4"))
-  ;; Check the registered symbol
+  ;; Check registered symbol
   (is (eq 'clock4
           (glib:symbol-for-gtype "GClock4")))
-  ;; Check the type initializer
+  ;; Check type initializer
   ;; no type initializer
-  ;; Check the parent
+  ;; Check parent
   (is (eq (g:gtype "GObject")
           (g:type-parent "GClock4")))
-  ;; Check the children
+  ;; Check children
   (is (equal '()
-             (list-children "GClock4")))
-  ;; Check the interfaces
+             (glib-test:list-children "GClock4")))
+  ;; Check interfaces
   (is (equal '()
-             (list-interfaces "GClock4")))
-  ;; Check the class properties
+             (glib-test:list-interfaces "GClock4")))
+  ;; Check class properties
   (is (equal '()
-             (list-properties "GClock4")))
-  ;; Check the list of signals
+             (glib-test:list-properties "GClock4")))
+  ;; Check signals
   (is (equal '()
-             (list-signals "GClock4")))
-  ;; Check the class definition
-  (is (equal '(GOBJECT:DEFINE-G-OBJECT-CLASS "GClock4" G-CLOCK4
-                               (:SUPERCLASS G-OBJECT
-                                :EXPORT T
-                                :INTERFACES NIL)
-                               NIL)
-             (gobject:get-g-type-definition "GClock4"))))
+             (glib-test:list-signals "GClock4")))
+  ;; Check class definition
+  (is (equal '(GOBJECT:DEFINE-GOBJECT "GClock4" CLOCK4
+                       (:SUPERCLASS GOBJECT:OBJECT
+                        :EXPORT T
+                        :INTERFACES NIL)
+                       NIL)
+             (gobject:get-gtype-definition "GClock4"))))
 
 (test filter-properties-to-register.clock4
   (let ((properties '((:cl timezone
@@ -365,10 +366,10 @@
                  (typep property 'gobject::property))
                (setf properties
                      (mapcar #'gobject::parse-property properties))))
-    (is (equal '((TIMEZONE :INITFORM LOCAL-TIME:+UTC-ZONE+ 
+    (is (equal '((TIMEZONE :INITFORM LOCAL-TIME:+UTC-ZONE+
                            :ACCESSOR CLOCK4-TIMEZONE)
-                 (LOCATION :INITFORM "UTC" 
-                           :ACCESSOR CLOCK4-LOCATION)) 
+                 (LOCATION :INITFORM "UTC"
+                           :ACCESSOR CLOCK4-LOCATION))
                (mapcar (lambda (property)
                          (gobject::property->slot "Clock4" property))
                        properties)))))
@@ -404,34 +405,35 @@
     "location" "gchararray" t t)))
 
 (test clock5-class
-  ;; Type check
+  ;; Check type
   (is (g:type-is-object "GClock5"))
-  ;; Check the registered symbol
+  ;; Check registered symbol
   (is (eq 'clock5
           (glib:symbol-for-gtype "GClock5")))
-  ;; Check the type initializer
+  ;; Check type initializer
   ;; no type initializer
-  ;; Check the parent
+  ;; Check parent
   (is (eq (g:gtype "GObject")
           (g:type-parent "GClock5")))
-  ;; Check the children
+  ;; Check children
   (is (equal '()
-             (list-children "GClock5")))
-  ;; Check the interfaces
+             (glib-test:list-children "GClock5")))
+  ;; Check interfaces
   (is (equal '()
-             (list-interfaces "GClock5")))
-  ;; Check the class properties
+             (glib-test:list-interfaces "GClock5")))
+  ;; Check class properties
   (is (equal '("location")
-             (list-properties "GClock5")))
-  ;; Check the list of signals
+             (glib-test:list-properties "GClock5")))
+  ;; Check signals
   (is (equal '()
-             (list-signals "GClock5")))
-  ;; Check the class definition
-  (is (equal '(GOBJECT:DEFINE-G-OBJECT-CLASS "GClock5" G-CLOCK5
-                               (:SUPERCLASS G-OBJECT :EXPORT T :INTERFACES NIL)
-                               ((LOCATION G-CLOCK5-LOCATION "location"
-                                 "gchararray" T T)))
-             (gobject:get-g-type-definition "GClock5"))))
+             (glib-test:list-signals "GClock5")))
+  ;; Check class definition
+  (is (equal '(GOBJECT:DEFINE-GOBJECT "GClock5" CLOCK5
+                       (:SUPERCLASS GOBJECT:OBJECT
+                        :EXPORT T
+                        :INTERFACES NIL)
+                       ((LOCATION CLOCK5-LOCATION "location" "gchararray" T T)))
+             (gobject:get-gtype-definition "GClock5"))))
 
 (test filter-properties-to-register.clock5
   (let ((properties '((:cl timezone
@@ -454,12 +456,12 @@
                  (typep property 'gobject::property))
                (setf properties
                      (mapcar #'gobject::parse-property properties))))
-    (is (equal '((TIMEZONE :INITFORM LOCAL-TIME:+UTC-ZONE+ 
+    (is (equal '((TIMEZONE :INITFORM LOCAL-TIME:+UTC-ZONE+
                            :ACCESSOR CLOCK5-TIMEZONE)
-                 (LOCATION :ALLOCATION :GOBJECT-PROPERTY 
+                 (LOCATION :ALLOCATION :GOBJECT-PROPERTY
                            :G-PROPERTY-TYPE "gchararray"
-                           :ACCESSOR CLOCK5-LOCATION 
-                           :INITARG :LOCATION 
+                           :ACCESSOR CLOCK5-LOCATION
+                           :INITARG :LOCATION
                            :G-PROPERTY-NAME "location"))
                (mapcar (lambda (property)
                          (gobject::property->slot "Clock5" property))
@@ -473,7 +475,7 @@
     (is (eq 'clock5 (gobject::subclass-info-class info)))
     (is (string= "GObject" (gobject::subclass-info-parent info)))
     (is (equal '() (gobject::subclass-info-interfaces info)))
-    (is (equal '(("location" "gchararray" CLOCK5-LOCATION T T)) 
+    (is (equal '(("location" "gchararray" CLOCK5-LOCATION T T))
                (gobject::subclass-info-properties info)))
 
     ;; Create an instance and access the properties
@@ -494,5 +496,5 @@
     (is (string= "UTC" (setf (g:object-property clock "location") "UTC")))
     (is (string= "UTC" (g:object-property clock "location")))
     (is (string= "abc" (setf (clock5-location clock) "abc")))))
-  
-;;; --- 2023-11-13 -------------------------------------------------------------
+
+;;; 2024-9-18

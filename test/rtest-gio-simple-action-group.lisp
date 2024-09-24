@@ -6,36 +6,36 @@
 ;;;   GSimpleActionGroup
 
 (test g-simple-action-group-class
-  ;; Type check
+  ;; Check type
   (is (g:type-is-object "GSimpleActionGroup"))
-  ;; Check the registered symbol
+  ;; Check registered symbol
   (is (eq 'g:simple-action-group
           (glib:symbol-for-gtype "GSimpleActionGroup")))
-  ;; Check the parent
+  ;; Check parent
   (is (eq (g:gtype "GObject")
           (g:type-parent "GSimpleActionGroup")))
-  ;; Check the children
+  ;; Check children
 ;  TODO: In a second run we have the child "GApplicationExportedActions
 ;  (is (equal '()
 ;             (mapcar #'g:type-name (g:type-children "GSimpleActionGroup"))))
-  ;; Check the interfaces
+  ;; Check interfaces
   (is (equal '("GActionGroup" "GActionMap")
-             (list-interfaces "GSimpleActionGroup")))
-  ;; Check the class properties
+             (glib-test:list-interfaces "GSimpleActionGroup")))
+  ;; Check class properties
   (is (equal '()
-              (list-properties "GSimpleActionGroup")))
-  ;; Check the signals
+              (glib-test:list-properties "GSimpleActionGroup")))
+  ;; Check signals
   (is (equal '()
-             (list-signals "GSimpleActionGroup")))
-  ;; Check the class definition
-  (is (equal '(GOBJECT:DEFINE-G-OBJECT-CLASS "GSimpleActionGroup"
-                                             G-SIMPLE-ACTION-GROUP
-                       (:SUPERCLASS G-OBJECT
+             (glib-test:list-signals "GSimpleActionGroup")))
+  ;; Check class definition
+  (is (equal '(GOBJECT:DEFINE-GOBJECT "GSimpleActionGroup"
+                                      GIO:SIMPLE-ACTION-GROUP
+                       (:SUPERCLASS GOBJECT:OBJECT
                         :EXPORT T
                         :INTERFACES ("GActionGroup" "GActionMap")
                         :TYPE-INITIALIZER "g_simple_action_group_get_type")
                        NIL)
-             (gobject:get-g-type-definition "GSimpleActionGroup"))))
+             (gobject:get-gtype-definition "GSimpleActionGroup"))))
 
 ;;; --- Functions --------------------------------------------------------------
 
@@ -87,4 +87,4 @@
     (is (typep (g:simple-action-group-lookup group "copy") 'g:simple-action))
     (is (typep (g:simple-action-group-lookup group "paste") 'g:simple-action))))
 
-;;; 2024-6-12
+;;; 2024-9-17

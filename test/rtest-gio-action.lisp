@@ -15,27 +15,30 @@
   ;; Check registered symbol
   (is (eq 'g:action
           (glib:symbol-for-gtype "GAction")))
-  ;; Check interface properties.
+  ;; Check type initializer
+  (is (eq (g:gtype "GAction")
+          (g:gtype (cffi:foreign-funcall "g_action_get_type" :size))))
+  ;; Check interface prerequisites
+  (is (equal '("GObject")
+             (glib-test:list-interface-prerequisites "GAction")))
+  ;; Check interface properties
   (is (equal '("enabled" "name" "parameter-type" "state" "state-type")
-             (list-interface-properties "GAction")))
+             (glib-test:list-interface-properties "GAction")))
   ;; Check signals
   (is (equal '()
-             (list-signals "GAction")))
+             (glib-test:list-signals "GAction")))
   ;; Check interface definition
-  (is (equal '(GOBJECT:DEFINE-G-INTERFACE "GAction" G-ACTION
-                                  (:EXPORT T
-                                   :TYPE-INITIALIZER "g_action_get_type")
-                                  (ENABLED G-ACTION-ENABLED
-                                   "enabled" "gboolean" T NIL)
-                                  (NAME G-ACTION-NAME
-                                   "name" "gchararray" T NIL)
-                                  (PARAMETER-TYPE G-ACTION-PARAMETER-TYPE
-                                   "parameter-type" "GVariantType" T NIL)
-                                  (STATE G-ACTION-STATE
-                                   "state" "GVariant" T NIL)
-                                  (STATE-TYPE G-ACTION-STATE-TYPE
-                                   "state-type" "GVariantType" T NIL))
-             (gobject:get-g-type-definition "GAction"))))
+  (is (equal '(GOBJECT:DEFINE-GINTERFACE "GAction" GIO:ACTION
+                       (:EXPORT T
+                        :TYPE-INITIALIZER "g_action_get_type")
+                       (ENABLED ACTION-ENABLED "enabled" "gboolean" T NIL)
+                       (NAME ACTION-NAME "name" "gchararray" T NIL)
+                       (PARAMETER-TYPE ACTION-PARAMETER-TYPE
+                        "parameter-type" "GVariantType" T NIL)
+                       (STATE ACTION-STATE "state" "GVariant" T NIL)
+                       (STATE-TYPE ACTION-STATE-TYPE
+                        "state-type" "GVariantType" T NIL))
+             (gobject:get-gtype-definition "GAction"))))
 
 ;;; --- Properties and Accessors -----------------------------------------------
 
@@ -184,4 +187,4 @@
   (is (string= "test(12)"
                (g:action-print-detailed-name "test" (g:variant-new-int32 12)))))
 
-;;; 2024-5-14
+;;; 2024-9-18

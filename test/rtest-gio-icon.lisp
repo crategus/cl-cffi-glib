@@ -6,25 +6,28 @@
 ;;;     GIcon
 
 (test g-icon-interface
-  ;; Type check
+  ;; Check type
   (is (g:type-is-interface "GIcon"))
-  ;; Check the registered symbol
+  ;; Check registered symbol
   (is (eq 'g:icon
           (glib:symbol-for-gtype "GIcon")))
-  ;; Check the type initializer
+  ;; Check type initializer
   (is (eq (g:gtype "GIcon")
           (g:gtype (cffi:foreign-funcall "g_icon_get_type" :size))))
-  ;; Get the names of the interface properties.
+  ;; Check interface prerequisites
+  (is (equal '("GObject")
+             (glib-test:list-interface-prerequisites "GIcon")))
+  ;; Check interface properties
   (is (equal '()
-             (list-interface-properties "GIcon")))
-  ;; Check the list of signals
+             (glib-test:list-interface-properties "GIcon")))
+  ;; Check signals
   (is (equal '()
-             (list-signals "GIcon")))
-  ;; Get the interface definition
-  (is (equal '(GOBJECT:DEFINE-G-INTERFACE "GIcon" G-ICON
-                                          (:EXPORT T
-                                           :TYPE-INITIALIZER "g_icon_get_type"))
-             (gobject:get-g-type-definition "GIcon"))))
+             (glib-test:list-signals "GIcon")))
+  ;; Check interface definition
+  (is (equal '(GOBJECT:DEFINE-GINTERFACE "GIcon" GIO:ICON
+                                         (:EXPORT T
+                                          :TYPE-INITIALIZER "g_icon_get_type"))
+             (gobject:get-gtype-definition "GIcon"))))
 
 ;;;   g_icon_hash
 
@@ -85,4 +88,4 @@
     (is (cffi:pointerp value))
     (is (typep (g:icon-deserialize value) 'g:icon))))
 
-;;; --- 2023-7-9 ---------------------------------------------------------------
+;;; 2024-9-17

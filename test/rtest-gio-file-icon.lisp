@@ -8,37 +8,37 @@
 ;;;     GFileIcon
 
 (test g-file-icon-class
-  ;; Type check
+  ;; Check type
   (is (g:type-is-object "GFileIcon"))
-  ;; Check the registered symbol
+  ;; Check registered symbol
   (is (eq 'g:file-icon
           (glib:symbol-for-gtype "GFileIcon")))
-  ;; Check the type initializer
+  ;; Check type initializer
   (is (eq (g:gtype "GFileIcon")
           (g:gtype (cffi:foreign-funcall "g_file_icon_get_type" :size))))
-  ;; Check the parent
+  ;; Check parent
   (is (eq (g:gtype "GObject")
           (g:type-parent "GFileIcon")))
-  ;; Check the children
+  ;; Check children
   (is (equal '()
-             (list-children "GFileIcon")))
-  ;; Check the interfaces
+             (glib-test:list-children "GFileIcon")))
+  ;; Check interfaces
   (is (equal '("GIcon" "GLoadableIcon")
-             (list-interfaces "GFileIcon")))
-  ;; Check the class properties
+             (glib-test:list-interfaces "GFileIcon")))
+  ;; Check class properties
   (is (equal '("file")
-             (list-properties "GFileIcon")))
-  ;; Check the list of signals
+             (glib-test:list-properties "GFileIcon")))
+  ;; Check signals
   (is (equal '()
-             (list-signals "GFileIcon")))
-  ;; Check the class definition
-  (is (equal '(GOBJECT:DEFINE-G-OBJECT-CLASS "GFileIcon" G-FILE-ICON
-                       (:SUPERCLASS G-OBJECT
+             (glib-test:list-signals "GFileIcon")))
+  ;; Check class definition
+  (is (equal '(GOBJECT:DEFINE-GOBJECT "GFileIcon" GIO:FILE-ICON
+                       (:SUPERCLASS GOBJECT:OBJECT
                         :EXPORT T
                         :INTERFACES ("GIcon" "GLoadableIcon")
                         :TYPE-INITIALIZER "g_file_icon_get_type")
-                       ((FILE G-FILE-ICON-FILE "file" "GFile" T NIL)))
-             (gobject:get-g-type-definition "GFileIcon"))))
+                       ((FILE FILE-ICON-FILE "file" "GFile" T NIL)))
+             (gobject:get-gtype-definition "GFileIcon"))))
 
 ;;; --- Properties -------------------------------------------------------------
 
@@ -56,4 +56,4 @@
     (is (string= "gtk-logo-24.png"
                  (g:file-basename (g:file-icon-file icon))))))
 
-;;; 2024-6-14
+;;; 2024-9-17

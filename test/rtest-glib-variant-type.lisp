@@ -13,9 +13,9 @@
 ;;;     GVariantType
 
 (test g-variant-type-struct
-  ;; Type check
+  ;; Check type
   (is (g:type-is-boxed "GVariantType"))
-  ;; Check the type initializer
+  ;; Check type initializer
   (is (eq (g:gtype "GVariantType")
           (g:gtype (cffi:foreign-funcall "g_variant_type_get_gtype" :size)))))
 
@@ -271,4 +271,4 @@
     (is (string= "n" (g:variant-type-dup-string (g:variant-type-key dict))))
     (is (string= "b" (g:variant-type-dup-string (g:variant-type-value dict))))))
 
-;;; --- 2023-6-26 --------------------------------------------------------------
+;;; 2024-9-17
