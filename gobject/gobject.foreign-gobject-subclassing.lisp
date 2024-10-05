@@ -600,7 +600,7 @@
          `(,(property-name property)
            ,@(cl-property-args property)))))
 
-(defmacro define-g-object-subclass (g-type-name name
+(defmacro define-gobject-subclass (g-type-name name
                                     (&key (superclass 'object)
                                           (export t)
                                           interfaces)
@@ -680,6 +680,6 @@
                           props)))
 )))
 
-(export 'define-g-object-subclass)
+(export 'define-gobject-subclass)
 
 ;;; --- End of file gobject.foreign-gobject-subclassing.lisp -------------------

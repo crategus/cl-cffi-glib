@@ -303,7 +303,7 @@
 
 ;;;     Define clock4
 
-(gobject:define-g-object-subclass "GClock4" clock4
+(gobject:define-gobject-subclass "GClock4" clock4
   (:superclass g:object
    :export t
    :interfaces ())
@@ -393,7 +393,7 @@
 
 ;;;     Define clock5
 
-(gobject:define-g-object-subclass "GClock5" clock5
+(gobject:define-gobject-subclass "GClock5" clock5
   (:superclass g:object
    :export nil
    :interfaces ())
