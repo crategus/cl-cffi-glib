@@ -1,7 +1,7 @@
 ;;; ----------------------------------------------------------------------------
 ;;; glib.error.lisp
 ;;;
-;;; The documentation of this file is taken from the GLib 2.76 Reference
+;;; The documentation of this file is taken from the GLib 2.80 Reference
 ;;; Manual and modified to document the Lisp binding to the GLib library.
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
 ;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
@@ -40,6 +40,10 @@
 ;;;     with-g-error
 ;;;     with-ignore-g-error
 ;;;     with-catching-g-error
+;;;
+;;;     with-error
+;;;     with-ignore-error
+;;;     with-catching-error
 ;;; ----------------------------------------------------------------------------
 
 (in-package :glib)
@@ -65,7 +69,7 @@
 (export 'error)
 
 ;;; ----------------------------------------------------------------------------
-;;; struct GError                                          not exported
+;;; GError                                                  not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcstruct %g-error
@@ -74,14 +78,14 @@
   (%message :string))
 
 ;;; ----------------------------------------------------------------------------
-;;; g_clear_error                                          not exported
+;;; g_clear_error                                           not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_clear_error" %g-clear-error) :void
   (err :pointer))
 
 ;;; ----------------------------------------------------------------------------
-;;; g_set_error_error_literal                              not exported
+;;; g_set_error_error_literal                               not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_set_error_literal" %g-set-error-literal) :void
@@ -129,7 +133,22 @@
        (maybe-raise-g-error-condition (cffi:mem-ref ,err :pointer))
        (%g-clear-error ,err))))
 
+(defmacro with-error ((err) &body body)
+  `(cffi:with-foreign-object (,err :pointer)
+     (setf (cffi:mem-ref ,err :pointer) (cffi:null-pointer))
+     (unwind-protect
+       (progn ,@body)
+       (maybe-raise-g-error-condition (cffi:mem-ref ,err :pointer))
+       (%g-clear-error ,err))))
+
 (defmacro with-ignore-g-error ((err) &body body)
+  `(cffi:with-foreign-object (,err :pointer)
+     (setf (cffi:mem-ref ,err :pointer) (cffi:null-pointer))
+     (unwind-protect
+       (progn ,@body)
+       (%g-clear-error ,err))))
+
+(defmacro with-ignore-error ((err) &body body)
   `(cffi:with-foreign-object (,err :pointer)
      (setf (cffi:mem-ref ,err :pointer) (cffi:null-pointer))
      (unwind-protect
@@ -155,6 +174,15 @@
 ;;; ----------------------------------------------------------------------------
 
 (defmacro with-catching-to-g-error ((err) &body body)
+  `(handler-case
+     (progn ,@body)
+     (g-error-condition (e)
+       (%g-set-error-literal ,err
+                             (g-error-condition-domain e)
+                             (g-error-condition-code e)
+                             (g-error-condition-message e)))))
+
+(defmacro with-catching-to-error ((err) &body body)
   `(handler-case
      (progn ,@body)
      (g-error-condition (e)
