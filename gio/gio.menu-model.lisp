@@ -115,7 +115,7 @@
 
   As an example, consider the visible portions of this menu.
 
-  @image[menu-example]{}
+  @image[menu-example]{Figure: Menu}
 
   There are 8 \"menus\" visible in the screenshot: one menubar, two submenus
   and 5 sections:
@@ -136,7 +136,7 @@
 
   @b{A menu example}
 
-  @image[menu-model]{}
+  @image[menu-model]{Figure: Menu model}
 
   Notice that the separators visible in the example appear nowhere in the menu
   model. This is because separators are not explicitly represented in the menu
