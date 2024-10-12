@@ -2,7 +2,7 @@
 ;;; gobject.base.lisp
 ;;;
 ;;; The documentation of this file is taken from the GObject Reference Manual
-;;; Version 2.76 and modified to document the Lisp binding to the GObject
+;;; Version 2.80 and modified to document the Lisp binding to the GObject
 ;;; library. See <http://www.gtk.org>. The API documentation of the Lisp
 ;;; binding is available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
@@ -57,36 +57,36 @@
 ;;;     G_OBJECT_CLASS_TYPE
 ;;;     G_OBJECT_CLASS_NAME
 ;;;
-;;;     g_object_class_install_property                    not exported
-;;;     g_object_class_install_properties                  not exported
+;;;     g_object_class_install_property                     not exported
+;;;     g_object_class_install_properties                   not exported
 ;;;     g_object_class_find_property
 ;;;     g_object_class_list_properties
-;;;     g_object_class_override_property                   not exported
-;;;     g_object_interface_install_property                not exported
+;;;     g_object_class_override_property                    not exported
+;;;     g_object_interface_install_property                 not exported
 ;;;     g_object_interface_find_property
 ;;;     g_object_interface_list_properties
 ;;;     g_object_new
-;;;     g_object_new_with_properties                       not implemented
-;;;     g_object_newv                                      not exported
-;;;     g_object_ref                                       not exported
-;;;     g_object_unref                                     not exported
-;;;     g_object_ref_sink                                  not exported
-;;;     g_set_object                                       not implemented
-;;;     g_clear_object                                     not implemented
-;;;     g_object_is_floating                               not exported
-;;;     g_object_force_floating                            not exported
+;;;     g_object_new_with_properties                        not implemented
+;;;     g_object_newv                                       not exported
+;;;     g_object_ref                                        not exported
+;;;     g_object_unref                                      not exported
+;;;     g_object_ref_sink                                   not exported
+;;;     g_set_object                                        not implemented
+;;;     g_clear_object                                      not implemented
+;;;     g_object_is_floating                                not exported
+;;;     g_object_force_floating                             not exported
 ;;;
 ;;;     GWeakNotify
 ;;;     g_object_weak_ref
-;;;     g_object_weak_unref                                not exported
-;;;     g_object_add_weak_pointer                          not exported
+;;;     g_object_weak_unref                                 not exported
+;;;     g_object_add_weak_pointer                           not exported
 ;;;     g_object_remove_weak_pointer
 ;;;     g_set_weak_pointer
 ;;;     g_clear_weak_pointer
 ;;;
 ;;;     GToggleNotify
-;;;     g_object_add_toggle_ref                            not exported
-;;;     g_object_remove_toggle_ref                         not exported
+;;;     g_object_add_toggle_ref                             not exported
+;;;     g_object_remove_toggle_ref                          not exported
 ;;;     g_object_connect
 ;;;     g_object_disconnect
 ;;;
@@ -167,6 +167,10 @@
 (defun rem-gobject-for-pointer-strong (ptr)
   (remhash (cffi:pointer-address ptr) *foreign-gobjects-strong*))
 
+(defun list-gobject-for-pointer-strong ()
+  (iter (for (key value) in-hashtable *foreign-gobjects-strong*)
+        (collect value)))
+
 (defun get-gobject-for-pointer-weak (ptr)
   (gethash (cffi:pointer-address ptr) *foreign-gobjects-weak*))
 
@@ -176,9 +180,20 @@
 (defun rem-gobject-for-pointer-weak (ptr)
   (remhash (cffi:pointer-address ptr) *foreign-gobjects-weak*))
 
+(defun list-gobject-for-pointer-weak ()
+  (iter (for (key value) in-hashtable *foreign-gobjects-weak*)
+        (collect value)))
+
 (defun get-gobject-for-pointer (ptr)
   (or (gethash (cffi:pointer-address ptr) *foreign-gobjects-strong*)
       (gethash (cffi:pointer-address ptr) *foreign-gobjects-weak*)))
+
+(defun list-gobject-for-pointer ()
+  (let ((weak (list-gobject-for-pointer-weak))
+        (strong (list-gobject-for-pointer-strong)))
+    (values (append strong weak)
+            (length strong)
+            (length weak))))
 
 ;;; ----------------------------------------------------------------------------
 ;;; GParameter                                              not exported
@@ -584,7 +599,7 @@ lambda (object pspec)    :no-hooks
                   (setf gtype (type-parent gtype)))))
     (let* ((gtype (type-from-instance pointer))
            (lisp-type (get-gobject-lisp-type gtype)))
-      (log-for :gc "~&CREATE-GOBJECR-FROM-POINTER: ~a~%" pointer)
+      (log-for :gc "~&CREATE-GOBJECT-FROM-POINTER: ~a~%" pointer)
       (unless lisp-type
         (error "Type ~A is not registered with REGISTER-OBJECT-TYPE"
                (glib:gtype-name gtype)))
@@ -1698,14 +1713,34 @@ lambda (object pspec)    :no-hooks
 
 (defun object-ref (object)
  #+liber-documentation
- "@version{2024-3-30}
+ "@version{2024-10-12}
   @argument[object]{a @class{g:object} instance}
-  @return{The same @arg{object}.}
-  @short{Increases the reference count of object.}
-  @see-class{g:object}"
+  @return{The same @arg{object} instance.}
+  @short{Increases the reference count of the object.}
+  @see-class{g:object}
+  @see-function{g:object-ref-count}
+  @see-function{g:object-unref}"
   (cffi:convert-from-foreign (%object-ref (object-pointer object)) 'object))
 
 (export 'object-ref)
+
+;;; ----------------------------------------------------------------------------
+;;; g:object-ref-count
+;;; ----------------------------------------------------------------------------
+
+(declaim (inline object-ref-count))
+
+(defun object-ref-count (object)
+ #+liber-documentation
+ "@version{2024-10-12}
+  @argument[object]{a @class{g:object} instance}
+  @return{The integer with the reference count of @arg{object}.}
+  @short{Returns the reference count of the object.}
+  @see-class{g:object}
+  @see-function{g:object-ref}"
+  (ref-count object))
+
+(export 'object-ref-count)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_object_unref
@@ -1716,13 +1751,14 @@ lambda (object pspec)    :no-hooks
 
 (defun object-unref (object)
  #+liber-documentation
- "@version{#2024-3-30}
+ "@version{2024-10-12}
   @argument[object]{a @class{g:object} instance}
   @begin{short}
     Decreases the reference count of @arg{object}.
   @end{short}
   When its reference count drops to 0, the object is finalized.
-  @see-class{g:object}"
+  @see-class{g:object}
+  @see-function{g:object-ref}"
   (%object-unref (object-pointer object)))
 
 (export 'object-unref)
