@@ -27,9 +27,8 @@
              (glib-test:list-signals "GListModel")))
   ;; Check interface definition
   (is (equal '(GOBJECT:DEFINE-GINTERFACE "GListModel" GIO:LIST-MODEL
-                                         (:EXPORT T
-                                          :TYPE-INITIALIZER
-                                          "g_list_model_get_type"))
+                       (:EXPORT T
+                        :TYPE-INITIALIZER "g_list_model_get_type"))
              (gobject:get-gtype-definition "GListModel"))))
 
 ;;; --- Signals ----------------------------------------------------------------
@@ -52,7 +51,6 @@
 ;;;     g_list_model_get_item_type
 ;;;     g_list_model_get_n_items
 ;;;     g_list_model_get_item
-;;;     g_list_model_get_object
 
 (test g-list-model-get.1
   (let ((store (g:list-store-new "GObject")))
@@ -90,6 +88,23 @@
     (is (typep (g:list-model-object store 0) 'g:simple-action))
     (is (typep (g:list-model-object store 1) 'g:simple-action))))
 
+;;;     g_list_model_get_object
+
+(test g-list-model-object
+  (let ((store (g:list-store-new "GObject"))
+        (object nil))
+    ;; Append some objects
+    (is-false (g:list-store-append store (make-instance 'g:simple-action)))
+    (is-false (g:list-store-append store (make-instance 'g:menu-item)))
+    ;; Get an object from the list store
+    (is (typep (setf object
+                     (g:list-model-object store 0)) 'g:simple-action))
+    (is (= 2 (g:object-ref-count object)))
+    ;; Get the object a second time from the list store
+    (is (typep (setf object
+                     (g:list-model-object store 0)) 'g:simple-action))
+    (is (= 2 (g:object-ref-count object)))))
+
 ;;;     g_list_model_items_changed
 
-;;; 2024-9-17
+;;; 2024-10-1

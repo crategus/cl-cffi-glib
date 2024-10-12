@@ -205,8 +205,8 @@ lambda (model pos removed added)    :run-last
   ;; Methods of the GListModel interface
   (get-item-type (gobject:type-t (model (gobject:object list-model))))
   (get-n-items (:uint (model (gobject:object list-model))))
-  (get-item (gobject:object (model (gobject:object list-model))
-                            (position :uint))))
+  (get-item (:pointer (model (gobject:object list-model))
+                      (position :uint))))
 
 (export 'list-model-get-item-type-impl)
 (export 'list-model-get-n-items-impl)
@@ -293,7 +293,8 @@ lambda (model pos removed added)    :run-last
 ;;; g_list_model_get_object ()
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcfun ("g_list_model_get_object" list-model-object) gobject:object
+(cffi:defcfun ("g_list_model_get_object" list-model-object)
+    (gobject:object :already-referenced)
  #+liber-documentation
  "@version{2024-3-31}
   @argument[model]{a @class{g:list-model} object}
