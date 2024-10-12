@@ -368,7 +368,7 @@ object3:propertyC -> object1:propertyA
 
 #+glib-2-68
 (cffi:defcfun ("g_binding_dup_source" binding-dup-source)
-    (object binding :already-referenced t)
+    (object binding :already-referenced)
  #+liber-documentation
  "@version{2024-6-18}
   @argument[binding]{a @class{g:binding} object}
@@ -394,7 +394,7 @@ object3:propertyC -> object1:propertyA
 
 #+glib-2-68
 (cffi:defcfun ("g_binding_dup_target" binding-dup-target)
-    (object binding :already-referenced t)
+    (object binding :already-referenced)
  #+liber-documentation
  "@version{2024-6-18}
   @argument[binding]{a @class{g:binding} object}
