@@ -73,6 +73,8 @@
 
            #:parse-g-value-for-type
            #:set-g-value-for-type
+
+           #:create-closure
     ))
 
 (in-package :gobject)
@@ -473,6 +475,7 @@
     @about-function{object-interface-list-properties}
     @about-function{object-new}
     @about-function{object-ref}
+    @about-function{object-ref-count}
     @about-function{object-unref}
     @about-function{object-notify}
     @about-function{object-freeze-notify}

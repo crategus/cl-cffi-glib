@@ -57,148 +57,17 @@
   higher-level, document-centric interfaces.
   @begin[File Operations]{section}
     @begin[GFile]{subsection}
-      @about-symbol{file-query-info-flags}
-      @about-symbol{file-create-flags}
-      @about-symbol{file-copy-flags}
-      @about-symbol{file-monitor-flags}
-      @about-symbol{file-measure-flags}
-      @about-symbol{filesystem-preview-type}
-      @about-type{file-as-namestring}
       @about-class{file}
-      @about-function{GFileProgressCallback}
-      @about-function{GFileReadMoreCallback}
-      @about-function{GFileMeasureProgressCallback}
+      @about-type{file-as-namestring}
       @about-function{file-new-for-path}
       @about-function{file-new-for-uri}
       @about-function{file-new-for-commandline-arg}
       @about-function{file-new-for-commandline-arg-and-cwd}
-      @about-function{file-new-tmp}
       @about-function{file-parse-name}
-      @about-function{file-new-build-filename}
-      @about-function{file-dup}
-      @about-function{file-hash}
-      @about-function{file-equal}
       @about-function{file-basename}
       @about-function{file-path}
-      @about-function{file-peek-path}
       @about-function{file-uri}
       @about-function{file-get-parse-name}
-      @about-function{file-get-parent}
-      @about-function{file-has-parent}
-      @about-function{file-get-child}
-      @about-function{file-get-child-for-display-name}
-      @about-function{file-has-prefix}
-      @about-function{file-get-relative-path}
-      @about-function{file-resolve-relative-path}
-      @about-function{file-is-native}
-      @about-function{file-has-uri-scheme}
-      @about-function{file-get-uri-scheme}
-      @about-function{file-read}
-      @about-function{file-read-async}
-      @about-function{file-read-finish}
-      @about-function{file-append-to}
-      @about-function{file-create}
-      @about-function{file-replace}
-      @about-function{file-append-to-async}
-      @about-function{file-append-to-finish}
-      @about-function{file-create-async}
-      @about-function{file-create-finish}
-      @about-function{file-replace-async}
-      @about-function{file-replace-finish}
-      @about-function{file-query-info}
-      @about-function{file-query-info-async}
-      @about-function{file-query-info-finish}
-      @about-function{file-query-exists}
-      @about-function{file-query-file-type}
-      @about-function{file-query-filesystem-info}
-      @about-function{file-query-filesystem-info-async}
-      @about-function{file-query-filesystem-info-finish}
-      @about-function{file-query-default-handler}
-      @about-function{file-query-default-handler-async}
-      @about-function{file-query-default-handler-finish}
-      @about-function{file-measure-disk-usage}
-      @about-function{file-measure-disk-usage-async}
-      @about-function{file-measure-disk-usage-finish}
-      @about-function{file-find-enclosing-mount}
-      @about-function{file-find-enclosing-mount-async}
-      @about-function{file-find-enclosing-mount-finish}
-      @about-function{file-enumerate-children}
-      @about-function{file-enumerate-children-async}
-      @about-function{file-enumerate-children-finish}
-      @about-function{file-set-display-name}
-      @about-function{file-set-display-name-async}
-      @about-function{file-set-display-name-finish}
-      @about-function{file-delete}
-      @about-function{file-delete-async}
-      @about-function{file-delete-finish}
-      @about-function{file-trash}
-      @about-function{file-trash-async}
-      @about-function{file-trash-finish}
-      @about-function{file-copy}
-      @about-function{file-copy-async}
-      @about-function{file-copy-finish}
-      @about-function{file-move}
-      @about-function{file-make-directory}
-      @about-function{file-make-directory-async}
-      @about-function{file-make-directory-finish}
-      @about-function{file-make-directory-with-parents}
-      @about-function{file-make-symbolic-link}
-      @about-function{file-query-settable-attributes}
-      @about-function{file-query-writable-namespaces}
-      @about-function{file-set-attribute}
-      @about-function{file-set-attributes-from-info}
-      @about-function{file-set-attributes-async}
-      @about-function{file-set-attributes-finish}
-      @about-function{file-set-attribute-string}
-      @about-function{file-set-attribute-byte-string}
-      @about-function{file-set-attribute-uint32}
-      @about-function{file-set-attribute-int32}
-      @about-function{file-set-attribute-uint64}
-      @about-function{file-set-attribute-int64}
-      @about-function{file-mount-mountable}
-      @about-function{file-mount-mountable-finish}
-      @about-function{file-unmount-mountable}
-      @about-function{file-unmount-mountable-finish}
-      @about-function{file-unmount-mountable-with-operation}
-      @about-function{file-unmount-mountable-with-operation-finish}
-      @about-function{file-eject-mountable}
-      @about-function{file-eject-mountable-finish}
-      @about-function{file-eject-mountable-with-operation}
-      @about-function{file-eject-mountable-with-operation-finish}
-      @about-function{file-start-mountable}
-      @about-function{file-start-mountable-finish}
-      @about-function{file-stop-mountable}
-      @about-function{file-stop-mountable-finish}
-      @about-function{file-poll-mountable}
-      @about-function{file-poll-mountable-finish}
-      @about-function{file-mount-enclosing-volume}
-      @about-function{file-mount-enclosing-volume-finish}
-      @about-function{file-monitor-directory}
-      @about-function{file-monitor-file}
-      @about-function{file-monitor}
-      @about-function{file-load-bytes}
-      @about-function{file-load-bytes-async}
-      @about-function{file-load-bytes-finish}
-      @about-function{file-load-contents}
-      @about-function{file-load-contents-async}
-      @about-function{file-load-contents-finish}
-      @about-function{file-load-partial-contents-async}
-      @about-function{file-load-partial-contents-finish}
-      @about-function{file-replace-contents}
-      @about-function{file-replace-contents-async}
-      @about-function{file-replace-contents-bytes-async}
-      @about-function{file-replace-contents-finish}
-      @about-function{file-copy-attributes}
-      @about-function{file-create-readwrite}
-      @about-function{file-create-readwrite-async}
-      @about-function{file-create-readwrite-finish}
-      @about-function{file-open-readwrite}
-      @about-function{file-open-readwrite-async}
-      @about-function{file-open-readwrite-finish}
-      @about-function{file-replace-readwrite}
-      @about-function{file-replace-readwrite-async}
-      @about-function{file-replace-readwrite-finish}
-      @about-function{file-supports-thread-contexts}
     @end{subsection}
     @begin[GFileInfo]{subsection}
       @about-class{file-info}

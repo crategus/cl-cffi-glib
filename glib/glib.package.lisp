@@ -2,7 +2,7 @@
 ;;; glib.package.lisp
 ;;;
 ;;; The documentation of this file is taken from the GLIB Reference Manual
-;;; Version 2.76 and modified to document the Lisp binding to the GLIB library.
+;;; Version 2.80 and modified to document the Lisp binding to the GLIB library.
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
 ;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
@@ -62,8 +62,11 @@
            ;; Symbols from glib.error.lisp
            #:error
            #:with-g-error
+           #:with-error
            #:with-ignore-g-error
-           #:with-catching-to-g-error))
+           #:with-ignore-error
+           #:with-catching-to-g-error
+           #:with-catching-to-error))
 
 (in-package :glib)
 

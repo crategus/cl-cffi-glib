@@ -32,7 +32,7 @@ GLib Core Application Support
     Memory Slices              - efficient way to allocate chunks of memory
     IO Channels                - support for using files, pipes and sockets
 
-  glib.error.lisp              - Error Reporting                   - Glib 2.36 %
+  glib.error.lisp              - Error Reporting                   - Glib 2.80%.
 
     Warnings and Assertions    - warnings and assertions to use in runtime code
     Message Output, Debugging  - functions to output messages

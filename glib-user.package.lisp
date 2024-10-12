@@ -511,6 +511,7 @@
            #:object-interface-list-properties
            #:object-new
            #:object-ref
+           #:object-ref-count
            #:object-unref
            #:object-notify
            #:object-freeze-notify
@@ -943,7 +944,6 @@
            #:notification-add-button-with-target-value
 
            ;; Symbols from gio.file.lisp
-           #:filesystem-preview-type
            #:file
            #:file-as-namestring
            #:file-new-for-path
