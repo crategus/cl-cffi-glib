@@ -4,9 +4,7 @@
 (in-suite gobject-base)
 
 (defparameter gobject-base
-              '(gobject::ref-count
-
-                g:object-pointer
+              '(g:object-pointer
                 g:object-has-reference
                 g:object-signal-handlers
 
@@ -41,6 +39,7 @@
                 g:object-interface-list-properties
                 g:object-new
                 g:object-ref
+                g:object-ref-count
                 g:object-unref
                 g:object-notify
                 g:object-freeze-notify
@@ -303,11 +302,11 @@
 
 (test g-object-ref/unref
   (let ((action (make-instance 'g:simple-action)))
-    (is (= 1 (gobject::ref-count action)))
+    (is (= 1 (g:object-ref-count action)))
     (is (eq action (g:object-ref action)))
-    (is (= 2 (gobject::ref-count action)))
+    (is (= 2 (g:object-ref-count action)))
     (is-false (g:object-unref action))
-    (is (= 1 (gobject::ref-count action)))))
+    (is (= 1 (g:object-ref-count action)))))
 
 ;;;     g_object_ref_sink
 ;;;     g_clear_object
@@ -473,5 +472,4 @@
 ;;;     g_weak_ref_set
 ;;;     g_assert_finalize_object
 
-;;; --- 2023-12-2 --------------------------------------------------------------
-
+;;; 2024-10-12
