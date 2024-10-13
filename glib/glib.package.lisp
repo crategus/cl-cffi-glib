@@ -48,9 +48,14 @@
            #:boxed-opaque-pointer
            #:boxed-cstruct-info
            #:boxed-variant-info
+
            #:define-g-boxed-opaque
            #:define-g-boxed-cstruct
            #:define-g-boxed-variant-cstruct
+
+           #:define-gboxed-opaque
+           #:define-gboxed-cstruct
+
            #:boxed-copy-fn
            #:make-boxed-type
            #:get-boxed-info
