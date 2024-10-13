@@ -13,8 +13,21 @@
 
 (test g-strv-t.2
   (let ((ptr (cffi:convert-to-foreign (list "a" "b" "c" "d" "" "e") 'g:strv-t)))
-    (is (equal '("a" "b" "c" "d" "" "e") 
+    (is (equal '("a" "b" "c" "d" "" "e")
                (cffi:convert-from-foreign ptr 'g:strv-t)))))
+
+(test g-strv-t.3
+  (let ((symbols (iter (for sym in-package "GLIB-USER" external-only t)
+                       (collect (symbol-name sym))))
+        (ptr nil) (result nil))
+    (is (<= 920 (length symbols)))
+    (is-false (member nil symbols))
+    ;; Convert to foreign
+    (is (cffi:pointerp (setf ptr (cffi:convert-to-foreign symbols 'g:strv-t))))
+    ;; Convert from foreign
+    (is (= (length symbols)
+           (length (setf result (cffi:convert-from-foreign ptr 'g:strv-t)))))
+    (is (equal symbols result))))
 
 ;;;   GList
 
@@ -55,7 +68,7 @@
 ;; a list with strings
 (test g-slist-t.2
   (let ((ptr (cffi:convert-to-foreign (list "a" "b" "c") '(g:slist-t :string))))
-    (is (equal '("a" "b" "c") 
+    (is (equal '("a" "b" "c")
                (cffi:convert-from-foreign ptr '(g:slist-t :string))))))
 
 ;; a list with objects
@@ -94,7 +107,7 @@
 
 ;;;   g_malloc
 ;;;   g_free
-  
+
 (test g-malloc/free
   (let ((mem nil))
     (is-true (cffi:pointerp (setq mem (g:malloc 10))))
@@ -125,4 +138,4 @@
 (test g-prgname
   (is (string= "glib-test" (g:prgname))))
 
-;;; --- 2023-6-22 --------------------------------------------------------------
+;;; 2024-10-12

@@ -213,6 +213,7 @@
   2 76    ; Since 2023-03-10
   2 78    ; Since 2023-09-08
   2 80    ; Since 2024-03-07
+  2 82    ; Since 2024-08-26
 )
 
 (require-library-version "GLib" 2 60

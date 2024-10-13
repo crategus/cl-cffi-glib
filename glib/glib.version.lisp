@@ -1,12 +1,12 @@
 ;;; ----------------------------------------------------------------------------
 ;;; glib.version.lisp
 ;;;
-;;; The documentation of this file is taken from the GLib 2.76 Reference
+;;; The documentation of this file is taken from the GLib 2.82 Reference
 ;;; Manual and modified to document the Lisp binding to the GLib library.
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
 ;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2011 - 2023 Dieter Kaiser
+;;; Copyright (C) 2011 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -59,10 +59,10 @@
 (setf (liber:alias-for-symbol '+major-version+)
       "Constant"
       (liber:symbol-documentation '+major-version+)
- "@version{2022-11-21}
+ "@version{2024-10-12}
   @begin{short}
-    The major version number of the GLib C library the Lisp binding is running
-    against.
+    The major version number of the GLib C library against which the Lisp
+    binding is running.
   @end{short}
   @see-function{glib:check-version}")
 
@@ -78,10 +78,10 @@
 (setf (liber:alias-for-symbol '+minor-version+)
       "Constant"
       (liber:symbol-documentation '+minor-version+)
- "@version{2022-11-21}
+ "@version{2024-10-12}
   @begin{short}
-    The minor version number of the GLib C library the Lisp binding is running
-    against.
+    The minor version number of the GLib C library against which the Lisp
+    binding is running.
   @end{short}
   @see-function{glib:check-version}")
 
@@ -97,50 +97,50 @@
 (setf (liber:alias-for-symbol '+micro-version+)
       "Constant"
       (liber:symbol-documentation '+micro-version+)
- "@version{2022-11-21}
+ "@version{2024-10-12}
   @begin{short}
-    The micro version number of the GLib C library the Lisp binding is running
-    against.
+    The micro version number of the GLib C library against which the Lisp
+    binding is running.
   @end{short}
   @see-function{glib:check-version}")
 
 (export '+micro-version+)
 
 ;;; ----------------------------------------------------------------------------
-;;; glib_binary_age                                        not implemented
+;;; glib_binary_age                                         not implemented
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; glib_interface_age                                     not implemented
+;;; glib_interface_age                                      not implemented
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; glib_check_version ()
+;;; glib_check_version
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("glib_check_version" check-version) :string
  #+liber-documentation
- "@version{2022-11-21}
+ "@version{2024-10-12}
   @argument[major]{an unsigned integer with the required major version}
   @argument[minor]{an unsigned integer with the required minor version}
   @argument[micro]{an unsigned integer with the required micro version}
   @begin{return}
-    @code{Nil} if the GLib C library against which the Lisp binding is running
-    is compatible with the given version, or a string describing the version
-    mismatch.
+    Returns @code{nil} if the GLib C library against which the Lisp binding is
+    running is compatible with the given version, or a string describing the
+    version mismatch.
   @end{return}
   @begin{short}
-    Checks that the GLib C library in use is compatible with the given
+    Checks if the GLib C library that is used is compatible with the given
     Lisp binding.
   @end{short}
-  @begin[Examples]{dictionary}
+  @begin{examples}
     Suppose the Glib library version 2.72.1 is installed. Then the following
     results are returned:
     @begin{pre}
 (glib:check-version 2 72 0) => NIL
 (glib:check-version 2 99 0) => \"GLib version too old (micro mismatch)\"
     @end{pre}
-  @end{dictionary}
+  @end{examples}
   @see-function{cl-cffi-glib-build-info}"
   (major :uint)
   (minor :uint)
@@ -152,13 +152,13 @@
 
 (defun cl-cffi-glib-build-info (&optional (out *standard-output*))
  #+liber-documentation
- "@version{2022-11-21}
+ "@version{2024-10-12}
   @argument[out]{an optional stream, the default is @code{*standard-output*}}
   @begin{short}
     Provides information about the version of the loaded GLIB library against
     which the Lisp binding is running.
   @end{short}
-  @begin[Example]{dictionary}
+  @begin{examples}
     @begin{pre}
 * (cl-cffi-glib-build-info)
 cl-cffi-glib build date: 22:17 10/23/2022
@@ -171,7 +171,7 @@ Lisp implementation type: SBCL
 Lisp implementation version: 2.1.11.debian
 NIL
     @end{pre}
-  @end{dictionary}
+  @end{examples}
   @see-symbol{glib:+major-version+}
   @see-symbol{glib:+minor-version+}
   @see-symbol{glib:+micro-version+}

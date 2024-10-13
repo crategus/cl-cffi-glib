@@ -1,7 +1,7 @@
 ;;; ----------------------------------------------------------------------------
 ;;; glib.misc.lisp
 ;;;
-;;; The documentation of this file is taken from the GLib 2.76 Reference
+;;; The documentation of this file is taken from the GLib 2.82 Reference
 ;;; Manual and modified to document the Lisp binding to the GLib library.
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
 ;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
@@ -103,20 +103,20 @@
 
 #+liber-documentation
 (setf (documentation 'strv-t 'type)
- "@version{2023-9-18}
+ "@version{2024-10-12}
   @begin{short}
-    The @type{g:strv-t} type represents and performs automatic conversion
-    between a list of Lisp strings and an array of C strings of the CFFI
-    @code{:string} type.
+    The @type{g:strv-t} type specifier represents and performs automatic
+    conversion between a list of Lisp strings and an array of C strings of the
+    CFFI @code{:string} type.
   @end{short}
-  @begin[Examples]{dictionary}
+  @begin{examples}
     @begin{pre}
 (setq str (cffi:convert-to-foreign (list \"Hello\" \"World\") 'g:strv-t))
 => #.(SB-SYS:INT-SAP #X01541998)
 (cffi:convert-from-foreign str 'g:strv-t)
 => (\"Hello\" \"World\")
     @end{pre}
-  @end{dictionary}")
+  @end{examples}")
 
 (export 'strv-t)
 
@@ -170,34 +170,34 @@
 
 #+liber-documentation
 (setf (documentation 'list-t 'type)
- "@version{2023-9-18}
+ "@version{2024-10-12}
   @begin{short}
-    The @type{g:list-t} type represents a C doubly linked list with elements of
-    the @code{GList} structure.
+    The @type{g:list-t} type specifier represents a C doubly linked list with
+    elements of the @code{GList} structure.
   @end{short}
-  The @type{g:list-t} type performs automatic conversion from a C list to a Lisp
-  list. The elements of the list can be pointers, strings or GObjects.
-  @begin[Examples]{dictionary}
+  The @type{g:list-t} type specifier performs automatic conversion from a C list
+  to a Lisp list. The elements of the list can be pointers, strings or GObjects.
+  @begin{examples}
     @begin{pre}
 (cffi:convert-to-foreign (list \"a\" \"b\" \"c\") '(g:list-t :string))
 => #.(SB-SYS:INT-SAP #X03B92220)
 (cffi:convert-from-foreign * '(g:list-t :string))
 => (\"a\" \"b\" \"c\")
     @end{pre}
-  @end{dictionary}
+  @end{examples}
   @see-type{g:slist-t}")
 
 (export 'list-t)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_list_free ()                                         not exported
+;;; g_list_free                                             not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_list_free" %list-free) :void
   (lst (:pointer (:struct %list-t))))
 
 ;;; ----------------------------------------------------------------------------
-;;; g_list_next ()                                         not exported
+;;; g_list_next                                             not exported
 ;;; ----------------------------------------------------------------------------
 
 (defun %list-next (lst)
@@ -206,7 +206,7 @@
       (cffi:foreign-slot-value lst '(:struct %list-t) 'next)))
 
 ;;; ----------------------------------------------------------------------------
-;;; g_list_append ()                                       not exported
+;;; g_list_append                                           not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_list_append" %list-append) (:pointer (:struct %list-t))
@@ -217,7 +217,7 @@
 ;;; GSList
 ;;; ----------------------------------------------------------------------------
 
-;; TODO: Check the memory management in more detail.
+;; TODO: Check the memory management in more detail
 
 (cffi:defcstruct %slist-t
   (data :pointer)
@@ -272,40 +272,41 @@
 
 #+liber-documentation
 (setf (documentation 'slist-t 'type)
- "@version{2023-9-18}
+ "@version{2024-10-12}
   @begin{short}
-    The @type{g:slist-t} type represents a C singly linked list with elements of
-    the @code{GSList} structure.
+    The @type{g:slist-t} type specifier represents a C singly linked list with
+    elements of the @code{GSList} structure.
   @end{short}
-  The @type{g:slist-t} type performs automatic conversion from a C list to a
-  Lisp list. The elements of the list can be pointers, strings or GObjects.
-  @begin[Examples]{dictionary}
+  The @type{g:slist-t} type specifier performs automatic conversion from a C
+  list to a Lisp list. The elements of the list can be pointers, strings or
+  GObjects.
+  @begin{examples}
     @begin{pre}
 (cffi:convert-to-foreign (list \"a\" \"b\" \"c\") '(g:slist-t :string))
 => #.(SB-SYS:INT-SAP #X03B92220)
 (cffi:convert-from-foreign * '(g:slist-t :string))
 => (\"a\" \"b\" \"c\")
     @end{pre}
-  @end{dictionary}
+  @end{examples}
   @see-type{g:list-t}")
 
 (export 'slist-t)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_slist_alloc ()                                       not exported
+;;; g_slist_alloc                                           not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_slist_alloc" %slist-alloc) (:pointer (:struct %slist-t)))
 
 ;;; ----------------------------------------------------------------------------
-;;; g_slist_free ()                                        not exported
+;;; g_slist_free                                            not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_slist_free" %slist-free) :void
   (lst (:pointer (:struct %slist-t))))
 
 ;;; ----------------------------------------------------------------------------
-;;; g_slist_next ()                                        not exported
+;;; g_slist_next                                            not exported
 ;;; ----------------------------------------------------------------------------
 
 (defun %slist-next (lst)
@@ -336,7 +337,7 @@
 
 #+liber-documentation
 (setf (documentation 'quark-as-string 'type)
- "@version{2024-6-20}
+ "@version{2024-10-12}
   @begin{short}
     Quarks are associations between strings and integer identifiers.
   @end{short}
@@ -356,7 +357,7 @@
     See the @fun{g:type-qdata} function for attaching a @code{GQuark}
     identifier to a @class{g:type-t} type ID.
   @end{dictionary}
-  @begin[Examples]{dictionary}
+  @begin{examples}
     Translate a Lisp String to a @code{GQuark} identifier:
     @begin{pre}
 (cffi:convert-to-foreign \"GtkWidget\" 'g:quark-as-string) => 91
@@ -369,7 +370,7 @@
 (cffi:convert-from-foreign 9 'g:quark-as-string) => \"gboolean\"
 (cffi:convert-from-foreign 0 'g:quark-as-string) => NIL
      @end{pre}
-  @end{dictionary}
+  @end{examples}
   @see-class{g:type-t}
   @see-function{g:type-qdata}")
 
@@ -402,18 +403,18 @@
 (setf (liber:alias-for-class 'date-time)
       "Type"
       (documentation 'date-time 'type)
- "@version{2023-9-18}
+ "@version{2024-10-12}
   @begin{short}
-    The @type{g:date-time} type represents the C @code{GDateTime} type which
-    represents a date and time, including a time one.
+    The @type{g:date-time} type specifier represents the C @code{GDateTime} type
+    which represents a date and time, including a time one.
   @end{short}
-  @begin[Examples]{dictionary}
+  @begin{examples}
     @begin{pre}
 (cffi:convert-to-foreign 0 'g:date-time)
 => #.(SB-SYS:INT-SAP #X558E3298CE40)
 (cffi:convert-from-foreign * 'g:date-time) => 0
     @end{pre}
-  @end{dictionary}")
+  @end{examples}")
 
 (export 'date-time)
 
@@ -436,16 +437,16 @@
 (setf (liber:alias-for-class 'unichar)
       "Type"
       (documentation 'unichar 'type)
- "@version{2023-9-18}
+ "@version{2024-10-12}
   @begin{short}
-    The @class{g:unichar} type represents the C @code{gunichar} type which can
-    hold any UCS-4 character code.
+    The @class{g:unichar} type specifier represents the C @code{gunichar} type
+    which can hold any UCS-4 character code.
   @end{short}
-  The @class{g:unichar} type performs automatic conversion from the C
+  The @class{g:unichar} type specifier performs automatic conversion from the C
   @code{gunichar} type to a Lisp character and a Lisp character to the C type.
   An integer value as argument to the @fun{cffi:convert-to-foreign} function
   is passed through.
-  @begin[Examples]{dictionary}
+  @begin{examples}
     Convert a Lisp character to a C @code{gunichar} value:
     @begin{pre}
 (cffi:convert-to-foreign #\A 'g:unichar) => 65
@@ -464,17 +465,17 @@
     @begin{pre}
 (cffi:convert-to-foreign 65 'g:unichar) => 65
     @end{pre}
-  @end{dictionary}")
+  @end{examples}")
 
 (export 'unichar)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_malloc () -> malloc
+;;; g_malloc
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_malloc" malloc) :pointer
  #+liber-documentation
- "@version{2023-9-18}
+ "@version{2024-10-12}
   @argument[nbytes]{an integer of @code{:size} type with the number of bytes
   to allocate}
   @return{The foreign pointer to the allocated memory.}
@@ -482,8 +483,8 @@
     Allocates @arg{nbytes} bytes of memory.
   @end{short}
   If the @arg{nbytes} argument is 0 the @fun{g:malloc} function returns a
-  foreign @code{null-pointer} value.
-  @begin[Examples]{dictionary}
+  foreign @code{cffi:null-pointer} value.
+  @begin{examples}
     @begin{pre}
 (g:malloc 100)
 => #.(SB-SYS:INT-SAP #X559FB7283340)
@@ -492,24 +493,24 @@
 (cffi:null-pointer-p (g:malloc 0))
 => T
     @end{pre}
-  @end{dictionary}
+  @end{examples}
   @see-function{g:free}"
   (nbytes :size))
 
 (export 'malloc)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_free () -> free
+;;; g_free
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_free" free) :void
  #+liber-documentation
- "@version{2023-9-18}
+ "@version{2024-10-12}
   @argument[mem]{a foreign pointer to the memory to free}
   @begin{short}
     Frees the memory pointed to by the @arg{mem} foreign pointer.
   @end{short}
-  If the @arg{mem} argument is a foreign @code{null-pointer} the
+  If the @arg{mem} argument is a foreign @code{cffi:null-pointer} the
   @fun{g:free} function simply returns.
   @see-function{g:malloc}"
   (mem :pointer))
@@ -518,19 +519,17 @@
 
 
 ;;; ----------------------------------------------------------------------------
-;;; g_get_application_name ()
-;;; g_set_application_name () -> application-name
+;;; g_get_application_name
+;;; g_set_application_name
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf application-name) (name)
-  (cffi:foreign-funcall "g_set_application_name"
-                        :string name
-                        :void)
+  (cffi:foreign-funcall "g_set_application_name" :string name :void)
   name)
 
 (cffi:defcfun ("g_get_application_name" application-name) :string
  #+liber-documentation
- "@version{2023-9-18}
+ "@version{2024-10-12}
   @syntax{(g:application-name) => name}
   @syntax{(setf (g:application-name) name)}
   @argument[name]{a string with the localized name of the application}
@@ -554,19 +553,17 @@
 (export 'application-name)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_get_prgname ()
-;;; g_set_prgname () -> prgname
+;;; g_get_prgname
+;;; g_set_prgname
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf prgname) (prgname)
-  (cffi:foreign-funcall "g_set_prgname"
-                        :string prgname
-                        :void)
+  (cffi:foreign-funcall "g_set_prgname" :string prgname :void)
   prgname)
 
 (cffi:defcfun ("g_get_prgname" prgname) :string
  #+liber-documentation
- "@version{2022-11-23}
+ "@version{2024-10-12}
   @syntax{(g:prgname) => prgname}
   @syntax{(setf (g:prgname) prgname)}
   @argument[prgname]{a string with the name of the program}

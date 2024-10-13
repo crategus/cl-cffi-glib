@@ -14,11 +14,13 @@
   (is (member :glib-2-72 *features*))
   (is (member :glib-2-74 *features*))
   (is (member :glib-2-76 *features*))
-  (is (member :glib-2-80 *features*)))
+  (is (member :glib-2-78 *features*))
+  (is (member :glib-2-80 *features*))
+  (is (member :glib-2-82 *features*)))
 
 (test check-glib-version
   (is (= 2 glib:+major-version+))
-  (is (= 80 glib:+minor-version+)))
+  (is (= 82 glib:+minor-version+)))
 
 (test g-check-version
   (is-true (integerp glib:+major-version+))
@@ -36,4 +38,4 @@
       (is-false (glib:cl-cffi-glib-build-info s))
       (is (stringp result)))))
 
-;;; 2024-5-25
+;;; 2024-10-13
