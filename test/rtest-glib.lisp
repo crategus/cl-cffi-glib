@@ -43,6 +43,25 @@
 
 ;;; ----------------------------------------------------------------------------
 
+(defun run-repeat (tests &key (count 1) (on-error nil) (linecount 50))
+  (let ((fiveam:*on-error* on-error)
+        (count (if (> count 0) (1- count) 0)))
+    (format t "~&Run tests ~a times:~%" (1+ count))
+    (format t "~6d " linecount)
+    (let ((*test-dribble* nil))
+      (dotimes (i count)
+        (if (= 0 (mod (1+ i) linecount))
+            (progn
+              (format t ".~%")
+              (format t "~6d " (+ 1 i linecount)))
+            (format t "."))
+        (fiveam:run tests)))
+    (format t ".~%")
+    ;; Explain the last run
+    (fiveam:explain! (fiveam:run tests))))
+
+;;; ----------------------------------------------------------------------------
+
 ;; See https://www.embeddeduse.com/2019/08/26/qt-compare-two-floats/
 (defun approx-equal (x y &optional (eps 1.0d-5))
   (or (< (abs (- x y)) eps)
