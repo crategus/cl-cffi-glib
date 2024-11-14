@@ -1,12 +1,12 @@
 ;;; ----------------------------------------------------------------------------
 ;;; glib.bytes.lisp
 ;;;
-;;; The documentation of this file is taken from the GLib 2.76 Reference
+;;; The documentation of this file is taken from the GLib 2.82 Reference
 ;;; Manual and modified to document the Lisp binding to the GLib library.
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
 ;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2021 -2023 Dieter Kaiser
+;;; Copyright (C) 2021 -2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -55,7 +55,7 @@
 ;;; GBytes
 ;;; ----------------------------------------------------------------------------
 
-(define-g-boxed-opaque bytes "GBytes"
+(define-gboxed-opaque bytes "GBytes"
   :export t
   :type-initializer "g_bytes_get_type"
   :alloc (%bytes-new (cffi:null-pointer) 0))
@@ -64,13 +64,13 @@
 (setf (liber:alias-for-class 'bytes)
       "GBoxed"
       (documentation 'bytes 'type)
- "@version{2023-8-12}
-  @begin{pre}
-(define-g-boxed-opaque bytes \"GBytes\"
+ "@version{2024-11-6}
+  @begin{declaration}
+(define-gboxed-opaque bytes \"GBytes\"
   :export t
   :type-initializer \"g_bytes_get_type\"
   :alloc (%bytes-new (cffi:null-pointer) 0))
-  @end{pre}
+  @end{declaration}
   @begin{short}
     The @class{g:bytes} structure is a simple refcounted data type representing
     an immutable sequence of zero or more bytes from an unspecified origin.
@@ -86,7 +86,7 @@
   different procedures for freeing the memory region. Examples are memory from
   the @fun{g:malloc} function.
   @begin[Examples]{dictionary}
-    Usage of a @class{g:bytes} instance for a Lisp string as byte data.
+    Using a @class{g:bytes} instance for a Lisp string as byte data.
     @begin{pre}
 (multiple-value-bind (data len)
     (foreign-string-alloc \"A test string.\")
@@ -101,11 +101,24 @@
 => \"A test string.\"
 => 14
     @end{pre}
+    Using a @class{g:bytes} instance to allocate the memory for a paintable
+    with 110 x 80 pixels and 4 bytes per pixel.
+    @begin{pre}
+(let* ((size (* 4 110 80))
+       (data (cffi:foreign-alloc :uchar :count size :initial-element #xff))
+       (bytes (g:bytes-new data size))
+       (texture (gdk:memory-texture-new 110 70
+                                        :B8G8R8A8-PREMULTIPLIED
+                                        bytes
+                                        (* 4 110)))
+       (picture (gtk:picture-new-for-paintable texture)))
+... )
+    @end{pre}
   @end{dictionary}
   @see-constructor{g:bytes-new}")
 
 ;;; ----------------------------------------------------------------------------
-;;; g_bytes_new () -> bytes-new
+;;; g_bytes_new
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_bytes_new" %bytes-new) :pointer
@@ -114,10 +127,10 @@
 
 (cffi:defcfun ("g_bytes_new" bytes-new) (boxed bytes :return)
  #+liber-documentation
- "@version{2022-11-22}
+ "@version{2024-11-6}
   @argument[data]{a pointer to the data to be used for the bytes}
   @argument[size]{an integer with the size of @arg{data}}
-  @return{A new @class{g:bytes} instance.}
+  @return{The new @class{g:bytes} instance.}
   @short{Creates a new @class{g:bytes} instance from @arg{data}.}
   @see-class{g:bytes}"
   (data :pointer)
@@ -246,7 +259,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_bytes_get_data ()
+;;; g_bytes_get_data
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_bytes_get_data" %bytes-data) :pointer
@@ -255,7 +268,7 @@
 
 (defun bytes-data (bytes)
  #+liber-documentation
- "@version{2023-1-6}
+ "@version{2024-11-6}
   @argument[bytes]{a @class{g:bytes} instance}
   @begin{return}
     @arg{data} -- a pointer to the byte data, or a @code{null-pointer} value
@@ -281,14 +294,14 @@
 (export 'bytes-data)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_bytes_get_size () -> bytes-size
+;;; g_bytes_get_size
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_bytes_get_size" bytes-size) :size
  #+liber-documentation
- "@version{2022-11-22}
+ "@version{2024-11-6}
   @argument[bytes]{a @class{g:bytes} instance}
-  @return{An integer with the size of the byte data.}
+  @return{The integer with the size of the byte data.}
   @begin{short}
     Get the size of the byte data in the @class{g:bytes} instance.
   @end{short}

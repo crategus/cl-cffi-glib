@@ -59,6 +59,8 @@
 ;;; GStrv
 ;;; ----------------------------------------------------------------------------
 
+;; TODO: Consider allowing a single string and making a list out of it.
+
 (cffi:define-foreign-type strv-type ()
   ((free-from-foreign :initarg :free-from-foreign
                       :initform t
@@ -109,14 +111,14 @@
     conversion between a list of Lisp strings and an array of C strings of the
     CFFI @code{:string} type.
   @end{short}
-  @begin{examples}
+  @begin[Examples]{dictionary}
     @begin{pre}
 (setq str (cffi:convert-to-foreign (list \"Hello\" \"World\") 'g:strv-t))
 => #.(SB-SYS:INT-SAP #X01541998)
 (cffi:convert-from-foreign str 'g:strv-t)
 => (\"Hello\" \"World\")
     @end{pre}
-  @end{examples}")
+  @end{dictionary}")
 
 (export 'strv-t)
 
@@ -177,14 +179,14 @@
   @end{short}
   The @type{g:list-t} type specifier performs automatic conversion from a C list
   to a Lisp list. The elements of the list can be pointers, strings or GObjects.
-  @begin{examples}
+  @begin[Examples]{dictionary}
     @begin{pre}
 (cffi:convert-to-foreign (list \"a\" \"b\" \"c\") '(g:list-t :string))
 => #.(SB-SYS:INT-SAP #X03B92220)
 (cffi:convert-from-foreign * '(g:list-t :string))
 => (\"a\" \"b\" \"c\")
     @end{pre}
-  @end{examples}
+  @end{dictionary}
   @see-type{g:slist-t}")
 
 (export 'list-t)
@@ -280,14 +282,14 @@
   The @type{g:slist-t} type specifier performs automatic conversion from a C
   list to a Lisp list. The elements of the list can be pointers, strings or
   GObjects.
-  @begin{examples}
+  @begin[Examples]{dictionary}
     @begin{pre}
 (cffi:convert-to-foreign (list \"a\" \"b\" \"c\") '(g:slist-t :string))
 => #.(SB-SYS:INT-SAP #X03B92220)
 (cffi:convert-from-foreign * '(g:slist-t :string))
 => (\"a\" \"b\" \"c\")
     @end{pre}
-  @end{examples}
+  @end{dictionary}
   @see-type{g:list-t}")
 
 (export 'slist-t)
@@ -357,7 +359,7 @@
     See the @fun{g:type-qdata} function for attaching a @code{GQuark}
     identifier to a @class{g:type-t} type ID.
   @end{dictionary}
-  @begin{examples}
+  @begin[Examples]{dictionary}
     Translate a Lisp String to a @code{GQuark} identifier:
     @begin{pre}
 (cffi:convert-to-foreign \"GtkWidget\" 'g:quark-as-string) => 91
@@ -370,7 +372,7 @@
 (cffi:convert-from-foreign 9 'g:quark-as-string) => \"gboolean\"
 (cffi:convert-from-foreign 0 'g:quark-as-string) => NIL
      @end{pre}
-  @end{examples}
+  @end{dictionary}
   @see-class{g:type-t}
   @see-function{g:type-qdata}")
 
@@ -408,13 +410,13 @@
     The @type{g:date-time} type specifier represents the C @code{GDateTime} type
     which represents a date and time, including a time one.
   @end{short}
-  @begin{examples}
+  @begin[Examples]{dictionary}
     @begin{pre}
 (cffi:convert-to-foreign 0 'g:date-time)
 => #.(SB-SYS:INT-SAP #X558E3298CE40)
 (cffi:convert-from-foreign * 'g:date-time) => 0
     @end{pre}
-  @end{examples}")
+  @end{dictionary}")
 
 (export 'date-time)
 
@@ -446,7 +448,7 @@
   @code{gunichar} type to a Lisp character and a Lisp character to the C type.
   An integer value as argument to the @fun{cffi:convert-to-foreign} function
   is passed through.
-  @begin{examples}
+  @begin[Examples]{dictionary}
     Convert a Lisp character to a C @code{gunichar} value:
     @begin{pre}
 (cffi:convert-to-foreign #\A 'g:unichar) => 65
@@ -465,7 +467,7 @@
     @begin{pre}
 (cffi:convert-to-foreign 65 'g:unichar) => 65
     @end{pre}
-  @end{examples}")
+  @end{dictionary}")
 
 (export 'unichar)
 
@@ -484,7 +486,7 @@
   @end{short}
   If the @arg{nbytes} argument is 0 the @fun{g:malloc} function returns a
   foreign @code{cffi:null-pointer} value.
-  @begin{examples}
+  @begin[Examples]{dictionary}
     @begin{pre}
 (g:malloc 100)
 => #.(SB-SYS:INT-SAP #X559FB7283340)
@@ -493,7 +495,7 @@
 (cffi:null-pointer-p (g:malloc 0))
 => T
     @end{pre}
-  @end{examples}
+  @end{dictionary}
   @see-function{g:free}"
   (nbytes :size))
 
@@ -516,7 +518,6 @@
   (mem :pointer))
 
 (export 'free)
-
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_get_application_name

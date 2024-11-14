@@ -1,12 +1,12 @@
 ;;; ----------------------------------------------------------------------------
 ;;; glib.key-value.lisp
 ;;;
-;;; The documentation of this file is taken from the GLib 2.76 Reference
+;;; The documentation of this file is taken from the GLib 2.82 Reference
 ;;; Manual and modified to document the Lisp binding to the GLib library.
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
 ;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2020 - 2023 Dieter Kaiser
+;;; Copyright (C) 2020 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -127,7 +127,7 @@
 (declaim (inline ensure-pointer))
 
 (defun ensure-pointer (value)
-  (if value value (cffi:null-pointer)))
+  (or value (cffi:null-pointer)))
 
 ;;; ----------------------------------------------------------------------------
 ;;; G_KEY_FILE_ERROR
@@ -174,7 +174,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; enum GKeyFileFlags
+;;; GKeyFileFlags
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defbitfield key-file-flags
@@ -370,7 +370,7 @@ Booleans=true;false;true;true
        (key-file-free ,keyfile))))
 
 ;;; ----------------------------------------------------------------------------
-;;; g_key_file_new ()
+;;; g_key_file_new
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_key_file_new" key-file-new) (:pointer (:struct key-file))
@@ -389,7 +389,7 @@ Booleans=true;false;true;true
 (export 'key-file-new)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_key_file_free ()
+;;; g_key_file_free
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_key_file_free" key-file-free) :void
@@ -408,7 +408,7 @@ Booleans=true;false;true;true
 (export 'key-file-free)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_key_file_ref ()
+;;; g_key_file_ref
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_key_file_ref" key-file-ref) (:pointer (:struct key-file))
@@ -426,7 +426,7 @@ Booleans=true;false;true;true
 (export 'key-file-ref)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_key_file_unref ()
+;;; g_key_file_unref
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_key_file_unref" key-file-unref) :void
@@ -445,7 +445,7 @@ Booleans=true;false;true;true
 (export 'key-file-unref)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_key_file_set_list_separator ()
+;;; g_key_file_set_list_separator
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_key_file_set_list_separator" %key-file-set-list-separator)
@@ -469,7 +469,7 @@ Booleans=true;false;true;true
 (export 'key-file-set-list-separator)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_key_file_load_from_file ()
+;;; g_key_file_load_from_file
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_key_file_load_from_file" %key-file-load-from-file) :boolean
@@ -497,7 +497,7 @@ Booleans=true;false;true;true
 (export 'key-file-load-from-file)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_key_file_load_from_data ()
+;;; g_key_file_load_from_data
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_key_file_load_from_data" %key-file-load-from-data) :boolean
@@ -526,31 +526,7 @@ Booleans=true;false;true;true
 (export 'key-file-load-from-data)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_key_file_load_from_bytes ()
-;;;
-;;; gboolean
-;;; g_key_file_load_from_bytes (GKeyFile *key_file,
-;;;                             GBytes *bytes,
-;;;                             GKeyFileFlags flags,
-;;;                             GError **error);
-;;;
-;;; Loads a key file from the data in bytes into an empty GKeyFile structure.
-;;; If the object cannot be created then error is set to a GKeyFileError.
-;;;
-;;; key_file :
-;;;     an empty GKeyFile struct
-;;;
-;;; bytes :
-;;;     a GBytes
-;;;
-;;; flags ;
-;;;     flags from GKeyFileFlags
-;;;
-;;; error :
-;;;     return location for a GError, or NULL
-;;;
-;;; Returns :
-;;;     TRUE if a key file could be loaded, FALSE otherwise
+;;; g_key_file_load_from_bytes
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_key_file_load_from_bytes" %key-file-load-from-bytes) :boolean
@@ -651,7 +627,7 @@ Booleans=true;false;true;true
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_key_file_to_data ()
+;;; g_key_file_to_data
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_key_file_to_data" %key-file-to-data) :string
@@ -679,7 +655,7 @@ Booleans=true;false;true;true
 (export 'key-file-to-data)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_key_file_save_to_file ()
+;;; g_key_file_save_to_file
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_key_file_save_to_file" %key-file-save-to-file) :boolean
@@ -704,7 +680,7 @@ Booleans=true;false;true;true
 (export 'key-file-save-to-file)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_key_file_get_start_group () -> key-file-start-group
+;;; g_key_file_get_start_group
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_key_file_get_start_group" key-file-start-group) :string
@@ -721,7 +697,7 @@ Booleans=true;false;true;true
 (export 'key-file-start-group)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_key_file_get_groups () -> key-file-groups
+;;; g_key_file_get_groups
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_key_file_get_groups" %key-file-groups)
@@ -743,7 +719,7 @@ Booleans=true;false;true;true
 (export 'key-file-groups)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_key_file_get_keys () -> key-file-keys
+;;; g_key_file_get_keys
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_key_file_get_keys" %key-file-keys)
@@ -770,7 +746,7 @@ Booleans=true;false;true;true
 (export 'key-file-keys)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_key_file_has_group ()
+;;; g_key_file_has_group
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_key_file_has_group" key-file-has-group) :boolean
@@ -790,7 +766,7 @@ Booleans=true;false;true;true
 (export 'key-file-has-group)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_key_file_has_key ()
+;;; g_key_file_has_key
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_key_file_has_key" %key-file-has-key) :boolean
@@ -818,8 +794,8 @@ Booleans=true;false;true;true
 (export 'key-file-has-key)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_key_file_get_value ()
-;;; g_key_file_set_value () -> key-file-value
+;;; g_key_file_get_value
+;;; g_key_file_set_value
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf key-file-value) (value keyfile group key)
@@ -866,8 +842,8 @@ Booleans=true;false;true;true
 (export 'key-file-value)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_key_file_get_string ()
-;;; g_key_file_set_string () -> key-file-string
+;;; g_key_file_get_string
+;;; g_key_file_set_string
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf key-file-string) (value keyfile group key)
@@ -1137,8 +1113,8 @@ Booleans=true;false;true;true
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_key_file_get_string_list ()
-;;; g_key_file_set_string_list () -> key-file-string-list
+;;; g_key_file_get_string_list
+;;; g_key_file_set_string_list
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_key_file_set_string_list" %key-file-set-string-list) :void
@@ -1338,56 +1314,8 @@ Booleans=true;false;true;true
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_key_file_get_comment ()
-;;;
-;;; gchar * g_key_file_get_comment (GKeyFile *key_file,
-;;;                                 const gchar *group_name,
-;;;                                 const gchar *key,
-;;;                                 GError **error);
-;;;
-;;;
-;;; key_file :
-;;;     a GKeyFile
-;;;
-;;; group_name :
-;;;     a group name, or NULL. [allow-none]
-;;;
-;;; key :
-;;;     a key
-;;;
-;;; error :
-;;;     return location for a GError
-;;;
-;;; Returns :
-;;;     a comment that should be freed with g_free()
-;;; ----------------------------------------------------------------------------
-;;; ----------------------------------------------------------------------------
-;;; g_key_file_set_comment ()
-;;;
-;;; gboolean g_key_file_set_comment (GKeyFile *key_file,
-;;;                                  const gchar *group_name,
-;;;                                  const gchar *key,
-;;;                                  const gchar *comment,
-;;;                                  GError **error);
-;;;
-;;;
-;;; key_file :
-;;;     a GKeyFile
-;;;
-;;; group_name :
-;;;     a group name, or NULL. [allow-none]
-;;;
-;;; key :
-;;;     a key. [allow-none]
-;;;
-;;; comment :
-;;;     a comment
-;;;
-;;; error :
-;;;     return location for a GError
-;;;
-;;; Returns :
-;;;     TRUE if the comment was written, FALSE otherwise
+;;; g_key_file_get_comment
+;;; g_key_file_set_comment
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_key_file_set_comment" %key-file-set-comment) :boolean
@@ -1707,7 +1635,7 @@ Booleans=true;false;true;true
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_key_file_remove_group ()
+;;; g_key_file_remove_group
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_key_file_remove_group" %key-file-remove-group) :boolean
@@ -1731,7 +1659,7 @@ Booleans=true;false;true;true
 (export 'key-file-remove-group)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_key_file_remove_key ()
+;;; g_key_file_remove_key
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_key_file_remove_key" %key-file-remove-key) :boolean
@@ -1757,7 +1685,7 @@ Booleans=true;false;true;true
 (export 'key-file-remove-key)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_key_file_remove_comment ()
+;;; g_key_file_remove_comment
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_key_file_remove_comment" %key-file-remove-comment) :boolean

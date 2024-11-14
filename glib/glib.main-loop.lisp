@@ -1,7 +1,7 @@
 ;;; ----------------------------------------------------------------------------
 ;;; glib.main-loop.lisp
 ;;;
-;;; The documentation of this file is taken from the GLib 2.76 Reference
+;;; The documentation of this file is taken from the GLib 2.82 Reference
 ;;; Manual and modified to document the Lisp binding to the GLib library.
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
 ;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
@@ -42,14 +42,7 @@
 ;;;     G_SOURCE_REMOVE
 ;;;
 ;;;     GMainLoop
-;;;
 ;;;     GMainContext
-;;;     GMainContextPusher
-;;;
-;;;     GPid
-;;;     G_PID_FORMAT
-;;;     GPollFD
-;;;     G_POLLFD_FORMAT
 ;;;
 ;;;     GSource
 ;;;     GSourceFuncs
@@ -78,7 +71,6 @@
 ;;;     g_main_context_acquire
 ;;;     g_main_context_release
 ;;;     g_main_context_is_owner
-;;;     g_main_context_wait                                deprecated
 ;;;     g_main_context_prepare
 ;;;     g_main_context_query
 ;;;     g_main_context_check
@@ -86,23 +78,12 @@
 ;;;     g_main_context_set_poll_func
 ;;;     g_main_context_get_poll_func
 ;;;
-;;;     GPollFunc
-;;;
 ;;;     g_main_context_add_poll
 ;;;     g_main_context_remove_poll
 ;;;     g_main_depth
 ;;;     g_main_current_source
-;;;     g_main_set_poll_func                               deprecated
 ;;;     g_main_context_invoke
 ;;;     g_main_context_invoke_full
-;;;
-;;;     g_main_context_pusher_new
-;;;     g_main_context_pusher_free
-;;;
-;;;     g_main_context_get_thread_default
-;;;     g_main_context_ref_thread_default
-;;;     g_main_context_push_thread_default
-;;;     g_main_context_pop_thread_default
 ;;;
 ;;;     g_timeout_source_new
 ;;;     g_timeout_source_new_seconds
@@ -115,14 +96,6 @@
 ;;;     g_idle_add
 ;;;     g_idle_add_full
 ;;;     g_idle_remove_by_data
-;;;
-;;;     GChildWatchFunc
-;;;
-;;;     g_child_watch_source_new
-;;;     g_child_watch_add
-;;;     g_child_watch_add_full
-;;;
-;;;     g_poll
 ;;;
 ;;;     GSourceDummyMarshal
 ;;;     GSourceDisposeFunc
@@ -147,7 +120,6 @@
 ;;;     g_source_set_callback
 ;;;
 ;;;     GSourceFunc
-;;;     G_SOURCE_FUNC
 ;;;     g_source_set_callback_indirect
 ;;;
 ;;;     g_source_set_ready_time
@@ -162,13 +134,9 @@
 ;;;     g_source_add_child_source
 ;;;     g_source_remove_child_source
 ;;;     g_source_get_time
-;;;     g_source_get_current_time                          deprecated
 ;;;     g_source_remove
 ;;;     g_source_remove_by_funcs_user_data
 ;;;     g_source_remove_by_user_data
-;;;
-;;;     GClearHandleFunc
-;;;     g_clear_handle_id
 ;;; ----------------------------------------------------------------------------
 
 (in-package :glib)
@@ -331,7 +299,7 @@
 (setf (liber:alias-for-type 'main-loop)
       "CStruct"
       (documentation 'main-loop 'type)
- "@version{2022-11-21}
+ "@version{2024-11-6}
   @begin{short}
     The main event loop manages all the available sources of events for GLib
     and GTK applications. These events can come from any number of different
@@ -356,15 +324,15 @@
   Idle functions can also be added, and assigned a priority. These will be run
   whenever no events with a higher priority are ready to be processed.
 
-  The @sym{g:main-loop} data type represents a main event loop. A
-  @sym{g:main-loop} instance is created with the @fun{g:main-loop-new} function.
-  After adding the initial event sources, the @fun{g:main-loop-run} function is
-  called. This continuously checks for new events from each of the event sources
-  and dispatches them. Finally, the processing of an event from one of the
-  sources leads to a call to the @fun{g:main-loop-quit} funcion to exit the
-  main loop, and the @fun{g:main-loop-run} function returns.
+  The @type{g:main-loop} structure represents a main event loop. A
+  @type{g:main-loop} instance is created with the @fun{g:main-loop-new}
+  function. After adding the initial event sources, the @fun{g:main-loop-run}
+  function is called. This continuously checks for new events from each of the
+  event sources and dispatches them. Finally, the processing of an event from
+  one of the sources leads to a call to the @fun{g:main-loop-quit} funcion to
+  exit the main loop, and the @fun{g:main-loop-run} function returns.
 
-  It is possible to create new instances of @sym{g:main-loop} instances
+  It is possible to create new instances of the @type{g:main-loop} structure
   recursively. This is often used in GTK applications when showing modal
   dialog boxes. Note that event sources are associated with a particular
   @type{g:main-context} instance, and will be checked and dispatched for all
@@ -385,94 +353,15 @@
 (setf (liber:alias-for-type 'main-context)
       "CStruct"
       (documentation 'main-context 'type)
- "@version{2022-11-21}
+ "@version{2024-11-6}
   @begin{short}
-    The @sym{g:main-context} structure is an opaque data type representing a
+    The @type{g:main-context} structure is an opaque data type representing a
     set of sources to be handled in a main loop.
   @end{short}
   @see-constructor{g:main-context-new}
   @see-type{g:main-loop}")
 
 (export 'main-context)
-
-;;; ----------------------------------------------------------------------------
-;;; GMainContextPusher
-;;;
-;;; typedef void GMainContextPusher GLIB_AVAILABLE_TYPE_IN_2_64;
-;;;
-;;; Opaque type. See g_main_context_pusher_new() for details.
-;;;
-;;; Since 2.64
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; GPid
-;;;
-;;; typedef int GPid;
-;;;
-;;; A type which is used to hold a process identification.
-;;;
-;;; On UNIX, processes are identified by a process id (an integer), while
-;;; Windows uses process handles (which are pointers).
-;;;
-;;; GPid is used in GLib only for descendant processes spawned with the g_spawn
-;;; functions.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_PID_FORMAT
-;;;
-;;; #define G_PID_FORMAT "i"
-;;;
-;;; A format specifier that can be used in printf()-style format strings when
-;;; printing a GPid.
-;;;
-;;; Since 2.50
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; GPollFD                                                 not exported
-;;; ----------------------------------------------------------------------------
-
-(cffi:defcstruct poll-fd
-  (fd :int) ; TODO: #if defined (G_OS_WIN32) && GLIB_SIZEOF_VOID_P == 8
-  (events :ushort)
-  (revent :ushort))
-
-#+liber-documentation
-(setf (liber:alias-for-type 'poll-fd)
-      "CStruct"
-      (documentation 'poll-fd 'type)
- "@version{#2021-4-2}
-  @begin{short}
-    Represents a file descriptor, which events to poll for, and which events
-    occurred.
-  @end{short}
-  @begin{pre}
-(cffi:defcstruct poll-fd
-  (fd :int)
-  (events :ushort)
-  (revent :ushort))
-  @end{pre}
-  @begin[code]{table}
-    @entry[fd]{The file descriptor to poll (or a @code{HANDLE} on Win32).}
-    @entry[events]{A bitwise combination from @code{GIOCondition},
-      specifying which events should be polled for. Typically for reading from
-      a file descriptor you would use @code{G_IO_IN | G_IO_HUP | G_IO_ERR}, and
-      for writing you would use @code{G_IO_OUT | G_IO_ERR}.}
-    @entry[revents]{A bitwise combination of flags from @code{GIOCondition},
-      returned from the @code{poll()} function to indicate which events
-      occurred.}
-  @end{table}")
-
-;;; ----------------------------------------------------------------------------
-;;; G_POLLFD_FORMAT
-;;;
-;;; #define G_POLLFD_FORMAT "%d"
-;;;
-;;; A format specifier that can be used in printf()-style format strings when
-;;; printing the fd member of a GPollFD.
-;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
 ;;; GSource
@@ -498,7 +387,7 @@
 (setf (liber:alias-for-type 'source)
       "CStruct"
       (documentation 'source 'type)
- "@version{2024-7-27}
+ "@version{2024-11-6}
   @begin{short}
     The @type{g:source} structure is an opaque data type representing an
     event source.
@@ -624,14 +513,14 @@
 
 (defun main-loop-new (context is-running)
  #+liber-documentation
- "@version{2023-1-5}
+ "@version{2024-11-6}
   @argument[context]{a @type{g:main-context} instance, if @code{nil}, the
     default context will be used}
   @argument[is-running]{set to @em{true} to indicate that the main loop is
     running}
-  @return{A new @type{g:main-loop} instance.}
+  @return{The new @type{g:main-loop} instance.}
   @short{Creates a new main loop.}
-  @begin[Example]{dictionary}
+  @begin[Examples]{dictionary}
     Create a running main loop with a default context and quit the main loop.
     @begin{pre}
 (setq mainloop (g:main-loop-new nil t))
@@ -644,7 +533,7 @@
   @see-type{g:main-loop}
   @see-type{g:main-context}
   @see-function{g:main-loop-run}"
-  (let ((context (if context context (cffi:null-pointer))))
+  (let ((context (or context (cffi:null-pointer))))
     (cffi:foreign-funcall "g_main_loop_new"
                           (:pointer (:struct main-context)) context
                           :boolean is-running
@@ -658,7 +547,7 @@
 
 (cffi:defcfun ("g_main_loop_ref" main-loop-ref) (:pointer (:struct main-loop))
  #+liber-documentation
- "@version{2022-11-21}
+ "@version{2024-11-6}
   @argument[loop]{a @type{g:main-loop} instance}
   @return{The @arg{loop} argument.}
   @short{Increases the reference count on a main loop by one.}
@@ -674,7 +563,7 @@
 
 (cffi:defcfun ("g_main_loop_unref" main-loop-unref) :void
  #+liber-documentation
- "@version{2022-11-21}
+ "@version{2024-11-6}
   @argument[loop]{a @type{g:main-loop} instance}
   @begin{short}
     Decreases the reference count on a main loop by one.
@@ -692,7 +581,7 @@
 
 (cffi:defcfun ("g_main_loop_run" main-loop-run) :void
  #+liber-documentation
- "@version{2022-11-21}
+ "@version{2024-11-6}
   @argument[loop]{a @type{g:main-loop} instance}
   @begin{short}
     Runs a main loop until the @fun{g:main-loop-quit} function is called on the
@@ -712,14 +601,14 @@
 
 (cffi:defcfun ("g_main_loop_quit" main-loop-quit) :void
  #+liber-documentation
- "@version{2022-11-21}
+ "@version{2024-11-6}
   @argument[loop]{a @type{g:main-loop} instance}
   @begin{short}
     Stops a main loop from running.
   @end{short}
   Any calls to the @fun{g:main-loop-run} function for the main loop will return.
   Note that sources that have already been dispatched when the
-  @sym{g:main-loop-quit} function is called will still be executed.
+  @fun{g:main-loop-quit} function is called will still be executed.
   @see-type{g:main-loop}
   @see-function{g:main-loop-run}"
   (loop (:pointer (:struct main-loop))))
@@ -732,7 +621,7 @@
 
 (cffi:defcfun ("g_main_loop_is_running" main-loop-is-running) :boolean
  #+liber-documentation
- "@version{2022-11-21}
+ "@version{2024-11-6}
   @argument[loop]{a @type{g:main-loop} instance}
   @return{@em{True} if the main loop is currently being run.}
   @begin{short}
@@ -752,7 +641,7 @@
 (cffi:defcfun ("g_main_loop_get_context" main-loop-context)
     (:pointer (:struct main-context))
  #+liber-documentation
- "@version{2022-11-21}
+ "@version{2024-11-6}
   @argument[loop]{a @type{g:main-loop} instance}
   @return{The @type{g:main-context} instance of @arg{loop}.}
   @short{Returns the context of the main loop.}
@@ -769,7 +658,7 @@
 (cffi:defcfun ("g_main_context_new" main-context-new)
     (:pointer (:struct main-context))
  #+liber-documentation
- "@version{2022-11-21}
+ "@version{2024-11-6}
   @return{The new @type{g:main-context} instance.}
   @short{Creates a new context.}
   @see-type{g:main-context}")
@@ -783,7 +672,7 @@
 (cffi:defcfun ("g_main_context_ref" main-context-ref)
     (:pointer (:struct main-context))
  #+liber-documentation
- "@version{2022-11-21}
+ "@version{2024-11-6}
   @argument[context]{a @type{g:main-context} instance}
   @return{The @arg{context} argument.}
   @short{Increases the reference count on a context by one.}
@@ -799,7 +688,7 @@
 
 (cffi:defcfun ("g_main_context_unref" main-context-unref) :void
  #+liber-documentation
- "@version{2022-11-21}
+ "@version{2024-11-6}
   @argument[context]{a @type{g:main-context} instance}
   @begin{short}
     Decreases the reference count on a context by one.
@@ -818,8 +707,8 @@
 (cffi:defcfun ("g_main_context_default" main-context-default)
     (:pointer (:struct main-context))
  #+liber-documentation
- "@version{2022-11-21}
-  @return{A @type{g:main-context} instance with the global default context.}
+ "@version{2024-11-6}
+  @return{The @type{g:main-context} instance with the global default context.}
   @begin{short}
     Returns the global default context.
   @end{short}
@@ -835,7 +724,7 @@
 
 (defun main-context-iteration (context block)
  #+liber-documentation
- "@version{#2023-1-5}
+ "@version{#2024-11-6}
   @argument[context]{a @type{g:main-context} instance, if @code{nil}, the
     default context will be used}
   @argument[block]{a boolean whether the call may block}
@@ -852,11 +741,11 @@
   moment without further waiting.
 
   Note that even when the @arg{block} argument is @em{true}, it is still
-  possible for the @sym{g:main-context-iteration} function to return @em{false},
+  possible for the @fun{g:main-context-iteration} function to return @em{false},
   since the wait may be interrupted for other reasons than an event source
   becoming ready.
   @see-type{g:main-context}"
-  (let ((context (if context context (cffi:null-pointer))))
+  (let ((context (or context (cffi:null-pointer))))
     (cffi:foreign-funcall "g_main_context_iteration"
                           (:pointer (:struct main-context)) context
                           :boolean block
@@ -870,13 +759,13 @@
 
 (defun main-context-pending (context)
  #+liber-documentation
- "@version{#2023-1-5}
+ "@version{#2024-11-6}
   @argument[context]{a @type{g:main-context} instance, if @code{nil}, the
     default context will be used}
   @return{@em{True} if events are pending.}
   @short{Checks if any sources have pending events for the given main context.}
   @see-type{g:main-context}"
-  (let ((context (if context context (cffi:null-pointer))))
+  (let ((context (or context (cffi:null-pointer))))
     (cffi:foreign-funcall "g_main_context_pending"
                           (:pointer (:struct main-context)) context
                           :boolean)))
@@ -889,7 +778,7 @@
 
 (defun main-context-find-source-by-id (context source)
  #+liber-documentation
- "@version{2023-1-5}
+ "@version{2024-11-6}
   @argument[context]{a @type{g:main-context} instance, if @code{nil}, the
     default context will be used}
   @argument[source]{an unsigned integer source ID, as returned by the
@@ -911,7 +800,7 @@
   @see-function{g:source-id}
   @see-function{g:idle-add}"
   (let ((result nil)
-        (context (if context context (cffi:null-pointer))))
+        (context (or context (cffi:null-pointer))))
     (setf result
           (cffi:foreign-funcall "g_main_context_find_source_by_id"
                                 (:pointer (:struct main-context)) context
@@ -1053,7 +942,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 
 (cffi:defcfun ("g_main_context_is_owner" main-context-is-owner) :boolean
  #+liber-documentation
- "@version{2022-11-22}
+ "@version{2024-11-6}
   @argument[context]{a @type{g:main-context} instance}
   @return{@em{True} if the current thread is owner of @arg{context}.}
   @begin{short}
@@ -1066,38 +955,6 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
   (context (:pointer (:struct main-context))))
 
 (export 'main-context-is-owner)
-
-;;; ----------------------------------------------------------------------------
-;;; g_main_context_wait ()
-;;;
-;;; gboolean
-;;; g_main_context_wait (GMainContext *context,
-;;;                      GCond *cond,
-;;;                      GMutex *mutex);
-;;;
-;;; g_main_context_wait has been deprecated since version 2.58 and should not
-;;; be used in newly written code.
-;;;
-;;; Use g_main_context_is_owner() and separate locking instead.
-;;;
-;;; Tries to become the owner of the specified context, as with
-;;; g_main_context_acquire(). But if another thread is the owner, atomically
-;;; drop mutex and wait on cond until that owner releases ownership or until
-;;; cond is signaled, then try again (once) to become the owner.
-;;;
-;;; context :
-;;;     a GMainContext
-;;;
-;;; cond :
-;;;     a condition variable
-;;;
-;;; mutex :
-;;;     a mutex, currently held
-;;;
-;;; Returns :
-;;;     TRUE if the operation succeeded, and this thread is now the owner of
-;;;     context .
-;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_main_context_prepare                                  not exported
@@ -1149,7 +1006,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
   (context (:pointer (:struct main-context)))
   (max-priority :int)
   (timeout (:pointer :int))
-  (fds (:pointer (:struct poll-fd)))
+  (fds :pointer)
   (n-fds :int))
 
 ;;; ----------------------------------------------------------------------------
@@ -1176,7 +1033,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
   @see-function{main-context-dispatch}"
   (context (:pointer (:struct main-context)))
   (max-priority :int)
-  (fds (:pointer (:struct poll-fd)))
+  (fds :pointer)
   (n-fds :int))
 
 ;;; ----------------------------------------------------------------------------
@@ -1236,29 +1093,6 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
   (context (:pointer (:struct main-context))))
 
 ;;; ----------------------------------------------------------------------------
-;;; GPollFunc ()
-;;;
-;;; gint (*GPollFunc) (GPollFD *ufds, guint nfsd, gint timeout_);
-;;;
-;;; Specifies the type of function passed to g_main_context_set_poll_func().
-;;; The semantics of the function should match those of the poll() system call.
-;;;
-;;; ufds :
-;;;     an array of GPollFD elements
-;;;
-;;; nfsd :
-;;;     the number of elements in ufds
-;;;
-;;; timeout_ :
-;;;     the maximum time to wait for an event of the file descriptors. A
-;;;     negative value indicates an infinite timeout.
-;;;
-;;; Returns :
-;;;     the number of GPollFD elements which have events or errors reported, or
-;;;     -1 if an error occurred.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
 ;;; g_main_context_add_poll                                 not exported
 ;;; ----------------------------------------------------------------------------
 
@@ -1284,7 +1118,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
   @see-function{source-add-poll}
   @see-function{source-attach}"
   (context (:pointer (:struct main-context)))
-  (fd (:pointer (:struct poll-fd)))
+  (fd :pointer)
   (priority :int))
 
 ;;; ----------------------------------------------------------------------------
@@ -1305,7 +1139,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
   @see-type{poll-fd}
   @see-function{main-context-add-poll}"
   (context (:pointer (:struct main-context)))
-  (fd (:pointer (:struct poll-fd))))
+  (fd :pointer))
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_main_depth                                            not exported
@@ -1360,23 +1194,6 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
   @return{The currently firing @type{source} instance or @code{null-pointer}.}
   @short{Returns the currently firing source for this thread.}
   @see-type{source}")
-
-;;; ----------------------------------------------------------------------------
-;;; g_main_set_poll_func()
-;;;
-;;; #define g_main_set_poll_func(func)
-;;;
-;;; Warning
-;;;
-;;; g_main_set_poll_func has been deprecated since version 2.2 and should not be
-;;; used in newly written code. Use g_main_context_set_poll_func() again
-;;;
-;;; Sets the function to use for the handle polling of file descriptors for the
-;;; default main context.
-;;;
-;;; func :
-;;;     the function to call to poll all file descriptors
-;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_main_context_invoke ()
@@ -1455,189 +1272,13 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_main_context_pusher_new ()
-;;;
-;;; GMainContextPusher *
-;;; g_main_context_pusher_new (GMainContext *main_context);
-;;;
-;;; Push main_context as the new thread-default main context for the current
-;;; thread, using g_main_context_push_thread_default(), and return a new
-;;; GMainContextPusher. Pop with g_main_context_pusher_free(). Using
-;;; g_main_context_pop_thread_default() on main_context while a
-;;; GMainContextPusher exists for it can lead to undefined behaviour.
-;;;
-;;; Using two GMainContextPushers in the same scope is not allowed, as it leads
-;;; to an undefined pop order.
-;;;
-;;; This is intended to be used with g_autoptr(). Note that g_autoptr() is only
-;;; available when using GCC or clang, so the following example will only work
-;;; with those compilers:
-;;;
-;;; typedef struct
-;;; {
-;;;   ...
-;;;   GMainContext *context;
-;;;   ...
-;;; } MyObject;
-;;;
-;;; static void
-;;; my_object_do_stuff (MyObject *self)
-;;; {
-;;;   g_autoptr(GMainContextPusher) pusher =
-;;;       g_main_context_pusher_new (self->context);
-;;;
-;;;   // Code with main context as the thread default here
-;;;
-;;;   if (cond)
-;;;     // No need to pop
-;;;     return;
-;;;
-;;;   // Optionally early pop
-;;;   g_clear_pointer (&pusher, g_main_context_pusher_free);
-;;;
-;;;   // Code with main context no longer the thread default here
-;;; }
-;;;
-;;; main_context :
-;;;     a main context to push.
-;;;
-;;; Returns :
-;;;     a GMainContextPusher.
-;;;
-;;; Since 2.64
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_main_context_pusher_free ()
-;;;
-;;; void
-;;; g_main_context_pusher_free (GMainContextPusher *pusher);
-;;;
-;;; Pop pusher ’s main context as the thread default main context. See
-;;; g_main_context_pusher_new() for details.
-;;;
-;;; This will pop the GMainContext as the current thread-default main context,
-;;; but will not call g_main_context_unref() on it.
-;;;
-;;; pusher :
-;;;     a GMainContextPusher.
-;;;
-;;; Since 2.64
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_main_context_get_thread_default                       not exported
-;;; ----------------------------------------------------------------------------
-
-(cffi:defcfun ("g_main_context_get_thread_default" main-context-thread-default)
-    (:pointer (:struct main-context))
- #+liber-documentation
- "@version{#2021-4-9}
-  @begin{return}
-    The thread default @type{main-context}, or @code{NULL} if the thread
-    default context is the global default context.
-  @end{return}
-  @begin{short}
-    Gets the thread default @type{main-context} for this thread.
-  @end{short}
-  Asynchronous operations that want to be able to be run in contexts other than
-  the default one should call this method or the
-  @fun{main-context-ref-thread-default} function to get a @type{main-context} to
-  add their @type{source}s to. Note that even in single-threaded programs
-  applications may sometimes want to temporarily push a non-default context, so
-  it is not safe to assume that this will always return @code{NULL} if you are
-  running in the default thread.
-
-  If you need to hold a reference on the context, use the
-  @fun{main-context-ref-thread-default} function instead.
-  @see-type{main-context}
-  @see-function{main-context-ref-thread-default}")
-
-;;; ----------------------------------------------------------------------------
-;;; g_main_context_ref_thread_default                       not exported
-;;; ----------------------------------------------------------------------------
-
-(cffi:defcfun ("g_main_context_ref_thread_default"
-                main-context-ref-thread-default)
-    (:pointer (:struct main-context))
- #+liber-documentation
- "@version{#2021-4-9}
-  @begin{return}
-    The thread-default @symbol{main-context}. Unref with the
-    @fun{main-context-unref} function when you are done with it
-  @end{return}
-  @begin{short}
-    Gets the thread-default @symbol{main-context} for this thread, as with
-    the @fun{main-context-get-thread-default} function, but also adds a
-    reference to it with the @fun{main-context-ref} function.
-  @end{short}
-  In addition, unlike the @fun{main-context-get-thread-default} function, if
-  the thread-default context is the global default context, this will return
-  that @symbol{main-context}, with a ref added to it, rather than returning
-  @code{NULL}.
-  @see-symbol{main-context}
-  @see-function{main-context-ref}
-  @see-function{main-context-unref}
-  @see-function{main-context-thread-default}")
-
-;;; ----------------------------------------------------------------------------
-;;; g_main_context_push_thread_default ()
-;;;
-;;; void g_main_context_push_thread_default (GMainContext *context);
-;;;
-;;; Acquires context and sets it as the thread-default context for the current
-;;; thread. This will cause certain asynchronous operations (such as most
-;;; gio-based I/O) which are started in this thread to run under context and
-;;; deliver their results to its main loop, rather than running under the global
-;;; default context in the main thread. Note that calling this function changes
-;;; the context returned by g_main_context_get_thread_default(), not the one
-;;; returned by g_main_context_default(), so it does not affect the context used
-;;; by functions like g_idle_add().
-;;;
-;;; Normally you would call this function shortly after creating a new thread,
-;;; passing it a GMainContext which will be run by a GMainLoop in that thread,
-;;; to set a new default context for all async operations in that thread. (In
-;;; this case, you don't need to ever call g_main_context_pop_thread_default().)
-;;; In some cases however, you may want to schedule a single operation in a
-;;; non-default context, or temporarily use a non-default context in the main
-;;; thread. In that case, you can wrap the call to the asynchronous operation
-;;; inside a g_main_context_push_thread_default() /
-;;; g_main_context_pop_thread_default() pair, but it is up to you to ensure that
-;;; no other asynchronous operations accidentally get started while the
-;;; non-default context is active.
-;;;
-;;; Beware that libraries that predate this function may not correctly handle
-;;; being used from a thread with a thread-default context. Eg, see
-;;; g_file_supports_thread_contexts().
-;;;
-;;; context :
-;;;     a GMainContext, or NULL for the global default context
-;;;
-;;; Since 2.22
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_main_context_pop_thread_default ()
-;;;
-;;; void g_main_context_pop_thread_default (GMainContext *context);
-;;;
-;;; Pops context off the thread-default context stack (verifying that it was on
-;;; the top of the stack).
-;;;
-;;; context :
-;;;     a GMainContext object, or NULL
-;;;
-;;; Since 2.22
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
 ;;; g_timeout_source_new
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_timeout_source_new" timeout-source-new)
     (:pointer (:struct source))
  #+liber-documentation
- "@version{2022-11-22}
+ "@version{2024-11-6}
   @argument[interval]{an integer with the timeout interval in milliseconds}
   @return{The newly created @type{g:source} timeout source.}
   @begin{short}
@@ -1659,7 +1300,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 (cffi:defcfun ("g_timeout_source_new_seconds" timeout-source-new-seconds)
     (:pointer (:struct source))
  #+liber-documentation
- "@version{2023-1-5}
+ "@version{2024-11-6}
   @argument[interval]{an integer with the timeout interval in seconds}
   @return{The newly created @type{g:source} timeout source.}
   @begin{short}
@@ -1680,9 +1321,16 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 ;;; g_timeout_add
 ;;; ----------------------------------------------------------------------------
 
+(cffi:defcfun ("g_timeout_add_full" %timeout-add-full) :uint
+  (priority :int)
+  (interval-milliseconds :uint)
+  (function :pointer)
+  (data :pointer)
+  (destroy-notify :pointer))
+
 (defun timeout-add (interval func &key (priority +priority-default+))
  #+liber-documentation
- "@version{2022-11-22}
+ "@version{2024-11-6}
   @argument[interval]{an integer with the time between calls to @arg{func},
     in milliseconds}
   @argument[func]{a @symbol{g:source-func} callback function to call}
@@ -1726,56 +1374,20 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 (export 'timeout-add)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_timeout_add_full                                      not exported
+;;; g_timeout_add_seconds
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcfun ("g_timeout_add_full" %timeout-add-full) :uint
- #+liber-documentation
- "@version{#2013-7-20}
-  @argument[priority]{the priority of the timeout source. Typically this will
-    be in the range between @var{g:+priority-default+} and
-    @var{g:+priority-high+}.}
-  @argument[interval]{the time between calls to the function, in milliseconds
-    (1/1000ths of a second)}
-  @argument[function]{function to call}
-  @argument[data]{data to pass to @arg{function}}
-  @argument[notify]{function to call when the timeout is removed, or
-    @code{null-pointer}}
-  @return{the ID (greater than @code{0}) of the event source.}
-  @begin{short}
-    Sets a function to be called at regular intervals, with the given priority.
-  @end{short}
-  The function is called repeatedly until it returns @code{nil}, at which point
-  the timeout is automatically destroyed and the function will not be called
-  again. The @arg{notify} function is called when the timeout is destroyed. The
-  first call to the function will be at the end of the first @arg{interval}.
-
-  Note that timeout functions may be delayed, due to the processing of other
-  event sources. Thus they should not be relied on for precise timing. After
-  each call to the timeout function, the time of the next timeout is
-  recalculated based on the current time and the given interval (it does not
-  try to 'catch up' time lost in delays).
-
-  This internally creates a main loop source using @fun{timeout-source-new}
-  and attaches it to the main loop context using @fun{source-attach}. You can
-  do these steps manually if you need greater control.
-
-  The interval given in terms of monotonic time, not wall clock time. See
-  @code{g_get_monotonic_time()}."
+(cffi:defcfun ("g_timeout_add_seconds_full" %timeout-add-seconds-full) :uint
   (priority :int)
-  (interval-milliseconds :uint)
+  (interval-seconds :uint)
   (function :pointer)
   (data :pointer)
   (destroy-notify :pointer))
 
-;;; ----------------------------------------------------------------------------
-;;; g_timeout_add_seconds
-;;; ----------------------------------------------------------------------------
-
 (defun timeout-add-seconds (interval func
                             &key (priority +priority-default+))
  #+liber-documentation
- "@version{2023-1-6}
+ "@version{2024-11-6}
   @argument[interval]{an unsigned integer with the time between calls to
     @arg{func}, in seconds}
   @argument[func]{a @symbol{g:source-func} callback function to call}
@@ -1811,71 +1423,12 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 (export 'timeout-add-seconds)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_timeout_add_seconds_full                              not exported
-;;; ----------------------------------------------------------------------------
-
-(cffi:defcfun ("g_timeout_add_seconds_full" %timeout-add-seconds-full) :uint
- #+liber-documentation
- "@version{#2013-01-17}
-  @argument[priority]{the priority of the timeout source. Typically this will
-    be in the range between @var{g:+priority-default+} and
-    @var{g:+priority-high+}.}
-  @argument[interval]{the time between calls to the function, in seconds}
-  @argument[function]{function to call}
-  @argument[data]{data to pass to function}
-  @argument[notify]{function to call when the timeout is removed, or
-    @code{null-pointer}}
-  @return{the ID (greater than @code{0}) of the event source.}
-  @begin{short}
-    Sets a @arg{function} to be called at regular intervals, with priority.
-  @end{short}
-  The @arg{function} is called repeatedly until it returns @code{nil}, at which
-  point the timeout is automatically destroyed and the function will not be
-  called again.
-
-  Unlike @fun{timeout-add}, this function operates at whole second
-  granularity. The initial starting point of the timer is determined by the
-  implementation and the implementation is expected to group multiple timers
-  together so that they fire all at the same time. To allow this grouping, the
-  interval to the first timer is rounded and can deviate up to one second from
-  the specified @arg{interval}. Subsequent timer iterations will generally run
-  at the specified interval.
-
-  Note that timeout functions may be delayed, due to the processing of other
-  event sources. Thus they should not be relied on for precise timing. After
-  each call to the timeout function, the time of the next timeout is
-  recalculated based on the current time and the given interval
-
-  If you want timing more precise than whole seconds, use @fun{timeout-add}
-  instead.
-
-  The grouping of timers to fire at the same time results in a more power and
-  CPU efficient behavior so if your timer is in multiples of seconds and you
-  don't require the first timer exactly one second from now, the use of
-  @fun{timeout-add-seconds} is preferred over @fun{timeout-add}.
-
-  This internally creates a main loop source using
-  @fun{timeout-source-new-seconds} and attaches it to the main loop context
-  using @fun{source-attach}. You can do these steps manually if you need
-  greater control.
-
-  The interval given is in terms of monotonic time, not wall clock time. See
-  @code{g_get_monotonic_time()}.
-
-  Since 2.14"
-  (priority :int)
-  (interval-seconds :uint)
-  (function :pointer)
-  (data :pointer)
-  (destroy-notify :pointer))
-
-;;; ----------------------------------------------------------------------------
 ;;; g_idle_source_new
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_idle_source_new" idle-source-new) (:pointer (:struct source))
  #+liber-documentation
- "@version{2022-11-22}
+ "@version{2024-11-6}
   @return{The newly created @type{g:source} idle source.}
   @begin{short}
     Creates a new idle source.
@@ -1894,9 +1447,15 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 ;;; g_idle_add
 ;;; ----------------------------------------------------------------------------
 
+(cffi:defcfun ("g_idle_add_full" %idle-add-full) :uint
+  (priority :uint)
+  (function :pointer)
+  (data :pointer)
+  (notify :pointer))
+
 (defun idle-add (func &key (priority +priority-default-idle+))
  #+liber-documentation
- "@version{2022-11-22}
+ "@version{2024-11-6}
   @argument[func]{a @symbol{g:source-func} callback function to call}
   @argument[priority]{an integer with the priority of the idle source, typically
     this will be in the range between @var{g:+priority-default-idle+} and
@@ -1925,34 +1484,6 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 (export 'idle-add)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_idle_add_full                                         not exported
-;;; ----------------------------------------------------------------------------
-
-(cffi:defcfun ("g_idle_add_full" %idle-add-full) :uint
- #+liber-documentation
- "@version{#2013-1-1}
-  @argument[priority]{the priority of the idle source. Typically this will be
-    in the range between G_PRIORITY_DEFAULT_IDLE and G_PRIORITY_HIGH_IDLE.}
-  @argument[function]{function to call}
-  @argument[data]{data to pass to function}
-  @argument[notify]{function to call when the idle is removed, or NULL}
-  @return{the ID (greater than 0) of the event source. Rename to: g_idle_add}
-  @begin{short}
-    Adds a function to be called whenever there are no higher priority events
-    pending.
-  @end{short}
-  If the function returns FALSE it is automatically removed from the list of
-  event sources and will not be called again.
-
-  This internally creates a main loop source using g_idle_source_new() and
-  attaches it to the main loop context using g_source_attach(). You can do
-  these steps manually if you need greater control."
-  (priority :uint)
-  (function :pointer)
-  (data :pointer)
-  (notify :pointer))
-
-;;; ----------------------------------------------------------------------------
 ;;; g_idle_remove_by_data                                   not exported
 ;;; ----------------------------------------------------------------------------
 
@@ -1963,186 +1494,6 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
   @return{TRUE if an idle source was found and removed.}
   @short{Removes the idle function with the given data.}"
   (data :pointer))
-
-;;; ----------------------------------------------------------------------------
-;;; GChildWatchFunc ()
-;;;
-;;; void (*GChildWatchFunc) (GPid pid, gint status, gpointer user_data);
-;;;
-;;; The type of functions to be called when a child exists.
-;;;
-;;; pid :
-;;;     the process id of the child process
-;;;
-;;; status :
-;;;     Status information about the child process, see waitpid(2) for more
-;;;     information about this field
-;;;
-;;; user_data :
-;;;     user data passed to g_child_watch_add()
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_child_watch_source_new ()
-;;;
-;;; GSource * g_child_watch_source_new (GPid pid);
-;;;
-;;; Creates a new child_watch source.
-;;;
-;;; The source will not initially be associated with any GMainContext and must
-;;; be added to one with g_source_attach() before it will be executed.
-;;;
-;;; Note that child watch sources can only be used in conjunction with
-;;; g_spawn... when the G_SPAWN_DO_NOT_REAP_CHILD flag is used.
-;;;
-;;; Note that on platforms where GPid must be explicitly closed (see
-;;; g_spawn_close_pid()) pid must not be closed while the source is still
-;;; active. Typically, you will want to call g_spawn_close_pid() in the callback
-;;; function for the source.
-;;;
-;;; Note further that using g_child_watch_source_new() is not compatible with
-;;; calling waitpid(-1) in the application. Calling waitpid() for individual
-;;; pids will still work fine.
-;;;
-;;; pid :
-;;;     process to watch. On POSIX the pid of a child process. On Windows a
-;;;     handle for a process (which does not have to be a child).
-;;;
-;;; Returns :
-;;;     the newly-created child watch source
-;;;
-;;; Since 2.4
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_child_watch_add ()
-;;;
-;;; guint g_child_watch_add (GPid pid,
-;;;                          GChildWatchFunc function,
-;;;                          gpointer data);
-;;;
-;;; Sets a function to be called when the child indicated by pid exits, at a
-;;; default priority, G_PRIORITY_DEFAULT.
-;;;
-;;; If you obtain pid from g_spawn_async() or g_spawn_async_with_pipes() you
-;;; will need to pass G_SPAWN_DO_NOT_REAP_CHILD as flag to the spawn function
-;;; for the child watching to work.
-;;;
-;;; Note that on platforms where GPid must be explicitly closed (see
-;;; g_spawn_close_pid()) pid must not be closed while the source is still
-;;; active. Typically, you will want to call g_spawn_close_pid() in the callback
-;;; function for the source.
-;;;
-;;; GLib supports only a single callback per process id.
-;;;
-;;; This internally creates a main loop source using g_child_watch_source_new()
-;;; and attaches it to the main loop context using g_source_attach(). You can do
-;;; these steps manually if you need greater control.
-;;;
-;;; pid :
-;;;     process id to watch. On POSIX the pid of a child process. On Windows a
-;;;     handle for a process (which does not have to be a child).
-;;;
-;;; function :
-;;;     function to call
-;;;
-;;; data :
-;;;     data to pass to function
-;;;
-;;; Returns :
-;;;     the ID (greater than 0) of the event source.
-;;;
-;;; Since 2.4
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_child_watch_add_full ()
-;;;
-;;; guint g_child_watch_add_full (gint priority,
-;;;                               GPid pid,
-;;;                               GChildWatchFunc function,
-;;;                               gpointer data,
-;;;                               GDestroyNotify notify);
-;;;
-;;; Sets a function to be called when the child indicated by pid exits, at the
-;;; priority priority.
-;;;
-;;; If you obtain pid from g_spawn_async() or g_spawn_async_with_pipes() you
-;;; will need to pass G_SPAWN_DO_NOT_REAP_CHILD as flag to the spawn function
-;;; for the child watching to work.
-;;;
-;;; Note that on platforms where GPid must be explicitly closed (see
-;;; g_spawn_close_pid()) pid must not be closed while the source is still
-;;; active. Typically, you will want to call g_spawn_close_pid() in the callback
-;;; function for the source.
-;;;
-;;; GLib supports only a single callback per process id.
-;;;
-;;; This internally creates a main loop source using g_child_watch_source_new()
-;;; and attaches it to the main loop context using g_source_attach(). You can
-;;; do these steps manually if you need greater control.
-;;;
-;;; priority :
-;;;     the priority of the idle source. Typically this will be in the range
-;;;     between G_PRIORITY_DEFAULT_IDLE and G_PRIORITY_HIGH_IDLE.
-;;;
-;;; pid :
-;;;     process to watch. On POSIX the pid of a child process. On Windows a
-;;;     handle for a process (which does not have to be a child).
-;;;
-;;; function :
-;;;     function to call
-;;;
-;;; data :
-;;;     data to pass to function
-;;;
-;;; notify :
-;;;     function to call when the idle is removed, or NULL
-;;;
-;;; Returns :
-;;;     the ID (greater than 0) of the event source. Rename to:
-;;;     g_child_watch_add
-;;;
-;;; Since 2.4
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_poll ()
-;;;
-;;; gint g_poll (GPollFD *fds, guint nfds, gint timeout);
-;;;
-;;; Polls fds, as with the poll() system call, but portably. (On systems that
-;;; don't have poll(), it is emulated using select().) This is used internally
-;;; by GMainContext, but it can be called directly if you need to block until
-;;; a file descriptor is ready, but don't want to run the full main loop.
-;;;
-;;; Each element of fds is a GPollFD describing a single file descriptor to
-;;; poll. The fd field indicates the file descriptor, and the events field
-;;; indicates the events to poll for. On return, the revents fields will be
-;;; filled with the events that actually occurred.
-;;;
-;;; On POSIX systems, the file descriptors in fds can be any sort of file
-;;; descriptor, but the situation is much more complicated on Windows. If you
-;;; need to use g_poll() in code that has to run on Windows, the easiest
-;;; solution is to construct all of your GPollFDs with
-;;; g_io_channel_win32_make_pollfd().
-;;;
-;;; fds :
-;;;     file descriptors to poll
-;;;
-;;; nfds :
-;;;     the number of file descriptors in fds
-;;;
-;;; timeout :
-;;;     amount of time to wait, in milliseconds, or -1 to wait forever
-;;;
-;;; Returns :
-;;;     the number of entries in fds whose revents fields were filled in, or 0
-;;;     if the operation timed out, or -1 on error or if the call was
-;;;     interrupted.
-;;;
-;;; Since 2.20
-;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
 ;;; GSourceDummyMarshal ()
@@ -2282,7 +1633,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 
 (defun source-attach (source context)
  #+liber-documentation
- "@version{2023-1-5}
+ "@version{2024-11-6}
   @argument[source]{a @type{g:source} instance}
   @argument[context]{a @type{g:main-context} instance, if @code{nil}, the
     default context will be used}
@@ -2296,7 +1647,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
   @see-type{g:source}
   @see-type{g:main-context}
   @see-function{g:source-destroy}"
-  (let ((context (if context context (cffi:null-pointer))))
+  (let ((context (or context (cffi:null-pointer))))
     (cffi:foreign-funcall "g_source_attach"
                           (:pointer (:struct source)) source
                           (:pointer (:struct main-context)) context
@@ -2310,7 +1661,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 
 (cffi:defcfun ("g_source_destroy" source-destroy) :void
  #+liber-documentation
- "@version{2022-11-22}
+ "@version{2024-11-6}
   @argument[source]{a @type{g:source} instance}
   @begin{short}
     Removes a source from its context, if any, and mark it as destroyed.
@@ -2329,7 +1680,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 
 (cffi:defcfun ("g_source_is_destroyed" source-is-destroyed) :boolean
  #+liber-documentation
- "@version{2022-11-22}
+ "@version{2024-11-6}
   @argument[source]{a @type{g:source} instance}
   @return{@em{True} if @arg{source} has been destroyed.}
   @begin{short}
@@ -2357,17 +1708,17 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 
 (cffi:defcfun ("g_source_get_priority" source-priority) :int
  #+liber-documentation
- "@version{2023-1-5}
+ "@version{2024-11-6}
   @syntax{(g:source-priority source) => priority}
   @syntax{(setf (g:source-priority source) => priority)}
   @argument[source]{a @type{g:source} instance}
   @argument[priority]{an integer with the priority}
   @begin{short}
-    The @sym{g:source-priority} function gets the priority of the source.
+    The @fun{g:source-priority} function gets the priority of the source.
   @end{short}
-  The @sym{(setf g:source-priority)} function sets the priority. While the main
-  loop is being run, a source will be dispatched if it is ready to be dispatched
-  and no sources at a higher (numerically smaller) priority are ready to be
+  The @setf{g:source-priority} function sets the priority. While the main loop
+  is being run, a source will be dispatched if it is ready to be dispatched and
+  no sources at a higher (numerically smaller) priority are ready to be
   dispatched.
   @see-type{g:source}"
   (source (:pointer (:struct source))))
@@ -2388,16 +1739,16 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 
 (cffi:defcfun ("g_source_get_can_recurse" source-can-recurse) :boolean
  #+liber-documentation
- "@version{2023-1-5}
+ "@version{2024-11-6}
   @syntax{(g:source-can-recurse source) => can-recurse}
   @syntax{(setf g:source-can-recurse source) can-recurse)}
   @argument[source]{a @type{g:source} instance}
   @argument[can-recurse]{a boolean whether recursion is allowed for this source}
   @begin{short}
-    The @sym{g:source-can-recurse} function checks whether the source is allowed
+    The @fun{g:source-can-recurse} function checks whether the source is allowed
     to be called recursively.
   @end{short}
-  The @sym{(setf g:source-can-recurse)} function sets whether the source can be
+  The @setf{g:source-can-recurse} function sets whether the source can be
   called recursively. If the @arg{can-recurse} argument is @em{true}, then while
   the source is being dispatched then this source will be processed normally.
   Otherwise, all processing of this source is blocked until the dispatch
@@ -2413,9 +1764,9 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 
 (cffi:defcfun ("g_source_get_id" source-id) :uint
  #+liber-documentation
- "@version{2022-11-22}
+ "@version{2024-11-6}
   @argument[source]{a @type{g:source} instance}
-  @return{An unsigned integer with the ID greater than 0 for @arg{source}.}
+  @return{The unsigned integer with the ID greater than 0 for @arg{source}.}
   @begin{short}
     Returns the numeric ID for a particular source.
   @end{short}
@@ -2443,7 +1794,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 
 (cffi:defcfun ("g_source_get_name" source-name) :string
  #+liber-documentation
- "@version{2024-7-27}
+ "@version{2024-11-6}
   @syntax{(g:source-name source) => name}
   @syntax{(setf (g:source-name source) name)}
   @argument[source]{a @type{g:source} instance}
@@ -2473,14 +1824,14 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 
 (cffi:defcfun ("g_source_set_name_by_id" source-set-name-by-id) :void
  #+liber-documentation
- "@version{2022-11-22}
+ "@version{2024-11-6}
   @argument[source]{an integer with the source ID}
   @argument[name]{a string with the debug name for the source}
   @begin{short}
     Sets the name of a source using its ID.
   @end{short}
   This is a convenience utility to set source names from the return value of
-  the @fun{g:idle-add}, @fun{g:timeout-add} functions, etc.
+  the @fun{g:idle-add}, @fun{g:timeout-add} functions, and so on.
   @see-type{g:source}
   @see-function{g:idle-add}
   @see-function{g:timeout-add}
@@ -2496,7 +1847,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 
 (defun source-context (source)
  #+liber-documentation
- "@version{2023-1-5}
+ "@version{2024-11-6}
   @argument[source]{a @type{g:source} instance}
   @return{The @type{g:main-context} instance with which the source is
     associated, or @code{nil} if the context has not yet been added to
@@ -2529,7 +1880,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 
 (defun source-set-callback (source func)
  #+liber-documentation
- "@version{2023-1-5}
+ "@version{2024-11-6}
   @argument[source]{a @type{g:source} instance}
   @argument[func]{a @symbol{g:source-func} callback function}
   @begin{short}
@@ -2559,8 +1910,8 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 (setf (liber:alias-for-symbol 'source-func)
       "Callback"
       (liber:symbol-documentation 'source-func)
- "@version{2024-7-27}
-  @syntax{lambda() => result}
+ "@version{2024-11-6}
+  @syntax{lambda () => result}
   @argument[result]{@em{false} if the source should be removed, the
     @var{g:+source-continue+} and @var{g:+source-remove+} constants are
     memorable names for the return value}
@@ -2568,7 +1919,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
     Specifies the type of callback function passed to the @fun{g:timeout-add},
     and @fun{g:idle-add} functions.
   @end{short}
-  @begin{examples}
+  @begin[Examples]{dictionary}
     This example shows a timeout callback function, which runs 10 times and
     then quits the main loop.
     @begin{pre}
@@ -2601,7 +1952,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
     (g:main-loop-run mainloop)
     (g:main-loop-unref mainloop)))
     @end{pre}
-  @end{examples}
+  @end{dictionary}
   @see-function{g:timeout-add}
   @see-function{g:idle-add}")
 
@@ -2646,24 +1997,24 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 
 (cffi:defcfun ("g_source_get_ready_time" source-ready-time) :int64
  #+liber-documentation
- "@version{2023-1-5}
+ "@version{2024-11-6}
   @syntax{(g:source-ready-time source) => time}
   @syntax{(setf (g:source-readey-time source) time)}
   @argument[source]{a @type{g:source} instance}
   @argument[time]{an integer with the monotonic time at which the source will
     be ready, 0 for \"immediately\", -1 for \"never\"}
   @begin{short}
-    The @sym{g:source-ready-time} function gets the \"ready time\" of the
+    The @fun{g:source-ready-time} function gets the \"ready time\" of the
     source.
   @end{short}
-  Any time before the current monotonic time, including 0, is an indication that
-  the source will fire immediately. The @sym{(setf g:source-ready-time)}
-  function sets a source to be dispatched when the given monotonic time is
-  reached (or passed). If the monotonic time is in the past, as it always will
-  be if @arg{time} is 0, then the source will be dispatched immediately. If
-  @arg{time} is -1 then the source is never woken up on the basis of the
-  passage of time. Dispatching the source does not reset the ready time. You
-  should do so yourself, from the source dispatch function.
+  Any time before the current monotonic time, including 0, is an indication
+  that the source will fire immediately. The @setf{g:source-ready-time} function
+  sets a source to be dispatched when the given monotonic time is reached (or
+  passed). If the monotonic time is in the past, as it always will be if
+  @arg{time} is 0, then the source will be dispatched immediately. If @arg{time}
+  is -1 then the source is never woken up on the basis of the passage of time.
+  Dispatching the source does not reset the ready time. You should do so
+  yourself, from the source dispatch function.
 
   Note that if you have a pair of sources where the ready time of one suggests
   that it will be delivered first but the priority for the other suggests that
@@ -2807,7 +2158,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
   @see-type{poll-fd}
   @see-function{source-new}"
   (source (:pointer (:struct source)))
-  (fd (:pointer (:struct poll-fd))))
+  (fd :pointer))
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_source_remove_poll                                    not exported
@@ -2822,51 +2173,54 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
   Removes a file descriptor from the set of file descriptors polled for this
   source."
   (source (:pointer (:struct source)))
-  (fd (:pointer (:struct poll-fd))))
+  (fd :pointer))
 
 ;;; ----------------------------------------------------------------------------
-;;; g_source_add_child_source ()
-;;;
-;;; void g_source_add_child_source (GSource *source, GSource *child_source);
-;;;
-;;; Adds child_source to source as a "polled" source; when source is added to a
-;;; GMainContext, child_source will be automatically added with the same
-;;; priority, when child_source is triggered, it will cause source to dispatch
-;;; (in addition to calling its own callback), and when source is destroyed, it
-;;; will destroy child_source as well. (source will also still be dispatched if
-;;; its own prepare/check functions indicate that it is ready.)
-;;;
-;;; If you don't need child_source to do anything on its own when it triggers,
-;;; you can call g_source_set_dummy_callback() on it to set a callback that does
-;;; nothing (except return TRUE if appropriate).
-;;;
-;;; source will hold a reference on child_source while child_source is attached
-;;; to it.
-;;;
-;;; source :
-;;;     a GSource
-;;;
-;;; child_source :
-;;;     a second GSource that source should "poll"
-;;;
-;;; Since 2.28
+;;; g_source_add_child_source
 ;;; ----------------------------------------------------------------------------
 
+(cffi:defcfun ("g_source_add_child_source" source-add-child-source) :void
+ #+liber-documentation
+ "@version{#2024-11-6}
+  @argument[source]{a @type{g:source} instance}
+  @argument[child]{a second @type{g:source} instance that @arg{source} should
+    \"poll\"}
+  @begin{short}
+    Adds @arg{child} to @arg{source} as a \"polled\" source.
+  @end{short}
+  When @arg{source} is added to a @type{g:main-context} instance, @arg{child}
+  will be automatically added with the same priority, when @arg{child} is
+  triggered, it will cause source to dispatch (in addition to calling its own
+  callback), and when @arg{source} is destroyed, it will destroy @arg{child} as
+  well. The @arg{source} instance will also still be dispatched if its own
+  prepare/check functions indicate that it is ready.
+
+  The @arg{source} instance will hold a reference on @arg{child} while
+  @arg{child} is attached to it.
+  @see-type{g:source}"
+  (source (:pointer (:struct source)))
+  (child (:pointer (:struct source))))
+
+(export 'source-add-child-source)
+
 ;;; ----------------------------------------------------------------------------
-;;; g_source_remove_child_source ()
-;;;
-;;; void g_source_remove_child_source (GSource *source, GSource *child_source);
-;;;
-;;; Detaches child_source from source and destroys it.
-;;;
-;;; source :
-;;;     a GSource
-;;;
-;;; child_source :
-;;;     a GSource previously passed to g_source_add_child_source().
-;;;
-;;; Since 2.28
+;;; g_source_remove_child_source
 ;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("g_source_remove_child_source" source-remove-child-source) :void
+ #+liber-documentation
+ "@version{#2024-11-6}
+  @argument[source]{a @type{g:source} instance}
+  @argument[child]{a @type{g:source} instance previously passed to the
+    @fun{g:source-add-child-source} function}
+  @begin{short}
+    Detaches @arg{child} from @arg{source} and destroys it.
+  @end{short}
+  @see-type{g:source}"
+  (source (:pointer (:struct source)))
+  (child (:pointer (:struct source))))
+
+(export 'source-remove-child-source)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_source_get_time
@@ -2874,9 +2228,9 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 
 (cffi:defcfun ("g_source_get_time" source-time) :uint64
  #+liber-documentation
- "@version{2022-11-22}
+ "@version{2024-11-6}
   @argument[source]{a @type{g:source} instance}
-  @return{An unsigned integer with the monotonic time in microseconds.}
+  @return{The unsigned integer with the monotonic time in microseconds.}
   @begin{short}
     Gets the time to be used when checking this source.
   @end{short}
@@ -2888,33 +2242,12 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 (export 'source-time)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_source_get_current_time ()
-;;;
-;;; void
-;;; g_source_get_current_time (GSource *source, GTimeVal *timeval);
-;;;
-;;; g_source_get_current_time has been deprecated since version 2.28 and should
-;;; not be used in newly written code.
-;;;
-;;; use g_source_get_time() instead
-;;;
-;;; This function ignores source and is otherwise the same as
-;;; g_get_current_time().
-;;;
-;;; source :
-;;;     a GSource
-;;;
-;;; timeval :
-;;;     GTimeVal structure in which to store current time.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
 ;;; g_source_remove
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_source_remove" source-remove) :boolean
  #+liber-documentation
- "@version{2024-5-13}
+ "@version{2024-11-6}
   @argument[source]{an unsigned integer ID for the source to remove}
   @return{@em{True} if @arg{source} was found and removed.}
   @begin{short}
@@ -2972,46 +2305,5 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
   If multiple sources exist with the same user data, only one will be
   destroyed."
   (user-data :pointer))
-
-;;; ----------------------------------------------------------------------------
-;;; GClearHandleFunc ()
-;;;
-;;; void
-;;; (*GClearHandleFunc) (guint handle_id);
-;;;
-;;; Specifies the type of function passed to g_clear_handle_id(). The
-;;; implementation is expected to free the resource identified by handle_id ;
-;;; for instance, if handle_id is a GSource ID, g_source_remove() can be used.
-;;;
-;;; handle_id :
-;;;     the handle ID to clear
-;;;
-;;; Since 2.56
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_clear_handle_id ()
-;;;
-;;; void
-;;; g_clear_handle_id (guint *tag_ptr, GClearHandleFunc clear_func);
-;;;
-;;; Clears a numeric handler, such as a GSource ID.
-;;;
-;;; tag_ptr must be a valid pointer to the variable holding the handler.
-;;;
-;;; If the ID is zero then this function does nothing. Otherwise, clear_func()
-;;; is called with the ID as a parameter, and the tag is set to zero.
-;;;
-;;; A macro is also included that allows this function to be used without
-;;; pointer casts.
-;;;
-;;; tag_ptr :
-;;;     a pointer to the handler ID.
-;;;
-;;; clear_func :
-;;;     the function to call to clear the handler.
-;;;
-;;; Since 2.56
-;;; ----------------------------------------------------------------------------
 
 ;;; --- End of file glib.main-loop.lisp  ---------------------------------------

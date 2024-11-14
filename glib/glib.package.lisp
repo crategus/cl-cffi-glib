@@ -49,12 +49,9 @@
            #:boxed-cstruct-info
            #:boxed-variant-info
 
-           #:define-g-boxed-opaque
-           #:define-g-boxed-cstruct
-           #:define-g-boxed-variant-cstruct
-
            #:define-gboxed-opaque
            #:define-gboxed-cstruct
+           #:define-gboxed-variant-cstruct
 
            #:boxed-copy-fn
            #:make-boxed-type
@@ -95,7 +92,6 @@
   small part of GLib is implemented in Lisp which is necessary to implement
   GTK in Lisp.
   @begin[Version Information]{section}
-    Variables and functions to check the GLib version.
     @about-symbol{+major-version+}
     @about-symbol{+minor-version+}
     @about-symbol{+micro-version+}
@@ -145,7 +141,6 @@
     @end{subsection}
   @end{section}
   @begin[The Main Event Loop]{section}
-    The Main Event Loop manages all available sources of events.
     @about-variable{+priority-high+}
     @about-variable{+priority-default+}
     @about-variable{+priority-high-idle+}
@@ -196,13 +191,13 @@
     @about-function{source-context}
     @about-symbol{source-func}
     @about-function{source-set-callback}
+    @about-function{source-add-child-source}
+    @about-function{source-remove-child-source}
     @about-function{source-time}
     @about-function{source-ready-time}
     @about-function{source-remove}
   @end{section}
   @begin[GBytes]{section}
-    A simple refcounted data type representing an immutable sequence of zero or
-    more bytes from an unspecified origin.
     @about-class{bytes}
     @about-function{bytes-new}
     @about-function{bytes-new-take}

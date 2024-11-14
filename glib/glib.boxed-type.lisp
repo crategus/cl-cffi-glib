@@ -256,45 +256,6 @@
   (lambda ()
     (register-gboxed-for-gc pointer info)))
 
-(defmacro define-g-boxed-opaque (name
-                                 gtype
-                                 &key (export t)
-                                      type-initializer
-                                      (alloc (cl:error "Alloc must be specified")))
-  (let ((native-copy (gensym "NATIVE-COPY-"))
-        (instance (gensym "INSTANCE-"))
-        (info (gensym "INFO-")))
-    `(progn
-       (defclass ,name (boxed-opaque) ())
-       (defmethod initialize-instance
-                  :after ((,instance ,name) &key &allow-other-keys)
-         (unless (boxed-opaque-pointer ,instance)
-           (let ((,native-copy ,alloc)
-                 (,info (get-boxed-info ',name)))
-             (assert (cffi:pointerp ,native-copy))
-             (setf (boxed-opaque-pointer ,instance) ,native-copy)
-             (tg:finalize ,instance
-                          (make-boxed-free-finalizer ,native-copy ,info)))))
-       ;; Change 2023-1-24:
-       ;; Add call to the type initializer, when available
-       ,@(when type-initializer
-           (list `(glib-init:at-init ()
-;                     (eval-when (:compile-toplevel :load-toplevel :execute)
-                       ,(type-initializer-call type-initializer))))
-;                       )
-       (eval-when (:compile-toplevel :load-toplevel :execute)
-         ;; Register the Lisp symbol NAME for GTYPE
-         (setf (symbol-for-gtype ,gtype) ',name)
-         ;; Store the structure in a hash table
-         (setf (get-boxed-info ',name)
-               (make-boxed-opaque-info :name ',name
-                                       :gtype ,gtype)))
-       ,@(when export
-           (list `(export ',name
-                          (find-package
-                              ,(package-name (symbol-package name)))))))))
-
-;; For replacing define-g-boxed-opaque
 (defmacro define-gboxed-opaque (name gtype
                                 &key (export t)
                                      type-initializer
@@ -418,47 +379,6 @@
 
 ;;; ----------------------------------------------------------------------------
 
-(defmacro define-g-boxed-cstruct (name gtype
-                                  (&key (export t)
-                                        type-initializer)
-                                  &body slots)
-  (let ((cstruct-description (parse-cstruct-definition name slots)))
-    `(progn
-       (defstruct ,name
-         ,@(iter (for slot in (cstruct-description-slots cstruct-description))
-                 (for name = (cstruct-slot-description-name slot))
-                 (for initform = (cstruct-slot-description-initform slot))
-                 (collect (list name initform))))
-       (cffi:defcstruct ,(generated-cstruct-name name)
-         ,@(iter (for slot in (cstruct-description-slots cstruct-description))
-                 (for name = (cstruct-slot-description-name slot))
-                 (for type = (cstruct-slot-description-type slot))
-                 (for count = (cstruct-slot-description-count slot))
-                 (collect `(,name ,type ,@(when count `(:count ,count))))))
-       (cffi:defcunion ,(generated-cunion-name name)
-         (,name (:struct ,(generated-cstruct-name name))))
-       (eval-when (:compile-toplevel :load-toplevel :execute)
-         ;; Register the Lisp symbol NAME for GTYPE
-         (setf (symbol-for-gtype ,gtype) ',name)
-         ;; Store the structure in a hash table
-         (setf (get-boxed-info ',name)
-               (make-boxed-cstruct-info :name ',name
-                                        :gtype ,gtype
-                                        :cstruct-description
-                                        ,cstruct-description))
-         (setf (get ',name 'structure-constructor)
-               ',(intern (format nil "MAKE-~A" (symbol-name name))
-                         (symbol-package name))))
-       ;; Change 2023-2-4:
-       ;; Add call to the type initializer, when available,
-       ;; and export the symbol
-       ,@(when type-initializer
-           (list `(glib-init:at-init ()
-                     ,(type-initializer-call type-initializer))))
-       ,@(when export
-           (list `(export (boxed-related-symbols ',name)))))))
-
-;; For replacing define-gboxed-cstruct
 (defmacro define-gboxed-cstruct (name gtype
                                  (&key (export t)
                                        type-initializer)
@@ -838,7 +758,7 @@
                  :info info
                  :returnp returnp))
 
-(defmacro define-g-boxed-variant-cstruct (name gtype &body slots)
+(defmacro define-gboxed-variant-cstruct (name gtype &body slots)
   (let* ((structure (parse-variant-structure-definition name slots)))
     `(progn
       ,@(generate-c-structures structure)

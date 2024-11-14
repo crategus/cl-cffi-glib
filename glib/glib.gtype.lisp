@@ -68,13 +68,13 @@
     Returns the name of the @code{GType} type.
   @end{short}
   The @arg{instance} argument must be a valid @symbol{g:gtype} instance.
-  @begin{examples}
+  @begin[Examples]{dictionary}
     @begin{pre}
 (g:gtype-name (g:gtype \"gboolean\")) => \"gboolean\"
 (g:gtype-name (g:gtype \"GObject\")) => \"GObject\"
 (g:gtype-name (g:gtype \"GSimpleAction\")) => \"GSimpleAction\"
     @end{pre}
-  @end{examples}
+  @end{dictionary}
   @see-symbol{g:gtype}
   @see-function{g:gtype-id}")
 
@@ -135,7 +135,7 @@
   @end{short}
   The function returns 0 for a @code{nil} value. This represents an invalid
   @code{GType} type.
-  @begin{examples}
+  @begin[Examples]{dictionary}
     @begin{pre}
 (g:gtype-id (g:gtype \"gboolean\")) => 20
 (g:gtype-id (g:gtype \"GObject\")) => 80
@@ -143,7 +143,7 @@
 (g:gtype-id (g:gtype \"GSimpleAction\")) => 95376336285744
 (g:gtype-id nil) => 0
     @end{pre}
-  @end{examples}
+  @end{dictionary}
   @see-symbol{g:gtype}
   @see-function{g:gtype-name}"
   (cond ((null instance) 0) ; for an invalid type
@@ -246,7 +246,7 @@
   @end{short}
   If the string or the integer does not represent a valid @code{GType} type the
   @code{nil} value is returned and a warning is printed.
-  @begin{examples}
+  @begin[Examples]{dictionary}
     @begin{pre}
 (g:gtype 20) => #<GTYPE :name \"gboolean\" :id 20>
 (g:gtype \"gboolean\") => #<GTYPE :name \"gboolean\" :id 20>
@@ -256,7 +256,7 @@
 => WARNING: unknown is not known to the GType system
 => NIL
     @end{pre}
-  @end{examples}
+  @end{dictionary}
   @see-symbol{g:gtype}")
 
 (export 'gtype)

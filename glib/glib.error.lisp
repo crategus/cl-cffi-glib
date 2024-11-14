@@ -51,7 +51,7 @@
 ;; GError is a boxed type. We export the type for usage in signals handlers,
 ;; when getting a GError as argument.
 
-(define-g-boxed-opaque error "GError"
+(define-gboxed-opaque error "GError"
   :export t
   :type-initializer "g_error_get_type"
   :alloc (cl:error "GError cannot be created from the Lisp side."))

@@ -1,12 +1,12 @@
 ;;; ----------------------------------------------------------------------------
 ;;; glib.option.lisp
 ;;;
-;;; The documentation of this file is taken from the GLib 2.76 Reference
+;;; The documentation of this file is taken from the GLib 2.82 Reference
 ;;; Manual and modified to document the Lisp binding to the GLib library.
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
 ;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2013 - 2023 Dieter Kaiser
+;;; Copyright (C) 2013 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -175,7 +175,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; enum GOptionArg
+;;; GOptionArg
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcenum option-arg
@@ -235,7 +235,7 @@
 (export 'option-arg)
 
 ;;; ----------------------------------------------------------------------------
-;;; enum GOptionFlags
+;;; GOptionFlags
 ;;;-----------------------------------------------------------------------------
 
 (cffi:defbitfield option-flags
@@ -308,7 +308,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; struct GOptionEntry                                    not exported
+;;; GOptionEntry                                            not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcstruct option-entry
@@ -537,7 +537,7 @@ Application Options:
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_option_context_new ()
+;;; g_option_context_new
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_option_context_new" %option-context-new)
@@ -589,13 +589,13 @@ Hilfeoptionen:
   @see-function{g:option-context-free}
   @see-function{g:option-context-summary}
   @see-function{g:option-context-set-translate-func}"
-  (%option-context-new (if parameter parameter (cffi:null-pointer))))
+  (%option-context-new (or parameter (cffi:null-pointer))))
 
 (export 'option-context-new)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_option_context_get_summary ()
-;;; g_option_context_set_summary () -> option-context-summary
+;;; g_option_context_get_summary
+;;; g_option_context_set_summary
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf option-context-summary) (summary context)
@@ -650,8 +650,8 @@ Hilfeoptionen:
 (export 'option-context-summary)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_option_context_get_description ()
-;;; g_option_context_set_description () -> option-context-description
+;;; g_option_context_get_description
+;;; g_option_context_set_description
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf option-context-description) (description context)
@@ -704,7 +704,7 @@ More descriptions.
 (export 'option-context-description)
 
 ;;; ----------------------------------------------------------------------------
-;;; GTranslateFunc ()
+;;; GTranslateFunc
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcallback translate-func :string
@@ -738,7 +738,7 @@ lambda (str)
 (export 'translate-func)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_option_context_set_translate_func ()
+;;; g_option_context_set_translate_func
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_option_context_set_translate_func"
@@ -787,7 +787,7 @@ lambda (str)
 (export 'option-context-set-translate-func)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_option_context_set_translation_domain ()
+;;; g_option_context_set_translation_domain
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_option_context_set_translation_domain"
@@ -807,7 +807,7 @@ lambda (str)
 (export 'option-context-set-translation-domain)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_option_context_free ()
+;;; g_option_context_free
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_option_context_free" option-context-free) :void
@@ -824,7 +824,7 @@ lambda (str)
 (export 'option-context-free)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_option_context_parse ()
+;;; g_option_context_parse
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_option_context_parse" %option-context-parse) :boolean
@@ -876,7 +876,7 @@ lambda (str)
 (export 'option-context-parse)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_option_context_parse_strv ()
+;;; g_option_context_parse_strv
 ;;; ----------------------------------------------------------------------------
 
 ;; TODO: The arguments should correspond the OPTION-CONTEXT-PARSE function.
@@ -931,8 +931,8 @@ lambda (str)
 (export 'option-context-parse-strv)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_option_context_get_help_enabled ()
-;;; g_option_context_set_help_enabled () -> option-context-help-enabled
+;;; g_option_context_get_help_enabled
+;;; g_option_context_set_help_enabled
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf option-context-help-enabled) (enabled context)
@@ -964,9 +964,8 @@ lambda (str)
 (export 'option-context-help-enabled)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_option_context_get_ignore_unknown_options ()
-;;; g_option_context_set_ignore_unknown_options ()
-;;; -> option-context-ignore-unknown-options
+;;; g_option_context_get_ignore_unknown_options
+;;; g_option_context_set_ignore_unknown_options
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf option-context-ignore-unknown-options) (value context)
@@ -1004,7 +1003,7 @@ lambda (str)
 (export 'option-context-ignore-unknown-options)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_option_context_get_help () -> option-context-help
+;;; g_option_context_get_help
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_option_context_get_help" %option-context-help) :string
@@ -1042,8 +1041,8 @@ lambda (str)
 (export 'option-context-help)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_option_context_get_strict_posix ()
-;;; g_option_context_set_strict_posix () -> option-context-strict-posix
+;;; g_option_context_get_strict_posix
+;;; g_option_context_set_strict_posix
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf option-context-strict-posix) (value context)
@@ -1091,7 +1090,7 @@ lambda (str)
 (export 'option-context-strict-posix)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_option_context_add_main_entries ()
+;;; g_option_context_add_main_entries
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_option_context_add_main_entries"
@@ -1173,7 +1172,7 @@ lambda (str)
 (export 'option-context-add-main-entries)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_option_context_add_group ()
+;;; g_option_context_add_group
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_option_context_add_group" option-context-add-group) :void
@@ -1197,8 +1196,8 @@ lambda (str)
 (export 'option-context-add-group)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_option_context_get_main_group ()
-;;; g_option_context_set_main_group () -> option-context-main-group
+;;; g_option_context_get_main_group
+;;; g_option_context_set_main_group
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf option-context-main-group) (group context)
@@ -1233,7 +1232,7 @@ lambda (str)
 (export 'option-context-main-group)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_option_group_new ()
+;;; g_option_group_new
 ;;; ----------------------------------------------------------------------------
 
 ;; TODO: The arguments USER-DATA and DESTROY are not implemented.
@@ -1276,7 +1275,7 @@ lambda (str)
 (export 'option-group-new)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_option_group_ref ()
+;;; g_option_group_ref
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_option_group_ref" option-group-ref)
@@ -1294,7 +1293,7 @@ lambda (str)
 (export 'option-group-ref)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_option_group_unref ()
+;;; g_option_group_unref
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_option_group_unref" option-group-unref) :void
@@ -1329,7 +1328,7 @@ lambda (str)
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_option_group_add_entries ()
+;;; g_option_group_add_entries
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_option_group_add_entries" %option-group-add-entries) :void
@@ -1543,7 +1542,7 @@ lambda (str)
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_option_group_set_translate_func ()
+;;; g_option_group_set_translate_func
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_option_group_set_translate_func"
@@ -1585,7 +1584,7 @@ lambda (str)
 (export 'option-group-set-translate-func)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_option_group_set_translation_domain ()
+;;; g_option_group_set_translation_domain
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_option_group_set_translation_domain"

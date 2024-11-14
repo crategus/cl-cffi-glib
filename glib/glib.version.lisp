@@ -133,14 +133,14 @@
     Checks if the GLib C library that is used is compatible with the given
     Lisp binding.
   @end{short}
-  @begin{examples}
+  @begin[Examples]{dictionary}
     Suppose the Glib library version 2.72.1 is installed. Then the following
     results are returned:
     @begin{pre}
 (glib:check-version 2 72 0) => NIL
 (glib:check-version 2 99 0) => \"GLib version too old (micro mismatch)\"
     @end{pre}
-  @end{examples}
+  @end{dictionary}
   @see-function{cl-cffi-glib-build-info}"
   (major :uint)
   (minor :uint)
@@ -158,20 +158,20 @@
     Provides information about the version of the loaded GLIB library against
     which the Lisp binding is running.
   @end{short}
-  @begin{examples}
+  @begin[Examples]{dictionary}
     @begin{pre}
-* (cl-cffi-glib-build-info)
-cl-cffi-glib build date: 22:17 10/23/2022
-GLIB version: 2.72.1
+* (g:cl-cffi-glib-build-info)
+cl-cffi-glib build date: 20:48 11/6/2024
+GLIB version: 2.82.1
 Machine type: X86-64
-Machine version: Intel(R) Core(TM) i5-4210U CPU @@ 1.70GHz
+Machine version: Intel(R) Core(TM) i5-5200U CPU @@ 2.20GHz
 Software type: Linux
-Software version: 5.15.0-52-generic
+Software version: 6.11.0-8-generic
 Lisp implementation type: SBCL
-Lisp implementation version: 2.1.11.debian
+Lisp implementation version: 2.2.9.debian
 NIL
     @end{pre}
-  @end{examples}
+  @end{dictionary}
   @see-symbol{glib:+major-version+}
   @see-symbol{glib:+minor-version+}
   @see-symbol{glib:+micro-version+}
