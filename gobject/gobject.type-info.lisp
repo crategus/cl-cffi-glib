@@ -2,7 +2,7 @@
 ;;; gobject.type-info.lisp
 ;;;
 ;;; The documentation of this file is taken from the GObject Reference Manual
-;;; Version 2.80 and modified to document the Lisp binding to the GObject
+;;; Version 2.82 and modified to document the Lisp binding to the GObject
 ;;; library. See <http://www.gtk.org>. The API documentation of the Lisp
 ;;; binding is available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
@@ -355,7 +355,7 @@ ID     NAME               CFFI type      Lisp type
 84     \"GVariant\"       :pointer
     @end{pre}
   @end{dictionary}
-  @begin{examples}
+  @begin[Examples]{dictionary}
     Create a @symbol{g:gtype} instance from a string or a numeric identifier.
     @begin{pre}
 (g:gtype \"gdouble\") => #<GTYPE :name \"gdouble\" :id 60>
@@ -381,7 +381,7 @@ ID     NAME               CFFI type      Lisp type
 (cffi:convert-to-foreign \"gdouble\" 'g:type-t) => 60
 (cffi:convert-to-foreign (g:gtype \"gdouble\") 'g:type-t) => 60
     @end{pre}
-  @end{examples}
+  @end{dictionary}
   @see-function{g:gtype}
   @see-function{g:gtype-name}
   @see-function{g:gtype-id}")
@@ -996,13 +996,13 @@ ID     NAME               CFFI type      Lisp type
   @end{short}
   Fundamental types are types that serve as ultimate bases for the derived
   types, thus they are the roots of distinct inheritance hierarchies.
-  @begin{examples}
+  @begin[Examples]{dictionary}
     @begin{pre}
 (g:type-fundamental \"GSimpleAction\") => #<GTYPE :name \"GObject\" :id 80>
 (g:type-fundamental \"GAction\") => #<GTYPE :name \"GInterface\" :id 8>
 (g:type-fundamental \"GBytes\") => #<GTYPE :name \"GBoxed\" :id 72>
     @end{pre}
-  @end{examples}
+  @end{dictionary}
   @see-class{g:type-t}"
   (gtype type-t))
 
@@ -1026,14 +1026,14 @@ ID     NAME               CFFI type      Lisp type
     The @fun{g:type-make-fundamental} function does not return a Lisp
     @class{g:type-t} type ID, but the ID number of the @class{g:type-t} type ID.
   @end{dictionary}
-  @begin{examples}
+  @begin[Examples]{dictionary}
     @begin{pre}
 (g:type-make-fundamental 5)
 => 20
 (gtype (g:type-make-fundamental 5))
 => <GTYPE :name \"gboolean\" :id 20>
     @end{pre}
-  @end{examples}
+  @end{dictionary}
   @see-class{g:type-t}
   @see-function{g:type-fundamental-next}"
   (ash x +type-fundamental-shift+))
@@ -1056,12 +1056,12 @@ ID     NAME               CFFI type      Lisp type
   @end{short}
   An abstract type cannot be instantiated and is normally used as an abstract
   base class for derived classes.
-  @begin{examples}
+  @begin[Examples]{dictionary}
     @begin{pre}
 (g:type-is-abstract \"GtkWidget\") => T
 (g:type-is-abstract \"GtkButton\") => NIL
     @end{pre}
-  @end{examples}
+  @end{dictionary}
   @see-class{g:type-t}"
   (%type-test-flags gtype :abstract))
 
@@ -1081,13 +1081,13 @@ ID     NAME               CFFI type      Lisp type
     inherited from another type.
   @end{short}
   This holds true for all non-fundamental types.
-  @begin{examples}
+  @begin[Examples]{dictionary}
     @begin{pre}
 (g:type-is-derived \"gboolean\") => NIL
 (g:type-is-derived \"GObject\") => NIL
 (g:type-is-derived \"GtkWidget\") => T
     @end{pre}
-  @end{examples}
+  @end{dictionary}
   @see-class{g:type-t}
   @see-function{g:type-is-fundamental}"
   (> (glib:gtype-id (glib:gtype gtype)) +type-fundamental-max+))
@@ -1106,13 +1106,13 @@ ID     NAME               CFFI type      Lisp type
   @begin{short}
     Checks if @arg{gtype} is a fundamental type.
   @end{short}
-  @begin{examples}
+  @begin[Examples]{dictionary}
     @begin{pre}
 (g:type-is-fundamental \"gboolean\") => T
 (g:type-is-fundamental \"GObject\") => T
 (g:type-is-fundamental \"GtkWidget\") => NIL
     @end{pre}
-  @end{examples}
+  @end{dictionary}
   @see-class{g:type-t}
   @see-function{g:type-is-derived}"
   (<= (glib:gtype-id (glib:gtype gtype)) +type-fundamental-max+))
@@ -1135,13 +1135,13 @@ ID     NAME               CFFI type      Lisp type
     Checks if @arg{gtype} is a value type and can be used with the
     @fun{g:value-init} function.
   @end{short}
-  @begin{examples}
+  @begin[Examples]{dictionary}
     @begin{pre}
 (g:type-is-value-type \"gint\") => T
 (g:type-is-value-type \"GObject\") => T
 (g:type-is-value-type \"GEnum\") => NIL
     @end{pre}
-  @end{examples}
+  @end{dictionary}
   @see-class{g:type-t}
   @see-symbol{g:value}
   @see-function{g:value-init}"
@@ -1261,13 +1261,13 @@ ID     NAME               CFFI type      Lisp type
   GLib interfaces are somewhat analogous to Java interfaces and C++ classes
   containing only pure virtual functions, with the difference that GType
   interfaces are not derivable.
-  @begin{examples}
+  @begin[Examples]{dictionary}
     @begin{pre}
 (g:type-is-interface \"GAction\") => T
 (g:type-is-interface (g:gtype \"GAction\")) => T
 (g:type-is-interface \"GSimpleAction\") => NIL
     @end{pre}
-  @end{examples}
+  @end{dictionary}
   @see-class{g:type-t}
   @see-symbol{g:type-interface}"
   (eq (glib:gtype "GInterface") (type-fundamental gtype)))
@@ -1289,12 +1289,12 @@ ID     NAME               CFFI type      Lisp type
     Signals an error if the @arg{instance} argument is not a valid
     @symbol{g:type-instance} instance.
   @end{dictionary}
-  @begin{examples}
+  @begin[Examles]{dictionary}
     @begin{pre}
 (g:type-from-instance (make-instance 'g:simple-action))
 => #<GTYPE :name \"GSimpleAction\" :id 97556076810288>
     @end{pre}
-  @end{examples}
+  @end{dictionary}
   @see-class{g:type-t}
   @see-symbol{g:type-instance}
   @see-function{g:type-from-class}"
@@ -1318,12 +1318,12 @@ ID     NAME               CFFI type      Lisp type
   @return{The @class{g:type-t} type ID of @arg{class}.}
   @short{Get the type identifier from a given class instance.}
   This function should only be used in type implementations.
-  @begin{examples}
+  @begin[Examples]{dictionary}
     @begin{pre}
 (g:type-from-class (g:type-class-ref \"GObject\"))
 => #<GTYPE :name \"GObject\" :id 80>
     @end{pre}
-  @end{examples}
+  @end{dictionary}
   @see-class{g:type-t}
   @see-symbol{g:type-class}
   @see-function{g:type-from-instance}
@@ -1343,12 +1343,12 @@ ID     NAME               CFFI type      Lisp type
   @return{The @class{g:type-t} type ID of @arg{iface}.}
   @short{Get the type identifier from a given interface instance.}
   This function should only be used in type implementations.
-  @begin{examples}
+  @begin[Examples]{dictionary}
     @begin{pre}
 (g:type-from-interface (g:type-default-interface-ref \"GtkOrientable\"))
 => #<GTYPE :name \"GtkOrientable\" :id 134920864>
     @end{pre}
-  @end{examples}
+  @end{dictionary}
   @see-class{g:type-t}
   @see-symbol{g:type-interface}
   @see-function{g:type-from-instance}
@@ -1370,14 +1370,14 @@ ID     NAME               CFFI type      Lisp type
     Get the class structure of a given @arg{instance}.
   @end{short}
   This function should only be used in type implementations.
-  @begin{examples}
+  @begin[Examples]{dictionary}
     @begin{pre}
 (g:type-instance-class (make-instance 'g:simple-action))
 => #.(SB-SYS:INT-SAP #X58BA0B4DF320)
 (g:type-from-class *)
 => #<GTYPE :name \"GSimpleAction\" :id 97556076810288>
     @end{pre}
-  @end{examples}
+  @end{dictionary}
   @see-symbol{g:type-instance}
   @see-symbol{g:type-class}"
   (let ((ptr (if (cffi:pointerp instance) instance (object-pointer instance))))
@@ -1518,7 +1518,7 @@ ID     NAME               CFFI type      Lisp type
     @arg{gtype} or derived.
   @end{short}
   This function should only be used in type implementations.
-  @begin{examples}
+  @begin[Examples]{dictionary}
     @begin{pre}
 (g:type-check-instance-type (make-instance 'g:simple-action) \"GObject\")
 => T
@@ -1527,7 +1527,7 @@ ID     NAME               CFFI type      Lisp type
 (g:type-check-instance-type (make-instance 'g:simple-action) \"GAction\")
 => T
     @end{pre}
-  @end{examples}
+  @end{dictionary}
   @see-class{g:type-t}
   @see-symbol{g:type-instance}
   @see-function{g:type-check-class-type}"
@@ -1593,12 +1593,12 @@ ID     NAME               CFFI type      Lisp type
     @arg{gtype} or derived.
   @end{short}
   This function should only be used in type implementations.
-  @begin{examples}
+  @begin[Examples]{dictionary}
     @begin{pre}
 (g:type-check-class-type (g:type-class-ref \"GtkButton\") \"GObject\") => T
 (g:type-check-class-type (g:type-class-ref \"GtkButton\") \"GtkWindow\") => NIL
     @end{pre}
-  @end{examples}
+  @end{dictionary}
   @see-class{g:type-t}
   @see-symbol{g:type-class}
   @see-function{g:type-check-instance-type}"
@@ -1695,7 +1695,7 @@ ID     NAME               CFFI type      Lisp type
     Get the unique name that is assigned to a type ID.
   @end{short}
   Note that this function returns @code{nil}, when @arg{gtype} is not known.
-  @begin{examples}
+  @begin[Examples]{dictionary}
     @begin{pre}
 (g:type-name 60) => \"gdouble\"
 (g:type-name \"gdouble\") => \"gdouble\"
@@ -1704,7 +1704,7 @@ ID     NAME               CFFI type      Lisp type
 => WARNING: unknown is not known to the GType system
 => NIL
     @end{pre}
-  @end{examples}
+  @end{dictionary}
   @see-class{g:type-t}
   @see-function{g:type-from-name}"
   (let ((gtype (glib:gtype gtype)))
@@ -1747,13 +1747,13 @@ ID     NAME               CFFI type      Lisp type
   @end{short}
   This is the preferred method to find out by name whether a specific type has
   been registered yet.
-  @begin{examples}
+  @begin[Examples]{dictionary}
     @begin{pre}
 (g:type-from-name \"gdouble\") => #<GTYPE :name \"gdouble\" :id 60>
 (g:type-from-name \"GAction\")
 => #<GTYPE :name \"GAction\" :id 102395834702912>
     @end{pre}
-  @end{examples}
+  @end{dictionary}
   @see-class{g:type-t}
   @see-function{g:type-name}"
   (glib:gtype name))
@@ -1774,7 +1774,7 @@ ID     NAME               CFFI type      Lisp type
   @end{short}
   If the passed in @arg{gtype} has no parent, for example, is a fundamental
   type, @code{nil} is returned.
-  @begin{examples}
+  @begin[Examples]{dictionary}
     @begin{pre}
 (g:type-parent \"GtkWindow\") => #<GTYPE :name \"GtkWidget\" :id 94209734120944>
 (g:type-parent \"GApplication\") => #<GTYPE :name \"GObject\" :id 80>
@@ -1782,7 +1782,7 @@ ID     NAME               CFFI type      Lisp type
 (g:type-parent \"GObject\") => NIL
 (g:type-parent \"gdouble\") => NIL
     @end{pre}
-  @end{examples}
+  @end{dictionary}
   @see-class{g:type-t}
   @see-function{g:type-children}"
   (gtype type-t))
@@ -1803,14 +1803,14 @@ ID     NAME               CFFI type      Lisp type
   @argument[gtype]{a @class{g:type-t} parent type ID}
   @return{The list of @class{g:type-t} child type IDs.}
   @short{Returns a list of type IDs, listing the child types of @arg{gtype}.}
-  @begin{examples}
+  @begin[Examples]{dictionary}
     @begin{pre}
 (g:type-children \"GtkButton\")
 => (#<GTYPE :name \"GtkToggleButton\" :id 94069209378496>
     #<GTYPE :name \"GtkLinkButton\" :id 94069209378816>
     #<GTYPE :name \"GtkLockButton\" :id 94069209383872>)
     @end{pre}
-  @end{examples}
+  @end{dictionary}
   @see-class{g:type-t}
   @see-function{g:type-parent}"
   (cffi:with-foreign-object (n-children :uint)
@@ -1836,12 +1836,12 @@ ID     NAME               CFFI type      Lisp type
   @end{short}
   This includes @arg{gtype} itself, so that, for example, a fundamental type
   has depth 1.
-  @begin{examples}
+  @begin[Examples]{dictionary}
     @begin{pre}
 (g:type-depth \"gdouble\") => 1
 (g:type-depth \"GtkButton\") => 4
     @end{pre}
-  @end{examples}
+  @end{dictionary}
   @see-class{g:type-t}"
   (gtype type-t))
 
@@ -1868,12 +1868,12 @@ ID     NAME               CFFI type      Lisp type
   from @arg{root} which is also a base class of @arg{leaf}. Given a root type
   and a leaf type, this function can be used to determine the types and order
   in which the leaf type is descended from the root type.
-  @begin{examples}
+  @begin[Examples]{dictionary}
     @begin{pre}
 (g:type-next-base \"GtkToggleButton\" \"GtkWidget\")
 => #<GTYPE :name \"GtkButton\" :id 94607001843920>
     @end{pre}
-  @end{examples}
+  @end{dictionary}
   @see-class{g:type-t}"
   (leaf type-t)
   (root type-t))
@@ -1881,7 +1881,7 @@ ID     NAME               CFFI type      Lisp type
 (export 'type-next-base)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_type_is_a ()
+;;; g_type_is_a
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_type_is_a" %type-is-a) :boolean
@@ -1900,7 +1900,7 @@ ID     NAME               CFFI type      Lisp type
     @arg{gtype} argument is a descendant of @arg{is-a-type}.
   @end{short}
   If @arg{is-a-type} is an interface, check whether @arg{gtype} conforms to it.
-  @begin{examples}
+  @begin[Examples]{dictionary}
     @begin{pre}
 (g:type-is-a \"gboolean\" g:+type-boolean+) => T
 (g:type-is-a \"GtkTextIter\" g:+type-boxed+) => T
@@ -1912,7 +1912,7 @@ ID     NAME               CFFI type      Lisp type
 (g:type-is-a \"GParamBoolean\" g:+type-param+) => T
 (g:type-is-a \"GVariant\" g:+type-variant+) => T
     @end{pre}
-  @end{examples}
+  @end{dictionary}
   @see-class{g:type-t}"
   (let ((*warn-unknown-gtype* nil)) ; no warnings for the test function
     (%type-is-a gtype is-a-type)))
@@ -1920,7 +1920,7 @@ ID     NAME               CFFI type      Lisp type
 (export 'type-is-a)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_type_class_ref ()
+;;; g_type_class_ref
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_type_class_ref" %type-class-ref)
@@ -1939,7 +1939,7 @@ ID     NAME               CFFI type      Lisp type
   @end{short}
   This function will create the class instance if it does not exist already.
   Returns @code{nil} when @arg{gtype} is not a valid type ID for classed type.
-  @begin{examples}
+  @begin[Examples]{dictionary}
     @begin{pre}
 (g:type-class-ref \"GApplication\") => #.(SB-SYS:INT-SAP #X55FA5306FE40)
 (g:type-from-class *) => #<GTYPE :name \"GApplication\" :id 94533623145984>
@@ -1947,7 +1947,7 @@ ID     NAME               CFFI type      Lisp type
 (g:type-class-ref \"gdouble\") => NIL
 (g:type-class-ref \"unknown\") => NIL
     @end{pre}
-  @end{examples}
+  @end{dictionary}
   @see-class{g:type-t}
   @see-symbol{g:type-class}
   @see-function{g:type-class-peek}
@@ -1962,7 +1962,7 @@ ID     NAME               CFFI type      Lisp type
 (export 'type-class-ref)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_type_class_peek ()
+;;; g_type_class_peek
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_type_class_peek" %type-class-peek)
@@ -1983,7 +1983,7 @@ ID     NAME               CFFI type      Lisp type
   @end{short}
   As a consequence, this function may return @code{nil} if the class of the
   type passed in does not currently exist (has not been referenced before).
-  @begin{examples}
+  @begin[Examples]{dictionary}
     @begin{pre}
 (g:type-class-peek \"GSimpleAction\") => #.(SB-SYS:INT-SAP #X55FA5306FE40)
 (g:type-from-class *) => #<GTYPE :name \"GSimpleAction\" :id 94533623145984>
@@ -1991,7 +1991,7 @@ ID     NAME               CFFI type      Lisp type
 (g:type-class-peek \"gdouble\") => NIL
 (g:type-class-peek \"unknown\") => NIL
     @end{pre}
-  @end{examples}
+  @end{dictionary}
   @see-class{g:type-t}
   @see-symbol{g:type-class}
   @see-function{g:type-class-ref}"
@@ -2025,7 +2025,7 @@ ID     NAME               CFFI type      Lisp type
   (gtype type-t))
 
 ;;; ----------------------------------------------------------------------------
-;;; g_type_class_unref ()
+;;; g_type_class_unref
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_type_class_unref" type-class-unref) :void
@@ -2045,7 +2045,7 @@ ID     NAME               CFFI type      Lisp type
 (export 'type-class-unref)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_type_class_peek_parent ()                            not exported
+;;; g_type_class_peek_parent                                not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_type_class_peek_parent" type-class-peek-parent)
@@ -2070,7 +2070,7 @@ ID     NAME               CFFI type      Lisp type
   (g-class (:pointer (:struct type-class))))
 
 ;;; ----------------------------------------------------------------------------
-;;; g_type_class_add_private ()                            not exported
+;;; g_type_class_add_private                                not exported
 ;;;
 ;;; g_type_class_add_private has been deprecated since version 2.58 and should
 ;;; not be used in newly written code. Use the G_ADD_PRIVATE() macro with the
@@ -2165,7 +2165,7 @@ ID     NAME               CFFI type      Lisp type
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_type_interface_peek ()
+;;; g_type_interface_peek
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_type_interface_peek" %type-interface-peek)
@@ -2187,14 +2187,14 @@ ID     NAME               CFFI type      Lisp type
     Returns the interface structure of an interface to which the passed in
     @arg{instance-class} conforms.
   @end{short}
-  @begin{examples}
+  @begin[Examples]{dictionary}
     @begin{pre}
 (g:type-interface-peek (g:type-class-ref \"GtkBox\") \"GtkOrientable\")
 => #.(SB-SYS:INT-SAP #X080C6858)
 (g:type-from-interface *)
 => #S(GTYPE :NAME \"GtkOrientable\" :%ID 134887472)
     @end{pre}
-  @end{examples}
+  @end{dictionary}
   @see-class{g:type-t}
   @see-symbol{g:type-class}
   @see-symbol{g:type-interface}"
@@ -2224,7 +2224,7 @@ ID     NAME               CFFI type      Lisp type
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_type_default_interface_ref ()
+;;; g_type_default_interface_ref
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_type_default_interface_ref" %type-default-interface-ref)
@@ -2249,7 +2249,7 @@ ID     NAME               CFFI type      Lisp type
   and default @code{vtable} init functions for the type. Calling this function
   is useful when you want to make sure that signals and properties for an
   interface have been installed.
-  @begin{examples}
+  @begin[Examples]{dictionary}
     @begin{pre}
 (g:type-default-interface-ref \"GAction\") => #.(SB-SYS:INT-SAP #X55D446D53DE0)
 (g:type-from-interface *) => #<GTYPE :name \"GAction\" :id 94370208235568>
@@ -2257,7 +2257,7 @@ ID     NAME               CFFI type      Lisp type
 (g:type-default-interface-ref \"gdouble\") => NIL
 (g:type-default-interface-ref \"unknown\") => NIL
     @end{pre}
-  @end{examples}
+  @end{dictionary}
   @see-class{g:type-t}
   @see-function{g:type-default-interface-unref}"
   (let ((*warn-unknown-gtype* nil))
@@ -2270,7 +2270,7 @@ ID     NAME               CFFI type      Lisp type
 (export 'type-default-interface-ref)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_type_default_interface_peek ()
+;;; g_type_default_interface_peek
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_type_default_interface_peek" %type-default-interface-peek)
@@ -2301,7 +2301,7 @@ ID     NAME               CFFI type      Lisp type
 (export 'type-default-interface-peek)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_type_default_interface_unref ()
+;;; g_type_default_interface_unref
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_type_default_interface_unref" type-default-interface-unref)
@@ -2324,7 +2324,7 @@ ID     NAME               CFFI type      Lisp type
 (export 'type-default-interface-unref)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_type_interfaces ()
+;;; g_type_interfaces
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_type_interfaces" %type-interfaces) (:pointer :size)
@@ -2340,7 +2340,7 @@ ID     NAME               CFFI type      Lisp type
     Returns a list of type IDs, listing the interface types that @arg{gtype}
     conforms to.
   @end{short}
-  @begin{examples}
+  @begin[Examples]{dictionary}
     @begin{pre}
 (g:type-interfaces \"GtkButton\")
 => (#<GTYPE :name \"GtkAccessible\" :id 94209734120256>
@@ -2348,7 +2348,7 @@ ID     NAME               CFFI type      Lisp type
     #<GTYPE :name \"GtkConstraintTarget\" :id 94209734121424>
     #<GTYPE :name \"GtkActionable\" :id 94209734120688>)
     @end{pre}
-  @end{examples}
+  @end{dictionary}
   @see-class{g:type-t}"
   (cffi:with-foreign-object (n-interfaces :uint)
     (let ((ptr (%type-interfaces gtype n-interfaces)))
@@ -2360,7 +2360,7 @@ ID     NAME               CFFI type      Lisp type
 (export 'type-interfaces)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_type_interface_prerequisites ()
+;;; g_type_interface_prerequisites
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_type_interface_prerequisites" %type-interface-prerequisites)
@@ -2379,12 +2379,12 @@ ID     NAME               CFFI type      Lisp type
   @begin{short}
     Returns the prerequisites of an interfaces type.
   @end{short}
-  @begin{examples}
+  @begin[Examples]{dictionary}
     @begin{pre}
 (g:type-interface-prerequisites \"GtkOrientable\")
 => (#<GTYPE :name \"GObject\" :id 80>)
     @end{pre}
-  @end{examples}
+  @end{dictionary}
   @see-class{g:type-t}"
   (cffi:with-foreign-object (n-prerequisites :uint)
     (let ((ptr (%type-interface-prerequisites itype n-prerequisites)))
@@ -2396,8 +2396,8 @@ ID     NAME               CFFI type      Lisp type
 (export 'type-interface-prerequisites)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_type_get_qdata ()
-;;; g_type_set_qdata () -> type-qdata
+;;; g_type_get_qdata
+;;; g_type_set_qdata
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_type_set_qdata" %type-set-qdata) :void
@@ -2439,7 +2439,7 @@ ID     NAME               CFFI type      Lisp type
 
   Note that this does not take subtyping into account. Data attached to one
   type cannot be retrieved from a subtype.
-  @begin{examples}
+  @begin[Examples]{dictionary}
     @begin{pre}
 (setf (g:type-qdata \"gboolean\" \"mydata\") \"a string\") => \"a string\"
 (g:type-qdata \"gboolean\" \"mydata\") => \"a string\"
@@ -2448,7 +2448,7 @@ ID     NAME               CFFI type      Lisp type
 (setf (g:type-qdata \"gboolean\" \"mydata\") nil) => NIL
 (g:type-qdata \"gboolean\" \"mydata\") => NIL
     @end{pre}
-  @end{examples}
+  @end{dictionary}
   @see-class{g:type-t}
   @see-type{g:quark-as-string}"
   (let ((ptr (%type-get-qdata gtype quark)))
@@ -2458,7 +2458,7 @@ ID     NAME               CFFI type      Lisp type
 (export 'type-qdata)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_type_query ()                                        not exported
+;;; g_type_query                                            not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_type_query" type-query) :void
@@ -2708,7 +2708,7 @@ ID     NAME               CFFI type      Lisp type
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_type_register_static ()                              not exported
+;;; g_type_register_static                                  not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_type_register_static" type-register-static) type-t
@@ -2737,7 +2737,7 @@ ID     NAME               CFFI type      Lisp type
   (flags type-flags))
 
 ;;; ----------------------------------------------------------------------------
-;;; g_type_register_static_simple ()                       not exported
+;;; g_type_register_static_simple                           not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_type_register_static_simple"
@@ -2842,7 +2842,7 @@ ID     NAME               CFFI type      Lisp type
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_type_add_interface_static ()                         not exported
+;;; g_type_add_interface_static                             not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_type_add_interface_static" type-add-interface-static) :void
@@ -2885,7 +2885,7 @@ ID     NAME               CFFI type      Lisp type
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_type_interface_add_prerequisite ()                   not exported
+;;; g_type_interface_add_prerequisite                       not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_type_interface_add_prerequisite"
@@ -2944,7 +2944,7 @@ ID     NAME               CFFI type      Lisp type
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_type_fundamental_next ()                             not exported
+;;; g_type_fundamental_next                                 not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_type_fundamental_next" type-fundamental-next) :size
@@ -3109,7 +3109,7 @@ ID     NAME               CFFI type      Lisp type
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_type_value_table_peek ()                             not exported
+;;; g_type_value_table_peek                                 not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_type_value_table_peek" type-value-table-peek)

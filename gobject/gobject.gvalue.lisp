@@ -890,7 +890,8 @@
     failing transformations, @arg{dest} is left untouched.}
   @begin{short}
     Tries to cast the contents of @arg{src} into a type appropriate to store in
-    @arg{dest}, e.g. to transform a \"gint\" value into a \"gfloat\" value.
+    @arg{dest}, for example, to transform a @code{\"gint\"} value into a
+    @code{\"gfloat\"} value.
   @end{short}
   Performing transformations between value types might incur precision
   lossage. Especially transformations into strings might reveal seemingly

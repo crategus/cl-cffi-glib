@@ -71,21 +71,21 @@
 (in-package :gobject)
 
 ;;; ----------------------------------------------------------------------------
-;;; define-g-enum
+;;; define-genum
 ;;;
 ;;; Defines a GEnum type for enumeration. Generates the corresponding CFFI
 ;;; definition.
 ;;;
 ;;; Example:
 ;;;
-;;; (define-g-enum "GdkGrabStatus" grab-status ()
+;;; (define-genum "GdkGrabStatus" grab-status ()
 ;;;   :success
 ;;;   :already-grabbed
 ;;;   :invalid-time
 ;;;   :not-viewable
 ;;;   :frozen)
 ;;;
-;;; (define-g-enum "GdkExtensionMode" extension-mode
+;;; (define-genum "GdkExtensionMode" extension-mode
 ;;;    (:export t
 ;;;     :type-initializer "gdk_extension_mode_get_type")
 ;;;    (:none 0)
@@ -121,26 +121,6 @@
 ;;;     if integer-value is not specified, it is generated automatically
 ;;;    (see the CFFI manual)
 ;;; ----------------------------------------------------------------------------
-
-(defmacro define-g-enum (gtype name (&key (export t)
-                                          (base-type :int)
-                                          (allow-undeclared-values nil)
-                                          type-initializer)
-                                     &body values)
-  `(progn
-     (cffi:defcenum (,name ,base-type
-                           :allow-undeclared-values ,allow-undeclared-values)
-               ,@values)
-     ,@(when export
-         (list `(export ',name
-                        (find-package ,(package-name (symbol-package name))))))
-     ,@(when type-initializer
-         (list `(glib-init:at-init ()
-                   ,(glib:type-initializer-call type-initializer))))
-     (eval-when (:compile-toplevel :load-toplevel :execute)
-       (setf (glib:symbol-for-gtype ,gtype) ',name))))
-
-(export 'define-g-enum)
 
 (defmacro define-genum (gtype name (&key (export t)
                                           (base-type :int)
@@ -340,7 +320,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; define-g-flags
+;;; define-gflags
 ;;;
 ;;; Defines a GFlags type for enumeration that can combine its values.
 ;;; Generates corresponding CFFI definition. Values of this type are lists of
@@ -348,7 +328,7 @@
 ;;;
 ;;; Example:
 ;;;
-;;; (define-g-flags \"GdkWindowState\" window-state ()
+;;; (define-gflags \"GdkWindowState\" window-state ()
 ;;;   (:withdrawn 1)
 ;;;   (:iconified 2) (:maximized 4) (:sticky 8) (:fullscreen 16)
 ;;;   (:above 32) (:below 64))
@@ -378,6 +358,7 @@
 ;;;     specified, it is generated automatically (see CFFI manual)
 ;;; ----------------------------------------------------------------------------
 
+#+nil
 (defmacro define-g-flags (gtype name (&key (export t)
                                            (base-type :int)
                                            type-initializer)
@@ -392,8 +373,6 @@
                    ,(glib:type-initializer-call type-initializer))))
      (eval-when (:compile-toplevel :load-toplevel :execute)
        (setf (glib:symbol-for-gtype ,gtype) ',name))))
-
-(export 'define-g-flags)
 
 (defmacro define-gflags (gtype name (&key (export t)
                                            (base-type :int)

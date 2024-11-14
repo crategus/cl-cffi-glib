@@ -30,7 +30,7 @@
 
 ;; A list of Gtypes with the corresponding Lisp symbol which do not follow
 ;; the general rule of building the symbol name from a Gtype name.
-;; Only use in GTK3 for e.g. "GtkHBox" -> gtk:hbox and not gtk:h-box
+;; Only use in GTK3, for example, "GtkHBox" -> gtk:hbox and not gtk:h-box
 
 ;; FIXME: The entries in the list are duplicated. Why?
 
@@ -91,7 +91,7 @@
 
 ;;; ----------------------------------------------------------------------------
 
-;; Needed for the macros define-g-object-class and define-g-interface
+;; Needed for the macros define-gobject and define-ginterface
 
 (defun parse-property (spec)
   (cond ((eq :cffi (first spec))
@@ -243,38 +243,6 @@
 
 ;;; ----------------------------------------------------------------------------
 
-(defmacro define-g-object-class (g-type-name name
-                                 (&key (superclass 'object)
-                                       (export t)
-                                       interfaces
-                                       type-initializer)
-                                 (&rest properties))
-  (setf properties (mapcar #'parse-property properties))
-  `(progn
-     (defclass ,name (,@(when (and superclass
-                                   (not (eq superclass 'object)))
-                          (list superclass))
-                      ,@(mapcar #'interface->lisp-class-name interfaces))
-       (,@(mapcar (lambda (property)
-                     (property->slot name property))
-                   properties))
-       (:gname . ,g-type-name)
-       ,@(when type-initializer
-           (list `(:initializer . ,type-initializer)))
-       (:metaclass gobject-class))
-     ,@(when export
-         (cons `(export ',name
-                        (find-package
-                          ,(package-name (symbol-package name))))
-               (mapcar (lambda (property)
-                         `(export ',(intern (format nil "~A-~A"
-                                                    (symbol-name name)
-                                                    (property-name property))
-                                            (symbol-package name))
-                                  (find-package
-                                    ,(package-name (symbol-package name)))))
-                       properties)))))
-
 (defmacro define-gobject (g-type-name name
                           (&key (superclass 'object)
                                 (export t)
@@ -308,44 +276,6 @@
                        properties)))))
 
 ;;; ----------------------------------------------------------------------------
-
-;; TODO: We have added code to allow other than g:object to be a prerequiste
-;; of an interface. We make GdkDragSurface a prerequiste of GdkSurface- But now
-;; the test gdk-cairo-context-cairo-create fails. The function
-;; translate-to-foreign for an object no longer regcognizes GdkWaylandSurface
-;; to be a GdkSurface. What is wrong?
-
-(defmacro define-g-interface (gtype-name name
-                              (&key (superclass 'object)
-                                    (export t)
-                                    type-initializer)
-                              (&rest properties))
-  (setf properties (mapcar #'parse-property properties))
-  `(progn
-     (defclass ,name (,@(when (and superclass
-                                   (not (eq superclass 'object)))
-                          (list superclass)))
-       (,@(mapcar (lambda (property)
-                    (property->slot name property))
-                  properties))
-       (:gname . ,gtype-name)
-       ,@(when type-initializer
-           (list `(:initializer . ,type-initializer)))
-       (:interface-p . t)
-       (:metaclass gobject-class))
-     ,@(when export
-         (cons `(export ',name
-                        (find-package ,(package-name (symbol-package name))))
-               (mapcar (lambda (property)
-                         `(export ',(intern (format nil "~A-~A"
-                                                    (symbol-name name)
-                                                    (property-name property))
-                                            (symbol-package name))
-                                  (find-package
-                                    ,(package-name (symbol-package name)))))
-                       properties)))
-     (eval-when (:compile-toplevel :load-toplevel :execute)
-       (setf (gethash ,gtype-name *known-interfaces*) ',name))))
 
 (defmacro define-ginterface (gtype-name name
                              (&key (superclass 'object)

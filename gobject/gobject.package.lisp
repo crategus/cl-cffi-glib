@@ -44,10 +44,6 @@
            #:create-fn-ref
 
            #:define-cb-methods
-           #:define-g-enum
-           #:define-g-flags
-           #:define-g-interface
-           #:define-g-object-class
            #:define-vtable
 
            #:define-genum

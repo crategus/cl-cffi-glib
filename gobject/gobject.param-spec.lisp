@@ -2,7 +2,7 @@
 ;;; gobject.param-spec.lisp
 ;;;
 ;;; The documentation of this file is taken from the GObject Reference Manual
-;;; Version 2.80 and modified to document the Lisp binding to the GObject
+;;; Version 2.82 and modified to document the Lisp binding to the GObject
 ;;; library. See <http://www.gtk.org>. The API documentation of the Lisp
 ;;; binding is available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
@@ -424,7 +424,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_param_spec_unref ()                                  not implemented
+;;; g_param_spec_unref                                      not implemented
 ;;; ----------------------------------------------------------------------------
 
 #+nil
@@ -452,7 +452,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_param_spec_ref_sink ()                               not implemented
+;;; g_param_spec_ref_sink                                   not implemented
 ;;; ----------------------------------------------------------------------------
 
 #+nil
@@ -586,7 +586,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_param_values_cmp ()                                  not implemented
+;;; g_param_values_cmp                                      not implemented
 ;;; ----------------------------------------------------------------------------
 
 #+nil
@@ -641,7 +641,7 @@
   @begin{short}
     Gets the name of a @symbol{g:param-spec} instance.
   @end{short}
-  @begin{examples}
+  @begin[Examples]{dictionary}
     @begin{pre}
 (mapcar #'g:param-spec-name
         (g:object-class-list-properties \"GtkApplication\"))
@@ -649,7 +649,7 @@
     \"is-remote\" \"inactivity-timeout\" \"action-group\" \"is-busy\"
     \"register-session\" \"screensaver-active\" \"menubar\" \"active-window\")
     @end{pre}
-  @end{examples}
+  @end{dictionary}
   @see-symbol{g:param-spec}"
   (pspec (:pointer (:struct param-spec))))
 
@@ -785,7 +785,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_param_spec_get_redirect_target ()                    not implemented
+;;; g_param_spec_get_redirect_target                        not implemented
 ;;; ----------------------------------------------------------------------------
 
 #+nil
@@ -845,7 +845,7 @@
   a label for the property in a property editor, and @arg{blurb}, which should
   be a somewhat longer description, suitable, for example, for a tooltip.
   The @arg{nick} and @arg{blurb} values should ideally be localized.
-  @begin{examples}
+  @begin[Examples]{dictionary}
     @begin{pre}
 (g:param-spec-internal \"GParamBoolean\"
                        \"Boolean\" \"Bool\" \"Doku\"
@@ -854,7 +854,7 @@
 (g:param-spec-type-name *)
 => \"GParamBoolean\"
     @end{pre}
-  @end{examples}
+  @end{dictionary}
   @see-symbol{g:param-spec}
   @see-symbol{g:param-flags}
   @see-class{g:type-t}"

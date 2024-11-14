@@ -116,9 +116,9 @@
     (is (equal '(POSITION :INITFORM :BOTTOM :INITARG POSITION)
                (gobject::property->slot nil property)))))
 
-;;; --- define-g-object-class --------------------------------------------------
+;;; --- define-gobject ---------------------------------------------------------
 
-(test define-g-object-class-macro.1
+(test define-gobject-macro.1
   (is (equal '(PROGN
  (DEFCLASS SIMPLE-ACTION (GIO:ACTION)
            ((ENABLED :ALLOCATION :GOBJECT-PROPERTY :G-PROPERTY-TYPE "gboolean"
@@ -146,30 +146,24 @@
  (EXPORT 'SIMPLE-ACTION-STATE (FIND-PACKAGE "GLIB-TEST"))
  (EXPORT 'SIMPLE-ACTION-STATE-TYPE (FIND-PACKAGE "GLIB-TEST")))
              (macroexpand
-               '(gobject:define-g-object-class "GSimpleAction" simple-action
-                                       (:superclass gobject:object
-                                        :export t
-                                        :interfaces ("GAction")
-                                        :type-initializer
-                                        "g_simple_action_get_type")
-                                       ((enabled
-                                         simple-action-enabled
-                                         "enabled" "gboolean" t t)
-                                        (name
-                                         simple-action-name
-                                         "name" "gchararray" t nil)
-                                        (parameter-type
-                                         simple-action-parameter-type
-                                         "parameter-type" "GVariantType" t nil)
-                                        (state
-                                         simple-action-state
-                                         "state" "GVariant" t t)
-                                        (state-type
-                                         simple-action-state-type
-                                         "state-type" "GVariantType" t nil)))))))
+               '(gobject:define-gobject "GSimpleAction" simple-action
+                         (:superclass gobject:object
+                          :export t
+                          :interfaces ("GAction")
+                          :type-initializer "g_simple_action_get_type")
+                         ((enabled simple-action-enabled
+                           "enabled" "gboolean" t t)
+                          (name simple-action-name
+                           "name" "gchararray" t nil)
+                          (parameter-type simple-action-parameter-type
+                           "parameter-type" "GVariantType" t nil)
+                          (state simple-action-state
+                           "state" "GVariant" t t)
+                          (state-type simple-action-state-type
+                           "state-type" "GVariantType" t nil)))))))
 
 ;; Add slots of type :cffi and :cl
-(test define-g-object-class-macro.3
+(test define-gobject-macro.3
   (is (equal '(PROGN
  (DEFCLASS SIMPLE-ACTION (GIO:ACTION)
            ((ENABLED :ALLOCATION :GOBJECT-PROPERTY :G-PROPERTY-TYPE "gboolean"
@@ -204,39 +198,32 @@
  (EXPORT 'SIMPLE-ACTION-STATE-HINT (FIND-PACKAGE "GLIB-TEST"))
  (EXPORT 'SIMPLE-ACTION-ROTATION (FIND-PACKAGE "GLIB-TEST")))
              (macroexpand
-               '(gobject:define-g-object-class "GSimpleAction" simple-action
-                                       (:superclass gobject:object
-                                        :export t
-                                        :interfaces ("GAction")
-                                        :type-initializer
-                                        "g_simple_action_get_type")
-                                       ((enabled
-                                         simple-action-enabled
-                                         "enabled" "gboolean" t t)
-                                        (name
-                                         simple-action-name
-                                         "name" "gchararray" t nil)
-                                        (parameter-type
-                                         simple-action-parameter-type
-                                         "parameter-type" "GVariantType" t nil)
-                                        (state
-                                         simple-action-state
-                                         "state" "GVariant" t t)
-                                        (state-type
-                                         simple-action-state-type
-                                         "state-type" "GVariantType" t nil)
-                                        (:cffi state-hint
-                                         simple-action-state-hint
-                                         glib:variant
-                                         nil
-                                         "g_simple_action_set_state_hint")
-                                         (:cl rotation
-                                          :accessor simple-action-rotation
-                                          :initarg rotation
-                                          :initfrom 0.0d0)
-                                         ))))))
+               '(gobject:define-gobject "GSimpleAction" simple-action
+                         (:superclass gobject:object
+                          :export t
+                          :interfaces ("GAction")
+                          :type-initializer "g_simple_action_get_type")
+                         ((enabled simple-action-enabled
+                           "enabled" "gboolean" t t)
+                          (name simple-action-name
+                           "name" "gchararray" t nil)
+                          (parameter-type simple-action-parameter-type
+                           "parameter-type" "GVariantType" t nil)
+                          (state simple-action-state
+                           "state" "GVariant" t t)
+                          (state-type simple-action-state-type
+                           "state-type" "GVariantType" t nil)
+                          (:cffi
+                           state-hint simple-action-state-hint
+                           glib:variant nil "g_simple_action_set_state_hint")
+                          (:cl
+                           rotation
+                           :accessor simple-action-rotation
+                           :initarg rotation
+                           :initfrom 0.0d0)
+                           ))))))
 
-(test define-g-interface-macro
+(test define-ginterface-macro
   (is (equal '(PROGN
                 (DEFCLASS ACTION NIL
                   ((ENABLED :ALLOCATION :GOBJECT-PROPERTY
@@ -276,26 +263,18 @@
                 (EXPORT 'ACTION-STATE-TYPE (FIND-PACKAGE "GLIB-TEST"))
                 (EVAL-WHEN (:COMPILE-TOPLEVEL :LOAD-TOPLEVEL :EXECUTE)
                   (SETF (GETHASH "GAction" GOBJECT::*KNOWN-INTERFACES*) 'ACTION)))
-             (macroexpand '(gobject:define-g-interface "GAction" action
-                                               (:export t
-                                                :type-initializer
-                                                "g_action_get_type")
-                                               ((enabled
-                                                 action-enabled
-                                                 "enabled" "gboolean" t nil)
-                                                (name
-                                                 action-name
-                                                 "name" "gchararray" t nil)
-                                                (parameter-type
-                                                 action-parameter-type
-                                                 "parameter-type" "GVariantType"
-                                                 t nil)
-                                                (state
-                                                 action-state
-                                                 "state" "GVariant" t nil)
-                                                (state-type
-                                                 action-state-type
-                                                 "state-type" "GVariantType"
-                                                 t nil)))))))
+             (macroexpand '(gobject:define-ginterface "GAction" action
+                                    (:export t
+                                     :type-initializer "g_action_get_type")
+                                    ((enabled action-enabled
+                                      "enabled" "gboolean" t nil)
+                                     (name action-name
+                                      "name" "gchararray" t nil)
+                                     (parameter-type action-parameter-type
+                                      "parameter-type" "GVariantType" t nil)
+                                     (state action-state
+                                      "state" "GVariant" t nil)
+                                     (state-type action-state-type
+                                      "state-type" "GVariantType" t nil)))))))
 
-;;; --- 2023-7-9 ---------------------------------------------------------------
+;;; 2024-10-25

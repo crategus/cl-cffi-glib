@@ -5,7 +5,7 @@
 
 ;;; --- Types and Values -------------------------------------------------------
 
-(test define-g-enum-macro
+(test define-genum-macro
   (is (equal '(PROGN
  (CFFI:DEFCENUM (GTK-RESPONSE-TYPE :INT :ALLOW-UNDECLARED-VALUES NIL)
    (:NONE -1)
@@ -28,8 +28,8 @@
              "gtk_response_type_get_type")))
  (EVAL-WHEN (:COMPILE-TOPLEVEL :LOAD-TOPLEVEL :EXECUTE)
    (SETF (GLIB:SYMBOL-FOR-GTYPE "GtkResponseType") 'GTK-RESPONSE-TYPE)))
-              (macroexpand '(gobject:define-g-enum "GtkResponseType"
-                                                   gtk-response-type
+              (macroexpand '(gobject:define-genum "GtkResponseType"
+                                                  gtk-response-type
                              (:export t
                               :type-initializer "gtk_response_type_get_type")
                              (:none -1)
@@ -44,7 +44,7 @@
                              (:apply -10)
                              (:help -11))))))
 
-(test define-g-flags-macro
+(test define-gflags-macro
   (is (equal '(PROGN
  (CFFI:DEFBITFIELD GDK-DRAG-ACTION
    :INT
@@ -63,8 +63,8 @@
              "gdk_drag_action_get_type")))
  (EVAL-WHEN (:COMPILE-TOPLEVEL :LOAD-TOPLEVEL :EXECUTE)
    (SETF (GLIB:SYMBOL-FOR-GTYPE "GdkDragAction") 'GDK-DRAG-ACTION)))
-             (macroexpand '(gobject:define-g-flags "GdkDragAction"
-                                                   gdk-drag-action
+             (macroexpand '(gobject:define-gflags "GdkDragAction"
+                                                  gdk-drag-action
                             (:export t
                              :type-initializer "gdk_drag_action_get_type")
                             (:default 1)

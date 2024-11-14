@@ -146,7 +146,7 @@
               (glib::boxed-opaque-pointer bytes)))
 )))
 
-(test define-g-boxed-opaque
+(test define-gboxed-opaque
   (when *verbose-gobject-boxed*
     (format t "~%~%")
     (trace glib::make-boxed-free-finalizer)
@@ -160,8 +160,8 @@
     (when *verbose-gobject-boxed*
 
       (format t "GBOXED-GC-HOOKS-HOOKS : ~a~%" glib::*gboxed-gc-hooks*)
-      (format t "~&~&DEFINE-G-BOXED-OPAQUE~%~a~%"
-                (macroexpand '(define-g-boxed-opaque bytes "GBytes"
+      (format t "~&~&DEFINE-GBOXED-OPAQUE~%~a~%"
+                (macroexpand '(define-gboxed-opaque bytes "GBytes"
                                 :alloc (bytes-new (cffi:null-pointer) 0))))
       (format t "~%BOXED-OPAQUE-INFO~%~a~%" boxed-info)
     )

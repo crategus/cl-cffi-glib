@@ -2,7 +2,7 @@
 ;;; gobject.signals.lisp
 ;;;
 ;;; The documentation of this file is taken from the GObject Reference Manual
-;;; Version 2.80 and modified to document the Lisp binding to the GObject
+;;; Version 2.82 and modified to document the Lisp binding to the GObject
 ;;; library. See <http://www.gtk.org>. The API documentation of the Lisp
 ;;; binding is available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
@@ -1023,7 +1023,7 @@
   @end{short}
   Emitting the signal by number is somewhat faster than using the name each
   time. Also tries the ancestors of the given type.
-  @begin{examples}
+  @begin[Examples]{dictionary}
     @begin{pre}
 (g:signal-lookup \"notify\" \"GObject\")
 => 1
@@ -1032,7 +1032,7 @@
 (g:signal-lookup \"unknown\" \"GObject\")
 => 0
     @end{pre}
-  @end{examples}
+  @end{dictionary}
   @see-class{g:type-t}
   @see-function{g:signal-name}
   @see-function{g:signal-query}
@@ -1056,7 +1056,7 @@
     Given the identifier of the signal, finds its name.
   @end{short}
   Two different signals may have the same name, if they have differing types.
-  @begin{examples}
+  @begin[Examples]{dictionary}
     Get the signal ID for the @code{\"startup\"} signal and then get the name
     for the ID:
     @begin{pre}
@@ -1074,7 +1074,7 @@
 => (\"activate\" \"startup\" \"shutdown\" \"open\" \"command-line\"
     \"handle-local-options\" \"name-lost\")
     @end{pre}
-  @end{examples}
+  @end{dictionary}
   @see-function{g:signal-query}
   @see-function{g:signal-lookup}
   @see-function{g:signal-list-ids}"
@@ -1100,14 +1100,14 @@
   @end{short}
   Further information about the signals can be acquired through the
   @fun{g:signal-query} function.
-  @begin{examples}
+  @begin[Examples]{dictionary}
     Get the IDs for a window widget in and show the names of the signals:
     @begin{pre}
 (mapcar #'g:signal-name (g:signal-list-ids \"GApplication\"))
 => (\"activate\" \"startup\" \"shutdown\" \"open\" \"command-line\"
     \"handle-local-options\" \"name-lost\")
     @end{pre}
-  @end{examples}
+  @end{dictionary}
   @see-class{g:type-t}
   @see-function{g:signal-query}"
   (when (or (type-is-object itype)
@@ -1277,7 +1277,7 @@
     The C library knows in addition the @code{g_signal_connect_after()}
     function, which is implemented with the @arg{after} keyword argument.
   @end{dictionary}
-  @begin{examples}
+  @begin[Examples]{dictionary}
     Connect a Lisp lambda function to the signal \"toggled\" of a toggle button:
     @begin{pre}
 (g:signal-connect button \"toggled\"
@@ -1305,7 +1305,7 @@
     @begin{pre}
 (g:signal-connect window \"destroy\" #'separate-event-handler)
     @end{pre}
-  @end{examples}
+  @end{dictionary}
   @see-class{g:object}"
   (%signal-connect-closure (object-pointer instance)
                            signal
@@ -1975,7 +1975,7 @@
   @code{:after} flag for the @fun{g:signal-connect} function.
 
   Prints a warning if used on a signal which is not being emitted.
-  @begin{examples}
+  @begin[Examples]{dictionary}
     As an example of the usage, by connecting the following handler to the
     @code{\"insert-text\"} signal, an application can convert all entry into a
     widget into uppercase.
@@ -1991,7 +1991,7 @@
             (g:signal-stop-emission editable \"insert-text\")
             (g:signal-handler-unblock editable handlerid))))
     @end{pre}
-  @end{examples}
+  @end{dictionary}
   @see-class{g:object}
   @see-function{g:signal-connect}"
   (instance object)

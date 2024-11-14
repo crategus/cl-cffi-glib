@@ -78,7 +78,7 @@
 ;;; GBindingFlags
 ;;; ----------------------------------------------------------------------------
 
-(define-g-flags "GBindingFlags" binding-flags
+(define-gflags "GBindingFlags" binding-flags
   (:export t
    :type-initializer "g_binding_flags_get_type")
   (:default 0)
@@ -92,7 +92,7 @@
       (liber:symbol-documentation 'binding-flags)
  "@version{2024-6-18}
   @begin{declaration}
-(define-g-flags \"GBindingFlags\" binding-flags
+(define-gflags \"GBindingFlags\" binding-flags
   (:export t
    :type-initializer \"g_binding_flags_get_type\")
   (:default 0)
@@ -128,7 +128,7 @@
 ;;; GBinding
 ;;; ----------------------------------------------------------------------------
 
-(define-g-object-class "GBinding" binding
+(define-gobject "GBinding" binding
   (:superclass object
    :export t
    :interfaces nil

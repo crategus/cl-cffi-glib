@@ -2,7 +2,7 @@
 ;;; gobject.param.lisp
 ;;;
 ;;; The documentation of this file is taken from the GObject Reference Manual
-;;; Version 2.80 and modified to document the Lisp binding to the GObject
+;;; Version 2.82 and modified to document the Lisp binding to the GObject
 ;;; library. See <http://www.gtk.org>. The API documentation of the Lisp
 ;;; binding is available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
@@ -844,7 +844,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; struct GParamSpecInt
+;;; GParamSpecInt
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcstruct param-spec-int
@@ -881,7 +881,7 @@
 (export 'param-spec-int)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_param_spec_int ()
+;;; g_param_spec_int
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_param_spec_int" param-spec-int)
@@ -915,8 +915,8 @@
 (export 'param-spec-int)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_value_get_int ()
-;;; g_value_set_int () -> value-int
+;;; g_value_get_int
+;;; g_value_set_int
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf value-int) (value gvalue)
@@ -993,7 +993,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; struct GParamSpecUInt
+;;; GParamSpecUInt
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcstruct param-spec-uint
@@ -1030,7 +1030,7 @@
 (export 'param-spec-uint)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_param_spec_uint ()
+;;; g_param_spec_uint
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_param_spec_uint" param-spec-uint)
@@ -1064,8 +1064,8 @@
 (export 'param-spec-uint)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_value_get_uint ()
-;;; g_value_set_uint () -> value-uint
+;;; g_value_get_uint
+;;; g_value_set_uint
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf value-uint) (value gvalue)
@@ -1145,7 +1145,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; struct GParamSpecLong
+;;; GParamSpecLong
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcstruct param-spec-long
@@ -1182,7 +1182,7 @@
 (export 'param-spec-long)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_param_spec_long ()
+;;; g_param_spec_long
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_param_spec_long" param-spec-long)
@@ -1216,8 +1216,8 @@
 (export 'param-spec-long)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_value_get_long ()
-;;; g_value_set_long () -> value-long
+;;; g_value_get_long
+;;; g_value_set_long
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf value-long) (value gvalue)
@@ -1297,7 +1297,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; struct GParamSpecULong
+;;; GParamSpecULong
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcstruct param-spec-ulong
@@ -1334,7 +1334,7 @@
 (export 'param-spec-ulong)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_param_spec_ulong ()
+;;; g_param_spec_ulong
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_param_spec_ulong" param-spec-ulong)
@@ -1368,8 +1368,8 @@
 (export 'param-spec-ulong)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_value_get_ulong ()
-;;; g_value_set_ulong () -> value-ulong
+;;; g_value_get_ulong
+;;; g_value_set_ulong
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf value-ulong) (value gvalue)
@@ -1449,7 +1449,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; struct GParamSpecInt64
+;;; GParamSpecInt64
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcstruct param-spec-int64
@@ -1486,7 +1486,7 @@
 (export 'param-spec-int64)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_param_spec_int64 ()
+;;; g_param_spec_int64
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_param_spec_int64" param-spec-int64)
@@ -1520,8 +1520,8 @@
 (export 'param-spec-int64)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_value_get_int64 ()
-;;; g_value_set_int64 () -> value-int64
+;;; g_value_get_int64
+;;; g_value_set_int64
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf value-int64) (value gvalue)
@@ -1601,7 +1601,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; struct GParamSpecUInt64
+;;; GParamSpecUInt64
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcstruct param-spec-uint64
@@ -1638,7 +1638,7 @@
 (export 'param-spec-uint64)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_param_spec_uint64 ()
+;;; g_param_spec_uint64
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_param_spec_uint64" param-spec-uint64)
@@ -1672,8 +1672,8 @@
 (export 'param-spec-uint64)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_value_get_uint64 ()
-;;; g_value_set_uint64 () -> value-uint64
+;;; g_value_get_uint64
+;;; g_value_set_uint64
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf value-uint64) (value gvalue)
@@ -1753,7 +1753,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; struct GParamSpecFloat
+;;; GParamSpecFloat
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcstruct param-spec-float
@@ -1794,7 +1794,7 @@
 (export 'param-spec-float)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_param_spec_float ()
+;;; g_param_spec_float
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_param_spec_float" param-spec-float)
@@ -1828,8 +1828,8 @@
 (export 'param-spec-float)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_value_get_float ()
-;;; g_value_set_float () -> value-float
+;;; g_value_get_float
+;;; g_value_set_float
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf value-float) (value gvalue)
@@ -1909,7 +1909,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; struct GParamSpecDouble
+;;; GParamSpecDouble
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcstruct param-spec-double
@@ -1950,7 +1950,7 @@
 (export 'param-spec-double)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_param_spec_double ()
+;;; g_param_spec_double
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_param_spec_double" param-spec-double)
@@ -1984,8 +1984,8 @@
 (export 'param-spec-double)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_value_get_double ()
-;;; g_value_set_double () -> value-double
+;;; g_value_get_double
+;;; g_value_set_double
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf value-double) (value gvalue)
@@ -2066,7 +2066,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; struct GParamSpecEnum
+;;; GParamSpecEnum
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcstruct param-spec-enum
@@ -2100,7 +2100,7 @@
 (export 'param-spec-enum)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_param_spec_enum ()
+;;; g_param_spec_enum
 ;;; ----------------------------------------------------------------------------
 
 ;; TODO:
@@ -2171,14 +2171,14 @@
   The @sym{g:value-enum} function gets the contents of a @symbol{g:value}
   instance of type @code{\"GEnum\"}. The @setf{value-enum} function sets the
   contents.
-  @begin{examples}
+  @begin[Examples]{dictionary}
     @begin{pre}
 (gobject:with-g-value (gvalue \"GEmblemOrigin\")
   (setf (g:value-enum gvalue) :device)
   (g:value-enum gvalue))
 => :DEVICE
     @end{pre}
-  @end{examples}
+  @end{dictionary}
   @see-symbol{g:value}"
   (parse-g-value-enum gvalue))
 
@@ -2237,7 +2237,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; struct GParamSpecFlags
+;;; GParamSpecFlags
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcstruct param-spec-flags
@@ -2271,7 +2271,7 @@
 (export 'param-spec-flags)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_param_spec_flags ()
+;;; g_param_spec_flags
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_param_spec_flags" param-spec-flags)
@@ -2339,14 +2339,14 @@
   The @sym{g:value-flags} function gets the contents of a @symbol{g:value}
   instance of type @code{\"GFlags\"}. The @setf{value-flags} function sets the
   contents.
-  @begin{examples}
+  @begin[Examples]{dictionary}
     @begin{pre}
 (gobject:with-g-value (gvalue \"GApplicationFlags\")
   (setf (g:value-flags gvalue) '(:handles-open :is-service))
   (g:value-flags gvalue))
 => (:IS-SERVICE :HANDLES-OPEN)
     @end{pre}
-  @end{examples}
+  @end{dictionary}
   @see-symbol{g:value}"
   (parse-g-value-flags gvalue))
 
@@ -2435,40 +2435,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; struct GParamSpecString
-;;;
-;;; TODO: This is taken from the C documentation. Check the implementation.
-;;;
-;;; struct GParamSpecString {
-;;;   GParamSpec    parent_instance;
-;;;   gchar        *default_value;
-;;;   gchar        *cset_first;
-;;;   gchar        *cset_nth;
-;;;   gchar         substitutor;
-;;;   guint         null_fold_if_empty : 1;
-;;;   guint         ensure_non_null : 1;
-;;; };
-;;;
-;;; A GParamSpec derived structure that contains the meta data for string
-;;; properties.
-;;;
-;;; gchar *default_value :
-;;;     default value for the property specified
-;;;
-;;; gchar *cset_first :
-;;;     a string containing the allowed values for the first byte
-;;;
-;;; gchar *cset_nth :
-;;;     a string containing the allowed values for the subsequent bytes
-;;;
-;;; gchar substitutor :
-;;;     the replacement byte for bytes which don't match cset_first or cset_nth
-;;;
-;;; guint null_fold_if_empty : 1;
-;;;     replace empty string by NULL
-;;;
-;;; guint ensure_non_null : 1;
-;;;     replace NULL strings by an empty string
+;;; GParamSpecString
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcstruct param-spec-string
@@ -2526,7 +2493,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_param_spec_string ()
+;;; g_param_spec_string
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_param_spec_string" param-spec-string)
@@ -2557,8 +2524,8 @@
 (export 'param-spec-string)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_value_get_string ()
-;;; g_value_set_string () -> value-string
+;;; g_value_get_string
+;;; g_value_set_string
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf value-string) (value gvalue)
@@ -2724,7 +2691,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; struct GParamSpecParam
+;;; GParamSpecParam
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcstruct param-spec-param
@@ -2752,7 +2719,7 @@
 (export 'param-spec-param)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_param_spec_param ()
+;;; g_param_spec_param
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_param_spec_param" param-spec-param)
@@ -2783,8 +2750,8 @@
 (export 'param-spec-param)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_value_get_param ()
-;;; g_value_set_param () -> value-param
+;;; g_value_get_param
+;;; g_value_set_param
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf value-param) (value gvalue)
@@ -2918,7 +2885,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; struct GParamSpecBoxed
+;;; GParamSpecBoxed
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcstruct param-spec-boxed
@@ -2946,7 +2913,7 @@
 (export 'param-spec-boxed)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_param_spec_boxed ()
+;;; g_param_spec_boxed
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_param_spec_boxed" param-spec-boxed)
@@ -2976,8 +2943,8 @@
 (export 'param-spec-boxed)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_value_get_boxed ()
-;;; g_value_set_boxed () -> value-boxed
+;;; g_value_get_boxed
+;;; g_value_set_boxed
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf value-boxed) (value gvalue)
@@ -3022,7 +2989,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_value_take_boxed ()
+;;; g_value_take_boxed
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_value_take_boxed" value-take-boxed) :void
@@ -3130,7 +3097,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; struct GParamSpecPointer
+;;; GParamSpecPointer
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcstruct param-spec-pointer
@@ -3158,7 +3125,7 @@
 (export 'param-spec-pointer)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_param_spec_pointer ()
+;;; g_param_spec_pointer
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_param_spec_pointer" param-spec-pointer)
@@ -3187,8 +3154,8 @@
 (export 'param-spec-pointer)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_value_get_pointer ()
-;;; g_value_set_pointer () -> value-pointer
+;;; g_value_get_pointer
+;;; g_value_set_pointer
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf value-pointer) (value gvalue)
@@ -3269,7 +3236,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; struct GParamSpecObject
+;;; GParamSpecObject
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcstruct param-spec-object
@@ -3297,7 +3264,7 @@
 (export 'param-spec-object)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_param_spec_object ()
+;;; g_param_spec_object
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_param_spec_object" param-spec-object)
@@ -3327,8 +3294,8 @@
 (export 'param-spec-object)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_value_get_object ()
-;;; g_value_set_object () -> value-object
+;;; g_value_get_object
+;;; g_value_set_object
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_value_set_object" %value-set-object) :void
@@ -3571,7 +3538,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; struct GParamSpecValueArray
+;;; GParamSpecValueArray
 ;;; ----------------------------------------------------------------------------
 
 ;; We do not expot this structure.
@@ -3606,7 +3573,7 @@
   @see-symbol{g:param-spec}")
 
 ;;; ----------------------------------------------------------------------------
-;;; g_param_spec_value_array ()
+;;; g_param_spec_value_array
 ;;; ----------------------------------------------------------------------------
 
 ;; We dot not export this function.
@@ -3781,7 +3748,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; struct GParamSpecGType
+;;; GParamSpecGType
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcstruct param-spec-gtype
@@ -3813,7 +3780,7 @@
 (export 'param-spec-gtype)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_param_spec_gtype ()
+;;; g_param_spec_gtype
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_param_spec_gtype" param-spec-gtype)
@@ -3845,8 +3812,8 @@
 (export 'param-spec-gtype)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_value_get_gtype ()
-;;; g_value_set_gtype () -> value-gtype
+;;; g_value_get_gtype
+;;; g_value_set_gtype
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf value-gtype) (value gvalue)
@@ -4000,8 +3967,8 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_value_get_variant ()
-;;; g_value_set_variant () -> value-variant
+;;; g_value_get_variant
+;;; g_value_set_variant
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf value-variant) (value gvalue)

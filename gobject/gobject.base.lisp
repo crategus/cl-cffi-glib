@@ -2,7 +2,7 @@
 ;;; gobject.base.lisp
 ;;;
 ;;; The documentation of this file is taken from the GObject Reference Manual
-;;; Version 2.80 and modified to document the Lisp binding to the GObject
+;;; Version 2.82 and modified to document the Lisp binding to the GObject
 ;;; library. See <http://www.gtk.org>. The API documentation of the Lisp
 ;;; binding is available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
@@ -1263,7 +1263,7 @@ lambda (object pspec)    :no-hooks
 ;;; g_object_class_install_property                         not exported
 ;;; ----------------------------------------------------------------------------
 
-;; For internal use and not exported.
+;; For internal use and not exported
 
 (cffi:defcfun ("g_object_class_install_property" %object-class-install-property)
     :void
@@ -2558,7 +2558,7 @@ lambda (object pspec)    :no-hooks
   associations. The @setf{g:object-data} function sets an association. If the
   object already had an association with that name, the old association will be
   destroyed.
-  @begin{examples}
+  @begin[Examples]{dictionary}
     @begin{pre}
 (defvar item (make-instance 'g:menu-item)) => ITEM
 ;; Set an integer
@@ -2576,7 +2576,7 @@ lambda (object pspec)    :no-hooks
 (setf (g:object-data item \"prop\") nil) => nil
 (g:object-data item \"prop\") => nil
     @end{pre}
-  @end{examples}
+  @end{dictionary}
   @see-class{g:object}"
   (let ((ptr (%object-get-data object key)))
     (when (not (cffi:null-pointer-p ptr))
@@ -2634,7 +2634,7 @@ lambda (object pspec)    :no-hooks
   @end{short}
   Note that the @arg{func} callback function is not called if the @arg{data}
   argument is @code{nil}.
-  @begin{examples}
+  @begin[Examples]{dictionary}
     Set a destroy notify callback function for a window. This function is
     called when the window is destroyed or when the data is set to @code{nil}.
     @begin{pre}
@@ -2642,7 +2642,7 @@ lambda (object pspec)    :no-hooks
                         (lambda ()
                           (gtk:window-destroy about)))
     @end{pre}
-  @end{examples}
+  @end{dictionary}
   @see-class{g:object}
   @see-symbol{g:destroy-notify}
   @see-function{g:object-data}"
