@@ -6,8 +6,8 @@
   (let ((app (make-instance 'g:application
                             :application-id "com.crategus.application-open"
                             :flags :handles-open))
-        (argv (cons "application-open" 
-                    (if argv argv (uiop:command-line-arguments)))))
+        (argv (cons "application-open"
+                    (or argv (uiop:command-line-arguments)))))
     ;; Print information about the application
     (format t "Start application~%")
     (format t "      arg : ~a~%" argv)

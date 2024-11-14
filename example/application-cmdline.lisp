@@ -7,7 +7,7 @@
                             :application-id
                             "com.crategus.application-cmdline"
                             :flags :handles-command-line))
-        (argv (if argv argv (uiop:command-line-arguments))))
+        (argv (or argv (uiop:command-line-arguments))))
     ;; Print info about the application
     (format t "Start application~%")
     (format t "       argv : ~a~%" argv)
