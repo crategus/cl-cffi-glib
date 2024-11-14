@@ -1,7 +1,7 @@
 ;;; ----------------------------------------------------------------------------
 ;;; liber.lisp
 ;;;
-;;; Copyright (C) 2022 - 2023 Dieter Kaiser
+;;; Copyright (C) 2022 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -56,7 +56,6 @@
   (let* ((base (asdf:component-pathname (asdf:find-system :cl-cffi-glib)))
          (output-directory (merge-pathnames "../books/cl-cffi-glib/" base)))
     (format t "Generate HTML to ~a~%" output-directory)
-    (ensure-directories-exist output-directory)
     (liber:generate-html-documentation
       '(:glib :gobject :gio)
       output-directory
@@ -75,7 +74,6 @@
          (output-directory
              (merge-pathnames "../books/cl-cffi-glib/single-page/" base)))
     (format t "Generate Single PAGE HTML to ~a~%" output-directory)
-    (ensure-directories-exist output-directory)
     (liber:generate-html-documentation
       '(:glib :gobject :gio)
       output-directory
