@@ -40,43 +40,66 @@
                        NIL)
              (gobject:get-gtype-definition "GCancellable"))))
 
-;;; Signals
+;;; --- Signals ----------------------------------------------------------------
 
 ;;;     cancelled
 
 (test g-cancellable-cancelled-signal
-  (let ((query (g:signal-query (g:signal-lookup "cancelled" "GCancellable"))))
-    (is (string= "cancelled" (g:signal-query-signal-name query)))
-    (is (string= "GCancellable" (g:type-name (g:signal-query-owner-type query))))
+  (let* ((name "cancelled")
+         (gtype (g:gtype "GCancellable"))
+         (query (g:signal-query (g:signal-lookup name gtype))))
+    ;; Retrieve name and gtype
+    (is (string= name (g:signal-query-signal-name query)))
+    (is (eq gtype (g:signal-query-owner-type query)))
+    ;; Check flags
     (is (equal '(:RUN-LAST)
                (sort (g:signal-query-signal-flags query) #'string<)))
-    (is (string= "void" (g:type-name (g:signal-query-return-type query))))
+    ;; Check return type
+    (is (eq (g:gtype "void") (g:signal-query-return-type query)))
+    ;; Check parameter types
     (is (equal '()
-               (mapcar #'g:type-name (g:signal-query-param-types query))))
-    (is-false (g:signal-query-signal-detail query))))
+               (mapcar #'g:type-name (g:signal-query-param-types query))))))
 
-;;; Functions
+;;; --- Functions --------------------------------------------------------------
 
 ;;;     GCancellableSourceFunc
 
 ;;;     g_cancellable_new
 
 (test g-cancellable-new
-  (is (typep (g:cancellable-new) 'g:cancellable))
-)
+  (let (cancellable)
+    (is (typep (setf cancellable (g:cancellable-new)) 'g:cancellable))
+    (is (= 1 (g:object-ref-count cancellable)))))
 
 ;;;     g_cancellable_is_cancelled
+
+(test g-cancellable-is-cancelled
+  (is-false (g:cancellable-is-cancelled (g:cancellable-new)))
+  (is-false (g:cancellable-is-cancelled nil)))
+
 ;;;     g_cancellable_set_error_if_cancelled
 ;;;     g_cancellable_get_fd
 ;;;     g_cancellable_make_pollfd
 ;;;     g_cancellable_release_fd
+
 ;;;     g_cancellable_source_new
+
 ;;;     g_cancellable_get_current
 ;;;     g_cancellable_pop_current
 ;;;     g_cancellable_push_current
-;;;     g_cancellable_reset
+
 ;;;     g_cancellable_connect
 ;;;     g_cancellable_disconnect
-;;;     g_cancellable_cancel
 
-;;; 2024-9-18
+;;;     g_cancellable_cancel
+;;;     g_cancellable_reset
+
+(test g-cancellabel-cancel
+  (let ((cancellable (g:cancellable-new)))
+    (is-false (g:cancellable-is-cancelled cancellable))
+    (is-false (g:cancellable-cancel cancellable))
+    (is-true (g:cancellable-is-cancelled cancellable))
+    (is-false (g:cancellable-reset cancellable))
+    (is-false (g:cancellable-is-cancelled cancellable))))
+
+;;; 2024-10-23

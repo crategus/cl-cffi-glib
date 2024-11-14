@@ -2,7 +2,7 @@
 ;;; gio.themed-icon.lisp
 ;;;
 ;;; The documentation of this file is taken from the GIO Reference Manual
-;;; Version 2.76 and modified to document the Lisp binding to the GIO library.
+;;; Version 2.82 and modified to document the Lisp binding to the GIO library.
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
 ;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
@@ -66,7 +66,7 @@
 ;;; GThemedIcon
 ;;; ----------------------------------------------------------------------------
 
-(gobject:define-g-object-class "GThemedIcon" themed-icon
+(gobject:define-gobject "GThemedIcon" themed-icon
   (:superclass gobject:object
    :export t
    :interfaces ("GIcon")
@@ -83,7 +83,7 @@
 
 #+liber-documentation
 (setf (documentation 'themed-icon 'type)
- "@version{2023-12-26}
+ "@version{2024-10-23}
   @begin{short}
     The @class{g:themed-icon} class is an implementation of the @class{g:icon}
     interface that supports icon themes.
@@ -91,9 +91,7 @@
   The @class{g:themed-icon} class contains a list of all of the icons present
   in an icon theme, so that icons can be looked up quickly. The
   @class{g:themed-icon} class does not provide actual pixmaps for icons, just
-  the icon names. Ideally something like the @fun{gtk:icon-theme-choose-icon}
-  function should be used to resolve the list of names so that fallback icons
-  work nicely with themes that inherit other themes.
+  the icon names.
   @see-constructor{g:themed-icon-new}
   @see-constructor{g:themed-icon-new-from-names}
   @see-constructor{g:themed-icon-new-with-default-fallbacks}
@@ -118,7 +116,7 @@
 (setf (liber:alias-for-function 'themed-icon-name)
       "Accessor"
       (documentation 'themed-icon-name 'function)
- "@version{2023-12-26}
+ "@version{2024-10-23}
   @syntax{(g:themed-icon-name object) => name}
   @syntax{(setf (g:themed-icon-name object) name)}
   @argument[object]{a @class{g:themed-icon} object}
@@ -135,13 +133,13 @@
 (setf (documentation (liber:slot-documentation "names" 'themed-icon) t)
  "The @code{names} property of type @type{g:strv-t}
   (Read / Write / Construct Only) @br{}
-  A list of strings with the icon names.")
+  The list of strings with the icon names.")
 
 #+liber-documentation
 (setf (liber:alias-for-function 'themed-icon-names)
       "Accessor"
       (documentation 'themed-icon-names 'function)
- "@version{2023-12-26}
+ "@version{2024-10-23}
   @syntax{(g:themed-icon-names object) => names}
   @syntax{(setf (g:themed-icon-names object) names)}
   @argument[object]{a @class{g:themed-icon} object}
@@ -161,22 +159,14 @@
  "The @code{use-default-fallbacks} property of type @code{:boolean}
   (Read / Write / Construct Only) @br{}
   Whether to use the default fallbacks found by shortening the icon name at '-'
-  characters. If the @code{names} list has more than one element, ignores
-  any past the first. For example, if the icon name was
-  \"gnome-dev-cdrom-audio\", the list would become
-  @begin{pre}
-'(\"gnome-dev-cdrom-audio\"
-  \"gnome-dev-cdrom\"
-  \"gnome-dev\"
-  \"gnome\")
-  @end{pre}
+  characters. @br{}
   Default value: @code{nil}")
 
 #+liber-documentation
 (setf (liber:alias-for-function 'themed-icon-use-default-fallbacks)
       "Accessor"
       (documentation 'themed-icon-use-default-fallbacks 'function)
- "@version{2023-12-26}
+ "@version{2024-10-23}
   @syntax{(g:themed-icon-use-default-fallbacks object) => setting}
   @syntax{(setf (g:themed-icon-use-default-fallbacks object) setting)}
   @argument[object]{a @class{g:themed-icon} object}
@@ -187,25 +177,28 @@
   @end{short}
   Whether to use the default fallbacks found by shortening the icon name at '-'
   characters. If the @code{names} list has more than one element, ignores
-  any past the first. For example, if the icon name was
-  \"gnome-dev-cdrom-audio\", the list would become
-  @begin{pre}
+  any past the first.
+  @begin[Examples]{dictionary}
+    For example, if the icon name was @code{\"gnome-dev-cdrom-audio\"}, the list
+    would become
+    @begin{pre}
 '(\"gnome-dev-cdrom-audio\"
   \"gnome-dev-cdrom\"
   \"gnome-dev\"
   \"gnome\")
-  @end{pre}
+    @end{pre}
+  @end{dictionary}
   @see-class{g:themed-icon}")
 
 ;;; ----------------------------------------------------------------------------
-;;; g_themed_icon_new ()
+;;; g_themed_icon_new
 ;;; ----------------------------------------------------------------------------
 
 (declaim (inline themed-icon-new))
 
 (defun themed-icon-new (name)
  #+liber-documentation
- "@version{2023-12-26}
+ "@version{2024-10-23}
   @argument[name]{a string containing an icon name}
   @return{The new @class{g:themed-icon} object.}
   @begin{short}
@@ -220,15 +213,15 @@
 (export 'themed-icon-new)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_themed_icon_new_from_names ()
+;;; g_themed_icon_new_from_names
 ;;; ----------------------------------------------------------------------------
 
 (declaim (inline themed-icon-new-from-names))
 
 (defun themed-icon-new-from-names (&rest names)
  #+liber-documentation
- "@version{2023-12-26}
-  @argument[names]{a list of strings containing icon names}
+ "@version{2024-10-23}
+  @argument[names]{strings containing icon names}
   @return{The new @class{g:themed-icon} object.}
   @begin{short}
     Creates a new themed icon for @arg{names}.
@@ -244,19 +237,19 @@
 (export 'themed-icon-new-from-names)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_themed_icon_new_with_default_fallbacks ()
+;;; g_themed_icon_new_with_default_fallbacks
 ;;; ----------------------------------------------------------------------------
 
 (defun themed-icon-new-with-default-fallbacks (name)
  #+liber-documentation
- "@version{2023-12-26}
+ "@version{2024-10-23}
   @argument[name]{a string containing an icon name}
   @return{The new @class{g:themed-icon} object.}
   @begin{short}
     Creates a new themed icon for @arg{name}, and all the names that can
     be created by shortening iconname at '-' characters.
   @end{short}
-  @begin[Example]{dictionary}
+  @begin[Examples]{dictionary}
     In the following example, @code{icon1} and @code{icon2} are equivalent:
     @begin{pre}
 (let* ((names (list \"gnome-dev-cdrom-audio\"
@@ -279,12 +272,12 @@
 (export 'themed-icon-new-with-default-fallbacks)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_themed_icon_prepend_name ()
+;;; g_themed_icon_prepend_name
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_themed_icon_prepend_name" themed-icon-prepend-name) :void
  #+liber-documentation
- "@version{2023-12-26}
+ "@version{2024-10-23}
   @argument[icon]{a @class{g:themed-icon} object}
   @argument[name]{a string with the name of the icon to prepend to list of
     icons from within @arg{icon}}
@@ -302,12 +295,12 @@
 (export 'themed-icon-prepend-name)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_themed_icon_append_name ()
+;;; g_themed_icon_append_name
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_themed_icon_append_name" themed-icon-append-name) :void
  #+liber-documentation
- "@version{2023-12-26}
+ "@version{2024-10-23}
   @argument[icon]{a @class{g:themed-icon} object}
   @argument[name]{a string with the name of the icon to append to list of icons
     from within @arg{icon}}

@@ -66,7 +66,7 @@
 ;;; GPropertyAction
 ;;; ----------------------------------------------------------------------------
 
-(gobject:define-g-object-class "GPropertyAction" property-action
+(gobject:define-gobject "GPropertyAction" property-action
   (:superclass gobject:object
    :export t
    :interfaces ("GAction")
@@ -281,7 +281,7 @@
   @begin{short}
     The type of the parameter that must be given when activating the action.
   @end{short}
-  @begin[Example]{dictionary}
+  @begin[Examples]{dictionary}
     @begin{pre}
 (defvar label (make-instance 'gtk:label))
 => LABEL

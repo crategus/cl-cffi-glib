@@ -59,7 +59,7 @@
 ;;; GSimpleActionGroup
 ;;; ----------------------------------------------------------------------------
 
-(gobject:define-g-object-class "GSimpleActionGroup" simple-action-group
+(gobject:define-gobject "GSimpleActionGroup" simple-action-group
   (:superclass gobject:object
    :export t
    :interfaces ("GActionGroup"

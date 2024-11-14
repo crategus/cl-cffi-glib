@@ -2,11 +2,11 @@
 ;;; gio.resource.lisp
 ;;;
 ;;; The documentation of this file is taken from the GIO Reference Manual
-;;; Version 2.76 and modified to document the Lisp binding to the GIO library.
+;;; Version 2.82 and modified to document the Lisp binding to the GIO library.
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
 ;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2019 - 2023 Dieter Kaiser
+;;; Copyright (C) 2019 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -82,7 +82,7 @@
 ;;; GResourceFlags
 ;;; ----------------------------------------------------------------------------
 
-(gobject:define-g-flags "GResourceFlags" resource-flags
+(gobject:define-gflags "GResourceFlags" resource-flags
   (:export t
    :type-initializer "g_resource_flags_get_type")
   (:none 0)
@@ -94,7 +94,7 @@
       (liber:symbol-documentation 'resource-flags)
  "@version{2024-5-12}
   @begin{declaration}
-(gobject:define-g-flags \"GResourceFlags\" resource-flags
+(gobject:define-gflags \"GResourceFlags\" resource-flags
   (:export t
    :type-initializer \"g_resource_flags_get_type\")
   (:none 0)
@@ -116,7 +116,7 @@
 ;;; GResourceLookupFlags
 ;;; ----------------------------------------------------------------------------
 
-(gobject:define-g-flags "GResourceLookupFlags" resource-lookup-flags
+(gobject:define-gflags "GResourceLookupFlags" resource-lookup-flags
   (:export t
    :type-initializer "g_resource_lookup_flags_get_type")
   (:none 0))
@@ -127,7 +127,7 @@
       (liber:symbol-documentation 'resource-lookup-flags)
  "@version{2024-5-12}
   @begin{declaration}
-(gobject:define-g-flags \"GResourceLookupFlags\" resource-lookup-flags
+(gobject:define-gflags \"GResourceLookupFlags\" resource-lookup-flags
   (:export t
    :type-initializer \"g_resource_lookup_flags_get_type\")
   (:none 0))
@@ -181,7 +181,7 @@
 
 ;; TODO: Rework the documentation for use in the Lisp library
 
-(glib:define-g-boxed-opaque resource "GResource"
+(glib:define-gboxed-opaque resource "GResource"
   :export t
   :type-initializer "g_resource_get_type"
   :alloc (error "GResource cannot be created from the Lisp side"))
@@ -192,7 +192,7 @@
       (documentation 'resource 'type)
  "@version{2024-5-12}
   @begin{declaration}
-(glib:define-g-boxed-opaque resource \"GResource\"
+(glib:define-gboxed-opaque resource \"GResource\"
   :export t
   :type-initializer \"g_resource_get_type\"
   :alloc (error \"GResource cannot be created from the Lisp side\"))
@@ -217,8 +217,8 @@
 
   Resource files can also be marked as compressed. Such files will be included
   in the resource bundle in a compressed form, but will be automatically
-  uncompressed when the resource is used. This is very useful e.g. for larger
-  text files that are parsed once, or rarely, and then thrown away.
+  uncompressed when the resource is used. This is very useful, for example, for
+  larg text files that are parsed once or rarely and then thrown away.
 
   Resource files can also be marked to be preprocessed, by setting the value of
   the preprocess attribute to a comma-separated list of preprocessing options.
@@ -308,12 +308,12 @@
   supported. Constructor support is available for at least Win32, Mac OS and
   Linux.
 
-  Note that resource data can point directly into the data segment of e.g. a
-  library, so if you are unloading libraries during runtime you need to be very
-  careful with keeping around pointers to data from a resource, as this goes
-  away when the library is unloaded. However, in practice this is not generally
-  a problem, since most resource accesses are for your own resources, and
-  resource data is often used once, during parsing, and then released.
+  Note that resource data can point directly into the data segment of, for
+  example, a library, so if you are unloading libraries during runtime you need
+  to be very careful with keeping around pointers to data from a resource, as
+  this goes away when the library is unloaded. However, in practice this is not
+  generally a problem, since most resource accesses are for your own resources,
+  and resource data is often used once, during parsing, and then released.
 
   When debugging a program or testing a change to an installed version, it is
   often useful to be able to replace resources in the program or library,

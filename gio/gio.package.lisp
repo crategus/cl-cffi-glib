@@ -289,6 +289,14 @@
       @about-function{themed-icon-prepend-name}
       @about-function{themed-icon-append-name}
     @end{subsection}
+    @begin[GEmblem]{subsection}
+      @about-symbol{emblem-origin}
+      @about-class{emblem}
+      @about-generic{emblem-icon}
+      @about-generic{emblem-origin}
+      @about-function{emblem-new}
+      @about-function{emblem-new-with-origin}
+    @end{subsection}
     @begin[GEmblemedIcon]{subsection}
       @about-class{emblemed-icon}
       @about-generic{emblemed-icon-gicon}
@@ -297,14 +305,6 @@
       @about-function{emblemed-icon-emblems}
       @about-function{emblemed-icon-add-emblem}
       @about-function{emblemed-icon-clear-emblems}
-    @end{subsection}
-    @begin[GEmblem]{subsection}
-      @about-symbol{emblem-origin}
-      @about-class{emblem}
-      @about-generic{emblem-icon}
-      @about-generic{emblem-origin}
-      @about-function{emblem-new}
-      @about-function{emblem-new-with-origin}
     @end{subsection}
   @end{section}
   @begin[Resources]{section}

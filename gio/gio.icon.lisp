@@ -2,11 +2,11 @@
 ;;; gio.icon.lisp
 ;;;
 ;;; The documentation of this file is taken from the GIO Reference Manual
-;;; Version 2.76 and modified to document the Lisp binding to the GIO library.
+;;; Version 2.82 and modified to document the Lisp binding to the GIO library.
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
 ;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2013 - 2023 Dieter Kaiser
+;;; Copyright (C) 2013 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -56,7 +56,7 @@
 ;;; GIcon
 ;;; ----------------------------------------------------------------------------
 
-(gobject:define-g-interface "GIcon" icon
+(gobject:define-ginterface "GIcon" icon
   (:export t
    :type-initializer "g_icon_get_type")
   nil)
@@ -65,31 +65,32 @@
 (setf (liber:alias-for-class 'icon)
       "Interface"
       (documentation 'icon 'type)
- "@version{2023-3-12}
+ "@version{2024-10-23}
   @begin{short}
-    The @sym{g:icon} interface is a very minimal interface for icons.
+    The @class{g:icon} interface is a very minimal interface for icons.
   @end{short}
   It provides functions for checking the equality of two icons, hashing of
   icons and serializing an icon to and from strings.
 
-  The @sym{g:icon} interface does not provide the actual pixmap for the icon
-  as this is out of GIO's scope, however implementations of the @sym{g:icon}
-  interface may contain the name of an icon, see the @class{g:themed-icon}
-  class, or the path to an icon, see the @class{g:loadable-icon} class.
+  The @class{g:icon} interface does not provide the actual pixmap for the icon
+  as this is out of the scope of GIO, however implementations of the
+  @class{g:icon} interface may contain the name of an icon, see the
+  @class{g:themed-icon} class, or the path to an icon, see the
+  @class{g:loadable-icon} class.
 
-  To obtain a hash of a @sym{g:icon} object, see the @fun{g:icon-hash} function.
-  To check if two @sym{g:icon} objects are equal, see the @fun{g:icon-equal}
-  function.
+  To obtain a hash of a @class{g:icon} object, see the @fun{g:icon-hash}
+  function. To check if two @class{g:icon} objects are equal, see the
+  @fun{g:icon-equal} function.
 
-  For serializing a @sym{g:icon} object, use the @fun{g:icon-serialize} and
+  For serializing a @class{g:icon} object, use the @fun{g:icon-serialize} and
   @fun{g:icon-deserialize} functions.
 
-  If you want to consume the @sym{g:icon} interface, for example, in a
+  If you want to consume the @class{g:icon} interface, for example, in a
   toolkit, you must be prepared to handle at least the three following cases:
   @class{g:loadable-icon}, @class{g:themed-icon} and @class{g:emblemed-icon}
   classes. It may also make sense to have fast-paths for other cases, like
   handling the @class{gdk-pixbuf:pixbuf} object directly, for example, but all
-  compliant @sym{g:icon} implementations outside of GIO must implement the
+  compliant @class{g:icon} implementations outside of GIO must implement the
   @class{g:loadable-icon} class.
 
   If your application or library provides one or more @class{g:icon}
@@ -103,16 +104,16 @@
   @see-class{g:loadable-icon}")
 
 ;;; ----------------------------------------------------------------------------
-;;; g_icon_hash ()
+;;; g_icon_hash
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_icon_hash" icon-hash) :uint
  #+liber-documentation
- "@version{2022-12-27}
+ "@version{2024-10-23}
   @argument[icon]{a @class{g:icon} object}
   @begin{return}
-    An unsigned integer containing a hash for the icon, suitable for use in a
-    Hash table or similar data structure.
+    The unsigned integer containing a hash for the icon, suitable for use in a
+    hash table or similar data structure.
   @end{return}
   @begin{short}
     Gets a hash for an icon.
@@ -123,12 +124,12 @@
 (export 'icon-hash)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_icon_equal ()
+;;; g_icon_equal
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_icon_equal" icon-equal) :boolean
  #+liber-documentation
- "@version{2022-12-27}
+ "@version{2024-10-23}
   @argument[icon1]{a first @class{g:icon} object}
   @argument[icon2]{a second @class{g:icon} object}
   @begin{return}
@@ -144,15 +145,15 @@
 (export 'icon-equal)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_icon_to_string ()
+;;; g_icon_to_string
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_icon_to_string" icon-to-string) (:string :free-from-foreign t)
  #+liber-documentation
- "@version{2022-12-27}
+ "@version{2024-10-23}
   @argument[icon]{a @class{g:icon} object}
   @begin{return}
-    An UTF-8 string or @code{nil} if @arg{icon} cannot be serialized.
+    The UTF-8 string or @code{nil} if @arg{icon} cannot be serialized.
   @end{return}
   @begin{short}
     Generates a textual representation of the icon that can be used for
@@ -187,20 +188,20 @@
 (export 'icon-to-string)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_icon_new_for_string ()
+;;; g_icon_new_for_string
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_icon_new_for_string" %icon-new-for-string)
-    (gobject:object icon)
+    (gobject:object icon :already-referenced)
   (str :string)
   (err :pointer))
 
 (defun icon-new-for-string (str)
  #+liber-documentation
- "@version{2022-12-27}
-  @argument[str]{a string obtained via the @fun{g:icon-to-string} function}
+ "@version{2024-10-23}
+  @argument[str]{a string obtained using the @fun{g:icon-to-string} function}
   @begin{return}
-    An object implementing the @class{g:icon} interface or @code{nil} if an
+    The object implementing the @class{g:icon} interface or @code{nil} if an
     error is set.
   @end{return}
   @begin{short}
@@ -220,15 +221,18 @@
 (export 'icon-new-for-string)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_icon_serialize ()
+;;; g_icon_serialize
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcfun ("g_icon_serialize" icon-serialize)
+(cffi:defcfun ("g_icon_serialize" %icon-serialize)
     (:pointer (:struct glib:variant))
+  (icon (gobject:object icon)))
+
+(defun icon-serialize (icon)
  #+liber-documentation
- "@version{2022-12-27}
+ "@version{2024-10-23}
   @argument[icon]{a @class{g:icon} object}
-  @return{A @type{g:variant} value, or @code{NULL} when serialization fails.
+  @return{The @type{g:variant} value, or @code{nil} when serialization fails.
     The @type{g:variant} value will not be floating.}
   @begin{short}
     Serializes a @class{g:icon} object into a @type{g:variant} value.
@@ -241,20 +245,22 @@
   @see-class{g:icon}
   @see-type{g:variant}
   @see-function{g:icon-deserialize}"
-  (icon (gobject:object icon)))
+  (let ((value (%icon-serialize icon)))
+    (unless (cffi:null-pointer-p value) value)))
 
 (export 'icon-serialize)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_icon_deserialize ()
+;;; g_icon_deserialize
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcfun ("g_icon_deserialize" icon-deserialize) (gobject:object icon)
+(cffi:defcfun ("g_icon_deserialize" icon-deserialize)
+    (gobject:object icon :already-referenced)
  #+liber-documentation
- "@version{2022-12-27}
+ "@version{2024-10-23}
   @argument[value]{a @type{g:variant} value created with the
     @fun{g:icon-serialize} function}
-  @return{A @class{g:icon} object, or @code{nil} when deserialization fails.}
+  @return{The @class{g:icon} object, or @code{nil} when deserialization fails.}
   @begin{short}
     Deserializes a @class{g:icon} object previously serialized using
     the @fun{g:icon-serialize} function.

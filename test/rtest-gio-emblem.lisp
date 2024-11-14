@@ -28,13 +28,12 @@
              (glib-test:list-enum-item-nicks "GEmblemOrigin")))
   ;; Check enum definition
   (is (equal '(GOBJECT:DEFINE-GENUM "GEmblemOrigin" GIO:EMBLEM-ORIGIN
-                                    (:EXPORT T
-                                     :TYPE-INITIALIZER
-                                     "g_emblem_origin_get_type")
-                                    (:UNKNOWN 0)
-                                    (:DEVICE 1)
-                                    (:LIVEMETADATA 2)
-                                    (:TAG 3))
+                       (:EXPORT T
+                        :TYPE-INITIALIZER "g_emblem_origin_get_type")
+                       (:UNKNOWN 0)
+                       (:DEVICE 1)
+                       (:LIVEMETADATA 2)
+                       (:TAG 3))
              (gobject:get-gtype-definition "GEmblemOrigin"))))
 
 ;;;     GEmblem
@@ -73,11 +72,35 @@
                         (ORIGIN EMBLEM-ORIGIN "origin" "GEmblemOrigin" T NIL)))
              (gobject:get-gtype-definition "GEmblem"))))
 
+;;; --- Properties -------------------------------------------------------------
+
+(test g-emblem-properties
+  (let ((emblem (make-instance 'g:emblem)))
+    (is-false (g:emblem-icon emblem))
+    (is (eq :unknown (g:emblem-origin emblem)))))
+
 ;;; --- Functions --------------------------------------------------------------
 
 ;;;     g_emblem_new
-;;;     g_emblem_new_with_origin
-;;;     g_emblem_get_icon
-;;;     g_emblem_get_origin
 
-;;; 2024-9-17
+(test g-emblem-new
+  (let* ((icon (g:themed-icon-new "battery"))
+         (emblem (g:emblem-new icon)))
+    (is (typep emblem 'g:emblem))
+    (is (eq :unknown (g:emblem-origin emblem)))
+    (is (eq icon (g:emblem-icon emblem)))
+    (is (= 2 (g:object-ref-count icon)))
+    (is (= 1 (g:object-ref-count emblem)))))
+
+;;;     g_emblem_new_with_origin
+
+(test g-emblem-new-with-origin
+  (let* ((icon (g:themed-icon-new "battery"))
+         (emblem (g:emblem-new-with-origin icon :device)))
+    (is (typep emblem 'g:emblem))
+    (is (eq :device (g:emblem-origin emblem)))
+    (is (eq icon (g:emblem-icon emblem)))
+    (is (= 2 (g:object-ref-count icon)))
+    (is (= 1 (g:object-ref-count emblem)))))
+
+;;; 2024-10-23

@@ -2,11 +2,11 @@
 ;;; gio.async-result.lisp
 ;;;
 ;;; The documentation of this file is taken from the GIO Reference Manual
-;;; Version 2.76 and modified to document the Lisp binding to the GIO library.
+;;; Version 2.82 and modified to document the Lisp binding to the GIO library.
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
 ;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2023 Dieter Kaiser
+;;; Copyright (C) 2023 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -56,7 +56,7 @@
 ;;; GAsyncResult
 ;;; ----------------------------------------------------------------------------
 
-(gobject:define-g-interface "GAsyncResult" async-result
+(gobject:define-ginterface "GAsyncResult" async-result
   (:export t
    :type-initializer "g_async_result_get_type")
   nil)
@@ -65,7 +65,7 @@
 (setf (liber:alias-for-class 'async-result)
       "Interface"
       (documentation 'async-result 'type)
- "@version{#2023-9-18}
+ "@version{2024-10-23}
   @begin{short}
     Provides a base class for implementing asynchronous function results.
   @end{short}
@@ -78,21 +78,21 @@
   be passed a @class{g:async-result} instance filled with the details of the
   operation's success or failure, the object the asynchronous function was
   started for and any error codes returned. The asynchronous callback function
-  is then expected to call the corresponding @code{_finish()} function, passing
+  is then expected to call the corresponding @sym{-finish} function, passing
   the object the function was called for, the @class{g:async-result} instance,
   and optionally an error to grab any error conditions that may have occurred.
 
-  The @code{_finish()} function for an operation takes the generic result of
-  type @class{g:async-result} and returns the specific result that the operation
-  in question yields, e.g. a @code{GFileEnumerator} for a \"enumerate children\"
-  operation. If the result or error status of the operation is not needed, there
-  is no need to call the @code{_finish()} function. GIO will take care of
-  cleaning up the result and error information after the
+  The @sym{-finish} function for an operation takes the generic result of
+  type @class{g:async-result} and returns the specific result that the
+  operation in question yields, for example a @code{GFileEnumerator} for a
+  \"enumerate children\" operation. If the result or error status of the
+  operation is not needed, there is no need to call the @sym{-finish} function.
+  GIO will take care of cleaning up the result and error information after the
   @symbol{g:async-ready-callback} function returns. You can pass @code{nil} for
   the @symbol{g:async-ready-callback} function if you do not need to take any
   action at all after the operation completes. Applications may also take a
-  reference to the @class{g:async-result} instance and call the @code{_finish()}
-  function later. However, the @code{_finish()} function may be called at most
+  reference to the @class{g:async-result} instance and call the @sym{-finish}
+  function later. However, the @sym{-finish} function may be called at most
   once.
 
   Example of a typical asynchronous operation flow:
@@ -108,8 +108,8 @@ gboolean _theoretical_frobnitz_finish (Theoretical   *t,
 
 static void
 frobnitz_result_func (GObject      *source_object,
-		 GAsyncResult *res,
-		 gpointer      user_data)
+         GAsyncResult *res,
+         gpointer      user_data)
 {
   gboolean success = FALSE;
 
@@ -150,7 +150,7 @@ int main (int argc, void *argv[])
   @see-class{g:task}")
 
 ;;; ----------------------------------------------------------------------------
-;;; GAsyncReadyCallback ()
+;;; GAsyncReadyCallback
 ;;; ----------------------------------------------------------------------------
 
 ;; TODO: We free the allocated pointer in an UNWIND-PROTECT macro. Is this safe?
@@ -168,7 +168,17 @@ int main (int argc, void *argv[])
 (setf (liber:alias-for-symbol 'async-ready-callback)
       "Callback"
       (liber:symbol-documentation 'async-ready-callback)
- "@version{#2023-9-18}
+ "@version{#2024-10-23}
+  @begin{declaration}
+lambda (source result)
+  @end{declaration}
+  @begin{values}
+    @begin[code]{table}
+      @entry[source]{The @class{g:object} instance the asynchronous operation
+        was started with.}
+      @entry[result]{The @class{g:async-result} object.}
+    @end{table}
+  @end{values}
   @begin{short}
     Type definition for a function that will be called back when an asynchronous
     operation within GIO has been completed.
@@ -178,27 +188,21 @@ int main (int argc, void *argv[])
   context where the @class{g:task} object was created. All other users of the
   @symbol{g:async-ready-callback} function must likewise call it asynchronously
   in a later iteration of the main context.
-  @begin{pre}
-lambda (source result)
-  @end{pre}
-  @begin[code]{table}
-    @entry[source]{The @class{g:object} instance the asynchronous operation was
-      started with.}
-    @entry[result]{A @class{g:async-result} object.}
-  @end{table}
   @see-class{g:async-result}")
 
 (export 'async-ready-callback)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_async_result_get_user_data ()
+;;; g_async_result_get_user_data
 ;;; ----------------------------------------------------------------------------
+
+;; TODO: Is this function useful?!
 
 (cffi:defcfun ("g_async_result_get_user_data" async-result-user-data) :pointer
  #+liber-documentation
- "@version{#2023-7-13}
+ "@version{#2024-10-23}
   @argument[result]{a @class{g:async-result} instance}
-  @return{A pointer to the user data for @arg{result}.}
+  @return{The pointer to the user data for @arg{result}.}
   @begin{short}
     Gets the user data from a @class{g:async-result} instance.
   @end{short}
@@ -208,15 +212,17 @@ lambda (source result)
 (export 'async-result-user-data)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_async_result_get_source_object ()
+;;; g_async_result_get_source_object
 ;;; ----------------------------------------------------------------------------
+
+;; TODO: Check the memory management!
 
 (cffi:defcfun ("g_async_result_get_source_object" async-result-source-object)
     gobject:object
  #+liber-documentation
- "@version{#2023-7-13}
+ "@version{#2024-10-23}
   @argument[result]{a @class{g:async-result} instance}
-  @return{A new reference to the source object for @arg{result}, or
+  @return{The new reference to the source object for @arg{result}, or
   @code{nil} if there is none.}
   @begin{short}
     Gets the source object from a @class{g:async-result} instance.
@@ -227,19 +233,19 @@ lambda (source result)
 (export 'async-result-source-object)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_async_result_is_tagged ()
+;;; g_async_result_is_tagged
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_async_result_is_tagged" async-result-is-tagged) :boolean
  #+liber-documentation
- "@version{#2023-7-13}
+ "@version{#2024-10-23}
   @argument[result]{a @class{g:async-result} instance}
-  @argument[source-tag]{a pointer to an application defined tag}
-  @return{@em{True} if @arg{result} has the indicated @arg{source-tag},
-    @em{false} if not.}
+  @argument[tag]{a pointer to an application defined tag}
+  @return{@em{True} if @arg{result} has the indicated @arg{tag}, @em{false}
+    if not.}
   @begin{short}
-    Checks if @arg{result} has the given @arg{source-tag}, generally a function
-    pointer indicating the function @arg{result} was created by.
+    Checks if @arg{result} has the given @arg{tag}, generally a function
+    pointer indicating the @arg{result} function was created by.
   @end{short}
   @see-class{g:async-result}"
   (result (gobject:object async-result))

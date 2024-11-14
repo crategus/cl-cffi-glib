@@ -2,11 +2,11 @@
 ;;; gio.content-type.lisp
 ;;;
 ;;; The documentation of this file is taken from the GIO Reference Manual
-;;; Version 2.76 and modified to document the Lisp binding to the GIO library.
+;;; Version 2.82 and modified to document the Lisp binding to the GIO library.
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
 ;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2013 - 2023 Dieter Kaiser
+;;; Copyright (C) 2013 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -54,7 +54,7 @@
 (in-package :gio)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_content_type_equals ()
+;;; g_content_type_equals
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_content_type_equals" content-type-equals) :boolean
@@ -73,7 +73,7 @@
 (export 'content-type-equals)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_content_type_is_a ()
+;;; g_content_type_is_a
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_content_type_is_a" content-type-is-a) :boolean
@@ -92,7 +92,7 @@
 (export 'content-type-is-a)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_content_type_is_mime_type ()
+;;; g_content_type_is_mime_type
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_content_type_is_mime_type" content-type-is-mime-type) :boolean
@@ -113,7 +113,7 @@
 (export 'content-type-is-mime-type)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_content_type_is_unknown ()
+;;; g_content_type_is_unknown
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_content_type_is_unknown" content-type-is-unknown) :boolean
@@ -131,7 +131,7 @@
 (export 'content-type-is-unknown)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_content_type_get_description () -> content-type-description
+;;; g_content_type_get_description
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_content_type_get_description" content-type-description)
@@ -145,7 +145,7 @@
   @begin{short}
     Gets the human readable description of the content type.
   @end{short}
-  @begin[Example]{dictionary}
+  @begin[Examples]{dictionary}
     @begin{pre}
 (g:content-type-description \"text/plain\")
 => \"Einfaches Textdokument\"
@@ -157,7 +157,7 @@
 (export 'content-type-description)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_content_type_get_mime_type () -> content-type-mime-type
+;;; g_content_type_get_mime_type
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_content_type_get_mime_type" content-type-mime-type) :string
@@ -219,7 +219,7 @@
 (export 'content-type-mime-dirs)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_content_type_get_icon () -> content-type-icon
+;;; g_content_type_get_icon
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_content_type_get_icon" content-type-icon)
@@ -233,7 +233,7 @@
   @begin{short}
     Gets the icon for a content type.
   @end{short}
-  @begin[Example]{dictionary}
+  @begin[Examples]{dictionary}
     @begin{pre}
 (g:content-type-icon \"text/plain\")
 => #<GIO:THEMED-ICON {10089505F3@}>
@@ -247,7 +247,7 @@
 (export 'content-type-icon)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_content_type_get_symbolic_icon () -> content-type-symbolic-icon
+;;; g_content_type_get_symbolic_icon
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_content_type_get_symbolic_icon" content-type-symbolic-icon)
@@ -267,7 +267,7 @@
 (export 'content-type-symbolic-icon)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_content_type_get_generic_icon_name () -> content-type-generic-icon-name
+;;; g_content_type_get_generic_icon_name
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_content_type_get_generic_icon_name"
@@ -285,7 +285,7 @@
   See the
   @url[https://www.freedesktop.org/wiki/Specifications/shared-mime-info-spec/]{shared-mime-info specification}
   for more on the generic icon name.
-  @begin[Example]{dictionary}
+  @begin[Examples]{dictionary}
     @begin{pre}
 (g:content-type-generic-icon-name \"text/plain\")
 => \"text-x-generic\"
@@ -298,7 +298,7 @@
 (export 'content-type-generic-icon-name)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_content_type_can_be_executable ()
+;;; g_content_type_can_be_executable
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_content_type_can_be_executable"
@@ -311,14 +311,14 @@
   @begin{short}
     Checks if a content type can be executable.
   @end{short}
-  Note that for instance things like text files can be executables, i.e.
+  Note that for instance things like text files can be executables, that is
   scripts and batch files."
   (ctype :string))
 
 (export 'content-type-can-be-executable)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_content_type_from_mime_type ()
+;;; g_content_type_from_mime_type
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_content_type_from_mime_type" content-type-from-mime-type)
@@ -372,7 +372,7 @@
 ;;; it contains. The result is an array of content types, with the best guess
 ;;; coming first.
 ;;;
-;;; The types returned all have the form x-content/foo, e.g.
+;;; The types returned all have the form x-content/foo, for example,
 ;;; x-content/audio-cdda (for audio CDs) or x-content/image-dcf (for a camera
 ;;; memory card). See the shared-mime-info specification for more on x-content
 ;;; types.
@@ -391,7 +391,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_content_types_get_registered () -> content-types-registered
+;;; g_content_types_get_registered
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_content_types_get_registered" content-types-registered)

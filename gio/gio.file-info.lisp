@@ -2,7 +2,7 @@
 ;;; gio.file-info.lisp
 ;;;
 ;;; The documentation of this file is taken from the GIO Reference Manual
-;;; Version 2.81 and modified to document the Lisp binding to the GIO library.
+;;; Version 2.82 and modified to document the Lisp binding to the GIO library.
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
 ;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
@@ -113,7 +113,7 @@
 ;;; GFileInfo
 ;;; ----------------------------------------------------------------------------
 
-(gobject:define-g-object-class "GFileInfo" file-info
+(gobject:define-gobject "GFileInfo" file-info
   (:superclass gobject:object
    :export t
    :interfaces nil
@@ -122,15 +122,12 @@
 
 #+liber-documentation
 (setf (documentation 'file-info 'type)
- "@version{2024-8-21}
+ "@version{2024-10-23}
   @begin{short}
-    Stores information about a file system object referenced by a @code{GFile}.
+    The @class{g:file-info} object implements methods for getting information
+    that all files should contain, and allows for manipulation of extended
+    attributes.
   @end{short}
-
-  Functionality for manipulating basic metadata for files. The
-  @class{g:file-info} object implements methods for getting information that
-  all files should contain, and allows for manipulation of extended attributes.
-
   See the file attributes document for more information on how GIO handles file
   attributes.
 
@@ -163,13 +160,22 @@
 
   The @symbol{g:file-attribute-matcher} instance allows for searching through a
   @class{g:file-info} instance for attributes.
+  @see-constructor{g:file-info-new}
   @see-class{g:file}")
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_file_info_new
-;;;
-;;; Creates a new file info structure.
 ;;; ----------------------------------------------------------------------------
+
+(defun file-info-new ()
+ #+liber-documentation
+ "@version{2024-10-23}
+  @return{The newly created @class{g:file-info} instance.}
+  @short{Creates a new file info instance.}
+  @see-class{g:file-info}"
+  (make-instance 'file-info))
+
+(export 'file-info-new)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_file_info_clear_status
@@ -215,8 +221,8 @@
 ;;; ----------------------------------------------------------------------------
 ;;; g_file_info_get_attribute_byte_string
 ;;;
-;;; Gets the value of a byte string attribute. If the attribute does not contain
-;;; a byte string, NULL will be returned.
+;;; Gets the value of a byte string attribute. If the attribute does not
+;;; contain a byte string, NULL will be returned.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -269,204 +275,401 @@
 ;;; string, NULL will be returned.
 ;;; ----------------------------------------------------------------------------
 
-#|
-
-g_file_info_get_attribute_stringv
-Gets the value of a stringv attribute. If the attribute does not contain a stringv, NULL will be returned.
-
-since: 2.22
-
-g_file_info_get_attribute_type
-Gets the attribute type for an attribute key.
-
-g_file_info_get_attribute_uint32
-Gets an unsigned 32-bit integer contained within the attribute. If the attribute does not contain an unsigned 32-bit integer, or is invalid, 0 will be returned.
-
-g_file_info_get_attribute_uint64
-Gets a unsigned 64-bit integer contained within the attribute. If the attribute does not contain an unsigned 64-bit integer, or is invalid, 0 will be returned.
-
-g_file_info_get_content_type
-Gets the file’s content type.
-
-g_file_info_get_creation_date_time
-Gets the creation time of the current info and returns it as a GDateTime.
-
-since: 2.70
-
-g_file_info_get_deletion_date
-Returns the GDateTime representing the deletion date of the file, as available in G_FILE_ATTRIBUTE_TRASH_DELETION_DATE. If the G_FILE_ATTRIBUTE_TRASH_DELETION_DATE attribute is unset, NULL is returned.
-
-since: 2.36
-
-g_file_info_get_display_name
-Gets a display name for a file. This is guaranteed to always be set.
-
-g_file_info_get_edit_name
-Gets the edit name for a file.
-
-g_file_info_get_etag
-Gets the entity tag for a given GFileInfo. See G_FILE_ATTRIBUTE_ETAG_VALUE.
-
-g_file_info_get_file_type
-Gets a file’s type (whether it is a regular file, symlink, etc). This is different from the file’s content type, see g_file_info_get_content_type().
-
-g_file_info_get_icon
-Gets the icon for a file.
-
-g_file_info_get_is_backup
-Checks if a file is a backup file.
-
-g_file_info_get_is_hidden
-Checks if a file is hidden.
-
-g_file_info_get_is_symlink
-Checks if a file is a symlink.
-
-g_file_info_get_modification_date_time
-Gets the modification time of the current info and returns it as a GDateTime.
-
-since: 2.62
-
-g_file_info_get_modification_time
-Gets the modification time of the current info and sets it in result.
-
-deprecated: 2.62
-
-g_file_info_get_name
-Gets the name for a file. This is guaranteed to always be set.
-
-g_file_info_get_size
-Gets the file’s size (in bytes). The size is retrieved through the value of the G_FILE_ATTRIBUTE_STANDARD_SIZE attribute and is converted from #guint64 to #goffset before returning the result.
-
-g_file_info_get_sort_order
-Gets the value of the sort_order attribute from the GFileInfo. See G_FILE_ATTRIBUTE_STANDARD_SORT_ORDER.
-
-g_file_info_get_symbolic_icon
-Gets the symbolic icon for a file.
-
-since: 2.34
-
-g_file_info_get_symlink_target
-Gets the symlink target for a given GFileInfo.
-
-g_file_info_has_attribute
-Checks if a file info structure has an attribute named attribute.
-
-g_file_info_has_namespace
-Checks if a file info structure has an attribute in the specified name_space.
-
-since: 2.22
-
-g_file_info_list_attributes
-Lists the file info structure’s attributes.
-
-g_file_info_remove_attribute
-Removes all cases of attribute from info if it exists.
-
-g_file_info_set_access_date_time
-Sets the G_FILE_ATTRIBUTE_TIME_ACCESS and G_FILE_ATTRIBUTE_TIME_ACCESS_USEC attributes in the file info to the given date/time value.
-
-since: 2.70
-
-g_file_info_set_attribute
-Sets the attribute to contain the given value, if possible. To unset the attribute, use G_FILE_ATTRIBUTE_TYPE_INVALID for type.
-
-g_file_info_set_attribute_boolean
-Sets the attribute to contain the given attr_value, if possible.
-
-g_file_info_set_attribute_byte_string
-Sets the attribute to contain the given attr_value, if possible.
-
-g_file_info_set_attribute_file_path
-Sets the attribute to contain the given attr_value, if possible.
-
-since: 2.78
-
-g_file_info_set_attribute_int32
-Sets the attribute to contain the given attr_value, if possible.
-
-g_file_info_set_attribute_int64
-Sets the attribute to contain the given attr_value, if possible.
-
-g_file_info_set_attribute_mask
-Sets mask on info to match specific attribute types.
-
-g_file_info_set_attribute_object
-Sets the attribute to contain the given attr_value, if possible.
-
-g_file_info_set_attribute_status
-Sets the attribute status for an attribute key. This is only needed by external code that implement g_file_set_attributes_from_info() or similar functions.
-
-since: 2.22
-
-g_file_info_set_attribute_string
-Sets the attribute to contain the given attr_value, if possible.
-
-g_file_info_set_attribute_stringv
-Sets the attribute to contain the given attr_value, if possible.
-
-g_file_info_set_attribute_uint32
-Sets the attribute to contain the given attr_value, if possible.
-
-g_file_info_set_attribute_uint64
-Sets the attribute to contain the given attr_value, if possible.
-
-g_file_info_set_content_type
-Sets the content type attribute for a given GFileInfo. See G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE.
-
-g_file_info_set_creation_date_time
-Sets the G_FILE_ATTRIBUTE_TIME_CREATED and G_FILE_ATTRIBUTE_TIME_CREATED_USEC attributes in the file info to the given date/time value.
-
-since: 2.70
-
-g_file_info_set_display_name
-Sets the display name for the current GFileInfo. See G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME.
-
-g_file_info_set_edit_name
-Sets the edit name for the current file. See G_FILE_ATTRIBUTE_STANDARD_EDIT_NAME.
-
-g_file_info_set_file_type
-Sets the file type in a GFileInfo to type. See G_FILE_ATTRIBUTE_STANDARD_TYPE.
-
-g_file_info_set_icon
-Sets the icon for a given GFileInfo. See G_FILE_ATTRIBUTE_STANDARD_ICON.
-
-g_file_info_set_is_hidden
-Sets the “is_hidden” attribute in a GFileInfo according to is_hidden. See G_FILE_ATTRIBUTE_STANDARD_IS_HIDDEN.
-
-g_file_info_set_is_symlink
-Sets the “is_symlink” attribute in a GFileInfo according to is_symlink. See G_FILE_ATTRIBUTE_STANDARD_IS_SYMLINK.
-
-g_file_info_set_modification_date_time
-Sets the G_FILE_ATTRIBUTE_TIME_MODIFIED and G_FILE_ATTRIBUTE_TIME_MODIFIED_USEC attributes in the file info to the given date/time value.
-
-since: 2.62
-
-g_file_info_set_modification_time
-Sets the G_FILE_ATTRIBUTE_TIME_MODIFIED and G_FILE_ATTRIBUTE_TIME_MODIFIED_USEC attributes in the file info to the given time value.
-
-deprecated: 2.62
-
-g_file_info_set_name
-Sets the name attribute for the current GFileInfo. See G_FILE_ATTRIBUTE_STANDARD_NAME.
-
-g_file_info_set_size
-Sets the G_FILE_ATTRIBUTE_STANDARD_SIZE attribute in the file info to the given size.
-
-g_file_info_set_sort_order
-Sets the sort order attribute in the file info structure. See G_FILE_ATTRIBUTE_STANDARD_SORT_ORDER.
-
-g_file_info_set_symbolic_icon
-Sets the symbolic icon for a given GFileInfo. See G_FILE_ATTRIBUTE_STANDARD_SYMBOLIC_ICON.
-
-since: 2.34
-
-g_file_info_set_symlink_target
-Sets the G_FILE_ATTRIBUTE_STANDARD_SYMLINK_TARGET attribute in the file info to the given symlink target.
-
-g_file_info_unset_attribute_mask
-Unsets a mask set by g_file_info_set_attribute_mask(), if one is set.
-
-|#
+;;; ----------------------------------------------------------------------------
+;;; g_file_info_get_attribute_stringv
+;;;
+;;; Gets the value of a stringv attribute. If the attribute does not contain a
+;;; stringv, NULL will be returned.
+;;;
+;;; Since 2.22
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_file_info_get_attribute_type
+;;;
+;;; Gets the attribute type for an attribute key.
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_file_info_get_attribute_uint32
+;;;
+;;; Gets an unsigned 32-bit integer contained within the attribute. If the
+;;; attribute does not contain an unsigned 32-bit integer, or is invalid, 0
+;;; will be returned.
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_file_info_get_attribute_uint64
+;;;
+;;; Gets a unsigned 64-bit integer contained within the attribute. If the
+;;; attribute does not contain an unsigned 64-bit integer, or is invalid, 0
+;;; will be returned.
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_file_info_get_content_type
+;;;
+;;; Gets the file’s content type.
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_file_info_get_creation_date_time
+;;;
+;;; Gets the creation time of the current info and returns it as a GDateTime.
+;;;
+;;; Since 2.70
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_file_info_get_deletion_date
+;;;
+;;; Returns the GDateTime representing the deletion date of the file, as
+;;; available in G_FILE_ATTRIBUTE_TRASH_DELETION_DATE. If the
+;;; G_FILE_ATTRIBUTE_TRASH_DELETION_DATE attribute is unset, NULL is returned.
+;;;
+;;; Since 2.36
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_file_info_get_display_name
+;;;
+;;; Gets a display name for a file. This is guaranteed to always be set.
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_file_info_get_edit_name
+;;;
+;;; Gets the edit name for a file.
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_file_info_get_etag
+;;;
+;;; Gets the entity tag for a given GFileInfo. See G_FILE_ATTRIBUTE_ETAG_VALUE.
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_file_info_get_file_type
+;;;
+;;; Gets a file’s type (whether it is a regular file, symlink, etc). This is
+;;; different from the file’s content type, see g_file_info_get_content_type().
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_file_info_get_icon
+;;;
+;;; Gets the icon for a file.
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_file_info_get_is_backup
+;;;
+;;; Checks if a file is a backup file.
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_file_info_get_is_hidden
+;;;
+;;; Checks if a file is hidden.
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_file_info_get_is_symlink
+;;;
+;;; Checks if a file is a symlink.
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_file_info_get_modification_date_time
+;;;
+;;; Gets the modification time of the current info and returns it as a
+;;; GDateTime.
+;;;
+;;; Since 2.62
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_file_info_get_modification_time
+;;;
+;;; Gets the modification time of the current info and sets it in result.
+;;;
+;;; Deprecated 2.62
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_file_info_get_name
+;;;
+;;; Gets the name for a file. This is guaranteed to always be set.
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_file_info_get_size
+;;;
+;;; Gets the file’s size (in bytes). The size is retrieved through the value of
+;;; the G_FILE_ATTRIBUTE_STANDARD_SIZE attribute and is converted from #guint64
+;;; to #goffset before returning the result.
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_file_info_get_sort_order
+;;;
+;;; Gets the value of the sort_order attribute from the GFileInfo. See
+;;; G_FILE_ATTRIBUTE_STANDARD_SORT_ORDER.
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_file_info_get_symbolic_icon
+;;;
+;;; Gets the symbolic icon for a file.
+;;;
+;;; Since 2.34
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_file_info_get_symlink_target
+;;;
+;;; Gets the symlink target for a given GFileInfo.
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_file_info_has_attribute
+;;;
+;;; Checks if a file info structure has an attribute named attribute.
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_file_info_has_namespace
+;;;
+;;; Checks if a file info structure has an attribute in the specified
+;;; name_space.
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_file_info_list_attributes
+;;;
+;;; Lists the file info structure’s attributes.
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_file_info_remove_attribute
+;;;
+;;; Removes all cases of attribute from info if it exists.
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_file_info_set_access_date_time
+;;;
+;;; Sets the G_FILE_ATTRIBUTE_TIME_ACCESS and
+;;; G_FILE_ATTRIBUTE_TIME_ACCESS_USEC attributes in the file info to the given
+;;; date/time value.
+;;;
+;;; Since 2.70
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_file_info_set_attribute
+;;;
+;;; Sets the attribute to contain the given value, if possible. To unset the
+;;; attribute, use G_FILE_ATTRIBUTE_TYPE_INVALID for type.
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_file_info_set_attribute_boolean
+;;;
+;;; Sets the attribute to contain the given attr_value, if possible.
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_file_info_set_attribute_byte_string
+;;;
+;;; Sets the attribute to contain the given attr_value, if possible.
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_file_info_set_attribute_file_path
+;;;
+;;; Sets the attribute to contain the given attr_value, if possible.
+;;;
+;;; Since 2.78
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_file_info_set_attribute_int32
+;;;
+;;; Sets the attribute to contain the given attr_value, if possible.
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_file_info_set_attribute_int64
+;;;
+;;; Sets the attribute to contain the given attr_value, if possible.
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_file_info_set_attribute_mask
+;;;
+;;; Sets mask on info to match specific attribute types.
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_file_info_set_attribute_object
+;;;
+;;; Sets the attribute to contain the given attr_value, if possible.
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_file_info_set_attribute_status
+;;;
+;;; Sets the attribute status for an attribute key. This is only needed by
+;;; external code that implement g_file_set_attributes_from_info() or similar
+;;; functions.
+;;;
+;;; Since 2.22
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_file_info_set_attribute_string
+;;;
+;;; Sets the attribute to contain the given attr_value, if possible.
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_file_info_set_attribute_stringv
+;;;
+;;; Sets the attribute to contain the given attr_value, if possible.
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_file_info_set_attribute_uint32
+;;;
+;;; Sets the attribute to contain the given attr_value, if possible.
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_file_info_set_attribute_uint64
+;;;
+;;; Sets the attribute to contain the given attr_value, if possible.
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_file_info_set_content_type
+;;;
+;;; Sets the content type attribute for a given GFileInfo. See
+;;; G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE.
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_file_info_set_creation_date_time
+;;;
+;;; Sets the G_FILE_ATTRIBUTE_TIME_CREATED and
+;;; G_FILE_ATTRIBUTE_TIME_CREATED_USEC attributes in the file info to the given
+;;; date/time value.
+;;;
+;;; Since 2.70
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_file_info_set_display_name
+;;;
+;;; Sets the display name for the current GFileInfo. See
+;;; G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME.
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_file_info_set_edit_name
+;;;
+;;; Sets the edit name for the current file. See
+;;; G_FILE_ATTRIBUTE_STANDARD_EDIT_NAME.
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_file_info_set_file_type
+;;;
+;;; Sets the file type in a GFileInfo to type. See
+;;; G_FILE_ATTRIBUTE_STANDARD_TYPE.
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_file_info_set_icon
+;;;
+;;; Sets the icon for a given GFileInfo. See G_FILE_ATTRIBUTE_STANDARD_ICON.
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_file_info_set_is_hidden
+;;;
+;;; Sets the “is_hidden” attribute in a GFileInfo according to is_hidden. See
+;;; G_FILE_ATTRIBUTE_STANDARD_IS_HIDDEN.
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_file_info_set_is_symlink
+;;;
+;;; Sets the “is_symlink” attribute in a GFileInfo according to is_symlink.
+;;; See G_FILE_ATTRIBUTE_STANDARD_IS_SYMLINK.
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_file_info_set_modification_date_time
+;;;
+;;; Sets the G_FILE_ATTRIBUTE_TIME_MODIFIED and
+;;; G_FILE_ATTRIBUTE_TIME_MODIFIED_USEC attributes in the file info to the
+;;; given date/time value.
+;;;
+;;; Since 2.62
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_file_info_set_modification_time
+;;;
+;;; Sets the G_FILE_ATTRIBUTE_TIME_MODIFIED and
+;;; G_FILE_ATTRIBUTE_TIME_MODIFIED_USEC attributes in the file info to the
+;;; given time value.
+;;;
+;;; Deprecated 2.62
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_file_info_set_name
+;;;
+;;; Sets the name attribute for the current GFileInfo. See
+;;; G_FILE_ATTRIBUTE_STANDARD_NAME.
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_file_info_set_size
+;;;
+;;; Sets the G_FILE_ATTRIBUTE_STANDARD_SIZE attribute in the file info to the
+;;; given size.
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_file_info_set_sort_order
+;;;
+;;; Sets the sort order attribute in the file info structure. See
+;;; G_FILE_ATTRIBUTE_STANDARD_SORT_ORDER.
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_file_info_set_symbolic_icon
+;;;
+;;; Sets the symbolic icon for a given GFileInfo. See
+;;; G_FILE_ATTRIBUTE_STANDARD_SYMBOLIC_ICON.
+;;;
+;;; Since 2.34
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_file_info_set_symlink_target
+;;;
+;;; Sets the G_FILE_ATTRIBUTE_STANDARD_SYMLINK_TARGET attribute in the file
+;;; info to the given symlink target.
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_file_info_unset_attribute_mask
+;;;
+;;; Unsets a mask set by g_file_info_set_attribute_mask(), if one is set.
+;;; ----------------------------------------------------------------------------
 
 ;;; ----- End of file gio.file-info.lisp ---------------------------------------

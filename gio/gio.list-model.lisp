@@ -68,7 +68,7 @@
 ;;; GListModel
 ;;; ----------------------------------------------------------------------------
 
-(gobject:define-g-interface "GListModel" list-model
+(gobject:define-ginterface "GListModel" list-model
   (:export t
    :type-initializer "g_list_model_get_type")
   nil)
@@ -127,10 +127,6 @@
       @begin{pre}
 lambda (model pos removed added)    :run-last
       @end{pre}
-      This signal is emitted whenever items were added to or removed from
-      @arg{model}. At @arg{pos}, removed items were removed and added items
-      were added in their place. Note: If @arg{removed} is not equal
-      @arg{added}, the positions of all later items in the model change.
       @begin[code]{table}
         @entry[model]{The @class{g:list-model} instance that changed.}
         @entry[pos]{The unsigned integer with the position at which @arg{model}
@@ -138,6 +134,10 @@ lambda (model pos removed added)    :run-last
         @entry[removed]{The unsigned integer with the number of items removed.}
         @entry[added]{The unsigned integer with the number of items addes.}
       @end{table}
+      This signal is emitted whenever items were added to or removed from
+      @arg{model}. At @arg{pos}, removed items were removed and added items
+      were added in their place. Note: If @arg{removed} is not equal
+      @arg{added}, the positions of all later items in the model change.
   @end{dictionary}
   @see-class{g:list-store}")
 

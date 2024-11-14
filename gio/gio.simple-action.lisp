@@ -2,11 +2,11 @@
 ;;; gio.simple-action.lisp
 ;;;
 ;;; The documentation of this file is taken from the GIO Reference Manual
-;;; Version 2.76 and modified to document the Lisp binding to the GIO library.
+;;; Version 2.82 and modified to document the Lisp binding to the GIO library.
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
 ;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2012 - 2023 Dieter Kaiser
+;;; Copyright (C) 2012 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -73,7 +73,7 @@
 ;;; GSimpleAction
 ;;; ----------------------------------------------------------------------------
 
-(gobject:define-g-object-class "GSimpleAction" simple-action
+(gobject:define-gobject "GSimpleAction" simple-action
   (:superclass gobject:object
    :export t
    :interfaces ("GAction")
@@ -108,17 +108,21 @@
       @begin{pre}
 lambda (action parameter)    :run-last
       @end{pre}
-      Indicates that the action was just activated. The @arg{parameter} argument
-      will always be of the expected type. In the event that an incorrect type
-      was given, no signal will be emitted.
       @begin[code]{table}
         @entry[action]{The @sym{g:simple-action} object.}
         @entry[parameter]{The @type{g:variant} parameter to the activation.}
       @end{table}
+      Indicates that the action was just activated. The @arg{parameter} argument
+      will always be of the expected type. In the event that an incorrect type
+      was given, no signal will be emitted.
     @subheading{The \"change-state\" signal}
       @begin{pre}
 lambda (action value)    :run-last
       @end{pre}
+      @begin[code]{table}
+        @entry[action]{The @sym{g:simple-action} object.}
+        @entry[value]{The requested @type{g:variant} value for the state.}
+      @end{table}
       Indicates that the action just received a request to change its state.
       The @arg{value} argument will always be of the correct state type. In the
       event that an incorrect type was given, no signal will be emitted.
@@ -126,8 +130,7 @@ lambda (action value)    :run-last
       to call the @fun{g:simple-action-state} function to set the state to the
       requested value. If you connect a signal handler then no default action
       is taken. If the state should change then you must call the
-      @fun{g:simple-action-state} function from the handler.
-
+      @fun{g:simple-action-state} function from the handler. @break{}
       @b{Example:} Implementation of a \"change-state\" handler
       @begin{pre}
 (g:signal-connect action \"change-state\"
@@ -139,10 +142,6 @@ lambda (action value)    :run-last
       @end{pre}
       The handler need not set the state to the requested value. It could set
       it to any value at all, or take some other action.
-      @begin[code]{table}
-        @entry[action]{The @sym{g:simple-action} object.}
-        @entry[value]{The requested @type{g:variant} value for the state.}
-      @end{table}
   @end{dictionary}
   @see-constructor{g:simple-action-new}
   @see-constructor{g:simple-action-new-stateful}

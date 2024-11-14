@@ -2,11 +2,11 @@
 ;;; gio.application-command-line.lisp
 ;;;
 ;;; The documentation of this file is taken from the GIO Reference Manual
-;;; Version 2.76 and modified to document the Lisp binding to the GIO library.
+;;; Version 2.82 and modified to document the Lisp binding to the GIO library.
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
 ;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2020 - 2023 Dieter Kaiser
+;;; Copyright (C) 2020 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -73,8 +73,7 @@
 ;;; GApplicationCommandLine
 ;;; ----------------------------------------------------------------------------
 
-(gobject:define-g-object-class "GApplicationCommandLine"
-                               application-command-line
+(gobject:define-gobject "GApplicationCommandLine" application-command-line
   (:superclass gobject:object
    :export t
    :interfaces ()
@@ -100,12 +99,13 @@
     invocation of an application.
   @end{short}
   It is created by the @class{g:application} object and emitted in the
-  \"command-line\" signal and virtual function.
+  @code{\"command-line\"} signal and virtual function.
 
   The class contains the list of arguments that the program was invoked with.
-  It is also possible to query if the command line invocation was local, i.e.
-  the current process is running in direct response to the invocation, or
-  remote, i.e. some other process forwarded the command line to this process.
+  It is also possible to query if the command line invocation was local, that
+  is, the current process is running in direct response to the invocation, or
+  remote, that is, some other process forwarded the command line to this
+  process.
 
   The @sym{g:application-command-line} object can provide the command line
   arguments for use with the @type{g:option-context} command line parsing API,
@@ -113,28 +113,30 @@
 
   The exit status of the originally invoked process may be set and messages can
   be printed to stdout or stderr of that process. The life cycle of the
-  originally invoked process is tied to the life cycle of this object, i.e. the
-  process exits when the last reference is dropped.
+  originally invoked process is tied to the life cycle of this object, that is,
+  the process exits when the last reference is dropped.
 
   The main use for the @sym{g:application-command-line} object, and the
-  \"command-line\" signal, is 'Emacs server' like use cases: You can set the
-  EDITOR environment variable to have e.g. GIT use your favourite editor to edit
-  commit messages, and if you already have an instance of the editor running,
-  the editing will happen in the running instance, instead of opening a new one.
-  An important aspect of this use case is that the process that gets started by
-  GIT does not return until the editing is done.
-  @begin[Example]{dictionary}
-    Normally, the command line is completely handled in the \"command-line\"
-    signal handler. The launching instance exits once the signal handler in the
-    primary instance has returned, and the return value of the signal handler
-    becomes the exit status of the launching instance.
+  @code{\"command-line\"} signal, is 'Emacs server' like use cases: You can set
+  the @code{EDITOR} environment variable to have, for example @code{GIT}, use
+  your favourite editor to edit commit messages, and if you already have an
+  instance of the editor running, the editing will happen in the running
+  instance, instead of opening a new one. An important aspect of this use case
+  is that the process that gets started by @code{GIT} does not return until the
+  editing is done.
+  @begin[Examples]{dictionary}
+    Normally, the command line is completely handled in the
+    @code{\"command-line\"} signal handler. The launching instance exits once
+    the signal handler in the primary instance has returned, and the return
+    value of the signal handler becomes the exit status of the launching
+    instance.
     @begin{pre}
 (defun application-cmdline (&rest argv)
   (let ((app (make-instance 'g:application
                             :application-id
                             \"com.crategus.application-cmdline\"
                             :flags :handles-command-line))
-        (argv (if argv argv (uiop:command-line-arguments))))
+        (argv (or argv (uiop:command-line-arguments))))
     ;; Print info about the application
     (format t \"Start application~%\")
     (format t \"       argv : ~a~%\" argv)
@@ -181,14 +183,15 @@
 ;;; Property and Accessor Details
 ;;; ----------------------------------------------------------------------------
 
-;;; --- application-command-line-arguments -------------------------------------
+;;; --- g:application-command-line-arguments -----------------------------------
 
 #+liber-documentation
 (setf (documentation (liber:slot-documentation "arguments"
                                                'application-command-line) t)
  "The @code{arguments} property of type @type{g:variant}
   (Write / Construct Only) @br{}
-  The command line that caused this \"command-line\" signal emission. @br{}
+  The command line that caused this @code{\"command-line\"} signal emission.
+  @br{}
   Allowed values: @code{GVariant<aay>} @br{}
   Default value: @code{nil}")
 
@@ -199,7 +202,7 @@
  "@version{#2022-12-29}
   @argument[object]{a @class{g:application-command-line} instance}
   @begin{short}
-    The command line that caused this \"command-line\" signal emission.
+    The command line that caused this @code{\"command-line\"} signal emission.
   @end{short}
   The @slot[g:application-command-line]{arguments} property is not readable
   and set when constructing the instance.
@@ -209,7 +212,7 @@
   @see-class{g:application-command-line}
   @see-function{g:application-command-line-get-arguments}")
 
-;;; --- application-command-line-is-remote -------------------------------------
+;;; --- g:application-command-line-is-remote -----------------------------------
 
 #+liber-documentation
 (setf (documentation (liber:slot-documentation "is-remote"
@@ -230,7 +233,7 @@
   @end{short}
   @see-class{g:application-command-line}")
 
-;;; --- application-command-line-options ---------------------------------------
+;;; --- g:application-command-line-options -------------------------------------
 
 #+liber-documentation
 (setf (documentation (liber:slot-documentation "options"
@@ -254,7 +257,7 @@
   set when constructing the instance.
   @see-class{g:application-command-line}")
 
-;;; --- application-command-line-platform-data ---------------------------------
+;;; --- g:application-command-line-platform-data -------------------------------
 
 #+liber-documentation
 (setf (documentation (liber:slot-documentation "platform-data"
@@ -279,7 +282,7 @@
   @see-class{g:application-command-line}")
 
 ;;; ----------------------------------------------------------------------------
-;;; g_application_command_line_get_arguments ()
+;;; g_application_command_line_get_arguments
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_application_command_line_get_arguments"
@@ -310,7 +313,7 @@
 (export 'application-command-line-get-arguments)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_application_command_line_get_cwd ()
+;;; g_application_command_line_get_cwd
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_application_command_line_get_cwd"
@@ -325,7 +328,7 @@
 
   It is possible that the remote application did not send a working directory,
   so this may be @code{nil}.
-  @begin[Example]{dictionary}
+  @begin[Examples]{dictionary}
     @begin{pre}
 (defvar cmd (make-instance 'g:application-command-line)) => CMD
 (g:application-command-line-cwd cmd) => \"/home/dieter/Lisp/lisp-projects\"
@@ -337,7 +340,7 @@
 (export 'application-command-line-cwd)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_application_command_line_get_environ ()
+;;; g_application_command_line_get_environ
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_application_command_line_get_environ"
@@ -368,8 +371,7 @@
 (export 'application-command-line-environ)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_application_command_line_get_options_dict ()
-;;; -> application-command-line-optons-dict
+;;; g_application_command_line_get_options_dict
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_application_command_line_get_options_dict"
@@ -386,8 +388,8 @@
   If you did not override the virtual function @code{local_command_line} then
   these are the same options that were parsed according to the options entries
   added to the application with the @fun{g:application-add-main-option-entries}
-  function and possibly modified from your \"handle-local-options\" signal
-  handler.
+  function and possibly modified from your @code{\"handle-local-options\"}
+  signal handler.
 
   If no options were sent then an empty dictionary is returned so that you
   do not need to check for @code{nil}.
@@ -424,7 +426,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_application_command_line_create_file_for_arg ()
+;;; g_application_command_line_create_file_for_arg
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_application_command_line_create_file_for_arg"
@@ -451,7 +453,7 @@
 (export 'application-command-line-create-file-for-arg)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_application_command_line_getenv ()
+;;; g_application_command_line_getenv
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_application_command_line_getenv"
@@ -471,7 +473,7 @@
   @code{:send-enviroment} flag to affect that. Even with this flag set it is
   possible that the environment is still not available, due to invocation
   messages from other applications.
-  @begin[Example]{dictionary}
+  @begin[Examples]{dictionary}
     @begin{pre}
 (defvar cmd (make-instance 'g:application-command-line)) => CMD
 (g:application-command-line-getenv cmd \"HOME\") => \"/home/dieter\"
@@ -485,7 +487,7 @@
 (export 'application-command-line-getenv)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_application_command_line_get_platform_data ()
+;;; g_application_command_line_get_platform_data
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_application_command_line_get_platform_data"
@@ -510,9 +512,8 @@
 (export 'application-command-line-get-platform-data)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_application_command_line_get_exit_status ()          not exported
-;;; g_application_command_line_set_exit_status ()
-;;; -> application-command-line-exit-status
+;;; g_application_command_line_get_exit_status              not exported
+;;; g_application_command_line_set_exit_status
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf application-command-line-exit-status) (exit-status cmdline)
@@ -540,8 +541,9 @@
   @sym{(setf application-command-line-exit-status)} sets the exit status that
   will be used when the invoking process exits.
 
-  The return value of the \"command-line\" signal is passed to this function
-  when the handler returns. This is the usual way of setting the exit status.
+  The return value of the @code{\"command-line\"} signal is passed to this
+  function when the handler returns. This is the usual way of setting the exit
+  status.
 
   In the event that you want the remote invocation to continue running and
   want to decide on the exit status in the future, you can use this call. For
@@ -551,8 +553,8 @@
 
   In the case that the command line invocation is local, the situation is
   slightly more complicated. If the command line invocation results in the
-  main loop running, i.e. because the use-count of the application increased to
-  a non-zero value, then the application is considered to have been
+  main loop running, that is, because the use-count of the application increased
+  to a non-zero value, then the application is considered to have been
   'successful' in a certain sense, and the exit status is always zero. If the
   application use count is zero, though, the exit status of the local
   @class{application-command-line} instance is used.

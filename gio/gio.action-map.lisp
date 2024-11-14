@@ -2,7 +2,7 @@
 ;;; gio.action-map.lisp
 ;;;
 ;;; The documentation of this file is taken from the GIO Reference Manual
-;;; Version 2.76 and modified to document the Lisp binding to the GIO library.
+;;; Version 2.82 and modified to document the Lisp binding to the GIO library.
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
 ;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
@@ -63,7 +63,7 @@
 ;;; GActionMap
 ;;; ----------------------------------------------------------------------------
 
-(gobject:define-g-interface "GActionMap" action-map
+(gobject:define-ginterface "GActionMap" action-map
   (:export t
    :type-initializer "g_action_map_get_type")
   nil)
@@ -80,7 +80,7 @@
   @end{short}
 
   One useful application of this interface is to map the names of actions from
-  various action groups to unique, prefixed names, e.g. by prepending
+  various action groups to unique, prefixed names, for example by prepending
   @code{\"app.\"} or @code{\"win.\"}. This is the motivation for the 'map' part
   of the interface name.
   @see-class{g:action}
@@ -151,7 +151,7 @@
       provide a handler here, stateless actions should not.}
   @end{table}
   All values after name are optional.
-  @begin{examples}
+  @begin[Examples]{dictionary}
     Using the @fun{g:action-map-add-action-entries} function:
     @begin{pre}
 (defun activate-quit (action parameter)
@@ -170,7 +170,7 @@
     (g:action-map-add-action-entries group entries)
     group))
     @end{pre}
-  @end{examples}
+  @end{dictionary}
   @see-class{g:action-map}
   @see-class{g:simple-action}
   @see-type{g:variant}

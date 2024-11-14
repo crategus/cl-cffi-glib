@@ -2,11 +2,11 @@
 ;;; gio.menu.lisp
 ;;;
 ;;; The documentation of this file is taken from the GIO Reference Manual
-;;; Version 2.76 and modified to document the Lisp binding to the GIO library.
+;;; Version 2.82 and modified to document the Lisp binding to the GIO library.
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
 ;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2013 - 2023 Dieter Kaiser
+;;; Copyright (C) 2013 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -88,7 +88,7 @@
 ;;; GMenu
 ;;; ----------------------------------------------------------------------------
 
-(gobject:define-g-object-class "GMenu" menu
+(gobject:define-gobject "GMenu" menu
   (:superclass menu-model
    :export t
    :interfaces nil
@@ -115,7 +115,7 @@
   @see-class{g:menu-item}")
 
 ;;; ----------------------------------------------------------------------------
-;;; g_menu_new ()
+;;; g_menu_new
 ;;; ----------------------------------------------------------------------------
 
 (declaim (inline menu-new))
@@ -132,7 +132,7 @@
 (export 'menu-new)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_menu_freeze ()
+;;; g_menu_freeze
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_menu_freeze" menu-freeze) :void
@@ -154,7 +154,7 @@
 (export 'menu-freeze)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_menu_insert ()
+;;; g_menu_insert
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_menu_insert" %menu-insert) :void
@@ -180,13 +180,13 @@
   @see-function{g:menu-insert-item}"
   (%menu-insert menu
                 position
-                (if label label (cffi:null-pointer))
-                (if action action (cffi:null-pointer))))
+                (or label (cffi:null-pointer))
+                (or action (cffi:null-pointer))))
 
 (export 'menu-insert)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_menu_prepend ()
+;;; g_menu_prepend
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_menu_prepend" %menu-prepend) :void
@@ -210,13 +210,13 @@
   @see-function{g:menu-item-new}
   @see-function{g:menu-insert-item}"
   (%menu-prepend menu
-                 (if label label (cffi:null-pointer))
-                 (if action action (cffi:null-pointer))))
+                 (or label (cffi:null-pointer))
+                 (or action (cffi:null-pointer))))
 
 (export 'menu-prepend)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_menu_append ()
+;;; g_menu_append
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_menu_append" %menu-append) :void
@@ -240,13 +240,13 @@
   @see-function{g:menu-item-new}
   @see-function{g:menu-insert-item}"
   (%menu-append menu
-                (if label label (cffi:null-pointer))
-                (if action action (cffi:null-pointer))))
+                (or label (cffi:null-pointer))
+                (or action (cffi:null-pointer))))
 
 (export 'menu-append)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_menu_insert_item ()
+;;; g_menu_insert_item
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_menu_insert_item" menu-insert-item) :void
@@ -284,7 +284,7 @@
 (export 'menu-insert-item)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_menu_append_item ()
+;;; g_menu_append_item
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_menu_append_item" menu-append-item) :void
@@ -305,7 +305,7 @@
 (export 'menu-append-item)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_menu_prepend_item ()
+;;; g_menu_prepend_item
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_menu_prepend_item" menu-prepend-item) :void
@@ -326,7 +326,7 @@
 (export 'menu-prepend-item)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_menu_insert_section ()
+;;; g_menu_insert_section
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_menu_insert_section" %menu-insert-section) :void
@@ -354,13 +354,13 @@
   @see-function{g:menu-insert-item}"
   (%menu-insert-section menu
                         position
-                        (if label label (cffi:null-pointer))
+                        (or label (cffi:null-pointer))
                         section))
 
 (export 'menu-insert-section)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_menu_prepend_section ()
+;;; g_menu_prepend_section
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_menu_prepend_section" %menu-prepend-section) :void
@@ -386,13 +386,13 @@
   @see-function{g:menu-item-new-section}
   @see-function{g:menu-insert-item}"
   (%menu-prepend-section menu
-                         (if label label (cffi:null-pointer))
+                         (or label (cffi:null-pointer))
                          section))
 
 (export 'menu-prepend-section)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_menu_append_section ()
+;;; g_menu_append_section
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_menu_append_section" %menu-append-section) :void
@@ -418,13 +418,13 @@
   @see-function{g:menu-item-new-section}
   @see-function{g:menu-insert-item}"
   (%menu-append-section menu
-                        (if label label (cffi:null-pointer))
+                        (or label (cffi:null-pointer))
                         section))
 
 (export 'menu-append-section)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_menu_append_submenu ()
+;;; g_menu_append_submenu
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_menu_append_submenu" %menu-append-submenu) :void
@@ -449,12 +449,12 @@
   @see-class{g:menu-model}
   @see-function{g:menu-item-new-submenu}
   @see-function{g:menu-insert-item}"
-  (%menu-append-submenu menu (if label label (cffi:null-pointer)) submenu))
+  (%menu-append-submenu menu (or label (cffi:null-pointer)) submenu))
 
 (export 'menu-append-submenu)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_menu_insert_submenu ()
+;;; g_menu_insert_submenu
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_menu_insert_submenu" %menu-insert-submenu) :void
@@ -482,13 +482,13 @@
   @see-function{g:menu-insert-item}"
   (%menu-insert-submenu menu
                         position
-                        (if label label (cffi:null-pointer))
+                        (or label (cffi:null-pointer))
                         submenu))
 
 (export 'menu-insert-submenu)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_menu_prepend_submenu ()
+;;; g_menu_prepend_submenu
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_menu_prepend_submenu" %menu-prepend-submenu) :void
@@ -514,13 +514,13 @@
   @see-function{g:menu-item-new-submenu}
   @see-function{g:menu-insert-item}"
   (%menu-prepend-submenu menu
-                         (if label label (cffi:null-pointer))
+                         (or label (cffi:null-pointer))
                          submenu))
 
 (export 'menu-prepend-submenu)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_menu_remove ()
+;;; g_menu_remove
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_menu_remove" menu-remove) :void
@@ -537,8 +537,8 @@
   the number of menu items in the menu.
 
   It is not possible to remove items by identity since items are added to the
-  menu simply by copying their links and attributes, i.e. identity of the menu
-  item itself is not preserved.
+  menu simply by copying their links and attributes, that is, identity of the
+  menu item itself is not preserved.
   @see-class{g:menu}"
   (menu (gobject:object menu))
   (position :int))
@@ -546,7 +546,7 @@
 (export 'menu-remove)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_menu_remove_all ()
+;;; g_menu_remove_all
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_menu_remove_all" menu-remove-all) :void
@@ -564,7 +564,7 @@
 ;;; GMenuItem
 ;;; ----------------------------------------------------------------------------
 
-(gobject:define-g-object-class "GMenuItem" menu-item
+(gobject:define-gobject "GMenuItem" menu-item
   (:superclass gobject:object
    :export t
    :interfaces nil
@@ -582,7 +582,7 @@
   @see-class{g:menu}")
 
 ;;; ----------------------------------------------------------------------------
-;;; g_menu_item_new ()
+;;; g_menu_item_new
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_menu_item_new" %menu-item-new) (gobject:object menu-item)
@@ -598,21 +598,21 @@
   @begin{short}
     Creates a new @class{g:menu-item} object.
   @end{short}
-  If @arg{label} is non-@code{nil} it is used to set the \"label\" attribute of
-  the new menu item.
+  If @arg{label} is non-@code{nil} it is used to set the @code{\"label\"}
+  attribute of the new menu item.
 
-  If @arg{action} is non-@code{nil} it is used to set the \"action\" and
-  possibly the \"target\" attribute of the new item. See the
+  If @arg{action} is non-@code{nil} it is used to set the @code{\"action\"} and
+  possibly the @code{\"target\"} attribute of the new item. See the
   @fun{g:menu-item-set-detailed-action} function for more information.
   @see-class{g:menu-item}
   @see-function{g:menu-item-set-detailed-action}"
-  (%menu-item-new (if label label (cffi:null-pointer))
-                  (if action action (cffi:null-pointer))))
+  (%menu-item-new (or label (cffi:null-pointer))
+                  (or action (cffi:null-pointer))))
 
 (export 'menu-item-new)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_menu_item_new_section ()
+;;; g_menu_item_new_section
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_menu_item_new_section" %menu-item-new-section)
@@ -689,12 +689,12 @@
   @see-class{g:menu-item}
   @see-function{g:menu-item-new}
   @see-function{g:menu-item-set-section}"
-  (%menu-item-new-section (if label label (cffi:null-pointer)) section))
+  (%menu-item-new-section (or label (cffi:null-pointer)) section))
 
 (export 'menu-item-new-section)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_menu_item_new_submenu ()
+;;; g_menu_item_new_submenu
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_menu_item_new_submenu" %menu-item-new-submenu)
@@ -718,12 +718,12 @@
   @see-class{g:menu-model}
   @see-function{g:menu-item-new}
   @see-function{g:menu-item-set-submenu}"
-  (%menu-item-new-submenu (if label label (cffi:null-pointer)) submenu))
+  (%menu-item-new-submenu (or label (cffi:null-pointer)) submenu))
 
 (export 'menu-item-new-submenu)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_menu_item_new_from_model ()
+;;; g_menu_item_new_from_model
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_menu_item_new_from_model" menu-item-new-from-model)
@@ -737,7 +737,7 @@
     Creates a @class{g:menu-item} object as an exact copy of an existing menu
     item in a @class{g:menu-model} object.
   @end{short}
-  The @arg{index} argument must be valid, i.e. be sure to call the
+  The @arg{index} argument must be valid, that is, be sure to call the
   @fun{g:menu-model-n-items} function first.
   @see-class{g:menu-item}
   @see-class{g:menu-model}
@@ -748,7 +748,7 @@
 (export 'menu-item-new-from-model)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_menu_item_set_label ()
+;;; g_menu_item_set_label
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_menu-item_set_label" %menu-item-set-label) :void
@@ -761,17 +761,17 @@
   @argument[item]{a @class{g:menu-item} object}
   @argument[label]{a string with the label to set, or @code{nil}}
   @begin{short}
-    Sets or unsets the \"label\" attribute of the menu item.
+    Sets or unsets the @code{\"label\"} attribute of the menu item.
   @end{short}
   If @arg{label} is non-@code{nil} it is used as the label for the menu item.
   If it is @code{nil} then the label attribute is unset.
   @see-class{g:menu-item}"
-  (%menu-item-set-label item (if label label (cffi:null-pointer))))
+  (%menu-item-set-label item (or label (cffi:null-pointer))))
 
 (export 'menu-item-set-label)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_menu_item_set_icon ()
+;;; g_menu_item_set_icon
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_menu_item_set_icon" menu-item-set-icon) :void
@@ -788,7 +788,7 @@
 
   This API is only intended for use with \"noun\" menu items. Things like
   bookmarks or applications in an \"Open With\" menu. Do not use it on menu
-  items corresponding to verbs, e.g. stock icons for 'Save' or 'Quit'.
+  items that correspond to verbs, such as the stock icons for 'Save' or 'Quit'.
 
   If the @arg{icon} argument is @code{nil} then the icon is unset.
   @see-class{g:menu-item}
@@ -800,7 +800,7 @@
 (export 'menu-item-set-icon)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_menu_item_set_action_and_target_value ()
+;;; g_menu_item_set_action_and_target_value
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_menu_item_set_action_and_target_value"
@@ -816,38 +816,39 @@
   @argument[action]{a string with the name of the action for this menu item}
   @argument[value]{a @symbol{g:variant} instance to use as the action target}
   @begin{short}
-    Sets or unsets the \"action\" and \"target\" attributes of the menu item.
+    Sets or unsets the @code{\"action\"} and @code{\"target\"} attributes of
+    the menu item.
   @end{short}
-  If @arg{action} is @code{nil} then both the \"action\" and \"target\"
-  attributes are unset, and @arg{value} is ignored.
+  If @arg{action} is @code{nil} then both the @code{\"action\"} and
+  @code{\"target\"} attributes are unset, and @arg{value} is ignored.
 
-  If @arg{action} is non-@code{nil} then the \"action\" attribute is set. The
-  \"target\" attribute is then set to the value of @arg{value} if it is
-  non-@code{nil} or unset otherwise.
+  If @arg{action} is non-@code{nil} then the @code{\"action\"} attribute is set.
+  The @code{\"target\"} attribute is then set to the value of @arg{value} if it
+  is non-@code{nil} or unset otherwise.
 
-  Normal menu items, i.e. not submenu, section or other custom item types, are
-  expected to have the \"action\" attribute set to identify the action that they
-  are associated with. The state type of the action help to determine the
-  disposition of the menu item. See the @class{g:action} and
+  Normal menu items, that is not submenu, section or other custom item types,
+  are expected to have the @code{\"action\"} attribute set to identify the
+  action that they are associated with. The state type of the action help to
+  determine the disposition of the menu item. See the @class{g:action} and
   @class{g:action-group} documentation for an overview of actions.
 
   In general, clicking on the menu item will result in activation of the named
-  action with the \"target\" attribute given as the parameter to the action
-  invocation. If the \"target\" attribute is not set then the action is invoked
-  with no parameter.
+  action with the @code{\"target\"} attribute given as the parameter to the
+  action invocation. If the @code{\"target\"} attribute is not set then the
+  action is invoked with no parameter.
 
   If the action has no state then the menu item is usually drawn as a plain
-  menu item, i.e. with no additional decoration.
+  menu item, that is with no additional decoration.
 
   If the action has a boolean state then the menu item is usually drawn as a
-  toggle menu item, i.e. with a checkmark or equivalent indication. The item
+  toggle menu item, that is with a checkmark or equivalent indication. The item
   should be marked as 'toggled' or 'checked' when the boolean state is
   @em{true}.
 
   If the action has a string state then the menu item is usually drawn as a
-  radio menu item, i.e. with a radio bullet or equivalent indication. The item
-  should be marked as 'selected' when the string state is equal to the value
-  of the target property.
+  radio menu item, that is with a radio bullet or equivalent indication. The
+  item should be marked as 'selected' when the string state is equal to the
+  value of the target property.
 
   See the @fun{g:menu-item-set-action-and-target} or
   @fun{g:menu-item-set-detailed-action} functions for two equivalent calls that
@@ -857,8 +858,8 @@
   @see-function{g:menu-item-set-action-and-target}
   @see-function{g:menu-item-set-detailed-action}"
   (%menu-item-set-action-and-target-value item
-                                          (if action action (cffi:null-pointer))
-                                          (if value value (cffi:null-pointer))))
+                                          (or action (cffi:null-pointer))
+                                          (or value (cffi:null-pointer))))
 
 (export 'menu-item-set-action-and-target-value)
 
@@ -904,7 +905,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_menu_item_set_detailed_action ()
+;;; g_menu_item_set_detailed_action
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_menu_item_set_detailed_action" menu-item-set-detailed-action)
@@ -914,7 +915,8 @@
   @argument[item]{a @class{g:menu-item} object}
   @argument[action]{a detailed action string}
   @begin{short}
-    Sets the \"action\" and possibly the \"target\" attribute of the menu item.
+    Sets the @code{\"action\"} and possibly the @code{\"target\"} attribute of
+    the menu item.
   @end{short}
   The format of @arg{action} is the same format parsed by the
   @fun{g:action-parse-detailed-name} function.
@@ -935,7 +937,7 @@
 (export 'menu-item-set-detailed-action)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_menu_item_set_section ()
+;;; g_menu_item_set_section
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_menu_item_set_section" %menu-item-set-section) :void
@@ -957,12 +959,12 @@
   @see-class{g:menu-item}
   @see-class{g:menu-model}
   @see-function{g:menu-item-new-section}"
-  (%menu-item-set-section item (if section section (cffi:null-pointer))))
+  (%menu-item-set-section item (or section (cffi:null-pointer))))
 
 (export 'menu-item-set-section)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_menu_item_set_submenu ()
+;;; g_menu_item_set_submenu
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_menu_item_set_submenu" %menu-item-set-submenu) :void
@@ -984,13 +986,13 @@
   it sounds.
   @see-class{g:menu-item}
   @see-class{g:menu-model}"
-  (%menu-item-set-submenu item (if submenu submenu (cffi:null-pointer))))
+  (%menu-item-set-submenu item (or submenu (cffi:null-pointer))))
 
 (export 'menu-item-set-submenu)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_menu_item_get_attribute_value ()
-;;; g_menu_item_set_attribute_value () -> menu-item-attribute-value
+;;; g_menu_item_get_attribute_value
+;;; g_menu_item_set_attribute_value
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf menu-item-attribute-value) (value item attribute)
@@ -1126,8 +1128,8 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_menu_item_get_link ()
-;;; g_menu_item_set_link () -> menu-item-link
+;;; g_menu_item_get_link
+;;; g_menu_item_set_link
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf menu-item-link) (value item link)

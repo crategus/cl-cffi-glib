@@ -42,7 +42,13 @@
 
 ;;; --- Properties -------------------------------------------------------------
 
-;;;     file
+;; TODO: MAKE-INSTANCES will crash the testsuite. Provide a method to signal
+;; an error.
+
+#+nil
+(test g-file-icon-file
+  (let ((icon (make-instance 'g:file-icon)))
+    (is-false (g:file-icon-file icon))))
 
 ;;; --- Functions --------------------------------------------------------------
 
@@ -54,6 +60,8 @@
          (icon (g:file-icon-new file)))
     (is (typep icon 'g:file-icon))
     (is (string= "gtk-logo-24.png"
-                 (g:file-basename (g:file-icon-file icon))))))
+                 (g:file-basename (g:file-icon-file icon))))
+    (is (= 2 (g:object-ref-count file)))
+    (is (= 1 (g:object-ref-count icon)))))
 
-;;; 2024-9-17
+;;; 2024-10-23

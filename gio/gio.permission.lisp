@@ -2,11 +2,11 @@
 ;;; gio.permission.lisp
 ;;;
 ;;; The documentation of this file is taken from the GIO Reference Manual
-;;; Version 2.76 and modified to document the Lisp binding to the GIO library.
+;;; Version 2.82 and modified to document the Lisp binding to the GIO library.
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
 ;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2021 - 2023 Dieter Kaiser
+;;; Copyright (C) 2021 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -67,7 +67,7 @@
 ;;; GPermission
 ;;; ----------------------------------------------------------------------------
 
-(gobject:define-g-object-class "GPermission" permission
+(gobject:define-gobject "GPermission" permission
   (:superclass gobject:object
    :export t
    :interfaces ()
@@ -107,7 +107,7 @@
 ;;; Property and Accessor Details
 ;;; ----------------------------------------------------------------------------
 
-;;; --- permission-allowed -----------------------------------------------------
+;;; --- g:permission-allowed ---------------------------------------------------
 
 #+liber-documentation
 (setf (documentation (liber:slot-documentation "allowed" 'permission) t)
@@ -135,7 +135,7 @@
   perform.
   @see-class{g:permission}")
 
-;;; --- permission-can-acquire -------------------------------------------------
+;;; --- g:permission-can-acquire -----------------------------------------------
 
 #+liber-documentation
 (setf (documentation (liber:slot-documentation "can-acquire" 'permission) t)
@@ -163,7 +163,7 @@
   @see-class{g:permission}
   @see-function{g:permission-acquire}")
 
-;;; --- permission-can-release -------------------------------------------------
+;;; --- g:permission-can-release -----------------------------------------------
 
 #+liber-documentation
 (setf (documentation (liber:slot-documentation "can-release" 'permission) t)
@@ -192,7 +192,7 @@
   @see-function{g:permission-release}")
 
 ;;; ----------------------------------------------------------------------------
-;;; g_permission_acquire ()
+;;; g_permission_acquire
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_permission_acquire" %permission-acquire) :boolean
@@ -221,7 +221,7 @@
   interaction is required.
   @see-class{g:permission}
   @see-function{g:permission-can-acquire}"
-  (let ((cancellable (if cancellable cancellable (cffi:null-pointer))))
+  (let ((cancellable (or cancellable (cffi:null-pointer))))
     (glib:with-g-error (err)
       (%permission-acquire permission cancellable err))))
 
@@ -286,27 +286,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_permission_release ()
-;;;
-;;; gboolean
-;;; g_permission_release (GPermission *permission,
-;;;                       GCancellable *cancellable,
-;;;                       GError **error);
-;;;
-;;;
-;;; permission :
-;;;     a GPermission instance
-;;;
-;;; cancellable :
-;;;     a GCancellable, or NULL.
-;;;
-;;; error :
-;;;     a pointer to a NULL GError, or NULL
-;;;
-;;; Returns :
-;;;     TRUE if the permission was successfully released
-;;;
-;;; Since: 2.26
+;;; g_permission_release
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_permission_release" %permission-release) :boolean
@@ -335,7 +315,7 @@
   interaction is required.
   @see-class{g:permission}
   @see-function{g:permission-can-release}"
-  (let ((cancellable (if cancellable cancellable (cffi:null-pointer))))
+  (let ((cancellable (or cancellable (cffi:null-pointer))))
     (glib:with-g-error (err)
       (%permission-release permission cancellable err))))
 

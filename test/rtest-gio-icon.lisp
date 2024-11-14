@@ -70,7 +70,11 @@
     (is (string= ". GThemedIcon gnome-dev-cdrom-audio%0A  gnome-dev-cdrom gnome-dev gnome gnome-dev-cdrom-audio%0A-symbolic -symbolic gnome-dev-cdrom-symbolic gnome-dev-symbolic gnome-symbolic"
                  (g:icon-to-string icon2)))
     (is (string= ". GThemedIcon gnome-dev-cdrom-audio gnome-dev-cdrom gnome-dev gnome gnome-dev-cdrom-audio-symbolic gnome-dev-cdrom-symbolic gnome-dev-symbolic gnome-symbolic"
-                 (g:icon-to-string icon3)))))
+                 (g:icon-to-string icon3)))
+
+    (is (= 1 (g:object-ref-count icon1)))
+    (is (= 1 (g:object-ref-count icon2)))
+    (is (= 1 (g:object-ref-count icon3)))))
 
 ;;;     g_icon_serialize
 
@@ -83,9 +87,13 @@
 ;;;     g_icon_deserialize
 
 (test g-icon-deserialize
-  (let* ((icon (g:icon-new-for-string "gnome-dev-cdrom-audio"))
-         (value (g:icon-serialize icon)))
+  (let* ((icon1 (g:icon-new-for-string "gnome-dev-cdrom-audio"))
+         (value (g:icon-serialize icon1))
+         (icon2 nil))
     (is (cffi:pointerp value))
-    (is (typep (g:icon-deserialize value) 'g:icon))))
+    (is (typep (setf icon2 (g:icon-deserialize value)) 'g:icon))
 
-;;; 2024-9-17
+    (is (= 1 (g:object-ref-count icon1)))
+    (is (= 1 (g:object-ref-count icon2)))))
+
+;;; 2024-10-23

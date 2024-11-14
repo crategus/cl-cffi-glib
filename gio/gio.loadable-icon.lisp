@@ -2,11 +2,11 @@
 ;;; gio.loadable-icon.lisp
 ;;;
 ;;; The documentation of this file is taken from the GIO Reference Manual
-;;; Version 2.76 and modified to document the Lisp binding to the GIO library.
+;;; Version 2.82 and modified to document the Lisp binding to the GIO library.
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
 ;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2021 - 2023 Dieter Kaiser
+;;; Copyright (C) 2021 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -48,11 +48,11 @@
 ;;;
 ;;; Prerequisites
 ;;;
-;;;     GLoadableIcon requires GIcon and GObject.
+;;;     GLoadableIcon requires GIcon and GObject
 ;;;
 ;;; Known Implementations
 ;;;
-;;;     GLoadableIcon is implemented by GBytesIcon and GFileIcon.
+;;;     GLoadableIcon is implemented by GBytesIcon and GFileIcon
 ;;; ----------------------------------------------------------------------------
 
 (in-package :gio)
@@ -61,7 +61,7 @@
 ;;; GLoadableIcon
 ;;; ----------------------------------------------------------------------------
 
-(gobject:define-g-interface "GLoadableIcon" loadable-icon
+(gobject:define-ginterface "GLoadableIcon" loadable-icon
   (:export t
    :type-initializer "g_loadable_icon_get_type")
   nil)
@@ -70,7 +70,7 @@
 (setf (liber:alias-for-class 'loadable-icon)
       "Interface"
       (documentation 'loadable-icon 'type)
- "@version{#2022-12-30}
+ "@version{2024-10-23}
   @begin{short}
     Extends the @class{g:icon} interface and adds the ability to load icons
     from streams.

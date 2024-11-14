@@ -2,7 +2,7 @@
 ;;; gio.action.lisp
 ;;;
 ;;; The documentation of this file is taken from the GIO Reference Manual
-;;; Version 2.76 and modified to document the Lisp binding to the GIO library.
+;;; Version 2.82 and modified to document the Lisp binding to the GIO library.
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
 ;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
@@ -80,7 +80,7 @@
 ;;; GAction
 ;;; ----------------------------------------------------------------------------
 
-(gobject:define-g-interface "GAction" action
+(gobject:define-ginterface "GAction" action
   (:export t
    :type-initializer "g_action_get_type")
   ((enabled
@@ -254,7 +254,7 @@
   @code{cffi:null-pointer} will be returned. If the action is stateful then the
   type of the return value is the type given by the @fun{g:action-state-type}
   function.
-  @begin{examples}
+  @begin[Examples]{dictionary}
     A stateful action with an integer value.
     @begin{pre}
 (defvar state (g:variant-new-int32 123)) => STATE
@@ -272,7 +272,7 @@
 =>  #<G-SIMPLE-ACTION {1004B2CE73@}>
 (g:action-state *) => #.(SB-SYS:INT-SAP #X00000000)
     @end{pre}
-  @end{examples}
+  @end{dictionary}
   @see-class{g:action}
   @see-type{g:variant}
   @see-function{g:action-state-type}")
@@ -334,7 +334,7 @@
   The action name is valid if it consists only of alphanumeric characters, plus
   '-' and '.'. The empty string is not a valid action name. It is an error to
   call this function with a non UTF-8 action name.
-  @begin{examples}
+  @begin[Examples]{dictionary}
     @begin{pre}
 (g:action-name-is-valid \"action\") => T
 (g:action-name-is-valid \"win.action\") => T
@@ -342,7 +342,7 @@
 (g:action-name-is-valid \"win-action!\") NIL
 (g:action-name-is-valid \"\") => NIL
     @end{pre}
-  @end{examples}
+  @end{dictionary}
   @see-class{g:action}"
   (name :string))
 
@@ -477,7 +477,7 @@
   way as well: @code{\"app.action('target')\"}. For strings, this third format
   must be used if *target value is empty or contains characters other than
   alphanumerics, '-' and '.'.
-  @begin{examples}
+  @begin[Examples]{dictionary}
     @begin{pre}
 ;; First format
 (g:action-parse-detailed-name \"app.action\")
@@ -500,7 +500,7 @@
         (g:action-parse-detailed-name \"app.action(42)\"))))
 => 42
     @end{pre}
-  @end{examples}
+  @end{dictionary}
   @see-class{g:action}
   @see-type{g:variant}
   @see-function{g:variant-parse}"
@@ -535,7 +535,7 @@
   It will produce a string that can be parsed back to the action name and
   target value by that function. See that function for the types of strings
   that will be printed by this function.
-  @begin{examples}
+  @begin[Examples]{dictionary}
     @begin{pre}
 (g:action-print-detailed-name \"action\")
 => \"action\"
@@ -544,7 +544,7 @@
 (g:action-print-detailed-name \"action\" (g:variant-new-int32 42))
 => \"action(42)\"
     @end{pre}
-  @end{examples}
+  @end{dictionary}
   @see-class{g:action}
   @see-type{g:variant}
   @see-function{g:action-parse-detailed-name}"

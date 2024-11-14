@@ -5,43 +5,47 @@
 
 ;;; --- Types and Values -------------------------------------------------------
 
-;;;     FileInfo
+;;;     GFileInfo
 
 (test g-file-info-class
   ;; Check type
-  (is (g:type-is-object "FileInfo"))
+  (is (g:type-is-object "GFileInfo"))
   ;; Check registered symbol
   (is (eq 'gio:file-info
-          (glib:symbol-for-gtype "FileInfo")))
+          (glib:symbol-for-gtype "GFileInfo")))
   ;; Check type initializer
-  (is (eq (g:gtype "FileInfo")
+  (is (eq (g:gtype "GFileInfo")
           (g:gtype (cffi:foreign-funcall "g_file_info_get_type" :size))))
   ;; Check parent
   (is (eq (g:gtype "GObject")
-          (g:type-parent "FileInfo")))
+          (g:type-parent "GFileInfo")))
   ;; Check children
   (is (equal '()
-             (glib-test:list-children "FileInfo")))
+             (glib-test:list-children "GFileInfo")))
   ;; Check interfaces
   (is (equal '()
-             (glib-test:list-interfaces "FileInfo")))
+             (glib-test:list-interfaces "GFileInfo")))
   ;; Check class properties
   (is (equal '()
-             (glib-test:list-properties "FileInfo")))
+             (glib-test:list-properties "GFileInfo")))
   ;; Check signals
   (is (equal '()
-             (glib-test:list-signals "FileInfo")))
+             (glib-test:list-signals "GFileInfo")))
   ;; Check class definition
-  (is (equal '(DEFINE-GOBJECT-CLASS "GFileInfo" GIO:FILE-INFO
-                                    (:SUPERCLASS GOBJECT:OBJECT
-                                     :EXPORT T
-                                     :INTERFACES NIL)
-                                    NIL)
+  (is (equal '(GOBJECT:DEFINE-GOBJECT "GFileInfo" GIO:FILE-INFO
+                       (:SUPERCLASS GOBJECT:OBJECT :EXPORT T :INTERFACES NIL
+                        :TYPE-INITIALIZER "g_file_info_get_type")
+                        NIL)
              (gobject:get-gtype-definition "GFileInfo"))))
 
 ;;; --- Functions --------------------------------------------------------------
 
 ;;;     g_file_info_new
+
+(test g-file-info-new
+  (let (info)
+    (is (typep (setf info (g:file-info-new)) 'g:file-info))
+    (is (= 1 (g:object-ref-count info)))))
 
 ;;;     g_file_info_clear_status
 ;;;     g_file_info_copy_into

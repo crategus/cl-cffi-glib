@@ -2,11 +2,11 @@
 ;;; gio.cancellable.lisp
 ;;;
 ;;; The documentation of this file is taken from the GIO Reference Manual
-;;; Version 2.76 and modified to document the Lisp binding to the GIO library.
+;;; Version 2.82 and modified to document the Lisp binding to the GIO library.
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
 ;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2023 Dieter Kaiser
+;;; Copyright (C) 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -68,11 +68,9 @@
 
 ;;; ----------------------------------------------------------------------------
 ;;; GCancellable
-;;;
-;;; Allows actions to be cancelled.
 ;;; ----------------------------------------------------------------------------
 
-(gobject:define-g-object-class "GCancellable" cancellable
+(gobject:define-gobject "GCancellable" cancellable
   (:superclass gobject:object
    :export t
    :interfaces nil
@@ -81,9 +79,9 @@
 
 #+liber-documentation
 (setf (documentation 'cancellable 'type)
- "@version{2023-5-7}
+ "@version{2024-10-23}
   @begin{short}
-    The @sym{g:cancellable} object is a thread-safe operation cancellation
+    The @class{g:cancellable} object is a thread-safe operation cancellation
     stack used throughout GIO to allow for cancellation of synchronous and
     asynchronous operations.
   @end{short}
@@ -92,6 +90,9 @@
       @begin{pre}
 lambda (cancellable)    :run-last
       @end{pre}
+      @begin[code]{table}
+        @entry[cancellable]{The @class{g:cancellable} object.}
+      @end{table}
       Emitted when the operation has been cancelled. Can be used by
       implementations of cancellable operations. If the operation is cancelled
       from another thread, the signal will be emitted in the thread that
@@ -139,21 +140,18 @@ my_data_free (my_data);
       Note that the cancelled signal is emitted in the thread that the user
       cancelled from, which may be the main thread. So, the cancellable signal
       should not do something that can block.
-      @begin[code]{table}
-        @entry[cancellable]{The @sym{g:cancellable} object.}
-      @end{table}
   @end{dictionary}")
 
 ;;; ----------------------------------------------------------------------------
-;;; g_cancellable_new ()
+;;; g_cancellable_new
 ;;; ----------------------------------------------------------------------------
 
 (declaim (inline cancellable-new))
 
 (defun cancellable-new ()
  #+liber-documentation
- "@version{2023-5-7}
-  @return{A @class{g:cancellable} object.}
+ "@version{2024-10-23}
+  @return{The @class{g:cancellable} object.}
   @begin{short}
     Creates a new @class{g:cancellable} object.
   @end{short}
@@ -169,15 +167,15 @@ my_data_free (my_data);
 (export 'cancellable-new)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_cancellable_is_cancelled ()
+;;; g_cancellable_is_cancelled
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_cancellable_is_cancelled" cancellable-is-cancelled) :boolean
  #+liber-documentation
- "@version{#2023-5-7}
+ "@version{2024-10-23}
   @argument[cancellable]{a @class{g:cancellable} object, or @code{nil}}
   @return{@em{True} if @arg{cancellable} is cancelled, @em{false} if called
-    with @code{nil} of if not cancelled}
+    with @code{nil} or if not cancelled.}
   @begin{short}
     Checks if a cancellable job has been cancelled.
   @end{short}
@@ -291,7 +289,7 @@ my_data_free (my_data);
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; GCancellableSourceFunc ()
+;;; GCancellableSourceFunc
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcallback cancellable-source-func :boolean
@@ -306,34 +304,35 @@ my_data_free (my_data);
 (setf (liber:alias-for-symbol 'cancellable-source-func)
       "Callback"
       (liber:symbol-documentation 'cancellable-source-func)
- "@version{#2023-5-7}
+ "@version{#2024-10-23}
+  @begin{declaration}
+(lambda (cancellable) => result
+  @end{declaration}
+  @begin{values}
+    @begin[code]{table}
+    @entry[cancellable]{The @class{g:cancellable} object.}
+    @entry[result]{It should return @em{false} if the source should be removed.}
+    @end{table}
+  @end{values}
   @begin{short}
     This is the function type of the callback used for the @type{g:source}
     instance returned by the @fun{g:cancellable-source-new} function.
   @end{short}
-  @begin{pre}
-lambda (cancellable)
-  @end{pre}
-  @begin[code]{table}
-    @entry[cancellable]{The @class{g:cancellable} object.}
-    @entry[Returns]{It should return @em{false} if the source should be
-      removed.}
-  @end{table}
   @see-class{g:cancellable}
   @see-function{g:cancellable-source-new}")
 
 (export 'cancellable-source-func)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_cancellable_source_new ()
+;;; g_cancellable_source_new
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_cancellable_soure_new" cancellable-source-new)
     (:pointer (:struct glib:source))
  #+liber-documentation
- "@version{#2023-5-9}
+ "@version{#2024-10-23}
   @argument[cancellable]{a @class{g:cancellable} object}
-  @return{A new @type{g:source} instance.}
+  @return{The new @type{g:source} instance.}
   @begin{short}
     Creates a source that triggers if @arg{cancellable} is cancelled and calls
     its @symbol{g:cancellable-source-func} callback function.
@@ -341,8 +340,8 @@ lambda (cancellable)
   This is primarily useful for attaching to another (non-cancellable) source
   with the @fun{g:source-add-child-source} function to add cancellability to it.
 
-  For convenience, you can call this with a @code{NULL} @class{g:cancellable}
-  object, in which case the source will never trigger.
+  For convenience, you can call this function with a @code{nil} value for
+  @arg{cancellable}, in which case the source will never trigger.
   @see-class{g:cancellable}
   @see-symbol{g:cancellable-source-func}
   @see-function{g:source-add-child-source}"
@@ -351,14 +350,14 @@ lambda (cancellable)
 (export 'cancellable-source-new)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_cancellable_get_current ()
+;;; g_cancellable_get_current
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_cancellable_get_current" cancellable-current)
     (gobject:object cancellable)
  #+liber-documentation
- "@version{#2023-5-9}
-  @return{A @class{g:cancellable} object from the top of the stack,
+ "@version{#2024-10-23}
+  @return{The @class{g:cancellable} object from the top of the stack,
     or @code{nil} if the stack is empty.}
   @short{Gets the top cancellable from the stack.}
   @see-class{g:cancellable}")
@@ -366,12 +365,12 @@ lambda (cancellable)
 (export 'cancellable-current)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_cancellable_pop_current ()
+;;; g_cancellable_pop_current
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_cancellable_pop_current" cancellable-pop-current) :void
  #+liber-documentation
- "@version{#2023-5-9}
+ "@version{#2024-10-23}
   @argument[cancellable]{a @class{g:cancellable} object}
   @begin{short}
     Pops @arg{cancellable} off the cancellable stack (verifying that cancellable
@@ -383,36 +382,37 @@ lambda (cancellable)
 (export 'cancellable-pop-current)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_cancellable_push_current ()
+;;; g_cancellable_push_current
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_cancellable_push_current" cancellable-push-current) :void
  #+liber-documentation
- "@version{#2023-5-9}
+ "@version{#2024-10-23}
   @argument[cancellable]{a @class{g:cancellable} object}
   @begin{short}
     Pushes @arg{cancellable} onto the cancellable stack.
   @end{short}
-   The current cancellable can then be received using the
-   @fun{g:cancellable-current} function.
+  The current cancellable can then be received using the
+  @fun{g:cancellable-current} function.
 
   This is useful when implementing cancellable operations in code that does not
   allow you to pass down the cancellable object.
 
-  This is typically called automatically by e.g. GFile operations, so you rarely
-  have to call this yourself.
-  @see-class{g:cancellable}"
+  This is typically called automatically by, for example @code{GFile}
+  operations, so you rarely have to call this yourself.
+  @see-class{g:cancellable}
+  @see-function{g:cancellable-current}"
   (cancellable (gobject:object cancellable)))
 
 (export 'cancellable-push-current)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_cancellable_reset ()
+;;; g_cancellable_reset
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_cancellable_reset" cancellable-reset) :void
  #+liber-documentation
- "@version{#2023-5-9}
+ "@version{2024-10-23}
   @argument[cancellable]{a @class{g:cancellable} object}
   @begin{short}
     Resets @arg{cancellable} to its uncancelled state.
@@ -496,19 +496,19 @@ lambda (cancellable)
 ;; TODO: This has to be implemented like gobject:signal-disconnect.
 
 ;;; ----------------------------------------------------------------------------
-;;; g_cancellable_cancel ()
+;;; g_cancellable_cancel
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_cancellable_cancel" cancellable-cancel) :void
  #+liber-documentation
- "@version{#2023-5-9}
+ "@version{2024-10-23}
   @argument[cancellable]{a @class{g:cancellable} object}
   @begin{short}
-    Will set @arg{cancellable} to cancelled, and will emit the \"cancelled\"
-    signal.
+    Will set @arg{cancellable} to cancelled, and will emit the
+    @code{\"cancelled\"} signal.
   @end{short}
-  (However, see the warning about race conditions in the documentation for that
-  signal if you are planning to connect to it.)
+  However, see the warning about race conditions in the documentation for that
+  signal if you are planning to connect to it.
 
   This function is thread-safe. In other words, you can safely call it from a
   thread other than the one running the operation that was passed the

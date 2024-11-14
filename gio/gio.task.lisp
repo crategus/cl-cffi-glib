@@ -2,11 +2,11 @@
 ;;; gio.task.lisp
 ;;;
 ;;; The documentation of this file is taken from the GIO Reference Manual
-;;; Version 2.76 and modified to document the Lisp binding to the GIO library.
+;;; Version 2.82 and modified to document the Lisp binding to the GIO library.
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
 ;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2023 Dieter Kaiser
+;;; Copyright (C) 2023 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -98,7 +98,7 @@
 ;;; GTask
 ;;; ----------------------------------------------------------------------------
 
-(gobject:define-g-object-class "GTask" task
+(gobject:define-gobject "GTask" task
   (:superclass gobject:object
    :export t
    :interfaces ("GAsyncResult")
@@ -109,28 +109,28 @@
 
 #+liber-documentation
 (setf (documentation 'task 'type)
- "@version{2023-5-7}
+ "@version{2024-10-23}
   @begin{short}
-    A @sym{g:task} instance represents and manages a cancellable \"task\".
+    The @class{g:task} class represents and manages a cancellable \"task\".
   @end{short}
 
   @subheading{Asynchronous operations}
-  The most common usage of @sym{g:task} object is as a @class{g:async-result}
-  object, to manage data during an asynchronous operation. You call the
-  @fun{g:task-new} function in the \"start\" method, followed by the
-  @fun{g:task-set-task-data} function and the like if you need to keep some
-  additional data associated with the task, and then pass the task object around
-  through your asynchronous operation. Eventually, you will call a method such
-  as the @fun{g:task-return-pointer} or the @fun{g:task-return-error} function,
-  which will save the value you give it and then invoke the task's callback
-  function in the thread-default main context where it was created (waiting
-  until the next iteration of the main loop first, if necessary). The caller
-  will pass the @sym{g:task} object back to the operation's finish function (as
-  a @class{g:async-result} object), and you can use the
-  @fun{g:task-propagate-pointer} function or the like to extract the return
-  value.
+  The most common usage of the @class{g:task} object is as the
+  @class{g:async-result} object, to manage data during an asynchronous
+  operation. You call the @fun{g:task-new} function in the \"start\" method,
+  followed by the @fun{g:task-set-task-data} function and the like if you need
+  to keep some additional data associated with the task, and then pass the task
+  object around through your asynchronous operation. Eventually, you will call
+  a method such as the @fun{g:task-return-pointer} or the
+  @fun{g:task-return-error} function, which will save the value you give it and
+  then invoke the task's callback function in the thread-default main context
+  where it was created (waiting until the next iteration of the main loop first,
+  if necessary). The caller will pass the @class{g:task} object back to the
+  operation's finish function (as a @class{g:async-result} object), and you can
+  use the @fun{g:task-propagate-pointer} function or the like to extract the
+  return value.
 
-  Here is an example for using the @sym{g:task} object as a
+  Here is an example for using the @class{g:task} object as a
   @class{g:async-result} object:
   @begin{pre}
 typedef struct {
@@ -226,8 +226,8 @@ baker_bake_cake_finish (Baker         *self,
 @}
   @end{pre}
   @subheading{Chained asynchronous operations}
-  The @sym{g:task} object also tries to simplify asynchronous operations that
-  internally chain together several smaller asynchronous operations. The
+  The @class{g:task} object also tries to simplify asynchronous operations
+  that internally chain together several smaller asynchronous operations. The
   @fun{g:task-get-cancellable}, @fun{g:task-get-context}, and
   @fun{g:task-get-priority} functions allow you to get back the task's
   @class{g:cancellable} object, @type{g:main-context} instance, and I/O priority
@@ -366,7 +366,7 @@ baker_bake_cake_finish (Baker         *self,
   You can use the @fun{g:task-run-in-thread} function to turn a synchronous
   operation into an asynchronous one, by running it in a thread. When it
   completes, the result will be dispatched to the thread-default main context
-  where the @sym{g:task} object was created.
+  where the @class{g:task} object was created.
 
   Running a task in a thread:
   @begin{pre}
@@ -441,8 +441,8 @@ baker_bake_cake_finish (Baker         *self,
   @subheading{Adding cancellability to uncancellable tasks}
   Finally, the @fun{g:task-run-in-thread} and @fun{g:task-run-in-thread-sync}
   functions can be used to turn an uncancellable operation into a cancellable
-  one. If you call the @fun{g:task-set-return-on-cancel} function, passing
-  @em{true}, then if the task's @clss{g:cancellable} object is cancelled, it
+  one. If you call the @fun{g:task-return-on-cancel} function, passing
+  @em{true}, then if the task's @class{g:cancellable} object is cancelled, it
   will return control back to the caller immediately, while allowing the task
   thread to continue running in the background (and simply discarding its result
   when it finally does finish). Provided that the task thread is careful about
@@ -542,7 +542,7 @@ baker_bake_cake_sync (Baker               *self,
 @}
   @end{pre}
   @subheading{Porting from GSimpleAsyncResult}
-  The @sym{g:task} API attempts to be simpler than the
+  The @class{g:task} API attempts to be simpler than the
   @class{g:simple-async-result} API in several ways:
   @begin{itemize}
     @begin{item}
@@ -553,8 +553,8 @@ baker_bake_cake_sync (Baker               *self,
       purpose with the @class{g:simple-async-result} object.
     @end{item}
     @begin{item}
-      In addition to the task data, the @sym{g:task} object also keeps track of
-      the priority, the @class{g:cancellable} object, and the
+      In addition to the task data, the @class{g:task} object also keeps track
+      of the priority, the @class{g:cancellable} object, and the
       @type{g:main-context} instance associated with the task, so tasks that
       consist of a chain of simpler asynchronous operations will have easy
       access to those values when starting each sub-task.
@@ -562,7 +562,7 @@ baker_bake_cake_sync (Baker               *self,
     @begin{item}
       The @fun{g:task-return-error-if-cancelled} function provides simplified
       handling for cancellation. In addition, cancellation overrides any other
-      @sym{g:task} return value by default, like the
+      @class{g:task} return value by default, like the
       @class{g:simple-async-result} function does when the
       @fun{g:simple-async-result-set-check-cancellable} function is called. (You
       can use the @fun{g:task-set-check-cancellable} function to turn off that
@@ -573,22 +573,22 @@ baker_bake_cake_sync (Baker               *self,
       @fun{g:task-return-error-if-cancelled} check if you need the old behavior.
     @end{item}
     @begin{item}
-      The \"return\" methods (e.g., the @fun{g:task-return-pointer} function)
-      automatically cause the task to be \"completed\" as well, and there is no
-      need to worry about the \"complete\" vs \"complete in idle\" distinction.
-      (the @sym{g:task} object automatically figures out whether the task's
-      callback can be invoked directly, or if it needs to be sent to another
-      @type{g:main-context} instance, or delayed until the next iteration of the
-      current @type{g:main-context} instance.)
+      The \"return\" methods, for example, the @fun{g:task-return-pointer}
+      function, automatically cause the task to be \"completed\" as well, and
+      there is no need to worry about the \"complete\" vs \"complete in idle\"
+      distinction. (the @class{g:task} object automatically figures out whether
+      the task's callback can be invoked directly, or if it needs to be sent to
+      another @type{g:main-context} instance, or delayed until the next
+      iteration of the current @type{g:main-context} instance.)
     @end{item}
     @begin{item}
-      The \"finish\" functions for the @sym{g:task} object based operations are
-      generally much simpler than the @class{g:simple-async-result} object ones,
-      normally consisting of only a single call to the
+      The \"finish\" functions for the @class{g:task} object based operations
+      are generally much simpler than the @class{g:simple-async-result} object
+      ones, normally consisting of only a single call to the
       @fun{g:task-propagate-pointer} function or the like. Since the
       @fun{g:task-propagate-pointer} function \"steals\" the return value from
-      the @sym{g:task} object, it is not necessary to juggle pointers around to
-      prevent it from being freed twice.
+      the @class{g:task} object, it is not necessary to juggle pointers around
+      to prevent it from being freed twice.
     @end{item}
     @begin{item}
       With the @class{g:simple-async-result} object, it was common to call
@@ -622,16 +622,16 @@ baker_bake_cake_sync (Baker               *self,
   invoked. This can only happen after the @fun{g:task-return-pointer} function,
   the @fun{g:task-return-error} function or one of the other return functions
   have been called on the task. This property is guaranteed to change from
-  @em{false} to @em{true} exactly once. The \"notify\" signal for this change is
-  emitted in the same main context as the task’s callback, immediately after
-  that callback is invoked. @br{}
+  @em{false} to @em{true} exactly once. The @code{\"notify\"} signal for this
+  change is emitted in the same main context as the task’s callback, immediately
+  after that callback is invoked. @br{}
   Default value: @em{false}")
 
 #+liber-documentation
 (setf (liber:alias-for-function 'task-completed)
       "Accessor"
       (documentation 'task-completed 'function)
- "@version{#2023-5-8}
+ "@version{#2024-10-23}
   @syntax{(setf (g:task-completed object) completed)}
   @argument[object]{a @class{g:task} object}
   @argument[completed]{a boolean whether the task has completed}
@@ -643,7 +643,7 @@ baker_bake_cake_sync (Baker               *self,
   @see-class{g:task}")
 
 ;;; ----------------------------------------------------------------------------
-;;; g_task_new ()
+;;; g_task_new
 ;;; ----------------------------------------------------------------------------
 
 ;; TODO: We allocate a stable pointer, but we do not free the pointer.
@@ -747,8 +747,8 @@ baker_bake_cake_sync (Baker               *self,
 (export 'task-task-data)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_task_set_priority ()
-;;; g_task_get_priority ()
+;;; g_task_set_priority
+;;; g_task_get_priority
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf task-priority) (priority task)
@@ -780,8 +780,8 @@ baker_bake_cake_sync (Baker               *self,
 (export 'task-priority)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_task_set_check_cancellable ()
-;;; g_task_get_check_cancellable ()
+;;; g_task_set_check_cancellable
+;;; g_task_get_check_cancellable
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf task-check-cancellable) (check task)
@@ -811,8 +811,8 @@ baker_bake_cake_sync (Baker               *self,
   or return value the task may have had.
 
   If @arg{cancellable} is @em{false}, then @arg{task} will not check the
-  cancellable itself, and it is up to owner of @arg{task} to do this, e.g., via
-  the   @fun{g:task-return-error-if-cancelled} function.
+  cancellable itself, and it is up to the owner of @arg{task} to do this, for
+  example using the @fun{g:task-return-error-if-cancelled} function.
 
   If you are using the @fun{g:task-set-return-on-cancel} function as well, then
   you must leave @arg{cancellable} set @em{true}.

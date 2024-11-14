@@ -2,11 +2,11 @@
 ;;; gio.action-group.lisp
 ;;;
 ;;; The documentation of this file is taken from the GIO Reference Manual
-;;; Version 2.76 and modified to document the Lisp binding to the GIO library.
+;;; Version 2.82 and modified to document the Lisp binding to the GIO library.
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
 ;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2012 - 2023 Dieter Kaiser
+;;; Copyright (C) 2012 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -84,7 +84,7 @@
 ;;; GActionGroup
 ;;; ----------------------------------------------------------------------------
 
-(gobject:define-g-interface "GActionGroup" action-group
+(gobject:define-ginterface "GActionGroup" action-group
   (:export t
    :type-initializer "g_action_group_get_type")
   nil)
@@ -100,8 +100,8 @@
   Actions can be used to expose functionality in a structured way, either from
   one part of a program to another, or to the outside world. Action groups are
   often used together with a @class{g:menu-model} object that provides
-  additional representation data for displaying the actions to the user, e.g.
-  in a menu.
+  additional representation data for displaying the actions to the user, for
+  example in a menu.
 
   The main way to interact with the actions in a @sym{g:action-group} object is
   to activate them with the @fun{g:action-group-activate-action} function.
@@ -128,11 +128,11 @@
 
   The @sym{g:action-group} API is meant to be the 'public' API to the action
   group. The calls here are exactly the interaction that 'external forces',
-  e.g. UI, incoming D-Bus messages, etc., are supposed to have with actions.
-  'Internal' APIs, i.e. ones meant only to be accessed by the action group
-  implementation, are found on subclasses. This is why you will find - for
-  example - the @fun{g:action-group-action-enabled} function but not an
-  equivalent @code{(setf g:action-group-action-enabled)} function.
+  for example UI, incoming D-Bus messages, etc., are supposed to have with
+  actions. 'Internal' APIs, that is, ones meant only to be accessed by the
+  action group implementation, are found on subclasses. This is why you will
+  find, for example, the @fun{g:action-group-action-enabled} function but not
+  an equivalent @code{(setf g:action-group-action-enabled)} function.
 
   Signals are emitted on the action group in response to state changes on
   individual actions.
@@ -147,43 +147,43 @@
       @begin{pre}
 lambda (group name)    :detailed
       @end{pre}
-      Signals that a new action was just added to the group. The signal is
-      emitted after the action has been added and is now visible.
       @begin[code]{table}
         @entry[group]{The @sym{g:action-group} object that changed.}
         @entry[name]{A string with the name of the action.}
       @end{table}
+      Signals that a new action was just added to the group. The signal is
+      emitted after the action has been added and is now visible.
     @subheading{The \"action-enabled-changed\" signal}
       @begin{pre}
 lambda (group name enabled)    :detailed
       @end{pre}
-      Signals that the enabled status of the named action has changed.
       @begin[code]{table}
         @entry[group]{The @sym{g:action-group} object that changed.}
         @entry[name]{A string with the name of the action.}
         @entry[enabled]{A boolean whether the action is enabled or not.}
       @end{table}
+      Signals that the enabled status of the named action has changed.
     @subheading{The \"action-removed\" signal}
       @begin{pre}
 lambda (group name)    :detailed
       @end{pre}
-      Signals that an action is just about to be removed from the group. This
-      signal is emitted before the action is removed, so the action is still
-      visible and can be queried from the signal handler.
       @begin[code]{table}
         @entry[group]{The @sym{g:action-group} object that changed.}
         @entry[name]{A string with the name of the action.}
       @end{table}
+      Signals that an action is just about to be removed from the group. This
+      signal is emitted before the action is removed, so the action is still
+      visible and can be queried from the signal handler.
     @subheading{The \"action-state-changed\" signal}
       @begin{pre}
 lambda (group name parameter)    :detailed
       @end{pre}
-      Signals that the state of the named action has changed.
       @begin[code]{table}
         @entry[group]{The @sym{g:action-group} object that changed.}
         @entry[name]{A string with the name of the action.}
         @entry[parameter]{The new @type{g:variant} parameter of the state.}
       @end{table}
+      Signals that the state of the named action has changed.
   @end{dictionary}
   @see-class{g:simple-action-group}")
 
@@ -415,9 +415,9 @@ lambda (group name parameter)    :detailed
   state of the action.
 
   If a @type{g:variant} parameter array is returned then each item in the array
-  is a possible value for the state. If a @type{g:variant} parameter pair, i.e.
-  two-tuple, is returned then the tuple specifies the inclusive lower and upper
-  bound of valid values for the state.
+  is a possible value for the state. If a @type{g:variant} parameter pair, that
+  is two-tuple, is returned then the tuple specifies the inclusive lower and
+  upper bound of valid values for the state.
 
   In any case, the information is merely a hint. It may be possible to have a
   state value outside of the hinted range and setting a value within the range
@@ -522,7 +522,7 @@ lambda (group name parameter)    :detailed
   @argument[group]{a @class{g:action-group} object}
   @argument[name]{a string with the name of an action in the group}
   @begin{short}
-    Emits the \"action-added\" signal on the action group.
+    Emits the @code{\"action-added\"} signal on the action group.
   @end{short}
   This function should only be called by @class{g:action-group} implementations.
   @see-class{g:action-group}"
@@ -542,7 +542,7 @@ lambda (group name parameter)    :detailed
   @argument[group]{a @class{g:action-group} object}
   @argument[name]{a string with the name of an action in the action group}
   @begin{short}
-    Emits the \"action-removed\" signal on the action group.
+    Emits the @code{\"action-removed\"} signal on the action group.
   @end{short}
   This function should only be called by @class{g:action-group} implementations.
   @see-class{g:action-group}"
@@ -563,7 +563,7 @@ lambda (group name parameter)    :detailed
   @argument[name]{a string with the name of an action in the action group}
   @argument[enabled]{a boolean whether or not the action is now enabled}
   @begin{short}
-    Emits the \"action-enabled-changed\" signal on the action group.
+    Emits the @code{\"action-enabled-changed\"} signal on the action group.
   @end{short}
   This function should only be called by @class{g:action-group}
   implementations.
@@ -586,7 +586,7 @@ lambda (group name parameter)    :detailed
   @argument[name]{a string with the name of an action in the group}
   @argument[state]{the new @type{g:variant} state of the named action}
   @begin{short}
-    Emits the \"action-state-changed\" signal on the action group.
+    Emits the @code{\"action-state-changed\"} signal on the action group.
   @end{short}
   This function should only be called by @class{g:action-group} implementations.
   @see-class{g:action-group}

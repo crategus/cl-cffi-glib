@@ -2,11 +2,11 @@
 ;;; gio.notification.lisp
 ;;;
 ;;; The documentation of this file is taken from the GIO Reference Manual
-;;; Version 2.76 and modified to document the Lisp binding to the GIO library.
+;;; Version 2.82 and modified to document the Lisp binding to the GIO library.
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
 ;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2021- 2023 Dieter Kaiser
+;;; Copyright (C) 2021- 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -66,7 +66,7 @@
 ;;; GNotificationPriority
 ;;; ----------------------------------------------------------------------------
 
-(gobject:define-g-enum "GNotificationPriority" notification-priority
+(gobject:define-genum "GNotificationPriority" notification-priority
   (:export t
    :type-initializer "g_notification_priority_get_type")
   (:normal 0)
@@ -80,7 +80,7 @@
       (liber:symbol-documentation 'notification-priority)
  "@version{#2022-12-30}
   @begin{declaration}
-(gobject:define-g-enum \"GNotificationPriority\" notification-priority
+(gobject:define-genum \"GNotificationPriority\" notification-priority
   (:export t
    :type-initializer \"g_notification_priority_get_type\")
   (:normal 0)
@@ -113,7 +113,7 @@
 ;;; GNotification
 ;;; ----------------------------------------------------------------------------
 
-(gobject:define-g-object-class "GNotification" notification
+(gobject:define-gobject "GNotification" notification
   (:superclass gobject:object
    :export t
    :interfaces nil
@@ -139,17 +139,17 @@
   be started as a D-Bus service, using the @class{g:application} class.
 
   User interaction with a notification, either the default action, or buttons,
-  must be associated with actions on the application, i.e. \"app.\" actions. It
-  is not possible to route user interaction through the notification itself,
-  because the object will not exist if the application is autostarted as a
-  result of a notification being clicked.
+  must be associated with actions on the application, that is, @code{\"app.\"}
+  actions. It is not possible to route user interaction through the notification
+  itself, because the object will not exist if the application is autostarted as
+  a result of a notification being clicked.
 
   A notification can be sent with the @fun{g:application-send-notification}
   function.
   @see-class{g:application}")
 
 ;;; ----------------------------------------------------------------------------
-;;; g_notification_new ()
+;;; g_notification_new
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_notification_new" notification-new)
@@ -172,7 +172,7 @@
 (export 'notification-new)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_notification_set_title ()
+;;; g_notification_set_title
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_notification_set_title" notification-set-title) :void
@@ -190,7 +190,7 @@
 (export 'notification-set-title)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_notification_set_body ()
+;;; g_notification_set_body
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_notification_set_body" notification-set-body) :void
@@ -208,7 +208,7 @@
 (export 'notification-set-body)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_notification_set_icon ()
+;;; g_notification_set_icon
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_notification_set_icon" notification-set-icon) :void
@@ -227,7 +227,7 @@
 (export 'notification-set-icon)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_notification_set_priority ()
+;;; g_notification_set_priority
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_notification_set_priority" notification-set-priority) :void
@@ -247,7 +247,7 @@
 (export 'notification-set-priority)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_notification_set_urgent ()
+;;; g_notification_set_urgent
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_notification_set_urgent" notification-set-urgent) :void
@@ -270,7 +270,7 @@
 (export 'notification-set-urgent)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_notification_set_default_action ()
+;;; g_notification_set_default_action
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_notification_set_default_action"
@@ -369,7 +369,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;;g_notification_add_button ()
+;;; g_notification_add_button
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_notification_add_button" notification-add-button) :void

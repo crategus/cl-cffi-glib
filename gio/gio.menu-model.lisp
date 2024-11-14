@@ -2,11 +2,11 @@
 ;;; gio.menu-model.lisp
 ;;;
 ;;; The documentation of this file is taken from the GIO Reference Manual
-;;; Version 2.76 and modified to document the Lisp binding to the GIO library.
+;;; Version 2.82 and modified to document the Lisp binding to the GIO library.
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
 ;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2013 - 2023 Dieter Kaiser
+;;; Copyright (C) 2013 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -86,7 +86,7 @@
 ;;; GMenuModel
 ;;; ----------------------------------------------------------------------------
 
-(gobject:define-g-object-class "GMenuModel" menu-model
+(gobject:define-gobject "GMenuModel" menu-model
   (:superclass gobject:object
    :export t
    :interfaces nil
@@ -103,8 +103,8 @@
   The items are associated with actions, which can be activated through them.
   Items can be grouped in sections, and may have submenus associated with them.
   Both items and sections usually have some representation data, such as labels
-  or icons. The type of the associated action, i.e. whether it is stateful, and
-  what kind of state it has, can influence the representation of the item.
+  or icons. The type of the associated action, that is, whether it is stateful,
+  and what kind of state it has, can influence the representation of the item.
 
   The conceptual model of menus in a @sym{g:menu-model} object is hierarchical:
   sections and submenus are again represented by @sym{g:menu-model} objects.
@@ -163,13 +163,14 @@
   Items in a @sym{g:menu-model} object represent active controls if they refer
   to an action that can get activated when the user interacts with the menu
   item. The reference to the action is encoded by the string ID in the
-  \"action\" attribute. An action ID uniquely identifies an action in an action
-  group. Which action group(s) provide actions depends on the context in which
-  the menu model is used. E.g. when the model is exported as the application
-  menu of a @class{gtk:application} instance, actions can be application-wide
-  or window specific, and thus come from two different action groups. By
-  convention, the application-wide actions have names that start with \"app.\",
-  while the names of window specific actions start with \"win.\".
+  @code{\"action\"} attribute. An action ID uniquely identifies an action in an
+  action group. Which action group(s) provide actions depends on the context in
+  which the menu model is used. For example, when the model is exported as the
+  application menu of a @class{gtk:application} instance, actions can be
+  application-wide or window specific, and thus come from two different action
+  groups. By convention, the application-wide actions have names that start with
+  @code{\"app.\"}, while the names of window specific actions start with
+  @code{\"win.\"}.
 
   While a wide variety of stateful actions is possible, the following is the
   minimum that is expected to be supported by all users of exported menu
@@ -204,6 +205,12 @@
       @begin{pre}
 lambda (model position removed added)   :run-last
       @end{pre}
+      @begin[code]{table}
+        @entry[model]{The @sym{g:menu-model} object that is changing.}
+        @entry[position]{An integer with the position of the change.}
+        @entry[removed]{An integer with the number of items removed.}
+        @entry[added]{An integer with the number of items added.}
+      @end{table}
       Emitted when a change has occured to the menu. The only changes that can
       occur to a menu is that items are removed or added. Items may not change,
       except by being removed and added back in the same location. The signal
@@ -220,12 +227,6 @@ lambda (model position removed added)   :run-last
       Signal handlers may query the model, particularly the added items, and
       expect to see the results of the modification that is being reported. The
       signal is emitted after the modification.
-      @begin[code]{table}
-        @entry[model]{The @sym{g:menu-model} object that is changing.}
-        @entry[position]{An integer with the position of the change.}
-        @entry[removed]{An integer with the number of items removed.}
-        @entry[added]{An integer with the number of items added.}
-      @end{table}
   @end{dictionary}
   @see-class{gtk:application}
   @see-class{g:action-group}")
@@ -382,8 +383,8 @@ lambda (model position removed added)   :run-last
  #+liber-documentation
  "@version{#2022-12-30}
   @argument[model]{a @class{g:menu-model} object}
-  @return{@em{True} if the model is mutable, i.e. the @code{\"items-changed\"}
-  signal may be emitted.}
+  @return{@em{True} if the model is mutable, that is, the
+  @code{\"items-changed\"} signal may be emitted.}
   @begin{short}
     Queries if @arg{model} is mutable.
   @end{short}

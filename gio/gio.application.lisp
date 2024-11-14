@@ -2,7 +2,7 @@
 ;;; gio.application.lisp
 ;;;
 ;;; The documentation of this file is taken from the GIO Reference Manual
-;;; Version 2.80 and modified to document the Lisp binding to the GIO library.
+;;; Version 2.82 and modified to document the Lisp binding to the GIO library.
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
 ;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
@@ -128,7 +128,7 @@
 ;;; GApplicationFlags
 ;;; ----------------------------------------------------------------------------
 
-(gobject:define-g-flags "GApplicationFlags" application-flags
+(gobject:define-gflags "GApplicationFlags" application-flags
   (:export t
    :type-initializer "g_application_flags_get_type")
   #-glib-2-74
@@ -153,7 +153,7 @@
       (liber:symbol-documentation 'application-flags)
  "@version{2024-5-24}
   @begin{declaration}
-(gobject:define-g-flags \"GApplicationFlags\" application-flags
+(gobject:define-gflags \"GApplicationFlags\" application-flags
   (:export t
    :type-initializer \"g_application_flags_get_type\")
   #-glib-2-74
@@ -222,7 +222,7 @@
 ;;; GApplication
 ;;; ----------------------------------------------------------------------------
 
-(gobject:define-g-object-class "GApplication" application
+(gobject:define-gobject "GApplication" application
   (:superclass gobject:object
    :export t
    :interfaces ("GActionGroup"
@@ -332,8 +332,8 @@
   There is a number of different entry points into a @class{g:application}
   instance:
   @begin{itemize}
-    @item{via 'Activate' (i.e. just starting the application)}
-    @item{via 'Open' (i.e. opening some files)}
+    @item{via 'Activate', that is just starting the application}
+    @item{via 'Open', that is opening some files}
     @item{by handling a command-line}
     @item{via activating an action}
   @end{itemize}
@@ -352,11 +352,11 @@
   @fun{g:application-command-line-get-platform-data} functions.
 
   As the name indicates, the platform data may vary depending on the operating
-  system, but it always includes the current directory, key \"cwd\", and
-  optionally the environment, i.e. the set of environment variables and their
-  values, of the calling process, key \"environ\". The environment is only
-  added to the platform data if the @code{:send-enviroment} flag is set. A
-  @class{g:application} subclass can add own platform data by overriding the
+  system, but it always includes the current directory, @code{\"cwd\"} key, and
+  optionally the environment, that is, the set of environment variables and
+  their values, of the calling process, @code{\"environ\"} key. The environment
+  is only added to the platform data if the @code{:send-enviroment} flag is set.
+  A @class{g:application} subclass can add own platform data by overriding the
   @code{add_platform_data} virtual function. For instance, the
   @class{gtk:application} class adds startup notification data in this way.
 
@@ -370,7 +370,7 @@
   (let ((app (make-instance 'g:application
                             :application-id \"com.crategus.application-open\"
                             :flags :handles-open))
-        (argv (if argv argv (uiop:command-line-arguments))))
+        (argv (or argv (uiop:command-line-arguments))))
     ;; Print information about the application
     (format t \"Start application~%\")
     (format t \"      arg : ~a~%\" argv)
@@ -474,19 +474,16 @@
       @begin{pre}
 lambda (application)    :run-last
       @end{pre}
-      The signal is emitted on the primary instance when an activation occurs.
-      See the @fun{g:application-activate} function.
       @begin[code]{table}
         @entry[application]{The @class{g:application} instance which received
           the signal.}
       @end{table}
+      The signal is emitted on the primary instance when an activation occurs.
+      See the @fun{g:application-activate} function.
     @subheading{The \"command-line\" signal}
       @begin{pre}
 lambda (application cmdline)    :run-last
       @end{pre}
-      The signal is emitted on the primary instance when a command line is not
-      handled locally. See the @fun{g:application-run} function and the
-      @class{g:application-command-line} documentation for more information.
       @begin[code]{table}
         @entry[application]{The @class{g:application} instance which received
           the signal.}
@@ -495,10 +492,22 @@ lambda (application cmdline)    :run-last
         @entry[Returns]{An integer that is set as the exit status for the
           calling process.}
       @end{table}
+      The signal is emitted on the primary instance when a command line is not
+      handled locally. See the @fun{g:application-run} function and the
+      @class{g:application-command-line} documentation for more information.
     @subheading{The \"handle-local-options\" signal}
       @begin{pre}
 lambda (application options)    :run-last
       @end{pre}
+      @begin[code]{table}
+        @entry[application]{The @class{g:application} instance which received
+          the signal.}
+        @entry[options]{The options dictionary of @class{g:variant-dict} type.}
+        @entry[Returns]{An exit code. If you have handled your options and want
+          to exit the process, return a non-negative option, 0 for success, and
+          a positive value for failure. Return -1 to let the default option
+          processing continue.}
+      @end{table}
       The signal is emitted on the local instance after the parsing of the
       command line options has occurred. You can add options to be recognised
       during command line option parsing using the
@@ -529,7 +538,7 @@ lambda (application options)    :run-last
       register the application first. You should probably not call the
       @fun{g:application-activate} function for yourself, however, just return
       -1 and allow the default handler to do it for you. This will ensure that
-      the @code{--gapplication-service} switch works properly, i.e. no
+      the @code{--gapplication-service} switch works properly, that is no
       activation in that case.
 
       Note that this signal is emitted from the default implementation of the
@@ -539,34 +548,23 @@ lambda (application options)    :run-last
       You can override the @code{local_command_line()} virtual function if you
       need more powerful capabilities than what is provided here, but this
       should not normally be required.
-      @begin[code]{table}
-        @entry[application]{The @class{g:application} instance which received
-          the signal.}
-        @entry[options]{The options dictionary of @class{g:variant-dict} type.}
-        @entry[Returns]{An exit code. If you have handled your options and want
-          to exit the process, return a non-negative option, 0 for success, and
-          a positive value for failure. Return -1 to let the default option
-          processing continue.}
-      @end{table}
     @subheading{The \"name-lost\" signal}
       @begin{pre}
 lambda (application)    :run-last
       @end{pre}
-      The signal is emitted only on the registered primary instance when a new
-      instance has taken over. This can only happen if the application is using
-      the @code{:allow-replacement} flag. The default handler for this signal
-      calls the @fun{g:application-quit} function. Since 2.60.
       @begin[code]{table}
         @entry[application]{The @class{g:application} instance which received
           the signal.}
         @entry[Returns]{@em{True} if the signal has been handled.}
       @end{table}
+      The signal is emitted only on the registered primary instance when a new
+      instance has taken over. This can only happen if the application is using
+      the @code{:allow-replacement} flag. The default handler for this signal
+      calls the @fun{g:application-quit} function. Since 2.60.
     @subheading{The \"open\" signal}
       @begin{pre}
 lambda (application files n-files hint)    :run-last
       @end{pre}
-      The signal is emitted on the primary instance when there are files to
-      open. See the @fun{g:application-open} function for more information.
       @begin[code]{table}
         @entry[application]{The @class{g:application} instance which received
           the signal.}
@@ -574,26 +572,28 @@ lambda (application files n-files hint)    :run-last
         @entry[n-files]{An integer with the length of @arg{files}.}
         @entry[hint]{A string with a hint provided by the calling instance.}
       @end{table}
+      The signal is emitted on the primary instance when there are files to
+      open. See the @fun{g:application-open} function for more information.
     @subheading{The \"shutdown\" signal}
       @begin{pre}
 lambda (application)    :run-last
       @end{pre}
-      The signal is emitted only on the registered primary instance immediately
-      after the main loop terminates.
       @begin[code]{table}
         @entry[application]{The @class{g:application} instance which received
           the signal.}
       @end{table}
+      The signal is emitted only on the registered primary instance immediately
+      after the main loop terminates.
     @subheading{The \"startup\" signal}
       @begin{pre}
 lambda (application)    :run-first
       @end{pre}
-      The signal is emitted on the primary instance immediately after
-      registration. See the @fun{g:application-register} function.
       @begin[code]{table}
         @entry[application]{The @class{g:application} instance which received
           the signal.}
       @end{table}
+      The signal is emitted on the primary instance immediately after
+      registration. See the @fun{g:application-register} function.
   @end{dictionary}
   @see-constructor{g:application-new}
   @see-slot{g:application-action-group}
@@ -643,7 +643,7 @@ lambda (application)    :run-first
     @class{g:action-map} interface instead. Never ever mix use of this API with
     use of the @class{g:action-map} interface on the same application or things
     will go very badly wrong. This function is known to introduce buggy
-    behaviour, i.e. signals not emitted on changes to the action group.
+    behaviour, that is, signals not emitted on changes to the action group.
   @end{dictionary}
   @see-class{g:application}
   @see-class{g:action-group}
@@ -937,7 +937,7 @@ lambda (application)    :run-first
       characters.}
     @item{Application identifiers must not exceed 255 characters.}
   @end{itemize}
-  @begin[Example]{dictionary}
+  @begin[Examples]{dictionary}
     @begin{pre}
 (g:application-id-is-valid \"com.crategus.application\") => T
 (g:application-id-is-valid \"application\") => NIL
@@ -1180,8 +1180,8 @@ lambda (application)    :run-first
   @end{short}
   The @arg{hint} argument is simply passed through to the @code{\"open\"}
   signal. It is intended to be used by applications that have multiple modes for
-  opening files, e.g. \"view\" versus \"edit\". Unless you have a need for this
-  functionality, you should use an empty string \"\".
+  opening files, for example, \"view\" versus \"edit\". Unless you have a need
+  for this functionality, you should use an empty string \"\".
 
   The application must be registered before calling this function and it must
   have the @code{:handles-open} flag set.
@@ -1345,21 +1345,21 @@ lambda (application)    :run-first
   Much like the @fun{g:main-loop-run} function, this function will acquire the
   main context for the duration that the application is running.
 
-  Applications that are not explicitly flagged as services or launchers, i.e.
-  neither the @code{:is-service} or the @code{:is-launcher} values are given as
-  flags, will check, from the default handler for the @code{local_command_line}
-  virtual function, if the @code{--gapplication-service} option was
-  given in the command line. If this flag is present then normal command line
-  processing is interrupted and the @code{:is-service} flag is set. This
-  provides a \"compromise\" solution whereby running an application directly
-  from the command line will invoke it in the normal way, which can be useful
-  for debugging, while still allowing applications to be D-Bus activated in
-  service mode. The D-Bus service file should invoke the executable with the
-  @code{--gapplication-service} option as the sole command line argument. This
-  approach is suitable for use by most graphical applications but should not be
-  used from applications like editors that need precise control over when
-  processes invoked via the command line will exit and what their exit status
-  will be.
+  Applications that are not explicitly flagged as services or launchers, that
+  is, neither the @code{:is-service} or the @code{:is-launcher} values are
+  given as flags, will check, from the default handler for the
+  @code{local_command_line} virtual function, if the
+  @code{--gapplication-service} option was given in the command line. If this
+  flag is present then normal command line processing is interrupted and the
+  @code{:is-service} flag is set. This provides a \"compromise\" solution
+  whereby running an application directly from the command line will invoke it
+  in the normal way, which can be useful for debugging, while still allowing
+  applications to be D-Bus activated in service mode. The D-Bus service file
+  should invoke the executable with the @code{--gapplication-service} option as
+  the sole command line argument. This approach is suitable for use by most
+  graphical applications but should not be used from applications like editors
+  that need precise control over when processes invoked via the command line
+  will exit and what their exit status will be.
   @see-class{g:application}
   @see-symbol{g:application-flags}
   @see-function{g:prgname}
@@ -1408,7 +1408,7 @@ lambda (application)    :run-first
   @fun{g:application-command-line-options-dict} function will return it. This
   \"packing\" is done according to the type of the argument - booleans for
   normal flags, strings for strings, bytestrings for filenames, etc. The
-  packing only occurs if the flag is given, i.e. we do not pack a
+  packing only occurs if the flag is given, that is, we do not pack a
   @type{g:variant} parameter in the case that a flag is missing.
 
   In general, it is recommended that all command line arguments are parsed
@@ -1739,8 +1739,8 @@ lambda (application)    :run-first
   Use this function to indicate that the application is busy, for instance
   while a long running operation is pending. The busy state will be exposed to
   other processes, so a session shell will use that information to indicate the
-  state to the user, e.g. with a spinner. To cancel the busy indication, use the
-  @fun{g:application-unmark-busy} function.
+  state to the user, for example, with a spinner. To cancel the busy indication,
+  use the @fun{g:application-unmark-busy} function.
   @see-class{g:application}
   @see-function{g:application-unmark-busy}"
   (application (gobject:object application)))

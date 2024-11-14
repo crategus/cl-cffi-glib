@@ -2,11 +2,11 @@
 ;;; gio.simple-permission.lisp
 ;;;
 ;;; The documentation of this file is taken from the GIO Reference Manual
-;;; Version 2.76 and modified to document the Lisp binding to the GIO library.
+;;; Version 2.82 and modified to document the Lisp binding to the GIO library.
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
 ;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2023 Dieter Kaiser
+;;; Copyright (C) 2023 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -52,7 +52,7 @@
 ;;; GSimplePermission
 ;;; ----------------------------------------------------------------------------
 
-(gobject:define-g-object-class "GSimplePermission" simple-permission
+(gobject:define-gobject "GSimplePermission" simple-permission
   (:superclass permission
    :export t
    :interfaces ()

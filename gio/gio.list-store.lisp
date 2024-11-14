@@ -2,7 +2,7 @@
 ;;; gio.list-store.lisp
 ;;;
 ;;; The documentation of this file is taken from the GIO Reference Manual
-;;; Version 2.76 and modified to document the Lisp binding to the GIO library.
+;;; Version 2.82 and modified to document the Lisp binding to the GIO library.
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
 ;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
@@ -72,7 +72,7 @@
 ;;; GListStore
 ;;; ----------------------------------------------------------------------------
 
-(gobject:define-g-object-class "GListStore" list-store
+(gobject:define-gobject "GListStore" list-store
   (:superclass gobject:object
    :export t
    :interfaces ("GListModel")
@@ -383,9 +383,9 @@
   @fun{g:list-store-insert} and @fun{g:list-store-remove} functions, because it
   only emits the @code{\"items-changed\"} signal once for the change.
 
-  The @arg{pos} and @arg{n} arguments must be correct, i.e. @arg{pos} + @arg{n}
-  must be less than or equal to the length of the list store at the time this
-  function is called.
+  The @arg{pos} and @arg{n} arguments must be correct, that is, @arg{pos} +
+  @arg{n} must be less than or equal to the length of the list store at the
+  time this function is called.
   @see-class{g:list-store}
   @see-class{g:object}
   @see-function{g:list-store-insert}

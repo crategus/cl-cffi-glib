@@ -2,11 +2,11 @@
 ;;; gio.app-info.lisp
 ;;;
 ;;; The documentation of this file is taken from the GIO Reference Manual
-;;; Version 2.76 and modified to document the Lisp binding to the GIO library.
+;;; Version 2.82 and modified to document the Lisp binding to the GIO library.
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
 ;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2012 - 2023 Dieter Kaiser
+;;; Copyright (C) 2012 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -125,7 +125,7 @@
 ;;; GAppInfoCreateFlags
 ;;; ----------------------------------------------------------------------------
 
-(gobject:define-g-flags "GAppInfoCreateFlags" app-info-create-flags
+(gobject:define-gflags "GAppInfoCreateFlags" app-info-create-flags
   (:export t
    :type-initializer "g_app_info_create_flags_get_type")
   (:none 0)
@@ -139,7 +139,7 @@
       (liber:symbol-documentation 'app-info-create-flags)
  "@version{2023-7-11}
   @begin{declaration}
-(gobject:define-g-flags \"GAppInfoCreateFlags\" app-info-create-flags
+(gobject:define-gflags \"GAppInfoCreateFlags\" app-info-create-flags
   (:export t
    :type-initializer \"g_app_info_create_flags_get_type\")
   (:none 0)
@@ -165,7 +165,7 @@
 ;;; GAppInfo
 ;;; ----------------------------------------------------------------------------
 
-(gobject:define-g-interface "GAppInfo" app-info
+(gobject:define-ginterface "GAppInfo" app-info
   (:export t
    :type-initializer "g_app_info_get_type")
   nil)
@@ -185,7 +185,7 @@
 ;;; GAppLaunchContext
 ;;; ----------------------------------------------------------------------------
 
-(gobject:define-g-object-class "GAppLaunchContext" app-launch-context
+(gobject:define-gobject "GAppLaunchContext" app-launch-context
   (:superclass gobject:object
    :export t
    :interfaces nil
@@ -205,24 +205,33 @@
       @begin{pre}
 lambda (context startup-notify-id)    :run-last
       @end{pre}
-      The signal is emitted when a @class{g:app-info} launch fails. The startup
-      notification ID is provided, so that the launcher can cancel the startup
-      notification.
       @begin[code]{table}
         @entry[context]{The @class{g:app-launch-context} object emitting the
           signal.}
         @entry[startup-notify-id]{A string with the startup notification ID
           for the failed launch.}
       @end{table}
+      The signal is emitted when a @class{g:app-info} launch fails. The startup
+      notification ID is provided, so that the launcher can cancel the startup
+      notification.
    @subheading{The \"launch-started\" signal}
      @begin{pre}
 lambda (context info platform-data)    :run-first
      @end{pre}
+     @begin[code]{table}
+       @entry[context]{The @class{g:app-launch-context} object emitting the
+         signal.}
+       @entry[info]{A @class{g:app-info} instance that is about to be
+         launched.}
+       @entry[platform-data]{A @type{g:variant} value with additional
+         platform specific data for this launch. The argument can be
+         @code{NULL}.}
+     @end{table}
      The signal is emitted when a @class{g:app-info} instance is about to be
      launched. If non-@code{null} the @arg{platform-data} is a @type{g:variant}
-     dictionary mapping strings to variants, i.e. @code{a{sv@}}, which contains
-     additional, platform specific data about this launch. On UNIX, at least
-     the @code{startup-notification-id} keys will be present.
+     dictionary mapping strings to variants, that is @code{a{sv@}}, which
+     contains additional, platform specific data about this launch. On UNIX, at
+     least the @code{startup-notification-id} keys will be present.
 
      The value of the @code{startup-notification-id} key (type @code{s}) is a
      startup notification ID corresponding to the format from the startup
@@ -240,24 +249,10 @@ lambda (context info platform-data)    :run-first
      @fun{g:signal-connect} function.
 
      Since 2.72
-     @begin[code]{table}
-       @entry[context]{The @class{g:app-launch-context} object emitting the
-         signal.}
-       @entry[info]{A @class{g:app-info} instance that is about to be
-         launched.}
-       @entry[platform-data]{A @type{g:variant} value with additional
-         platform specific data for this launch. The argument can be
-         @code{NULL}.}
-     @end{table}
     @subheading{The \"launched\" signal}
       @begin{pre}
 lambda (context info platform-data)    :run-last
       @end{pre}
-      The signal is emitted when a @class{g:app-info} object is successfully
-      launched. The argument @arg{platform-data} is an @type{g:variant}
-      dictionary mapping strings to variants, i.e. @code{a{sv@}}, which contains
-      additional, platform-specific data about this launch. On UNIX, at least
-      the \"pid\" and \"startup-notification-id\" keys will be present.
       @begin[code]{table}
         @entry[context]{The @class{g:app-launch-context} object emitting the
           signal.}
@@ -265,13 +260,19 @@ lambda (context info platform-data)    :run-last
         @entry[platform-data]{A @type{g:variant} instance with additional
           platform specific data for this launch.}
       @end{table}
+      The signal is emitted when a @class{g:app-info} object is successfully
+      launched. The argument @arg{platform-data} is an @type{g:variant}
+      dictionary mapping strings to variants, that is @code{a{sv@}}, which
+      contains additional, platform-specific data about this launch. On UNIX,
+      at least the @code{\"pid\"} and @code{\"startup-notification-id\"} keys
+      will be present.
   @end{dictionary}
   @see-construtor{g:app-launch-context-new}
   @see-class{g:app-info}
   @see-class{gdk:app-launch-context}")
 
 ;;; ----------------------------------------------------------------------------
-;;; g_app_info_create_from_commandline ()
+;;; g_app_info_create_from_commandline
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_create_from_commandline"
@@ -306,7 +307,7 @@ lambda (context info platform-data)    :run-last
 (export 'app-info-create-from-commandline)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_app_info_dup ()
+;;; g_app_info_dup
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_dup" app-info-dup) (gobject:object app-info)
@@ -323,7 +324,7 @@ lambda (context info platform-data)    :run-last
 (export 'app-info-dup)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_app_info_equal ()
+;;; g_app_info_equal
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_equal" app-info-equal) :boolean
@@ -343,7 +344,7 @@ lambda (context info platform-data)    :run-last
 (export 'app-info-equal)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_app_info_get_id ()
+;;; g_app_info_get_id
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_get_id" app-info-id) :string
@@ -366,7 +367,7 @@ lambda (context info platform-data)    :run-last
 (export 'app-info-id)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_app_info_get_name ()
+;;; g_app_info_get_name
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_get_name" app-info-name) :string
@@ -384,7 +385,7 @@ lambda (context info platform-data)    :run-last
 (export 'app-info-name)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_app_info_get_display_name ()
+;;; g_app_info_get_display_name
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_get_display_name" app-info-display-name) :string
@@ -405,7 +406,7 @@ lambda (context info platform-data)    :run-last
 (export 'app-info-display-name)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_app_info_get_description ()
+;;; g_app_info_get_description
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_get_description" app-info-description) :string
@@ -423,7 +424,7 @@ lambda (context info platform-data)    :run-last
 (export 'app-info-description)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_app_info_get_executable ()
+;;; g_app_info_get_executable
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_get_executable" app-info-executable) :string
@@ -440,7 +441,7 @@ lambda (context info platform-data)    :run-last
 (export 'app-info-executable)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_app_info_get_commandline ()
+;;; g_app_info_get_commandline
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_get_commandline" app-info-commandline) :string
@@ -458,7 +459,7 @@ lambda (context info platform-data)    :run-last
 (export 'app-info-commandline)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_app_info_get_icon ()
+;;; g_app_info_get_icon
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_get_icon" app-info-icon) (gobject:object icon)
@@ -477,7 +478,7 @@ lambda (context info platform-data)    :run-last
 (export 'app-info-icon)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_app_info_launch ()
+;;; g_app_info_launch
 ;;; ----------------------------------------------------------------------------
 
 ;; TODO: Consider to change the implementation and pass a list of Lisp path
@@ -536,7 +537,7 @@ lambda (context info platform-data)    :run-last
 (export 'app-info-launch)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_app_info_supports_files ()
+;;; g_app_info_supports_files
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_supports_files" app-info-supports-files) :boolean
@@ -553,7 +554,7 @@ lambda (context info platform-data)    :run-last
 (export 'app-info-supports-files)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_app_info_supports_uris ()
+;;; g_app_info_supports_uris
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_supports_uris" app-info-supports-uris) :boolean
@@ -570,7 +571,7 @@ lambda (context info platform-data)    :run-last
 (export 'app-info-supports-uris)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_app_info_launch_uris ()
+;;; g_app_info_launch_uris
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_launch_uris" %app-info-launch-uris) :boolean
@@ -670,7 +671,7 @@ lambda (context info platform-data)    :run-last
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_app_info_should_show ()
+;;; g_app_info_should_show
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_should_show" app-info-should-show) :boolean
@@ -688,7 +689,7 @@ lambda (context info platform-data)    :run-last
 (export 'app-info-should-show)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_app_info_can_delete ()
+;;; g_app_info_can_delete
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_can_delete" app-info-can-delete) :boolean
@@ -707,7 +708,7 @@ lambda (context info platform-data)    :run-last
 (export 'app-info-can-delete)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_app_info_delete ()
+;;; g_app_info_delete
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_delete" app-info-delete) :boolean
@@ -729,7 +730,7 @@ lambda (context info platform-data)    :run-last
 (export 'app-info-delete)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_app_info_reset_type_associations ()
+;;; g_app_info_reset_type_associations
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_reset_type_associations"
@@ -754,7 +755,7 @@ lambda (context info platform-data)    :run-last
 (export 'app-info-reset-type-associations)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_app_info_set_as_default_for_type ()
+;;; g_app_info_set_as_default_for_type
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_set_as_default_for_type"
@@ -779,7 +780,7 @@ lambda (context info platform-data)    :run-last
 (export 'app-info-set-as-default-for-type)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_app_info_set_as_default_for_extension ()
+;;; g_app_info_set_as_default_for_extension
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_set_as_default_for_extension"
@@ -804,7 +805,7 @@ lambda (context info platform-data)    :run-last
 (export 'app-info-set-as-default-for-extension)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_app_info_set_as_last_used_for_type ()
+;;; g_app_info_set_as_last_used_for_type
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_set_as_last_used_for_type"
@@ -833,7 +834,7 @@ lambda (context info platform-data)    :run-last
 (export 'app-info-set-as-last-used-for-type)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_app_info_add_supports_type ()
+;;; g_app_info_add_supports_type
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_add_supports_type" %app-info-add-supports-type)
@@ -859,7 +860,7 @@ lambda (context info platform-data)    :run-last
 (export 'app-info-add-supports-type)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_app_info_can_remove_supports_type ()
+;;; g_app_info_can_remove_supports_type
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_can_remove_supports_type"
@@ -878,7 +879,7 @@ lambda (context info platform-data)    :run-last
 (export 'app-info-can-remove-supports-type)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_app_info_remove_supports_type ()
+;;; g_app_info_remove_supports_type
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_remove_supports_type" %app-info-remove-supports-type)
@@ -903,7 +904,7 @@ lambda (context info platform-data)    :run-last
 (export 'app-info-remove-supports-type)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_app_info_get_supported_types ()
+;;; g_app_info_get_supported_types
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_get_supported_types" app-info-supported-types)
@@ -926,7 +927,7 @@ lambda (context info platform-data)    :run-last
 (export 'app-info-supported-types)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_app_info_get_all ()
+;;; g_app_info_get_all
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_get_all" app-info-all) (glib:list-t gobject:object)
@@ -946,7 +947,7 @@ lambda (context info platform-data)    :run-last
 (export 'app-info-all)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_app_info_get_all_for_type ()
+;;; g_app_info_get_all_for_type
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_get_all_for_type" app-info-all-for-type)
@@ -970,7 +971,7 @@ lambda (context info platform-data)    :run-last
 (export 'app-info-all-for-type)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_app_info_get_default_for_type ()
+;;; g_app_info_get_default_for_type
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_get_default_for_type" app-info-default-for-type)
@@ -1000,7 +1001,7 @@ lambda (context info platform-data)    :run-last
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_app_info_get_default_for_uri_scheme ()
+;;; g_app_info_get_default_for_uri_scheme
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_get_default_for_uri_scheme"
@@ -1014,7 +1015,7 @@ lambda (context info platform-data)    :run-last
     Gets the default application for handling URIs with the given URI scheme.
   @end{short}
   A URI scheme is the initial part of the URI, up to but not including the ':',
-  e.g. \"http\", \"ftp\" or \"sip\".
+  for example, \"http\", \"ftp\" or \"sip\".
   @see-class{g:app-info}"
   (uri-scheme :string))
 
@@ -1029,7 +1030,7 @@ lambda (context info platform-data)    :run-last
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_app_info_get_fallback_for_type ()
+;;; g_app_info_get_fallback_for_type
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_get_fallback_for_type" app-info-fallback-for-type)
@@ -1040,7 +1041,7 @@ lambda (context info platform-data)    :run-last
   @return{A list of @class{g:app-info} instances for given @arg{content-type}
     or @code{nil} on error.}
   @begin{short}
-    Gets a list of fallback application infos for a given content type, i.e.
+    Gets a list of fallback application infos for a given content type, that is,
     those applications which claim to support the given content type by MIME
     type subclassing and not directly.
   @end{short}
@@ -1050,7 +1051,7 @@ lambda (context info platform-data)    :run-last
 (export 'app-info-fallback-for-type)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_app_info_get_recommended_for_type ()
+;;; g_app_info_get_recommended_for_type
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_get_recommended_for_type"
@@ -1061,12 +1062,12 @@ lambda (context info platform-data)    :run-last
   @return{A list of @class{g:app-info} instances for given @arg{content-type}
     or @code{nil} on error.}
   @begin{short}
-    Gets a list of recommended application infos for a given content type, i.e.
-    those applications which claim to support the given content type exactly,
-    and not by MIME type subclassing.
+    Gets a list of recommended application infos for a given content type, that
+    is, those applications which claim to support the given content type
+    exactly, and not by MIME type subclassing.
   @end{short}
-  Note that the first application of the list is the last used one, i.e. the
-  last one for which the @fun{g:app-info-set-as-last-used-for-type} function
+  Note that the first application of the list is the last used one, that is,
+  the last one for which the @fun{g:app-info-set-as-last-used-for-type} function
   has been called.
   @see-class{g:app-info}
   @see-function{g:app-info-set-as-last-used-for-type}"
@@ -1075,7 +1076,7 @@ lambda (context info platform-data)    :run-last
 (export 'app-info-recommended-for-type)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_app_info_launch_default_for_uri ()
+;;; g_app_info_launch_default_for_uri
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_launch_default_for_uri"
@@ -1099,13 +1100,13 @@ lambda (context info platform-data)    :run-last
   @see-class{g:app-info}
   @see-class{g:app-launch-context}"
   (glib:with-ignore-g-error (err)
-    (let ((context (if context context (cffi:null-pointer))))
+    (let ((context (or context (cffi:null-pointer))))
       (%app-info-launch-default-for-uri uri context err))))
 
 (export 'app-info-launch-default-for-uri)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_app_info_launch_default_for_uri_async ()
+;;; g_app_info_launch_default_for_uri_async
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_launch_default_for_uri_async"
@@ -1143,15 +1144,15 @@ lambda (context info platform-data)    :run-last
   (let ((ptr (glib:allocate-stable-pointer func)))
     (%app-info-launch-default-for-uri-async
                        uri
-                       (if context context (cffi:null-pointer))
-                       (if cancellable cancellable (cffi:null-pointer))
+                       (or context (cffi:null-pointer))
+                       (or cancellable (cffi:null-pointer))
                        (cffi:callback async-ready-callback)
                        ptr)))
 
 (export 'app-info-launch-default-for-uri-async)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_app_info_launch_default_for_uri_finish ()
+;;; g_app_info_launch_default_for_uri_finish
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_launch_default_for_uri_finish"
@@ -1176,7 +1177,7 @@ lambda (context info platform-data)    :run-last
 (export 'app-info-launch-default-for-uri-finish)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_app_launch_context_new ()
+;;; g_app_launch_context_new
 ;;; ----------------------------------------------------------------------------
 
 (declaim (inline app-launch-context-new))
@@ -1197,7 +1198,7 @@ lambda (context info platform-data)    :run-last
 (export 'app-launch-context-new)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_app_launch_context_setenv ()
+;;; g_app_launch_context_setenv
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_launch_context_setenv" app-launch-context-setenv) :void
@@ -1218,7 +1219,7 @@ lambda (context info platform-data)    :run-last
 (export 'app-launch-context-setenv)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_app_launch_context_unsetenv ()
+;;; g_app_launch_context_unsetenv
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_launch_context_unsetenv" app-launch-context-unsetenv)
@@ -1238,7 +1239,7 @@ lambda (context info platform-data)    :run-last
 (export 'app-launch-context-unsetenv)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_app_launch_context_get_environment ()
+;;; g_app_launch_context_get_environment
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_launch_context_get_environment"
@@ -1258,7 +1259,7 @@ lambda (context info platform-data)    :run-last
 (export 'app-launch-context-environment)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_app_launch_context_get_display ()
+;;; g_app_launch_context_get_display
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_launch_context_get_display" app-launch-context-display)
@@ -1283,7 +1284,7 @@ lambda (context info platform-data)    :run-last
 (export 'app-launch-context-display)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_app_launch_context_get_startup_notify_id ()
+;;; g_app_launch_context_get_startup_notify_id
 ;;; ----------------------------------------------------------------------------
 
 ;; TODO: Replace FILES with a list of Lisp namestrings.
@@ -1313,7 +1314,7 @@ lambda (context info platform-data)    :run-last
 (export 'app-launch-context-startup-notify-id)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_app_launch_context_launch_failed ()
+;;; g_app_launch_context_launch_failed
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_launch_context_launch_failed"
