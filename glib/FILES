@@ -7,12 +7,12 @@ Content from the Glib Reference Manual for Version 2.82
 
 GLib Fundamentals
 
-  glib.version.lisp            - Version Information               - Glib 2.82 %
-  glib.misc.lisp               - Basic Types                       - Glib 2.82 %
+  glib.version.lisp            - Version Information               - Glib 2.82
+  glib.misc.lisp               - Basic Types                       - Glib 2.82
 
 GLib Core Application Support
 
-  glib.main-loop.lisp          - The Main Event Loop               - Glib 2.68 %
+  glib.main-loop.lisp          - The Main Event Loop               - Glib 2.82
 
     Threads                    - portable support for threads, mutexes, etc.
     Thread Pools               - pools of threads to execute work concurrently
@@ -97,7 +97,7 @@ GLib Data Types
     Pointer Arrays             - arrays of pointers to any type of data, which
                                  grow automatically as new elements are added
 
-  glib.bytes.lisp              - arrays of bytes
+  glib.bytes.lisp              - arrays of bytes                   - Glib 2.82
 
     Balanced Binary Trees      - a sorted collection of key/value pairs
                                  optimized for searching and traversing in order
@@ -116,4 +116,4 @@ GLib Data Types
     GVariant Format Strings    - varargs conversion of GVariants
     GVariant Text Format       - textual representation of GVariants
 
-2024-10-13
+2024-11-6

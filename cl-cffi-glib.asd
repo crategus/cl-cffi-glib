@@ -108,7 +108,7 @@
      (:file "gio.menu")                ; Simple implementation of GMenuModel
      (:file "gio.notification")        ; User Notifications, pop up messages
      ;; File Operations
-     (:file "gio.file")                ; File and Directory Handling
+     (:file "gio.file")
      (:file "gio.file-info")
      ;; Asynchronous I/O
      (:file "gio.cancellable")
@@ -199,11 +199,11 @@
      (:file "rtest-gio-notification")
      ;; File Operations
      (:file "rtest-gio-file")
-;     (:file "gio.file-info")
+     (:file "rtest-gio-file-info")
      ;; Asynchronous I/O
      (:file "rtest-gio-cancellable")
-;    (:file "gio.async-result")
-;    (:file "gio.task")
+     (:file "rtest-gio-async-result")
+     (:file "rtest-gio-task")
 
      (:file "rtest-glib-finish")
      )))

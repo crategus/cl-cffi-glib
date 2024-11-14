@@ -102,6 +102,8 @@
            #:source-context
            #:source-set-callback
            #:source-func
+           #:source-add-child-source
+           #:source-remove-child-source
            #:source-time
            #:source-ready-time
            #:source-remove
@@ -1005,7 +1007,7 @@
 
            ;; Symbols from gio.cancellable.lisp
            #:cancellable
-           #:ancellable-source-func
+           #:cancellable-source-func
            #:cancellable-new
            #:cancellable-is-cancelled
            #:cancellable-set-error-if-cancelled
