@@ -215,18 +215,17 @@
     @about-function{bytes-unref-to-array}
   @end{section}
   @begin[Command line option parser]{section}
-    Parses command line options.
     @about-symbol{option-arg}
     @about-symbol{option-flags}
     @about-type{option-context}
-    @about-macro{with-g-option-context}
+    @about-macro{with-option-context}
     @about-function{option-context-new}
+    @about-function{option-context-free}
     @about-function{option-context-summary}
     @about-function{option-context-description}
     @about-symbol{translate-func}
     @about-function{option-context-set-translate-func}
     @about-function{option-context-set-translation-domain}
-    @about-function{option-context-free}
     @about-function{option-context-parse}
     @about-function{option-context-parse-strv}
     @about-function{option-context-help-enabled}
@@ -237,11 +236,10 @@
     @about-function{option-context-add-group}
     @about-function{option-context-main-group}
     @about-type{option-group}
-    @about-macro{with-g-option-group}
+    @about-macro{with-option-group}
     @about-function{option-group-new}
     @about-function{option-group-ref}
     @about-function{option-group-unref}
-    @about-function{option-group-free}
     @about-function{option-group-add-entries}
     @about-symbol{OptionParseFunc}
     @about-function{option-group-set-parse-hooks}

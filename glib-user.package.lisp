@@ -134,6 +134,8 @@
            #:build-path
 
            ;; Symbols from glib.option.lisp
+           #:with-option-context
+           #:with-option-group
            #:option-arg
            #:option-flags
            #:option-context
