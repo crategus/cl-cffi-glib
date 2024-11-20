@@ -12,7 +12,7 @@ Content from the Glib Reference Manual for Version 2.82
   glib.option.lisp             - parses command line options       - Glib 2.82&.
   glib.key-file.lisp           - parses .ini-like config files     - Glib 2.64 &
   glib.bytes.lisp              - arrays of bytes                   - Glib 2.82
-  glib.variant-type.lisp       - GVariantType                      - Glib 2.36
-  glib.variant.lisp            - GVariant                          - Glib 2.76 &
+  glib.variant-type.lisp       - GVariantType                      - Glib 2.82 .
+  glib.variant.lisp            - GVariant                          - Glib 2.82&.
 
-2024-11-19
+2024-11-20
