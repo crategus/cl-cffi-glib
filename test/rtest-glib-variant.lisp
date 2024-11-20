@@ -172,40 +172,40 @@
 
 (test g-variant-print
   (let (value)
-    (is (string= "false" 
+    (is (string= "false"
                  (g:variant-print (setf value (g:variant-new-boolean nil)))))
     (is-false (g:variant-unref value))
-    (is (string= "true" 
+    (is (string= "true"
                  (g:variant-print (setf value (g:variant-new-boolean t)))))
     (is-false (g:variant-unref value))
-    (is (string= "0xff" 
+    (is (string= "0xff"
                  (g:variant-print (setf value (g:variant-new-byte #xff)))))
     (is-false (g:variant-unref value))
-    (is (string= "10.0" 
+    (is (string= "10.0"
                  (g:variant-print (setf value (g:variant-new-double 10.0d0)))))
     (is-false (g:variant-unref value))
-    (is (string= "16777215" 
+    (is (string= "16777215"
                  (g:variant-print (setf value (g:variant-new-handle #xffffff)))))
     (is-false (g:variant-unref value))
-    (is (string= "4095" 
+    (is (string= "4095"
                  (g:variant-print (setf value (g:variant-new-int16 #xfff)))))
     (is-false (g:variant-unref value))
-    (is (string= "4095" 
+    (is (string= "4095"
                  (g:variant-print (setf value (g:variant-new-uint16 #xfff)))))
     (is-false (g:variant-unref value))
-    (is (string= "65535" 
+    (is (string= "65535"
                  (g:variant-print (setf value (g:variant-new-int32 #xffff)))))
     (is-false (g:variant-unref value))
-    (is (string= "65535" 
+    (is (string= "65535"
                  (g:variant-print (setf value (g:variant-new-uint32 #xffff)))))
     (is-false (g:variant-unref value))
-    (is (string= "1048575" 
+    (is (string= "1048575"
                  (g:variant-print (setf value (g:variant-new-int64 #xfffff)))))
     (is-false (g:variant-unref value))
-    (is (string= "1048575" 
+    (is (string= "1048575"
                  (g:variant-print (setf value (g:variant-new-uint64 #xfffff)))))
     (is-false (g:variant-unref value))
-    (is (string= "'test'" 
+    (is (string= "'test'"
                  (g:variant-print (setf value (g:variant-new-string "test")))))
     (is-false (g:variant-unref value))))
 
@@ -460,4 +460,4 @@
 ;;;     g_variant_new_parsed_va
 ;;;     g_variant_new_parsed
 
-;;; --- 2023-4-29 --------------------------------------------------------------
+;;; 2024-11-20

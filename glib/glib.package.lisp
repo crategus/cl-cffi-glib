@@ -2,7 +2,7 @@
 ;;; glib.package.lisp
 ;;;
 ;;; The documentation of this file is taken from the GLIB Reference Manual
-;;; Version 2.80 and modified to document the Lisp binding to the GLIB library.
+;;; Version 2.82 and modified to document the Lisp binding to the GLIB library.
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
 ;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
@@ -249,7 +249,6 @@
     @about-function{option-group-set-translation-domain}
   @end{section}
   @begin[Key-value file parser]{section}
-    Parses .ini-like config files.
     @about-symbol{key-file-error}
     @about-symbol{key-file-flags}
     @about-type{key-file}
@@ -291,11 +290,10 @@
     @about-function{key-file-remove-comment}
   @end{section}
   @begin[GVariantType]{section}
-    Introduction to the GVariant type system.
     @about-class{variant-type}
     @about-function{variant-type-checked}
-    @about-function{variant-type-copy}
     @about-function{variant-type-new}
+    @about-function{variant-type-copy}
     @about-function{variant-type-string-is-valid}
     @about-function{variant-type-string-scan}
     @about-function{variant-type-string-length}
@@ -324,17 +322,16 @@
     @about-function{variant-type-value}
   @end{section}
   @begin[GVariant]{section}
-    Strongly typed value datatype.
-    @about-type{variant}
     @about-symbol{variant-class}
+    @about-type{variant}
     @about-symbol{variant-iter}
     @about-symbol{variant-builder}
     @about-symbol{variant-parse-error}
-    @about-function{variant-unref}
     @about-function{variant-ref}
+    @about-function{variant-unref}
     @about-function{variant-ref-sink}
-    @about-function{variant-is-floating}
     @about-function{variant-take-ref}
+    @about-function{variant-is-floating}
     @about-function{variant-type}
     @about-function{variant-type-string}
     @about-function{variant-is-of-type}
@@ -347,46 +344,45 @@
     @about-function{variant-new}
     @about-function{variant-new-va}
     @about-function{variant-new-boolean}
+    @about-function{variant-boolean}
     @about-function{variant-new-byte}
+    @about-function{variant-byte}
     @about-function{variant-new-int16}
+    @about-function{variant-int16}
     @about-function{variant-new-uint16}
+    @about-function{variant-uint16}
     @about-function{variant-new-int32}
+    @about-function{variant-int32}
     @about-function{variant-new-uint32}
+    @about-function{variant-uint32}
     @about-function{variant-new-int64}
+    @about-function{variant-int64}
     @about-function{variant-new-uint64}
+    @about-function{variant-uint64}
     @about-function{variant-new-handle}
+    @about-function{variant-handle}
     @about-function{variant-new-double}
+    @about-function{variant-double}
     @about-function{variant-new-string}
     @about-function{variant-new-take-string}
+    @about-function{variant-string}
     @about-function{variant-new-printf}
     @about-function{variant-new-object-path}
     @about-function{variant-is-object-path}
     @about-function{variant-new-signature}
     @about-function{variant-is-signature}
     @about-function{variant-new-variant}
-    @about-function{variant-new-strv}
-    @about-function{variant-new-objv}
-    @about-function{variant-new-bytestring}
-    @about-function{variant-new-bytestring-array}
-    @about-function{variant-boolean}
-    @about-function{variant-byte}
-    @about-function{variant-int16}
-    @about-function{variant-uint16}
-    @about-function{variant-int32}
-    @about-function{variant-uint32}
-    @about-function{variant-int64}
-    @about-function{variant-int64}
-    @about-function{variant-uint64}
-    @about-function{variant-handle}
-    @about-function{variant-double}
-    @about-function{variant-string}
     @about-function{variant-variant}
+    @about-function{variant-new-strv}
     @about-function{variant-strv}
     @about-function{variant-dup-strv}
+    @about-function{variant-new-objv}
     @about-function{variant-objv}
     @about-function{variant-dup-objv}
+    @about-function{variant-new-bytestring}
     @about-function{variant-bytestring}
     @about-function{variant-dup-bytestring}
+    @about-function{variant-new-bytestring-array}
     @about-function{variant-bytestring_array}
     @about-function{variant-dup-bytestring-array}
     @about-function{variant-new-maybe}
