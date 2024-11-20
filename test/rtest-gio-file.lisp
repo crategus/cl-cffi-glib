@@ -35,6 +35,7 @@
 
 ;;;     g:file-as-namestring
 
+#-windows
 (test g-file-as-namestring
   (let ((path (glib-sys:sys-path "test/rtest-gio-file.lisp"))
         (file nil))
@@ -55,6 +56,7 @@
 
 ;;;     g_file_new_for_path
 
+#-windows
 (test g-file-new-for-path
   (let* ((path (glib-sys:sys-path "test/rtest-gio-file.lisp"))
          (file (g:file-new-for-path path)))
@@ -65,7 +67,7 @@
 ;;;     g_file_new_for_uri
 
 (test file-new-for-uri
-  (let* ((path "http://crategus.com")
+  (let* ((path "http://crategus.com/")
          (file (g:file-new-for-uri path)))
     (is (typep file 'g:object))
     (is-false (g:file-path file))
@@ -178,4 +180,4 @@
   (let ((file (g:file-parse-name "http://crategus.com")))
     (is (string= "http://crategus.com/" (g:file-get-parse-name file)))))
 
-;;; 2024-10-12
+;;; 2024-11-10

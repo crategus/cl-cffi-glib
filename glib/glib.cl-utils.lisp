@@ -32,7 +32,7 @@
 ;;;      Print debug information
 ;;;
 ;;; Usage is as following. Define a global variable which starts with
-;;; DEBUG- , e.g.;
+;;; DEBUG- , for example
 ;;;
 ;;;     (defvar *debug-gboxed-gc* nil)
 ;;;

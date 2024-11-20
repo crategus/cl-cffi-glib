@@ -225,8 +225,8 @@
     containing groups of key-value pairs, which we call key files for lack of a
     better name.
   @end{short}
-  Several freedesktop.org specifications use key files now, e.g. the Desktop
-  Entry Specification and the Icon Theme Specification.
+  Several freedesktop.org specifications use key files now, for example, the
+  Desktop Entry Specification and the Icon Theme Specification.
 
   The syntax of key files is described in detail in the Desktop Entry
   Specification, here is a quick summary: Key files consists of groups of
