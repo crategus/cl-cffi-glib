@@ -171,15 +171,16 @@
   @see-class{g:list-store}")
 
 ;;; ----------------------------------------------------------------------------
-;;; g_list_store_new ()
+;;; g_list_store_new
 ;;; ----------------------------------------------------------------------------
 
 ;; Use the C implementation and not MAKE-INSTANCE because we have to pass
 ;; a pointer of a GType for the ITEM-TYPE property.
 
-(cffi:defcfun ("g_list_store_new" list-store-new) (gobject:object list-store)
+(cffi:defcfun ("g_list_store_new" list-store-new)
+    (gobject:object list-store :already-referenced)
  #+liber-documentation
- "@version{2024-3-31}
+ "@version{2024-11-29}
   @argument[gtype]{a @class{g:type-t} type ID for the items in the list}
   @return{The new @class{g:list-store} object.}
   @begin{short}
@@ -194,7 +195,7 @@
 (export 'list-store-new)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_list_store_insert ()
+;;; g_list_store_insert
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_list_store_insert" list-store-insert) :void
@@ -259,7 +260,7 @@
 (export 'compare-data-func)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_list_store_insert_sorted ()
+;;; g_list_store_insert_sorted
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_list_store_insert_sorted" %list-store-insert-sorted) :uint
@@ -295,7 +296,7 @@
 (export 'list-store-insert-sorted)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_list_store_append ()
+;;; g_list_store_append
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_list_store_append" list-store-append) :void
@@ -319,7 +320,7 @@
 (export 'list-store-append)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_list_store_remove ()
+;;; g_list_store_remove
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_list_store_remove" list-store-remove) :void
@@ -342,7 +343,7 @@
 (export 'list-store-remove)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_list_store_remove_all ()
+;;; g_list_store_remove_all
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_list_store_remove_all" list-store-remove-all) :void
@@ -356,7 +357,7 @@
 (export 'list-store-remove-all)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_list_store_splice ()
+;;; g_list_store_splice
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_list_store_splice" %list-store-splice) :void
@@ -404,7 +405,7 @@
 (export 'list-store-splice)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_list_store_sort ()
+;;; g_list_store_sort
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_list_store_sort" %list-store-sort) :void
@@ -430,7 +431,7 @@
 (export 'list-store-sort)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_list_store_find ()
+;;; g_list_store_find
 ;;; ----------------------------------------------------------------------------
 
 #+glib-2-64
@@ -510,7 +511,7 @@
 (export 'equal-func-full)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_list_store_find_with_equal_func ()
+;;; g_list_store_find_with_equal_func
 ;;; ----------------------------------------------------------------------------
 
 #+glib-2-74
