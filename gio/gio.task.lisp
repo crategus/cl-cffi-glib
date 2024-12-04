@@ -1398,7 +1398,7 @@ The value is a NUL terminated UTF-8 string.
   (err :pointer))
 
 (defun task-propagate-pointer (task)
-  (glib:with-g-error (err)
+  (glib:with-error (err)
     (%task-propagate-pointer task err)))
 
 (export 'task-propagate-pointer)
@@ -1483,11 +1483,7 @@ The value is a NUL terminated UTF-8 string.
   (func :pointer))
 
 (defun task-run-in-thread (task func)
-  (format t "in TASK-RUN-IN-THREAD:~%")
-  (format t "    task : ~a~%" task)
-  (format t "    func : ~a~%" func)
   (let ((ptr (glib:allocate-stable-pointer func)))
-    (format t "    ptr : ~a~%" ptr)
     ;; Store the pointer to the callback function in task data
     (setf (task-task-data task) ptr)
     (%task-run-in-thread task
@@ -1566,13 +1562,6 @@ The value is a NUL terminated UTF-8 string.
      (source :pointer)
      (data :pointer)
      (cancellable :pointer))
-  (format t "in TASK-THREAD-FUNC:~%")
-  (format t "    task : ~a~%" task)
-  (format t "    source : ~a~%" source)
-  (format t "    data : ~a~%" data)
-  (format t "    data value : ~a~%" (glib:get-stable-pointer-value data))
-  (format t "    task data : ~a~%" (task-task-data task))
-  (format t "    cancellable : ~a~%" cancellable)
   (let ((func (glib:get-stable-pointer-value (task-task-data task))))
 ;    (unwind-protect
       (funcall func task source data cancellable))

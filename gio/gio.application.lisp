@@ -1045,7 +1045,7 @@ lambda (application)    :run-first
 
 (defun application-register (application)
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{#2024-11-21}
   @argument[application]{a @class{g:application} instance}
   @return{@em{True} if registration succeeded.}
   @begin{short}
@@ -1072,7 +1072,7 @@ lambda (application)    :run-first
   @end{dictionary}
   @see-class{g:application}
   @see-function{g:application-is-remote}"
-  (glib:with-g-error (err)
+  (glib:with-error (err)
     (%application-register application (cffi:null-pointer) err)))
 
 (export 'application-register)

@@ -311,7 +311,6 @@
     @about-symbol{resource-flags}
     @about-symbol{resource-lookup-flags}
     @about-class{resource}
-    @about-macro{with-g-resources}
     @about-macro{with-resource}
     @about-macro{with-resources}
     @about-function{resource-load}

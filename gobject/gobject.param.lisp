@@ -2173,7 +2173,7 @@
   contents.
   @begin[Examples]{dictionary}
     @begin{pre}
-(gobject:with-g-value (gvalue \"GEmblemOrigin\")
+(gobject:with-value (gvalue \"GEmblemOrigin\")
   (setf (g:value-enum gvalue) :device)
   (g:value-enum gvalue))
 => :DEVICE
@@ -2341,7 +2341,7 @@
   contents.
   @begin[Examples]{dictionary}
     @begin{pre}
-(gobject:with-g-value (gvalue \"GApplicationFlags\")
+(gobject:with-value (gvalue \"GApplicationFlags\")
   (setf (g:value-flags gvalue) '(:handles-open :is-service))
   (g:value-flags gvalue))
 => (:IS-SERVICE :HANDLES-OPEN)

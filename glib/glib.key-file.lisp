@@ -186,25 +186,27 @@
 (setf (liber:alias-for-symbol 'key-file-flags)
       "Bitfield"
       (liber:symbol-documentation 'key-file-flags)
- "@version{2023-1-25}
-  @begin{short}
-    Flags which influence the parsing of key values.
-  @end{short}
-  @begin{pre}
+ "@version{2024-11-25}
+  @begin{declaration}
 (cffi:defbitfield key-file-flags
   (:none 0)
   (:keep-comments #.(ash 1 0))
   (:keep-translations #.(ash 1 1)))
-  @end{pre}
-  @begin[code]{table}
-    @entry[:none]{No flags, default behaviour.}
-    @entry[:keep-coments]{Use this flag if you plan to write the possibly
-      modified contents of the key file back to a file. Otherwise all comments
-      will be lost when the key file is written back.}
-    @entry[:keep-translations]{Use this flag if you plan to write the possibly
-      modified contents of the key file back to a file. Otherwise only the
-      translations for the current language will be written back.}
-  @end{table}
+  @end{declaration}
+  @begin{values}
+    @begin[code]{table}
+      @entry[:none]{No flags, default behaviour.}
+      @entry[:keep-coments]{Use this flag if you plan to write the possibly
+        modified contents of the key file back to a file. Otherwise all comments
+        will be lost when the key file is written back.}
+      @entry[:keep-translations]{Use this flag if you plan to write the possibly
+        modified contents of the key file back to a file. Otherwise only the
+        translations for the current language will be written back.}
+    @end{table}
+  @end{values}
+  @begin{short}
+    Flags which influence the parsing of key values.
+  @end{short}
   @see-type{g:key-file}")
 
 (export 'key-file-flags)
@@ -219,9 +221,9 @@
 (setf (liber:alias-for-type 'key-file)
       "CStruct"
       (documentation 'key-file 'type)
- "@version{2023-1-25}
+ "@version{2024-11-25}
   @begin{short}
-    The @sym{g:key-file} structure lets you parse, edit or create files
+    The @type{g:key-file} structure lets you parse, edit or create files
     containing groups of key-value pairs, which we call key files for lack of a
     better name.
   @end{short}
@@ -294,7 +296,7 @@ Booleans=true;false;true;true
   @begin[Examples]{dictionary}
     Here is an example of loading a key file and reading a value:
     @begin{pre}
-(with-g-key-file (keyfile)
+(g:with-key-file (keyfile)
   ;; Load the key file
   (unless (g:key-file-load-from-file keyfile \"rtest-glib-key-file.ini\" :none)
     (error \"Error loading the key file: RTEST-GLIB-KEY-FILE.INI\"))
@@ -306,7 +308,7 @@ Booleans=true;false;true;true
     @end{pre}
     Here is an example of creating and saving a key file:
     @begin{pre}
-(with-g-key-file (keyfile)
+(g:with-key-file (keyfile)
   ;; Load existing key file
   (g:key-file-load-from-file keyfile \"rtest-glib-key-file.ini\" :none)
   ;; Add a string to the First Group
@@ -321,21 +323,21 @@ Booleans=true;false;true;true
     ... ))
     @end{pre}
   @end{dictionary}
-  @see-macro{with-g-key-file}")
+  @see-macro{g:with-key-file}")
 
 (export 'key-file)
 
 ;;; ----------------------------------------------------------------------------
-;;; with-g-key-file
+;;; g:with-key-file
 ;;; ----------------------------------------------------------------------------
 
-(defmacro with-g-key-file ((keyfile) &body body)
+(defmacro with-key-file ((keyfile) &body body)
  #+liber-documentation
- "@version{2023-2-1}
-  @syntax{(with-g-key-file (keyfile) body) => result}
+ "@version{2024-11-25}
+  @syntax{(g:with-key-file (keyfile) body) => result}
   @argument[keyfile]{a newly allocated @type{g:key-file} instance}
   @begin{short}
-    The @sym{with-g-file-key} macro allocates a new @type{g:key-file} instance
+    The @fun{g:with-file-key} macro allocates a new @type{g:key-file} instance
     and executes the body that uses the key file.
   @end{short}
   After execution of the body the allocated memory for the key file is released.
@@ -345,29 +347,31 @@ Booleans=true;false;true;true
        (progn ,@body)
        (key-file-free ,keyfile))))
 
-(export 'with-g-key-file)
+(export 'with-key-file)
 
-
-(defmacro with-g-key-file-from-file ((keyfile path &optional (flags :none))
-                                     &body body)
+(defmacro with-key-file-from-file ((keyfile path &optional (flags :none))
+                                   &body body)
  #+liber-documentation
- "@version{2023-6-22}
-  @syntax{(with-g-key-file-from-file (keyfile path flags) body) => result}
+ "@version{2024-11-25}
+  @syntax{(g:with-key-file-from-file (keyfile path flags) body) => result}
   @argument[keyfile]{a newly allocated @type{g:key-file} instance}
   @argument[path]{a pathname or namestring with the path of a file to load}
   @argument[flags]{an optional @symbol{g:key-file-flags} value, the default
     value is @code{:none}}
   @begin{short}
-    The @sym{with-g-file-key} macro allocates a new @type{g:key-file} instance
+    The @fun{g:with-file-key} macro allocates a new @type{g:key-file} instance
     and executes the body that uses the key file.
   @end{short}
   After execution of the body the allocated memory for the key file is released.
-  @see-type{g:key-file}"
+  @see-type{g:key-file}
+  @see-sybmol{g:key-file-flags}"
   `(let ((,keyfile (key-file-new)))
      (key-file-load-from-file ,keyfile (namestring ,path) ,flags)
      (unwind-protect
        (progn ,@body)
        (key-file-free ,keyfile))))
+
+(export 'with-key-file-from-file)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_key_file_new
@@ -375,8 +379,8 @@ Booleans=true;false;true;true
 
 (cffi:defcfun ("g_key_file_new" key-file-new) (:pointer (:struct key-file))
  #+liber-documentation
- "@version{2023-1-25}
-  @return{An empty @type{g:key-file} instance.}
+ "@version{2024-11-25}
+  @return{The empty @type{g:key-file} instance.}
   @begin{short}
     Creates a new empty @type{g:key-file} instance.
   @end{short}
@@ -413,8 +417,8 @@ Booleans=true;false;true;true
 
 (cffi:defcfun ("g_key_file_ref" key-file-ref) (:pointer (:struct key-file))
  #+liber-documentation
- "@version{2023-1-25}
-  @argument[keyfile]{a @type{g:file-key} instance}
+ "@version{2024-11-25}
+  @argument[keyfile]{a @type{g:key-file} instance}
   @return{The same @type{g:key-file} instance.}
   @begin{short}
     Increases the reference count of @arg{keyfile}.
@@ -480,7 +484,7 @@ Booleans=true;false;true;true
 
 (defun key-file-load-from-file (keyfile path flags)
  #+liber-documentation
- "@version{2023-1-25}
+ "@version{2024-11-21}
   @argument[keyfile]{a @type{g:key-file} instance}
   @argument[path]{a pathname or namestring with the path of a file to load}
   @argument[flags]{a @symbol{g:key-file-flags} value}
@@ -491,7 +495,7 @@ Booleans=true;false;true;true
   If the file could not be loaded then @em{false} is returned.
   @see-type{g:key-file}
   @see-symbol{g:key-file-flags}"
-  (with-ignore-g-error (err)
+  (with-ignore-error (err)
     (%key-file-load-from-file keyfile (namestring path) flags err)))
 
 (export 'key-file-load-from-file)
@@ -509,7 +513,7 @@ Booleans=true;false;true;true
 
 (defun key-file-load-from-data (keyfile data flags)
  #+liber-documentation
- "@version{2023-1-25}
+ "@version{2024-11-21}
   @argument[keyfile]{a @type{g:key-file} instance}
   @argument[data]{a string with the key file loaded in memory}
   @argument[flags]{a @symbol{g:key-file-flags} value}
@@ -520,7 +524,7 @@ Booleans=true;false;true;true
   If the data cannot be loaded then @em{false} is returned.
   @see-type{g:key-file}
   @see-symbol{g:key-file-flags}"
-  (with-ignore-g-error (err)
+  (with-ignore-error (err)
     (%key-file-load-from-data keyfile data (length data) flags err)))
 
 (export 'key-file-load-from-data)
@@ -537,7 +541,7 @@ Booleans=true;false;true;true
 
 (defun key-file-load-from-bytes (keyfile bytes flags)
  #+liber-documentation
- "@version{2023-6-24}
+ "@version{2024-11-21}
   @argument[keyfile]{a @type{g:key-file} instance}
   @argument[bytes]{a @class{g:bytes} instance}
   @argument[flags]{a @symbol{g:key-file-flags} value}
@@ -549,7 +553,7 @@ Booleans=true;false;true;true
   @see-type{g:key-file}
   @see-class{g:bytes}
   @see-symbol{g:key-file-flags}"
-  (with-g-error (err)
+  (with-error (err)
     (%key-file-load-from-bytes keyfile bytes flags err)))
 
 (export 'key-file-load-from-bytes)
@@ -637,7 +641,7 @@ Booleans=true;false;true;true
 
 (defun key-file-to-data (keyfile)
  #+liber-documentation
- "@version{2023-1-25}
+ "@version{2024-11-21}
   @syntax{(g:key-file-to-data keyfile) => data, len}
   @argument[keyfile]{a @type{g:key-file} instance}
   @argument[data]{a string holding the contents of the key file}
@@ -647,7 +651,7 @@ Booleans=true;false;true;true
   @end{short}
   @see-type{g:key-file}
   @see-function{g:key-file-save-to-file}"
-  (with-g-error (err)
+  (with-error (err)
     (cffi:with-foreign-object (len :size)
       (values (%key-file-to-data keyfile len err)
               (cffi:mem-ref len :size)))))
@@ -665,7 +669,7 @@ Booleans=true;false;true;true
 
 (defun key-file-save-to-file (keyfile path)
  #+liber-documentation
- "@version{2023-1-25}
+ "@version{2024-11-21}
   @argument[keyfile]{a @type{g:key-file} instance}
   @argument[path]{a pathname or namestring with the file to write to}
   @return{@em{True} if successful, else @em{false}.}
@@ -674,7 +678,7 @@ Booleans=true;false;true;true
   @end{short}
   @see-type{g:key-file}
   @see-function{g:key-file-load-from-file}"
-  (with-g-error (err)
+  (with-error (err)
     (%key-file-save-to-file keyfile (namestring path) err)))
 
 (export 'key-file-save-to-file)
@@ -685,9 +689,9 @@ Booleans=true;false;true;true
 
 (cffi:defcfun ("g_key_file_get_start_group" key-file-start-group) :string
  #+liber-documentation
- "@version{2023-1-25}
+ "@version{2024-11-25}
   @argument[keyfile]{a @type{g:key-file} instance}
-  @return{A string with the start group of the key file.}
+  @return{the string with the start group of the key file.}
   @begin{short}
     Returns the name of the start group of the key file.
   @end{short}
@@ -709,7 +713,7 @@ Booleans=true;false;true;true
  #+liber-documentation
  "@version{2023-1-25}
   @argument[keyfile]{a @type{g:key-file} instance}
-  @return{A list of strings.}
+  @return{The list of strings.}
   @begin{short}
     Returns all groups in the key file loaded with @arg{keyfile}.
   @end{short}
@@ -731,16 +735,16 @@ Booleans=true;false;true;true
 
 (defun key-file-keys (keyfile group)
  #+liber-documentation
- "@version{2023-1-25}
+ "@version{2024-11-21}
   @argument[keyfile]{a @type{g:key-file} instance}
   @argument[group]{a string with the group name}
-  @return{A list of strings.}
+  @return{The list of strings.}
   @begin{short}
     Returns all keys for the group name.
   @end{short}
   In the event that the group name cannot be found, @code{nil} is returned.
   @see-type{g:key-file}"
-  (with-g-error (err)
+  (with-error (err)
     (%key-file-keys keyfile group (cffi:null-pointer) err)))
 
 (export 'key-file-keys)
@@ -777,7 +781,7 @@ Booleans=true;false;true;true
 
 (defun key-file-has-key (keyfile group key)
  #+liber-documentation
- "@version{2023-1-25}
+ "@version{2024-11-21}
   @argument[keyfile]{a @type{g:key-file} instance}
   @argument[group]{a string with the group name}
   @argument[key]{a string with the key name}
@@ -788,7 +792,7 @@ Booleans=true;false;true;true
     @arg{group}.
   @end{short}
   @see-type{g:key-file}"
-  (with-g-error (err)
+  (with-error (err)
     (%key-file-has-key keyfile group key err)))
 
 (export 'key-file-has-key)
@@ -815,7 +819,7 @@ Booleans=true;false;true;true
 
 (defun key-file-value (keyfile group key)
  #+liber-documentation
- "@version{2023-1-26}
+ "@version{2024-11-25}
   @syntax{(g:key-file-value keyfile group key) => value}
   @syntax{(setf (g:key-file-value keyfile group key) value)}
   @argument[keyfile]{a @type{g:key-file} instance}
@@ -823,20 +827,20 @@ Booleans=true;false;true;true
   @argument[key]{a string with a key}
   @argument[value]{a string with the value}
   @begin{short}
-    The @sym{g:file-key-value} function returns the raw value associated with
+    The @fun{g:key-file-value} function returns the raw value associated with
     @arg{key} under @arg{group}.
   @end{short}
   Use the @fun{g:key-file-string} functon to retrieve an unescaped UTF-8 string.
   In the event the key or group name cannot be found, @code{nil} is returned.
 
-  The @sym{(setf g:key-file-value)} function associates a new value with
-  @arg{key} under @arg{group}. If @arg{key} cannot be found then it is created.
-  If @arg{group} cannot be found then it is created. To set an UTF-8 string
-  which may contain characters that need escaping (such as newlines or spaces),
-  use the @fun{g:key-file-string} function.
+  The @setf{g:key-file-value} function associates a new value with @arg{key}
+  under @arg{group}. If @arg{key} cannot be found then it is created. If
+  @arg{group} cannot be found then it is created. To set an UTF-8 string which
+  may contain characters that need escaping (such as newlines or spaces), use
+  the @fun{g:key-file-string} function.
   @see-type{g:key-file}
   @see-function{g:key-file-string}"
-  (with-ignore-g-error (err)
+  (with-ignore-error (err)
     (%key-file-value keyfile group key err)))
 
 (export 'key-file-value)
@@ -863,7 +867,7 @@ Booleans=true;false;true;true
 
 (defun key-file-string (keyfile group key)
  #+liber-documentation
- "@version{2023-1-25}
+ "@version{2024-11-25}
   @syntax{(g:key-file-string keyfile group key) => value}
   @syntax{(setf (g:key-file-string keyfile group key) value)}
   @argument[keyfile]{a @type{g:key-file} instance}
@@ -871,17 +875,17 @@ Booleans=true;false;true;true
   @argument[key]{a string with the key name}
   @argument[value]{a string or @code{nil}}
   @begin{short}
-    The @sym{g:key-file-string} function returns the string value associated
+    The @fun{g:key-file-string} function returns the string value associated
     with @arg{key} under @arg{group}.
   @end{short}
   In the event the key or the group name cannot be found, @code{nil} is
-  returned. The @sym{(setf g:key-file-string)} function associates a new string
-  value with @arg{key} under @arg{group}. If @arg{key} or @arg{group} cannot be
-  found then they are created. Unlike the @fun{g:key-file-value} function, this
+  returned. The @setf{g:key-file-string} function associates a new string value
+  with @arg{key} under @arg{group}. If @arg{key} or @arg{group} cannot be found
+  then they are created. Unlike the @fun{g:key-file-value} function, this
   function handles characters that need escaping, such as newlines.
   @see-type{g:key-file}
   @see-function{g:key-file-value}"
-  (with-ignore-g-error (err)
+  (with-ignore-error (err)
     (%key-file-string keyfile group key err)))
 
 (export 'key-file-string)
@@ -1137,7 +1141,7 @@ Booleans=true;false;true;true
 
 (defun key-file-string-list (keyfile group key)
  #+liber-documentation
- "@version{2023-1-25}
+ "@version{2024-11-25}
   @syntax{(g:key-file-string-list keyfile group key) => value}
   @syntax{(setf (g:key-file-string-list keyfile group key) value)}
   @argument[keyfile]{a @type{g:key-file} instance}
@@ -1145,15 +1149,15 @@ Booleans=true;false;true;true
   @argument[key]{a string with the key name}
   @argument[value]{a list of strings}
   @begin{short}
-    The @sym{g:key-file-string-list} function returns the values associated
+    The @fun{g:key-file-string-list} function returns the values associated
     with @arg{key} under @arg{group}.
   @end{short}
   In the event the key or the group name cannot be found, @code{nil} is
-  returned. The @sym{(setf g:key-file-string-list)} function associates a list
-  of string values for @arg{key} under @arg{group}. If @arg{key} or @arg{group}
+  returned. The @setf{g:key-file-string-list} function associates a list of
+  string values for @arg{key} under @arg{group}. If @arg{key} or @arg{group}
   cannot be found then they are created.
   @see-type{g:key-file}"
-  (with-ignore-g-error (err)
+  (with-ignore-error (err)
     (cffi:with-foreign-object (len :size)
       (%key-file-get-string-list keyfile group key len err))))
 
@@ -1326,7 +1330,7 @@ Booleans=true;false;true;true
   (err :pointer))
 
 (defun (setf key-file-comment) (value keyfile group key)
-  (with-ignore-g-error (err)
+  (with-ignore-error (err)
     (%key-file-set-comment keyfile
                            (ensure-pointer group)
                            (ensure-pointer key)
@@ -1342,7 +1346,7 @@ Booleans=true;false;true;true
 
 (defun key-file-comment (keyfile group key)
  #+liber-documentation
- "@version{2023-1-26}
+ "@version{2024-11-25}
   @syntax{(g:key-file-comment keyfile group key) => value}
   @syntax{(setf (g:key-file-comment keyfile group key) value)}
   @argument[keyfile]{a @type{g:key-file} instance}
@@ -1350,19 +1354,19 @@ Booleans=true;false;true;true
   @argument[key]{a string with the key name}
   @argument[value]{a string with the comment}
   @begin{short}
-    The @sym{g:key-file-comment} retrieves a comment above @arg{key} from
+    The @fun{g:key-file-comment} retrieves a comment above @arg{key} from
     @arg{group}.
   @end{short}
   If @arg{key} is @code{nil} then the comment will be read from above
   @arg{group}. If both @arg{key} and @arg{group} are @code{nil}, then the
   comment will be read from above the first group in the file.
 
-  The @sym{(setf g:key-file-comment)} function places a comment above @arg{key}
-  from @arg{group}. If @arg{key} is @code{nil} then the comment will be written
+  The @setf{g:key-file-comment} function places a comment above @arg{key} from
+  @arg{group}. If @arg{key} is @code{nil} then the comment will be written
   above @arg{group}. If both @arg{key} and @arg{group} are @code{nil}, then the
   comment will be written above the first group in the file.
   @see-type{g:key-file}"
-  (with-ignore-g-error (err)
+  (with-ignore-error (err)
     (%key-file-get-comment keyfile
                            (ensure-pointer group)
                            (ensure-pointer key)
@@ -1645,7 +1649,7 @@ Booleans=true;false;true;true
 
 (defun key-file-remove-group (keyfile group)
  #+liber-documentation
- "@version{#2023-1-26}
+ "@version{#2024-11-21}
   @argument[keyfile]{a @type{g:key-file} instance}
   @argument[group]{a string with the group name to remove}
   @return{@em{True} if the group was removed, @em{false} otherwise.}
@@ -1653,7 +1657,7 @@ Booleans=true;false;true;true
     Removes the specified group from the key file.
   @end{short}
   @see-type{g:key-file}"
-  (with-ignore-g-error (err)
+  (with-ignore-error (err)
     (%key-file-remove-group keyfile group err)))
 
 (export 'key-file-remove-group)
@@ -1670,7 +1674,7 @@ Booleans=true;false;true;true
 
 (defun key-file-remove-key (keyfile group key)
  #+liber-documentation
- "@version{#2023-1-26}
+ "@version{#2024-11-21}
   @argument[keyfile]{a @type{g:key-file} instance}
   @argument[group]{a string with the group name}
   @argument[key]{a string with the key name to remove}
@@ -1679,7 +1683,7 @@ Booleans=true;false;true;true
     Removes the specified key from the key file.
   @end{short}
   @see-type{g:key-file}"
-  (with-ignore-g-error (err)
+  (with-ignore-error (err)
     (%key-file-remove-key keyfile group key err)))
 
 (export 'key-file-remove-key)
@@ -1696,7 +1700,7 @@ Booleans=true;false;true;true
 
 (defun key-file-remove-comment (keyfile group key)
  #+liber-documentation
- "@version{#2023-1-26}
+ "@version{#2024-11-21}
   @argument[keyfile]{a @type{g:key-file} instance}
   @argument[group]{a string with the group name}
   @argument[key]{a string with the key name to remove}
@@ -1708,7 +1712,7 @@ Booleans=true;false;true;true
   If both @arg{key} and @arg{group} are @code{nil}, then the comment will be
   removed above the first group in the file.
   @see-type{g:key-file}"
-  (with-ignore-g-error (err)
+  (with-ignore-error (err)
     (%key-file-remove-comment keyfile
                               (ensure-pointer group)
                               (ensure-pointer key)

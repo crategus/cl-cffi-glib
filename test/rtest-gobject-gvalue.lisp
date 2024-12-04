@@ -3,32 +3,32 @@
 (def-suite gobject-gvalue :in gobject-suite)
 (in-suite gobject-gvalue)
 
-;;;     with-g-value
+;;;     glib:with-value
 
-(test with-g-value-macro.1
-  (gobject:with-g-value (gvalue)
+(test with-value-macro.1
+  (gobject:with-value (gvalue)
     (is (cffi:pointerp gvalue))
     (is (cffi:pointerp (g:value-init gvalue "gint")))
     (is (eq (g:gtype "gint") (g:value-type gvalue)))))
 
-(test with-g-value-macro.2
-  (gobject:with-g-value (gvalue "gint")
+(test with-value-macro.2
+  (gobject:with-value (gvalue "gint")
     (is (cffi:pointerp gvalue))
     (is (eq (g:gtype "gint") (g:value-type gvalue)))
     (is (= 0 (g:value-get gvalue)))))
 
-(test with-g-value-macro.3
-  (gobject:with-g-value (gvalue "gint" 199)
+(test with-value-macro.3
+  (gobject:with-value (gvalue "gint" 199)
     (is (cffi:pointerp gvalue))
     (is (eq (g:gtype "gint") (g:value-type gvalue)))
     (is (= 199 (g:value-get gvalue)))))
 
-;;;     with-g-values
+;;;     with-values
 
-(test with-g-values-macro
-  (gobject:with-g-values (gvalue1
-                          (gvalue2 "gint")
-                          (gvalue3 "gint" 199))
+(test with-values-macro
+  (gobject:with-values (gvalue1
+                        (gvalue2 "gint")
+                        (gvalue3 "gint" 199))
     (is (cffi:pointerp gvalue1))
     (is (cffi:pointerp gvalue2))
     (is (eq (g:gtype "gint") (g:value-type gvalue2)))
@@ -57,7 +57,7 @@
     (is-true  (g:value-holds value "gint"))))
 
 (test g-value-holds
-  (gobject:with-g-value (value "gint")
+  (gobject:with-value (value "gint")
     (is-false (g:value-holds value "gboolean"))
     (is-true  (g:value-holds value "gint"))))
 
@@ -70,7 +70,7 @@
     (is (eq (g:gtype "gint") (g:value-type value)))))
 
 (test g-value-type
-  (gobject:with-g-value (value "gint")
+  (gobject:with-value (value "gint")
     (is (eq (g:gtype "gint") (g:value-type value)))))
 
 ;;;     G_VALUE_TYPE_NAME
@@ -82,7 +82,7 @@
     (is (string= "gint" (g:value-type-name value)))))
 
 (test g-value-type-name
-  (gobject:with-g-value (value "gint")
+  (gobject:with-value (value "gint")
     (is (string= "gint" (g:value-type-name value)))))
 
 ;;;     G_TYPE_IS_VALUE
@@ -169,7 +169,7 @@
     (is (= 100 (g:value-get value2)))))
 
 (test g-value-copy
-  (gobject:with-g-values ((value1 "gint") (value2 "gint"))
+  (gobject:with-values ((value1 "gint") (value2 "gint"))
     (is (=   0 (g:value-get value1)))
     (is (= 100 (g:value-set value1 100 "gint")))
     (is (=  0  (g:value-get value2)))
@@ -189,7 +189,7 @@
     (is (= 0 (g:value-get value))))))
 
 (test g-value-reset
-  (gobject:with-g-value (value "gint")
+  (gobject:with-value (value "gint")
     (is (=  0 (g:value-get value)))
     (is (= 10 (g:value-set value 10 "gint"))
     (is (= 10 (g:value-get value)))
@@ -221,7 +221,7 @@
     (is (= 99.0d0 (g:value-get value)))))
 
 (test g-value-get/set.1
-  (gobject:with-g-value (value "gint")
+  (gobject:with-value (value "gint")
     (is (= 99 (g:value-set value 99 "gint")))
     (is (= 99 (g:value-get value)))
     (is (= 99 (g:value-set value 99 "guint")))
@@ -246,7 +246,7 @@
     (is (= 123 (g:value-get (g:value-get value2))))))
 
 (test g-value-get/set.2
-  (gobject:with-g-values ((value1 "gint") (value2 "GValue"))
+  (gobject:with-values ((value1 "gint") (value2 "GValue"))
     ;; Init a GValue of "gint" type
     (is (= 123 (g:value-set value1 123 "gint")))
     (is (= 123 (g:value-get value1)))
@@ -334,7 +334,7 @@
 
 (defun example-g-value ()
   ;; Declare two variables of type g:value.
-  (gobject:with-g-values (value1 value2)
+  (gobject:with-values (value1 value2)
     ;; Initialization, setting and reading a value of type g:value
     (g:value-init value1 "gchararray")
     (setf (g:value-string value1) "string")
@@ -383,4 +383,4 @@
     (g:value-transform value1 value2)
     (format t "value2 = ~A~%~%" (g:value-get value2))))
 
-;;; --- 2023-11-7 --------------------------------------------------------------
+;;; 2024-11-26

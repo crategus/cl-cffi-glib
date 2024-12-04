@@ -202,7 +202,7 @@
 
 (defun permission-acquire (permission &optional (cancellable nil))
  #+liber-documentation
- "@version{#2023-5-5}
+ "@version{#2024-11-21}
   @argument[permission]{a @class{g:permission} instance}
   @argument[cancellable]{a @code{GCanellable} instance, or @code{nil}}
   @return{@em{True} if the permission was successfully acquired.}
@@ -222,7 +222,7 @@
   @see-class{g:permission}
   @see-function{g:permission-can-acquire}"
   (let ((cancellable (or cancellable (cffi:null-pointer))))
-    (glib:with-g-error (err)
+    (glib:with-error (err)
       (%permission-acquire permission cancellable err))))
 
 (export 'permission-acquire)
@@ -296,7 +296,7 @@
 
 (defun permission-release (permission &optional (cancellable nil))
  #+liber-documentation
- "@version{#2023-5-5}
+ "@version{#2024-11-21}
   @argument[permission]{a @class{g:permission} instance}
   @argument[cancellable]{a @code{GCanellable} instance, or @code{nil}}
   @return{@em{True} if the permission was successfully released.}
@@ -316,7 +316,7 @@
   @see-class{g:permission}
   @see-function{g:permission-can-release}"
   (let ((cancellable (or cancellable (cffi:null-pointer))))
-    (glib:with-g-error (err)
+    (glib:with-error (err)
       (%permission-release permission cancellable err))))
 
 (export 'permission-release)

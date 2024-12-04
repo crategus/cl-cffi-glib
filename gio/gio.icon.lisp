@@ -198,7 +198,7 @@
 
 (defun icon-new-for-string (str)
  #+liber-documentation
- "@version{2024-10-23}
+ "@version{2024-11-21}
   @argument[str]{a string obtained using the @fun{g:icon-to-string} function}
   @begin{return}
     The object implementing the @class{g:icon} interface or @code{nil} if an
@@ -215,7 +215,7 @@
   system prior to calling this function.
   @see-class{g:icon}
   @see-function{g:icon-to-string}"
-  (glib:with-g-error (err)
+  (glib:with-error (err)
     (%icon-new-for-string str err)))
 
 (export 'icon-new-for-string)

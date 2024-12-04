@@ -47,9 +47,9 @@
 
            ;; Symbols from glib.error.lisp
            #:error
-           #:with-g-error
-           #:with-ignore-g-error
-           #:with-catching-to-g-error
+           #:with-error
+           #:with-ignore-error
+           #:with-catching-to-error
 
            ;; Symbols from glib.main-loop.lisp
            #:+priority-high+
@@ -164,6 +164,8 @@
            #:option-group-set-translation-domain
 
            ;; Symbols from glib.key-file.lisp
+           #:with-key-file
+           #:with-key-file-from-file
            #:key-file
            #:key-file-flags
            #:key-file-new
@@ -692,7 +694,6 @@
            #:resource
            #:resource-flags
            #:resource-lookup-flags
-           #:with-g-resources
            #:with-resource
            #:with-resources
            #:resource-load

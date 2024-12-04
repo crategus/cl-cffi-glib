@@ -350,41 +350,6 @@
 
 ;;; ----------------------------------------------------------------------------
 
-;; TODO: Remove the WITH-G-RESOURCES implementation, it is replaced with
-;; WITH-RESOURCE and WITH-RESOURCES
-
-(defmacro with-g-resources ((resource path) &body body)
- #+liber-documentation
- "@version{2023-4-22}
-  @syntax{(with-g-resources (resource path) body) => result}
-  @argument[resource]{a @class{g:resource} instance to create and register}
-  @argument[path]{a pathname or namestring with the path of a file to load}
-  @begin{short}
-    The @macro{g:with-g-resources} macro allocates a new @class{g:resource}
-    instance, loads the resource from a file, register the resource with the
-    process-global set of resources and executes the body that uses the
-    resources.
-  @end{short}
-  After execution of the body the resource is unregistered from the
-  process-global set of resources.
-  @begin[Warning]{dictionary}
-    This macro has been deprecated and will no longer be available in the near
-    future. Use the @macro{g:with-resource} macro.
-  @end{dictionary}
-  @see-class{g:resource}
-  @see-function{g:resource-load}
-  @see-function{g:resources-register}
-  @see-function{g:resources-unregister}"
-  `(let ((,resource (resource-load ,path)))
-     (resources-register ,resource)
-     (unwind-protect
-       (progn ,@body)
-       (resources-unregister ,resource))))
-
-(export 'with-g-resources)
-
-;;; ----------------------------------------------------------------------------
-
 (defmacro with-resource ((resource path) &body body)
  #+liber-documentation
  "@version{2024-5-12}
@@ -447,7 +412,7 @@
 
 (defun resource-load (path)
  #+liber-documentation
- "@version{2024-5-12}
+ "@version{2024-11-21}
   @argument[path]{a pathname or namestring with the path of a file to load, in
     the GLib filenname encoding}
   @return{The new @class{g:resource} instance.}
@@ -460,7 +425,7 @@
   signals an error if the resource file does not exist.
   @see-class{g:resource}
   @see-function{g:resources-register}"
-  (glib:with-g-error (err)
+  (glib:with-error (err)
     (%resource-load (namestring path) err)))
 
 (export 'resource-load)
@@ -540,7 +505,7 @@
 
 (defun resource-lookup-data (resource path lookup)
  #+liber-documentation
- "@version{2024-5-12}
+ "@version{2024-11-21}
   @argument[resource]{a @class{g:resource} instance}
   @argument[path]{a string with a pathname inside the resource}
   @argument[lookup]{a @symbol{g:resource-lookup-flags} value}
@@ -561,7 +526,7 @@
   The @arg{lookup} argument controls the behaviour of the lookup.
   @see-class{g:resource}
   @see-symbol{g:resource-lookup-flags}"
-  (glib:with-g-error (err)
+  (glib:with-error (err)
     (%resource-lookup-data resource path lookup err)))
 
 (export 'resource-lookup-data)
@@ -612,7 +577,7 @@
 
 (defun resource-enumerate-children (resource path lookup)
  #+liber-documentation
- "@version{2024-5-12}
+ "@version{2024-11-21}
   @argument[resource]{a @class{g:resource} instance}
   @argument[path]{a string with a pathname inside the resource}
   @argument[lookup]{a @symbol{g:resource-lookup-flags} value}
@@ -624,7 +589,7 @@
   the behaviour of the lookup.
   @see-class{g:resource}
   @see-symbol{g:resource-lookup-flags}"
-  (glib:with-g-error (err)
+  (glib:with-error (err)
     (%resource-enumerate-children resource path lookup err)))
 
 (export 'resource-enumerate-children)
@@ -643,7 +608,7 @@
 
 (defun resource-info (resource path lookup)
  #+liber-documentation
- "@version{2024-5-12}
+ "@version{2024-11-21}
   @argument[resource]{a @class{g:resource} instance}
   @argument[path]{a string with a pathname inside the resource}
   @argument[lookup]{a @symbol{g:resource-lookup-flags} value}
@@ -658,7 +623,7 @@
   The @arg{lookup} argument controls the behaviour of the lookup.
   @see-class{g:resource}
   @see-symbol{g:resource-lookup-flags}"
-  (glib:with-g-error (err)
+  (glib:with-error (err)
     (cffi:with-foreign-objects ((size :size) (flags :uint32))
       (when (%resource-info resource path lookup size flags err)
         (values (cffi:mem-ref size :size)
@@ -769,7 +734,7 @@
 
 (defun resources-lookup-data (path &optional (lookup :none))
  #+liber-documentation
- "@version{2024-5-12}
+ "@version{2024-11-21}
   @argument[path]{a string with a pathname inside the resource}
   @argument[lookup]{an optional @symbol{g:resource-lookup-flags} value,
     the default value is @code{:none}}
@@ -790,7 +755,7 @@
   The @arg{lookup} argument controls the behaviour of the lookup.
   @see-class{g:resource}
   @see-symbol{g:resource-lookup-flags}"
-  (glib:with-g-error (err)
+  (glib:with-error (err)
     (%resources-lookup-data path lookup err)))
 
 (export 'resources-lookup-data)
@@ -836,7 +801,7 @@
 
 (defun resources-enumerate-children (path lookup)
  #+liber-documentation
- "@version{2024-5-12}
+ "@version{2024-11-21}
   @argument[path]{a string with a pathname inside the resource}
   @argument[lookup]{a @symbol{g:resource-lookup-flags} value}
   @return{The list of strings.}
@@ -847,7 +812,7 @@
   The @arg{lookup} argument controls the behaviour of the lookup.
   @see-class{g:resource}
   @see-symbol{g:resource-lookup-flags}"
-  (glib:with-g-error (err)
+  (glib:with-error (err)
     (%resources-enumerate-children path lookup err)))
 
 (export 'resources-enumerate-children)
@@ -865,7 +830,7 @@
 
 (defun resources-info (path lookup)
  #+liber-documentation
- "@version{2024-5-12}
+ "@version{2024-11-21}
   @argument[path]{a string with a pathname inside the resource}
   @argument[lookup]{a @symbol{g:resource-lookup-flags} value}
   @begin{return}
@@ -879,7 +844,7 @@
   The @arg{lookup} argument controls the behaviour of the lookup.
   @see-class{g:resource}
   @see-symbol{g:resource-lookup-flags}"
-  (glib:with-g-error (err)
+  (glib:with-error (err)
     (cffi:with-foreign-objects ((size :size) (flags :uint32))
       (when (%resources-info path lookup size flags err)
         (values (cffi:mem-ref size :size)

@@ -37,10 +37,6 @@
 ;;;
 ;;; Macros
 ;;;
-;;;     with-g-error
-;;;     with-ignore-g-error
-;;;     with-catching-g-error
-;;;
 ;;;     with-error
 ;;;     with-ignore-error
 ;;;     with-catching-error
@@ -97,7 +93,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;; The Lisp implementation for GError replaces the C implementation. Only the
-;; WITH-G-ERROR, WITH-IGNORE-G-ERROR, and WITH-CATCHING-TO-G-ERROR macros are
+;; WITH-ERROR, WITH-IGNORE-ERROR, and WITH-CATCHING-TO-ERROR macros are
 ;; exported for use.
 
 (define-condition g-error-condition (cl:error)
@@ -125,27 +121,12 @@
                 :code %code
                 :message %message))))
 
-(defmacro with-g-error ((err) &body body)
-  `(cffi:with-foreign-object (,err :pointer)
-     (setf (cffi:mem-ref ,err :pointer) (cffi:null-pointer))
-     (unwind-protect
-       (progn ,@body)
-       (maybe-raise-g-error-condition (cffi:mem-ref ,err :pointer))
-       (%g-clear-error ,err))))
-
 (defmacro with-error ((err) &body body)
   `(cffi:with-foreign-object (,err :pointer)
      (setf (cffi:mem-ref ,err :pointer) (cffi:null-pointer))
      (unwind-protect
        (progn ,@body)
        (maybe-raise-g-error-condition (cffi:mem-ref ,err :pointer))
-       (%g-clear-error ,err))))
-
-(defmacro with-ignore-g-error ((err) &body body)
-  `(cffi:with-foreign-object (,err :pointer)
-     (setf (cffi:mem-ref ,err :pointer) (cffi:null-pointer))
-     (unwind-protect
-       (progn ,@body)
        (%g-clear-error ,err))))
 
 (defmacro with-ignore-error ((err) &body body)
@@ -162,7 +143,7 @@
 ;; (defcallback callback-func :boolean
 ;;     ((...
 ;;      (err :pointer))
-;;   (with-catching-to-g-error (err)
+;;   (with-catching-to-error (err)
 ;;     (restart-case
 ;;       ...
 ;;       (return-from-callback-func
@@ -172,15 +153,6 @@
 ;;                  :code 0
 ;;                  :message "Error in CALLBACK-FUNC"))))))
 ;;; ----------------------------------------------------------------------------
-
-(defmacro with-catching-to-g-error ((err) &body body)
-  `(handler-case
-     (progn ,@body)
-     (g-error-condition (e)
-       (%g-set-error-literal ,err
-                             (g-error-condition-domain e)
-                             (g-error-condition-code e)
-                             (g-error-condition-message e)))))
 
 (defmacro with-catching-to-error ((err) &body body)
   `(handler-case

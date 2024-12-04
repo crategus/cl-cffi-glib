@@ -13,11 +13,11 @@
   (is (eq 'glib:error
           (glib:symbol-for-gtype "GError"))))
 
-;;;     with-g-error
+;;;     with-error
 
-(test with-g-error
+(test with-error
   ;; Successfully loaded.
-  (is-true (glib:with-g-error (err)
+  (is-true (glib:with-error (err)
              (glib::%key-file-load-from-file
                  (g:key-file-new)
                  (namestring (glib-sys:sys-path "test/resource/rtest-glib-key-file.ini"))
@@ -25,34 +25,34 @@
                  err)))
   ;; Signals an error
   (signals (error)
-           (glib:with-g-error (err)
+           (glib:with-error (err)
              (glib::%key-file-load-from-file
                  (g:key-file-new)
                  (namestring (glib-sys:sys-path ""))
                  :none
                  err))))
 
-;;;     with-ignore-g-error
+;;;     with-ignore-error
 
-(test with-ignore-g-error
+(test with-ignore-error
   ;; Successfully loaded
-  (is-true (glib:with-ignore-g-error (err)
+  (is-true (glib:with-ignore-error (err)
              (glib::%key-file-load-from-file
                  (g:key-file-new)
                  (namestring (glib-sys:sys-path "test/resource/rtest-glib-key-file.ini"))
                  :none
                  err)))
   ;; Error is ignored, the return value is NIL
-  (is-false (glib:with-ignore-g-error (err)
+  (is-false (glib:with-ignore-error (err)
              (glib::%key-file-load-from-file
                  (g:key-file-new)
                  (namestring (glib-sys:sys-path ""))
                  :none
                  err))))
 
-;;;     with-catching-to-g-error
+;;;     with-catching-to-error
 
-;; TODO: The WITH-CATCHING-TO-G-ERROR is for usage in callback functions which
+;; TODO: The WITH-CATCHING-TO-ERROR is for usage in callback functions which
 ;; have an error argument. We have no example at this time.
 
-;;; 2024-6-22
+;;; 2024-11-21

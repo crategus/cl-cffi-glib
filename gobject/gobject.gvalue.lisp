@@ -70,17 +70,17 @@
 
 (in-package :gobject)
 
-(defmacro with-g-value ((var &rest args) &body body)
+(defmacro with-value ((var &rest args) &body body)
  #+liber-documentation
- "@version{2023-11-7}
-  @syntax{gobject:with-g-value (gvalue) body) => result}
-  @syntax{(gobject:with-g-value (gvalue gtype) body) => result}
-  @syntax{(gobject:with-g-value (gvalue gtype value) body) => result}
+ "@version{2024-11-26}
+  @syntax{gobject:with-value (gvalue) body) => result}
+  @syntax{(gobject:with-value (gvalue gtype) body) => result}
+  @syntax{(gobject:with-value (gvalue gtype value) body) => result}
   @argument[gvalue]{a @symbol{g:value} instance to create and initialize}
   @argument[gtype]{an optional @symbol{g:type-t} type ID}
   @argument[value]{an optional value corresponding to @arg{gtype} to set}
   @begin{short}
-    The @fun{gobject:with-g-value} macro allocates a new  @symbol{g:value}
+    The @fun{gobject:with-value} macro allocates a new  @symbol{g:value}
     instance, initializes it with the given values and executes the body that
     uses @arg{gvalue}.
   @end{short}
@@ -121,34 +121,34 @@
                 (progn ,@body)
                 (value-unset ,var)))))
         (t
-          (error "WITH-G-VALUE: Wrong number of arguments"))))
+          (error "GOBJECT:WITH-VALUE: Wrong number of arguments"))))
 
-(export 'with-g-value)
+(export 'with-value)
 
-(defmacro with-g-values (vars &body body)
+(defmacro with-values (vars &body body)
  #+liber-documentation
- "@version{2023-11-7}
-  @syntax{(gobject:with-g-values (gvalue1 gvalue2 ... gvaluen) body) => result}
+ "@version{2024-11-26}
+  @syntax{(gobject:with-values (gvalue1 gvalue2 ... gvaluen) body) => result}
   @argument[gvalue1 ... gvaluen]{the newly created @symbol{g:value} instances}
   @argument[body]{a body that uses the bindings @arg{gvalue1 ... gvaluen}}
   @begin{short}
-    The @fun{gobject:with-g-values} macro creates new variable bindings and
+    The @fun{gobject:with-values} macro creates new variable bindings and
     executes the body that use these bindings.
   @end{short}
   The macro performs the bindings sequentially, like the @sym{let*} macro.
 
   Each @arg{gvalue} can be initialized with a type and a value using the syntax
-  for the @fun{gobject:with-g-value} macro.
-  @see-macro{gobject:with-g-value}
+  for the @fun{gobject:with-value} macro.
+  @see-macro{gobject:with-value}
   @see-symbol{g:value}"
   (if vars
       (let ((var (if (listp (first vars)) (first vars) (list (first vars)))))
-        `(with-g-value ,var
-           (with-g-values ,(rest vars)
+        `(with-value ,var
+           (with-values ,(rest vars)
              ,@body)))
       `(progn ,@body)))
 
-(export 'with-g-values)
+(export 'with-values)
 
 ;;; ----------------------------------------------------------------------------
 
@@ -442,7 +442,7 @@
 
 (defun example-g-value ()
   ;; Declare two variables of type g:value.
-  (gobject:with-g-values (value1 value2)
+  (gobject:with-values (value1 value2)
 
     ;; Initialization, setting and reading a value of type g:value
     (g:value-init value1 \"gchararray\")

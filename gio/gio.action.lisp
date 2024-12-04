@@ -447,7 +447,7 @@
 
 (defun action-parse-detailed-name (detailed)
  #+liber-documentation
- "@version{2024-5-14}
+ "@version{2024-11-21}
   @argument[detailed]{a string with a detailed action name}
   @begin{return}
      @arg{name} -- a string with the action name @br{}
@@ -504,7 +504,7 @@
   @see-class{g:action}
   @see-type{g:variant}
   @see-function{g:variant-parse}"
-  (glib:with-g-error (err)
+  (glib:with-error (err)
     (cffi:with-foreign-objects ((name :string)
                                 (value '(:pointer (:struct glib:variant))))
       (when (%action-parse-detailed-name detailed name value err)

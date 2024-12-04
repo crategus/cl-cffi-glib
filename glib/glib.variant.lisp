@@ -3623,7 +3623,7 @@
 
 (defun variant-parse (vtype text)
  #+liber-documentation
- "@version{2024-11-20}
+ "@version{2024-11-21}
   @argument[vtype]{a @class{g:variant-type} instance, or a valid type string}
   @argument[text]{a string containing a @type{g:variant} in text form}
   @return{The @type{g:variant} instance.}
@@ -3659,7 +3659,7 @@
   @end{dictionary}
   @see-type{g:variant}
   @see-function{g:variant-print}"
-  (with-g-error (err)
+  (with-error (err)
     (cond ((stringp vtype)
            (let ((vtype1 (variant-type-new vtype)))
                (%variant-parse-2 vtype1

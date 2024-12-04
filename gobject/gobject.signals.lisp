@@ -566,7 +566,7 @@
  "@version{2024-6-18}
   @syntax{(g:signal-query-return-type instance) => return-type}
   @argument[instance]{a @struct{g:signal-query} instance}
-  @argument[return-type]{a @class{g:type-} type ID with the return type for
+  @argument[return-type]{a @class{g:type-t} type ID with the return type for
     user callbacks}
   @begin{short}
     Accessor of the @slot[g:signal-query]{return-type} slot of the
@@ -624,7 +624,7 @@
   :after
   :swapped)
 
-#+(and nil liber-documentation)
+#+liber-documentation
 (setf (liber:alias-for-symbol 'connect-flags)
       "Bitfield"
       (liber:symbol-documentation 'connect-flags)

@@ -41,11 +41,11 @@
 (unexport 'glib:get-stable-pointer-value :glib)
 (unexport 'glib:stable-pointer-destroy-notify :glib)
 (unexport 'glib:with-stable-pointer :glib)
-(unexport 'glib:with-g-error :glib)
-(unexport 'glib:with-ignore-g-error :glib)
-(unexport 'glib:with-catching-to-g-error :glib)
-(unexport 'glib:with-foreign-boxed-array :glib)
-(unexport 'glib:with-g-boxed-array :glib)
+(unexport 'glib:with-error :glib)
+(unexport 'glib:with-ignore-error :glib)
+(unexport 'glib:with-catching-to-error :glib)
+
+(unexport 'glib:with-gboxed-array :glib)
 
 (unexport 'gobject:initially-unowned :gobject)
 (unexport 'gobject:gobject-class :gobject)

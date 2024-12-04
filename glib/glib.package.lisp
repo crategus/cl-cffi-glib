@@ -56,18 +56,14 @@
            #:boxed-copy-fn
            #:make-boxed-type
            #:get-boxed-info
-           #:with-foreign-boxed-array
-           #:with-g-boxed-array
+           #:with-gboxed-array
            #:pointer
            #:cleanup-translated-object-for-callback
            #:type-initializer-call
            ;; Symbols from glib.error.lisp
            #:error
-           #:with-g-error
            #:with-error
-           #:with-ignore-g-error
            #:with-ignore-error
-           #:with-catching-to-g-error
            #:with-catching-to-error))
 
 (in-package :glib)
@@ -252,7 +248,8 @@
     @about-symbol{key-file-error}
     @about-symbol{key-file-flags}
     @about-type{key-file}
-    @about-macro{with-g-key-file}
+    @about-macro{with-key-file}
+    @about-macro{with-key-file-from-file}
     @about-function{key-file-new}
     @about-function{key-file-free}
     @about-function{key-file-ref}
