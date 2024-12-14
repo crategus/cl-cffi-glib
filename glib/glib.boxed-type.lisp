@@ -158,6 +158,10 @@
     (make-boxed-type info
                      :returnp (member :return options))))
 
+;; Register Lisp symbol for fundamental "GBoxed" type
+(glib-init:at-init ()
+  (setf (glib:symbol-for-gtype "GBoxed") 'boxed))
+
 (export 'boxed)
 
 ;;; ----------------------------------------------------------------------------

@@ -332,6 +332,10 @@
   @see-function{g:variant-ref}
   @see-function{g:variant-unref}")
 
+;; Register Lisp symbol for fundamental "GVariant" type
+(glib-init:at-init ()
+  (setf (glib:symbol-for-gtype "GVariant") 'variant))
+
 (export 'variant)
 
 ;;; ----------------------------------------------------------------------------
