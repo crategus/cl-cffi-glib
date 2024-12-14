@@ -24,10 +24,9 @@
 
 (in-package :gobject)
 
-;; TODO: This is a second method for the definition of a call function.
-;; Is this needed?! The implementation is removed from GTK 4.
+;; TODO: This is a second method for the definition of a callback function.
 
-;; Example for GtkAssistantPageFunc:
+;; Example for GtkAssistantPageFunc in GTK 3
 ;;
 ;; (gobject:define-cb-methods assistant-page-func :int ((current-page :int)))
 ;;
@@ -70,7 +69,7 @@
                   (,fn-id (cffi:foreign-slot-value ,data
                                                    '(:struct object-func-ref)
                                                    :fn-id))
-                  (,fn (retrieve-handler-from-object ,obj ,fn-id)))
+                  (,fn (retrieve-handler-from-instance ,obj ,fn-id)))
              (funcall ,fn ,@arg-names)))
          (cffi:defcallback ,destroy-cb :void ((,data :pointer))
            (let* ((,obj (cffi:convert-from-foreign
@@ -81,12 +80,12 @@
                   (,fn-id (cffi:foreign-slot-value ,data
                                                    '(:struct object-func-ref)
                                                    :fn-id)))
-             (delete-handler-from-object ,obj ,fn-id))
+             (delete-handler-from-instance ,obj ,fn-id))
            (cffi:foreign-free ,data))))))
 
 (defun create-fn-ref (object function)
   (let ((ref (cffi:foreign-alloc '(:struct object-func-ref)))
-        (fn-id (save-handler-to-object object function)))
+        (fn-id (save-handler-to-instance object function)))
     (setf (cffi:foreign-slot-value ref '(:struct object-func-ref) :object)
           (object-pointer object)
           (cffi:foreign-slot-value ref '(:struct object-func-ref) :fn-id)

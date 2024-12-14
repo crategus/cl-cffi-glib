@@ -459,10 +459,7 @@
 
 (defun object-property-set (object property-id value pspec)
   (declare (ignore property-id))
-  (let* ((lisp-object (or (gethash (cffi:pointer-address object)
-                                   *foreign-gobjects-strong*)
-                          (gethash (cffi:pointer-address object)
-                                   *foreign-gobjects-weak*)))
+  (let* ((lisp-object (get-gobject-for-pointer object))
          (property-name (cffi:foreign-slot-value pspec
                                                  '(:struct param-spec) :name))
          (type-name (glib:gtype-name

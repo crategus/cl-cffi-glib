@@ -38,36 +38,25 @@
 ;;;     GObjectConstructParam                              not exported
 ;;;     GParameter                                         not exported
 ;;;     GInitiallyUnowned
-;;;     GInitiallyUnownedClass                             not implemented
 ;;;
 ;;; Functions
 ;;;
-;;;     GObjectGetPropertyFunc
-;;;     GObjectSetPropertyFunc
-;;;     GObjectFinalizeFunc
-;;;
 ;;;     G_TYPE_IS_OBJECT
-;;;     G_OBJECT
 ;;;     G_IS_OBJECT
-;;;     G_OBJECT_CLASS
-;;;     G_IS_OBJECT_CLASS
-;;;     G_OBJECT_GET_CLASS
-;;;     G_OBJECT_TYPE
-;;;     G_OBJECT_TYPE_NAME
-;;;     G_OBJECT_CLASS_TYPE
-;;;     G_OBJECT_CLASS_NAME
 ;;;
 ;;;     g_object_class_install_property                     not exported
 ;;;     g_object_class_install_properties                   not exported
 ;;;     g_object_class_find_property
 ;;;     g_object_class_list_properties
 ;;;     g_object_class_override_property                    not exported
+;;;
 ;;;     g_object_interface_install_property                 not exported
 ;;;     g_object_interface_find_property
 ;;;     g_object_interface_list_properties
+;;;
 ;;;     g_object_new
-;;;     g_object_new_with_properties                        not implemented
-;;;     g_object_newv                                       not exported
+;;;     g_object_new_with_properties                        Since 2.54
+;;;     g_object_newv                                       Deprecated 2.54
 ;;;     g_object_ref                                        not exported
 ;;;     g_object_unref                                      not exported
 ;;;     g_object_ref_sink                                   not exported
@@ -120,8 +109,6 @@
 ;;;     g_object_watch_closure
 ;;;     g_object_run_dispose
 ;;;
-;;;     G_OBJECT_WARN_INVALID_PROPERTY_ID
-;;;
 ;;;     g_weak_ref_init
 ;;;     g_weak_ref_clear
 ;;;     g_weak_ref_get
@@ -142,58 +129,55 @@
 
 (in-package :gobject)
 
-(defvar *foreign-gobjects-weak*
-        (tg:make-weak-hash-table :test 'equal :weakness :value))
-(defvar *foreign-gobjects-strong* (make-hash-table :test 'equal))
 (defvar *current-creating-object* nil)
 (defvar *current-object-from-pointer* nil)
 (defvar *currently-making-object-p* nil)
 
-(glib-init:at-finalize ()
-  (clrhash *foreign-gobjects-weak*)
-  (clrhash *foreign-gobjects-strong*)
-  (setf *current-creating-object* nil
-        *current-object-from-pointer* nil
-        *currently-making-object-p* nil))
+(let ((gobjects-weak-table (tg:make-weak-hash-table :test 'equal
+                                                    :weakness :value))
+      (gobjects-strong-table (make-hash-table :test 'equal)))
 
-;; Access the hashtables with functions
+  (glib-init:at-finalize ()
+    (clrhash gobjects-weak-table)
+    (clrhash gobjects-strong-table)
+    (setf *current-creating-object* nil
+          *current-object-from-pointer* nil
+          *currently-making-object-p* nil))
 
-(defun get-gobject-for-pointer-strong (ptr)
-  (gethash (cffi:pointer-address ptr) *foreign-gobjects-strong*))
+  ;; Access the hashtables with functions
 
-(defun (setf get-gobject-for-pointer-strong) (value ptr)
-  (setf (gethash (cffi:pointer-address ptr) *foreign-gobjects-strong*) value))
+  (defun get-gobject-for-pointer-strong (ptr)
+    (gethash (cffi:pointer-address ptr) gobjects-strong-table))
+  (defun (setf get-gobject-for-pointer-strong) (value ptr)
+    (setf (gethash (cffi:pointer-address ptr) gobjects-strong-table) value))
+  (defun rem-gobject-for-pointer-strong (ptr)
+    (remhash (cffi:pointer-address ptr) gobjects-strong-table))
 
-(defun rem-gobject-for-pointer-strong (ptr)
-  (remhash (cffi:pointer-address ptr) *foreign-gobjects-strong*))
+  (defun list-gobject-for-pointer-strong ()
+    (iter (for (key value) in-hashtable gobjects-strong-table)
+          (collect value)))
 
-(defun list-gobject-for-pointer-strong ()
-  (iter (for (key value) in-hashtable *foreign-gobjects-strong*)
-        (collect value)))
+  (defun get-gobject-for-pointer-weak (ptr)
+    (gethash (cffi:pointer-address ptr) gobjects-weak-table))
+  (defun (setf get-gobject-for-pointer-weak) (value ptr)
+    (setf (gethash (cffi:pointer-address ptr) gobjects-weak-table) value))
+  (defun rem-gobject-for-pointer-weak (ptr)
+    (remhash (cffi:pointer-address ptr) gobjects-weak-table))
 
-(defun get-gobject-for-pointer-weak (ptr)
-  (gethash (cffi:pointer-address ptr) *foreign-gobjects-weak*))
+  (defun list-gobject-for-pointer-weak ()
+    (iter (for (key value) in-hashtable gobjects-weak-table)
+          (collect value)))
 
-(defun (setf get-gobject-for-pointer-weak) (value ptr)
-  (setf (gethash (cffi:pointer-address ptr) *foreign-gobjects-weak*) value))
+  (defun get-gobject-for-pointer (ptr)
+    (or (gethash (cffi:pointer-address ptr) gobjects-strong-table)
+        (gethash (cffi:pointer-address ptr) gobjects-weak-table)))
 
-(defun rem-gobject-for-pointer-weak (ptr)
-  (remhash (cffi:pointer-address ptr) *foreign-gobjects-weak*))
-
-(defun list-gobject-for-pointer-weak ()
-  (iter (for (key value) in-hashtable *foreign-gobjects-weak*)
-        (collect value)))
-
-(defun get-gobject-for-pointer (ptr)
-  (or (gethash (cffi:pointer-address ptr) *foreign-gobjects-strong*)
-      (gethash (cffi:pointer-address ptr) *foreign-gobjects-weak*)))
-
-(defun list-gobject-for-pointer ()
-  (let ((weak (list-gobject-for-pointer-weak))
-        (strong (list-gobject-for-pointer-strong)))
-    (values (append strong weak)
-            (length strong)
-            (length weak))))
+  (defun list-gobject-for-pointer ()
+    (let ((weak (list-gobject-for-pointer-weak))
+          (strong (list-gobject-for-pointer-strong)))
+      (values (append strong weak)
+              (length strong)
+              (length weak)))))
 
 ;;; ----------------------------------------------------------------------------
 ;;; GParameter                                              not exported
@@ -204,27 +188,16 @@
   (value (:struct value)))
 
 ;;; ----------------------------------------------------------------------------
-;;; GObject
-;;;
-;;; All the fields in the GObject structure are private to the GObject
-;;; implementation and should never be accessed directly.
+;;; GObject                                                 not exported
 ;;; ----------------------------------------------------------------------------
 
-;; %object is not needed in the implementation.
-;; It is defined to access the property ref-count for debugging the code.
+;; %object is not needed in the implementation. It is defined to access the
+;; slot REF-COUNT with the G:OBJECT-REF-COUNT function for debugging the code.
 
 (cffi:defcstruct %object
   (:type-instance (:pointer (:struct type-instance)))
   (:ref-count :uint)
   (:data :pointer))
-
-;; Accessor for the slot ref-count of %object
-
-(defun ref-count (pointer)
-  (cffi:foreign-slot-value (if (cffi:pointerp pointer)
-                               pointer
-                               (object-pointer pointer))
-                           '(:struct %object) :ref-count))
 
 ;;; ----------------------------------------------------------------------------
 
@@ -240,6 +213,8 @@
     :type boolean
     :accessor object-has-reference
     :initform nil)
+   ;; TODO: Remove this slot, it is no longer needed. The handlers are stored
+   ;; in a hash table.
    (signal-handlers
     :type (array t *)
     :initform (make-array 0 :adjustable t :fill-pointer t)
@@ -251,7 +226,7 @@
 (export 'object-signal-handlers)
 
 ;; Add object to the global Hash table for registered types
-(eval-when (:compile-toplevel :load-toplevel :execute)
+(glib-init:at-init ()
   (setf (glib:symbol-for-gtype "GObject") 'object))
 
 ;;; ----------------------------------------------------------------------------
@@ -406,11 +381,6 @@ lambda (object pspec)    :no-hooks
 
 ;;; ----------------------------------------------------------------------------
 ;;; GInitiallyUnowned
-;;;
-;;; typedef struct _GObject GInitiallyUnowned;
-;;;
-;;; All the fields in the GInitiallyUnowned structure are private to the
-;;; GInitiallyUnowned implementation and should never be accessed directly.
 ;;; ----------------------------------------------------------------------------
 
 ;; This class is unexported for the cl-cffi-gtk documentation.
@@ -421,27 +391,6 @@ lambda (object pspec)    :no-hooks
   (:gname . "GInitiallyUnowned")
   (:initializer . "g_initially_unowned_get_type")
   (:documentation "Base class that has initial 'floating' reference."))
-
-#+liber-documentation
-(setf (documentation 'initially-unowned 'type)
- "@version{#2022-12-30}
-  @begin{short}
-    The @class{g:initially-unowned} class is derived from the @class{g:object}
-    class.
-  @end{short}
-  The only difference between the two is that the initial reference of a
-  @class{g:initially-unowned} object is flagged as a floating reference. This
-  means that it is not specifically claimed to be \"owned\" by any code portion.
-
-  The floating reference can be converted into an ordinary reference by
-  calling the @code{g_object_ref_sink()} function. For already sunken objects,
-  objects that do not have a floating reference anymore, the
-  @code{g_object_ref_sink()} function is equivalent to the @code{g_object_ref()}
-  function and returns a new reference. Since floating references are useful
-  almost exclusively for C convenience, language bindings that provide automated
-  reference and memory ownership maintenance, such as smart pointers
-  or garbage collection, should not expose floating references in their API.
-  @see-class{g:object}")
 
 (export 'initially-unowned)
 
@@ -470,7 +419,6 @@ lambda (object pspec)    :no-hooks
 (defun activate-gc-hooks ()
   (bt:with-recursive-lock-held (*gobject-gc-hooks-lock*)
     (when *gobject-gc-hooks*
-      (log-for :gc "~&ACTIVATE-GC-HOOKS for: ~A~%" *gobject-gc-hooks*)
       (iter (for pointer in *gobject-gc-hooks*)
             (%object-remove-toggle-ref pointer
                                        (cffi:callback toggle-notify)
@@ -483,7 +431,6 @@ lambda (object pspec)    :no-hooks
     (let ((locks-were-present (not (null *gobject-gc-hooks*))))
       (push pointer *gobject-gc-hooks*)
       (unless locks-were-present
-        (log-for :gc "~&REGISTER-GOBJECT-FOR-GC: ~a~%" pointer)
         (glib:idle-add #'activate-gc-hooks)))))
 
 ;;; ----------------------------------------------------------------------------
@@ -495,27 +442,21 @@ lambda (object pspec)    :no-hooks
 ;; A special case is GtkWindow: we should ref-sink it anyway
 
 (defun should-ref-sink-at-creation (object)
-  (let ((r (cond ;; not new objects should be ref_sunk
-                 ((equal *current-object-from-pointer* (object-pointer object))
-                  (log-for :gc "~&SHOULD-REF-SINK: object is from pointer~%")
-                  t)
-                 ;; g_object_new returns objects with ref=1,
-                 ;; we should save this ref
-                 ((eq object *current-creating-object*)
-                  ;; but GInitiallyUnowned objects should be ref_sunk
-                  (typep object 'initially-unowned))
-                 (t t))))
-    (log-for :gc "~&SHOULD-REF-SINK: ~a => ~a~%" object r)
-    r))
+  (let ((result (cond ;; not new objects should be ref_sunk
+                      ((equal *current-object-from-pointer*
+                              (object-pointer object))
+                       t)
+                      ;; g_object_new returns objects with ref=1,
+                      ;; we should save this ref
+                      ((eq object *current-creating-object*)
+                       ;; but GInitiallyUnowned objects should be ref_sunk
+                       (typep object 'initially-unowned))
+                      (t t))))
+    result))
 
 (defun register-gobject (object)
   (let ((pointer (object-pointer object)))
-    (log-for :gc "~&REGISTER-GOBJECT: ~a, refcount: ~a ~a~%"
-             object
-             (ref-count object)
-             (if (%object-is-floating pointer) "(floating)" ""))
     (when (should-ref-sink-at-creation object)
-      (log-for :gc "~&REGISTER-GOBJECT: g:object-ref-sink ~a~%" object)
       (%object-ref-sink pointer))
     (setf (object-has-reference object) t)
     (setf (get-gobject-for-pointer-strong pointer) object)
@@ -530,8 +471,6 @@ lambda (object pspec)    :no-hooks
   (when *currently-making-object-p*
     (setf *currently-making-object-p* t))
   (let ((*current-creating-object* obj))
-    (log-for :subclass
-             ":subclass INITIALIZE-INSTANCE :around creating ~a~%" obj)
     (call-next-method)))
 
 (defmethod initialize-instance :after ((obj object) &key &allow-other-keys)
@@ -541,11 +480,6 @@ lambda (object pspec)    :no-hooks
          (s (format nil "~a" obj)))
     (tg:finalize obj
                  (lambda ()
-                   (log-for :gc
-                            "~&FINALIZE: ~a ~a queued for GC, refcount: ~a~%"
-                            (type-name (type-from-instance pointer))
-                            pointer
-                            (ref-count pointer))
                    (handler-case
                      (dispose-carefully pointer)
                      (error (e)
@@ -560,27 +494,18 @@ lambda (object pspec)    :no-hooks
 (cffi:defcallback gobject-weak-ref-finalized :void
     ((data :pointer) (pointer :pointer))
   (declare (ignore data))
-  (log-for :gc "~&~A is weak-ref-finalized with ~A refs~%"
-           pointer (ref-count pointer))
-  (remhash (cffi:pointer-address pointer) *foreign-gobjects-weak*)
+  (rem-gobject-for-pointer-weak pointer)
   (when (get-gobject-for-pointer-strong pointer)
-;       (gethash (cffi:pointer-address pointer) *foreign-gobjects-strong*)
     (warn "GObject at ~A was weak-ref-finalized while still holding lisp-side ~
            strong reference to it"
-          pointer)
-    (log-for :gc "~&GObject at ~A was weak-ref-finalized while still holding ~
-                  lisp-side strong reference to it"
-             pointer))
-;  (remhash (cffi:pointer-address pointer) *foreign-gobjects-strong*)
-   (rem-gobject-for-pointer-strong pointer)
-  )
+          pointer))
+   (rem-gobject-for-pointer-strong pointer))
 
 ;;; ----------------------------------------------------------------------------
 
 ;; Translate a pointer to the corresponding Lisp object. If a Lisp object does
 ;; not exist, create the Lisp object.
 (defun get-or-create-gobject-for-pointer (pointer)
-  (log-for :gc "~&GET-OR-CREATE-GOBJECT-FOR-POINTER: ~A~%" pointer)
   (unless (cffi:null-pointer-p pointer)
     (or (get-gobject-for-pointer pointer)
         (create-gobject-from-pointer pointer))))
@@ -599,7 +524,6 @@ lambda (object pspec)    :no-hooks
                   (setf gtype (type-parent gtype)))))
     (let* ((gtype (type-from-instance pointer))
            (lisp-type (get-gobject-lisp-type gtype)))
-      (log-for :gc "~&CREATE-GOBJECT-FROM-POINTER: ~a~%" pointer)
       (unless lisp-type
         (error "Type ~A is not registered with REGISTER-OBJECT-TYPE"
                (glib:gtype-name gtype)))
@@ -652,30 +576,6 @@ lambda (object pspec)    :no-hooks
 
 ;;; ----------------------------------------------------------------------------
 
-;; Moved to gobject.gobject-class.lisp
-
-;(define-condition property-access-error (error)
-;  ((property-name :initarg :property-name
-;                  :reader property-access-error-property-name)
-;   (class-name :initarg :class-name
-;               :reader property-access-error-class-name)
-;   (message :initarg :message :reader property-access-error-message))
-;  (:report (lambda (condition stream)
-;             (format stream "Error accessing property '~A' on class '~A': ~A"
-;                     (property-access-error-property-name condition)
-;                     (property-access-error-class-name condition)
-;                     (property-access-error-message condition)))))
-
-;(define-condition property-unreadable-error (property-access-error)
-;  ()
-;  (:default-initargs :message "property is not readable"))
-
-;(define-condition property-unwritable-error (property-access-error)
-;  ()
-;  (:default-initargs :message "property is not writable"))
-
-;;; ----------------------------------------------------------------------------
-
 ;; Get the definition of a property for the GObject type. Both arguments are of
 ;; type string, e.g. (class-property-info "GtkLabel" "label")
 
@@ -717,8 +617,6 @@ lambda (object pspec)    :no-hooks
 ;;; ----------------------------------------------------------------------------
 
 (defmethod make-instance ((class gobject-class) &rest initargs &key pointer)
-  (log-for :subclass
-           ":subclass MAKE-INSTANCE ~A ~{~A~^ ~})~%" class initargs)
   (ensure-finalized class)
   (let ((*currently-making-object-p* t))
     (if pointer
@@ -762,14 +660,15 @@ lambda (object pspec)    :no-hooks
                             :test 'member))
           (when (and slot (typep slot 'gobject-effective-slot-definition)))
           (typecase slot
-           (gobject-property-effective-slot-definition
-            (push (gobject-property-effective-slot-definition-g-property-name slot)
+           (gobject-prop-effective-slot-definition
+            (push (gobject-prop-effective-slot-definition-prop-name slot)
                   arg-names)
             (push arg-value arg-values)
-            (push (gobject-effective-slot-definition-g-property-type slot)
+            ;; TODO: The list is always filled with NIL values. Why?
+            (push (gobject-effective-slot-definition-prop-type slot)
                   arg-types))
-           (gobject-fn-effective-slot-definition
-            (push (gobject-fn-effective-slot-definition-g-setter-fn slot)
+           (gobject-func-effective-slot-definition
+            (push (gobject-func-effective-slot-definition-setter-func slot)
                   nc-setters)
             (push arg-value nc-arg-values))))
     (let ((object (call-gobject-constructor (gobject-class-gname class)
@@ -783,46 +682,34 @@ lambda (object pspec)    :no-hooks
 
 ;;; ----------------------------------------------------------------------------
 
-(defun call-gobject-constructor (object-type args-names args-values
-                                 &optional args-types)
-  (unless args-types
-    (setf args-types
+(defun call-gobject-constructor (gtype names values &optional types)
+  (unless types
+    (setf types
           (mapcar (lambda (name)
-                    (class-property-type object-type name))
-                  args-names)))
-  (let ((args-count (length args-names)))
-    (cffi:with-foreign-object (params '(:struct %parameter) args-count)
-      (iter (for i from 0 below args-count)
-            (for arg-name in args-names)
-            (for arg-value in args-values)
-            (for arg-type in args-types)
-            (for arg-gtype = (if arg-type
-                                 arg-type
-                                 (class-property-type object-type arg-name)))
-            (for param = (cffi:mem-aptr params
-                                        '(:struct %parameter) i))
-            (setf (cffi:foreign-slot-value param
-                                           '(:struct %parameter) 'name)
-                  arg-name)
-            (set-g-value (cffi:foreign-slot-pointer param
-                                                    '(:struct %parameter)
-                                                    'value)
-                         arg-value
-                         arg-gtype
+                    (class-property-type gtype name))
+                  names)))
+  (let ((count (length names)))
+    (cffi:with-foreign-object (aptr-values '(:struct value) count)
+      (iter (for i from 0 below count)
+            (for name in names)
+            (for value in values)
+            (for type in types)
+            (for type1 = (or type
+                             (class-property-type gtype name)))
+            (for gvalue = (cffi:mem-aptr aptr-values '(:struct value) i))
+            (set-g-value gvalue
+                         value
+                         type1
                          :zero-gvalue t))
       (unwind-protect
-        (%object-newv object-type args-count params)
-        (iter (for i from 0 below args-count)
-              (for param = (cffi:mem-aptr params '(:struct %parameter) i))
-              (cffi:foreign-string-free
-                  (cffi:mem-ref
-                      (cffi:foreign-slot-pointer param
-                                                 '(:struct %parameter)
-                                                 'name)
-                      :pointer))
-              (value-unset (cffi:foreign-slot-pointer param
-                                                      '(:struct %parameter)
-                                                      'value)))))))
+        (glib-sys:with-foreign-string-array (aptr-names names)
+          (%object-new-with-properties gtype
+                                       count
+                                       aptr-names
+                                       aptr-values))
+        (iter (for i from 0 below count)
+              (for gvalue = (cffi:mem-aptr aptr-values '(:struct value) i))
+              (value-unset gvalue))))))
 
 ;;; ----------------------------------------------------------------------------
 ;;; GObjectClass                                            not exported
@@ -840,80 +727,6 @@ lambda (object pspec)    :no-hooks
   (:notify :pointer)
   (:constructed :pointer)
   (:pdummy :pointer :count 7))
-
-#+liber-documentation
-(setf (liber:alias-for-symbol 'object-class)
-      "CStruct"
-      (liber:symbol-documentation 'object-class)
- "@version{#2021-9-9}
-  @short{The class structure for the @class{g:object} type.}
-  @begin{pre}
-(cffi:defcstruct object-class
-  (:type-class g-type-class)
-  (:construct-properties :pointer)
-  (:constructor :pointer)
-  (:set-property :pointer)
-  (:get-property :pointer)
-  (:dispose :pointer)
-  (:finalize :pointer)
-  (:dispatch-properties-changed :pointer)
-  (:notify :pointer)
-  (:constructed :pointer)
-  (:pdummy :pointer :count 7))
-  @end{pre}
-  @begin[code]{table}
-    @begin[:type-class]{entry}
-      The parent class.
-    @end{entry}
-    @begin[:constructor]{entry}
-      The @code{constructor} function is called by the @fun{object-new}
-      function to complete the object initialization after all the
-      construction properties are set. The first thing a @code{constructor}
-      implementation must do is chain up to the @code{constructor} of the
-      parent class. Overriding @code{constructor} should be rarely needed,
-      e.g. to handle construct properties, or to implement singletons.
-    @end{entry}
-    @begin[:set-property]{entry}
-      The generic setter for all properties of this type. Should be overridden
-      for every type with properties. Implementations of @code{set-property}
-      do not need to emit property change notification explicitly, this is
-      handled by the type system.
-    @end{entry}
-    @begin[:get-property]{entry}
-      The generic getter for all properties of this type. Should be overridden
-      for every type with properties.
-    @end{entry}
-    @begin[:dispose]{entry}
-      The @code{dispose} function is supposed to drop all references to other
-      objects, but keep the instance otherwise intact, so that client method
-      invocations still work. It may be run multiple times (due to reference
-      loops). Before returning, @code{dispose} should chain up to the
-      @code{dispose} method of the parent class.
-    @end{entry}
-    @begin[:finalize]{entry}
-      Instance finalization function, should finish the finalization of the
-      instance begun in @code{dispose} and chain up to the @code{finalize}
-      method of the parent class.
-    @end{entry}
-    @begin[:dispatch-properties-changed]{entry}
-      Emits property change notification for a bunch of properties. Overriding
-      @code{dispatch-properties-changed} should be rarely needed.
-    @end{entry}
-    @begin[:notify]{entry}
-      The class closure for the notify signal.
-    @end{entry}
-    @begin[:constructed]{entry}
-      The @code{constructed} function is called by the @fun{object-new}
-      function as the final step of the object creation process. At
-      the point of the call, all construction properties have been set on the
-      object. The purpose of this call is to allow for object initialisation
-      steps that can only be performed after construction properties have been
-      set. @code{constructed} implementors should chain up to the
-      @code{constructed} call of their parent class to allow it to complete
-      its initialisation.
-    @end{entry}
-  @end{table}
-  @see-class{g:object}")
 
 ;; Accessors for the slots of the GObjectClass structure
 (defun object-class-get-property (class)
@@ -940,97 +753,6 @@ lambda (object pspec)    :no-hooks
 (cffi:defcstruct object-construct-param
   (:pspec (:pointer (:struct param-spec)))
   (:value (:pointer (:struct value))))
-
-#+liber-documentation
-(setf (liber:alias-for-symbol 'object-construct-param)
-      "CStruct"
-      (liber:symbol-documentation 'object-construct-param)
- "@version{#2020-2-17}
-  @begin{short}
-    The @symbol{g:object-construct-param} structure is an auxiliary structure
-    used to hand @symbol{g:param-spec}/@symbol{g:value} pairs to the constructor
-    of a @symbol{g:object-class} structure.
-  @end{short}
-  @begin{pre}
-(cffi:defcstruct object-construct-param
-  (:pspec (:pointer param-spec))
-  (:value (:pointer value)))
-  @end{pre}
-  @begin[code]{table}
-    @entry[:pspec]{The @symbol{param-spec} instance of the construct
-      parameter.}
-    @entry[:value]{The value to set the parameter to.}
-  @end{table}
-  @see-symbol{object-class}
-  @see-symbol{param-spec}
-  @see-symbol{value}")
-
-;;; ----------------------------------------------------------------------------
-;;; GInitiallyUnownedClass
-;;;
-;;; typedef struct _GObjectClass GInitiallyUnownedClass;
-;;;
-;;; The class structure for the GInitiallyUnowned type.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; GObjectGetPropertyFunc ()
-;;;
-;;; void (*GObjectGetPropertyFunc) (GObject *object,
-;;;                                 guint property_id,
-;;;                                 GValue *value,
-;;;                                 GParamSpec *pspec);
-;;;
-;;; The type of the get_property function of GObjectClass.
-;;;
-;;; object :
-;;;     a GObject
-;;;
-;;; property_id :
-;;;     the numeric id under which the property was registered with
-;;;     g_object_class_install_property().
-;;;
-;;; value :
-;;;     a GValue to return the property value in
-;;;
-;;; pspec :
-;;;     the GParamSpec describing the property
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; GObjectSetPropertyFunc ()
-;;;
-;;; void (*GObjectSetPropertyFunc) (GObject *object,
-;;;                                 guint property_id,
-;;;                                 const GValue *value,
-;;;                                 GParamSpec *pspec);
-;;;
-;;; The type of the set_property function of GObjectClass.
-;;;
-;;; object :
-;;;     a GObject
-;;;
-;;; property_id :
-;;;     the numeric id under which the property was registered with
-;;;     g_object_class_install_property().
-;;;
-;;; value :
-;;;     the new value for the property
-;;;
-;;; pspec :
-;;;     the GParamSpec describing the property
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; GObjectFinalizeFunc ()
-;;;
-;;; void (*GObjectFinalizeFunc) (GObject *object);
-;;;
-;;; The type of the finalize function of GObjectClass.
-;;;
-;;; object :
-;;;     the GObject being finalized
-;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
 ;;; G_TYPE_IS_OBJECT
@@ -1064,20 +786,6 @@ lambda (object pspec)    :no-hooks
 (export 'type-is-object)
 
 ;;; ----------------------------------------------------------------------------
-;;; G_OBJECT()
-;;;
-;;; #define G_OBJECT(object)
-;;;         (G_TYPE_CHECK_INSTANCE_CAST ((object), G_TYPE_OBJECT, GObject))
-;;;
-;;; Casts a GObject or derived pointer into a (GObject*) pointer. Depending on
-;;; the current debugging level, this function may invoke certain runtime checks
-;;; to identify invalid casts.
-;;;
-;;; object :
-;;;     Object which is subject to casting.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
 ;;; G_IS_OBJECT
 ;;; ----------------------------------------------------------------------------
 
@@ -1101,165 +809,6 @@ lambda (object pspec)    :no-hooks
 (export 'is-object)
 
 ;;; ----------------------------------------------------------------------------
-;;; G_OBJECT_CLASS()
-;;;
-;;; #define G_OBJECT_CLASS(class)
-;;;         (G_TYPE_CHECK_CLASS_CAST ((class), G_TYPE_OBJECT, GObjectClass))
-;;;
-;;; Casts a derived GObjectClass structure into a GObjectClass structure.
-;;;
-;;; class :
-;;;     a valid GObjectClass
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_IS_OBJECT_CLASS                                       not exported
-;;; ----------------------------------------------------------------------------
-
-(defun is-object-class (class)
- #+liber-documentation
- "@version{#2021-9-9}
-  @argument[class]{a foreign pointer to a @symbol{object-class} instance}
-  @begin{short}
-    Checks whether the @arg{class} argument is a @symbol{object-class}
-    instance of type @code{\"GObject\"} or derived.
-  @end{short}
-  @begin[Examples]{dictionary}
-    @begin{pre}
-(g:object-class (make-instance 'gtk-button))
-=> #.(SB-SYS:INT-SAP #X557BB1322590)
-(g:is-object-class *) => T
-    @end{pre}
-  @end{dictionary}
-  @see-class{g:object}
-  @see-symbol{object-class}"
-  (type-check-class-type class (glib:gtype "GObject")))
-
-;;; ----------------------------------------------------------------------------
-;;; G_OBJECT_GET_CLASS                                      not exported
-;;; ----------------------------------------------------------------------------
-
-(defun object-class (object)
- #+liber-documentation
- "@version{#2021-9-9}
-  @argument[object]{a @class{g:object} instance}
-  @return{The foreign pointer to the @symbol{object-class} instance.}
-  @short{Gets the class instance associated to a @class{g:object} instance.}
-  @begin[Examples]{dictionary}
-    @begin{pre}
-(g:object-class (make-instance 'gtk-button))
-=> #.(SB-SYS:INT-SAP #X557BB1322590)
-    @end{pre}
-  @end{dictionary}
-  @see-class{g:object}
-  @see-symbol{object-class}"
-  (type-instance-class object))
-
-;;; ----------------------------------------------------------------------------
-;;; G_OBJECT_TYPE
-;;; ----------------------------------------------------------------------------
-
-(defun object-type (object)
- #+liber-documentation
- "@version{2023-12-1}
-  @argument[object]{a @class{g:object} instance to return the type ID for}
-  @return{The @class{g:type-t} type ID of the @arg{object} argument.}
-  @begin{short}
-    Gets the type ID for the instance of an object.
-  @end{short}
-  Returns @code{nil} if the @arg{object} argument is @code{nil}. This function
-  calls the @fun{g:type-from-instance} function to get the type for an object,
-  but checks in addition for a non-@code{nil} argument.
-  @begin[Examples]{dictionary}
-    @begin{pre}
-(g:object-type (make-instance 'gtk:label))
-=> #S(GTYPE :name \"GtkLabel\" :id 134905144)
-(g:object-type nil) => nil
-    @end{pre}
-  @end{dictionary}
-  @see-class{g:object}
-  @see-class{g:type-t}
-  @see-function{g:object-type-name}
-  @see-function{g:type-from-instance}"
-  (when object
-    (type-from-instance object)))
-
-(export 'object-type)
-
-;;; ----------------------------------------------------------------------------
-;;; G_OBJECT_TYPE_NAME
-;;; ----------------------------------------------------------------------------
-
-(defun object-type-name (object)
- #+liber-documentation
- "@version{2023-12-1}
-  @argument[object]{a @class{g:object} instance to return the type name for}
-  @return{The string with type name of the @arg{object} argument.}
-  @begin{short}
-    Gets the name of the type for an instance.
-  @end{short}
-  Returns @code{nil}, if the @arg{object} argument is @code{nil}. This function
-  calls the @fun{g:type-from-instance} and @fun{g:type-name} functions to get
-  the name, but checks for a non-@code{nil} argument.
-  @begin[Examples]{dictionary}
-    @begin{pre}
-(g:object-type-name (make-instance 'gtk:label)) => \"GtkLabel\"
-    @end{pre}
-    This is equivalent to:
-    @begin{pre}
-(g:type-name (g:type-from-instance (make-instance 'gtk:label))) => \"GtkLabel\"
-    @end{pre}
-  @end{dictionary}
-  @see-class{g:object}
-  @see-function{g:object-type}
-  @see-function{g:type-name}
-  @see-function{g:type-from-instance}"
-  (when object
-    (type-name (type-from-instance object))))
-
-(export 'object-type-name)
-
-;;; ----------------------------------------------------------------------------
-;;; G_OBJECT_CLASS_TYPE                                     not exported
-;;; ----------------------------------------------------------------------------
-
-(defun object-class-type (class)
- #+liber-documentation
- "@version{#2021-9-9}
-  @argument[class]{a foreign pointer to a @symbol{g:object-class} instance}
-  @return{The @class{g:type-t} type ID of the @arg{class} argument.}
-  @short{Gets the type ID of a class instance.}
-  @begin[Examples]{dictionary}
-    @begin{pre}
-(g:object-class-type (g:type-class-ref \"GtkLabel\"))
-=> #<GTYPE :name \"GtkLabel\" :id 93989740834480>
-    @end{pre}
-  @end{dictionary}
-  @see-class{g:type-t}
-  @see-class{g:object}
-  @see-symbol{g:object-class}"
-  (type-from-class class))
-
-;;; ----------------------------------------------------------------------------
-;;; G_OBJECT_CLASS_NAME                                     not exported
-;;; ----------------------------------------------------------------------------
-
-(defun object-class-name (class)
- #+liber-documentation
- "@version{#2021-9-9}
-  @argument[class]{a foreign pointer of a @symbol{object-class} instance}
-  @return{The string with the type name of the @arg{class} argument.}
-  @short{Returns the name of the type of a class instance.}
-  @begin[Examples]{dictionary}
-    @begin{pre}
-(g:object-class-name (g:type-class-ref \"GtkLabel\")) => \"GtkLabel\"
-    @end{pre}
-  @end{dictionary}
-  @see-class{g:object}
-  @see-symbol{g:object-class}"
-  (type-name (type-from-class class)))
-
-;;; ----------------------------------------------------------------------------
 ;;; g_object_class_install_property                         not exported
 ;;; ----------------------------------------------------------------------------
 
@@ -1267,95 +816,14 @@ lambda (object pspec)    :no-hooks
 
 (cffi:defcfun ("g_object_class_install_property" %object-class-install-property)
     :void
- #+liber-documentation
- "@version{#2020-2-17}
-  @argument[class]{a @symbol{object-class} structure}
-  @argument[property-id]{the ID for the new property}
-  @argument[pspec]{a @symbol{param-spec} instance for the new property}
-  @begin{short}
-    Installs a new property. This is usually done in the class initializer.
-  @end{short}
-
-  Note that it is possible to redefine a property in a derived class, by
-  installing a property with the same name. This can be useful at times, e.g.
-  to change the range of allowed values or the default value.
-  @see-class{g:object}
-  @see-symbol{object-class}
-  @see-symbol{param-spec}"
   (class (:pointer (:struct object-class)))
   (property-id :uint)
   (pspec (:pointer (:struct param-spec))))
 
 ;;; ----------------------------------------------------------------------------
-;;; g_object_class_install_properties ()
+;;; g_object_class_install_properties
 ;;;
-;;; void g_object_class_install_properties (GObjectClass *oclass,
-;;;                                         guint n_pspecs,
-;;;                                         GParamSpec **pspecs);
-;;;
-;;; Installs new properties from an array of GParamSpecs. This is usually done
-;;; in the class initializer.
-;;;
-;;; The property id of each property is the index of each GParamSpec in the
-;;; pspecs array.
-;;;
-;;; The property id of 0 is treated specially by GObject and it should not be
-;;; used to store a GParamSpec.
-;;;
-;;; This function should be used if you plan to use a static array of
-;;; GParamSpecs and g_object_notify_by_pspec(). For instance, this class
-;;; initialization:
-;;;
-;;;   enum {
-;;;     PROP_0, PROP_FOO, PROP_BAR, N_PROPERTIES
-;;;   };
-;;;
-;;;   static GParamSpec *obj_properties[N_PROPERTIES] = { NULL, };
-;;;
-;;;   static void
-;;;   my_object_class_init (MyObjectClass *klass)
-;;;   {
-;;;     GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
-;;;
-;;;     obj_properties[PROP_FOO] =
-;;;       g_param_spec_int ("foo", "Foo", "Foo",
-;;;                         -1, G_MAXINT,
-;;;                         0,
-;;;                         G_PARAM_READWRITE);
-;;;
-;;;     obj_properties[PROP_BAR] =
-;;;       g_param_spec_string ("bar", "Bar", "Bar",
-;;;                            NULL,
-;;;                            G_PARAM_READWRITE);
-;;;
-;;;     gobject_class->set_property = my_object_set_property;
-;;;     gobject_class->get_property = my_object_get_property;
-;;;     g_object_class_install_properties (gobject_class,
-;;;                                        N_PROPERTIES,
-;;;                                        obj_properties);
-;;;   }
-;;;
-;;; allows calling g_object_notify_by_pspec() to notify of property changes:
-;;;
-;;;   void
-;;;   my_object_set_foo (MyObject *self, gint foo)
-;;;   {
-;;;     if (self->foo != foo)
-;;;       {
-;;;         self->foo = foo;
-;;;         g_object_notify_by_pspec (G_OBJECT (self),
-;;;                                   obj_properties[PROP_FOO]);
-;;;       }
-;;;    }
-;;;
-;;; oclass :
-;;;     a GObjectClass
-;;;
-;;; n_pspecs :
-;;;     the length of the GParamSpecs array
-;;;
-;;; pspecs :
-;;;     the GParamSpecs array defining the new properties
+;;; Installs new properties from an array of GParamSpecs.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -1458,6 +926,7 @@ lambda (object pspec)    :no-hooks
 ;;; g_object_class_override_property                        not exported
 ;;; ----------------------------------------------------------------------------
 
+#+nil
 (cffi:defcfun ("g_object_class_override_property"
                 %object-class-override-property) :void
  #+liber-documentation
@@ -1497,6 +966,7 @@ lambda (object pspec)    :no-hooks
 ;;; g_object_interface_install_property                     not exported
 ;;; ----------------------------------------------------------------------------
 
+#+nil
 (cffi:defcfun ("g_object_interface_install_property"
                %object-interface-install-property) :void
  #+liber-documentation
@@ -1692,6 +1162,13 @@ lambda (object pspec)    :no-hooks
 ;;;     a new instance of object_type .
 ;;; ----------------------------------------------------------------------------
 
+(cffi:defcfun ("g_object_new_with_properties" %object-new-with-properties)
+    :pointer
+  (gtype type-t)
+  (n-properties :uint)
+  (names :pointer)
+  (values :pointer))
+
 ;;; ----------------------------------------------------------------------------
 ;;; g_object_newv                                           not exported
 ;;; ----------------------------------------------------------------------------
@@ -1699,8 +1176,10 @@ lambda (object pspec)    :no-hooks
 ;; This function is called internally in the Lisp library to create an object
 ;; and is not exported.
 
+;; TODO: Replace this function with g_object_new_with_properties
+
 (cffi:defcfun ("g_object_newv" %object-newv) :pointer
-  (object-type type-t)
+  (gtype type-t)
   (n-parameter :uint)
   (parameters :pointer))
 
@@ -1728,17 +1207,18 @@ lambda (object pspec)    :no-hooks
 ;;; g:object-ref-count
 ;;; ----------------------------------------------------------------------------
 
-(declaim (inline object-ref-count))
-
 (defun object-ref-count (object)
  #+liber-documentation
- "@version{2024-10-12}
+ "@version{2024-12-12}
   @argument[object]{a @class{g:object} instance}
   @return{The integer with the reference count of @arg{object}.}
   @short{Returns the reference count of the object.}
   @see-class{g:object}
   @see-function{g:object-ref}"
-  (ref-count object))
+  (cffi:foreign-slot-value (if (cffi:pointerp object)
+                               object
+                               (object-pointer object))
+                           '(:struct %object) :ref-count))
 
 (export 'object-ref-count)
 
@@ -1767,96 +1247,21 @@ lambda (object pspec)    :no-hooks
 ;;; g_object_ref_sink                                       not exported
 ;;; ----------------------------------------------------------------------------
 
-;; The memory management is done in the Lisp library. We do not export this
-;; function.
+;; For internal use
 
 (cffi:defcfun ("g_object_ref_sink" %object-ref-sink) :pointer
- #+liber-documentation
- "@version{#2020-2-17}
-  @argument[object]{a @class{g:object} instance}
-  @return{@arg{object}}
-  @begin{short}
-    Increase the reference count of @arg{object}, and possibly remove the
-    floating reference, if @arg{object} has a floating reference.
-  @end{short}
-  In other words, if the @arg{object} is floating, then this call \"assumes
-  ownership\" of the floating reference, converting it to a normal reference by
-  clearing the floating flag while leaving the reference count unchanged. If
-  the @arg{object} is not floating, then this call adds a new normal reference
-  increasing the reference count by one.
-  @see-class{g:object}"
   (object :pointer))
 
 ;;; ----------------------------------------------------------------------------
-;;; g_set_object ()
+;;; g_set_object
 ;;;
-;;; gboolean
-;;; g_set_object (GObject **object_ptr,
-;;;               GObject *new_object);
-;;;
-;;; Updates a GObject pointer to refer to new_object . It increments the
-;;; reference count of new_object (if non-NULL), decrements the reference count
-;;; of the current value of object_ptr (if non-NULL), and assigns new_object to
-;;; object_ptr . The assignment is not atomic.
-;;;
-;;; object_ptr must not be NULL.
-;;;
-;;; A macro is also included that allows this function to be used without
-;;; pointer casts. The function itself is static inline, so its address may
-;;; vary between compilation units.
-;;;
-;;; One convenient usage of this function is in implementing property setters:
-;;;
-;;; void
-;;; foo_set_bar (Foo *foo,
-;;;              Bar *new_bar)
-;;; {
-;;;   g_return_if_fail (IS_FOO (foo));
-;;;   g_return_if_fail (new_bar == NULL || IS_BAR (new_bar));
-;;;
-;;;   if (g_set_object (&foo->bar, new_bar))
-;;;     g_object_notify (foo, "bar");
-;;; }
-;;;
-;;; object_ptr :
-;;;     a pointer to a GObject reference
-;;;
-;;; new_object :
-;;;     a pointer to the new GObject to assign to it, or NULL to clear the
-;;;     pointer.
-;;;
-;;; Returns :
-;;;     TRUE if the value of object_ptr changed, FALSE otherwise
+;;; Updates a GObject pointer to refer to new_object
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_clear_object ()
-;;;
-;;; void g_clear_object (volatile GObject **object_ptr);
+;;; g_clear_object
 ;;;
 ;;; Clears a reference to a GObject.
-;;;
-;;; object_ptr must not be NULL.
-;;;
-;;; If the reference is NULL then this function does nothing. Otherwise, the
-;;; reference count of the object is decreased and the pointer is set to NULL.
-;;;
-;;; This function is threadsafe and modifies the pointer atomically, using
-;;; memory barriers where needed.
-;;;
-;;; A macro is also included that allows this function to be used without
-;;; pointer casts.
-;;;
-;;; object_ptr :
-;;;     a pointer to a GObject reference
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_TYPE_INITIALLY_UNOWNED
-;;;
-;;; #define G_TYPE_INITIALLY_UNOWNED (g_initially_unowned_get_type())
-;;;
-;;; The type for GInitiallyUnowned.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -1901,21 +1306,10 @@ lambda (object pspec)    :no-hooks
   (object :pointer))
 
 ;;; ----------------------------------------------------------------------------
-;;; GWeakNotify ()
-;;;
-;;; void (*GWeakNotify) (gpointer data,
-;;;                      GObject *where_the_object_was);
+;;; GWeakNotify
 ;;;
 ;;; A GWeakNotify function can be added to an object as a callback that gets
-;;; triggered when the object is finalized. Since the object is already being
-;;; finalized when the GWeakNotify is called, there's not much you could do with
-;;; the object, apart from e.g. using its address as hash-index or the like.
-;;;
-;;; data :
-;;;     data that was provided when the weak reference was established
-;;;
-;;; where_the_object_was :
-;;;     the object being finalized
+;;; triggered when the object is finalized.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -1925,6 +1319,7 @@ lambda (object pspec)    :no-hooks
 ;; The memory management is done in the Lisp library. We do not export this
 ;; function.
 
+#+nil
 (cffi:defcfun ("g_object_weak_ref" %object-weak-ref) :void
  #+liber-documentation
  "@version{#2020-2-17}
@@ -1957,6 +1352,7 @@ lambda (object pspec)    :no-hooks
 ;; The memory management is done in the Lisp library. We do not export this
 ;; function.
 
+#+nil
 (cffi:defcfun ("g_object_weak_unref" %object-weak-unref) :void
  #+liber-documentation
  "@version{#2020-2-17}
@@ -1972,129 +1368,37 @@ lambda (object pspec)    :no-hooks
   (data :pointer))
 
 ;;; ----------------------------------------------------------------------------
-;;; g_object_add_weak_pointer ()
-;;;
-;;; void g_object_add_weak_pointer (GObject *object,
-;;;                                 gpointer *weak_pointer_location);
+;;; g_object_add_weak_pointer
 ;;;
 ;;; Adds a weak reference from weak_pointer to object to indicate that the
 ;;; pointer located at weak_pointer_location is only valid during the lifetime
-;;; of object. When the object is finalized, weak_pointer will be set to NULL.
-;;;
-;;; Note that as with g_object_weak_ref(), the weak references created by this
-;;; method are not thread-safe: they cannot safely be used in one thread if the
-;;; object's last g_object_unref() might happen in another thread. Use GWeakRef
-;;; if thread-safety is required.
-;;;
-;;; object :
-;;;     The object that should be weak referenced.
-;;;
-;;; weak_pointer_location :
-;;;     The memory address of a pointer.
+;;; of object.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_object_remove_weak_pointer ()
-;;;
-;;; void g_object_remove_weak_pointer (GObject *object,
-;;;                                    gpointer *weak_pointer_location);
+;;; g_object_remove_weak_pointer
 ;;;
 ;;; Removes a weak reference from object that was previously added using
-;;; g_object_add_weak_pointer(). The weak_pointer_location has to match the one
-;;; used with g_object_add_weak_pointer().
-;;;
-;;; object :
-;;;     The object that is weak referenced.
-;;;
-;;; weak_pointer_location :
-;;;     The memory address of a pointer.
+;;; g_object_add_weak_pointer().
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_set_weak_pointer ()
+;;; g_set_weak_pointer
 ;;;
-;;; gboolean
-;;; g_set_weak_pointer (gpointer *weak_pointer_location,
-;;;                     GObject *new_object);
-;;;
-;;; Updates a pointer to weakly refer to new_object . It assigns new_object to
-;;; weak_pointer_location and ensures that weak_pointer_location will
-;;; automaticaly be set to NULL if new_object gets destroyed. The assignment is
-;;; not atomic. The weak reference is not thread-safe, see
-;;; g_object_add_weak_pointer() for details.
-;;;
-;;; weak_pointer_location must not be NULL.
-;;;
-;;; A macro is also included that allows this function to be used without
-;;; pointer casts. The function itself is static inline, so its address may
-;;; vary between compilation units.
-;;;
-;;; One convenient usage of this function is in implementing property setters:
-;;;
-;;; void
-;;; foo_set_bar (Foo *foo,
-;;;              Bar *new_bar)
-;;; {
-;;;   g_return_if_fail (IS_FOO (foo));
-;;;   g_return_if_fail (new_bar == NULL || IS_BAR (new_bar));
-;;;
-;;;   if (g_set_weak_pointer (&foo->bar, new_bar))
-;;;     g_object_notify (foo, "bar");
-;;; }
-;;;
-;;; weak_pointer_location :
-;;;     the memory address of a pointer
-;;;
-;;; new_object :
-;;;     a pointer to the new GObject to assign to it, or NULL to clear the
-;;;     pointer.
-;;;
-;;; Returns :
-;;;     TRUE if the value of weak_pointer_location changed, FALSE otherwise
+;;; Updates a pointer to weakly refer to new_object.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_clear_weak_pointer ()
-;;;
-;;; void
-;;; g_clear_weak_pointer (gpointer *weak_pointer_location);
+;;; g_clear_weak_pointer
 ;;;
 ;;; Clears a weak reference to a GObject.
-;;;
-;;; weak_pointer_location must not be NULL.
-;;;
-;;; If the weak reference is NULL then this function does nothing. Otherwise,
-;;; the weak reference to the object is removed for that location and the
-;;; pointer is set to NULL.
-;;;
-;;; A macro is also included that allows this function to be used without
-;;; pointer casts. The function itself is static inline, so its address may
-;;; vary between compilation units.
-;;;
-;;; weak_pointer_location :
-;;;     The memory address of a pointer
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; GToggleNotify ()
-;;;
-;;; void (*GToggleNotify) (gpointer data,
-;;;                        GObject *object,
-;;;                        gboolean is_last_ref);
+;;; GToggleNotify                                           not exported
 ;;;
 ;;; A callback function used for notification when the state of a toggle
-;;; reference changes. See g_object_add_toggle_ref().
-;;;
-;;; data :
-;;;     Callback data passed to g_object_add_toggle_ref()
-;;;
-;;; object :
-;;;     The object on which g_object_add_toggle_ref() was called.
-;;;
-;;; is_last_ref :
-;;;     TRUE if the toggle reference is now the last reference to the object.
-;;;     FALSE if the toggle reference was the last reference and there are now
-;;;     other references.
+;;; reference changes.
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcallback toggle-notify :void
@@ -2102,10 +1406,6 @@ lambda (object pspec)    :no-hooks
      (object :pointer)
      (is-last-ref :boolean))
   (declare (ignore data))
-  (log-for :gc "~&TOGGLE-NOTIFY: ~A is now ~A with ~A refs~%"
-           (get-gobject-for-pointer object)
-           (if is-last-ref "weak pointer" "strong pointer")
-           (ref-count object))
   (if is-last-ref
       (let ((obj (get-gobject-for-pointer-strong object)))
         (if obj
@@ -2131,42 +1431,6 @@ lambda (object pspec)    :no-hooks
 ;; function.
 
 (cffi:defcfun ("g_object_add_toggle_ref" %object-add-toggle-ref) :void
- #+liber-documentation
- "@version{#2020-2-17}
-  @argument[object]{a @class{g:object} instance}
-  @argument[notify]{a function to call when this reference is the last reference
-    to the @arg{object}, or is no longer the last reference}
-  @argument[data]{data to pass to notify}
-  @begin{short}
-    Increases the reference count of the @arg{object} by one and sets a callback
-    to be called when all other references to the @arg{object} are dropped, or
-    when this is already the last reference to the @arg{object} and another
-    reference is established.
-  @end{short}
-
-  This functionality is intended for binding @arg{object} to a proxy object
-  managed by another memory manager. This is done with two paired references:
-  the strong reference added by the @fun{g:object-add-toggle-ref} function and
-  a reverse reference to the proxy object which is either a strong reference or
-  weak reference.
-
-  The setup is that when there are no other references to @arg{object}, only a
-  weak reference is held in the reverse direction from @arg{object} to the proxy
-  object, but when there are other references held to @arg{object}, a strong
-  reference is held. The @arg{notify} callback is called when the reference from
-  @arg{object} to the proxy object should be toggled from strong to weak
-  (@code{is_last_ref} @em{true}) or weak to strong (@code{is_last_ref}
-  @code{nil}).
-
-  Since a (normal) reference must be held to the object before calling the
-  @fun{g:object-add-toggle-ref} function, the initial state of the reverse link
-  is always strong.
-
-  Multiple toggle references may be added to the same gobject, however if
-  there are multiple toggle references to an object, none of them will ever be
-  notified until all but one are removed. For this reason, you should only
-  ever use a toggle reference if there is important state in the proxy object.
-  @see-class{g:object}"
   (object :pointer)
   (notify :pointer)
   (data :pointer))
@@ -2179,230 +1443,44 @@ lambda (object pspec)    :no-hooks
 ;; function.
 
 (cffi:defcfun ("g_object_remove_toggle_ref" %object-remove-toggle-ref) :void
- #+liber-documentation
- "@version{#2020-2-17}
-  @argument[object]{a @class{g:object} instance}
-  @argument[notify]{a function to call when this reference is the last reference
-    to the @arg{object}, or is no longer the last reference}
-  @argument[data]{data to pass to @arg{notify}}
-  @begin{short}
-    Removes a reference added with the @fun{object-add-toggle-ref} function.
-    The reference count of the @arg{object} is decreased by one.
-  @end{short}
-  @see-class{g:object}
-  @see-function{object-add-toggle-ref}"
   (object :pointer)
   (notify :pointer)
   (data :pointer))
 
 ;;; ----------------------------------------------------------------------------
-;;; g_object_connect ()
-;;;
-;;; gpointer g_object_connect (gpointer object,
-;;;                            const gchar *signal_spec,
-;;;                            ...);
+;;; g_object_connect
 ;;;
 ;;; A convenience function to connect multiple signals at once.
-;;;
-;;; The signal specs expected by this function have the form
-;;; "modifier::signal_name", where modifier can be one of the following:
-;;;
-;;; signal
-;;;
-;;;     equivalent to g_signal_connect_data (..., NULL, 0)
-;;;
-;;; object_signal, object-signal
-;;;
-;;;     equivalent to g_signal_connect_object (..., 0)
-;;;
-;;; swapped_signal, swapped-signal
-;;;
-;;;     equivalent to g_signal_connect_data (..., NULL, G_CONNECT_SWAPPED)
-;;;
-;;; swapped_object_signal, swapped-object-signal
-;;;
-;;;     equivalent to g_signal_connect_object (..., G_CONNECT_SWAPPED)
-;;;
-;;; signal_after, signal-after
-;;;
-;;;     equivalent to g_signal_connect_data (..., NULL, G_CONNECT_AFTER)
-;;;
-;;; object_signal_after, object-signal-after
-;;;
-;;;     equivalent to g_signal_connect_object (..., G_CONNECT_AFTER)
-;;;
-;;; swapped_signal_after, swapped-signal-after
-;;;
-;;;     equivalent to g_signal_connect_data (..., NULL,
-;;;                                          G_CONNECT_SWAPPED |
-;;;                                          G_CONNECT_AFTER)
-;;;
-;;; swapped_object_signal_after, swapped-object-signal-after
-;;;
-;;;   equivalent to g_signal_connect_object (..., G_CONNECT_SWAPPED |
-;;;                                               G_CONNECT_AFTER)
-;;;
-;;;   menu->toplevel = g_object_connect (g_object_new (GTK_TYPE_WINDOW,
-;;;                              "type", GTK_WINDOW_POPUP,
-;;;                              "child", menu,
-;;;                              NULL),
-;;;                  "signal::event", gtk_menu_window_event, menu,
-;;;                  "signal::size_request", gtk_menu_window_size_request, menu,
-;;;                  "signal::destroy", gtk_widget_destroyed, &menu->toplevel,
-;;;                  NULL);
-;;;
-;;; object :
-;;;     a GObject
-;;;
-;;; signal_spec :
-;;;     the spec for the first signal
-;;;
-;;; ... :
-;;;     GCallback for the first signal, followed by data for the first signal,
-;;;     followed optionally by more signal spec/callback/data triples, followed
-;;;     by NULL
-;;;
-;;; Returns :
-;;;     object
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_object_disconnect ()
-;;;
-;;; void g_object_disconnect (gpointer object,
-;;;                           const gchar *signal_spec,
-;;;                           ...);
+;;; g_object_disconnect
 ;;;
 ;;; A convenience function to disconnect multiple signals at once.
-;;;
-;;; The signal specs expected by this function have the form "any_signal", which
-;;; means to disconnect any signal with matching callback and data, or
-;;; "any_signal::signal_name", which only disconnects the signal named
-;;; "signal_name".
-;;;
-;;; object :
-;;;     a GObject
-;;;
-;;; signal_spec :
-;;;     the spec for the first signal
-;;;
-;;; ... :
-;;;     GCallback for the first signal, followed by data for the first signal,
-;;;     followed optionally by more signal spec/callback/data triples, followed
-;;;     by NULL
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_object_set ()
-;;;
-;;; void g_object_set (gpointer object, const gchar *first_property_name, ...);
+;;; g_object_set
 ;;;
 ;;; Sets properties on an object.
-;;;
-;;; object :
-;;;     a GObject
-;;;
-;;; first_property_name :
-;;;     name of the first property to set
-;;;
-;;; ... :
-;;;     value for the first property, followed optionally by more name/value
-;;;     pairs, followed by NULL
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_object_setv ()
+;;; g_object_setv
 ;;;
-;;; void
-;;; g_object_setv (GObject *object,
-;;;                guint n_properties,
-;;;                const gchar *names[],
-;;;                const GValue values[]);
-;;;
-;;; Sets n_properties properties for an object . Properties to be set will be
-;;; taken from values . All properties must be valid. Warnings will be emitted
-;;; and undefined behaviour may result if invalid properties are passed in.
-;;;
-;;; object :
-;;;     a GObject
-;;;
-;;; n_properties :
-;;;     the number of properties
-;;;
-;;; names :
-;;;     the names of each property to be set.
-;;;
-;;; values :
-;;;     the values of each property to be set.
+;;; Sets n_properties properties for an object.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_object_get ()
-;;;
-;;; void g_object_get (gpointer object, const gchar *first_property_name, ...);
+;;; g_object_get
 ;;;
 ;;; Gets properties of an object.
-;;;
-;;; In general, a copy is made of the property contents and the caller is
-;;; responsible for freeing the memory in the appropriate manner for the type,
-;;; for instance by calling g_free() or g_object_unref().
-;;;
-;;; Example 2. Using g_object_get()
-;;;
-;;; An example of using g_object_get() to get the contents of three properties -
-;;; one of type G_TYPE_INT, one of type G_TYPE_STRING, and one of type
-;;; G_TYPE_OBJECT:
-;;;
-;;;   gint intval;
-;;;   gchar *strval;
-;;;   GObject *objval;
-;;;
-;;;   g_object_get (my_object,
-;;;                 "int-property", &intval,
-;;;                 "str-property", &strval,
-;;;                 "obj-property", &objval,
-;;;                 NULL);
-;;;
-;;;   // Do something with intval, strval, objval
-;;;
-;;;   g_free (strval);
-;;;   g_object_unref (objval);
-;;;
-;;; object :
-;;;     a GObject
-;;;
-;;; first_property_name :
-;;;     name of the first property to get
-;;;
-;;; ... :
-;;;     return location for the first property, followed optionally by more
-;;;     name/return location pairs, followed by NULL
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_object_getv ()
+;;; g_object_getv
 ;;;
-;;; void
-;;; g_object_getv (GObject *object,
-;;;                guint n_properties,
-;;;                const gchar *names[],
-;;;                GValue values[]);
-;;;
-;;; Gets n_properties properties for an object . Obtained properties will be set
-;;; to values . All properties must be valid. Warnings will be emitted and
-;;; undefined behaviour may result if invalid properties are passed in.
-;;;
-;;; object :
-;;;     a GObject
-;;;
-;;; n_properties :
-;;;     the number of properties
-;;;
-;;; names :
-;;;     the names of each property to get.
-;;;
-;;; values :
-;;;     the values of each property to get.
+;;; Gets n_properties properties for an object.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -2425,50 +1503,9 @@ lambda (object pspec)    :no-hooks
 (export 'object-notify)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_object_notify_by_pspec ()
-;;;
-;;; void g_object_notify_by_pspec (GObject *object, GParamSpec *pspec);
+;;; g_object_notify_by_pspec
 ;;;
 ;;; Emits a "notify" signal for the property specified by pspec on object.
-;;;
-;;; This function omits the property name lookup, hence it is faster than
-;;; g_object_notify().
-;;;
-;;; One way to avoid using g_object_notify() from within the class that
-;;; registered the properties, and using g_object_notify_by_pspec() instead, is
-;;; to store the GParamSpec used with g_object_class_install_property() inside a
-;;; static array, e.g.:
-;;;
-;;;   enum
-;;;   {
-;;;     PROP_0,
-;;;     PROP_FOO,
-;;;     PROP_LAST
-;;;   };
-;;;
-;;;   static GParamSpec *properties[PROP_LAST];
-;;;
-;;;   static void
-;;;   my_object_class_init (MyObjectClass *klass)
-;;;   {
-;;;     properties[PROP_FOO] = g_param_spec_int ("foo", "Foo", "The foo",
-;;;                                              0, 100,
-;;;                                              50,
-;;;                                              G_PARAM_READWRITE);
-;;;     g_object_class_install_property (gobject_class,
-;;;                                      PROP_FOO,
-;;;                                      properties[PROP_FOO]);
-;;;   }
-;;;
-;;; and then notify a change on the "foo" property with:
-;;;
-;;;   g_object_notify_by_pspec (self, properties[PROP_FOO]);
-;;;
-;;; object :
-;;;     a GObject
-;;;
-;;; pspec :
-;;;     the GParamSpec of a property installed on the class of object.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -2657,6 +1694,7 @@ lambda (object pspec)    :no-hooks
 ;;; g_object_steal_data                                     not exported
 ;;; ----------------------------------------------------------------------------
 
+#+nil
 (cffi:defcfun ("g_object_steal_data" object-steal-data) :pointer
  #+liber-documentation
  "@version{#2022-12-30}
@@ -2674,282 +1712,60 @@ lambda (object pspec)    :no-hooks
   (key :string))
 
 ;;;-----------------------------------------------------------------------------
-;;; g_object_dup_data ()
-;;;
-;;; gpointer g_object_dup_data (GObject *object,
-;;;                             const gchar *key,
-;;;                             GDuplicateFunc dup_func,
-;;;                             gpointer user_data);
+;;; g_object_dup_data
 ;;;
 ;;; This is a variant of g_object_get_data() which returns a 'duplicate' of the
-;;; value. dup_func defines the meaning of 'duplicate' in this context, it could
-;;; e.g. take a reference on a ref-counted object.
-;;;
-;;; If the key is not set on the object then dup_func will be called with a NULL
-;;; argument.
-;;;
-;;; Note that dup_func is called while user data of object is locked.
-;;;
-;;; This function can be useful to avoid races when multiple threads are using
-;;; object data on the same key on the same object.
-;;;
-;;; object :
-;;;     the GObject to store user data on
-;;;
-;;; key :
-;;;     a string, naming the user data pointer
-;;;
-;;; dup_func :
-;;;     function to dup the value. [allow-none]
-;;;
-;;; user_data :
-;;;     passed as user_data to dup_func. [allow-none]
-;;;
-;;; Returns :
-;;;     the result of calling dup_func on the value associated with key on
-;;;     object, or NULL if not set. If dup_func is NULL, the value is returned
-;;;     unmodified.
+;;; value.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_object_replace_data ()
-;;;
-;;; gboolean g_object_replace_data (GObject *object,
-;;;                                 const gchar *key,
-;;;                                 gpointer oldval,
-;;;                                 gpointer newval,
-;;;                                 GDestroyNotify destroy,
-;;;                                 GDestroyNotify *old_destroy);
+;;; g_object_replace_data
 ;;;
 ;;; Compares the user data for the key key on object with oldval, and if they
 ;;; are the same, replaces oldval with newval.
-;;;
-;;; This is like a typical atomic compare-and-exchange operation, for user data
-;;; on an object.
-;;;
-;;; If the previous value was replaced then ownership of the old value (oldval)
-;;; is passed to the caller, including the registred destroy notify for it
-;;; (passed out in old_destroy). Its up to the caller to free this as he wishes,
-;;; which may or may not include using old_destroy as sometimes replacement
-;;; should not destroy the object in the normal way.
-;;;
-;;; Return: TRUE if the existing value for key was replaced by newval, FALSE
-;;; otherwise.
-;;;
-;;; object :
-;;;     the GObject to store user data on
-;;;
-;;; key :
-;;;     a string, naming the user data pointer
-;;;
-;;; oldval :
-;;;     the old value to compare against. [allow-none]
-;;;
-;;; newval :
-;;;     the new value. [allow-none]
-;;;
-;;; destroy :
-;;;     a destroy notify for the new value. [allow-none]
-;;;
-;;; old_destroy :
-;;;     destroy notify for the existing value. [allow-none]
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_object_get_qdata ()
-;;;
-;;; gpointer g_object_get_qdata (GObject *object, GQuark quark);
+;;; g_object_get_qdata
 ;;;
 ;;; This function gets back user data pointers stored via g_object_set_qdata().
-;;;
-;;; object :
-;;;     The GObject to get a stored user data pointer from
-;;;
-;;; quark :
-;;;     A GQuark, naming the user data pointer
-;;;
-;;; Returns :
-;;;     The user data pointer set, or NULL.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_object_set_qdata ()
 ;;;
-;;; void g_object_set_qdata (GObject *object, GQuark quark, gpointer data);
-;;;
-;;; This sets an opaque, named pointer on an object. The name is specified
-;;; through a GQuark (retrived e.g. via g_quark_from_static_string()), and the
-;;; pointer can be gotten back from the object with g_object_get_qdata() until
-;;; the object is finalized. Setting a previously set user data pointer,
-;;; overrides (frees) the old pointer set, using NULL as pointer essentially
-;;; removes the data stored.
-;;;
-;;; object :
-;;;     The GObject to set store a user data pointer
-;;;
-;;; quark :
-;;;     A GQuark, naming the user data pointer
-;;;
-;;; data :
-;;;     An opaque user data pointer
+;;; This sets an opaque, named pointer on an object.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_object_set_qdata_full ()
-;;;
-;;; void g_object_set_qdata_full (GObject *object,
-;;;                               GQuark quark,
-;;;                               gpointer data,
-;;;                               GDestroyNotify destroy);
+;;; g_object_set_qdata_full
 ;;;
 ;;; This function works like g_object_set_qdata(), but in addition, a
 ;;; void (*destroy) (gpointer) function may be specified which is called with
 ;;; data as argument when the object is finalized, or the data is being
 ;;; overwritten by a call to g_object_set_qdata() with the same quark.
-;;;
-;;; object :
-;;;     The GObject to set store a user data pointer
-;;;
-;;; quark :
-;;;     A GQuark, naming the user data pointer
-;;;
-;;; data :
-;;;     An opaque user data pointer
-;;;
-;;; destroy :
-;;;     Function to invoke with data as argument, when data needs to be freed
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_object_steal_qdata ()
-;;;
-;;; gpointer g_object_steal_qdata (GObject *object, GQuark quark);
+;;; g_object_steal_qdata
 ;;;
 ;;; This function gets back user data pointers stored via g_object_set_qdata()
 ;;; and removes the data from object without invoking its destroy() function (if
-;;; any was set). Usually, calling this function is only required to update user
-;;; data pointers with a destroy notifier, for example:
-;;;
-;;;   void
-;;;   object_add_to_user_list (GObject     *object,
-;;;                            const gchar *new_string)
-;;;   {
-;;;     // the quark, naming the object data
-;;;     GQuark quark_string_list = g_quark_from_static_string("my-string-list");
-;;;     // retrive the old string list
-;;;     GList *list = g_object_steal_qdata (object, quark_string_list);
-;;;
-;;;     // prepend new string
-;;;     list = g_list_prepend (list, g_strdup (new_string));
-;;;     // this changed 'list', so we need to set it again
-;;;     g_object_set_qdata_full (object, quark_string_list, list,
-;;;                              free_string_list);
-;;;   }
-;;;   static void
-;;;   free_string_list (gpointer data)
-;;;   {
-;;;     GList *node, *list = data;
-;;;
-;;;     for (node = list; node; node = node->next)
-;;;       g_free (node->data);
-;;;     g_list_free (list);
-;;;   }
-;;;
-;;; Using g_object_get_qdata() in the above example, instead of
-;;; g_object_steal_qdata() would have left the destroy function set, and thus
-;;; the partial string list would have been freed upon
-;;; g_object_set_qdata_full().
-;;;
-;;; object :
-;;;     The GObject to get a stored user data pointer from
-;;;
-;;; quark :
-;;;     A GQuark, naming the user data pointer
-;;;
-;;; Returns :
-;;;     The user data pointer set, or NULL.
+;;; any was set).
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_object_dup_qdata ()
-;;;
-;;; gpointer g_object_dup_qdata (GObject *object,
-;;;                              GQuark quark,
-;;;                              GDuplicateFunc dup_func,
-;;;                              gpointer user_data);
+;;; g_object_dup_qdata
 ;;;
 ;;; This is a variant of g_object_get_qdata() which returns a 'duplicate' of the
-;;; value. dup_func defines the meaning of 'duplicate' in this context, it could
-;;; e.g. take a reference on a ref-counted object.
-;;;
-;;; If the quark is not set on the object then dup_func will be called with a
-;;; NULL argument.
-;;;
-;;; Note that dup_func is called while user data of object is locked.
-;;;
-;;; This function can be useful to avoid races when multiple threads are using
-;;; object data on the same key on the same object.
-;;;
-;;; object :
-;;;     the GObject to store user data on
-;;;
-;;; quark :
-;;;     a GQuark, naming the user data pointer
-;;;
-;;; dup_func :
-;;;     function to dup the value. [allow-none]
-;;;
-;;; user_data :
-;;;     passed as user_data to dup_func. [allow-none]
-;;;
-;;; Returns :
-;;;     the result of calling dup_func on the value associated with quark on
-;;;     object, or NULL if not set. If dup_func is NULL, the value is returned
-;;;     unmodified.
+;;; value.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_object_replace_qdata ()
-;;;
-;;; gboolean g_object_replace_qdata (GObject *object,
-;;;                                  GQuark quark,
-;;;                                  gpointer oldval,
-;;;                                  gpointer newval,
-;;;                                  GDestroyNotify destroy,
-;;;                                  GDestroyNotify *old_destroy);
+;;; g_object_replace_qdata
 ;;;
 ;;; Compares the user data for the key quark on object with oldval, and if they
 ;;; are the same, replaces oldval with newval.
-;;;
-;;; This is like a typical atomic compare-and-exchange operation, for user data
-;;; on an object.
-;;;
-;;; If the previous value was replaced then ownership of the old value (oldval)
-;;; is passed to the caller, including the registred destroy notify for it
-;;; (passed out in old_destroy). Its up to the caller to free this as he wishes,
-;;; which may or may not include using old_destroy as sometimes replacement
-;;; should not destroy the object in the normal way.
-;;;
-;;; Return: TRUE if the existing value for quark was replaced by newval, FALSE
-;;; otherwise.
-;;;
-;;; object :
-;;;     the GObject to store user data on
-;;;
-;;; quark :
-;;;     a GQuark, naming the user data pointer
-;;;
-;;; oldval :
-;;;     the old value to compare against. [allow-none]
-;;;
-;;; newval :
-;;;     the new value. [allow-none]
-;;;
-;;; destroy :
-;;;     a destroy notify for the new value. [allow-none]
-;;;
-;;; old_destroy :
-;;;     destroy notify for the existing value. [allow-none]
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -3023,248 +1839,74 @@ lambda (object pspec)    :no-hooks
 (export 'object-property)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_object_new_valist ()
-;;;
-;;; GObject * g_object_new_valist (GType object_type,
-;;;                                const gchar *first_property_name,
-;;;                                va_list var_args);
+;;; g_object_new_valist
 ;;;
 ;;; Creates a new instance of a GObject subtype and sets its properties.
-;;;
-;;; Construction parameters (see G_PARAM_CONSTRUCT, G_PARAM_CONSTRUCT_ONLY)
-;;; which are not explicitly specified are set to their default values.
-;;;
-;;; object_type :
-;;;     the type id of the GObject subtype to instantiate
-;;;
-;;; first_property_name :
-;;;     the name of the first property
-;;;
-;;; var_args :
-;;;     the value of the first property, followed optionally by more name/value
-;;;     pairs, followed by NULL
-;;;
-;;; Returns :
-;;;     a new instance of object_type
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_object_set_valist ()
-;;;
-;;; void g_object_set_valist (GObject *object,
-;;;                           const gchar *first_property_name,
-;;;                           va_list var_args);
+;;; g_object_set_valist
 ;;;
 ;;; Sets properties on an object.
-;;;
-;;; object :
-;;;     a GObject
-;;;
-;;; first_property_name :
-;;;     name of the first property to set
-;;;
-;;; var_args :
-;;;     value for the first property, followed optionally by more name/value
-;;;     pairs, followed by NULL
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_object_get_valist ()
-;;;
-;;; void g_object_get_valist (GObject *object,
-;;;                           const gchar *first_property_name,
-;;;                           va_list var_args);
+;;; g_object_get_valist
 ;;;
 ;;; Gets properties of an object.
-;;;
-;;; In general, a copy is made of the property contents and the caller is
-;;; responsible for freeing the memory in the appropriate manner for the type,
-;;; for instance by calling g_free() or g_object_unref().
-;;;
-;;; See g_object_get().
-;;;
-;;; object :
-;;;     a GObject
-;;;
-;;; first_property_name :
-;;;     name of the first property to get
-;;;
-;;; var_args :
-;;;     return location for the first property, followed optionally by more
-;;;     name/return location pairs, followed by NULL
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_object_watch_closure ()
 ;;;
-;;; void g_object_watch_closure (GObject *object, GClosure *closure);
-;;;
 ;;; This function essentially limits the life time of the closure to the life
-;;; time of the object. That is, when the object is finalized, the closure is
-;;; invalidated by calling g_closure_invalidate() on it, in order to prevent
-;;; invocations of the closure with a finalized (nonexisting) object. Also,
-;;; g_object_ref() and g_object_unref() are added as marshal guards to the
-;;; closure, to ensure that an extra reference count is held on object during
-;;; invocation of the closure. Usually, this function will be called on closures
-;;; that use this object as closure data.
-;;;
-;;; object :
-;;;     GObject restricting lifetime of closure
-;;;
-;;; closure :
-;;;     GClosure to watch
+;;; time of the object.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_object_run_dispose ()
+;;; g_object_run_dispose
 ;;;
-;;; void g_object_run_dispose (GObject *object);
-;;;
-;;; Releases all references to other objects. This can be used to break
-;;; reference cycles.
-;;;
-;;; This functions should only be called from object system implementations.
-;;;
-;;; object :
-;;;     a GObject
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_OBJECT_WARN_INVALID_PROPERTY_ID()
-;;;
-;;; #define G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec)
-;;;
-;;; This macro should be used to emit a standard warning about unexpected
-;;; properties in set_property() and get_property() implementations.
-;;;
-;;; object :
-;;;     the GObject on which set_property() or get_property() was called
-;;;
-;;; property_id :
-;;;     the numeric id of the property
-;;;
-;;; pspec :
-;;;     the GParamSpec of the property
+;;; Releases all references to other objects.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
 ;;; GWeakRef
 ;;;
-;;; typedef struct {
-;;; } GWeakRef;
-;;;
-;;; A structure containing a weak reference to a GObject. It can either be empty
-;;; (i.e. point to NULL), or point to an object for as long as at least one
-;;; "strong" reference to that object exists. Before the object's
-;;; GObjectClass.dispose method is called, every GWeakRef associated with
-;;; becomes empty (i.e. points to NULL).
-;;;
-;;; Like GValue, GWeakRef can be statically allocated, stack- or heap-allocated,
-;;; or embedded in larger structures.
-;;;
-;;; Unlike g_object_weak_ref() and g_object_add_weak_pointer(), this weak
-;;; reference is thread-safe: converting a weak pointer to a reference is atomic
-;;; with respect to invalidation of weak pointers to destroyed objects.
-;;;
-;;; If the object's GObjectClass.dispose method results in additional references
-;;; to the object being held, any GWeakRefs taken before it was disposed will
-;;; continue to point to NULL. If GWeakRefs are taken after the object is
-;;; disposed and re-referenced, they will continue to point to it until its
-;;; refcount goes back to zero, at which point they too will be invalidated.
+;;; A structure containing a weak reference to a GObject.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_weak_ref_init ()
-;;;
-;;; void g_weak_ref_init (GWeakRef *weak_ref, gpointer object);
+;;; g_weak_ref_init
 ;;;
 ;;; Initialise a non-statically-allocated GWeakRef.
-;;;
-;;; This function also calls g_weak_ref_set() with object on the
-;;; freshly-initialised weak reference.
-;;;
-;;; This function should always be matched with a call to g_weak_ref_clear(). It
-;;; is not necessary to use this function for a GWeakRef in static storage
-;;; because it will already be properly initialised. Just use g_weak_ref_set()
-;;; directly.
-;;;
-;;; weak_ref :
-;;;     uninitialized or empty location for a weak reference
-;;;
-;;; object :
-;;;     a GObject or NULL
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_weak_ref_clear ()
-;;;
-;;; void g_weak_ref_clear (GWeakRef *weak_ref);
+;;; g_weak_ref_clear
 ;;;
 ;;; Frees resources associated with a non-statically-allocated GWeakRef. After
 ;;; this call, the GWeakRef is left in an undefined state.
-;;;
-;;; You should only call this on a GWeakRef that previously had
-;;; g_weak_ref_init() called on it.
-;;;
-;;; weak_ref :
-;;;     location of a weak reference, which may be empty
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_weak_ref_get ()
-;;;
-;;; gpointer g_weak_ref_get (GWeakRef *weak_ref);
+;;; g_weak_ref_get
 ;;;
 ;;; If weak_ref is not empty, atomically acquire a strong reference to the
 ;;; object it points to, and return that reference.
-;;;
-;;; This function is needed because of the potential race between taking the
-;;; pointer value and g_object_ref() on it, if the object was losing its last
-;;; reference at the same time in a different thread.
-;;;
-;;; The caller should release the resulting reference in the usual way, by using
-;;; g_object_unref().
-;;;
-;;; weak_ref :
-;;;     location of a weak reference to a GObject
-;;;
-;;; Returns :
-;;;     the object pointed to by weak_ref, or NULL if it was empty
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_weak_ref_set ()
-;;;
-;;; void g_weak_ref_set (GWeakRef *weak_ref, gpointer object);
+;;; g_weak_ref_set
 ;;;
 ;;; Change the object to which weak_ref points, or set it to NULL.
-;;;
-;;; You must own a strong reference on object while calling this function.
-;;;
-;;; weak_ref :
-;;;     location for a weak reference
-;;;
-;;; object :
-;;;     a GObject or NULL
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_assert_finalize_object ()
-;;;
-;;; void
-;;; g_assert_finalize_object (GObject *object);
+;;; g_assert_finalize_object
 ;;;
 ;;; Assert that object is non-NULL, then release one reference to it with
 ;;; g_object_unref() and assert that it has been finalized (i.e. that there are
 ;;; no more references).
-;;;
-;;; If assertions are disabled via G_DISABLE_ASSERT, this macro just calls
-;;; g_object_unref() without any further checks.
-;;;
-;;; This macro should only be used in regression tests.
-;;;
-;;; object :
-;;;     an object.
 ;;;
 ;;; Since 2.62
 ;;; ----------------------------------------------------------------------------

@@ -33,31 +33,30 @@
 ;;;
 ;;; Types and Values
 ;;;
-;;;     G_TYPE_RESERVED_GLIB_FIRST                         not exported
-;;;     G_TYPE_RESERVED_GLIB_LAST                          not exported
-;;;     G_TYPE_RESERVED_BSE_FIRST                          not exported
-;;;     G_TYPE_RESERVED_BSE_LAST                           not exported
-;;;     G_TYPE_RESERVED_USER_FIRST                         not exported
+;;;     G_TYPE_RESERVED_GLIB_FIRST                          not exported
+;;;     G_TYPE_RESERVED_GLIB_LAST                           not exported
+;;;     G_TYPE_RESERVED_BSE_FIRST                           not exported
+;;;     G_TYPE_RESERVED_BSE_LAST                            not exported
+;;;     G_TYPE_RESERVED_USER_FIRST                          not exported
 ;;;
-;;;     G_TYPE_FUNDAMENTAL_MAX                             not exported
+;;;     G_TYPE_FUNDAMENTAL_MAX                              not exported
 ;;;
 ;;;     GType
 ;;;     GTypeInterface
 ;;;     GTypeInstance
 ;;;     GTypeClass
-;;;     GTypeInfo                                          not exported
-;;;     GTypeFundamentalInfo                               not exported
-;;;     GInterfaceInfo                                     not exported
-;;;     GTypeValueTable                                    not exported
-;;;     G_TYPE_FLAG_RESERVED_ID_BIT                        not implemented
-;;;     GTypeDebugFlags                                    not implemented
-;;;     GTypeQuery                                         not exported
-;;;     GTypeFlags                                         not exported
-;;;     GTypeFundamentalFlags                              not exported
+;;;
+;;;     GTypeInfo                                           not exported
+;;;     GTypeFundamentalInfo                                not exported
+;;;     GInterfaceInfo                                      not exported
+;;;     GTypeValueTable                                     not exported
+;;;     GTypeDebugFlags                                     Deprecated 2.36
+;;;     GTypeQuery                                          not exported
+;;;     GTypeFlags                                          not exported
+;;;     GTypeFundamentalFlags                               not exported
 ;;;
 ;;; Functions
 ;;;
-;;;     G_TYPE_FUNDAMENTAL
 ;;;     G_TYPE_MAKE_FUNDAMENTAL                            not exported
 ;;;     G_TYPE_IS_ABSTRACT
 ;;;     G_TYPE_IS_DERIVED
@@ -73,11 +72,11 @@
 ;;;     G_TYPE_FROM_CLASS
 ;;;     G_TYPE_FROM_INTERFACE
 ;;;     G_TYPE_INSTANCE_GET_CLASS
-;;;     G_TYPE_INSTANCE_GET_INTERFACE                      not implemented
-;;;     G_TYPE_INSTANCE_GET_PRIVATE                        not implemented
-;;;     G_TYPE_CLASS_GET_PRIVATE                           not implemented
-;;;     G_TYPE_CHECK_INSTANCE                              not implemented
-;;;     G_TYPE_CHECK_INSTANCE_CAST                         not implemented
+;;;     G_TYPE_INSTANCE_GET_INTERFACE                       not implemented
+;;;     G_TYPE_INSTANCE_GET_PRIVATE                         Deprecated 2.58
+;;;     G_TYPE_CLASS_GET_PRIVATE                            not implemented
+;;;     G_TYPE_CHECK_INSTANCE                               not implemented
+;;;     G_TYPE_CHECK_INSTANCE_CAST                          not implemented
 ;;;     G_TYPE_CHECK_INSTANCE_TYPE
 ;;;     G_TYPE_CHECK_INSTANCE_FUNDAMENTAL_TYPE
 ;;;     G_TYPE_CHECK_CLASS_CAST                            not implemented
@@ -85,8 +84,8 @@
 ;;;     G_TYPE_CHECK_VALUE                                 not implemented
 ;;;     G_TYPE_CHECK_VALUE_TYPE                            not implemented
 ;;;
-;;;     g_type_init                                        deprecated
-;;;     g_type_init_with_debug_flags                       deprecated
+;;;     g_type_init                                        Deprecated 2.36
+;;;     g_type_init_with_debug_flags                       Deprecated 2.36
 ;;;     g_type_name
 ;;;     g_type_qname                                       not implemented
 ;;;     g_type_from_name
@@ -148,35 +147,11 @@
 ;;;
 ;;;     g_type_get_type_registration_serial                not implemented
 ;;;     g_type_get_instance_count                          not implemented
-;;;
-;;;     G_DECLARE_FINAL_TYPE                               not implemented
-;;;     G_DECLARE_DERIVABLE_TYPE                           not implemented
-;;;     G_DECLARE_INTERFACE                                not implemented
-;;;     G_DEFINE_TYPE                                      not implemented
-;;;     G_DEFINE_TYPE_WITH_PRIVATE                         not implemented
-;;;     G_DEFINE_TYPE_WITH_CODE                            not implemented
-;;;     G_DEFINE_ABSTRACT_TYPE                             not implemented
-;;;     G_DEFINE_ABSTRACT_TYPE_WITH_PRIVATE                not implemented
-;;;     G_DEFINE_ABSTRACT_TYPE_WITH_CODE                   not implemented
-;;;     G_ADD_PRIVATE                                      not implemented
-;;;     G_PRIVATE_OFFSET                                   not implemented
-;;;     G_PRIVATE_FIELD                                    not implemented
-;;;     G_PRIVATE_FIELD_P                                  not implemented
-;;;     G_DEFINE_INTERFACE                                 not implemented
-;;;     G_DEFINE_INTERFACE_WITH_CODE                       not implemented
-;;;     G_IMPLEMENT_INTERFACE                              not implemented
-;;;     G_DEFINE_TYPE_EXTENDED                             not implemented
-;;;     G_DEFINE_BOXED_TYPE                                not implemented
-;;;     G_DEFINE_BOXED_TYPE_WITH_CODE                      not implemented
-;;;     G_DEFINE_POINTER_TYPE                              not implemented
-;;;     G_DEFINE_POINTER_TYPE_WITH_CODE                    not implemented
 ;;; ----------------------------------------------------------------------------
 
 (in-package :gobject)
 
-;; This constant is not exported.
-(eval-when (:execute :compile-toplevel :load-toplevel)
-  (defconstant +type-fundamental-shift+ 2))
+(defconstant +type-fundamental-shift+ 2)
 
 ;;; ----------------------------------------------------------------------------
 ;;; G_TYPE_GTYPE
@@ -200,9 +175,10 @@
 ;;; G_TYPE_RESERVED_GLIB_FIRST                             not exported
 ;;; ----------------------------------------------------------------------------
 
+#+nil
 (defconstant +type-reserved-glib-first+ 22)
 
-#+liber-documentation
+#+nil
 (setf (liber:alias-for-variable '+type-reserved-glib-first+)
       "Constant"
       (documentation '+type-reserved-glib-first+ 'variable)
@@ -218,9 +194,10 @@
 ;;; G_TYPE_RESERVED_GLIB_LAST                              not exported
 ;;; ----------------------------------------------------------------------------
 
+#+nil
 (defconstant +type-reserved-glib-last+ 31)
 
-#+liber-documentation
+#+nil
 (setf (liber:alias-for-variable '+type-reserved-glib-last+)
       "Constant"
       (documentation '+type-reserved-glib-last+ 'variable)
@@ -235,9 +212,10 @@
 ;;; G_TYPE_RESERVED_BSE_FIRST                              not exported
 ;;; ----------------------------------------------------------------------------
 
+#+nil
 (defconstant +type-reserved-bse-first+ 32)
 
-#+liber-documentation
+#+nil
 (setf (liber:alias-for-variable '+type-reserved-bse-first+)
       "Constant"
       (documentation '+type-reserved-bse-first+ 'variable)
@@ -254,9 +232,10 @@
 ;;; G_TYPE_RESERVED_BSE_LAST                               not exported
 ;;; ----------------------------------------------------------------------------
 
+#+nil
 (defconstant +type-reserved-bse-last+ 48)
 
-#+liber-documentation
+#+nil
 (setf (liber:alias-for-variable '+type-reserved-bse-last+)
       "Constant"
       (documentation '+type-reserved-bse-last+ 'variable)
@@ -271,9 +250,10 @@
 ;;; G_TYPE_RESERVED_USER_FIRST                             not exported
 ;;; ----------------------------------------------------------------------------
 
+#+nil
 (defconstant +type-reserved-user-first+ 49)
 
-#+liber-documentation
+#+nil
 (setf (liber:alias-for-variable '+type-reserved-user-first+)
       "Constant"
       (documentation '+type-reserved-user-first+ 'variable)
@@ -287,16 +267,11 @@
   @see-function{g:type-make-fundamental}")
 
 ;;; ----------------------------------------------------------------------------
-;;; G_TYPE_FUNDAMENTAL_MAX                                 not exported
+;;; G_TYPE_FUNDAMENTAL_MAX                                  not exported
 ;;; ----------------------------------------------------------------------------
 
 (defconstant +type-fundamental-max+
-             #.(ash 255 +type-fundamental-shift+)
- #+liber-documentation
- "@version{#2013-3-31}
-  @variable-value{1020}
-  An integer constant that represents the number of identifiers reserved for
-  types that are assigned at compile time.")
+             #.(ash 255 +type-fundamental-shift+))
 
 ;;; ----------------------------------------------------------------------------
 
@@ -314,7 +289,7 @@
 (setf (liber:alias-for-class 'type-t)
       "Type"
       (documentation 'type-t 'type)
- "@version{2024-6-11}
+ "@version{2024-12-8}
   @begin{short}
     The @class{g:type-t} type specifier represents the unique @code{GType}
     identifier of a registered type.
@@ -343,17 +318,21 @@ ID     NAME               CFFI type      Lisp type
 36     \"gulong\"         :ulong
 40     \"gint64\"         :int64
 44     \"guint64\"        :uint64
-48     \"GEnum\"                           keyword
-52     \"GFlags\"                          list of keywords
+48     \"GEnum\"                           g:enum
+52     \"GFlags\"                          g:flags
 56     \"gfloat\"         :float           single-float
 60     \"gdouble\"        :double          double-float
 64     \"gchararray\"     :string
 68     \"gpointer\"       :pointer
 72     \"GBoxed\"         :pointer         g:boxed
-76     \"GParam\"         :pointer
+76     \"GParam\"         :pointer         g:param
 80     \"GObject\"        :pointer         g:object
-84     \"GVariant\"       :pointer
+84     \"GVariant\"       :pointer         g:variant
     @end{pre}
+  @end{dictionary}
+  @begin[Lisp symbols for types]{dictionary}
+    In the Lisp API, a Lisp symbol is registered for each GType. The
+    @fun{g:symbol-for-gtype} function gets this Lisp symbol.
   @end{dictionary}
   @begin[Examples]{dictionary}
     Create a @symbol{g:gtype} instance from a string or a numeric identifier.
@@ -381,10 +360,17 @@ ID     NAME               CFFI type      Lisp type
 (cffi:convert-to-foreign \"gdouble\" 'g:type-t) => 60
 (cffi:convert-to-foreign (g:gtype \"gdouble\") 'g:type-t) => 60
     @end{pre}
+    Get the Lisp symbol for a GType:
+    @begin{pre}
+(g:symbol-for-gtype \"GApplication\")
+=> GIO:APPLICATION
+=> T
+    @end{pre}
   @end{dictionary}
   @see-function{g:gtype}
   @see-function{g:gtype-name}
-  @see-function{g:gtype-id}")
+  @see-function{g:gtype-id}
+  @see-function{g:symbol-for-gtype}")
 
 ;;; ----------------------------------------------------------------------------
 
@@ -412,7 +398,7 @@ ID     NAME               CFFI type      Lisp type
 (setf (liber:alias-for-symbol 'type-class)
       "CStruct"
       (liber:symbol-documentation 'type-class)
- "@version{2024-6-11}
+ "@version{2024-12-8}
   @begin{declaration}
 (cffi:defcstruct type-class
   (:type type-t))
@@ -436,7 +422,7 @@ ID     NAME               CFFI type      Lisp type
 (setf (liber:alias-for-symbol 'type-interface)
       "CStruct"
       (liber:symbol-documentation 'type-interface)
- "@version{2024-6-11}
+ "@version{2024-12-8}
   @begin{declaration}
 (cffi:defcstruct type-interface
   (:type type-t)
@@ -461,7 +447,7 @@ ID     NAME               CFFI type      Lisp type
 (setf (liber:alias-for-symbol 'type-instance)
       "CStruct"
       (liber:symbol-documentation 'type-instance)
- "@version{2024-6-11}
+ "@version{2024-12-8}
   @begin{declaration}
 (cffi:defcstruct type-instance
   (:class (:pointer (:struct type-class))))
@@ -489,83 +475,6 @@ ID     NAME               CFFI type      Lisp type
   (:instance-init-fn :pointer)
   (:value-table :pointer))
 
-#+liber-documentation
-(setf (liber:alias-for-symbol 'type-info)
-      "CStruct"
-      (liber:symbol-documentation 'type-info)
- "@version{#2022-12-31}
-  @begin{short}
-    This structure is used to provide the type system with the information
-    required to initialize and destruct (finalize) a type's class and its
-    instances.
-  @end{short}
-  The initialized structure is passed to the function
-  @fun{type-register-static}. The type system will perform a deep copy of
-  this structure, so its memory does not need to be persistent across
-  invocation of the function @fun{type-register-static}.
-  @begin{pre}
-(cffi:defcstruct type-info
-  (:class-size :uint16)
-  (:base-init-fn :pointer)
-  (:base-finalize-fn :pointer)
-  (:class-init-fn :pointer)
-  (:class-finalize-fn :pointer)
-  (:class-data :pointer)
-  (:instance-size :uint16)
-  (:n-preallocs :uint16)
-  (:instance-init-fn :pointer)
-  (:value-table :pointer))
-  @end{pre}
-  @begin[code]{table}
-    @begin[:class-size]{entry}
-      Size of the class structure, required for interface, classed and
-      instantiatable types.
-    @end{entry}
-    @begin[:base-init-fn]{entry}
-      Location of the base initialization function (optional).
-    @end{entry}
-    @begin[:base-finalize-fn]{entry}
-      Location of the base finalization function (optional).
-    @end{entry}
-    @begin[:class-init-fn]{entry}
-      Location of the class initialization function for classed and
-      instantiatable types. Location of the default vtable inititalization
-      function for interface types (optional). This function is used both to
-      fill in virtual functions in the class or default vtable, and to do type
-      specific setup such as registering signals and object properties.
-    @end{entry}
-    @begin[:class-finalize-fn]{entry}
-      Location of the class finalization function for classed and
-      instantiatable types. Location fo the default vtable finalization
-      function for interface types (optional).
-    @end{entry}
-    @begin[:class-data]{entry}
-      User supplied data passed to the class init/finalize functions.
-    @end{entry}
-    @begin[:instance-size]{entry}
-      Size of the instance (object) structure (required for instantiatable
-      types only).
-    @end{entry}
-    @begin[:n-preallocs]{entry}
-      Prior to GLib 2.10, it specified the number of pre-allocated (cached)
-      instances to reserve memory for (0 indicates no caching). Since
-      GLib 2.10, it is ignored, since instances are allocated with the slice
-      allocator now.
-    @end{entry}
-    @begin[:instance-init-fn]{entry}
-      Location of the instance initialization function (optional, for
-      instantiatable types only).
-    @end{entry}
-    @begin[:value-table]{entry}
-      A @symbol{type-value-table} function table for generic handling of
-      @symbol{value}s of this type, usually only useful for fundamental
-      types.
-    @end{entry}
-  @end{table}
-  @see-symbol{value}
-  @see-symbol{type-value-table}
-  @see-function{type-register-static}")
-
 ;;; ----------------------------------------------------------------------------
 ;;; GTypeFundamentalFlags                                   not exported
 ;;; ----------------------------------------------------------------------------
@@ -576,63 +485,12 @@ ID     NAME               CFFI type      Lisp type
   :derivable
   :deep-derivable)
 
-#+liber-documentation
-(setf (liber:alias-for-symbol 'type-fundamental-flags)
-      "Bitfield"
-      (liber:symbol-documentation 'type-fundamental-flags)
- "@version{#2022-12-31}
-  @begin{short}
-    Bit masks used to check or determine specific characteristics of a
-   fundamental type.
-  @end{short}
-  See the @fun{g:type-is-classed}, @fun{g:type-is-instantiatable},
-  and @fun{g:type-is-deep-variable} functions to check a type ID for these
-  flags.
-  @begin{pre}
-(cffi:defbitfield type-fundamental-flags
-  :classed
-  :instantiatable
-  :derivable
-  :deep-derivable)
-  @end{pre}
-  @begin[code]{table}
-    @entry[:classed]{Indicates a classed type.}
-    @entry[:instantiatable]{Indicates an instantiable type (implies classed).}
-    @entry[:derivable]{Indicates a flat derivable type.}
-    @entry[:deep-derivable]{Indicates a deep derivable type (implies
-      derivable).}
-  @end{table}
-  @see-class{g:type-t}
-  @see-function{g:type-is-classed}
-  @see-function{g:type-is-instantiatable}
-  @see-function{g:type-is-derivable}
-  @see-function{g:type-is-deep-derivable}")
-
 ;;; ----------------------------------------------------------------------------
 ;;; GTypeFundamentalInfo                                    not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcstruct type-fundamental-info
   (:type-flags type-fundamental-flags))
-
-#+liber-documentation
-(setf (liber:alias-for-symbol 'type-fundamental-info)
-      "CStruct"
-      (liber:symbol-documentation 'type-fundamental-info)
- "@version{#2013-4-1}
-  @begin{short}
-    A structure that provides information to the type system which is used
-    specifically for managing fundamental types.
-  @end{short}
-  @begin{pre}
-(cffi:defcstruct type-fundamental-info
-  (:type-flags type-fundamental-flags))
-  @end{pre}
-  @begin[code]{table}
-    @entry[type-flags]{@symbol{type-fundamental-flags} describing
-      the characteristics of the fundamental type.}
-  @end{table}
-  @see-symbol{type-fundamental-flags}")
 
 ;;; ----------------------------------------------------------------------------
 ;;; GInterfaceInfo                                          not exported
@@ -642,30 +500,6 @@ ID     NAME               CFFI type      Lisp type
   (:interface-init :pointer)
   (:interface-finalize :pointer)
   (:interface-data :pointer))
-
-#+liber-documentation
-(setf (liber:alias-for-symbol 'interface-info)
-      "CStruct"
-      (liber:symbol-documentation 'interface-info)
- "@version{#2022-12-31}
-  @begin{short}
-    A structure that provides information to the type system which is used
-    specifically for managing interface types.
-  @end{short}
-  @begin{pre}
-(cffi:defcstruct interface-info
-  (:interface-init :pointer)
-  (:interface-finalize :pointer)
-  (:interface-data :pointer))
-  @end{pre}
-  @begin[@code]{table}
-    @entry[:interface-init]{Location of the interface initialization function.}
-    @entry[:interface-finalize]{Location of the interface finalization
-      function.}
-    @entry[:interface-data]{User supplied data passed to the interface
-      init/finalize functions.}
-  @end{table}
-  @see-symbol{type-interface}")
 
 ;;; ----------------------------------------------------------------------------
 ;;; GTypeValueTable                                         not exported
@@ -681,234 +515,8 @@ ID     NAME               CFFI type      Lisp type
   (:lcopy-format (:string :free-from-foreign nil :free-to-foreign nil))
   (:lcopy-value :pointer))
 
-#+liber-documentation
-(setf (liber:alias-for-symbol 'type-value-table)
-      "CStruct"
-      (liber:symbol-documentation 'type-value-table)
- "@version{#2022-12-31}
-  @begin{short}
-    The @symbol{type-value-table} structure provides the functions required by
-    the @symbol{value} implementation, to serve as a container for values of a
-    type.
-  @end{short}
-  @begin{pre}
-(cffi:defcstruct type-value-table
-  (:value-init :pointer)
-  (:value-free :pointer)
-  (:value-copy :pointer)
-  (:value-peek-pointer :pointer)
-  (:collect-format (:string :free-from-foreign nil :free-to-foreign nil))
-  (:collect-value :pointer)
-  (:lcopy-format (:string :free-from-foreign nil :free-to-foreign nil))
-  (:lcopy-value :pointer))
-  @end{pre}
-  @begin[code]{table}
-    @begin[:value-init]{entry}
-      Default initialize values contents by poking values directly into the
-      @code{value->data array}. The data array of the @symbol{value} passed
-      into this function was zero-filled with @code{memset()}, so no care has
-      to be taken to free any old contents. E.g. for the implementation of a
-      string value that may never be @code{NULL}, the implementation might look
-      like:
-      @begin{pre}
- value->data[0].v_pointer = g_strdup (\"\");
-      @end{pre}
-    @end{entry}
-    @begin[:value-free]{entry}
-      Free any old contents that might be left in the data array of the passed
-      in value. No resources may remain allocated through the @symbol{value}
-      contents after this function returns. E.g. for our above string type:
-      @begin{pre}
- // only free strings without a specific flag for static storage
- if (!(value->data[1].v_uint & G_VALUE_NOCOPY_CONTENTS))
- g_free (value->data[0].v_pointer);
-      @end{pre}
-    @end{entry}
-    @begin[:value-copy]{entry}
-      @arg{dest-value} is a @symbol{value} with zero-filled data section and
-      @arg{src-value} is a properly setup @symbol{value} of same or derived
-      type. The purpose of this function is to copy the contents of
-      @arg{src-value} into @arg{dest-value} in a way, that even after
-      @arg{src-value} has been freed, the contents of @arg{dest-value} remain
-      valid. String type example:
-      @begin{pre}
- dest_value->data[0].v_pointer = g_strdup (src_value->data[0].v_pointer);
-      @end{pre}
-    @end{entry}
-    @begin[:value-peek-pointer]{entry}
-      If the value contents fit into a pointer, such as objects or strings,
-      return this pointer, so the caller can peek at the current contents. To
-      extend on our above string example:
-      @begin{pre}
- return value->data[0].v_pointer;
-      @end{pre}
-    @end{entry}
-    @begin[:collect-format]{entry}
-      A string format describing how to collect the contents of this value
-      bit-by-bit. Each character in the format represents an argument to be
-      collected, and the characters themselves indicate the type of the
-      argument. Currently supported arguments are:
-      @begin{table}
-        @entry['i']{Integers, passed as @code{collect_values[].v_int}.}
-        @entry['l']{Longs, passed as @code{collect_values[].v_long}.}
-        @entry['d']{Doubles, passed as @code{collect_values[].v_double}.}
-        @entry['p']{Pointers, passed as @code{collect_values[].v_pointer}.}
-      @end{table}
-      It should be noted that for variable argument list construction, ANSI C
-      promotes every type smaller than an integer to an int, and floats to
-      doubles. So for collection of short int or char, 'i' needs to be used,
-      and for collection of floats 'd'.
-    @end{entry}
-    @begin[:collect-value]{entry}
-      The @code{collect_value()} function is responsible for converting the
-      values collected from a variable argument list into contents suitable for
-      storage in a @symbol{value}. This function should setup value similar
-      to @code{value_init()}; e.g. for a string value that does not allow
-      @code{NULL} pointers, it needs to either spew an error, or do an implicit
-      conversion by storing an empty string. The value passed in to this
-      function has a zero-filled data array, so just like for
-      @code{value_init()} it is guaranteed to not contain any old contents that
-      might need freeing. @code{n_collect_values} is exactly the string length
-      of collect_format, and @code{collect_values} is an array of unions
-      @code{GTypeCValue} with length @code{n_collect_values}, containing the
-      collected values according to  @code{collect_format}. @code{collect_flags}
-      is an argument provided as a hint by the caller. It may contain the flag
-      @code{G_VALUE_NOCOPY_CONTENTS} indicating, that the collected value
-      contents may be considered \"static\" for the duration of the value
-      lifetime. Thus an extra copy of the contents stored in
-      @code{collect_values} is not required for assignment to value. For our
-      above string example, we continue with:
-      @begin{pre}
- if (!collect_values[0].v_pointer)
-     value->data[0].v_pointer = g_strdup (\"\");
- else if (collect_flags & G_VALUE_NOCOPY_CONTENTS)
-   {
-     value->data[0].v_pointer = collect_values[0].v_pointer;
-     // keep a flag for the value_free() implementation to not free this
-     // string
-     value->data[1].v_uint = G_VALUE_NOCOPY_CONTENTS;
-   @}
-   else
-     value->data[0].v_pointer = g_strdup (collect_values[0].v_pointer);
-   return NULL;
-      @end{pre}
-      It should be noted, that it is generally a bad idea to follow the
-      @code{G_VALUE_NOCOPY_CONTENTS} hint for reference counted types. Due to
-      reentrancy requirements and reference count assertions performed by the
-      signal emission code, reference counts should always be incremented for
-      reference counted contents stored in the @code{value->data} array. To
-      deviate from our string example for a moment, and taking a look at an
-      exemplary implementation for @code{collect_value()} of GObject:
-      @begin{pre}
- if (collect_values[0].v_pointer)
- {
-     GObject *object = G_OBJECT (collect_values[0].v_pointer);
-     // never honour G_VALUE_NOCOPY_CONTENTS for ref-counted types
-     value->data[0].v_pointer = g_object_ref (object);
-     return NULL;
- @}
- else
-     return g_strdup_printf (\"Object passed as invalid NULL pointer\");
- @}
-      @end{pre}
-      The reference count for valid objects is always incremented, regardless
-      of @code{collect_flags}. For invalid objects, the example returns a newly
-      allocated string without altering value. Upon success,
-      @code{collect_value()} needs to return @code{NULL}. If, however, an error
-      condition occurred, @code{collect_value()} may spew an error by returning
-      a newly allocated non-@code{NULL} string, giving a suitable description
-      of the error condition. The calling code makes no assumptions about the
-      value contents being valid upon error returns, value is simply thrown
-      away without further freeing. As such, it is a good idea to not allocate
-      @symbol{value} contents, prior to returning an error, however,
-      @code{collect_values()} is not obliged to return a correctly setup value
-      for error returns, simply because any non-@code{NULL} return is
-      considered a fatal condition so further program behaviour is undefined.
-    @end{entry}
-    @begin[:lcopy-format]{entry}
-      Format description of the arguments to collect for @code{lcopy_value},
-      analogous to @code{collect_format}. Usually, @code{lcopy_format} string
-      consists only of 'p's to provide @code{lcopy_value()} with pointers to
-      storage locations.
-    @end{entry}
-    @begin[:lcopy-value]{entry}
-      This function is responsible for storing the value contents into
-      arguments passed through a variable argument list which got collected
-      into @code{collect_values} according to @code{lcopy_format}.
-      @code{n_collect_values} equals the string length of @code{lcopy_format},
-      and collect_flags may contain @code{G_VALUE_NOCOPY_CONTENTS}. In contrast
-      to @code{collect_value()}, @code{lcopy_value()} is obliged to always
-      properly support @code{G_VALUE_NOCOPY_CONTENTS}. Similar to
-      @code{collect_value()} the function may prematurely abort by returning a
-      newly allocated string describing an error condition. To complete the
-      string example:
-      @begin{pre}
- gchar **string_p = collect_values[0].v_pointer;
- if (!string_p)
-   return g_strdup_printf (\"string location passed as NULL\");
- if (collect_flags & G_VALUE_NOCOPY_CONTENTS)
-   *string_p = value->data[0].v_pointer;
- else
-   *string_p = g_strdup (value->data[0].v_pointer);
-      @end{pre}
-      And an illustrative version of @code{lcopy_value()} for reference-counted
-      types:
-      @begin{pre}
- GObject **object_p = collect_values[0].v_pointer;
- if (!object_p)
-   return g_strdup_printf (\"object location passed as NULL\");
- if (!value->data[0].v_pointer)
-   *object_p = NULL;
- else if (collect_flags & G_VALUE_NOCOPY_CONTENTS) /* always honour */
-   *object_p = value->data[0].v_pointer;
- else
-   *object_p = g_object_ref (value->data[0].v_pointer);
- return NULL;
-      @end{pre}
-    @end{entry}
-  @end{table}
-  @see-symbol{value}")
-
 ;;; ----------------------------------------------------------------------------
-;;; G_TYPE_FLAG_RESERVED_ID_BIT
-;;;
-;;; #define G_TYPE_FLAG_RESERVED_ID_BIT ((GType) (1 << 0))
-;;;
-;;; A bit in the type number that's supposed to be left untouched.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; enum GTypeDebugFlags
-;;;
-;;; typedef enum {
-;;;   G_TYPE_DEBUG_NONE    = 0,
-;;;   G_TYPE_DEBUG_OBJECTS = 1 << 0,
-;;;   G_TYPE_DEBUG_SIGNALS = 1 << 1,
-;;;   G_TYPE_DEBUG_MASK    = 0x03
-;;; } GTypeDebugFlags;
-;;;
-;;; Warning
-;;;
-;;; GTypeDebugFlags has been deprecated since version 2.36 and should not be
-;;; used in newly written code. g_type_init() is now done automatically
-;;;
-;;; These flags used to be passed to g_type_init_with_debug_flags() which is now
-;;; deprecated.
-;;;
-;;; If you need to enable debugging features, use the GOBJECT_DEBUG environment
-;;; variable.
-;;;
-;;; G_TYPE_DEBUG_NONE
-;;;     Print no messages.
-;;;
-;;; G_TYPE_DEBUG_OBJECTS
-;;;     Print messages about object bookkeeping.
-;;;
-;;; G_TYPE_DEBUG_SIGNALS
-;;;     Print messages about signal emissions.
-;;;
-;;; G_TYPE_DEBUG_MASK
-;;;     Mask covering all debug flags.
+;;; GTypeDebugFlags                                         Deprecated 2.36
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -921,33 +529,6 @@ ID     NAME               CFFI type      Lisp type
   (:class-size :uint)
   (:instance-size :uint))
 
-#+liber-documentation
-(setf (liber:alias-for-symbol 'type-query)
-      "CStruct"
-      (liber:symbol-documentation 'type-query)
- "@version{#2020-10-31}
-  @begin{short}
-    A structure holding information for a specific type.
-  @end{short}
-  It is filled in by the @fun{g:type-query} function.
-  @begin{pre}
-(cffi:defcstruct type-query
-  (:type type-t)
-  (:type-name :string)
-  (:class-size :uint)
-  (:instance-size :uint))
-  @end{pre}
-  @begin[code]{table}
-    @entry[type]{The @class{g:type-t} type ID of the type.}
-    @entry[type-name]{A string with the name of the type.}
-    @entry[class-size]{An unsigned integer with the size of the class
-      structure.}
-    @entry[instance-size]{An unsigned integer with the size of the instance
-      structure.}
-  @end{table}
-  @see-class{g:type-t}
-  @see-function{g:type-query}")
-
 ;;; ----------------------------------------------------------------------------
 ;;; GTypeFlags                                              not exported
 ;;; ----------------------------------------------------------------------------
@@ -956,62 +537,11 @@ ID     NAME               CFFI type      Lisp type
   (:abstract #.(ash 1 4))
   (:value-abstract #.(ash 1 5)))
 
-#+liber-documentation
-(setf (liber:alias-for-symbol 'type-flags)
-      "Bitfield"
-      (liber:symbol-documentation 'type-flags)
- "@version{#2022-12-31}
-  @short{Bit masks used to check or determine characteristics of a type.}
-  See the @fun{g:type-is-abstract} function to check a type for the flag
-  @code{:abstract} and the @fun{g:type-is-value-abstract} function to check a
-  type for the flag @code{:value-abstract}.
-  @begin{pre}
-(cffi:defbitfield type-flags
-  (:abstract #.(ash 1 4))
-  (:value-abstract #.(ash 1 5)))
-  @end{pre}
-  @begin[code]{table}
-    @entry[:abstract]{Indicates an abstract type. No instances can be created
-      for an abstract type.}
-    @entry[:value-abstract]{Indicates an abstract value type, i.e. a type that
-      introduces a value table, but can not be used for the @fun{value-init}
-      function.}
-  @end{table}
-  @see-class{g:type-t}
-  @see-function{g:value-init}
-  @see-function{g:type-is-abstract}
-  @see-function{g:type-is-value-abstract}")
-
-;;; ----------------------------------------------------------------------------
-;;; G_TYPE_FUNDAMENTAL
-;;; ----------------------------------------------------------------------------
-
-(cffi:defcfun ("g_type_fundamental" type-fundamental) type-t
- #+liber-documentation
- "@version{2022-12-29}
-  @argument[gtype]{a valid @class{g:type-t} type ID}
-  @return{The fundamental @class{g:type-t} type ID of the @arg{gtype} argument.}
-  @begin{short}
-    The fundamental type which is the ancestor of the @arg{gtype} argument.
-  @end{short}
-  Fundamental types are types that serve as ultimate bases for the derived
-  types, thus they are the roots of distinct inheritance hierarchies.
-  @begin[Examples]{dictionary}
-    @begin{pre}
-(g:type-fundamental \"GSimpleAction\") => #<GTYPE :name \"GObject\" :id 80>
-(g:type-fundamental \"GAction\") => #<GTYPE :name \"GInterface\" :id 8>
-(g:type-fundamental \"GBytes\") => #<GTYPE :name \"GBoxed\" :id 72>
-    @end{pre}
-  @end{dictionary}
-  @see-class{g:type-t}"
-  (gtype type-t))
-
-(export 'type-fundamental)
-
 ;;; ----------------------------------------------------------------------------
 ;;; G_TYPE_MAKE_FUNDAMENTAL                                 not exported
 ;;; ----------------------------------------------------------------------------
 
+#+nil
 (defun type-make-fundamental (x)
  #+liber-documentation
  "@version{#2020-11-1}
@@ -1048,7 +578,7 @@ ID     NAME               CFFI type      Lisp type
 
 (defun type-is-abstract (gtype)
  #+liber-documentation
- "@version{2024-6-11}
+ "@version{2024-12-8}
   @argument[gtype]{a @class{g:type-t} type ID}
   @return{@em{True} if @arg{gtype} is an abstract type.}
   @begin{short}
@@ -1073,7 +603,7 @@ ID     NAME               CFFI type      Lisp type
 
 (defun type-is-derived (gtype)
  #+liber-documentation
- "@version{2024-6-11}
+ "@version{2024-12-8}
   @argument[gtype]{a @class{g:type-t} type ID}
   @return{@em{True} if @arg{gtype} is a dervied type.}
   @begin{short}
@@ -1100,7 +630,7 @@ ID     NAME               CFFI type      Lisp type
 
 (defun type-is-fundamental (gtype)
  #+liber-documentation
- "@version{2024-6-11}
+ "@version{2024-12-8}
   @argument[gtype]{a @class{g:type-t} type ID}
   @return{@em{True} if @arg{gtype} is a fundamental type.}
   @begin{short}
@@ -1128,7 +658,7 @@ ID     NAME               CFFI type      Lisp type
 
 (defun type-is-value-type (gtype)
  #+liber-documentation
- "@version{2024-6-11}
+ "@version{2024-12-8}
   @argument[gtype]{a @class{g:type-t} type ID}
   @return{@em{True} if @arg{gtype} is a value type.}
   @begin{short}
@@ -1153,6 +683,7 @@ ID     NAME               CFFI type      Lisp type
 ;;; G_TYPE_HAS_VALUE_TABLE                                  not exported
 ;;; ----------------------------------------------------------------------------
 
+#+nil
 (defun type-has-value-table (gtype)
  #+liber-documentation
  "@version{#2020-11-1}
@@ -1182,7 +713,7 @@ ID     NAME               CFFI type      Lisp type
 
 (defun type-is-classed (gtype)
  #+liber-documentation
- "@version{2024-6-11}
+ "@version{2024-12-8}
   @argument[gtype]{a @class{g:type-t} type ID}
   @return{@em{True} if @arg{gtype} is a classed type.}
   @short{Checks if @arg{gtype} is a classed type.}
@@ -1196,6 +727,7 @@ ID     NAME               CFFI type      Lisp type
 ;;; G_TYPE_IS_INSTANTIATABLE                                not exported
 ;;; ----------------------------------------------------------------------------
 
+#+nil
 (defun type-is-instantiatable (gtype)
  #+liber-documentation
  "@version{#2020-11-13}
@@ -1212,6 +744,7 @@ ID     NAME               CFFI type      Lisp type
 ;;; G_TYPE_IS_DERIVABLE                                     not exported
 ;;; ----------------------------------------------------------------------------
 
+#+nil
 (defun type-is-derivable (gtype)
  #+liber-documentation
  "@version{#2020-11-1}
@@ -1230,6 +763,7 @@ ID     NAME               CFFI type      Lisp type
 ;;; G_TYPE_IS_DEEP_DERIVABLE                                not exported
 ;;; ----------------------------------------------------------------------------
 
+#+nil
 (defun type-is-deep-derivable (gtype)
  #+liber-documentation
  "@version{#2020-11-1}
@@ -1250,7 +784,7 @@ ID     NAME               CFFI type      Lisp type
 
 (defun type-is-interface (gtype)
  #+liber-documentation
- "@version{2024-6-11}
+ "@version{2024-12-8}
   @argument[gtype]{a @class{g:type-t} type ID}
   @return{@em{True} if @arg{gtype} is an interface type.}
   @begin{short}
@@ -1280,7 +814,7 @@ ID     NAME               CFFI type      Lisp type
 
 (defun type-from-instance (instance)
  #+liber-documentation
- "@version{2024-6-11}
+ "@version{2024-12-8}
   @argument[instance]{a valid @symbol{g:type-instance} instance}
   @return{The @class{g:type-t} type ID of @arg{instance}.}
   @short{Get the type identifier from a given instance.}
@@ -1313,7 +847,7 @@ ID     NAME               CFFI type      Lisp type
 
 (defun type-from-class (class)
  #+liber-documentation
- "@version{2024-6-11}
+ "@version{2024-12-8}
   @argument[class]{a valid @symbol{g:type-class} instance}
   @return{The @class{g:type-t} type ID of @arg{class}.}
   @short{Get the type identifier from a given class instance.}
@@ -1338,7 +872,7 @@ ID     NAME               CFFI type      Lisp type
 
 (defun type-from-interface (iface)
  #+liber-documentation
- "@version{2024-6-11}
+ "@version{2024-12-8}
   @argument[iface]{a valid @symbol{g:type-interface} instance}
   @return{The @class{g:type-t} type ID of @arg{iface}.}
   @short{Get the type identifier from a given interface instance.}
@@ -1363,7 +897,7 @@ ID     NAME               CFFI type      Lisp type
 
 (defun type-instance-class (instance)
  #+liber-documentation
- "@version{2024-6-11}
+ "@version{2024-12-8}
   @argument[instance]{a @symbol{g:type-instance} instance}
   @return{The @symbol{g:type-class} instance of @arg{instance}.}
   @begin{short}
@@ -1388,119 +922,31 @@ ID     NAME               CFFI type      Lisp type
 ;;; ----------------------------------------------------------------------------
 ;;; G_TYPE_INSTANCE_GET_INTERFACE()
 ;;;
-;;; #define G_TYPE_INSTANCE_GET_INTERFACE(instance, g_type, c_type)
-;;;         (_G_TYPE_IGI ((instance), (g_type), c_type))
-;;;
 ;;; Get the interface structure for interface g_type of a given instance.
-;;;
-;;; This macro should only be used in type implementations.
-;;;
-;;; instance :
-;;;     Location of the GTypeInstance structure.
-;;;
-;;; g_type :
-;;;     The GType of the interface to be returned.
-;;;
-;;; c_type :
-;;;     The C type of the interface structure.
-;;;
-;;; Returns :
-;;;     a pointer to the interface structure
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; G_TYPE_INSTANCE_GET_PRIVATE()
-;;;
-;;; #define G_TYPE_INSTANCE_GET_PRIVATE(instance, g_type, c_type)
-;;;         ((c_type*) g_type_instance_get_private ((GTypeInstance*) (instance),
-;;;                                                 (g_type)))
-;;;
-;;; G_TYPE_INSTANCE_GET_PRIVATE has been deprecated since version 2.58 and
-;;; should not be used in newly written code. Use G_ADD_PRIVATE and the
-;;; generated your_type_get_instance_private() function instead
-;;;
-;;; Gets the private structure for a particular type. The private structure must
-;;; have been registered in the class_init function with
-;;; g_type_class_add_private().
-;;;
-;;; This macro should only be used in type implementations.
-;;;
-;;; instance :
-;;;     the instance of a type deriving from private_type.
-;;;
-;;; g_type :
-;;;     the type identifying which private data to retrieve.
-;;;
-;;; c_type :
-;;;     The C type for the private structure.
-;;;
-;;; Returns :
-;;;     a pointer to the private data structure.
+;;; G_TYPE_INSTANCE_GET_PRIVATE                             Deprecated 2.58
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; G_TYPE_CLASS_GET_PRIVATE()
+;;; G_TYPE_CLASS_GET_PRIVATE
 ;;;
-;;; #define G_TYPE_CLASS_GET_PRIVATE(klass, g_type, c_type)
-;;;       ((c_type*) g_type_class_get_private ((GTypeClass*) (klass), (g_type)))
-;;;
-;;; Gets the private class structure for a particular type. The private
-;;; structure must have been registered in the get_type() function with
-;;; g_type_add_class_private().
-;;;
-;;; This macro should only be used in type implementations.
-;;;
-;;; klass :
-;;;     the class of a type deriving from private_type.
-;;;
-;;; g_type :
-;;;     the type identifying which private data to retrieve.
-;;;
-;;; c_type :
-;;;     The C type for the private structure.
-;;;
-;;; Returns :
-;;;     a pointer to the private data structure.
+;;; Gets the private class structure for a particular type.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; G_TYPE_CHECK_INSTANCE()
-;;;
-;;; #define G_TYPE_CHECK_INSTANCE(instance)
-;;;         (_G_TYPE_CHI ((GTypeInstance*) (instance)))
+;;; G_TYPE_CHECK_INSTANCE
 ;;;
 ;;; Checks if instance is a valid GTypeInstance structure, otherwise issues a
 ;;; warning and returns FALSE.
-;;;
-;;; This macro should only be used in type implementations.
-;;;
-;;; instance :
-;;;     Location of a GTypeInstance structure.
-;;;
-;;; Returns :
-;;;     TRUE on success.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; G_TYPE_CHECK_INSTANCE_CAST()
-;;;
-;;; #define G_TYPE_CHECK_INSTANCE_CAST(instance, g_type, c_type)
-;;;         (_G_TYPE_CIC ((instance), (g_type), c_type))
+;;; G_TYPE_CHECK_INSTANCE_CAST
 ;;;
 ;;; Checks that instance is an instance of the type identified by g_type and
-;;; issues a warning if this is not the case. Returns instance casted to a
-;;; pointer to c_type.
-;;;
-;;; This macro should only be used in type implementations.
-;;;
-;;; instance :
-;;;     Location of a GTypeInstance structure.
-;;;
-;;; g_type :
-;;;     The type to be returned.
-;;;
-;;; c_type :
-;;;     The corresponding C type of g_type.
+;;; issues a warning if this is not the case.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -1509,7 +955,7 @@ ID     NAME               CFFI type      Lisp type
 
 (defun type-check-instance-type (instance gtype)
  #+liber-documentation
- "@version{2024-6-11}
+ "@version{2024-12-8}
   @argument[instance]{a @symbol{g:type-instance} instance}
   @argument[gtype]{a @class{g:type-t} type ID to be checked}
   @return{@em{True} on success.}
@@ -1536,46 +982,17 @@ ID     NAME               CFFI type      Lisp type
 (export 'type-check-instance-type)
 
 ;;; ----------------------------------------------------------------------------
-;;; G_TYPE_CHECK_INSTANCE_FUNDAMENTAL_TYPE()
-;;;
-;;; #define G_TYPE_CHECK_INSTANCE_FUNDAMENTAL_TYPE(instance, g_type)
-;;;         (_G_TYPE_CIFT ((instance), (g_type)))
+;;; G_TYPE_CHECK_INSTANCE_FUNDAMENTAL_TYPE
 ;;;
 ;;; Checks if instance is an instance of the fundamental type identified by
-;;; g_type . If instance is NULL, FALSE will be returned.
-;;;
-;;; This macro should only be used in type implementations.
-;;;
-;;; instance:
-;;;     Location of a GTypeInstance structure.
-;;;
-;;; g_type:
-;;;     The fundamental type to be checked
-;;;
-;;; Returns:
-;;;     TRUE on success
+;;; g_type.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; G_TYPE_CHECK_CLASS_CAST()
-;;;
-;;; #define G_TYPE_CHECK_CLASS_CAST(g_class, g_type, c_type)
-;;;         (_G_TYPE_CCC ((g_class), (g_type), c_type))
+;;; G_TYPE_CHECK_CLASS_CAST
 ;;;
 ;;; Checks that g_class is a class structure of the type identified by g_type
-;;; and issues a warning if this is not the case. Returns g_class casted to a
-;;; pointer to c_type.
-;;;
-;;; This macro should only be used in type implementations.
-;;;
-;;; g_class :
-;;;     Location of a GTypeClass structure.
-;;;
-;;; g_type :
-;;;     The type to be returned.
-;;;
-;;; c_type :
-;;;     The corresponding C type of class structure of g_type.
+;;; and issues a warning if this is not the case.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -1584,7 +1001,7 @@ ID     NAME               CFFI type      Lisp type
 
 (defun type-check-class-type (class gtype)
  #+liber-documentation
- "@version{2022-12-29}
+ "@version{2024-12-8}
   @argument[class]{a @symbol{g:type-class} instance}
   @argument[gtype]{a @class{g:type-t} type ID to be checked}
   @return{@em{True} on success.}
@@ -1607,80 +1024,24 @@ ID     NAME               CFFI type      Lisp type
 (export 'type-check-class-type)
 
 ;;; ----------------------------------------------------------------------------
-;;; G_TYPE_CHECK_VALUE()
-;;;
-;;; #define G_TYPE_CHECK_VALUE(value) (_G_TYPE_CHV ((value)))
+;;; G_TYPE_CHECK_VALUE
 ;;;
 ;;; Checks if value has been initialized to hold values of a value type.
-;;;
-;;; This macro should only be used in type implementations.
-;;;
-;;; value :
-;;;     a GValue
-;;;
-;;; Returns :
-;;;     TRUE on success.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; G_TYPE_CHECK_VALUE_TYPE()
-;;;
-;;; #define G_TYPE_CHECK_VALUE_TYPE
-;;;         (value, g_type) (_G_TYPE_CVH ((value), (g_type)))
+;;; G_TYPE_CHECK_VALUE_TYPE
 ;;;
 ;;; Checks if value has been initialized to hold values of type g_type.
-;;;
-;;; This macro should only be used in type implementations.
-;;;
-;;; value :
-;;;     a GValue
-;;;
-;;; g_type :
-;;;     The type to be checked.
-;;;
-;;; Returns :
-;;;     TRUE on success.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_type_init ()
-;;;
-;;; void g_type_init (void);
-;;;
-;;; Warning
-;;;
-;;; g_type_init has been deprecated since version 2.36 and should not be used in
-;;; newly written code. The type system is now initialised automatically.
-;;;
-;;; This function used to initialise the type system. Since GLib 2.36, the type
-;;; system is initialised automatically and this function does nothing.
+;;; g_type_init                                             Deprecated 2.36
 ;;; ----------------------------------------------------------------------------
 
-;; Not implemented because the function is deprecated.
-
 ;;; ----------------------------------------------------------------------------
-;;; g_type_init_with_debug_flags ()
-;;;
-;;; void g_type_init_with_debug_flags (GTypeDebugFlags debug_flags);
-;;;
-;;; Warning
-;;;
-;;; g_type_init_with_debug_flags has been deprecated since version 2.36 and
-;;; should not be used in newly written code. the type system is now initialised
-;;; automatically
-;;;
-;;; This function used to initialise the type system with debugging flags. Since
-;;; GLib 2.36, the type system is initialised automatically and this function
-;;; does nothing.
-;;;
-;;; If you need to enable debugging features, use the GOBJECT_DEBUG environment
-;;; variable.
-;;;
-;;; debug_flags :
-;;;     Bitwise combination of GTypeDebugFlags values for debugging purposes.
+;;; g_type_init_with_debug_flags                            Deprecated 2.36
 ;;; ----------------------------------------------------------------------------
-
-;;; * deprecated *
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_type_name
@@ -1688,7 +1049,7 @@ ID     NAME               CFFI type      Lisp type
 
 (defun type-name (gtype)
  #+liber-documentation
- "@version{2024-9-16}
+ "@version{2024-12-8}
   @argument[gtype]{a @class{g:type-t} type ID to return the type name for}
   @return{The string with the type name, or @code{nil}.}
   @begin{short}
@@ -1719,6 +1080,7 @@ ID     NAME               CFFI type      Lisp type
 ;; This function is not exported. In the Lisp binding there is no difference
 ;; to the function type-name.
 
+#+nil
 (cffi:defcfun ("g_type_qname" type-qname) glib:quark-as-string
  #+liber-documentation
  "@version{#2013-4-1}
@@ -1734,9 +1096,11 @@ ID     NAME               CFFI type      Lisp type
 ;; TODO: Implemented with the G:GTYPE function and does not use the
 ;; C function. Should we change the implemenation?
 
+#+nil
 (cffi:defcfun ("g_type_from_name" %type-from-name) :size
   (name :string))
 
+#+nil
 (defun type-from-name (name)
  #+liber-documentation
  "@version{2024-6-11}
@@ -1758,6 +1122,7 @@ ID     NAME               CFFI type      Lisp type
   @see-function{g:type-name}"
   (glib:gtype name))
 
+#+nil
 (export 'type-from-name)
 
 ;;; ----------------------------------------------------------------------------
@@ -1766,9 +1131,9 @@ ID     NAME               CFFI type      Lisp type
 
 (cffi:defcfun ("g_type_parent" type-parent) type-t
  #+liber-documentation
- "@version{2024-6-11}
+ "@version{2024-12-8}
   @argument[gtype]{a derived @class{g:type-t} type ID}
-  @return{The parent type of @arg{gtype}.}
+  @return{The parent @class{g:type-t} type ID of @arg{gtype}.}
   @begin{short}
     Returns the direct parent type of the passed in @arg{gtype}.
   @end{short}
@@ -1799,7 +1164,7 @@ ID     NAME               CFFI type      Lisp type
 
 (defun type-children (gtype)
  #+liber-documentation
- "@version{2024-6-11}
+ "@version{2024-12-8}
   @argument[gtype]{a @class{g:type-t} parent type ID}
   @return{The list of @class{g:type-t} child type IDs.}
   @short{Returns a list of type IDs, listing the child types of @arg{gtype}.}
@@ -1828,7 +1193,7 @@ ID     NAME               CFFI type      Lisp type
 
 (cffi:defcfun ("g_type_depth" type-depth) :uint
  #+liber-documentation
- "@version{2024-6-11}
+ "@version{2024-12-8}
   @argument[gtype]{a @class{g:type-t} type ID}
   @return{The unsigned integer with the depth of @arg{gtype}.}
   @begin{short}
@@ -1853,9 +1218,11 @@ ID     NAME               CFFI type      Lisp type
 
 (cffi:defcfun ("g_type_next_base" type-next-base) type-t
  #+liber-documentation
- "@version{2024-6-11}
-  @argument[leaf]{descendant of @arg{root} and the type to be returned}
-  @argument[root]{immediate parent of the returned type}
+ "@version{2024-12-8}
+  @argument[leaf]{a @class{g:type-t} type ID descendant of @arg{root} and the
+    type to be returned}
+  @argument[root]{a @class{g:type-t} type ID immediate parent of the returned
+    type}
   @begin{return}
     Immediate @class{g:type-t} child type ID of @arg{root} and anchestor of
     @arg{leaf}.
@@ -1890,10 +1257,10 @@ ID     NAME               CFFI type      Lisp type
 
 (defun type-is-a (gtype is-a-type)
  #+liber-documentation
- "@version{2022-12-29}
+ "@version{2024-12-8}
   @argument[gtype]{a @class{g:type-t} type ID to check anchestry for}
-  @argument[is-a-type]{possible anchestor of @arg{gtype} or the interface
-    that @arg{gtype} could conform to}
+  @argument[is-a-type]{a @class{g:type-t} type ID with the possible anchestor
+    of @arg{gtype} or the interface that @arg{gtype} could conform to}
   @return{@em{True} if the @arg{gtype} argument is a @arg{is-a-type}.}
   @begin{short}
     If the @arg{is-a-type} argument is a derivable type, check whether the
@@ -1902,15 +1269,11 @@ ID     NAME               CFFI type      Lisp type
   If @arg{is-a-type} is an interface, check whether @arg{gtype} conforms to it.
   @begin[Examples]{dictionary}
     @begin{pre}
-(g:type-is-a \"gboolean\" g:+type-boolean+) => T
-(g:type-is-a \"GtkTextIter\" g:+type-boxed+) => T
-(g:type-is-a \"GtkWindowType\" g:+type-enum+) => T
-(g:type-is-a \"GtkApplicationInhibitFlags\" g:+type-flags+) => T
-(g:type-is-a \"GtkActionable\" g:+type-interface+) => T
-(g:type-is-a \"unknown\" g:+type-invalid+) => T
-(g:type-is-a \"GtkApplication\" g:+type-object+) => T
-(g:type-is-a \"GParamBoolean\" g:+type-param+) => T
-(g:type-is-a \"GVariant\" g:+type-variant+) => T
+(g:type-is-a \"gboolean\" \"gboolean\") => T
+(g:type-is-a \"GBytes\" \"GBoxed\") => T
+(g:type-is-a \"GApplicationFlags\" \"GFlags\") => T
+(g:type-is-a \"GApplication\" \"GObject\") => T
+(g:type-is-a \"GParamBoolean\" \"GParam\") => T
     @end{pre}
   @end{dictionary}
   @see-class{g:type-t}"
@@ -1929,7 +1292,7 @@ ID     NAME               CFFI type      Lisp type
 
 (defun type-class-ref (gtype)
  #+liber-documentation
- "@version{2023-11-12}
+ "@version{2024-12-8}
   @argument[gtype]{a @class{g:type-t} type ID of a classed type}
   @return{The pointer to the @symbol{g:type-class} instance for the given
     @arg{gtype}.}
@@ -1938,7 +1301,7 @@ ID     NAME               CFFI type      Lisp type
     @arg{gtype} and returns the pointer to the class instance.
   @end{short}
   This function will create the class instance if it does not exist already.
-  Returns @code{nil} when @arg{gtype} is not a valid type ID for classed type.
+  Returns @code{nil} when @arg{gtype} is not a valid type ID for a classed type.
   @begin[Examples]{dictionary}
     @begin{pre}
 (g:type-class-ref \"GApplication\") => #.(SB-SYS:INT-SAP #X55FA5306FE40)
@@ -1971,7 +1334,7 @@ ID     NAME               CFFI type      Lisp type
 
 (defun type-class-peek (gtype)
  #+liber-documentation
- "@version{2023-11-12}
+ "@version{2024-12-8}
   @argument[gtype]{a @class{g:type-t} type ID of a classed type}
   @begin{return}
     The @symbol{g:type-class} instance for the given @arg{gtype} type ID or
@@ -2008,6 +1371,7 @@ ID     NAME               CFFI type      Lisp type
 ;;; g_type_class_peek_static                                not exported
 ;;; ----------------------------------------------------------------------------
 
+#+nil
 (cffi:defcfun ("g_type_class_peek_static" type-class-peek-static)
     (:pointer (:struct type-class))
  #+liber-documentation
@@ -2030,7 +1394,7 @@ ID     NAME               CFFI type      Lisp type
 
 (cffi:defcfun ("g_type_class_unref" type-class-unref) :void
  #+liber-documentation
- "@version{2023-11-12}
+ "@version{2024-12-8}
   @argument[class]{a pointer to the @symbol{g:type-class} instance to
     unreference}
   @begin{short}
@@ -2048,6 +1412,7 @@ ID     NAME               CFFI type      Lisp type
 ;;; g_type_class_peek_parent                                not exported
 ;;; ----------------------------------------------------------------------------
 
+#+nil
 (cffi:defcfun ("g_type_class_peek_parent" type-class-peek-parent)
     (:pointer (:struct type-class))
  #+liber-documentation
@@ -2077,6 +1442,7 @@ ID     NAME               CFFI type      Lisp type
 ;;; G_DEFINE_* family of macros to add instance private data to a type
 ;;; ----------------------------------------------------------------------------
 
+#+nil
 (cffi:defcfun ("g_type_class_add_private" type-class-add-private) :void
  #+liber-documentation
  "@version{#2014-4-1}
@@ -2146,22 +1512,9 @@ ID     NAME               CFFI type      Lisp type
   (private-size :size))
 
 ;;; ----------------------------------------------------------------------------
-;;; g_type_add_class_private ()
+;;; g_type_add_class_private
 ;;;
-;;; void g_type_add_class_private (GType class_type, gsize private_size);
-;;;
-;;; Registers a private class structure for a classed type; when the class is
-;;; allocated, the private structures for the class and all of its parent types
-;;; are allocated sequentially in the same memory block as the public
-;;; structures. This function should be called in the type's get_type() function
-;;; after the type is registered. The private structure can be retrieved using
-;;; the G_TYPE_CLASS_GET_PRIVATE() macro.
-;;;
-;;; class_type :
-;;;     GType of an classed type.
-;;;
-;;; private_size :
-;;;     size of private structure.
+;;; Registers a private class structure for a classed type.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -2170,22 +1523,22 @@ ID     NAME               CFFI type      Lisp type
 
 (cffi:defcfun ("g_type_interface_peek" %type-interface-peek)
     (:pointer (:struct type-interface))
-  (instance-class (:pointer (:struct type-class)))
-  (iface-type type-t))
+  (class (:pointer (:struct type-class)))
+  (itype type-t))
 
-(defun type-interface-peek (instance-class iface-type)
+(defun type-interface-peek (class itype)
  #+liber-documentation
- "@version{#2022-12-29}
-  @argument[instance-class]{a @symbol{g:type-class} instance}
-  @argument[iface-type]{a @class{g:type-t} interface type ID which this
-    @arg{instance-class} conforms to}
+ "@version{2024-12-8}
+  @argument[class]{a @symbol{g:type-class} instance}
+  @argument[itype]{a @class{g:type-t} interface type ID which this @arg{class}
+    conforms to}
   @begin{return}
-    The @symbol{g:type-interface} instance of @arg{iface-type} if
-    implemented by @arg{instance-class}, @code{nil} otherwise.
+    The @symbol{g:type-interface} instance of @arg{itype} if implemented by
+    @arg{class}, @code{nil} otherwise.
   @end{return}
   @begin{short}
     Returns the interface structure of an interface to which the passed in
-    @arg{instance-class} conforms.
+    @arg{class} conforms.
   @end{short}
   @begin[Examples]{dictionary}
     @begin{pre}
@@ -2198,29 +1551,17 @@ ID     NAME               CFFI type      Lisp type
   @see-class{g:type-t}
   @see-symbol{g:type-class}
   @see-symbol{g:type-interface}"
-  (let ((iface (%type-interface-peek instance-class iface-type)))
+  (let ((iface (%type-interface-peek class itype)))
     (when (not (cffi:null-pointer-p iface))
       iface)))
 
 (export 'type-interface-peek)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_type_interface_peek_parent ()
-;;;
-;;; gpointer g_type_interface_peek_parent (gpointer g_iface);
+;;; g_type_interface_peek_parent
 ;;;
 ;;; Returns the corresponding GTypeInterface structure of the parent type of the
-;;; instance type to which g_iface belongs. This is useful when deriving the
-;;; implementation of an interface from the parent type and then possibly
-;;; overriding some methods.
-;;;
-;;; g_iface :
-;;;     A GTypeInterface structure.
-;;;
-;;; Returns :
-;;;     The corresponding GTypeInterface structure of the parent type of the
-;;;     instance type to which g_iface belongs, or NULL if the parent type
-;;;     does not conform to the interface.
+;;; instance type to which g_iface belongs
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -2233,7 +1574,7 @@ ID     NAME               CFFI type      Lisp type
 
 (defun type-default-interface-ref (gtype)
  #+liber-documentation
- "@version{2023-12-12}
+ "@version{2024-12-8}
   @argument[gtype]{a @class{g:type-t} interface type ID}
   @return{The pointer to the default @code{vtable} for the interface of type
     @arg{gtype}, or @code{nil} if @arg{gtype} is not an interface type.}
@@ -2279,7 +1620,7 @@ ID     NAME               CFFI type      Lisp type
 
 (defun type-default-interface-peek (gtype)
 #+liber-documentation
- "@version{2023-11-12}
+ "@version{2024-12-8}
   @argument[gtype]{a @class{g:type-t} interface type ID}
   @begin{return}
     The default @code{vtable} for the interface of type @arg{gtype}, @code{nil}
@@ -2307,7 +1648,7 @@ ID     NAME               CFFI type      Lisp type
 (cffi:defcfun ("g_type_default_interface_unref" type-default-interface-unref)
     :void
  #+liber-documentation
- "@version{2023-11-12}
+ "@version{2024-12-8}
   @argument[iface]{a pointer to the default @code{vtable} instance for an
     interface, as returned by the @fun{g:type-default-interface-ref} function}
   @begin{short}
@@ -2333,7 +1674,7 @@ ID     NAME               CFFI type      Lisp type
 
 (defun type-interfaces (gtype)
  #+liber-documentation
- "@version{2023-7-29}
+ "@version{2024-12-8}
   @argument[gtype]{a @class{g:type-t} type ID to list interface types for}
   @return{The list of @class{g:type-t} interface type IDs.}
   @begin{short}
@@ -2370,10 +1711,10 @@ ID     NAME               CFFI type      Lisp type
 
 (defun type-interface-prerequisites (itype)
  #+liber-documentation
- "@version{2023-7-29}
+ "@version{2024-12-8}
   @argument[itype]{a @class{g:type-t} interface type ID}
   @begin{return}
-    A list of @class{g:type-t} type IDs containing the prerequisites of
+    The list of @class{g:type-t} type IDs containing the prerequisites of
     @arg{itype}.
   @end{return}
   @begin{short}
@@ -2426,7 +1767,7 @@ ID     NAME               CFFI type      Lisp type
 
 (defun type-qdata (gtype quark)
  #+liber-documentation
- "@version{2022-12-29}
+ "@version{2023-12-8}
   @syntax{(g:type-qdata type quark) => data}
   @syntax{(setf (g:type-qdata type quark) data)}
   @argument[gtype]{a @class{g:type-t} type ID}
@@ -2462,249 +1803,61 @@ ID     NAME               CFFI type      Lisp type
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_type_query" type-query) :void
- #+liber-documentation
- "@version{#2020-10-31}
-  @argument[gtype]{a @class{g:type-t} type ID of a static, classed type}
-  @argument[query]{a user provided @symbol{g:type-query} instance that is
-    filled in with constant values upon success}
-  @begin{short}
-    Queries the type system for information about a specific type.
-  @end{short}
-  This function will fill in a user provided structure to hold type specific
-  information. If an invalid @class{g:type-t} type ID is passed in, the type
-  member of the @symbol{g:type-query} is 0. All members filled into the
-  @symbol{g:type-query} structure should be considered constant and have to be
-  left untouched.
-  @see-symbol{g:type-query}"
   (gtype type-t)
   (query (:pointer (:struct type-query))))
 
 ;;; ----------------------------------------------------------------------------
-;;; GBaseInitFunc ()
-;;;
-;;; void (*GBaseInitFunc) (gpointer g_class);
+;;; GBaseInitFunc
 ;;;
 ;;; A callback function used by the type system to do base initialization of the
-;;; class structures of derived types. It is called as part of the
-;;; initialization process of all derived classes and should reallocate or reset
-;;; all dynamic class members copied over from the parent class. For example,
-;;; class members (such as strings) that are not sufficiently handled by a plain
-;;; memory copy of the parent class into the derived class have to be altered.
-;;; See GClassInitFunc() for a discussion of the class intialization process.
-;;;
-;;; g_class :
-;;;     The GTypeClass structure to initialize.
+;;; class structures of derived types.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; GBaseFinalizeFunc ()
-;;;
-;;; void (*GBaseFinalizeFunc) (gpointer g_class);
+;;; GBaseFinalizeFunc
 ;;;
 ;;; A callback function used by the type system to finalize those portions of a
 ;;; derived types class structure that were setup from the corresponding
-;;; GBaseInitFunc() function. Class finalization basically works the inverse way
-;;; in which class intialization is performed. See GClassInitFunc() for a
-;;; discussion of the class intialization process.
-;;;
-;;; g_class :
-;;;     The GTypeClass structure to finalize.
+;;; GBaseInitFunc() function.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; GClassInitFunc ()
-;;;
-;;; void (*GClassInitFunc) (gpointer g_class, gpointer class_data);
+;;; GClassInitFunc
 ;;;
 ;;; A callback function used by the type system to initialize the class of a
-;;; specific type. This function should initialize all static class members.
-;;; The initialization process of a class involves:
-;;;
-;;;     1 - Copying common members from the parent class over to the derived
-;;;         class structure.
-;;;
-;;;     2 - Zero initialization of the remaining members not copied over from
-;;;         the parent class.
-;;;
-;;;     3 - Invocation of the GBaseInitFunc() initializers of all parent types
-;;;         and the class' type.
-;;;
-;;;     4 - Invocation of the class' GClassInitFunc() initializer.
-;;;
-;;; Since derived classes are partially initialized through a memory copy of
-;;; the parent class, the general rule is that GBaseInitFunc() and
-;;; GBaseFinalizeFunc() should take care of necessary reinitialization and
-;;; release of those class members that were introduced by the type that
-;;; specified these GBaseInitFunc()/GBaseFinalizeFunc(). GClassInitFunc()
-;;; should only care about initializing static class members, while dynamic
-;;; class members (such as allocated strings or reference counted resources)
-;;; are better handled by a GBaseInitFunc() for this type, so proper
-;;; initialization of the dynamic class members is performed for class
-;;; initialization of derived types as well. An example may help to correspond
-;;; the intend of the different class initializers:
-;;;
-;;;   typedef struct {
-;;;     GObjectClass parent_class;
-;;;     gint         static_integer;
-;;;     gchar       *dynamic_string;
-;;;   } TypeAClass;
-;;;   static void
-;;;   type_a_base_class_init (TypeAClass *class)
-;;;   {
-;;;     class->dynamic_string = g_strdup ("some string");
-;;;   }
-;;;   static void
-;;;   type_a_base_class_finalize (TypeAClass *class)
-;;;   {
-;;;     g_free (class->dynamic_string);
-;;;   }
-;;;   static void
-;;;   type_a_class_init (TypeAClass *class)
-;;;   {
-;;;     class->static_integer = 42;
-;;;   }
-;;;
-;;;   typedef struct {
-;;;     TypeAClass   parent_class;
-;;;     gfloat       static_float;
-;;;     GString     *dynamic_gstring;
-;;;   } TypeBClass;
-;;;   static void
-;;;   type_b_base_class_init (TypeBClass *class)
-;;;   {
-;;;     class->dynamic_gstring = g_string_new ("some other string");
-;;;   }
-;;;   static void
-;;;   type_b_base_class_finalize (TypeBClass *class)
-;;;   {
-;;;     g_string_free (class->dynamic_gstring);
-;;;   }
-;;;   static void
-;;;   type_b_class_init (TypeBClass *class)
-;;;   {
-;;;     class->static_float = 3.14159265358979323846;
-;;;   }
-;;;
-;;; Initialization of TypeBClass will first cause initialization of TypeAClass
-;;; (derived classes reference their parent classes, see g_type_class_ref() on
-;;; this). Initialization of TypeAClass roughly involves zero-initializing its
-;;; fields, then calling its GBaseInitFunc() type_a_base_class_init() to
-;;; allocate its dynamic members (dynamic_string), and finally calling its
-;;; GClassInitFunc() type_a_class_init() to initialize its static members
-;;; (static_integer). The first step in the initialization process of
-;;; TypeBClass is then a plain memory copy of the contents of TypeAClass into
-;;; TypeBClass and zero-initialization of the remaining fields in TypeBClass.
-;;; The dynamic members of TypeAClass within TypeBClass now need
-;;; reinitialization which is performed by calling type_a_base_class_init()
-;;; with an argument of TypeBClass. After that, the GBaseInitFunc() of
-;;; TypeBClass, type_b_base_class_init() is called to allocate the dynamic
-;;; members of TypeBClass (dynamic_gstring), and finally the GClassInitFunc()
-;;; of TypeBClass, type_b_class_init(), is called to complete the initialization
-;;; process with the static members (static_float). Corresponding finalization
-;;; counter parts to the GBaseInitFunc() functions have to be provided to
-;;; release allocated resources at class finalization time.
-;;;
-;;; g_class :
-;;;     The GTypeClass structure to initialize.
-;;;
-;;; class_data :
-;;;     The class_data member supplied via the GTypeInfo structure.
+;;; specific type.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; GClassFinalizeFunc ()
+;;; GClassFinalizeFunc
 ;;;
-;;; void (*GClassFinalizeFunc) (gpointer g_class, gpointer class_data);
-;;;
-;;; A callback function used by the type system to finalize a class. This
-;;; function is rarely needed, as dynamically allocated class resources should
-;;; be handled by GBaseInitFunc() and GBaseFinalizeFunc(). Also, specification
-;;; of a GClassFinalizeFunc() in the GTypeInfo structure of a static type is
-;;; invalid, because classes of static types will never be finalized (they are
-;;; artificially kept alive when their reference count drops to zero).
-;;;
-;;; g_class :
-;;;     The GTypeClass structure to finalize.
-;;;
-;;; class_data :
-;;;     The class_data member supplied via the GTypeInfo structure.
+;;; A callback function used by the type system to finalize a class.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; GInstanceInitFunc ()
-;;;
-;;; void (*GInstanceInitFunc) (GTypeInstance *instance, gpointer g_class);
+;;; GInstanceInitFunc
 ;;;
 ;;; A callback function used by the type system to initialize a new instance of
-;;; a type. This function initializes all instance members and allocates any
-;;; resources required by it. Initialization of a derived instance involves
-;;; calling all its parent types instance initializers, so the class member of
-;;; the instance is altered during its initialization to always point to the
-;;; class that belongs to the type the current initializer was introduced for.
-;;;
-;;; instance :
-;;;     The instance to initialize.
-;;;
-;;; g_class :
-;;;     The class of the type the instance is created for.
+;;; a type.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; GInterfaceInitFunc ()
-;;;
-;;; void (*GInterfaceInitFunc) (gpointer g_iface, gpointer iface_data);
+;;; GInterfaceInitFunc
 ;;;
 ;;; A callback function used by the type system to initialize a new interface.
-;;; This function should initialize all internal data and allocate any resources
-;;; required by the interface.
-;;;
-;;; g_iface :
-;;;     The interface structure to initialize.
-;;;
-;;; iface_data :
-;;;     The interface_data supplied via the GInterfaceInfo structure.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; GInterfaceFinalizeFunc ()
+;;; GInterfaceFinalizeFunc
 ;;;
-;;; void (*GInterfaceFinalizeFunc) (gpointer g_iface, gpointer iface_data);
-;;;
-;;; A callback function used by the type system to finalize an interface. This
-;;; function should destroy any internal data and release any resources
-;;; allocated by the corresponding GInterfaceInitFunc() function.
-;;;
-;;; g_iface :
-;;;     The interface structure to finalize.
-;;;
-;;; iface_data :
-;;;     The interface_data supplied via the GInterfaceInfo structure.
+;;; A callback function used by the type system to finalize an interface.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; GTypeClassCacheFunc ()
-;;;
-;;; gboolean (*GTypeClassCacheFunc) (gpointer cache_data, GTypeClass *g_class);
+;;; GTypeClassCacheFunc
 ;;;
 ;;; A callback function which is called when the reference count of a class
-;;; drops to zero. It may use g_type_class_ref() to prevent the class from being
-;;; freed. You should not call g_type_class_unref() from a GTypeClassCacheFunc
-;;; function to prevent infinite recursion, use g_type_class_unref_uncached()
-;;; instead.
-;;;
-;;; The functions have to check the class id passed in to figure whether they
-;;; actually want to cache the class of this type, since all classes are routed
-;;; through the same GTypeClassCacheFunc chain.
-;;;
-;;; cache_data :
-;;;     data that was given to the g_type_add_class_cache_func() call
-;;;
-;;; g_class :
-;;;     The GTypeClass structure which is unreferenced
-;;;
-;;; Returns :
-;;;     TRUE to stop further GTypeClassCacheFuncs from being called, FALSE to
-;;;     continue.
+;;; drops to zero.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -2712,25 +1865,6 @@ ID     NAME               CFFI type      Lisp type
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_type_register_static" type-register-static) type-t
- #+liber-documentation
- "@version{#2020-11-1}
-  @argument[parent-type]{a @class{g:type-t} type ID from which this type will
-    be derived}
-  @argument[type-name]{a string used as the name of the new type}
-  @argument[info]{a @symbol{g:type-info} instance for this type}
-  @argument[flags]{bitwise combination of @symbol{g:type-flags} values}
-  @return{The new @class{g:type-t} type ID.}
-  @begin{short}
-    Registers @arg{g:type-name} as the name of a new static type derived from
-    @arg{parent-type}.
-  @end{short}
-  The type system uses the information contained in the @symbol{g:type-info}
-  structure pointed to by @arg{info} to manage the type and its instances (if
-  not abstract). The value of @arg{flags} determines the nature (e.g. abstract
-  or not) of the type.
-  @see-class{g:type-t}
-  @see-symbol{g:type-info}
-  @see-symbol{g:type-flags}"
   (parent-type type-t)
   (type-name :string)
   (info (:pointer (:struct type-info)))
@@ -2742,31 +1876,6 @@ ID     NAME               CFFI type      Lisp type
 
 (cffi:defcfun ("g_type_register_static_simple"
                 type-register-static-simple) type-t
- #+liber-documentation
- "@version{#2020-11-1}
-  @argument[parent-type]{a @class{g:type-t} type ID from which this type will
-    be derived}
-  @argument[type-name]{a string used as the name of the new type}
-  @argument[class-size]{an unsigned integer with the size of the class
-    structure}
-  @argument[class-init]{a pointer with the location of the class initialization
-    function}
-  @argument[instance-size]{an unsigned integer with the size of the instance
-    structure}
-  @argument[instance-init]{a pointer with the location of the instance
-    initialization function}
-  @argument[flags]{bitwise combination of @symbol{g:type-flags} values}
-  @return{The new @class{g:type-t} type ID.}
-  @begin{short}
-    Registers @arg{g:type-name} as the name of a new static type derived from
-    @arg{parent-type}.
-  @end{short}
-  The value of flags determines the nature (e.g. abstract or not) of the type.
-  It works by filling a @symbol{g:type-info} instance and calling the function
-  @fun{g:type-register-static}.
-  @see-class{g:type-t}
-  @see-symbol{g:type-flags}
-  @see-function{g:type-register-static}"
   (parent-type type-t)
   (type-name :string)
   (class-size :uint)
@@ -2776,69 +1885,17 @@ ID     NAME               CFFI type      Lisp type
   (flags type-flags))
 
 ;;; ----------------------------------------------------------------------------
-;;; g_type_register_dynamic ()
-;;;
-;;; GType g_type_register_dynamic (GType parent_type,
-;;;                                const gchar *type_name,
-;;;                                GTypePlugin *plugin,
-;;;                                GTypeFlags flags);
+;;; g_type_register_dynamic
 ;;;
 ;;; Registers type_name as the name of a new dynamic type derived from
-;;; parent_type. The type system uses the information contained in the
-;;; GTypePlugin structure pointed to by plugin to manage the type and its
-;;; instances (if not abstract). The value of flags determines the nature (e.g.
-;;; abstract or not) of the type.
-;;;
-;;; parent_type :
-;;;     Type from which this type will be derived.
-;;;
-;;; type_name :
-;;;     0-terminated string used as the name of the new type.
-;;;
-;;; plugin :
-;;;     The GTypePlugin structure to retrieve the GTypeInfo from.
-;;;
-;;; flags :
-;;;     Bitwise combination of GTypeFlags values.
-;;;
-;;; Returns :
-;;;     The new type identifier or G_TYPE_INVALID if registration failed.
+;;; parent_type.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_type_register_fundamental ()
-;;;
-;;; GType g_type_register_fundamental (GType type_id,
-;;;                                    const gchar *type_name,
-;;;                                    const GTypeInfo *info,
-;;;                                    const GTypeFundamentalInfo *finfo,
-;;;                                    GTypeFlags flags);
+;;; g_type_register_fundamental
 ;;;
 ;;; Registers type_id as the predefined identifier and type_name as the name of
-;;; a fundamental type. If type_id is already registered, or a type named
-;;; type_name is already registered, the behaviour is undefined. The type
-;;; system uses the information contained in the GTypeInfo structure pointed to
-;;; by info and the GTypeFundamentalInfo structure pointed to by finfo to
-;;; manage the type and its instances. The value of flags determines additional
-;;; characteristics of the fundamental type.
-;;;
-;;; type_id :
-;;;     A predefined type identifier.
-;;;
-;;; type_name :
-;;;     0-terminated string used as the name of the new type.
-;;;
-;;; info :
-;;;     The GTypeInfo structure for this type.
-;;;
-;;; finfo :
-;;;     The GTypeFundamentalInfo structure for this type.
-;;;
-;;; flags :
-;;;     Bitwise combination of GTypeFlags values.
-;;;
-;;; Returns :
-;;;     The predefined type identifier.
+;;; a fundamental type.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -2846,48 +1903,21 @@ ID     NAME               CFFI type      Lisp type
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_type_add_interface_static" type-add-interface-static) :void
- #+liber-documentation
- "@version{#2020-11-1}
-  @argument[instance-type]{a @class{g:type-t} type ID of an instantiable type}
-  @argument[interface-type]{a @class{g:type-t} type ID of an interface type}
-  @argument[info]{a @symbol{interface-info} instance for this
-    (@arg{instance-type}, @arg{interface-type}) combination}
-  @begin{short}
-    Adds the static @arg{interface-type} to @arg{instantiable-type}.
-  @end{short}
-  The information contained in the @symbol{interface-info} instance pointed
-  to by @arg{info} is used to manage the relationship.
-  @see-class{g:type-t}
-  @see-symbol{g:interface-info}"
   (instance-type type-t)
   (interface-type type-t)
   (info (:pointer (:struct interface-info))))
 
 ;;; ----------------------------------------------------------------------------
-;;; g_type_add_interface_dynamic ()
+;;; g_type_add_interface_dynamic
 ;;;
-;;; void g_type_add_interface_dynamic (GType instance_type,
-;;;                                    GType interface_type,
-;;;                                    GTypePlugin *plugin);
-;;;
-;;; Adds the dynamic interface_type to instantiable_type. The information
-;;; contained in the GTypePlugin structure pointed to by plugin is used to
-;;; manage the relationship.
-;;;
-;;; instance_type :
-;;;     the GType value of an instantiable type.
-;;;
-;;; interface_type :
-;;;     the GType value of an interface type.
-;;;
-;;; plugin :
-;;;     the GTypePlugin structure to retrieve the GInterfaceInfo from.
+;;; Adds the dynamic interface_type to instantiable_type.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_type_interface_add_prerequisite                       not exported
 ;;; ----------------------------------------------------------------------------
 
+#+nil
 (cffi:defcfun ("g_type_interface_add_prerequisite"
                 type-interface-add-prerequisite) :void
  #+liber-documentation
@@ -2907,46 +1937,23 @@ ID     NAME               CFFI type      Lisp type
   (prerequisite-type type-t))
 
 ;;; ----------------------------------------------------------------------------
-;;; g_type_get_plugin ()
-;;;
-;;; GTypePlugin * g_type_get_plugin (GType type);
+;;; g_type_get_plugin
 ;;;
 ;;; Returns the GTypePlugin structure for type or NULL if type does not have a
 ;;; GTypePlugin structure.
-;;;
-;;; type :
-;;;     The GType to retrieve the plugin for.
-;;;
-;;; Returns :
-;;;     The corresponding plugin if type is a dynamic type, NULL otherwise.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_type_interface_get_plugin ()
+;;; g_type_interface_get_plugin
 ;;;
-;;; GTypePlugin * g_type_interface_get_plugin (GType instance_type,
-;;;                                            GType interface_type);
-;;;
-;;; Returns the GTypePlugin structure for the dynamic interface interface_type
-;;; which has been added to instance_type, or NULL if interface_type has not
-;;; been added to instance_type or does not have a GTypePlugin structure. See
-;;; g_type_add_interface_dynamic().
-;;;
-;;; instance_type :
-;;;     the GType value of an instantiatable type.
-;;;
-;;; interface_type :
-;;;     the GType value of an interface type.
-;;;
-;;; Returns :
-;;;     the GTypePlugin for the dynamic interface interface_type of
-;;;     instance_type
+;;; Returns the GTypePlugin structure for the dynamic interface interface_type.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_type_fundamental_next                                 not exported
 ;;; ----------------------------------------------------------------------------
 
+#+nil
 (cffi:defcfun ("g_type_fundamental_next" type-fundamental-next) :size
  #+liber-documentation
  "@version{#2013-6-17}
@@ -2960,158 +1967,88 @@ ID     NAME               CFFI type      Lisp type
   identifier.")
 
 ;;; ----------------------------------------------------------------------------
-;;; g_type_fundamental ()
+;;; g_type_fundamental
 ;;; ----------------------------------------------------------------------------
 
-;; See G_TYPE_FUNDAMENTAL
+(cffi:defcfun ("g_type_fundamental" type-fundamental) type-t
+ #+liber-documentation
+ "@version{2024-12-8}
+  @argument[gtype]{a valid @class{g:type-t} type ID}
+  @return{The fundamental @class{g:type-t} type ID of the @arg{gtype} argument.}
+  @begin{short}
+    The fundamental type which is the ancestor of the @arg{gtype} argument.
+  @end{short}
+  Fundamental types are types that serve as ultimate bases for the derived
+  types, thus they are the roots of distinct inheritance hierarchies.
+  @begin[Examples]{dictionary}
+    @begin{pre}
+(g:type-fundamental \"GSimpleAction\") => #<GTYPE :name \"GObject\" :id 80>
+(g:type-fundamental \"GAction\") => #<GTYPE :name \"GInterface\" :id 8>
+(g:type-fundamental \"GBytes\") => #<GTYPE :name \"GBoxed\" :id 72>
+    @end{pre}
+  @end{dictionary}
+  @see-class{g:type-t}"
+  (gtype type-t))
+
+(export 'type-fundamental)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_type_create_instance ()
-;;;
-;;; GTypeInstance * g_type_create_instance (GType type);
+;;; g_type_create_instance
 ;;;
 ;;; Creates and initializes an instance of type if type is valid and can be
-;;; instantiated. The type system only performs basic allocation and structure
-;;; setups for instances: actual instance creation should happen through
-;;; functions supplied by the type's fundamental type implementation. So use of
-;;; g_type_create_instance() is reserved for implementators of fundamental types
-;;; only. E.g. instances of the GObject hierarchy should be created via
-;;; g_object_new() and never directly through g_type_create_instance() which
-;;; does not handle things like singleton objects or object construction. Note:
-;;; Do not use this function, unless you're implementing a fundamental type.
-;;; Also language bindings should not use this function but g_object_new()
-;;; instead.
-;;;
-;;; type :
-;;;     An instantiatable type to create an instance for.
-;;;
-;;; Returns :
-;;;     An allocated and initialized instance, subject to further treatment by
-;;;     the fundamental type implementation.
+;;; instantiated.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_type_free_instance ()
+;;; g_type_free_instance
 ;;;
-;;; void g_type_free_instance (GTypeInstance *instance);
-;;;
-;;; Frees an instance of a type, returning it to the instance pool for the type,
-;;; if there is one.
-;;;
-;;; Like g_type_create_instance(), this function is reserved for implementors of
-;;; fundamental types.
-;;;
-;;; instance :
-;;;     an instance of a type.
+;;; Frees an instance of a type.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_type_add_class_cache_func ()
-;;;
-;;; void g_type_add_class_cache_func (gpointer cache_data,
-;;;                                   GTypeClassCacheFunc cache_func);
+;;; g_type_add_class_cache_func
 ;;;
 ;;; Adds a GTypeClassCacheFunc to be called before the reference count of a
-;;; class goes from one to zero. This can be used to prevent premature class
-;;; destruction. All installed GTypeClassCacheFunc functions will be chained
-;;; until one of them returns TRUE. The functions have to check the class id
-;;; passed in to figure whether they actually want to cache the class of this
-;;; type, since all classes are routed through the same GTypeClassCacheFunc
-;;; chain.
-;;;
-;;; cache_data :
-;;;     data to be passed to cache_func
-;;;
-;;; cache_func :
-;;;     a GTypeClassCacheFunc
+;;; class goes from one to zero.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_type_remove_class_cache_func ()
 ;;;
-;;; void g_type_remove_class_cache_func (gpointer cache_data,
-;;;                                      GTypeClassCacheFunc cache_func);
-;;;
-;;; Removes a previously installed GTypeClassCacheFunc. The cache maintained by
-;;; cache_func has to be empty when calling g_type_remove_class_cache_func() to
-;;; avoid leaks.
-;;;
-;;; cache_data :
-;;;     data that was given when adding cache_func
-;;;
-;;; cache_func :
-;;;     a GTypeClassCacheFunc
+;;; Removes a previously installed GTypeClassCacheFunc.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_type_class_unref_uncached ()
-;;;
-;;; void g_type_class_unref_uncached (gpointer g_class);
+;;; g_type_class_unref_uncached
 ;;;
 ;;; A variant of g_type_class_unref() for use in GTypeClassCacheFunc
-;;; implementations. It unreferences a class without consulting the chain of
-;;; GTypeClassCacheFuncs, avoiding the recursion which would occur otherwise.
-;;;
-;;; g_class :
-;;;     The GTypeClass structure to unreference.
+;;; implementations.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_type_add_interface_check ()
-;;;
-;;; void g_type_add_interface_check (gpointer check_data,
-;;;                                  GTypeInterfaceCheckFunc check_func);
+;;; g_type_add_interface_check
 ;;;
 ;;; Adds a function to be called after an interface vtable is initialized for
-;;; any class (i.e. after the interface_init member of GInterfaceInfo has been
-;;; called).
-;;;
-;;; This function is useful when you want to check an invariant that depends on
-;;; the interfaces of a class. For instance, the implementation of GObject uses
-;;; this facility to check that an object implements all of the properties that
-;;; are defined on its interfaces.
-;;;
-;;; check_data :
-;;;     data to pass to check_func
-;;;
-;;; check_func :
-;;;     function to be called after each interface is initialized.
+;;; any class.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_type_remove_interface_check ()
-;;;
-;;; void g_type_remove_interface_check (gpointer check_data,
-;;;                                     GTypeInterfaceCheckFunc check_func);
+;;; g_type_remove_interface_check
 ;;;
 ;;; Removes an interface check function added with g_type_add_interface_check().
-;;;
-;;; check_data :
-;;;     callback data passed to g_type_add_interface_check()
-;;;
-;;; check_func :
-;;;     callback function passed to g_type_add_interface_check()
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; GTypeInterfaceCheckFunc ()
+;;; GTypeInterfaceCheckFunc
 ;;;
-;;; void (*GTypeInterfaceCheckFunc) (gpointer check_data, gpointer g_iface);
-;;;
-;;; A callback called after an interface vtable is initialized. See
-;;; g_type_add_interface_check().
-;;;
-;;; check_data :
-;;;     data passed to g_type_add_interface_check().
-;;;
-;;; g_iface :
-;;;     the interface that has been initialized
+;;; A callback called after an interface vtable is initialized.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_type_value_table_peek                                 not exported
 ;;; ----------------------------------------------------------------------------
 
+#+nil
 (cffi:defcfun ("g_type_value_table_peek" type-value-table-peek)
     (:pointer (:struct type-value-table))
  #+liber-documentation
@@ -3135,13 +2072,9 @@ ID     NAME               CFFI type      Lisp type
 ;;; g_type_ensure
 ;;; ----------------------------------------------------------------------------
 
-#+nil
-(cffi:defcfun ("g_type_ensure" %type-ensure) :void
-  (gtype type-t))
-
 (defun type-ensure (gtype)
  #+liber-documentation
- "@version{2024-6-13}
+ "@version{2024-8-12}
   @argument[gtype]{a @class{g:type-t} type ID}
   @return{The @arg{gtype} type ID, or @code{nil}.}
   @begin{short}
@@ -3160,182 +2093,13 @@ ID     NAME               CFFI type      Lisp type
 ;;; g_type_get_type_registration_serial
 ;;;
 ;;; Returns an opaque serial number that represents the state of the set of
-;;; registered types. Any time a type is registred this serial changes, which
-;;; means you can cache information based on type lookups (such as
-;;; g_type_from_name) and know if the cache is still valid at a later time by
-;;; comparing the current serial with the one at the type lookup.
+;;; registered types.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_type_get_instance_count
 ;;;
-;;; Returns the number of instances allocated of the particular type; this is
-;;; only available if GLib is built with debugging support and the
-;;; instance_count debug flag is set (by setting the GOBJECT_DEBUG variable to
-;;; include instance-count).
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_DECLARE_FINAL_TYPE
-;;;
-;;; A convenience macro for emitting the usual declarations in the header file
-;;; for a type which is not (at the present time) intended to be subclassed.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_DECLARE_DERIVABLE_TYPE
-;;;
-;;; A convenience macro for emitting the usual declarations in the header file
-;;; for a type which is intended to be subclassed.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_DECLARE_INTERFACE
-;;;
-;;; A convenience macro for emitting the usual declarations in the header file
-;;; for a GInterface type.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_DEFINE_TYPE
-;;;
-;;; A convenience macro for type implementations, which declares a class
-;;; initialization function, an instance initialization function (see GTypeInfo
-;;; for information about these) and a static variable named t_n_parent_class
-;;; pointing to the parent class. Furthermore, it defines a *_get_type()
-;;; function.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_DEFINE_TYPE_WITH_PRIVATE
-;;;
-;;; A convenience macro for type implementations, which declares a class
-;;; initialization function, an instance initialization function (see GTypeInfo
-;;; for information about these), a static variable named t_n_parent_class
-;;; pointing to the parent class, and adds private instance data to the type.
-;;; Furthermore, it defines a *_get_type() function.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_DEFINE_TYPE_WITH_CODE
-;;;
-;;; A convenience macro for type implementations. Similar to G_DEFINE_TYPE(),
-;;; but allows you to insert custom code into the *_get_type() function, e.g.
-;;; interface implementations via G_IMPLEMENT_INTERFACE().
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_DEFINE_ABSTRACT_TYPE
-;;;
-;;; A convenience macro for type implementations. Similar to G_DEFINE_TYPE(),
-;;; but defines an abstract type.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_DEFINE_ABSTRACT_TYPE_WITH_PRIVATE
-;;;
-;;; Similar to G_DEFINE_TYPE_WITH_PRIVATE(), but defines an abstract type.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_DEFINE_ABSTRACT_TYPE_WITH_CODE
-;;;
-;;; A convenience macro for type implementations. Similar to
-;;; G_DEFINE_TYPE_WITH_CODE(), but defines an abstract type and allows you to
-;;; insert custom code into the *_get_type() function, e.g. interface
-;;; implementations via G_IMPLEMENT_INTERFACE().
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_ADD_PRIVATE
-;;;
-;;; A convenience macro to ease adding private data to instances of a new type
-;;; in the _C_ section of G_DEFINE_TYPE_WITH_CODE() or
-;;; G_DEFINE_ABSTRACT_TYPE_WITH_CODE().
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_PRIVATE_OFFSET
-;;;
-;;; Evaluates to the offset of the field inside the instance private data
-;;; structure for TypeName .
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_PRIVATE_FIELD
-;;;
-;;; Evaluates to the field_name inside the inst private data structure for
-;;; TypeName .
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_PRIVATE_FIELD_P
-;;;
-;;; Evaluates to a pointer to the field_name inside the inst private data
-;;; structure for TypeName .
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_DEFINE_INTERFACE
-;;;
-;;; A convenience macro for GTypeInterface definitions, which declares a default
-;;; vtable initialization function and defines a *_get_type() function.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_DEFINE_INTERFACE_WITH_CODE
-;;;
-;;; A convenience macro for GTypeInterface definitions. Similar to
-;;; G_DEFINE_INTERFACE(), but allows you to insert custom code into the
-;;; *_get_type() function, e.g. additional interface implementations via
-;;; G_IMPLEMENT_INTERFACE(), or additional prerequisite types. See
-;;; G_DEFINE_TYPE_EXTENDED() for a similar example using
-;;; G_DEFINE_TYPE_WITH_CODE().
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_IMPLEMENT_INTERFACE
-;;;
-;;; A convenience macro to ease interface addition in the _C_ section of
-;;; G_DEFINE_TYPE_WITH_CODE() or G_DEFINE_ABSTRACT_TYPE_WITH_CODE().
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_DEFINE_TYPE_EXTENDED
-;;;
-;;; The most general convenience macro for type implementations, on which
-;;; G_DEFINE_TYPE(), etc are based.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_DEFINE_BOXED_TYPE
-;;;
-;;; A convenience macro for boxed type implementations, which defines a
-;;; type_name_get_type() function registering the boxed type.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_DEFINE_BOXED_TYPE_WITH_CODE
-;;;
-;;; A convenience macro for boxed type implementations. Similar to
-;;; G_DEFINE_BOXED_TYPE(), but allows to insert custom code into the
-;;; type_name_get_type() function, e.g. to register value transformations with
-;;; g_value_register_transform_func().
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_DEFINE_POINTER_TYPE
-;;;
-;;; A convenience macro for pointer type implementations, which defines a
-;;; type_name_get_type() function registering the pointer type.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_DEFINE_POINTER_TYPE_WITH_CODE
-;;;
-;;; A convenience macro for pointer type implementations. Similar to
-;;; G_DEFINE_POINTER_TYPE(), but allows to insert custom code into the
-;;; type_name_get_type() function.
+;;; Returns the number of instances allocated of the particular type.
 ;;; ----------------------------------------------------------------------------
 
 ;;; --- End of file gobject.type-info.lisp -------------------------------------
