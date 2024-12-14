@@ -37,7 +37,7 @@
    (location :initform "UTC"
              :accessor clock-location))
   (:gname . "GClock1")
-  (:metaclass gobject:gobject-class))
+  (:metaclass gobject::gobject-class))
 
 (gobject:register-object-type-implementation "GClock1"         ; name
                                              clock1            ; class
@@ -103,7 +103,7 @@
    (location :initform "UTC"
              :accessor clock2-location))
   (:gname . "GClock2")
-  (:metaclass gobject:gobject-class))
+  (:metaclass gobject::gobject-class))
 
 (gobject:register-object-type-implementation "GClock2"         ; name
                                              clock2            ; class
@@ -228,7 +228,7 @@
    (location :initform "UTC"
              :accessor clock3-location))
   (:gname . "GClock3")
-  (:metaclass gobject:gobject-class))
+  (:metaclass gobject::gobject-class))
 
 (gobject:register-object-type-implementation "GClock3"         ; name
                                              clock3            ; class
@@ -459,10 +459,10 @@
     (is (equal '((TIMEZONE :INITFORM LOCAL-TIME:+UTC-ZONE+
                            :ACCESSOR CLOCK5-TIMEZONE)
                  (LOCATION :ALLOCATION :GOBJECT-PROPERTY
-                           :G-PROPERTY-TYPE "gchararray"
+                           :PROP-TYPE "gchararray"
                            :ACCESSOR CLOCK5-LOCATION
                            :INITARG :LOCATION
-                           :G-PROPERTY-NAME "location"))
+                           :PROP-NAME "location"))
                (mapcar (lambda (property)
                          (gobject::property->slot "Clock5" property))
                        properties)))))
@@ -497,4 +497,4 @@
     (is (string= "UTC" (g:object-property clock "location")))
     (is (string= "abc" (setf (clock5-location clock) "abc")))))
 
-;;; 2024-9-18
+;;; 2024-12-12

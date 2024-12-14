@@ -3,7 +3,7 @@
 (def-suite gobject-binding :in gobject-suite)
 (in-suite gobject-binding)
 
-(defvar *verbose-gobject-binding* t)
+(defvar *verbose-gobject-binding* nil)
 
 (defparameter gobject-binding
               '(g:binding-flags
@@ -102,16 +102,23 @@
                                           action2 "enabled"
                                           :bidirectional)))
     (is-false (setf (g:simple-action-enabled action1) nil))
-    (is (eq (g:simple-action-enabled action1) (g:simple-action-enabled action2)))
+    (is (eq (g:simple-action-enabled action1)
+            (g:simple-action-enabled action2)))
     (is-true (setf (g:simple-action-enabled action2) t))
-    (is (eq (g:simple-action-enabled action1) (g:simple-action-enabled action2)))
+    (is (eq (g:simple-action-enabled action1)
+            (g:simple-action-enabled action2)))
     (is (equal '(:bidirectional) (g:binding-flags binding)))
     (is (eq (g:gtype "GSimpleAction")
-            (g:object-type (g:binding-source binding))))
+            (g:type-from-instance (g:binding-source binding))))
     (is (string= "enabled" (g:binding-source-property binding)))
-    (is (eq (g:gtype "GSimpleAction") (g:object-type (g:binding-target binding))))
+    (is (eq (g:gtype "GSimpleAction")
+            (g:type-from-instance (g:binding-target binding))))
     (is (string= "enabled" (g:binding-target-property binding)))
-    (is-false (g:binding-unbind binding))))
+    (is-false (g:binding-unbind binding))
+    ;; Check memory management
+    (is (= 1 (g:object-ref-count action1)))
+    (is (= 1 (g:object-ref-count action2)))
+    (is (= 1 (g:object-ref-count binding)))))
 
 (test g-binding-properties.2
   (let* ((action1 (make-instance 'g:simple-action))
@@ -120,16 +127,23 @@
                                           action2 "enabled"
                                           :invert-boolean)))
     (is-false (setf (g:simple-action-enabled action1) nil))
-    (is (eq (g:simple-action-enabled action1) (not (g:simple-action-enabled action2))))
+    (is (eq (g:simple-action-enabled action1)
+            (not (g:simple-action-enabled action2))))
     (is-true (setf (g:simple-action-enabled action2) t))
-    (is (eq (g:simple-action-enabled action1) (not (g:simple-action-enabled action2))))
+    (is (eq (g:simple-action-enabled action1)
+            (not (g:simple-action-enabled action2))))
     (is (equal '(:invert-boolean) (g:binding-flags binding)))
     (is (eq (g:gtype "GSimpleAction")
-            (g:object-type (g:binding-source binding))))
+            (g:type-from-instance (g:binding-source binding))))
     (is (string= "enabled" (g:binding-source-property binding)))
-    (is (eq (g:gtype "GSimpleAction") (g:object-type (g:binding-target binding))))
+    (is (eq (g:gtype "GSimpleAction")
+            (g:type-from-instance (g:binding-target binding))))
     (is (string= "enabled" (g:binding-target-property binding)))
-    (is-false (g:binding-unbind binding))))
+    (is-false (g:binding-unbind binding))
+    ;; Check memory management
+    (is (= 1 (g:object-ref-count action1)))
+    (is (= 1 (g:object-ref-count action2)))
+    (is (= 1 (g:object-ref-count binding)))))
 
 ;;; --- Functions --------------------------------------------------------------
 
@@ -143,7 +157,12 @@
                                           action2 "enabled"
                                           :default)))
     (is (eq action1 (g:binding-dup-source binding)))
-    (is (eq action2 (g:binding-dup-target binding)))))
+    (is (eq action2 (g:binding-dup-target binding)))
+    (is-false (g:binding-unbind binding))
+    ;; Check memory management
+    (is (= 1 (g:object-ref-count action1)))
+    (is (= 1 (g:object-ref-count action2)))
+    (is (= 1 (g:object-ref-count binding)))))
 
 ;;;     g_binding_unbind
 ;;;     g_object_bind_property
@@ -154,17 +173,21 @@
          (binding (g:object-bind-property action1 "enabled"
                                           action2 "enabled"
                                           :sync-create)))
-    (is (eq (g:gtype "GBinding") (g:object-type binding)))
+    (is (eq (g:gtype "GBinding") (g:type-from-instance binding)))
     (is (equal '(:sync-create) (g:binding-flags binding)))
     ;; Default values are true
     (is-true (g:simple-action-enabled action1))
     (is-true (g:simple-action-enabled action2))
     ;; Set action1 to false
     (is-false (setf (g:simple-action-enabled action1) nil))
-    ;; enabled is nil for action2
+    ;; enabled is false for action2
     (is-false (g:simple-action-enabled action2))
     ;; Unbind the binding
-    (is-false (g:binding-unbind binding))))
+    (is-false (g:binding-unbind binding))
+    ;; Check memory management
+    (is (= 1 (g:object-ref-count action1)))
+    (is (= 1 (g:object-ref-count action2)))
+    (is (= 1 (g:object-ref-count binding)))))
 
 ;;;     GBindingTransformFunc
 ;;;     g_object_bind_property_full
@@ -173,96 +196,111 @@
   (let* ((action1 (make-instance 'g:simple-action))
          (action2 (make-instance 'g:simple-action))
          binding)
-  (is (typep (setf binding
-                   (g:object-bind-property-full
-                           action1 "enabled"
-                           action2 "enabled"
-                           :default
-                           ;; TRANSFORM-TO function
-                           (lambda (binding from to)
-                             (g:value-set to (g:value-get from) "gboolean")
-                             (when *verbose-gobject-binding*
-                               (format t "~%")
-                               (format t " binding: ~a~%" binding)
-                               (format t "    from: ~a~%" (g:value-get from))
-                               (format t "      to: ~a~%" (g:value-get to)))
-                             t)
-                           ;; TRANSFORM-FROM function
-                           nil))
-             'g:binding))
-  ;; Default values
-  (is-true (g:simple-action-enabled action1))
-  (is-true (g:simple-action-enabled action2))
-  ;; Set action1 NL
-  (is-false (setf (g:simple-action-enabled action1) nil))
-  (is-false (g:simple-action-enabled action1))
-  (is-false (g:simple-action-enabled action2))
-  ;;S Set action1 T
-  (is-true (setf (g:simple-action-enabled action1) t))
-  (is-true (g:simple-action-enabled action1))
-  (is-true (g:simple-action-enabled action2))))
+    (is (typep (setf binding
+                     (g:object-bind-property-full
+                             action1 "enabled"
+                             action2 "enabled"
+                             :default
+                             ;; TRANSFORM-TO function
+                             (lambda (binding from to)
+                               (g:value-set to (g:value-get from) "gboolean")
+                               (when *verbose-gobject-binding*
+                                 (format t "~%")
+                                 (format t " binding: ~a~%" binding)
+                                 (format t "    from: ~a~%" (g:value-get from))
+                                 (format t "      to: ~a~%" (g:value-get to)))
+                               t)
+                             ;; TRANSFORM-FROM function
+                             nil))
+               'g:binding))
+    ;; Default values
+    (is-true (g:simple-action-enabled action1))
+    (is-true (g:simple-action-enabled action2))
+    ;; Set action1 NIL
+    (is-false (setf (g:simple-action-enabled action1) nil))
+    (is-false (g:simple-action-enabled action1))
+    (is-false (g:simple-action-enabled action2))
+    ;; Set action1 T
+    (is-true (setf (g:simple-action-enabled action1) t))
+    (is-true (g:simple-action-enabled action1))
+    (is-true (g:simple-action-enabled action2))
+    (is-false (g:binding-unbind binding))
+    ;; Check memory management
+    (is (= 1 (g:object-ref-count action1)))
+    (is (= 1 (g:object-ref-count action2)))
+    (is (= 1 (g:object-ref-count binding)))))
 
 (test g-object-bind-property-full.2
   (let* ((action1 (make-instance 'g:simple-action))
          (action2 (make-instance 'g:simple-action))
          binding)
-  (is (typep (setf binding
-                   (g:object-bind-property-full action1 "enabled"
-                                                action2 "enabled"
-                                                :default
-                                                 nil
-                                                 nil))
-             'g:binding))
-  ;; Default values
-  (is-true (g:simple-action-enabled action1))
-  (is-true (g:simple-action-enabled action2))
-  ;; Set action1 NL
-  (is-false (setf (g:simple-action-enabled action1) nil))
-  (is-false (g:simple-action-enabled action1))
-  (is-false (g:simple-action-enabled action2))
-  ;;S Set action1 T
-  (is-true (setf (g:simple-action-enabled action1) t))
-  (is-true (g:simple-action-enabled action1))
-  (is-true (g:simple-action-enabled action2))))
+    (is (typep (setf binding
+                     (g:object-bind-property-full action1 "enabled"
+                                                  action2 "enabled"
+                                                  :default
+                                                   nil
+                                                   nil))
+               'g:binding))
+    ;; Default values
+    (is-true (g:simple-action-enabled action1))
+    (is-true (g:simple-action-enabled action2))
+    ;; Set action1 NIL
+    (is-false (setf (g:simple-action-enabled action1) nil))
+    (is-false (g:simple-action-enabled action1))
+    (is-false (g:simple-action-enabled action2))
+    ;; Set action1 T
+    (is-true (setf (g:simple-action-enabled action1) t))
+    (is-true (g:simple-action-enabled action1))
+    (is-true (g:simple-action-enabled action2))
+    (is-false (g:binding-unbind binding))
+    ;; Check memory management
+    (is (= 1 (g:object-ref-count action1)))
+    (is (= 1 (g:object-ref-count action2)))
+    (is (= 1 (g:object-ref-count binding)))))
 
 (test g-object-bind-property-full.3
   (let* ((action1 (make-instance 'g:simple-action))
          (action2 (make-instance 'g:simple-action))
          binding)
-  (is (typep (setf binding
-                   (g:object-bind-property-full
-                           action1 "enabled"
-                           action2 "enabled"
-                           :bidirectional
-                           ;; TRANSFORM-TO function
-                           (lambda (binding from to)
-                             (g:value-set to (g:value-get from) "gboolean")
-                             (when *verbose-gobject-binding*
-                               (format t "~&in TRANSFORM-TO~%")
-                               (format t " binding: ~a~%" binding)
-                               (format t "    from: ~a~%" (g:value-get from))
-                               (format t "      to: ~a~%" (g:value-get to)))
-                             t)
-                           ;; TRANSFORM-FROM function
-                           (lambda (binding from to)
-                             (g:value-set to (g:value-get from) "gboolean")
-                             (when *verbose-gobject-binding*
-                               (format t "~&in TRANSFORM-FROM~%")
-                               (format t " binding: ~a~%" binding)
-                               (format t "    from: ~a~%" (g:value-get from))
-                               (format t "      to: ~a~%" (g:value-get to)))
-                             t)))
-             'g:binding))
-  ;; Default values
-  (is-true (g:simple-action-enabled action1))
-  (is-true (g:simple-action-enabled action2))
-  ;; Set action2 NIL
-  (is-false (setf (g:simple-action-enabled action2) nil))
-  (is-false (g:simple-action-enabled action1))
-  (is-false (g:simple-action-enabled action2))
-  ;; Set action2 T
-  (is-true (setf (g:simple-action-enabled action2) t))
-  (is-true (g:simple-action-enabled action1))
-  (is-true (g:simple-action-enabled action2))))
+    (is (typep (setf binding
+                     (g:object-bind-property-full
+                             action1 "enabled"
+                             action2 "enabled"
+                             :bidirectional
+                             ;; TRANSFORM-TO function
+                             (lambda (binding from to)
+                               (g:value-set to (g:value-get from) "gboolean")
+                               (when *verbose-gobject-binding*
+                                 (format t "~&in TRANSFORM-TO~%")
+                                 (format t " binding: ~a~%" binding)
+                                 (format t "    from: ~a~%" (g:value-get from))
+                                 (format t "      to: ~a~%" (g:value-get to)))
+                               t)
+                             ;; TRANSFORM-FROM function
+                             (lambda (binding from to)
+                               (g:value-set to (g:value-get from) "gboolean")
+                               (when *verbose-gobject-binding*
+                                 (format t "~&in TRANSFORM-FROM~%")
+                                 (format t " binding: ~a~%" binding)
+                                 (format t "    from: ~a~%" (g:value-get from))
+                                 (format t "      to: ~a~%" (g:value-get to)))
+                               t)))
+               'g:binding))
+    ;; Default values
+    (is-true (g:simple-action-enabled action1))
+    (is-true (g:simple-action-enabled action2))
+    ;; Set action2 NIL
+    (is-false (setf (g:simple-action-enabled action2) nil))
+    (is-false (g:simple-action-enabled action1))
+    (is-false (g:simple-action-enabled action2))
+    ;; Set action2 T
+    (is-true (setf (g:simple-action-enabled action2) t))
+    (is-true (g:simple-action-enabled action1))
+    (is-true (g:simple-action-enabled action2))
+    (is-false (g:binding-unbind binding))
+    ;; Check memory management
+    (is (= 1 (g:object-ref-count action1)))
+    (is (= 1 (g:object-ref-count action2)))
+    (is (= 1 (g:object-ref-count binding)))))
 
-;;; 2024-9-18
+;;; 2024-12-12

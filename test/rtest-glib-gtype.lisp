@@ -17,16 +17,9 @@
 ;;; ----------------------------------------------------------------------------
 
 (test glib-get-name-to-gtypes
-  (is (every #'stringp
-             (iter (for (name gtype) in-hashtable glib::*name-to-gtype*)
-                   (collect name))))
-  (is (every #'stringp
-             (glib::get-name-to-gtypes))))
+  (is (every #'stringp (glib::get-name-to-gtypes))))
 
 (test glib-get-id-to-gtypes
-  (is (every #'integerp
-             (iter (for (id gtype) in-hashtable glib::*id-to-gtype*)
-                   (collect id))))
   (is (every #'integerp
              (mapcar #'car (glib::get-id-to-gtypes)))))
 
@@ -42,8 +35,7 @@
     (is-false (glib::gtype-from-name "unknown"))))
 
 (test gtype-from-name.3
-  (let ((gtypes (iter (for (name gtype) in-hashtable glib::*name-to-gtype*)
-                      (collect name))))
+  (let ((gtypes (glib::get-name-to-gtypes)))
     (is (every #'stringp gtypes))
     (is (every (lambda (x) (typep x 'glib:gtype))
                (mapcar #'glib::gtype-from-name gtypes)))))
@@ -59,8 +51,7 @@
     (is-false gtype)))
 
 (test gtype-from-id.3
-  (let ((gtypes (iter (for (id gtype) in-hashtable glib::*id-to-gtype*)
-                      (collect id))))
+  (let ((gtypes (mapcar #'car (glib::get-id-to-gtypes))))
     (is (every #'integerp gtypes))
     (is (every (lambda (x) (typep x 'glib:gtype))
                (mapcar #'glib::gtype-from-id gtypes)))))
@@ -72,9 +63,10 @@
 
 ;;; ----------------------------------------------------------------------------
 
+#+nil
 (test glib-warn-unkown-gtype
  (is-false (glib::warn-unknown-gtype "gdouble"))
  (is-false (glib::warn-unknown-gtype (g:gtype-id (g:gtype "gdouble"))))
  (is-false (glib::warn-unknown-gtype (g:gtype "gdouble"))))
 
-;;; 2024-6-15
+;;; 2024-12-8

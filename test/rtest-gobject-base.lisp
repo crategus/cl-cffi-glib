@@ -31,8 +31,6 @@
 
                 g:type-is-object
                 g:is-object
-                g:object-type
-                g:object-type-name
                 g:object-class-find-property
                 g:object-class-list-properties
                 g:object-interface-find-property
@@ -208,28 +206,11 @@
 
 ;;;     g-is-object-class
 ;;;     g-object-class
-
 ;;;     g_object_type
-
-(test g-object-type
-  (is-false (g:object-type nil))
-  (is (eq (g:gtype "GSimpleAction")
-          (g:object-type (make-instance 'g:simple-action))))
-  (is (eq (g:gtype "GSimpleAction")
-          (g:object-type (g:object-pointer (make-instance 'g:simple-action))))))
-
 ;;;     g_object_type_name
-
-(test g-object-type-name
-  (is-false (g:object-type-name nil))
-  (is (string= "GSimpleAction"
-               (g:object-type-name (make-instance 'g:simple-action))))
-  (is (string= "GSimpleAction"
-               (g:object-type-name
-                   (g:object-pointer (make-instance 'g:simple-action))))))
-
 ;;;     g-object-class-type
 ;;;     g-object-class-name
+
 ;;;     g_object_class_install_property
 ;;;     g_object_class_install_properties
 
@@ -285,12 +266,12 @@
 (test g-object-new
   (let (action)
     (is (eq (g:gtype "GSimpleAction")
-            (g:object-type (g:object-new "GSimpleAction"))))
+            (g:type-from-instance (g:object-new "GSimpleAction"))))
     (is (eq (g:gtype "GSimpleAction")
-            (g:object-type (setf action
-                                 (g:object-new "GSimpleAction"
-                                               :name "action"
-                                               :enabled nil)))))
+            (g:type-from-instance (setf action
+                                        (g:object-new "GSimpleAction"
+                                                      :name "action"
+                                                      :enabled nil)))))
     (is (string= "action" (g:simple-action-name action)))
     (is-false (g:simple-action-enabled action))))
 
@@ -330,7 +311,7 @@
 ;;;     g_object_set
 ;;;     g_object_get
 
-;;;     g-object-notify
+;;;     g_object_notify
 
 (test g-object-notify
   (let* ((message nil)
@@ -339,11 +320,12 @@
                          (lambda (object pspec)
                            (setf message
                                  "Signal notify::name emitted")
-                           (is (g:gtype "GSimpleAction") (g:object-type object))
+                           (is (eq (g:gtype "GSimpleAction")
+                                   (g:type-from-instance object)))
                            (is (g:is-param-spec pspec))
                            (is (string= "name" (g:param-spec-name pspec)))))))
     (is (integerp handler-id))
-    ;; Notify button
+    ;; Notify action
     (is-false (g:object-notify action "name"))
     (is (string= "Signal notify::name emitted" message))))
 
@@ -360,7 +342,7 @@
                            (setf message
                                  (append message (list "notify::name")))
                            (is (eq (g:gtype "GSimpleAction")
-                                   (g:object-type object)))
+                                   (g:type-from-instance object)))
                            (is (g:is-param-spec pspec))))))
     (is (integerp handler-id))
     ;; Freeze the notify signal
@@ -384,7 +366,7 @@
                            (setf message
                                  (append message (list "notify::name")))
                            (is (eq (g:gtype "GSimpleAction")
-                                   (g:object-type object)))
+                                   (g:type-from-instance object)))
                            (is (g:is-param-spec pspec))))))
     (is (integerp handler-id))
     ;; Freeze the notify signal

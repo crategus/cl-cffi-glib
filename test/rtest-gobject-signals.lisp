@@ -3,7 +3,7 @@
 (def-suite gobject-signals :in gobject-suite)
 (in-suite gobject-signals)
 
-(defvar *verbose-gobject-signals* t)
+(defvar *verbose-gobject-signals* nil)
 
 (defparameter gobject-signals
               '(gobject::create-closure
@@ -34,17 +34,29 @@
 
 ;;; --- Types and Values -------------------------------------------------------
 
-;;;     GSignalInvocationHint
-;;;     GSignalCMarshaller
-;;;     GSignalCVaMarshaller
+
 ;;;     GSignalFlags
-;;;     GSignalMatchType
-;;;     GSignalQuery
+
+(test g-signal-flags
+  (is (equal '(:RUN-FIRST :RUN-LAST :RUN-CLEANUP :NO-RECURSE :DETAILED :ACTION
+               :NO-HOOKS :MUST-COLLECT :DEPRECATED)
+             (cffi:foreign-bitfield-symbols 'g:signal-flags #xffff)))
+  (is (equal '(1 2 4 8 16 32 64 128 256)
+             (mapcar (lambda (x)
+                       (cffi:foreign-bitfield-value 'g:signal-flags x))
+                     (cffi:foreign-bitfield-symbols 'g:signal-flags #xffff)))))
+
 ;;;     GConnectFlags
 
-;;;     G_SIGNAL_TYPE_STATIC_SCOPE
-;;;     G_SIGNAL_MATCH_MASK
-;;;     G_SIGNAL_FLAGS_MASK
+(test g-connect-flags
+  (is (equal '(:AFTER :SWAPPED)
+             (cffi:foreign-bitfield-symbols 'g:connect-flags #xffff)))
+  (is (equal '(1 2)
+             (mapcar (lambda (x)
+                       (cffi:foreign-bitfield-value 'g:connect-flags x))
+                     (cffi:foreign-bitfield-symbols 'g:connect-flags #xffff)))))
+
+;;;     GSignalQuery
 
 ;;; --- Functions --------------------------------------------------------------
 

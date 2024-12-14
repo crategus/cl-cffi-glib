@@ -25,7 +25,6 @@
     g:type-check-instance-type
     g:type-check-class-type
     g:type-name
-    g:type-from-name
     g:type-parent
     g:type-children
     g:type-depth
@@ -465,6 +464,7 @@
 
 ;;;   g_type_from_name
 
+#+nil
 (test g-type-from-name
   (is (eq (g:gtype "gdouble") (g:type-from-name "gdouble")))
   (is (eq (g:gtype "GBoxed") (g:type-from-name "GBoxed")))

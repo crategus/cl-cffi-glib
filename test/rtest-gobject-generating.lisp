@@ -50,10 +50,10 @@
                                              "use-header-bar" "gint" t t))))
     (is (equal '(USE-HEADER-BAR
                  :ALLOCATION :GOBJECT-PROPERTY
-                 :G-PROPERTY-TYPE "gint"
+                 :PROP-TYPE "gint"
                  :ACCESSOR DIALOG-USE-HEADER-BAR
                  :INITARG :USE-HEADER-BAR
-                 :G-PROPERTY-NAME "use-header-bar")
+                 :PROP-NAME "use-header-bar")
                (gobject::property->slot nil property)))))
 
 (test property->slot.2
@@ -62,10 +62,10 @@
                                              "use-header-bar" "gint" t t))))
     (is (equal '(USE-HEADER-BAR
                  :ALLOCATION :GOBJECT-PROPERTY
-                 :G-PROPERTY-TYPE "gint"
+                 :PROP-TYPE "gint"
                  :ACCESSOR DIALOG-USE-HEADER-BAR
                  :INITARG :USE-HEADER-BAR
-                 :G-PROPERTY-NAME "use-header-bar")
+                 :PROP-NAME "use-header-bar")
                (gobject::property->slot nil property)))))
 
 (test property->slot.3
@@ -74,10 +74,10 @@
                                              "use-header-bar" "gfloat" t t))))
     (is (equal '(USE-HEADER-BAR
                  :ALLOCATION :GOBJECT-PROPERTY
-                 :G-PROPERTY-TYPE "gfloat"
+                 :PROP-TYPE "gfloat"
                  :ACCESSOR DIALOG-USE-HEADER-BAR
                  :INITARG :USE-HEADER-BAR
-                 :G-PROPERTY-NAME "use-header-bar")
+                 :PROP-NAME "use-header-bar")
                (gobject::property->slot nil property)))))
 
 (test property->slot.4
@@ -86,10 +86,10 @@
                                              "use-header-bar" "gdouble" t t))))
     (is (equal '(USE-HEADER-BAR
                  :ALLOCATION :GOBJECT-PROPERTY
-                 :G-PROPERTY-TYPE "gdouble"
+                 :PROP-TYPE "gdouble"
                  :ACCESSOR DIALOG-USE-HEADER-BAR
                  :INITARG :USE-HEADER-BAR
-                 :G-PROPERTY-NAME "use-header-bar")
+                 :PROP-NAME "use-header-bar")
                (gobject::property->slot nil property)))))
 
 (test property->slot.5
@@ -101,12 +101,12 @@
                                              "gtk_file_chooser_set_filename"))))
     (is (equal '(FILENAME
                  :ALLOCATION :GOBJECT-FN
-                 :G-PROPERTY-TYPE (:STRING :FREE-FROM-FOREIGN T
-                                           :FREE-TO-FOREIGN T)
+                 :PROP-TYPE (:STRING :FREE-FROM-FOREIGN T
+                                     :FREE-TO-FOREIGN T)
                  :ACCESSOR FILE-CHOOSER-FILENAME
                  :INITARG :FILENAME
-                 :G-GETTER "gtk_file_chooser_get_filename"
-                 :G-SETTER "gtk_file_chooser_set_filename")
+                 :GETTER "gtk_file_chooser_get_filename"
+                 :SETTER "gtk_file_chooser_set_filename")
                (gobject::property->slot nil property)))))
 
 (test property->slot.6
@@ -121,24 +121,22 @@
 (test define-gobject-macro.1
   (is (equal '(PROGN
  (DEFCLASS SIMPLE-ACTION (GIO:ACTION)
-           ((ENABLED :ALLOCATION :GOBJECT-PROPERTY :G-PROPERTY-TYPE "gboolean"
-             :ACCESSOR SIMPLE-ACTION-ENABLED :INITARG :ENABLED :G-PROPERTY-NAME
+           ((ENABLED :ALLOCATION :GOBJECT-PROPERTY :PROP-TYPE "gboolean"
+             :ACCESSOR SIMPLE-ACTION-ENABLED :INITARG :ENABLED :PROP-NAME
              "enabled")
-            (NAME :ALLOCATION :GOBJECT-PROPERTY :G-PROPERTY-TYPE "gchararray"
-             :ACCESSOR SIMPLE-ACTION-NAME :INITARG :NAME :G-PROPERTY-NAME
-             "name")
-            (PARAMETER-TYPE :ALLOCATION :GOBJECT-PROPERTY :G-PROPERTY-TYPE
+            (NAME :ALLOCATION :GOBJECT-PROPERTY :PROP-TYPE "gchararray"
+             :ACCESSOR SIMPLE-ACTION-NAME :INITARG :NAME :PROP-NAME "name")
+            (PARAMETER-TYPE :ALLOCATION :GOBJECT-PROPERTY :PROP-TYPE
              "GVariantType" :ACCESSOR SIMPLE-ACTION-PARAMETER-TYPE :INITARG
-             :PARAMETER-TYPE :G-PROPERTY-NAME "parameter-type")
-            (STATE :ALLOCATION :GOBJECT-PROPERTY :G-PROPERTY-TYPE "GVariant"
-             :ACCESSOR SIMPLE-ACTION-STATE :INITARG :STATE :G-PROPERTY-NAME
-             "state")
-            (STATE-TYPE :ALLOCATION :GOBJECT-PROPERTY :G-PROPERTY-TYPE
+             :PARAMETER-TYPE :PROP-NAME "parameter-type")
+            (STATE :ALLOCATION :GOBJECT-PROPERTY :PROP-TYPE "GVariant"
+             :ACCESSOR SIMPLE-ACTION-STATE :INITARG :STATE :PROP-NAME "state")
+            (STATE-TYPE :ALLOCATION :GOBJECT-PROPERTY :PROP-TYPE
              "GVariantType" :ACCESSOR SIMPLE-ACTION-STATE-TYPE :INITARG
-             :STATE-TYPE :G-PROPERTY-NAME "state-type"))
+             :STATE-TYPE :PROP-NAME "state-type"))
            (:GNAME . "GSimpleAction")
            (:INITIALIZER . "g_simple_action_get_type")
-           (:METACLASS GOBJECT:GOBJECT-CLASS))
+           (:METACLASS GOBJECT::GOBJECT-CLASS))
  (EXPORT 'SIMPLE-ACTION (FIND-PACKAGE "GLIB-TEST"))
  (EXPORT 'SIMPLE-ACTION-ENABLED (FIND-PACKAGE "GLIB-TEST"))
  (EXPORT 'SIMPLE-ACTION-NAME (FIND-PACKAGE "GLIB-TEST"))
@@ -166,29 +164,27 @@
 (test define-gobject-macro.3
   (is (equal '(PROGN
  (DEFCLASS SIMPLE-ACTION (GIO:ACTION)
-           ((ENABLED :ALLOCATION :GOBJECT-PROPERTY :G-PROPERTY-TYPE "gboolean"
-             :ACCESSOR SIMPLE-ACTION-ENABLED :INITARG :ENABLED :G-PROPERTY-NAME
+           ((ENABLED :ALLOCATION :GOBJECT-PROPERTY :PROP-TYPE "gboolean"
+             :ACCESSOR SIMPLE-ACTION-ENABLED :INITARG :ENABLED :PROP-NAME
              "enabled")
-            (NAME :ALLOCATION :GOBJECT-PROPERTY :G-PROPERTY-TYPE "gchararray"
-             :ACCESSOR SIMPLE-ACTION-NAME :INITARG :NAME :G-PROPERTY-NAME
-             "name")
-            (PARAMETER-TYPE :ALLOCATION :GOBJECT-PROPERTY :G-PROPERTY-TYPE
+            (NAME :ALLOCATION :GOBJECT-PROPERTY :PROP-TYPE "gchararray"
+             :ACCESSOR SIMPLE-ACTION-NAME :INITARG :NAME :PROP-NAME "name")
+            (PARAMETER-TYPE :ALLOCATION :GOBJECT-PROPERTY :PROP-TYPE
              "GVariantType" :ACCESSOR SIMPLE-ACTION-PARAMETER-TYPE :INITARG
-             :PARAMETER-TYPE :G-PROPERTY-NAME "parameter-type")
-            (STATE :ALLOCATION :GOBJECT-PROPERTY :G-PROPERTY-TYPE "GVariant"
-             :ACCESSOR SIMPLE-ACTION-STATE :INITARG :STATE :G-PROPERTY-NAME
-             "state")
-            (STATE-TYPE :ALLOCATION :GOBJECT-PROPERTY :G-PROPERTY-TYPE
+             :PARAMETER-TYPE :PROP-NAME "parameter-type")
+            (STATE :ALLOCATION :GOBJECT-PROPERTY :PROP-TYPE "GVariant"
+             :ACCESSOR SIMPLE-ACTION-STATE :INITARG :STATE :PROP-NAME "state")
+            (STATE-TYPE :ALLOCATION :GOBJECT-PROPERTY :PROP-TYPE
              "GVariantType" :ACCESSOR SIMPLE-ACTION-STATE-TYPE :INITARG
-             :STATE-TYPE :G-PROPERTY-NAME "state-type")
-            (STATE-HINT :ALLOCATION :GOBJECT-FN :G-PROPERTY-TYPE GLIB:VARIANT
-             :ACCESSOR SIMPLE-ACTION-STATE-HINT :INITARG :STATE-HINT :G-GETTER
-             NIL :G-SETTER "g_simple_action_set_state_hint")
+             :STATE-TYPE :PROP-NAME "state-type")
+            (STATE-HINT :ALLOCATION :GOBJECT-FN :PROP-TYPE GLIB:VARIANT
+             :ACCESSOR SIMPLE-ACTION-STATE-HINT :INITARG :STATE-HINT :GETTER
+             NIL :SETTER "g_simple_action_set_state_hint")
             (ROTATION :ACCESSOR SIMPLE-ACTION-ROTATION :INITARG ROTATION
              :INITFROM 0.0d0))
            (:GNAME . "GSimpleAction")
            (:INITIALIZER . "g_simple_action_get_type")
-           (:METACLASS GOBJECT:GOBJECT-CLASS))
+           (:METACLASS GOBJECT::GOBJECT-CLASS))
  (EXPORT 'SIMPLE-ACTION (FIND-PACKAGE "GLIB-TEST"))
  (EXPORT 'SIMPLE-ACTION-ENABLED (FIND-PACKAGE "GLIB-TEST"))
  (EXPORT 'SIMPLE-ACTION-NAME (FIND-PACKAGE "GLIB-TEST"))
@@ -227,34 +223,34 @@
   (is (equal '(PROGN
                 (DEFCLASS ACTION NIL
                   ((ENABLED :ALLOCATION :GOBJECT-PROPERTY
-                            :G-PROPERTY-TYPE "gboolean"
+                            :PROP-TYPE "gboolean"
                             :ACCESSOR ACTION-ENABLED
                             :INITARG :ENABLED
-                            :G-PROPERTY-NAME "enabled")
+                            :PROP-NAME "enabled")
                    (NAME :ALLOCATION :GOBJECT-PROPERTY
-                         :G-PROPERTY-TYPE "gchararray"
+                         :PROP-TYPE "gchararray"
                          :ACCESSOR ACTION-NAME
                          :INITARG :NAME
-                         :G-PROPERTY-NAME "name")
+                         :PROP-NAME "name")
                    (PARAMETER-TYPE :ALLOCATION :GOBJECT-PROPERTY
-                                   :G-PROPERTY-TYPE "GVariantType"
+                                   :PROP-TYPE "GVariantType"
                                    :ACCESSOR ACTION-PARAMETER-TYPE
                                    :INITARG :PARAMETER-TYPE
-                                   :G-PROPERTY-NAME "parameter-type")
+                                   :PROP-NAME "parameter-type")
                    (STATE :ALLOCATION :GOBJECT-PROPERTY
-                          :G-PROPERTY-TYPE "GVariant"
+                          :PROP-TYPE "GVariant"
                           :ACCESSOR ACTION-STATE
                           :INITARG :STATE
-                          :G-PROPERTY-NAME "state")
+                          :PROP-NAME "state")
                    (STATE-TYPE :ALLOCATION :GOBJECT-PROPERTY
-                               :G-PROPERTY-TYPE "GVariantType"
+                               :PROP-TYPE "GVariantType"
                                :ACCESSOR ACTION-STATE-TYPE
                                :INITARG :STATE-TYPE
-                               :G-PROPERTY-NAME "state-type"))
+                               :PROP-NAME "state-type"))
                   (:GNAME . "GAction")
                   (:INITIALIZER . "g_action_get_type")
                   (:INTERFACE-P . T)
-                  (:METACLASS GOBJECT:GOBJECT-CLASS))
+                  (:METACLASS GOBJECT::GOBJECT-CLASS))
                 (EXPORT 'ACTION (FIND-PACKAGE "GLIB-TEST"))
                 (EXPORT 'ACTION-ENABLED (FIND-PACKAGE "GLIB-TEST"))
                 (EXPORT 'ACTION-NAME (FIND-PACKAGE "GLIB-TEST"))
@@ -277,4 +273,4 @@
                                      (state-type action-state-type
                                       "state-type" "GVariantType" t nil)))))))
 
-;;; 2024-10-25
+;;; 2024-12-12
