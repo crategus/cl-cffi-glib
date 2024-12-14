@@ -59,14 +59,15 @@
 
 (cffi:defcfun ("g_content_type_equals" content-type-equals) :boolean
  #+liber-documentation
- "@version{#2023-7-12}
+ "@version{2024-12-7}
   @argument[ctype1]{a content type string}
   @argument[ctype2]{a content type string}
   @return{@em{True} if the two content types are identical or equivalent,
     @em{false} otherwise.}
   @begin{short}
     Compares two content types for equality.
-  @end{short}"
+  @end{short}
+  @see-function{g:content-type-is-a}"
   (ctype1 :string)
   (ctype2 :string))
 
@@ -78,14 +79,15 @@
 
 (cffi:defcfun ("g_content_type_is_a" content-type-is-a) :boolean
  #+liber-documentation
- "@version{#2023-7-12}
+ "@version{2024-12-7}
   @argument[ctype]{a content type string}
   @argument[supertype]{a content type string}
   @return{@em{True} if @arg{ctype} is a kind of @arg{supertype}, @em{false}
     otherwise.}
   @begin{short}
     Determines if @arg{ctype} is a subset of @arg{supertype}.
-  @end{short}"
+  @end{short}
+  @see-function{g:content-type-is-mime-type}"
   (ctype :string)
   (supertype :string))
 
@@ -97,7 +99,7 @@
 
 (cffi:defcfun ("g_content_type_is_mime_type" content-type-is-mime-type) :boolean
  #+liber-documentation
- "@version{#2023-7-12}
+ "@version{2024-12-7}
   @argument[ctype]{a content type string}
   @argument[mimetype]{a MIME type string}
   @return{@em{True} if @arg{ctype} is a kind of @arg{mimetype}, @em{false}
@@ -118,14 +120,19 @@
 
 (cffi:defcfun ("g_content_type_is_unknown" content-type-is-unknown) :boolean
  #+liber-documentation
- "@version{#2023-7-12}
+ "@version{2024-12-7}
   @argument[ctype]{a content type string}
   @return{@em{True} if @arg{ctype} is the unknown content type.}
   @begin{short}
     Checks if the content type is the generic \"unknown\" content type.
   @end{short}
-  On UNIX this is the \"application/octet-stream\" MIME type, while on win32 it
-  is \"*\"."
+  On UNIX this is the @code{\"application/octet-stream\"} MIME type, while on
+  Win32 it is @code{\"*\"}.
+  @begin[Examples]{dictionary}
+    @begin{pre}
+(g:content-type-is-unknown \"application/octet-stream\") => T
+    @end{pre}
+  @end{dictionary}"
   (ctype :string))
 
 (export 'content-type-is-unknown)
@@ -137,10 +144,10 @@
 (cffi:defcfun ("g_content_type_get_description" content-type-description)
     (:string :free-from-foreign t)
  #+liber-documentation
- "@version{2022-12-27}
+ "@version{2024-12-7}
   @argument[ctype]{a content type string}
   @begin{return}
-    A string with a short description of the content type.
+    The string with a short description of the content type.
   @end{return}
   @begin{short}
     Gets the human readable description of the content type.
@@ -162,28 +169,29 @@
 
 (cffi:defcfun ("g_content_type_get_mime_type" content-type-mime-type) :string
  #+liber-documentation
- "@version{2022-12-27}
+ "@version{2024-12-7}
   @argument[ctype]{a content type string}
   @begin{return}
-    A string with the registered MIME type for the given @arg{ctype}, or
+    The string with the registered MIME type for the given @arg{ctype}, or
     @code{nil} if unknown.
   @end{return}
   @begin{short}
     Gets the MIME type for the content type, if one is registered.
-  @end{short}"
+  @end{short}
+  @see-function{g:content-type-is-mime-type}"
   (ctype :string))
 
 (export 'content-type-mime-type)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_content_type_set_mime_dirs
-;;; g_content_type_get_mime_dirs
-;;; ----------------------------------------------------------------------------
+;;; g_content_type_get_mime_dirs                            not implemented
+;;; ---------------------------------------------------------------------------
 
 ;; FIXME: This implementation does not work. The type conversion glib:strv-t
 ;; is not the correct implementation.
 
-#+glib-2-60
+#+nil
 (defun (setf content-type-mime-dirs) (dirs)
   (cffi:foreign-funcall "g_content_type_set_mime_dirs"
                         (glib:strv-t :free-to-foreign nil) dirs
@@ -192,28 +200,24 @@
 
 #+glib-2-60
 (cffi:defcfun ("g_content_type_get_mime_dirs" content-type-mime-dirs)
-    glib:strv-t
+    (glib:strv-t :free-from-foreign nil)
  #+liber-documentation
- "@version{#2023-7-14}
+ "@version{2024-12-7}
   @syntax{(g:content-type-mime-dirs) => dirs}
-  @syntax{(setf (g:content-type-mime-dirs) dirs)}
   @argument[dirs]{a list of directories to load MIME data from, including any
     @file{file/} subdirectory, and with the first directory to try listed first}
   @begin{short}
-    The @sym{g:content-type-mime-type} function gets the list of directories
+    The @fun{g:content-type-mime-type} function gets the list of directories
     which MIME data is loaded from.
   @end{short}
-  The @sym{(setf g:content-type-mime-type)} function sets the list of
-  directories used by GIO to load the MIME database. If @arg{dirs} is
-  @code{nil}, the directories used are the default:
-  @begin{itemize}
-    @item{the mime subdirectory of the directory in @code{$XDG_DATA_HOME}}
-    @item{the mime subdirectory of every directory in @code{$XDG_DATA_DIRS}}
-  @end{itemize}
   This function is intended to be used when writing tests that depend on
   information stored in the MIME database, in order to control the data.
 
-  Since 2.60")
+  Since 2.60
+  @begin[Notes]{dictionary}
+    The corresponding @code{g_content_type_set_mime_dirs()} setter function is
+    not implemented in the Lisp library.
+  @end{dictionary}")
 
 #+glib-2-60
 (export 'content-type-mime-dirs)
@@ -223,12 +227,12 @@
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_content_type_get_icon" content-type-icon)
-    (gobject:object icon)
+    (gobject:object icon :already-referenced)
  #+liber-documentation
- "@version{2022-12-27}
+ "@version{2024-12-7}
   @argument[ctype]{a content type string}
   @begin{return}
-    A @class{g:icon} object corresponding to the content type.
+    The @class{g:icon} object corresponding to the content type.
   @end{return}
   @begin{short}
     Gets the icon for a content type.
@@ -251,12 +255,12 @@
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_content_type_get_symbolic_icon" content-type-symbolic-icon)
-    (gobject:object g-icon)
+    (gobject:object icon :already-referenced)
  #+liber-documentation
- "@version{2022-12-27}
+ "@version{2024-12-7}
   @argument[ctype]{a content type string}
   @begin{return}
-    Symbolic @class{g:icon} object corresponding to the content type.
+    The symbolic @class{g:icon} object corresponding to the content type.
   @end{return}
   @short{Gets the symbolic icon for a content type.}
   @see-class{g:icon}
@@ -273,10 +277,10 @@
 (cffi:defcfun ("g_content_type_get_generic_icon_name"
                 content-type-generic-icon-name) (:string :free-from-foreign t)
  #+liber-documentation
- "@version{2022-12-27}
+ "@version{2024-12-7}
   @argument[ctype]{a content type string}
   @begin{return}
-    A string with the registered generic icon name for the given @arg{ctype},
+    The string with the registered generic icon name for the given @arg{ctype},
     or @code{nil} if unknown.
   @end{return}
   @begin{short}
@@ -304,7 +308,7 @@
 (cffi:defcfun ("g_content_type_can_be_executable"
                 content-type-can-be-executable) :boolean
  #+liber-documentation
- "@version{#2023-7-12}
+ "@version{2024-12-7}
   @argument[ctype]{a content type string}
   @return{@em{True} if the file type corresponds to a content type that can be
     executable, @em{false} otherwise.}
@@ -324,9 +328,9 @@
 (cffi:defcfun ("g_content_type_from_mime_type" content-type-from-mime-type)
     :string
  #+liber-documentation
- "@version{#2023-7-12}
+ "@version{2024-12-7}
   @argument[mimetype]{a MIME type string}
-  @return{A string with the content type or @code{nil}.}
+  @return{The string with the content type or @code{nil}.}
   @begin{short}
     Tries to find a content type based on the MIME type name.
   @end{short}"
@@ -386,8 +390,6 @@
 ;;; Returns :
 ;;;     an NULL-terminated array of zero or more content types. Free with
 ;;;     g_strfreev().
-;;;
-;;; Since 2.18
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -395,10 +397,10 @@
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_content_types_get_registered" content-types-registered)
-    (glib:list-t :string :free-from-foreign t)
+    (glib:list-t (:string :free-from-foreign t) :free-from-foreign t)
  #+liber-documentation
- "@version{2022-12-27}
-  @return{A list of strings with the registered content types.}
+ "@version{2024-12-7}
+  @return{The list of strings with the registered content types.}
   @begin{short}
     Gets a list of strings containing all the registered content types known to
     the system.
