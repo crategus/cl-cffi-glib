@@ -227,7 +227,7 @@
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_content_type_get_icon" content-type-icon)
-    (gobject:object icon :already-referenced)
+    (gobject:object icon :return)
  #+liber-documentation
  "@version{2024-12-7}
   @argument[ctype]{a content type string}
@@ -255,7 +255,7 @@
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_content_type_get_symbolic_icon" content-type-symbolic-icon)
-    (gobject:object icon :already-referenced)
+    (gobject:object icon :return)
  #+liber-documentation
  "@version{2024-12-7}
   @argument[ctype]{a content type string}

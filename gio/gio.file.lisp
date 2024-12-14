@@ -113,7 +113,7 @@
   (gobject:object-pointer
       (cffi:foreign-funcall "g_file_parse_name"
                             :string (namestring value)
-                            (gobject:object :already-referenced))))
+                            (gobject:object :return))))
 
 (defmethod cffi:translate-from-foreign
     (value (type file-as-namestring-type))
@@ -145,7 +145,7 @@
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_file_new_for_path" %file-new-for-path)
-    (gobject:object file :already-referenced)
+    (gobject:object file :return)
   (path :string))
 
 (defun file-new-for-path (path)
@@ -169,7 +169,7 @@
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_file_new_for_uri" file-new-for-uri)
-    (gobject:object file :already-referenced)
+    (gobject:object file :return)
  #+liber-documentation
  "@version{2024-10-12}
   @argument[uri]{a UTF-8 string containing a URI}
@@ -190,7 +190,7 @@
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_file_new_for_commandline_arg" file-new-for-commandline-arg)
-    (gobject:object file :already-referenced)
+    (gobject:object file :return)
  #+liber-documentation
  "@version{2024-10-12}
   @argument[arg]{a command line string}
@@ -226,7 +226,7 @@
 
 (cffi:defcfun ("g_file_new_for_commandline_arg_and_cwd"
                file-new-for-commandline-arg-and-cwd)
-    (gobject:object file :already-referenced)
+    (gobject:object file :return)
  #+liber-documentation
  "@version{2024-10-12}
   @argument[arg]{a command line string}
@@ -257,7 +257,7 @@
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_file_parse_name" file-parse-name)
-    (gobject:object file :already-referenced)
+    (gobject:object file :return)
  #+liber-documentation
  "@version{2024-10-12}
   @argument[parsename]{a string with a file name or path to be parsed}

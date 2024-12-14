@@ -192,7 +192,7 @@
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_icon_new_for_string" %icon-new-for-string)
-    (gobject:object icon :already-referenced)
+    (gobject:object icon :return)
   (str :string)
   (err :pointer))
 
@@ -255,7 +255,7 @@
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_icon_deserialize" icon-deserialize)
-    (gobject:object icon :already-referenced)
+    (gobject:object icon :return)
  #+liber-documentation
  "@version{2024-10-23}
   @argument[value]{a @type{g:variant} value created with the

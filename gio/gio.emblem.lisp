@@ -183,8 +183,7 @@
 ;;; g_emblem_new
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcfun ("g_emblem_new" emblem-new)
-    (gobject:object emblem :already-referenced)
+(cffi:defcfun ("g_emblem_new" emblem-new) (gobject:object emblem :return)
  #+liber-documentation
  "@version{2024-10-23}
   @argument[icon]{a @class{g:icon} object containing the icon}
@@ -203,7 +202,7 @@
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_emblem_new_with_origin" emblem-new-with-origin)
-    (gobject:object emblem :already-referenced)
+    (gobject:object emblem :return)
  #+liber-documentation
  "@version{2024-10-23}
   @argument[icon]{a @class{g:icon} object containing the icon}

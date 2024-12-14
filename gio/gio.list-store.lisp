@@ -178,7 +178,7 @@
 ;; a pointer of a GType for the ITEM-TYPE property.
 
 (cffi:defcfun ("g_list_store_new" list-store-new)
-    (gobject:object list-store :already-referenced)
+    (gobject:object list-store :return)
  #+liber-documentation
  "@version{2024-11-29}
   @argument[gtype]{a @class{g:type-t} type ID for the items in the list}

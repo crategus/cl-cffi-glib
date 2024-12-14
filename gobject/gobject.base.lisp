@@ -538,18 +538,18 @@ lambda (object pspec)    :no-hooks
   ((sub-type :reader sub-type
              :initarg :sub-type
              :initform 'object)
-   (already-referenced :reader foreign-g-object-type-already-referenced
-                       :initarg :already-referenced
-                       :initform nil))
+   (returnp :reader foreign-g-object-type-returnp
+            :initarg :returnp
+            :initform nil))
   (:actual-type :pointer))
 
 (cffi:define-parse-method object (&rest args)
   (let* ((sub-type (first (remove-if #'keywordp args)))
          (flags (remove-if-not #'keywordp args))
-         (already-referenced (not (null (find :already-referenced flags)))))
+         (returnp (not (null (find :return flags)))))
     (make-instance 'foreign-g-object-type
                    :sub-type sub-type
-                   :already-referenced already-referenced)))
+                   :returnp returnp)))
 
 (defmethod cffi:translate-to-foreign (object (type foreign-g-object-type))
   (let ((pointer nil))
@@ -570,7 +570,7 @@ lambda (object pspec)    :no-hooks
 (defmethod cffi:translate-from-foreign (pointer (type foreign-g-object-type))
   (let ((object (get-or-create-gobject-for-pointer pointer)))
     (when (and object
-               (foreign-g-object-type-already-referenced type))
+               (foreign-g-object-type-returnp type))
       (%object-unref (object-pointer object)))
     object))
 

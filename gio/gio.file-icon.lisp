@@ -117,8 +117,7 @@
 
 ;; TODO: Extend the implementation and support pathnames and namestrings
 
-(cffi:defcfun ("g_file_icon_new" file-icon-new)
-    (gobject:object icon :already-referenced)
+(cffi:defcfun ("g_file_icon_new" file-icon-new) (gobject:object icon :return)
  #+liber-documentation
  "@version{2024-10-23}
   @argument[file]{a @class{g:file} object}

@@ -294,7 +294,7 @@ lambda (model pos removed added)    :run-last
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_list_model_get_object" list-model-object)
-    (gobject:object :already-referenced)
+    (gobject:object :return)
  #+liber-documentation
  "@version{2024-3-31}
   @argument[model]{a @class{g:list-model} object}

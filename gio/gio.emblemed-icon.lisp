@@ -118,7 +118,7 @@
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_emblemed_icon_new" emblemed-icon-new)
-    (gobject:object icon :already-referenced)
+    (gobject:object icon :return)
  #+liber-documentation
  "@version{2024-10-23}
   @argument[icon]{a @class{g:icon} object}
