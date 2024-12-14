@@ -28,7 +28,8 @@
            #:get-current-package
            #:sys-path
            #:check-and-create-resources
-           #:flatten))
+           #:flatten
+           #:with-foreign-string-array))
 
 (in-package :glib-sys)
 
@@ -98,5 +99,26 @@
                      (push subtree lst)))))
       (traverse tree))
     (nreverse lst)))
+
+;;; ----------------------------------------------------------------------------
+
+(defmacro with-foreign-string-array ((strptr strs) &body body)
+  (let ((i (gensym))
+        (str (gensym)))
+    `(let ((,strptr (cffi:foreign-alloc :pointer :count (1+ (length ,strs)))))
+       (iter (for ,i from 0)
+             (for ,str in ,strs)
+             (setf (cffi:mem-aref ,strptr :pointer ,i)
+                   (cffi:foreign-string-alloc ,str)))
+       (setf (cffi:mem-aref ,strptr :pointer (length ,strs))
+             (cffi:null-pointer))
+       (unwind-protect
+         (progn ,@body)
+         (progn
+           (iter (for ,i from 0)
+                 (repeat (1- (length ,strs)))
+                 (cffi:foreign-string-free (cffi:mem-aref ,strptr
+                                                          :pointer ,i)))
+           (cffi:foreign-string-free ,strptr))))))
 
 ;;; --- End of file c-cffi-glib-sys.lisp ---------------------------------------
