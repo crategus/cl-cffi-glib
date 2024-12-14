@@ -89,6 +89,12 @@
 
 (in-package :gobject)
 
+;; Register Lisp symbol for fundamental "GParam" type
+(glib-init:at-init ()
+  (setf (glib:symbol-for-gtype "GParam") 'param))
+
+(export 'param)
+
 ;;; ----------------------------------------------------------------------------
 ;;; GParamFlags
 ;;; ----------------------------------------------------------------------------

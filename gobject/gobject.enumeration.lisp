@@ -70,6 +70,12 @@
 
 (in-package :gobject)
 
+;; Register Lisp symbol for fundamental "GEnum" type
+(glib-init:at-init ()
+  (setf (glib:symbol-for-gtype "GEnum") 'enum))
+
+(export 'enum)
+
 ;;; ----------------------------------------------------------------------------
 ;;; define-genum
 ;;;
@@ -318,6 +324,12 @@
 ;;; This is intended to be used for debugging purposes. The format of the
 ;;; output may change in the future.
 ;;; ----------------------------------------------------------------------------
+
+;; Register Lisp symbol for fundamental "GFlags" type
+(glib-init:at-init ()
+  (setf (glib:symbol-for-gtype "GFlags") 'flags))
+
+(export 'flags)
 
 ;;; ----------------------------------------------------------------------------
 ;;; define-gflags
