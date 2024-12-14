@@ -2,7 +2,7 @@
 ;;; gio.package.lisp
 ;;;
 ;;; The documentation of this file is taken from the GIO Reference Manual
-;;; Version 2.76 and modified to document the Lisp binding to the GIO library.
+;;; Version 2.82 and modified to document the Lisp binding to the GIO library.
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
 ;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
@@ -180,13 +180,16 @@
     @end{subsection}
   @end{section}
   @begin[File types and applications]{section}
-    @begin[GContentType]{subsection}
+    @begin[Introduction to GContentType]{subsection}
       A content type is a platform specific string that defines the type of a
-      file. On UNIX it is a mime type like \"text/plain\" or \"image/png\". On
-      Win32 it is an extension string like \".doc\", \".txt\" or a perceived
-      string like \"audio\". Such strings can be looked up in the registry at
+      file. On UNIX it is a MIME type like @code{\"text/plain\"} or
+      @code{\"image/png\"}. On Win32 it is an extension string like
+      @code{\".doc\"}, @code{\".txt\"} or a perceived string like
+      @code{\"audio\"}. Such strings can be looked up in the registry at
       @code{HKEY_CLASSES_ROOT}. On macOS it is a Uniform Type Identifier such
       as @code{com.apple.application}.
+    @end{subsection}
+    @begin[Functions for GContentType]{subsection}
       @about-function{content-type-equals}
       @about-function{content-type-is-a}
       @about-function{content-type-is-mime-type}

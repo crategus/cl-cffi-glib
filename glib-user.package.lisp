@@ -312,6 +312,7 @@
            #:gtype                               ; TODO: Change the name?
            #:gtype-name
            #:gtype-id
+           #:symbol-for-gtype
            #:type-interface
            #:type-class
            #:type-instance
@@ -509,8 +510,6 @@
            #:initially-unowned
            #:type-is-object
            #:is-object
-           #:object-type
-           #:object-type-name
            #:object-class-find-property
            #:object-class-list-properties
            #:object-interface-find-property

@@ -71,6 +71,7 @@
            #:set-g-value-for-type
 
            #:create-closure
+           #:create-closure-for-instance
     ))
 
 (in-package :gobject)
@@ -89,8 +90,6 @@
   This is the API documentation of a Lisp binding to GObject.
   @begin[Type Information]{section}
     @begin[Introduction to type information]{subsection}
-      The GLib Runtime type identification and management system.
-
       The GType API is the foundation of the GObject system. It provides the
       facilities for registering and managing all fundamental data types,
       user-defined objects and interface types.
@@ -128,24 +127,15 @@
       characters can be letters, numbers or any of '-_+'.
     @end{subsection}
     @begin[Types and functions for type information]{subsection}
+      @about-class{type-t}
       @about-symbol{glib:gtype}
-      @about-function{glib:gtype}
       @about-function{glib:gtype-name}
       @about-function{glib:gtype-id}
-      @about-class{type-t}
+      @about-function{glib:gtype}
+      @about-function{glib:symbol-for-gtype}
       @about-symbol{type-class}
       @about-symbol{type-interface}
       @about-symbol{type-instance}
-      @about-symbol{type-info}
-      @about-symbol{type-fundamental-info}
-      @about-symbol{interface-info}
-      @about-symbol{type-value-table}
-      @about-symbol{type-debug-flags}
-      @about-symbol{type-query}
-      @about-symbol{type-flags}
-      @about-symbol{type-fundamental-flags}
-      @about-function{type-fundamental}
-      @about-function{type-make-fundamental}
       @about-function{type-is-abstract}
       @about-function{type-is-derived}
       @about-function{type-is-fundamental}
@@ -207,6 +197,7 @@
       @about-function{type-get-plugin}
       @about-function{type-interface-get-plugin}
       @about-function{type-fundamental-next}
+      @about-function{type-fundamental}
       @about-function{type-create-instance}
       @about-function{type-free-instance}
       @about-function{type-add-class-cache-func}
@@ -476,8 +467,6 @@
     @about-generic{object-signal-handlers}
     @about-function{type-is-object}
     @about-function{is-object}
-    @about-function{object-type}
-    @about-function{object-type-name}
     @about-function{object-class-find-property}
     @about-function{object-class-list-properties}
     @about-function{object-interface-find-property}
@@ -559,11 +548,8 @@
       detail string, other than that it must be non-empty.
     @end{subsection}
     @begin[Types and functions for signals]{subsection}
-      @about-symbol{signal-invocation-hint}
-      @about-symbol{signal-cmarshaller}
-      @about-symbol{signal-cvamarshaller}
       @about-symbol{signal-flags}
-      @about-symbol{signal-match-type}
+      @about-symbol{connect-flags}
       @about-struct{signal-query}
       @about-function{signal-query-signal-id}
       @about-function{signal-query-signal-name}
@@ -572,7 +558,6 @@
       @about-function{signal-query-return-type}
       @about-function{signal-query-param-types}
       @about-function{signal-query-signal-detail}
-      @about-symbol{connect-flags}
       @about-function{signal-new}
       @about-function{signal-newv}
       @about-function{signal-new-valist}

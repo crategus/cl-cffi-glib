@@ -1,7 +1,7 @@
 ;;; ----------------------------------------------------------------------------
 ;;; cl-cffi-glib.asd
 ;;;
-;;; Copyright (C) 2011 - 2023 Dieter Kaiser
+;;; Copyright (C) 2011 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -66,7 +66,7 @@
      (:file "gobject.param")
      (:file "gobject.gobject-class")
      (:file "gobject.base")
-     (:file "gobject.closures")
+;     (:file "gobject.closures")
      (:file "gobject.signals")
      (:file "gobject.binding")
 

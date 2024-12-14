@@ -19,7 +19,7 @@ Asynchronous I/O
 
 File types and applications
 
-  gio.content-type.lisp        - Platform-specific content typing     GIO 2.66
+  gio.content-type.lisp        - Platform-specific content typing     GIO 2.82 .
   gio.app-info.lisp            - GAppInfo                             GIO 2.76 &
 
   not implemented              - GAppInfoMonitor
