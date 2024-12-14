@@ -2,7 +2,7 @@
 ;;; gobject.binding.lisp
 ;;;
 ;;; The documentation of this file is taken from the GObject Reference Manual
-;;; Version 2.80 and modified to document the Lisp binding to the GObject
+;;; Version 2.82 and modified to document the Lisp binding to the GObject
 ;;; library. See <http://www.gtk.org>. The API documentation of the Lisp
 ;;; binding is available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
@@ -151,7 +151,7 @@
 
 #+liber-documentation
 (setf (documentation 'binding 'type)
- "@version{2024-6-18}
+ "@version{2024-12-7}
   @begin{short}
     The @class{g:binding} object is the representation of a binding between a
     property on a @class{g:object} instance, or source, and another property on
@@ -237,13 +237,13 @@ object3:propertyC -> object1:propertyA
 (setf (documentation (liber:slot-documentation "flags" 'binding) t)
  "The @code{flags} property of type @symbol{g:binding-flags}
   (Read / Write / Construct Only) @br{}
-  Flags to be used to control the binding.")
+  The flags to be used to control the binding.")
 
 #+liber-documentation
 (setf (liber:alias-for-function 'binding-flags)
       "Accessor"
       (documentation 'binding-flags 'function)
- "@version{2024-6-18}
+ "@version{2024-12-7}
   @syntax{(g:binding-flags object) => flags}
   @argument[object]{a @class{g:binding} object}
   @argument[flags]{a @symbol{g:binding-flags} value used by the binding}
@@ -266,7 +266,7 @@ object3:propertyC -> object1:propertyA
 (setf (liber:alias-for-function 'binding-source)
       "Accessor"
       (documentation 'binding-source 'function)
- "@version{2024-6-18}
+ "@version{2024-12-7}
   @syntax{(g:binding-source object) => source}
   @argument[object]{a @class{g:binding} object}
   @argument[source]{a @class{g:object} source instance}
@@ -297,7 +297,7 @@ object3:propertyC -> object1:propertyA
 (setf (liber:alias-for-function 'binding-source-property)
       "Accessor"
       (documentation 'binding-source-property 'function)
- "@version{2024-6-18}
+ "@version{2024-12-7}
   @syntax{(g:binding-source-property object) => property}
   @argument[object]{a @class{g:binding} object}
   @argument[property]{a string with the name of the source property}
@@ -320,7 +320,7 @@ object3:propertyC -> object1:propertyA
 (setf (liber:alias-for-function 'binding-target)
       "Accessor"
       (documentation 'binding-target 'function)
- "@version{2024-6-18}
+ "@version{2024-12-7}
   @syntax{(g:binding-target object) => target}
   @argument[object]{a @class{g:binding} object}
   @argument[target]{a @class{g:object} target instance}
@@ -351,7 +351,7 @@ object3:propertyC -> object1:propertyA
 (setf (liber:alias-for-function 'binding-target-property)
       "Accessor"
       (documentation 'binding-target-property 'function)
- "@version{2024-6-18}
+ "@version{2024-12-7}
   @syntax{(g:binding-target-property object) => property}
   @argument[object]{a @class{g:binding} object}
   @argument[property]{a string with the name of the target property}
@@ -370,7 +370,7 @@ object3:propertyC -> object1:propertyA
 (cffi:defcfun ("g_binding_dup_source" binding-dup-source)
     (object binding :already-referenced)
  #+liber-documentation
- "@version{2024-6-18}
+ "@version{2024-12-7}
   @argument[binding]{a @class{g:binding} object}
   @return{The @class{g:object} source instance, or @code{nil} if the source
     does not exist any more.}
@@ -396,7 +396,7 @@ object3:propertyC -> object1:propertyA
 (cffi:defcfun ("g_binding_dup_target" binding-dup-target)
     (object binding :already-referenced)
  #+liber-documentation
- "@version{2024-6-18}
+ "@version{2024-12-7}
   @argument[binding]{a @class{g:binding} object}
   @return{The @class{g:object} target instance, or @code{nil} if the target
     does not exist any more.}
@@ -420,7 +420,7 @@ object3:propertyC -> object1:propertyA
 
 (cffi:defcfun ("g_binding_unbind" binding-unbind) :void
  #+liber-documentation
- "@version{2024-6-18}
+ "@version{2024-12-7}
   @argument[binding]{a @class{g:binding} object}
   @begin{short}
     Explicitly releases the binding between the source and the target property
@@ -441,7 +441,7 @@ object3:propertyC -> object1:propertyA
 
 (cffi:defcfun ("g_object_bind_property" object-bind-property) (object binding)
  #+liber-documentation
- "@version{2024-6-18}
+ "@version{2024-12-7}
   @argument[source]{a @class{g:object} source instance}
   @argument[source-prop]{a string with the property on @arg{source} to bind}
   @argument[target]{a @class{g:object} target instance}
@@ -456,12 +456,7 @@ object3:propertyC -> object1:propertyA
     @arg{target-prop} on @arg{target}.
   @end{short}
   Whenever the @arg{source-prop} is changed the @arg{target-prop} is
-  updated using the same value. For instance:
-  @begin{pre}
-(g:object-bind-property action \"active\" widget \"sensitive\" :default)
-  @end{pre}
-  will result in the @code{sensitive} property of the widget to be updated with
-  the same value of the @code{active} property of the action.
+  updated using the same value.
 
   If the @arg{flags} argument contains the @code{:bidirectional} value then the
   binding will be mutual. If the @arg{target-prop} property on @arg{target}
@@ -470,13 +465,21 @@ object3:propertyC -> object1:propertyA
 
   The binding will automatically be removed when either the source or the
   target instances are finalized. To remove the binding without affecting the
-  source and the target you can just call the @fun{g:object-unref} function on
+  source and the target you can call the @fun{g:binding-unbind} function on
   the returned @class{g:binding} object.
 
   A @class{g:object} instance can have multiple bindings.
+  @begin[Examples]{dictionary}
+    This example will result in the @code{sensitive} property of the widget to
+    be updated with the same value of the @code{active} property of the action.
+  @begin{pre}
+(g:object-bind-property action \"active\" widget \"sensitive\" :default)
+  @end{pre}
+  @end{dictionary}
   @see-class{g:binding}
   @see-class{g:object}
-  @see-symbol{g:binding-flags}"
+  @see-symbol{g:binding-flags}
+  @see-function{g:binding-unbind}"
   (source object)
   (source-prop :string)
   (target object)
@@ -488,6 +491,8 @@ object3:propertyC -> object1:propertyA
 ;;; ----------------------------------------------------------------------------
 ;;; GBindingTransformFunc
 ;;; ----------------------------------------------------------------------------
+
+;; This callback is not needed. Binding is implemented with closures.
 
 #+nil
 (cffi:defcallback binding-transform-func :boolean
@@ -502,7 +507,7 @@ object3:propertyC -> object1:propertyA
 (setf (liber:alias-for-symbol 'binding-transform-func)
       "Callback"
       (liber:symbol-documentation 'binding-transform-func)
- "@version{2024-6-18}
+ "@version{2024-12-7}
   @syntax{lambda (binding from to) => result}
   @argument[binding]{a @class{g:binding} object}
   @argument[from]{a @symbol{g:value} instance in which to store the value to
@@ -512,14 +517,16 @@ object3:propertyC -> object1:propertyA
   @argument[result]{@em{True} if the transformation was successful,
     and @em{false} otherwise.}
   @begin{short}
-    A function to be called to transform @arg{from} to @arg{to}.
+    The callback function for the @fun{g:object-bind-property-full} function to
+    be called to transform @arg{from} to @arg{to}.
   @end{short}
   If this is the @code{transform-to} function of a binding, then @arg{from} is
   the source property on the source object, and @arg{to} is the target property
   on the target object. If this is the @code{transform-from} function of a
   @code{:bidirectional} binding, then those roles are reversed.
   @see-class{g:binding}
-  @see-function{g:bind-property-full}")
+  @see-symbol{g:value}
+  @see-function{g:object-bind-property-full}")
 
 (export 'binding-transform-func)
 
@@ -549,7 +556,7 @@ object3:propertyC -> object1:propertyA
                                   transform-to
                                   transform-from)
  #+liber-documentation
- "@version{2024-6-18}
+ "@version{2024-12-7}
   @argument[source]{a @class{g:object} source instance}
   @argument[source-prop]{a string with the property on @arg{source} to bind}
   @argument[target]{a @class{g:object} target instance}
@@ -559,9 +566,8 @@ object3:propertyC -> object1:propertyA
     from the source to the target, or @code{nil} to use the default}
   @argument[transform-form]{a @symbol{g:binding-transform-func} callback
     function from the target to the source, or @code{nil} to use the default}
-  @return{The @class{g:binding} object representing the binding between the two
-    @class{g:object} instances. The binding is released whenever the
-    @class{g:binding} object reference count reaches zero.}
+  @return{The @class{g:binding} object representing the binding between
+    @arg{source} and @arg{target}.}
   @begin{short}
     Complete version of the @fun{g:object-bind-property} function.
   @end{short}
@@ -578,25 +584,29 @@ object3:propertyC -> object1:propertyA
   The binding will automatically be removed when either the source or the target
   instances are finalized. This will release the reference that is being held on
   the @class{g:binding} object. If you want to hold on to the @class{g:binding}
-  object, you will need to hold a reference to it.
+  object, you will need to hold a reference to it. To remove the binding, call
+  the @fun{g:binding-unbind} function.
 
-  To remove the binding, call the @fun{g:binding-unbind} function.
   A @class{g:object} instance can have multiple bindings.
   @see-class{g:binding}
   @see-class{g:object}
-  @see-symbol{g:binding-transform-func}"
-  (%object-bind-property-with-closures
-          source
-          source-prop
-          target
-          target-prop
-          flags
-          (if transform-to
-              (create-closure source transform-to)
-              (cffi:null-pointer))
-          (if transform-from
-              (create-closure source transform-from)
-              (cffi:null-pointer))))
+  @see-symbol{g:binding-flags}
+  @see-symbol{g:binding-transform-func}
+  @see-function{g:object-bind-property}
+  @see-function{g:binding-unbind}"
+  (let ((source (object-pointer source)))
+    (%object-bind-property-with-closures
+            source
+            source-prop
+            target
+            target-prop
+            flags
+            (if transform-to
+                (create-closure-for-instance source transform-to)
+                (cffi:null-pointer))
+            (if transform-from
+                (create-closure-for-instance source transform-from)
+                (cffi:null-pointer)))))
 
 (export 'object-bind-property-full)
 
