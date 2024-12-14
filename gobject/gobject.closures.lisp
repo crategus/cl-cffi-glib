@@ -278,8 +278,6 @@
 
 (glib-init:at-init nil (type-closure))
 
-(export 'type-closure)
-
 ;;; ----------------------------------------------------------------------------
 ;;; struct GCClosure
 ;;;
