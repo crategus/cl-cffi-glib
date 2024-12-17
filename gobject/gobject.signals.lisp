@@ -99,39 +99,6 @@
 
 (in-package :gobject)
 
-;; TODO: The CREATE-CLOSURE implementation is reworked. Remove the old code.
-
-;;; ----------------------------------------------------------------------------
-
-#+nil
-(defun save-handler-to-object (object handler)
-  (flet ((find-free-function-id (object)
-            (iter (with handlers = (object-signal-handlers object))
-                  (for i from 0 below (length handlers))
-                  (finding i such-that (null (aref handlers i))))))
-    (let ((id (find-free-function-id object))
-          (handlers (object-signal-handlers object)))
-      (if id
-          (progn
-            (setf (aref handlers id) handler)
-            id)
-          (progn
-            (vector-push-extend handler handlers)
-            (1- (length handlers)))))))
-
-#+nil
-(defun retrieve-handler-from-object (object function-id)
-  (aref (object-signal-handlers object) function-id))
-
-#+nil
-(defun delete-handler-from-object (object function-id)
-  (let ((handlers (object-signal-handlers object)))
-    (setf (aref handlers function-id) nil)
-    (iter (while (plusp (length handlers)))
-          (while (null (aref handlers (1- (length handlers)))))
-          (vector-pop handlers))
-    nil))
-
 ;;; ----------------------------------------------------------------------------
 
 ;; Store, retrieve and delete a Lisp function in a hash table for an instance
