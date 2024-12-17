@@ -57,9 +57,15 @@
       "GBoxed"
       (documentation 'error 'type)
  "@version{2023-6-1}
+  @begin{declaration}
+(define-gboxed-opaque error \"GError\"
+  :export t
+  :type-initializer \"g_error_get_type\"
+  :alloc (cl:error \"GError cannot be created from the Lisp side.\"))
+  @end{declaration}
   @begin{short}
-    The @class{g:error} structure contains information about an error that has
-    occurred.
+    The @class{glib:error} structure contains information about an error that
+    has occurred.
   @end{short}")
 
 (export 'error)
