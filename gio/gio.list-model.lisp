@@ -2,11 +2,11 @@
 ;;; gio.list-model.lisp
 ;;;
 ;;; The documentation of this file is taken from the GIO Reference Manual
-;;; Version 2.76 and modified to document the Lisp binding to the GIO library.
+;;; Version 2.82 and modified to document the Lisp binding to the GIO library.
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
 ;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2021 - 2023 Dieter Kaiser
+;;; Copyright (C) 2021 - 2024 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -256,47 +256,16 @@ lambda (model pos removed added)    :run-last
 (export 'list-model-n-items)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_list_model_get_item ()
+;;; g_list_model_get_item
+;;; g_list_model_get_object
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcfun ("g_list_model_get_item" list-model-item) :pointer
- #+liber-documentation
- "@version{2024-3-31}
-  @argument[model]{a @class{g:list-model} object}
-  @argument[pos]{an unsigned integer with the position of the item to fetch}
-  @return{The pointer for the item at @arg{pos}.}
-  @begin{short}
-    Get the pointer for the item at @arg{pos} in the list model.
-  @end{short}
-  If the @arg{pos} argument is greater than the number of items in the list
-  model, the @code{null-pointer} value is returned. The @code{null-pointer}
-  value is never returned for an index that is smaller than the length of the
-  list model. See the @fun{g:list-model-n-items} function.
-  @begin[Note]{dictionary}
-    This function returns a pointer which can be translated to the
-    corresponding object with the @code{cffi:convert-from-foreign} function:
-    @begin{pre}
-(cffi:convert-from-foreign (g:list-model-item model pos) 'g:object)
-    @end{pre}
-    In the Lisp implementation, the @fun{g:list-model-object} function is more
-    useful, which directly returns the object at @arg{pos}.
-  @end{dictionary}
-  @see-class{g:list-model}
-  @see-function{g:list-model-n-items}
-  @see-function{g:list-model-object}"
-  (model (gobject:object list-model))
-  (pos :uint))
+;; The C function is exported as g:list-model-item
 
-(export 'list-model-item)
-
-;;; ----------------------------------------------------------------------------
-;;; g_list_model_get_object ()
-;;; ----------------------------------------------------------------------------
-
-(cffi:defcfun ("g_list_model_get_object" list-model-object)
+(cffi:defcfun ("g_list_model_get_object" list-model-item)
     (gobject:object :return)
  #+liber-documentation
- "@version{2024-3-31}
+ "@version{2024-12-17}
   @argument[model]{a @class{g:list-model} object}
   @argument[pos]{an unsigned integer with the position of the item to fetch}
   @return{The @class{g:object} instance at @arg{pos}.}
@@ -311,9 +280,9 @@ lambda (model pos removed added)    :run-last
   @see-class{g:object}
   @see-function{g:list-model-n-items}"
   (model (gobject:object list-model))
-  (position :uint))
+  (pos :uint))
 
-(export 'list-model-object)
+(export 'list-model-item)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_list_model_items_changed ()
