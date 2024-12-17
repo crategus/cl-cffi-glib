@@ -183,6 +183,11 @@
 ;;; Clears the status information from info.
 ;;; ----------------------------------------------------------------------------
 
+(cffi:defcfun ("g_file_info_clear_status" file-info-clear-status) :void
+  (info (gobject:object file-info)))
+
+(export 'file-info-clear-status)
+
 ;;; ----------------------------------------------------------------------------
 ;;; g_file_info_copy_into
 ;;;
@@ -402,6 +407,11 @@
 ;;; Gets the name for a file. This is guaranteed to always be set.
 ;;; ----------------------------------------------------------------------------
 
+(cffi:defcfun ("g_file_info_get_name" file-info-name) :string
+  (info (gobject:object file-info)))
+
+(export 'file-info-name)
+
 ;;; ----------------------------------------------------------------------------
 ;;; g_file_info_get_size
 ;;;
@@ -409,6 +419,11 @@
 ;;; the G_FILE_ATTRIBUTE_STANDARD_SIZE attribute and is converted from #guint64
 ;;; to #goffset before returning the result.
 ;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("g_file_info_get_size" file-info-size) :offset
+  (info (gobject:object file-info)))
+
+(export 'file-info-size)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_file_info_get_sort_order

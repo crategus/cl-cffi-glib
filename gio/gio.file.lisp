@@ -34,6 +34,7 @@
 ;;; Types and Values
 ;;;
 ;;;     GFile
+;;;     GFileQueryInfoFlags
 ;;;
 ;;; Functions
 ;;;
@@ -48,6 +49,8 @@
 ;;;     g_file_get_uri
 ;;;     g_file_get_parse_name
 ;;;
+;;;     g_file_query_info
+;;;
 ;;; Object Hierarchy
 ;;;
 ;;;     GInterface
@@ -59,6 +62,40 @@
 ;;; ----------------------------------------------------------------------------
 
 (in-package :gio)
+
+;;; ----------------------------------------------------------------------------
+;;; GFileQueryInfoFlags
+;;; ----------------------------------------------------------------------------
+
+(gobject:define-gflags "GFileQueryInfoFlags" file-query-info-flags
+  (:export t
+   :type-initializer "g_file_query_info_flags_get_type")
+  (:none 0)
+  (:nofollow-symlinks #.(ash 1 0)))
+
+#+liber-documentation
+(setf (liber:alias-for-symbol 'file-query-info-flags)
+      "GFlags"
+      (liber:symbol-documentation 'file-query-info-flags)
+ "@version{2024-12-14}
+  @begin{declaration}
+(gobject:define-gflags \"GFileQueryInfoFlags\" file-query-info-flags
+  (:export t
+   :type-initializer \"g_file_query_info_flags_get_type\")
+  (:none 0)
+  (:nofollow-symlinks #.(ash 1 0)))
+  @end{declaration}
+  @begin{values}
+    @begin[code]{table}
+      @entry[:none]{No flags set.}
+      @entry[:nofollow-symlinks]{Do not follow symlinks.}
+    @end{table}
+  @end{values}
+  @begin{short}
+    Flags used when querying a @class{g:file-info} instance.
+  @end{short}
+  @see-class{g:file}
+  @see-class{g:file-info}")
 
 ;;; ----------------------------------------------------------------------------
 ;;; GFile
@@ -372,5 +409,24 @@
   (file gobject:object))
 
 (export 'file-get-parse-name)
+
+;;; ----------------------------------------------------------------------------
+;;; g_file_query_info
+;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("g_file_query_info" %file-query-info)
+    (gobject:object file-info :return)
+  (file gobject:object)
+  (attributes :string)
+  (flags file-query-info-flags)
+  (cancellable (gobject:object cancellable))
+  (err :pointer))
+
+(defun file-query-info (file attributes flags &optional cancellable)
+  (glib:with-error (err)
+    (let ((cancellable (or cancellable (cffi:null-pointer))))
+      (%file-query-info file attributes flags cancellable err))))
+
+(export 'file-query-info)
 
 ;;; --- End of file gio.file.lisp ----------------------------------------------
