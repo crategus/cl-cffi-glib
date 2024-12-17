@@ -45,10 +45,10 @@
 ;;;     G_IS_OBJECT
 ;;;
 ;;;     g_object_class_install_property                     not exported
-;;;     g_object_class_install_properties                   not exported
+;;;     g_object_class_install_properties                   not implemented
 ;;;     g_object_class_find_property
 ;;;     g_object_class_list_properties
-;;;     g_object_class_override_property                    not exported
+;;;     g_object_class_override_property                    not implemented
 ;;;
 ;;;     g_object_interface_install_property                 not exported
 ;;;     g_object_interface_find_property
@@ -57,63 +57,30 @@
 ;;;     g_object_new
 ;;;     g_object_new_with_properties                        Since 2.54
 ;;;     g_object_newv                                       Deprecated 2.54
-;;;     g_object_ref                                        not exported
-;;;     g_object_unref                                      not exported
+;;;     g_object_ref
+;;;     g:object-ref-count
+;;;     g_object_unref
 ;;;     g_object_ref_sink                                   not exported
 ;;;     g_set_object                                        not implemented
 ;;;     g_clear_object                                      not implemented
-;;;     g_object_is_floating                                not exported
-;;;     g_object_force_floating                             not exported
-;;;
-;;;     GWeakNotify
-;;;     g_object_weak_ref
-;;;     g_object_weak_unref                                 not exported
-;;;     g_object_add_weak_pointer                           not exported
-;;;     g_object_remove_weak_pointer
-;;;     g_set_weak_pointer
-;;;     g_clear_weak_pointer
+;;;     g_object_is_floating                                not implemented
+;;;     g_object_force_floating                             not implemented
 ;;;
 ;;;     GToggleNotify
 ;;;     g_object_add_toggle_ref                             not exported
 ;;;     g_object_remove_toggle_ref                          not exported
-;;;     g_object_connect
-;;;     g_object_disconnect
-;;;
-;;;     g_object_set
-;;;     g_object_setv
-;;;     g_object_get
-;;;     g_object_getv
 ;;;
 ;;;     g_object_notify
-;;;     g_object_notify_by_pspec
+;;;     g_object_notify_by_pspec                            not implemented
 ;;;     g_object_freeze_notify
 ;;;     g_object_thaw_notify
 ;;;
 ;;;     g_object_get_data
 ;;;     g_object_set_data
 ;;;     g_object_set_data_full
-;;;     g_object_steal_data
-;;;     g_object_dup_data
-;;;     g_object_replace_data
-;;;     g_object_get_qdata
-;;;     g_object_set_qdata
-;;;     g_object_set_qdata_full
-;;;     g_object_steal_qdata
-;;;     g_object_dup_qdata
-;;;     g_object_replace-qdata
+;;;
 ;;;     g_object_set_property
 ;;;     g_object_get_property
-;;;     g_object_new_valist
-;;;     g_object_set_valist
-;;;     g_object_get_valist
-;;;     g_object_watch_closure
-;;;     g_object_run_dispose
-;;;
-;;;     g_weak_ref_init
-;;;     g_weak_ref_clear
-;;;     g_weak_ref_get
-;;;     g_weak_ref_set
-;;;     g_assert_finalize_object
 ;;;
 ;;; Signals
 ;;;
@@ -133,9 +100,9 @@
 (defvar *current-object-from-pointer* nil)
 (defvar *currently-making-object-p* nil)
 
-(let ((gobjects-weak-table (tg:make-weak-hash-table :test 'equal
-                                                    :weakness :value))
-      (gobjects-strong-table (make-hash-table :test 'equal)))
+(let ((gobjects-strong-table (make-hash-table :test 'equal))
+      (gobjects-weak-table (tg:make-weak-hash-table :test 'equal
+                                                    :weakness :value)))
 
   (glib-init:at-finalize ()
     (clrhash gobjects-weak-table)
@@ -188,20 +155,8 @@
   (value (:struct value)))
 
 ;;; ----------------------------------------------------------------------------
-;;; GObject                                                 not exported
+;;; GObject
 ;;; ----------------------------------------------------------------------------
-
-;; %object is not needed in the implementation. It is defined to access the
-;; slot REF-COUNT with the G:OBJECT-REF-COUNT function for debugging the code.
-
-(cffi:defcstruct %object
-  (:type-instance (:pointer (:struct type-instance)))
-  (:ref-count :uint)
-  (:data :pointer))
-
-;;; ----------------------------------------------------------------------------
-
-;; Define the base class object
 
 (defclass object ()
   ((pointer
@@ -212,20 +167,13 @@
    (has-reference
     :type boolean
     :accessor object-has-reference
-    :initform nil)
-   ;; TODO: Remove this slot, it is no longer needed. The handlers are stored
-   ;; in a hash table.
-   (signal-handlers
-    :type (array t *)
-    :initform (make-array 0 :adjustable t :fill-pointer t)
-    :reader object-signal-handlers)))
+    :initform nil)))
 
 (export 'object)
 (export 'object-pointer)
 (export 'object-has-reference)
-(export 'object-signal-handlers)
 
-;; Add object to the global Hash table for registered types
+;; Add OBJECT to the global hash table for registered types
 (glib-init:at-init ()
   (setf (glib:symbol-for-gtype "GObject") 'object))
 
@@ -233,7 +181,7 @@
 
 #+liber-documentation
 (setf (documentation 'object 'type)
- "@version{2023-12-1}
+ "@version{2024-12-14}
   @begin{short}
     The @class{g:object} class is the fundamental type providing the common
     attributes and methods for all object types in GTK, Pango and other
@@ -242,19 +190,21 @@
   The @class{g:object} class provides methods for object construction and
   destruction, property access methods, and signal support.
   @begin[Lisp Implementation]{dictionary}
-    In the Lisp implementation three slots are added. The
-    @slot[g:object]{pointer} slot holds the foreign pointer to the C instance
-    of the object. The @slot[g:object]{signal-handlers} slot stores the Lisp
-    functions which are connected to an instance with the @fun{g:signal-connect}
-    function. The @slot[g:object]{has-reference} slot is initialized to the
-    value @em{true} during creation of an object. See the slot access functions
-    for examples.
+    In the Lisp implementation two slots are added. The @slot[g:object]{pointer}
+    slot holds the foreign pointer to the C instance of the object. The
+    @slot[g:object]{has-reference} slot is initialized to the @em{true} value
+    during creation of an object. See the slot access functions for examples.
   @end{dictionary}
   @begin[Signal Details]{dictionary}
     @subheading{The \"notify\" signal}
     @begin{pre}
 lambda (object pspec)    :no-hooks
     @end{pre}
+    @begin[code]{table}
+      @entry[object]{The @class{g:object} instance which received the signal.}
+      @entry[pspec]{The @symbol{g:param-spec} instance of the property which
+        changed.}
+    @end{table}
     The signal is emitted on an object when one of its properties has been
     changed. Note that getting this signal does not guarantee that the
     value of the property has actually changed, it may also be emitted when
@@ -272,16 +222,10 @@ lambda (object pspec)    :no-hooks
     @end{pre}
     It is important to note that you must use canonical parameter names as
     detail strings for the notify signal.
-    @begin[code]{table}
-      @entry[object]{The @class{g:object} instance which received the signal.}
-      @entry[pspec]{The @symbol{g:param-spec} instance of the property which
-        changed.}
-    @end{table}
   @end{dictionary}
   @see-constructor{g:object-new}
   @see-slot{g:object-has-reference}
   @see-slot{g:object-pointer}
-  @see-slot{g:object-signal-handlers}
   @see-symbol{g:param-spec}
   @see-function{g:signal-connect}")
 
@@ -293,18 +237,19 @@ lambda (object pspec)    :no-hooks
 
 #+liber-documentation
 (setf (documentation (liber:slot-documentation "has-reference" 'object) t)
- "Holds the value @em{true} when the instance is successfully registered.")
+ "Holds the @em{true} value when the instance is successfully registered.")
 
 #+liber-documentation
 (setf (liber:alias-for-function 'object-has-reference)
       "Accessor"
       (documentation 'object-has-reference 'function)
- "@version{2023-12-1}
+ "@version{2024-12-14}
   @syntax{(g:object-has-reference object) => has-reference}
   @argument[object]{a @class{g:object} instance}
   @argument[has-reference]{@em{true} when registering @arg{object}}
   @begin{short}
-    Accessor of the @code{has-reference} slot of the @class{g:object} class.
+    Accessor of the @slot[g:object]{has-reference} slot of the @class{g:object}
+    class.
   @end{short}
   The slot is set to @em{true} when registering an object during creation.
   @see-class{g:object}")
@@ -319,7 +264,7 @@ lambda (object pspec)    :no-hooks
 (setf (liber:alias-for-function 'object-pointer)
       "Accessor"
       (documentation 'object-pointer 'function)
- "@version{2023-12-1}
+ "@version{2024-12-14}
   @syntax{(g:object-pointer object) => pointer}
   @argument[object]{a @class{g:object} instance}
   @argument[pointer]{a foreign pointer to the C instance of @arg{object}}
@@ -337,53 +282,12 @@ lambda (object pspec)    :no-hooks
   @see-class{g:object}")
 
 ;; Abbreviation POINTER for the OBJECT-POINTER slot access function
-
 (defmethod glib:pointer ((instance object))
   (object-pointer instance))
-
-(defmethod (setf glib:pointer) (value (instance object))
-  (setf (object-pointer instance) value))
-
-;;; --- g:object-signal-handlers -----------------------------------------------
-
-#+liber-documentation
-(setf (documentation (liber:slot-documentation "signal-handlers" 'object) t)
- "An array of Lisp signals handlers which are connected to the instance.")
-
-#+liber-documentation
-(setf (liber:alias-for-function 'object-signal-handlers)
-      "Accessor"
-      (documentation 'object-signal-handlers 'function)
- "@version{2023-12-1}
-  @argument[object]{a @class{g:object} instance}
-  @argument[handlers]{an array with the signal handlers connected to
-    @arg{object}}
-  @begin{short}
-    Returns the array of Lisp signal handlers which are connected with the
-    @fun{g:signal-connect} function to a @class{g:object} instance.
-  @end{short}
-  @begin[Examples]{dictionary}
-    @begin{pre}
-(setq button (make-instance 'gtk:button))
-=> #<GTK-BUTTON {E319359@}>
-(g:signal-connect button \"clicked\" (lambda () ))
-=> 27
-(g:object-signal-handlers button)
-=> #(#<FUNCTION (LAMBDA #) {E324855@}>)
-(g:signal-connect button \"destroy\" (lambda () ))
-=> 28
-(g:object-signal-handlers button)
-=> #(#<FUNCTION (LAMBDA #) {E324855@}> #<FUNCTION (LAMBDA #) {E336EDD@}>)
-    @end{pre}
-  @end{dictionary}
-  @see-class{g:object}
-  @see-function{g:signal-connect}")
 
 ;;; ----------------------------------------------------------------------------
 ;;; GInitiallyUnowned
 ;;; ----------------------------------------------------------------------------
-
-;; This class is unexported for the cl-cffi-gtk documentation.
 
 (defclass initially-unowned (object)
   ()
@@ -398,40 +302,37 @@ lambda (object pspec)    :no-hooks
 
 ;; GC for weak pointers
 
-(defvar *gobject-gc-hooks-lock*
-        (bt:make-recursive-lock "gobject-gc-hooks-lock"))
-(defvar *gobject-gc-hooks* nil) ; pointers to objects to be freed
+(let ((gobject-gc-hooks nil)
+      (gobject-gc-hooks-lock (bt:make-recursive-lock "gobject-gc-hooks-lock")))
 
-;;; ----------------------------------------------------------------------------
+  (defun dispose-carefully (pointer)
+    (handler-case
+      (register-gobject-for-gc pointer)
+      (error (err)
+        (format t "Error in DISPOSE-CAREFULLY: ~a~%" err))))
 
-(defun dispose-carefully (pointer)
-  (handler-case
-    (register-gobject-for-gc pointer)
-    (error (e)
-      (format t "Error in DISPOSE-CAREFULLY: ~A~%" e))))
+  (defmethod release ((obj object))
+    (tg:cancel-finalization obj)
+    (let ((ptr (object-pointer obj)))
+      (setf (object-pointer obj) nil)
+      (dispose-carefully ptr)))
 
-(defmethod release ((obj object))
-  (tg:cancel-finalization obj)
-  (let ((ptr (object-pointer obj)))
-    (setf (object-pointer obj) nil)
-    (dispose-carefully ptr)))
+  (defun activate-gc-hooks ()
+    (bt:with-recursive-lock-held (gobject-gc-hooks-lock)
+      (when gobject-gc-hooks
+        (iter (for pointer in gobject-gc-hooks)
+              (%object-remove-toggle-ref pointer
+                                         (cffi:callback toggle-notify)
+                                         (cffi:null-pointer)))
+        (setf gobject-gc-hooks nil)))
+    nil)
 
-(defun activate-gc-hooks ()
-  (bt:with-recursive-lock-held (*gobject-gc-hooks-lock*)
-    (when *gobject-gc-hooks*
-      (iter (for pointer in *gobject-gc-hooks*)
-            (%object-remove-toggle-ref pointer
-                                       (cffi:callback toggle-notify)
-                                       (cffi:null-pointer)))
-      (setf *gobject-gc-hooks* nil)))
-  nil)
-
-(defun register-gobject-for-gc (pointer)
-  (bt:with-recursive-lock-held (*gobject-gc-hooks-lock*)
-    (let ((locks-were-present (not (null *gobject-gc-hooks*))))
-      (push pointer *gobject-gc-hooks*)
-      (unless locks-were-present
-        (glib:idle-add #'activate-gc-hooks)))))
+  (defun register-gobject-for-gc (pointer)
+    (bt:with-recursive-lock-held (gobject-gc-hooks-lock)
+      (let ((locks-were-present (not (null gobject-gc-hooks))))
+        (push pointer gobject-gc-hooks)
+        (unless locks-were-present
+          (glib:idle-add #'activate-gc-hooks))))))
 
 ;;; ----------------------------------------------------------------------------
 
@@ -463,7 +364,7 @@ lambda (object pspec)    :no-hooks
     (%object-add-toggle-ref pointer
                             (cffi:callback toggle-notify)
                             (cffi:null-pointer))
-    (%object-unref pointer)))
+    (object-unref pointer)))
 
 ;;; ----------------------------------------------------------------------------
 
@@ -482,8 +383,8 @@ lambda (object pspec)    :no-hooks
                  (lambda ()
                    (handler-case
                      (dispose-carefully pointer)
-                     (error (e)
-                       (format t "Error in finalizer for ~A: ~A~%" s e))))))
+                     (error (err)
+                       (format t "Error in finalizer for ~a: ~a~%" s err))))))
   (register-gobject obj)
   (activate-gc-hooks))
 
@@ -525,20 +426,20 @@ lambda (object pspec)    :no-hooks
     (let* ((gtype (type-from-instance pointer))
            (lisp-type (get-gobject-lisp-type gtype)))
       (unless lisp-type
-        (error "Type ~A is not registered with REGISTER-OBJECT-TYPE"
+        (error "Type ~a is not registered with REGISTER-OBJECT-TYPE"
                (glib:gtype-name gtype)))
       (let ((*current-object-from-pointer* pointer))
         (make-instance lisp-type :pointer pointer)))))
 
 ;;; ----------------------------------------------------------------------------
 
-;; Define the type foreign-g-object-type and the type transformation rules.
+;; Define the type foreign-gobject-type and the type transformation rules.
 
-(cffi:define-foreign-type foreign-g-object-type ()
+(cffi:define-foreign-type foreign-gobject-type ()
   ((sub-type :reader sub-type
              :initarg :sub-type
              :initform 'object)
-   (returnp :reader foreign-g-object-type-returnp
+   (returnp :reader foreign-gobject-type-returnp
             :initarg :returnp
             :initform nil))
   (:actual-type :pointer))
@@ -547,31 +448,31 @@ lambda (object pspec)    :no-hooks
   (let* ((sub-type (first (remove-if #'keywordp args)))
          (flags (remove-if-not #'keywordp args))
          (returnp (not (null (find :return flags)))))
-    (make-instance 'foreign-g-object-type
+    (make-instance 'foreign-gobject-type
                    :sub-type sub-type
                    :returnp returnp)))
 
-(defmethod cffi:translate-to-foreign (object (type foreign-g-object-type))
+(defmethod cffi:translate-to-foreign (object (type foreign-gobject-type))
   (let ((pointer nil))
     (cond ((null object)
            (cffi:null-pointer))
           ((cffi:pointerp object)
            object)
           ((null (setf pointer (object-pointer object)))
-           (error "Object ~A has been disposed" object))
+           (error "Object ~a has been disposed" object))
           ((typep object 'object)
            (when (sub-type type)
              (assert (typep object (sub-type type))
                       nil
-                      "Object ~A is not a subtype of ~A" object (sub-type type)))
+                      "Object ~a is not a subtype of ~a" object (sub-type type)))
            pointer)
-          (t (error "Object ~A is not translatable as GObject*" object)))))
+          (t (error "Object ~a is not translatable as GObject*" object)))))
 
-(defmethod cffi:translate-from-foreign (pointer (type foreign-g-object-type))
+(defmethod cffi:translate-from-foreign (pointer (type foreign-gobject-type))
   (let ((object (get-or-create-gobject-for-pointer pointer)))
     (when (and object
-               (foreign-g-object-type-returnp type))
-      (%object-unref (object-pointer object)))
+               (foreign-gobject-type-returnp type))
+      (object-unref (object-pointer object)))
     object))
 
 ;;; ----------------------------------------------------------------------------
@@ -647,7 +548,7 @@ lambda (object pspec)    :no-hooks
 
 (defun create-gobject-from-class (class initargs)
   (when (gobject-class-interface-p class)
-    (error "Trying to create instance of GInterface '~A' (class '~A')"
+    (error "Trying to create instance of GInterface '~a' (class '~a')"
            (gobject-class-gname class)
            (class-name class)))
   (let (arg-names arg-values arg-types nc-setters nc-arg-values)
@@ -760,7 +661,7 @@ lambda (object pspec)    :no-hooks
 
 (defun type-is-object (gtype)
  #+liber-documentation
- "@version{2023-12-1}
+ "@version{2024-12-14}
   @argument[gtype]{a @class{g:type-t} type ID to check}
   @begin{return}
     @em{False} or @em{true}, indicating whether the @arg{gtype} argument is a
@@ -791,13 +692,13 @@ lambda (object pspec)    :no-hooks
 
 (defun is-object (object)
  #+liber-documentation
- "@version{2023-12-1}
+ "@version{2024-12-14}
   @argument[object]{a valid @symbol{g:type-instance} instance to check}
   @begin{short}
     Checks whether the @arg{object} argument is of @code{\"GObject\"} type
     or derived from it.
   @end{short}
-  @begin[Example]{dictionary}
+  @begin[Examples]{dictionary}
     @begin{pre}
 (g:is-object (make-instance 'gtk-button)) => T
     @end{pre}
@@ -811,8 +712,6 @@ lambda (object pspec)    :no-hooks
 ;;; ----------------------------------------------------------------------------
 ;;; g_object_class_install_property                         not exported
 ;;; ----------------------------------------------------------------------------
-
-;; For internal use and not exported
 
 (cffi:defcfun ("g_object_class_install_property" %object-class-install-property)
     :void
@@ -837,7 +736,7 @@ lambda (object pspec)    :no-hooks
 
 (defun object-class-find-property (gtype name)
  #+liber-documentation
- "@version{2023-12-1}
+ "@version{2024-12-14}
   @argument[gtype]{a @class{g:type-t} type ID for an object class type}
   @argument[name]{a string with the name of the property to look up}
   @begin{return}
@@ -849,9 +748,9 @@ lambda (object pspec)    :no-hooks
     class type.
   @end{short}
   Signals an error if the @arg{gtype} type ID is not a @code{\"GObject\"} type.
-  @begin[Example]{dictionary}
+  @begin[Examples]{dictionary}
     Get the @symbol{g:param-spec} instance for the @slot[g:simple-action]{name}
-    property of the @class{g:simple-action} object is looked up.
+    property of the @class{g:simple-action} object.
     @begin{pre}
 (setq pspec (g:object-class-find-property \"GSimpleAction\" \"name\"))
 => #.(SB-SYS:INT-SAP #X560E17A46220)
@@ -886,7 +785,7 @@ lambda (object pspec)    :no-hooks
 
 (defun object-class-list-properties (gtype)
  #+liber-documentation
- "@version{2023-12-1}
+ "@version{2024-12-14}
   @argument[gtype]{a @class{g:type-t} type ID of an object class}
   @return{The list of @symbol{g:param-spec} instances.}
   @begin{short}
@@ -894,7 +793,7 @@ lambda (object pspec)    :no-hooks
     object class type.
   @end{short}
   Signals an error if the @arg{gtype} type ID is not a @code{\"GObject\"} type.
-  @begin[Example]{dictionary}
+  @begin[Examples]{dictionary}
     @begin{pre}
 (mapcar #'g:param-spec-name
         (g:object-class-list-properties \"GApplication\"))
@@ -923,79 +822,12 @@ lambda (object pspec)    :no-hooks
 (export 'object-class-list-properties)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_object_class_override_property                        not exported
+;;; g_object_class_override_property
 ;;; ----------------------------------------------------------------------------
 
-#+nil
-(cffi:defcfun ("g_object_class_override_property"
-                %object-class-override-property) :void
- #+liber-documentation
- "@version{#2020-2-17}
-  @argument[class]{a @symbol{object-class} structure}
-  @argument[property-id]{the new property ID}
-  @argument[name]{the name of a property registered in a parent class or in an
-    interface of this class}
-  @begin{short}
-    Registers @arg{property-id} as referring to a property with the name
-    @arg{name} in a parent class or in an interface implemented by @arg{class}.
-  @end{short}
-  This allows this class to override a property implementation in a parent class
-  or to provide the implementation of a property from an interface.
-  @begin[Note]{dictionary}
-    Internally, overriding is implemented by creating a property of type
-    @code{GParamSpecOverride}; generally operations that query the properties of
-    the object class, such as the functions @fun{object-class-find-property}
-    or @fun{object-class-list-properties} will return the overridden property.
-    However, in one case, the @code{construct_properties} argument of the
-    constructor virtual function, the @code{GParamSpecOverride} is passed
-    instead, so that the @code{param_id} field of the @symbol{param-spec}
-    instance will be correct. For virtually all uses, this makes no difference.
-    If you need to get the overridden property, you can call the
-    @fun{param-spec-get-redirect-target} function.
-  @end{dictionary}
-  @see-class{g:object}
-  @see-symbol{g:object-class}
-  @see-function{g:object-class-find-property}
-  @see-function{g:object-class-list-properties}
-  @see-function{g:param-spec-get-redirect-target}"
-  (class (:pointer (:struct object-class)))
-  (property-id :uint)
-  (name :string))
-
 ;;; ----------------------------------------------------------------------------
-;;; g_object_interface_install_property                     not exported
+;;; g_object_interface_install_property
 ;;; ----------------------------------------------------------------------------
-
-#+nil
-(cffi:defcfun ("g_object_interface_install_property"
-               %object-interface-install-property) :void
- #+liber-documentation
- "@version{#2020-2-17}
-  @argument[iface]{any interface vtable for the interface, or the default
-    vtable for the interface}
-  @argument[pspec]{a @symbol{param-spec} instance for the new property}
-  @begin{short}
-    Add a property to an interface; this is only useful for interfaces that are
-    added to GObject-derived types.
-  @end{short}
-  Adding a property to an interface forces all objects classes with that
-  interface to have a compatible property. The compatible property could be a
-  newly created @symbol{param-spec} instance, but normally the
-  @fun{object-class-override-property} function will be used so that the
-  object class only needs to provide an implementation and inherits the property
-  description, default value, bounds, and so forth from the interface
-  property.
-
-  This function is meant to be called from the interface's default vtable
-  initialization function (the @code{class_init} member of
-  @symbol{type-info}.) It must not be called after after @code{class_init} has
-  been called for any object types implementing this interface.
-  @see-class{g:object}
-  @see-symbol{g:param-spec}
-  @see-symbol{g:type-info}
-  @see-function{g:object-class-override-property}"
-  (iface :pointer)
-  (pspec (:pointer (:struct param-spec))))
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_object_interface_find_property
@@ -1008,7 +840,7 @@ lambda (object pspec)    :no-hooks
 
 (defun object-interface-find-property (gtype name)
  #+liber-documentation
- "@version{2023-12-1}
+ "@version{2024-12-14}
   @argument[gtype]{a @class{g:type-t} type ID for an interface type}
   @argument[name]{a string with the name of a property to lookup}
   @begin{return}
@@ -1057,7 +889,7 @@ lambda (object pspec)    :no-hooks
 
 (defun object-interface-list-properties (gtype)
  #+liber-documentation
- "@version{2023-12-1}
+ "@version{2024-12-14}
   @argument[gtype]{a @class{g:type-t} type ID of an interface type}
   @return{The list of @symbol{g:param-spec} instances for all properties of an
     interface type.}
@@ -1066,7 +898,7 @@ lambda (object pspec)    :no-hooks
   @end{short}
   Signals an error if the @arg{gtype} type ID is not an @code{\"GInterface\"}
   type.
-  @begin[Example]{dictionary}
+  @begin[Examples]{dictionary}
     @begin{pre}
 (mapcar #'g:param-spec-name
         (g:object-interface-list-properties \"GAction\"))
@@ -1098,10 +930,10 @@ lambda (object pspec)    :no-hooks
 
 (defun object-new (gtype &rest args)
  #+liber-documentation
- "@version{2023-12-1}
+ "@version{2024-12-14}
   @argument[gtype]{a @class{g:type-t} type ID of the @class{g:object} subtype
     to instantiate}
-  @argument[args]{pairs of the property keyword and value}
+  @argument[args]{pairs of a property keyword and value}
   @begin{short}
     Creates a new instance of a @class{g:object} subtype and sets its
     properties.
@@ -1131,35 +963,7 @@ lambda (object pspec)    :no-hooks
 (export 'object-new)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_object_new_with_properties ()
-;;;
-;;; GObject *
-;;; g_object_new_with_properties (GType object_type,
-;;;                               guint n_properties,
-;;;                               const char *names[],
-;;;                               const GValue values[]);
-;;;
-;;; Creates a new instance of a GObject subtype and sets its properties using
-;;; the provided arrays. Both arrays must have exactly n_properties elements,
-;;; and the names and values correspond by index.
-;;;
-;;; Construction parameters (see G_PARAM_CONSTRUCT, G_PARAM_CONSTRUCT_ONLY)
-;;; which are not explicitly specified are set to their default values.
-;;;
-;;; object_type :
-;;;     the object type to instantiate
-;;;
-;;; n_properties :
-;;;     the number of properties
-;;;
-;;; names :
-;;;     the names of each property to be set.
-;;;
-;;; values :
-;;;     the values of each property to be set.
-;;;
-;;; Returns :
-;;;     a new instance of object_type .
+;;; g_object_new_with_properties                            not exported
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_object_new_with_properties" %object-new-with-properties)
@@ -1170,36 +974,23 @@ lambda (object pspec)    :no-hooks
   (values :pointer))
 
 ;;; ----------------------------------------------------------------------------
-;;; g_object_newv                                           not exported
+;;; g_object_newv                                           Deprecated 2.54
 ;;; ----------------------------------------------------------------------------
-
-;; This function is called internally in the Lisp library to create an object
-;; and is not exported.
-
-;; TODO: Replace this function with g_object_new_with_properties
-
-(cffi:defcfun ("g_object_newv" %object-newv) :pointer
-  (gtype type-t)
-  (n-parameter :uint)
-  (parameters :pointer))
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_object_ref
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcfun ("g_object_ref" %object-ref) :pointer
-  (object :pointer))
-
-(defun object-ref (object)
+(cffi:defcfun ("g_object_ref" object-ref) object
  #+liber-documentation
- "@version{2024-10-12}
+ "@version{2024-12-14}
   @argument[object]{a @class{g:object} instance}
-  @return{The same @arg{object} instance.}
-  @short{Increases the reference count of the object.}
+  @return{The same @class{g:object} instance.}
+  @short{Increases the reference count of @arg{object}.}
   @see-class{g:object}
   @see-function{g:object-ref-count}
   @see-function{g:object-unref}"
-  (cffi:convert-from-foreign (%object-ref (object-pointer object)) 'object))
+  (object object))
 
 (export 'object-ref)
 
@@ -1207,18 +998,28 @@ lambda (object pspec)    :no-hooks
 ;;; g:object-ref-count
 ;;; ----------------------------------------------------------------------------
 
+;; Only used for the g:object-ref-count implementation
+(cffi:defcstruct %object
+  (:type-instance (:pointer (:struct type-instance)))
+  (:ref-count :uint)
+  (:data :pointer))
+
 (defun object-ref-count (object)
  #+liber-documentation
- "@version{2024-12-12}
+ "@version{2024-12-14}
   @argument[object]{a @class{g:object} instance}
   @return{The integer with the reference count of @arg{object}.}
   @short{Returns the reference count of the object.}
+  @begin[Notes]{dictionary}
+    This function is a Lisp extension. It can be used in test files to check
+    the number of references for objects.
+  @end{dictionary}
   @see-class{g:object}
   @see-function{g:object-ref}"
-  (cffi:foreign-slot-value (if (cffi:pointerp object)
-                               object
-                               (object-pointer object))
-                           '(:struct %object) :ref-count))
+  (let ((pointer (if (cffi:pointerp object)
+                     object
+                     (object-pointer object))))
+    (cffi:foreign-slot-value pointer '(:struct %object) :ref-count)))
 
 (export 'object-ref-count)
 
@@ -1226,12 +1027,9 @@ lambda (object pspec)    :no-hooks
 ;;; g_object_unref
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcfun ("g_object_unref" %object-unref) :void
-  (object :pointer))
-
-(defun object-unref (object)
+(cffi:defcfun ("g_object_unref" object-unref) :void
  #+liber-documentation
- "@version{2024-10-12}
+ "@version{2024-12-14}
   @argument[object]{a @class{g:object} instance}
   @begin{short}
     Decreases the reference count of @arg{object}.
@@ -1239,7 +1037,7 @@ lambda (object pspec)    :no-hooks
   When its reference count drops to 0, the object is finalized.
   @see-class{g:object}
   @see-function{g:object-ref}"
-  (%object-unref (object-pointer object)))
+  (object object))
 
 (export 'object-unref)
 
@@ -1247,158 +1045,11 @@ lambda (object pspec)    :no-hooks
 ;;; g_object_ref_sink                                       not exported
 ;;; ----------------------------------------------------------------------------
 
-;; For internal use
-
 (cffi:defcfun ("g_object_ref_sink" %object-ref-sink) :pointer
   (object :pointer))
 
 ;;; ----------------------------------------------------------------------------
-;;; g_set_object
-;;;
-;;; Updates a GObject pointer to refer to new_object
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_clear_object
-;;;
-;;; Clears a reference to a GObject.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_object_is_floating                                    not exported
-;;; ----------------------------------------------------------------------------
-
-;; The memory management is done in the Lisp library. We do not export this
-;; function.
-
-(cffi:defcfun ("g_object_is_floating" %object-is-floating) :boolean
- #+liber-documentation
- "@version{#2020-2-17}
-  @argument[object]{a @class{g:object} instance}
-  @return{@em{True} if @arg{object} has a floating reference.}
-  @begin{short}
-    Checks whether @arg{object} has a floating reference.
-  @end{short}
-  @see-class{g:object}"
-  (object :pointer))
-
-;;; ----------------------------------------------------------------------------
-;;; g_object_force_floating                                 not exported
-;;; ----------------------------------------------------------------------------
-
-;; The memory management is done in the Lisp library. We do not export this
-;; function.
-
-(cffi:defcfun ("g_object_force_floating" %object-force-floating) :void
- #+liber-documentation
- "@version{#2020-2-17}
-  @argument[object]{a @class{g:object} instance}
-  @begin{short}
-    This function is intended for @class{g:object} implementations to re-enforce
-    a floating object reference.
-  @end{short}
-  Doing this is seldom required: all @class{g:initially-unowned}'s are created
-  with a floating reference which usually just needs to be sunken by calling
-  the function @fun{g:object-ref-sink}.
-  @see-class{g:object}
-  @see-class{g:initially-unowned}
-  @see-function{g:object-ref-sink}"
-  (object :pointer))
-
-;;; ----------------------------------------------------------------------------
-;;; GWeakNotify
-;;;
-;;; A GWeakNotify function can be added to an object as a callback that gets
-;;; triggered when the object is finalized.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_object_weak_ref                                       not exported
-;;; ----------------------------------------------------------------------------
-
-;; The memory management is done in the Lisp library. We do not export this
-;; function.
-
-#+nil
-(cffi:defcfun ("g_object_weak_ref" %object-weak-ref) :void
- #+liber-documentation
- "@version{#2020-2-17}
-  @argument[object]{@class{g:object} instance to reference weakly}
-  @argument[notify]{callback to invoke before the @arg{object} is freed}
-  @argument[data]{extra data to pass to @arg{notify}}
-  @begin{short}
-    Adds a weak reference callback to an object.
-  @end{short}
-  Weak references are used for notification when an object is finalized. They
-  are called \"weak references\" because they allow you to safely hold a pointer
-  to an object without calling @fun{object-ref} (@fun{object-ref} adds a
-  strong reference, that is, forces the object to stay alive).
-
-  Note that the weak references created by this method are not thread-safe:
-  they cannot safely be used in one thread if the object's last
-  @fun{object-unref} might happen in another thread. Use @class{weak-ref} if
-  thread-safety is required.
-  @see-class{g:object}
-  @see-function{object-ref}
-  @see-function{object-unref}"
-  (object :pointer)
-  (notify :pointer)
-  (data :pointer))
-
-;;; ----------------------------------------------------------------------------
-;;; g_object_weak_unref                                     not exported
-;;; ----------------------------------------------------------------------------
-
-;; The memory management is done in the Lisp library. We do not export this
-;; function.
-
-#+nil
-(cffi:defcfun ("g_object_weak_unref" %object-weak-unref) :void
- #+liber-documentation
- "@version{#2020-2-17}
-  @argument[object]{@class{object} instance to remove a weak reference from}
-  @argument[notify]{callback to search for}
-  @argument[data]{data to search for}
-  @begin{short}
-    Removes a weak reference callback to an object.
-  @end{short}
-  @see-class{object}"
-  (object :pointer)
-  (notify :pointer)
-  (data :pointer))
-
-;;; ----------------------------------------------------------------------------
-;;; g_object_add_weak_pointer
-;;;
-;;; Adds a weak reference from weak_pointer to object to indicate that the
-;;; pointer located at weak_pointer_location is only valid during the lifetime
-;;; of object.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_object_remove_weak_pointer
-;;;
-;;; Removes a weak reference from object that was previously added using
-;;; g_object_add_weak_pointer().
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_set_weak_pointer
-;;;
-;;; Updates a pointer to weakly refer to new_object.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_clear_weak_pointer
-;;;
-;;; Clears a weak reference to a GObject.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
 ;;; GToggleNotify                                           not exported
-;;;
-;;; A callback function used for notification when the state of a toggle
-;;; reference changes.
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcallback toggle-notify :void
@@ -1412,12 +1063,12 @@ lambda (object pspec)    :no-hooks
             (progn
               (rem-gobject-for-pointer-strong object)
               (setf (get-gobject-for-pointer-weak object) obj))
-            (warn "TOGGLE-NOTIFY: ~a at ~a has no lisp-side (strong) reference"
+            (warn "TOGGLE-NOTIFY: ~a at ~a has no Lisp side (strong) reference"
                   (type-name (type-from-instance object))
                   object)))
       (let ((obj (get-gobject-for-pointer-weak object)))
         (unless obj
-          (warn "TOGGLE-NOTIFY: ~a at ~a has no lisp-side (weak) reference"
+          (warn "TOGGLE-NOTIFY: ~a at ~a has no Lisp side (weak) reference"
                 (type-name (type-from-instance object))
                 object))
         (rem-gobject-for-pointer-weak object)
@@ -1426,9 +1077,6 @@ lambda (object pspec)    :no-hooks
 ;;; ----------------------------------------------------------------------------
 ;;; g_object_add_toggle_ref                                 not exported
 ;;; ----------------------------------------------------------------------------
-
-;; The memory management is done in the Lisp library. We do not export this
-;; function.
 
 (cffi:defcfun ("g_object_add_toggle_ref" %object-add-toggle-ref) :void
   (object :pointer)
@@ -1439,49 +1087,10 @@ lambda (object pspec)    :no-hooks
 ;;; g_object_remove_toggle_ref                              not exported
 ;;; ----------------------------------------------------------------------------
 
-;; The memory management is done in the Lisp library. We do not export this
-;; function.
-
 (cffi:defcfun ("g_object_remove_toggle_ref" %object-remove-toggle-ref) :void
   (object :pointer)
   (notify :pointer)
   (data :pointer))
-
-;;; ----------------------------------------------------------------------------
-;;; g_object_connect
-;;;
-;;; A convenience function to connect multiple signals at once.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_object_disconnect
-;;;
-;;; A convenience function to disconnect multiple signals at once.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_object_set
-;;;
-;;; Sets properties on an object.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_object_setv
-;;;
-;;; Sets n_properties properties for an object.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_object_get
-;;;
-;;; Gets properties of an object.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_object_getv
-;;;
-;;; Gets n_properties properties for an object.
-;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_object_notify
@@ -1489,7 +1098,7 @@ lambda (object pspec)    :no-hooks
 
 (cffi:defcfun ("g_object_notify" object-notify) :void
  #+liber-documentation
- "@version{2023-12-1}
+ "@version{2024-12-14}
   @argument[object]{a @class{g:object} instance}
   @argument[name]{a string with the name of a property installed on the class
     of @arg{object}}
@@ -1514,7 +1123,7 @@ lambda (object pspec)    :no-hooks
 
 (cffi:defcfun ("g_object_freeze_notify" object-freeze-notify) :void
  #+liber-documentation
- "@version{2023-12-1}
+ "@version{2024-12-14}
   @argument[object]{a @class{g:object} instance}
   @begin{short}
     Increases the freeze count on the object.
@@ -1536,7 +1145,7 @@ lambda (object pspec)    :no-hooks
 
 (cffi:defcfun ("g_object_thaw_notify" object-thaw-notify) :void
  #+liber-documentation
- "@version{2023-12-1}
+ "@version{2024-12-14}
   @argument[object]{a @class{g:object} instance}
   @begin{short}
     Reverts the effect of a previous call to the @fun{g:object-freeze-notify}
@@ -1582,7 +1191,7 @@ lambda (object pspec)    :no-hooks
 
 (defun object-data (object key)
  #+liber-documentation
- "@version{2024-5-13}
+ "@version{2024-12-14}
   @syntax{(g:object-data object key) => data}
   @syntax{(setf (g:object-data object key) data)}
   @argument[object]{a @class{g:object} instance containing the associations}
@@ -1636,7 +1245,7 @@ lambda (object pspec)    :no-hooks
 (setf (liber:alias-for-symbol 'destroy-notify)
       "Callback"
       (liber:symbol-documentation 'destroy-notify)
- "@version{2024-5-13}
+ "@version{2024-12-14}
   @syntax{lambda ()}
   @begin{short}
     Specifies the type of function which is called when a data element is
@@ -1660,7 +1269,7 @@ lambda (object pspec)    :no-hooks
 
 (defun object-set-data-full (object key func)
  #+liber-documentation
- "@version{2024-5-13}
+ "@version{2024-12-14}
   @argument[object]{a @class{g:object} instance containing the associations}
   @argument[key]{a string with the name of the key}
   @argument[func]{a @symbol{g:destroy-notify} callback function}
@@ -1689,84 +1298,6 @@ lambda (object pspec)    :no-hooks
                          (cffi:callback destroy-notify)))
 
 (export 'object-set-data-full)
-
-;;; ----------------------------------------------------------------------------
-;;; g_object_steal_data                                     not exported
-;;; ----------------------------------------------------------------------------
-
-#+nil
-(cffi:defcfun ("g_object_steal_data" object-steal-data) :pointer
- #+liber-documentation
- "@version{#2022-12-30}
-  @argument[object]{a @class{g:object} instance containing the associations}
-  @argument[key]{a string with the name of the key}
-  @return{The data as a pointer if found, or @code{nil} if no such data exists.}
-  @begin{short}
-    Remove a specified datum from the data associations of the object, without
-    invoking the destroy handler of the association.
-  @end{short}
-  @see-class{g:object}
-  @see-function{g:object-data}
-  @see-function{g:object-set-data-full}"
-  (object object)
-  (key :string))
-
-;;;-----------------------------------------------------------------------------
-;;; g_object_dup_data
-;;;
-;;; This is a variant of g_object_get_data() which returns a 'duplicate' of the
-;;; value.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_object_replace_data
-;;;
-;;; Compares the user data for the key key on object with oldval, and if they
-;;; are the same, replaces oldval with newval.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_object_get_qdata
-;;;
-;;; This function gets back user data pointers stored via g_object_set_qdata().
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_object_set_qdata ()
-;;;
-;;; This sets an opaque, named pointer on an object.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_object_set_qdata_full
-;;;
-;;; This function works like g_object_set_qdata(), but in addition, a
-;;; void (*destroy) (gpointer) function may be specified which is called with
-;;; data as argument when the object is finalized, or the data is being
-;;; overwritten by a call to g_object_set_qdata() with the same quark.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_object_steal_qdata
-;;;
-;;; This function gets back user data pointers stored via g_object_set_qdata()
-;;; and removes the data from object without invoking its destroy() function (if
-;;; any was set).
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_object_dup_qdata
-;;;
-;;; This is a variant of g_object_get_qdata() which returns a 'duplicate' of the
-;;; value.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_object_replace_qdata
-;;;
-;;; Compares the user data for the key quark on object with oldval, and if they
-;;; are the same, replaces oldval with newval.
-;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_object_set_property
@@ -1799,7 +1330,7 @@ lambda (object pspec)    :no-hooks
 
 (defun object-property (object name &optional gtype)
  #+liber-documentation
- "@version{2023-7-27}
+ "@version{2024-12-14}
   @syntax{(g:object-property object name gtype) => value}
   @syntax{(setf (g:object-property object name gtype) value)}
   @argument[object]{a @class{g:object} instance}
@@ -1807,7 +1338,7 @@ lambda (object pspec)    :no-hooks
   @argument[gtype]{an optional @class{g:type-t} type ID of the property}
   @argument[value]{a value for the property}
   @short{Accessor of the property of an object.}
-  @begin[Example]{dictionary}
+  @begin[Examples]{dictionary}
     Setting and retrieving the
     @slot[gtk:settings]{gtk-application-prefer-dark-theme} setting.
     @begin{pre}
@@ -1837,78 +1368,5 @@ lambda (object pspec)    :no-hooks
       (value-unset value))))
 
 (export 'object-property)
-
-;;; ----------------------------------------------------------------------------
-;;; g_object_new_valist
-;;;
-;;; Creates a new instance of a GObject subtype and sets its properties.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_object_set_valist
-;;;
-;;; Sets properties on an object.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_object_get_valist
-;;;
-;;; Gets properties of an object.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_object_watch_closure ()
-;;;
-;;; This function essentially limits the life time of the closure to the life
-;;; time of the object.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_object_run_dispose
-;;;
-;;; Releases all references to other objects.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; GWeakRef
-;;;
-;;; A structure containing a weak reference to a GObject.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_weak_ref_init
-;;;
-;;; Initialise a non-statically-allocated GWeakRef.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_weak_ref_clear
-;;;
-;;; Frees resources associated with a non-statically-allocated GWeakRef. After
-;;; this call, the GWeakRef is left in an undefined state.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_weak_ref_get
-;;;
-;;; If weak_ref is not empty, atomically acquire a strong reference to the
-;;; object it points to, and return that reference.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_weak_ref_set
-;;;
-;;; Change the object to which weak_ref points, or set it to NULL.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_assert_finalize_object
-;;;
-;;; Assert that object is non-NULL, then release one reference to it with
-;;; g_object_unref() and assert that it has been finalized (i.e. that there are
-;;; no more references).
-;;;
-;;; Since 2.62
-;;; ----------------------------------------------------------------------------
 
 ;;; --- End of file gobject.base.lisp ------------------------------------------
