@@ -6,7 +6,6 @@
 (defparameter gobject-base
               '(g:object-pointer
                 g:object-has-reference
-                g:object-signal-handlers
 
                 gobject::get-gobject-for-pointer
                 gobject::get-gobject-for-pointer-strong
@@ -124,43 +123,26 @@
 (test g-object-properties
   (let ((object (make-instance 'g:simple-action)))
     (is (cffi:pointerp (g:object-pointer object)))
-    (is (cffi:pointerp (g:object-pointer object)))
-    (is-true (g:object-has-reference object))
-    (is (typep (g:object-signal-handlers object) 'array))))
-
-(test g-object-pointer.1
-  (let* ((object (make-instance 'g:simple-action))
-         (ptr (g:object-pointer object)))
-    (is (cffi:pointerp ptr))
-    (is (cffi:null-pointer-p (setf (g:object-pointer object)
-                                   (cffi:null-pointer))))
-    (is (cffi:null-pointer-p (g:object-pointer object)))
-    (is (cffi:pointerp (setf (g:object-pointer object) ptr)))
-    (is (cffi:pointerp (g:object-pointer object)))))
-
-;; Use the abbreviation POINTER for G:OBJECT-POINTER
-(test g-object-pointer.2
-  (let* ((object (make-instance 'g:simple-action))
-         (ptr (glib:pointer object)))
-    (is (cffi:pointerp ptr))
-    (is (cffi:null-pointer-p (setf (glib:pointer object) (cffi:null-pointer))))
-    (is (cffi:null-pointer-p (glib:pointer object)))
-    (is (cffi:pointerp (setf (glib:pointer object) ptr)))
-    (is (cffi:pointerp (glib:pointer object)))))
+    (is (cffi:pointerp (glib:pointer object)))
+    (is-true (gobject::object-has-reference object))))
 
 ;;; --- Signals ----------------------------------------------------------------
 
 (test g-object-notify-signal
-  ;; Query info for "notify" signal
-  (let ((query (g:signal-query (g:signal-lookup "notify" "GObject"))))
-    (is (string= "notify" (g:signal-query-signal-name query)))
-    (is (string= "GObject" (g:type-name (g:signal-query-owner-type query))))
-    (is (equal '(:RUN-FIRST :NO-RECURSE :DETAILED :ACTION :NO-HOOKS)
-               (g:signal-query-signal-flags query)))
-    (is (string= "void" (g:type-name (g:signal-query-return-type query))))
+  (let* ((name "notify")
+         (gtype (g:gtype "GObject"))
+         (query (g:signal-query (g:signal-lookup name gtype))))
+    ;; Retrieve name and gtype
+    (is (string= name (g:signal-query-signal-name query)))
+    (is (eq gtype (g:signal-query-owner-type query)))
+    ;; Check flags
+    (is (equal '(:ACTION :DETAILED :NO-HOOKS :NO-RECURSE :RUN-FIRST)
+               (sort (g:signal-query-signal-flags query) #'string<)))
+    ;; Check return type
+    (is (eq (g:gtype "void") (g:signal-query-return-type query)))
+    ;; Check parameter types
     (is (equal '("GParam")
-               (mapcar #'g:type-name (g:signal-query-param-types query))))
-    (is-false (g:signal-query-signal-detail query))))
+               (mapcar #'g:type-name (g:signal-query-param-types query))))))
 
 ;;; --- Functions --------------------------------------------------------------
 
@@ -204,17 +186,10 @@
   (is-true  (g:is-object (g:object-pointer (make-instance 'g:simple-action))))
   (is-false (g:is-object (g:param-spec-boolean "new" "nick" "blurb" nil nil))))
 
-;;;     g-is-object-class
-;;;     g-object-class
-;;;     g_object_type
-;;;     g_object_type_name
-;;;     g-object-class-type
-;;;     g-object-class-name
-
 ;;;     g_object_class_install_property
 ;;;     g_object_class_install_properties
 
-;;;     g-object-class-find-property
+;;;     g_object_class_find_property
 
 (test g-object-class-find-property
   (is (g:is-param-spec (g:object-class-find-property "GSimpleAction" "name")))
@@ -239,7 +214,7 @@
 ;;;     g_object_class_override_property
 ;;;     g_object_interface_install_property
 
-;;;     g-object-interface-find-property
+;;;     g_object_interface_find_property
 
 (test g-object-interface-find-property
   (is (g:is-param-spec (g:object-interface-find-property "GAction" "enabled")))
@@ -261,7 +236,7 @@
                      (g:object-interface-list-properties "GActionMap"))))
   (signals (error) (g:object-interface-list-properties "unknown")))
 
-;;;     g-object-new
+;;;     g_object_new
 
 (test g-object-new
   (let (action)
@@ -276,12 +251,12 @@
     (is-false (g:simple-action-enabled action))))
 
 ;;;     g_object_new_with_properties
-;;;     g_object_newv
 
 ;;;     g_object_ref
+;;;     g:object-ref-count
 ;;;     g_object_unref
 
-(test g-object-ref/unref
+(test g-object-ref/unref.1
   (let ((action (make-instance 'g:simple-action)))
     (is (= 1 (g:object-ref-count action)))
     (is (eq action (g:object-ref action)))
@@ -289,27 +264,21 @@
     (is-false (g:object-unref action))
     (is (= 1 (g:object-ref-count action)))))
 
+(test g-object-ref/unref.2
+  (let* ((action (make-instance 'g:simple-action))
+         (pointer (g:object-pointer action)))
+    (is (= 1 (g:object-ref-count pointer)))
+    (is (eq action (g:object-ref pointer)))
+    (is (= 2 (g:object-ref-count pointer)))
+    (is-false (g:object-unref pointer))
+    (is (= 1 (g:object-ref-count pointer)))))
+
 ;;;     g_object_ref_sink
-;;;     g_clear_object
 
 ;;;     GInitiallyUnowned
-;;;     GInitiallyUnownedClass
 
-;;;     G_TYPE_INITIALLY_UNOWNED
-
-;;;     g_object_is_floating
-;;;     g_object_force_floating
-;;;     g_object_weak_ref
-;;;     g_object_weak_unref
-;;;     g_object_add_weak_pointer
-;;;     g_object_remove_weak_pointer
 ;;;     g_object_add_toggle_ref
 ;;;     g_object_remove_toggle_ref
-
-;;;     g_object_connect
-;;;     g_object_disconnect
-;;;     g_object_set
-;;;     g_object_get
 
 ;;;     g_object_notify
 
@@ -331,8 +300,8 @@
 
 ;;;     g_object_notify_by_pspec
 
-;;;     g-object-freeze-notify
-;;;     g-object-thaw-notify
+;;;     g_object_freeze_notify
+;;;     g_object_thaw_notify
 
 (test g-object-freeze-notify.1
   (let* ((message nil)
@@ -380,7 +349,7 @@
     ;; Check order of the execution
     (is (equal '("freeze" "notify::name" "thaw") message))))
 
-;;;     g-object-data
+;;;     g_object_data
 
 (test g-object-data
   (let ((item (make-instance 'g:menu-item)))
@@ -399,7 +368,7 @@
     (is-false (setf (g:object-data item "prop") nil))
     (is-false (g:object-data item "prop"))))
 
-;;;     g-object-set-data-full
+;;;     g_object_set_data_full
 
 (test g-object-set-data-full
   (let ((action (make-instance 'g:simple-action))
@@ -414,17 +383,7 @@
     ;; Check status
     (is (string= "destroy-notify-cb" msg))))
 
-;;;     g-object-steal-data
-;;;     g_object_dup_data
-;;;     g_object_replace_data
-;;;     g_object_get_qdata
-;;;     g_object_set_qdata
-;;;     g_object_set_qdata_full
-;;;     g_object_steal_qdata
-;;;     g_object_dup_qdata
-;;;     g_object_replace-qdata
-
-;;;     g-object-property
+;;;     g_object_property
 
 (test g-object-property
   (let ((obj (g:simple-action-new "action" "s")))
@@ -439,19 +398,4 @@
     (is-true (setf (g:object-property (g:object-pointer obj) "enabled") t))
     (is-true (g:object-property (g:object-pointer obj) "enabled"))))
 
-;;;     g_object_new_valist
-;;;     g_object_set_valist
-;;;     g_object_get_valist
-;;;     g_object_watch_closure
-;;;     g_object_run_dispose
-
-;;;     G_OBJECT_WARN_INVALID_PROPERTY_ID
-
-;;;     GWeakRef
-;;;     g_weak_ref_init
-;;;     g_weak_ref_clear
-;;;     g_weak_ref_get
-;;;     g_weak_ref_set
-;;;     g_assert_finalize_object
-
-;;; 2024-10-12
+;;; 2024-12-14

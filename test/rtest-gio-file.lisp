@@ -5,6 +5,36 @@
 
 ;;; --- Types and Values -------------------------------------------------------
 
+;;;     GFileQueryInfoFlags
+
+(test g-file-query-info-flags
+  ;; Check type
+  (is (g:type-is-flags "GFileQueryInfoFlags"))
+  ;; Check registered symbol
+  (is (eq 'g:file-query-info-flags
+          (glib:symbol-for-gtype "GFileQueryInfoFlags")))
+  ;; Check type initializer
+  (is (eq (g:gtype "GFileQueryInfoFlags")
+          (g:gtype (cffi:foreign-funcall "g_file_query_info_flags_get_type"
+                                         :size))))
+  ;; Check names
+  (is (equal '("G_FILE_QUERY_INFO_NONE" "G_FILE_QUERY_INFO_NOFOLLOW_SYMLINKS")
+             (glib-test:list-flags-item-names "GFileQueryInfoFlags")))
+  ;; Check values
+  (is (equal '(0 1)
+             (glib-test:list-flags-item-values "GFileQueryInfoFlags")))
+  ;; Check nick names
+  (is (equal '("none" "nofollow-symlinks")
+             (glib-test:list-flags-item-nicks "GFileQueryInfoFlags")))
+  ;; Check flags definition
+  (is (equal '(GOBJECT:DEFINE-GFLAGS "GFileQueryInfoFlags"
+                                     GIO:FILE-QUERY-INFO-FLAGS
+                      (:EXPORT T
+                       :TYPE-INITIALIZER "g_file_query_info_flags_get_type")
+                      (:NONE 0)
+                      (:NOFOLLOW-SYMLINKS 1))
+             (gobject:get-gtype-definition "GFileQueryInfoFlags"))))
+
 ;;;     GFile
 
 (test g-file-interface
@@ -180,4 +210,17 @@
   (let ((file (g:file-parse-name "http://crategus.com")))
     (is (string= "http://crategus.com/" (g:file-get-parse-name file)))))
 
-;;; 2024-11-10
+;;;     g_file_query_info
+
+#-windows
+(test g-file-query-info
+  (let* ((path (glib-sys:sys-path "test/rtest-gio-file.lisp"))
+         (file (g:file-new-for-path path))
+         (info nil))
+
+    (is (typep (setf info (g:file-query-info file "" :none)) 'g:file-info))
+    ;;Check memory management
+    (is (= 1 (g:object-ref-count file)))
+    (is (= 1 (g:object-ref-count info)))))
+
+;;; 2024-12-14

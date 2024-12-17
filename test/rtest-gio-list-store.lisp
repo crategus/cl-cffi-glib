@@ -93,7 +93,7 @@
     (is (equal '("Action 9" "Action 8" "Action 7" "Action 6" "Action 5"
                  "Action 4" "Action 3" "Action 2" "Action 1" "Action 0")
                (iter (for i from 0 below 10)
-                     (for obj = (g:list-model-object store i))
+                     (for obj = (g:list-model-item store i))
                      (collect (format nil "~a"
                                           (g:simple-action-name obj))))))))
 
@@ -114,7 +114,7 @@
     (is (equal '("Action 0" "Action 1" "Action 2" "Action 3" "Action 4"
                  "Action 5" "Action 6" "Action 7" "Action 8" "Action 9")
                (iter (for i from 0 below 10)
-                     (for obj = (g:list-model-object store i))
+                     (for obj = (g:list-model-item store i))
                      (collect (format nil "~a"
                                           (g:simple-action-name obj))))))))
 
@@ -156,7 +156,7 @@
     (is (equal '("Action 0" "Action 1" "Action 2" "Action 3" "Action 4"
                  "Action 7" "Action 8" "Action 9")
                (iter (for i from 0 below (g:list-store-n-items store))
-                     (for obj = (g:list-model-object store i))
+                     (for obj = (g:list-model-item store i))
                      (collect (g:simple-action-name obj)))))))
 
 (test g-list-store-splice.2
@@ -180,7 +180,7 @@
     (is (equal '("Action 0" "Action 1" "Action 2" "Action 3" "Action 4"
                  "action" "action" "action" "Action 7" "Action 8" "Action 9")
                (iter (for i from 0 below (g:list-store-n-items store))
-                     (for obj = (g:list-model-object store i))
+                     (for obj = (g:list-model-item store i))
                      (collect (g:simple-action-name obj)))))))
 
 ;;;     g_list_store_sort
@@ -202,7 +202,7 @@
     (is (equal '("Action 9" "Action 8" "Action 7" "Action 6" "Action 5"
                  "Action 4" "Action 3" "Action 2" "Action 1" "Action 0")
                (iter (for i from 0 below 10)
-                     (for obj = (g:list-model-object store i))
+                     (for obj = (g:list-model-item store i))
                      (collect (format nil "~a"
                                           (g:simple-action-name obj))))))
     (g:list-store-sort store
@@ -214,7 +214,7 @@
     (is (equal '("Action 0" "Action 1" "Action 2" "Action 3" "Action 4"
                  "Action 5" "Action 6" "Action 7" "Action 8" "Action 9")
                (iter (for i from 0 below 10)
-                     (for obj = (g:list-model-object store i))
+                     (for obj = (g:list-model-item store i))
                      (collect (format nil "~a"
                                           (g:simple-action-name obj))))))))
 
@@ -251,7 +251,7 @@
     (is (equal '("Action 0" "Action 1" "Action 2" "Action 3" "Action 4"
                  "Action 5" "Action 6" "Action 7" "Action 8" "Action 9")
                (iter (for i from 0 below 10)
-                     (for obj = (g:list-model-object store i))
+                     (for obj = (g:list-model-item store i))
                      (collect (format nil "~a"
                                           (g:simple-action-name obj))))))
     (is (= 5

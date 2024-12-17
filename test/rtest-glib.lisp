@@ -18,7 +18,10 @@
            #:list-flags-item-names
            #:list-flags-item-values
            #:list-flags-item-nicks
-           #:profile #:unprofile #:report #:reset))
+           #:profile #:unprofile #:report #:reset
+           #:with-ref-count-object
+           #:with-ref-count-objects
+           #:with-check-memory))
 
 (in-package :glib-test)
 
@@ -150,4 +153,41 @@
   (mapcar #'gobject:enum-item-nick
           (gobject:get-enum-items gtype)))
 
-;;; 2024-9-17
+;;; ----------------------------------------------------------------------------
+
+(defmacro with-ref-count-object ((var &optional (refcount 1)) &body body)
+  `(let (,var)
+     (progn ,@body)
+     (is (= ,refcount (g:object-ref-count ,var))
+         "~a holds ~a reference(s) (expected ~a)"
+         ,var
+         (g:object-ref-count ,var)
+         ,refcount)))
+
+(defmacro with-ref-count-objects (vars &body body)
+    (if vars
+        (let ((var (glib-sys:mklist (first vars))))
+          `(with-ref-count-object ,var
+             (with-ref-count-objects ,(rest vars)
+               ,@body)))
+        `(progn ,@body)))
+
+(defmacro with-check-memory ((vars &key (strong 0)) &body body)
+  (setf vars (glib-sys:mklist vars))
+  (let ((nptr1 (gensym))
+        (lptr1 (gensym))
+        (nptr2 (gensym))
+        (lptr2 (gensym)))
+    `(let* ((,lptr1 (gobject::list-gobject-for-pointer-strong))
+            (,nptr1 (length ,lptr1)))
+       (with-ref-count-objects ,vars
+          ,@body)
+       (let* ((,lptr2 (gobject::list-gobject-for-pointer-strong))
+              (,nptr2 (length ,lptr2)))
+         (is (= ,strong (- ,nptr2 ,nptr1))
+             "The test added ~a (expected ~a) strong references for~%     ~a"
+             (- ,nptr2 ,nptr1)
+             ,strong
+             (set-difference ,lptr2 ,lptr1 :test #'eq))))))
+
+;;; 2024-12-16

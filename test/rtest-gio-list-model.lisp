@@ -65,16 +65,16 @@
     (is (typep (cffi:convert-from-foreign (g:list-model-item store 0)
                                           'g:object)
                'g:simple-action))
-    (is (typep (g:list-model-object store 0) 'g:simple-action))
+    (is (typep (g:list-model-item store 0) 'g:simple-action))
 
     (is (cffi:pointerp (g:list-model-item store 1)))
     (is (typep (cffi:convert-from-foreign (g:list-model-item store 1)
                                           'g:object)
                'g:menu-item))
-    (is (typep (g:list-model-object store 1) 'g:menu-item))
+    (is (typep (g:list-model-item store 1) 'g:menu-item))
     ;; Access an invalid position
     (is (cffi:null-pointer-p (g:list-model-item store 2)))
-    (is-false  (g:list-model-object store 2))))
+    (is-false  (g:list-model-item store 2))))
 
 (test g-list-model-get.2
   (let ((store (g:list-store-new "GAction")))
@@ -85,8 +85,8 @@
     (is (eq (g:gtype "GAction") (g:list-model-item-type store)))
     (is (= 2 (g:list-model-n-items store)))
     (is (cffi:pointerp (g:list-model-item store 0)))
-    (is (typep (g:list-model-object store 0) 'g:simple-action))
-    (is (typep (g:list-model-object store 1) 'g:simple-action))))
+    (is (typep (g:list-model-item store 0) 'g:simple-action))
+    (is (typep (g:list-model-item store 1) 'g:simple-action))))
 
 ;;;     g_list_model_get_object
 
@@ -98,13 +98,13 @@
     (is-false (g:list-store-append store (make-instance 'g:menu-item)))
     ;; Get an object from the list store
     (is (typep (setf object
-                     (g:list-model-object store 0)) 'g:simple-action))
+                     (g:list-model-item store 0)) 'g:simple-action))
     (is (= 2 (g:object-ref-count object)))
     ;; Get the object a second time from the list store
     (is (typep (setf object
-                     (g:list-model-object store 0)) 'g:simple-action))
+                     (g:list-model-item store 0)) 'g:simple-action))
     (is (= 2 (g:object-ref-count object)))))
 
 ;;;     g_list_model_items_changed
 
-;;; 2024-10-1
+;;; 2024-12-17

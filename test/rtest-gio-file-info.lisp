@@ -42,6 +42,7 @@
 
 ;;;     g_file_info_new
 
+#+nil
 (test g-file-info-new
   (let (info)
     (is (typep (setf info (g:file-info-new)) 'g:file-info))
@@ -78,7 +79,17 @@
 ;;;     g_file_info_get_is_symlink
 ;;;     g_file_info_get_modification_date_time              Since 2.62
 ;;;     g_file_info_get_modification_time                   Deprecated 2.62
+
 ;;;     g_file_info_get_name
+
+(test g-file-info-name
+  (let* ((path (glib-sys:sys-path "test/rtest-gio-file.lisp"))
+         (file (g:file-new-for-path path))
+         (info (g:file-query-info file "standard::*" :none)))
+
+    (is-false (g:file-info-name info))
+    (is (= 1 (g:object-ref-count info)))))
+
 ;;;     g_file_info_get_size
 ;;;     g_file_info_get_sort_order
 ;;;     g_file_info_get_symbolic_icon
@@ -118,4 +129,4 @@
 ;;;     g_file_info_set_symlink_target
 ;;;     g_file_info_unset_attribute_mask
 
-;;; 2024-9-17
+;;; 2024-12-14

@@ -68,7 +68,8 @@
 ;;;     g_action_group_list_actions
 
 (test g-action-group-list-actions
-  (let ((group (g:simple-action-group-new)))
+  (glib-test:with-check-memory (((group 1)) :strong 6)
+    (setf group (g:simple-action-group-new))
     (is (equal '() (g:action-group-list-actions group)))
     (is-false (g:action-map-add-action-entries group *action-entries*))
     (is (equal '("markup" "paste" "statusbar" "sources" "copy" "toolbar")
@@ -81,7 +82,8 @@
 ;;;     g_action_group_has_action
 
 (test g-action-group-has-action
-  (let ((group (g:simple-action-group-new)))
+  (glib-test:with-check-memory (((group 1)) :strong 6)
+    (setf group (g:simple-action-group-new))
     (is-false (g:action-map-add-action-entries group *action-entries*))
     (is-true (g:action-group-has-action group "copy"))
     (is-true (g:action-group-has-action group "paste"))
