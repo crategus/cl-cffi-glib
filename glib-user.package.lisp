@@ -506,7 +506,6 @@
            #:object
            #:object-has-reference
            #:object-pointer
-           #:object-signal-handlers
            #:initially-unowned
            #:type-is-object
            #:is-object
@@ -949,6 +948,7 @@
 
            ;; Symbols from gio.file.lisp
            #:file
+           #:file-query-info-flags
            #:file-as-namestring
            #:file-new-for-path
            #:file-new-for-uri
@@ -959,6 +959,7 @@
            #:file-path
            #:file-uri
            #:file-get-parse-name
+           #:file-query-info
 
            ;; Symbols from gio.file-info.lisp
            #:file-info

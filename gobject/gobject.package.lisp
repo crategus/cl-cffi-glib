@@ -464,7 +464,6 @@
     @about-class{object}
     @about-generic{object-has-reference}
     @about-generic{object-pointer}
-    @about-generic{object-signal-handlers}
     @about-function{type-is-object}
     @about-function{is-object}
     @about-function{object-class-find-property}
