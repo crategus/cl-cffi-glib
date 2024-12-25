@@ -269,8 +269,8 @@
         (info (gensym "INFO-")))
     `(progn
        (defclass ,name (boxed-opaque) ())
-       (defmethod initialize-instance
-                  :after ((,instance ,name) &key &allow-other-keys)
+       (defmethod initialize-instance :after
+                  ((,instance ,name) &key &allow-other-keys)
          (unless (boxed-opaque-pointer ,instance)
            (let ((,native-copy ,alloc)
                  (,info (get-boxed-info ',name)))

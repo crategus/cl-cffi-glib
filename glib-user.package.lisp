@@ -349,21 +349,19 @@
            #:type-ensure
 
            ;; Symbols from gobject.gvalue.lisp
+           #:with-value
+           #:with-values
            #:value
            #:value-holds
            #:value-type
            #:value-type-name
            #:type-is-value
-           #:type-is-value-abstract
-           #:type-value
            #:value-init
            #:value-copy
            #:value-reset
            #:value-unset
            #:value-get
            #:value-set
-           #:value-init-from-instance
-           #:value-set-instance
            #:value-type-compatible
            #:value-type-transformable
            #:value-transform
@@ -426,19 +424,10 @@
            #:param-value-set-default
            #:param-value-defaults
            #:param-value-validate
-           #:param-value-convert
-           #:param-values-cmp
-           #:param-spec-is-valid-name
            #:param-spec-name
-           #:param-spec-name-quark
            #:param-spec-nick
            #:param-spec-blurb
-           #:param-spec-qdata
-           #:param-spec-set-qdata-full
-           #:param-spec-steal-qdata
-           #:param-spec-redirect-target
            #:param-spec-internal
-           #:param-type-register-static
 
            ;; Symbols from gobject.param.lisp
            #:param-spec-boolean

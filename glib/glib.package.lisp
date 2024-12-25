@@ -95,103 +95,103 @@
     @about-function{cl-cffi-glib-build-info}
   @end{section}
   @begin[Miscellaneous]{section}
-    Documentation of several type definitions and functions, which are
-    needed for the implementation of the GTK library. Only a small part of the
-    GLib library is implemented.
+    @begin[Introduction to miscellaneous]{subsection}
+      Documentation of several type definitions and functions, which are
+      needed for the implementation of the GTK library. Only a small part of
+      the GLib library is implemented.
+    @end{subsection}
     @begin[String Utility Functions]{subsection}
-      String Utility Functions. The following type is implemented:
       @about-type{strv-t}
     @end{subsection}
     @begin[Doubly-Linked Lists]{subsection}
-      Linked lists containing pointers to data, with the ability to iterate over
-      the list in both directions. Implemented is the type:
       @about-type{list-t}
     @end{subsection}
     @begin[Singly-Linked Lists]{subsection}
-      Linked lists containing pointers to data, limited to iterating over the
-      list in one direction. Implemented is the type:
       @about-type{slist-t}
     @end{subsection}
     @begin[Quarks]{subsection}
-      A 2-way association between a string and a unique integer identifier.
       @about-type{quark-as-string}
     @end{subsection}
     @begin[GDateTime]{subsection}
       @about-type{date-time}
     @end{subsection}
     @begin[Unicode manipulation]{subsection}
-      @about-class{unichar}
+      @about-type{unichar}
     @end{subsection}
     @begin[GError]{subsection}
       @about-class{error}
     @end{subsection}
     @begin[Memory Allocation]{subsection}
-      The following functions for general memory handling are implemented:
       @about-function{malloc}
       @about-function{free}
     @end{subsection}
     @begin[Utility Functions]{subsection}
-      A selection of portable utility functions. Two functions are implemened.
       @about-function{application-name}
       @about-function{prgname}
     @end{subsection}
   @end{section}
   @begin[The Main Event Loop]{section}
-    @about-variable{+priority-high+}
-    @about-variable{+priority-default+}
-    @about-variable{+priority-high-idle+}
-    @about-variable{+priority-default-idle+}
-    @about-variable{+priority-low+}
-    @about-variable{+source-continue+}
-    @about-variable{+source-remove+}
-    @about-type{main-loop}
-    @about-function{main-loop-new}
-    @about-function{main-loop-ref}
-    @about-function{main-loop-unref}
-    @about-function{main-loop-run}
-    @about-function{main-loop-quit}
-    @about-function{main-loop-is-running}
-    @about-function{main-loop-context}
-    @about-type{main-context}
-    @about-function{main-context-new}
-    @about-function{main-context-ref}
-    @about-function{main-context-unref}
-    @about-function{main-context-default}
-    @about-function{main-context-iteration}
-    @about-function{main-context-pending}
-    @about-function{main-context-find-source-by-id}
-    @about-function{main-context-wakeup}
-    @about-function{main-context-acquire}
-    @about-function{main-context-release}
-    @about-function{main-context-is-owner}
-    @about-function{main-context-dispatch}
-    @about-function{main-depth}
-    @about-function{main-current-source}
-    @about-type{source}
-    @about-function{timeout-source-new}
-    @about-function{timeout-source-new-seconds}
-    @about-function{timeout-add}
-    @about-function{timeout-add-seconds}
-    @about-function{idle-source-new}
-    @about-function{idle-add}
-    @about-function{source-ref}
-    @about-function{source-unref}
-    @about-function{source-attach}
-    @about-function{source-destroy}
-    @about-function{source-is-destroyed}
-    @about-function{source-priority}
-    @about-function{source-can-recurse}
-    @about-function{source-id}
-    @about-function{source-name}
-    @about-function{source-set-name-by-id}
-    @about-function{source-context}
-    @about-symbol{source-func}
-    @about-function{source-set-callback}
-    @about-function{source-add-child-source}
-    @about-function{source-remove-child-source}
-    @about-function{source-time}
-    @about-function{source-ready-time}
-    @about-function{source-remove}
+    @begin[GMainLoop]{subsection}
+      @about-variable{+priority-high+}
+      @about-variable{+priority-default+}
+      @about-variable{+priority-high-idle+}
+      @about-variable{+priority-default-idle+}
+      @about-variable{+priority-low+}
+      @about-variable{+source-continue+}
+      @about-variable{+source-remove+}
+      @about-type{main-loop}
+      @about-function{main-loop-new}
+      @about-function{main-loop-ref}
+      @about-function{main-loop-unref}
+      @about-function{main-loop-run}
+      @about-function{main-loop-quit}
+      @about-function{main-loop-is-running}
+      @about-function{main-loop-context}
+    @end{subsection}
+    @begin[GMainContext]{subsection}
+      @about-type{main-context}
+      @about-function{main-context-new}
+      @about-function{main-context-ref}
+      @about-function{main-context-unref}
+      @about-function{main-context-default}
+      @about-function{main-context-iteration}
+      @about-function{main-context-pending}
+      @about-function{main-context-find-source-by-id}
+      @about-function{main-context-wakeup}
+      @about-function{main-context-acquire}
+      @about-function{main-context-release}
+      @about-function{main-context-is-owner}
+      @about-function{main-context-dispatch}
+      @about-function{main-depth}
+      @about-function{main-current-source}
+    @end{subsection}
+    @begin[GSource]{subsection}
+      @about-type{source}
+      @about-function{timeout-source-new}
+      @about-function{timeout-source-new-seconds}
+      @about-function{timeout-add}
+      @about-function{timeout-add-seconds}
+      @about-function{idle-source-new}
+      @about-function{idle-add}
+      @about-function{source-ref}
+      @about-function{source-unref}
+      @about-function{source-attach}
+      @about-function{source-destroy}
+      @about-function{source-is-destroyed}
+      @about-function{source-priority}
+      @about-function{source-can-recurse}
+      @about-function{source-id}
+      @about-function{source-name}
+      @about-function{source-set-name-by-id}
+      @about-function{source-context}
+      @about-symbol{source-func}
+      @about-function{source-set-callback}
+      @about-function{source-add-child-source}
+      @about-function{source-remove-child-source}
+      @about-function{source-time}
+      @about-function{source-ready-time}
+      @about-function{source-remove}
+    @end{subsection}
   @end{section}
   @begin[GBytes]{section}
     @about-class{bytes}

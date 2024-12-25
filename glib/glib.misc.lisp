@@ -382,20 +382,20 @@
 ;;; GDateTime
 ;;; ----------------------------------------------------------------------------
 
+;; TODO: Improve the documentation
+
 (cffi:define-foreign-type date-time-type ()
   ()
   (:actual-type :pointer)
   (:simple-parser date-time))
 
 (let ((offset (encode-universal-time 0 0 0 1 1 1970)))
-  (defmethod cffi:translate-to-foreign
-      (value (type date-time-type))
+  (defmethod cffi:translate-to-foreign (value (type date-time-type))
     (cffi:foreign-funcall "g_date_time_new_from_unix_utc"
                           :int64 (- value offset)
                           :pointer))
 
-  (defmethod cffi:translate-from-foreign
-      (value (type date-time-type))
+  (defmethod cffi:translate-from-foreign (value (type date-time-type))
     (+ offset
        (cffi:foreign-funcall "g_date_time_to_unix"
                              :pointer value
@@ -405,11 +405,14 @@
 (setf (liber:alias-for-class 'date-time)
       "Type"
       (documentation 'date-time 'type)
- "@version{2024-10-12}
+ "@version{2024-12-18}
   @begin{short}
-    The @type{g:date-time} type specifier represents the C @code{GDateTime} type
-    which represents a date and time, including a time one.
+    The @type{g:date-time} type specifier represents the C @code{GDateTime}
+    type which represents a date and time.
   @end{short}
+  The @type{g:date-time} type specifier performs automatic conversion between
+  the @code{GDateTime} time representation and the Lisp universal time, that is
+  measured as an offset from the beginning of the year 1900.
   @begin[Examples]{dictionary}
     @begin{pre}
 (cffi:convert-to-foreign 0 'g:date-time)
@@ -424,15 +427,15 @@
 ;;; gunichar
 ;;; ----------------------------------------------------------------------------
 
-(cffi:define-foreign-type unichar ()
+(cffi:define-foreign-type unichar-type ()
   ()
   (:actual-type :uint32)
   (:simple-parser unichar))
 
-(defmethod cffi:translate-from-foreign (value (type unichar))
+(defmethod cffi:translate-from-foreign (value (type unichar-type))
   (code-char value))
 
-(defmethod cffi:translate-to-foreign (value (type unichar))
+(defmethod cffi:translate-to-foreign (value (type unichar-type))
   (if (integerp value) value (char-code value)))
 
 #+liber-documentation
@@ -441,12 +444,12 @@
       (documentation 'unichar 'type)
  "@version{2024-10-12}
   @begin{short}
-    The @class{g:unichar} type specifier represents the C @code{gunichar} type
+    The @type{g:unichar} type specifier represents the C @code{gunichar} type
     which can hold any UCS-4 character code.
   @end{short}
-  The @class{g:unichar} type specifier performs automatic conversion from the C
+  The @type{g:unichar} type specifier performs automatic conversion from the C
   @code{gunichar} type to a Lisp character and a Lisp character to the C type.
-  An integer value as argument to the @fun{cffi:convert-to-foreign} function
+  An integer value as argument to the @sym{cffi:convert-to-foreign} function
   is passed through.
   @begin[Examples]{dictionary}
     Convert a Lisp character to a C @code{gunichar} value:
