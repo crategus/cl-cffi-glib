@@ -87,13 +87,15 @@
 ;;;     can-release
 
 (test g-permission-properties.1
-  (let ((permission (g:simple-permission-new t)))
+  (glib-test:with-check-memory (permission)
+    (setf permission (g:simple-permission-new t))
     (is-true (g:permission-allowed permission))
     (is-false (g:permission-can-acquire permission))
     (is-false (g:permission-can-release permission))))
 
 (test g-permission-properties.2
-  (let ((permission (g:simple-permission-new nil)))
+  (glib-test:with-check-memory (permission)
+    (setf permission (g:simple-permission-new nil))
     (is-false (g:permission-allowed permission))
     (is-false (g:permission-can-acquire permission))
     (is-false (g:permission-can-release permission))))

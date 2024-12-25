@@ -42,18 +42,21 @@
 ;;;   g_simple_action_group_new
 
 (test g-simple-action-group-new
-  (is (eq 'g:simple-action-group (type-of (g:simple-action-group-new)))))
+  (glib-test:with-check-memory ()
+    (is (eq 'g:simple-action-group (type-of (g:simple-action-group-new))))))
 
 ;;;   g_simple_action_group_lookup
 
 (test g-simple-action-group-lookup
-  (let ((action-group (g:simple-action-group-new)))
-    (is-false (g:simple-action-group-lookup action-group "action"))))
+  (glib-test:with-check-memory (group)
+    (setf group (g:simple-action-group-new))
+    (is-false (g:simple-action-group-lookup group "action"))))
 
 ;;;   g_simple_action_group_insert
 
 (test g-simple-action-group-insert
-  (let ((group (g:simple-action-group-new)))
+  (glib-test:with-check-memory (group)
+    (setf group (g:simple-action-group-new))
     (g:simple-action-group-insert group
                                   (g:simple-action-new "simple"
                                                        (g:variant-type-new "b")))
@@ -63,7 +66,8 @@
 ;;;   g_simple_action_group_remove
 
 (test g-simple-action-group-insert
-  (let ((group (g:simple-action-group-new)))
+  (glib-test:with-check-memory (group)
+    (setf group (g:simple-action-group-new))
     (g:simple-action-group-insert group
                                   (g:simple-action-new "simple"
                                                        (g:variant-type-new "b")))
@@ -75,16 +79,22 @@
 ;;;   g_simple_action_group_add_entries
 
 (test g-simple-action-group-add-entries
-  (let ((group (g:simple-action-group-new))
-        (entries '(("copy"       ; name
-                    nil          ; activate callback
-                    nil          ; g:variant-type string
-                    nil          ; g:variant
-                    nil          ; change-state callback
-                   )
-                   ("paste" nil nil nil nil))))
-    (g:simple-action-group-add-entries group entries)
-    (is (typep (g:simple-action-group-lookup group "copy") 'g:simple-action))
-    (is (typep (g:simple-action-group-lookup group "paste") 'g:simple-action))))
+  (glib-test:with-check-memory (group)
+    (let ((entries '(("copy"       ; name
+                      nil          ; activate callback
+                      nil          ; g:variant-type string
+                      nil          ; g:variant
+                      nil          ; change-state callback
+                     )
+                     ("paste" nil nil nil nil))))
+      (setf group (g:simple-action-group-new))
+      (g:simple-action-group-add-entries group entries)
+      (is (typep (g:simple-action-group-lookup group "copy") 'g:simple-action))
+      (is (typep (g:simple-action-group-lookup group "paste") 'g:simple-action))
+      ;; Remove references
+      (is-false (map nil (lambda (x)
+                           (g:action-map-remove-action group x))
+                         (g:action-group-list-actions group)))
+      (is-false (g:action-group-list-actions group)))))
 
-;;; 2024-9-17
+;;; 2024-12-19

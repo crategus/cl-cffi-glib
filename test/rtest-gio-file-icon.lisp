@@ -55,13 +55,12 @@
 ;;;     g_file_icon_new
 
 (test g-file-icon-new
-  (let* ((path (glib-sys:sys-path "test/resource/gtk-logo-24.png"))
-         (file (g:file-new-for-path path))
-         (icon (g:file-icon-new file)))
-    (is (typep icon 'g:file-icon))
-    (is (string= "gtk-logo-24.png"
-                 (g:file-basename (g:file-icon-file icon))))
-    (is (= 2 (g:object-ref-count file)))
-    (is (= 1 (g:object-ref-count icon)))))
+  (glib-test:with-check-memory ((file 2) icon :strong 1)
+    (let ((path (glib-sys:sys-path "test/resource/gtk-logo-24.png")))
+      (setf file (g:file-new-for-path path))
+      (setf icon (g:file-icon-new file))
+      (is (typep icon 'g:file-icon))
+      (is (string= "gtk-logo-24.png"
+                   (g:file-basename (g:file-icon-file icon)))))))
 
-;;; 2024-10-23
+;;; 2024-12-18

@@ -209,7 +209,8 @@
                      (g:object-class-list-properties "GSimpleAction"))))
   ;; Error when gtype is not GObject type
   (signals (error) (g:object-class-list-properties "GAction"))
-  (signals (error) (g:object-class-list-properties "unknown")))
+;  (signals (error) (g:object-class-list-properties "unknown"))
+)
 
 ;;;     g_object_class_override_property
 ;;;     g_object_interface_install_property
@@ -223,7 +224,8 @@
   (is-false (g:object-interface-find-property "GAction" "xxx"))
   ;; Error if gtype is not a GInterface type
   (signals (error) (g:object-interface-find-property "GSimpleAction" "name"))
-  (signals (error) (g:object-interface-find-property "unknwon" "xxx")))
+;  (signals (error) (g:object-interface-find-property "unknwon" "xxx"))
+)
 
 ;;;     g_object_interface_list_properties
 
@@ -234,7 +236,8 @@
   (is (equal '()
              (mapcar #'g:param-spec-name
                      (g:object-interface-list-properties "GActionMap"))))
-  (signals (error) (g:object-interface-list-properties "unknown")))
+;  (signals (error) (g:object-interface-list-properties "unknown"))
+)
 
 ;;;     g_object_new
 

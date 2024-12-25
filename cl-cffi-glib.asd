@@ -205,6 +205,7 @@
      (:file "rtest-gio-async-result")
      (:file "rtest-gio-task")
 
+     (:file "rtest-glib-check-memory")
      (:file "rtest-glib-finish")
      )))
   :perform (test-op (o c)

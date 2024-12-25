@@ -50,7 +50,8 @@
 ;;;   g_themed_icon_get_names
 
 (test g-themed-icon-new
-  (let ((icon (g:themed-icon-new "gnome-dev-cdrom")))
+  (glib-test:with-check-memory (icon)
+    (setf icon (g:themed-icon-new "gnome-dev-cdrom"))
     (is (equal '("gnome-dev-cdrom")
                (g:themed-icon-names icon)))
     (is-false (g:themed-icon-append-name icon "gnome-dev"))
@@ -64,10 +65,11 @@
 ;;;   g_themed_icon_get_names
 
 (test g-themed-icon-new-from-names
-  (let ((icon (g:themed-icon-new-from-names "gnome-dev-cdrom-audio"
-                                            "gnome-dev-cdrom"
-                                            "gnome-dev"
-                                            "gnome")))
+  (glib-test:with-check-memory (icon)
+    (setf icon (g:themed-icon-new-from-names "gnome-dev-cdrom-audio"
+                                             "gnome-dev-cdrom"
+                                             "gnome-dev"
+                                             "gnome"))
     (is (equal '("gnome-dev-cdrom-audio" "gnome-dev-cdrom" "gnome-dev"
                  "gnome")
                (g:themed-icon-names icon)))))
@@ -75,17 +77,18 @@
 ;;;   g_themed_icon_new_with_default_fallbacks
 
 (test g-themed-icon-new-with-default-fallbacks
-  (let* ((names (list "gnome-dev-cdrom-audio" "gnome-dev-cdrom" "gnome-dev"
-                      "gnome"))
-         (icon1 (g:themed-icon-new-from-names names))
-         (icon2 (g:themed-icon-new-with-default-fallbacks "gnome-dev-cdrom-audio")))
-    (is (equal '("gnome-dev-cdrom-audio" "gnome-dev-cdrom" "gnome-dev" "gnome")
-               (g:themed-icon-names icon1)))
-    (is (equal '("gnome-dev-cdrom-audio")
-               (g:themed-icon-names icon2)))
-    (is (= 2604122446 (g:icon-hash icon1)))
-    (is (= 2604122446 (g:icon-hash icon2)))
-    (is (= (g:icon-hash icon1) (g:icon-hash icon2)))
-    (is-true (g:icon-equal icon1 icon2))))
+  (glib-test:with-check-memory (icon1 icon2)
+    (let ((names (list "gnome-dev-cdrom-audio" "gnome-dev-cdrom" "gnome-dev"
+                       "gnome")))
+      (setf icon1 (g:themed-icon-new-from-names names))
+      (setf icon2 (g:themed-icon-new-with-default-fallbacks "gnome-dev-cdrom-audio"))
+      (is (equal '("gnome-dev-cdrom-audio" "gnome-dev-cdrom" "gnome-dev" "gnome")
+                 (g:themed-icon-names icon1)))
+      (is (equal '("gnome-dev-cdrom-audio")
+                 (g:themed-icon-names icon2)))
+      (is (= 2604122446 (g:icon-hash icon1)))
+      (is (= 2604122446 (g:icon-hash icon2)))
+      (is (= (g:icon-hash icon1) (g:icon-hash icon2)))
+      (is-true (g:icon-equal icon1 icon2)))))
 
-;;; 2024-9-18
+;;; 2024-9-19

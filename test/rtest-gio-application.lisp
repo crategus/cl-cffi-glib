@@ -103,16 +103,20 @@
 ;;;     g_application_action_group
 
 (test g-application-action-group-property
-  (let ((app (make-instance 'g:application))
-        (group (make-instance 'g:simple-action-group)))
+  (glib-test:with-check-memory (app group)
+    (setf app (make-instance 'g:application))
+    (setf group (make-instance 'g:simple-action-group))
     ;; action-group is not readable
     (signals (error) (g:application-action-group app))
-    (is-true (setf (g:application-action-group app) group))))
+    (is-true (setf (g:application-action-group app) group))
+    ;; Remove references
+    (is-false (setf (g:application-action-group app) nil))))
 
 ;;;     g_application_application_id
 
 (test g-application-application-id-property
-  (let ((app (make-instance 'g:application)))
+  (glib-test:with-check-memory (app)
+    (setf app (make-instance 'g:application))
     (is-false (g:application-application-id app))
     (is-true (setf (g:application-application-id app) "com.crategus.app"))
     (is (string= "com.crategus.app" (g:application-application-id app)))))
@@ -120,7 +124,8 @@
 ;;;     g_application_flags
 
 (test g-application-flags-property
-  (let ((app (make-instance 'g:application)))
+  (glib-test:with-check-memory (app)
+    (setf app (make-instance 'g:application))
     (is (equal '() (g:application-flags app)))
     ;; a single flag
     (is-true (setf (g:application-flags app) :handles-open))
@@ -135,7 +140,8 @@
 ;;;     g_applicaton_inactivity_timeout
 
 (test g-application-inactivity-timeout-property
-  (let ((app (make-instance 'g:application)))
+  (glib-test:with-check-memory (app)
+    (setf app (make-instance 'g:application))
     (is (= 0 (g:application-inactivity-timeout app)))
     (is (= 10000 (setf (g:application-inactivity-timeout app) 10000)))
     (is (= 10000 (g:application-inactivity-timeout app)))))
@@ -143,7 +149,8 @@
 ;;;     g_application_is_busy
 
 (test g-application-is-busy-property
-  (let ((app (make-instance 'g:application)))
+  (glib-test:with-check-memory (app)
+    (setf app (make-instance 'g:application))
     ;; Default value is nil
     (is-false (g:application-is-busy app))
     ;; is-busy is not writeable
@@ -152,7 +159,8 @@
 ;;;     g_application_is_registered
 
 (test g-application-is-registered-property
-  (let ((app (make-instance 'g:application)))
+  (glib-test:with-check-memory (app)
+    (setf app (make-instance 'g:application))
     (is-false (g:application-is-registered app))
     ;; is-registered is not writeable
     (signals (error) (setf (g:application-is-registered app) t))))
@@ -160,7 +168,8 @@
 ;;;     g_application_is_remote
 
 (test g-application-is-remote-property
-  (let ((app (make-instance 'g:application)))
+  (glib-test:with-check-memory (app)
+    (setf app (make-instance 'g:application))
     ;; is-remote is not readable before registration
 ;   (is-false (g:application-is-remote app))
     ;; is-remote is not writeable
@@ -169,7 +178,8 @@
 ;;;     g_application_resource_base_path
 
 (test g-application-resource-base-path-property
-  (let ((app (make-instance 'g:application)))
+  (glib-test:with-check-memory (app)
+    (setf app (make-instance 'g:application))
     (is-false (g:application-resource-base-path app))
     (is (string= "/test" (setf (g:application-resource-base-path app) "/test")))
     (is (string= "/test" (g:application-resource-base-path app)))))
@@ -242,10 +252,11 @@
 
 #-windows
 (test g-application-signals
-  (is (equal '(t t nil t)
-             (example-application-open)))
-  (is (equal '(t nil t t)
-             (example-application-open '("demo" "file1" "file2")))))
+  (glib-test:with-check-memory ()
+    (is (equal '(t t nil t)
+               (example-application-open)))
+    (is (equal '(t nil t t)
+               (example-application-open '("demo" "file1" "file2"))))))
 
 ;;; --- Functions --------------------------------------------------------------
 
@@ -316,4 +327,4 @@
 ;;;     g_application_bind_busy_property
 ;;;     g_application_unbind_busy_property
 
-;;; 2024-9-18
+;;; 2024-12-19

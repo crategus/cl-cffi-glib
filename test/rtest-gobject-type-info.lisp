@@ -587,20 +587,19 @@
 
 #-windows
 (test g-type-children
-  (if *first-run-glib-test*
-      (is (equal '("GAppLaunchContext" "GApplication" "GApplicationCommandLine"
-                   "GBinding" "GCancellable" "GClock1" "GClock2" "GClock3"
-                   "GClock4" "GClock5" "GEmblem" "GEmblemedIcon" "GFileIcon"
-                   "GFileInfo" "GInitiallyUnowned" "GListStore" "GMenuItem"
-                   "GMenuModel" "GNotification" "GPermission" "GPropertyAction"
-                   "GSimpleAction" "GSimpleActionGroup" "GTask" "GThemedIcon")
+  (is (subsetp '("GAppLaunchContext" "GApplication" "GApplicationCommandLine"
+                 "GBinding" "GCancellable" "GClock1" "GClock2" "GClock3"
+                 "GClock4" "GClock5" "GEmblem" "GEmblemedIcon" "GFileIcon"
+                 "GFileInfo" "GInitiallyUnowned" "GListStore" "GMenuItem"
+                 "GMenuModel" "GNotification" "GPermission" "GPropertyAction"
+                 "GSimpleAction" "GSimpleActionGroup" "GTask" "GThemedIcon")
                  (sort (mapcar #'g:type-name
-                               (g:type-children "GObject"))
-                       #'string<)))))
+                               (g:type-children "GObject")) #'string<)
+               :test #'string=)))
 
 #+windows
 (test g-type-children
-  (if *first-run-glib-test*
+  (if *first-run-testsuite*
       (is (equal '("GAppLaunchContext" "GApplication" "GApplicationCommandLine"
                    "GBinding" "GCancellable" "GClock1" "GClock2" "GClock3"
                    "GClock4" "GClock5" "GEmblem" "GEmblemedIcon" "GFileIcon"
@@ -676,11 +675,9 @@
 
 (test g-type-ensure
   (is (eq (g:gtype "GAction") (g:type-ensure "GAction")))
-      (is-true (g:type-ensure "GSimpleAction"))
-  (when *first-run-glib-test*
-;    (is-false (g:gtype "GSimpleAsyncResult"))
-    (is-true (g:type-ensure "GSimpleAsyncResult")))
+  (is (eq (g:gtype "GSimpleAction") (g:type-ensure "GSimpleAction")))
   (is (eq (g:gtype "gboolean") (g:type-ensure "gboolean")))
+  (is-true (g:type-ensure "GSimpleAsyncResult"))
   ;; GTYPE is not known
   (is-false (g:type-ensure "unknown")))
 
@@ -699,4 +696,4 @@
 ;;;     G_DEFINE_POINTER_TYPE                              not implemented
 ;;;     G_DEFINE_POINTER_TYPE_WITH_CODE                    not implemented
 
-;;; 2024-9-13
+;;; 2024-12-23

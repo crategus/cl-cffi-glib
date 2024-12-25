@@ -45,7 +45,8 @@
 ;;;     gicon
 
 (test g-emblemed-icon-properties
-  (let ((icon (make-instance 'g:emblemed-icon)))
+  (glib-test:with-check-memory (icon)
+    (setf icon (make-instance 'g:emblemed-icon))
     (is-false (g:emblemed-icon-gicon icon))))
 
 ;;; --- Functions --------------------------------------------------------------
@@ -53,68 +54,47 @@
 ;;;     g_emblemed_icon_new
 
 (test g-emblemed-icon-new
-  (let* ((icon1 (g:themed-icon-new "emblem-default"))
-         (icon2 (g:themed-icon-new "battery"))
-         (emblem (g:emblem-new icon1))
-         (emblemed (g:emblemed-icon-new icon2 emblem)))
+  (glib-test:with-check-memory ((icon1 2) (icon2 2) emblem emblemed :strong 2)
+    (setf icon1 (g:themed-icon-new "emblem-default"))
+    (setf icon2 (g:themed-icon-new "battery"))
+    (setf emblem (g:emblem-new icon1))
+    (setf emblemed (g:emblemed-icon-new icon2 emblem))
     (is (typep emblemed 'g:emblemed-icon))
-
-    (is-false (g:emblemed-icon-clear-emblems emblemed))
-
-    (is (= 2 (g:object-ref-count icon1)))
-    (is (= 2 (g:object-ref-count icon2)))
-    (is (= 1 (g:object-ref-count emblem)))
-    (is (= 1 (g:object-ref-count emblemed)))))
+    (is-false (g:emblemed-icon-clear-emblems emblemed))))
 
 ;;;     g_emblemed_icon_get_icon
 
 (test g-emblemed-icon-icon
-  (let* ((icon1 (g:themed-icon-new "emblem-default"))
-         (icon2 (g:themed-icon-new "battery"))
-         (emblem (g:emblem-new icon1))
-         (emblemed (g:emblemed-icon-new icon2 emblem)))
+  (glib-test:with-check-memory ((icon1 2) (icon2 2) emblem emblemed :strong 2)
+    (setf icon1 (g:themed-icon-new "emblem-default"))
+    (setf icon2 (g:themed-icon-new "battery"))
+    (setf emblem (g:emblem-new icon1))
+    (setf emblemed (g:emblemed-icon-new icon2 emblem))
     (is (typep emblemed 'g:emblemed-icon))
-
     (is (eq icon2 (g:emblemed-icon-icon emblemed)))
     (is (eq (g:emblemed-icon-gicon emblemed) (g:emblemed-icon-icon emblemed)))
-
-    (is-false (g:emblemed-icon-clear-emblems emblemed))
-
-    (is (= 2 (g:object-ref-count icon1)))
-    (is (= 2 (g:object-ref-count icon2)))
-    (is (= 1 (g:object-ref-count emblem)))
-    (is (= 1 (g:object-ref-count emblemed)))))
+    (is-false (g:emblemed-icon-clear-emblems emblemed))))
 
 ;;;     g_emblemed_icon_get_emblems
 ;;;     g_emblemed_icon_add_emblem
 ;;;     g_emblemed_icon_clear_emblems
 
 (test g-emblemed-icon-emblems
-  (let* ((icon1 (g:themed-icon-new "emblem-default"))
-         (icon2 (g:themed-icon-new "emblem-new"))
-         (icon3 (g:themed-icon-new "battery"))
-         (emblem1 (g:emblem-new icon1))
-         (emblem2 (g:emblem-new icon3))
-         (emblemed (g:emblemed-icon-new icon2 emblem1)))
+  (glib-test:with-check-memory ((icon1 2) (icon2 2) (icon3 2)
+                                emblem1 emblem2 emblemed :strong 3)
+    (setf icon1 (g:themed-icon-new "emblem-default"))
+    (setf icon2 (g:themed-icon-new "emblem-new"))
+    (setf icon3 (g:themed-icon-new "battery"))
+    (setf emblem1 (g:emblem-new icon1))
+    (setf emblem2 (g:emblem-new icon3))
+    (setf emblemed (g:emblemed-icon-new icon2 emblem1))
     (is (typep emblemed 'g:emblemed-icon))
-
     (is (member emblem1 (g:emblemed-icon-emblems emblemed) :test #'eq))
-
     (is-false (g:emblemed-icon-add-emblem emblemed emblem2))
-
     (is (member emblem1 (g:emblemed-icon-emblems emblemed) :test #'eq))
     (is (member emblem2 (g:emblemed-icon-emblems emblemed) :test #'eq))
-
     (is (eq (g:emblemed-icon-gicon emblemed) (g:emblemed-icon-icon emblemed)))
-
     (is-false (g:emblemed-icon-clear-emblems emblemed))
-    (is-false (g:emblemed-icon-emblems emblemed))
+    (is-false (g:emblemed-icon-emblems emblemed))))
 
-    (is (= 2 (g:object-ref-count icon1)))
-    (is (= 2 (g:object-ref-count icon2)))
-    (is (= 2 (g:object-ref-count icon3)))
-    (is (= 1 (g:object-ref-count emblem1)))
-    (is (= 1 (g:object-ref-count emblem2)))
-    (is (= 1 (g:object-ref-count emblemed)))))
-
-;;; 2024-10-23
+;;; 2024-12-19

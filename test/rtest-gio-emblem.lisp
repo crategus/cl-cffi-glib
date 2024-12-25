@@ -1,7 +1,7 @@
 (in-package :glib-test)
 
-(def-suite gio-emblemed :in gio-suite)
-(in-suite gio-emblemed)
+(def-suite gio-emblem :in gio-suite)
+(in-suite gio-emblem)
 
 ;;; --- Types and Values -------------------------------------------------------
 
@@ -75,7 +75,8 @@
 ;;; --- Properties -------------------------------------------------------------
 
 (test g-emblem-properties
-  (let ((emblem (make-instance 'g:emblem)))
+  (glib-test:with-check-memory (emblem)
+    (setf emblem (make-instance 'g:emblem))
     (is-false (g:emblem-icon emblem))
     (is (eq :unknown (g:emblem-origin emblem)))))
 
@@ -84,23 +85,21 @@
 ;;;     g_emblem_new
 
 (test g-emblem-new
-  (let* ((icon (g:themed-icon-new "battery"))
-         (emblem (g:emblem-new icon)))
+  (glib-test:with-check-memory ((icon 2) emblem :strong 1)
+    (setf icon (g:themed-icon-new "battery"))
+    (setf emblem (g:emblem-new icon))
     (is (typep emblem 'g:emblem))
     (is (eq :unknown (g:emblem-origin emblem)))
-    (is (eq icon (g:emblem-icon emblem)))
-    (is (= 2 (g:object-ref-count icon)))
-    (is (= 1 (g:object-ref-count emblem)))))
+    (is (eq icon (g:emblem-icon emblem)))))
 
 ;;;     g_emblem_new_with_origin
 
 (test g-emblem-new-with-origin
-  (let* ((icon (g:themed-icon-new "battery"))
-         (emblem (g:emblem-new-with-origin icon :device)))
+  (glib-test:with-check-memory ((icon 2) emblem :strong 1)
+    (setf icon (g:themed-icon-new "battery"))
+    (setf emblem (g:emblem-new-with-origin icon :device))
     (is (typep emblem 'g:emblem))
     (is (eq :device (g:emblem-origin emblem)))
-    (is (eq icon (g:emblem-icon emblem)))
-    (is (= 2 (g:object-ref-count icon)))
-    (is (= 1 (g:object-ref-count emblem)))))
+    (is (eq icon (g:emblem-icon emblem)))))
 
-;;; 2024-10-23
+;;; 2024-12-19

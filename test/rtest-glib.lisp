@@ -5,7 +5,8 @@
   (:import-from :gobject)
   (:import-from :gio)
   (:import-from :glib-sys)
-  (:export #:run!
+  (:export #:*first-run-testsuite*
+           #:run!
            #:list-children
            #:list-interfaces
            #:list-properties
@@ -21,11 +22,12 @@
            #:profile #:unprofile #:report #:reset
            #:with-ref-count-object
            #:with-ref-count-objects
-           #:with-check-memory))
+           #:with-check-memory
+           #:with-check-memory-new))
 
 (in-package :glib-test)
 
-(defvar *first-run-glib-test* t)
+(defvar *first-run-testsuite* t)
 
 (eval-when (:compile-toplevel :load-toplevel :execute)
   ;; Set the current package for the testsuite
@@ -51,7 +53,8 @@
         (count (if (> count 0) (1- count) 0)))
     (format t "~&Run tests ~a times:~%" (1+ count))
     (format t "~6d " linecount)
-    (let ((*test-dribble* nil))
+    (let ((*test-dribble* nil)
+          (*first-run-testsuite* nil))  ; Do not repeat tests for single run
       (dotimes (i count)
         (if (= 0 (mod (1+ i) linecount))
             (progn
@@ -61,7 +64,8 @@
         (fiveam:run tests)))
     (format t ".~%")
     ;; Explain the last run
-    (fiveam:explain! (fiveam:run tests))))
+    (let ((*first-run-testsuite* t)) ; Do all tests
+      (fiveam:explain! (fiveam:run tests)))))
 
 ;;; ----------------------------------------------------------------------------
 
@@ -172,6 +176,7 @@
                ,@body)))
         `(progn ,@body)))
 
+#+nil
 (defmacro with-check-memory ((vars &key (strong 0)) &body body)
   (setf vars (glib-sys:mklist vars))
   (let ((nptr1 (gensym))
@@ -189,5 +194,36 @@
              (- ,nptr2 ,nptr1)
              ,strong
              (set-difference ,lptr2 ,lptr1 :test #'eq))))))
+
+(defmacro with-check-memory (args &body body)
+  (let* ((keys (member-if #'keywordp args))
+         (vars (ldiff args keys))
+         (strong (if keys (second keys) 0)))
+  (let ((nptr1 (gensym))
+        (lptr1 (gensym))
+        (nptr2 (gensym))
+        (lptr2 (gensym)))
+    (if vars
+        `(let* ((,lptr1 (gobject::list-gobject-for-pointer-strong))
+                (,nptr1 (length ,lptr1)))
+           (with-ref-count-objects ,vars
+              ,@body)
+           (let* ((,lptr2 (gobject::list-gobject-for-pointer-strong))
+                  (,nptr2 (length ,lptr2)))
+             (is (>= ,strong (- ,nptr2 ,nptr1))
+                 "The test added ~a (expected ~a) strong references:~%     ~a"
+                 (- ,nptr2 ,nptr1)
+                 ,strong
+                 (set-difference ,lptr2 ,lptr1 :test #'eq))))
+        `(let* ((,lptr1 (gobject::list-gobject-for-pointer-strong))
+                (,nptr1 (length ,lptr1)))
+           (progn ,@body)
+           (let* ((,lptr2 (gobject::list-gobject-for-pointer-strong))
+                  (,nptr2 (length ,lptr2)))
+             (is (>= ,strong (- ,nptr2 ,nptr1))
+                 "The test added ~a (expected ~a) strong references:~%     ~a"
+                 (- ,nptr2 ,nptr1)
+                 ,strong
+                 (set-difference ,lptr2 ,lptr1 :test #'eq))))))))
 
 ;;; 2024-12-16

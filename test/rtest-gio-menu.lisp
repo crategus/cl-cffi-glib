@@ -75,12 +75,14 @@
 ;;;     g_menu_new
 
 (test g-menu-new
-  (is (typep (g:menu-new) 'g:menu)))
+  (glib-test:with-check-memory ()
+    (is (typep (g:menu-new) 'g:menu))))
 
 ;;;     g_menu_freeze
 
 (test g-menu-freeze
-  (let ((menu (g:menu-new)))
+  (glib-test:with-check-memory (menu)
+    (setf menu (g:menu-new))
     (is-true (g:menu-model-is-mutable menu))
     (is-false (g:menu-freeze menu))
     ;; A frozen menu is not mutable
@@ -91,7 +93,8 @@
 ;;;     g_menu_append
 
 (test g-menu-insert
-  (let ((menu (g:menu-new)))
+  (glib-test:with-check-memory (menu)
+    (setf menu (g:menu-new))
     (is-false (g:menu-insert menu 0 "insert" "action"))
     (is (= 1 (g:menu-model-n-items menu)))
     (is-false (g:menu-prepend menu "prepend" "action"))
@@ -104,21 +107,32 @@
 ;;;     g_menu_prepend_item
 
 (test g-menu-insert-item
-  (let ((menu (g:menu-new)))
-    (is-false (g:menu-insert-item menu 0 (g:menu-item-new "insert" nil)))
+  (glib-test:with-check-memory (menu item1 item2 item3)
+    (setf menu (g:menu-new))
+    (is-false (g:menu-insert-item menu 0
+                                       (setf item1
+                                             (g:menu-item-new "insert" nil))))
     (is (= 1 (g:menu-model-n-items menu)))
-    (is-false (g:menu-prepend-item menu (g:menu-item-new "prepend" nil)))
+    (is-false (g:menu-prepend-item menu
+                                   (setf item2
+                                         (g:menu-item-new "prepend" nil))))
     (is (= 2 (g:menu-model-n-items menu)))
-    (is-false (g:menu-append-item menu (g:menu-item-new "append" nil)))
-    (is (= 3 (g:menu-model-n-items menu)))))
+    (is-false (g:menu-append-item menu
+                                  (setf item3
+                                        (g:menu-item-new "append" nil))))
+    (is (= 3 (g:menu-model-n-items menu)))
+    ;; Remove references
+    (is-false (g:menu-remove-all menu))
+    (is (= 0 (g:menu-model-n-items menu)))))
 
 ;;;     g_menu_insert_section
 ;;;     g_menu_prepend_section
 ;;;     g_menu_append_section
 
 (test g-menu-insert-section
-  (let ((menu (g:menu-new))
-        (section (g:menu-new)))
+  (glib-test:with-check-memory (menu section)
+    (setf menu (g:menu-new))
+    (setf section (g:menu-new))
     ;; Add threee items to the section
     (is-false (g:menu-append section "item1" nil))
     (is-false (g:menu-append section "item2" nil))
@@ -132,15 +146,18 @@
     (is (= 2 (g:menu-model-n-items menu)))
     ;; Append section to the menu
     (is-false (g:menu-append-section menu "section3" section))
-    (is (= 3 (g:menu-model-n-items menu)))))
+    (is (= 3 (g:menu-model-n-items menu)))
+    ;; Remove references
+    (is-false (g:menu-remove-all menu))))
 
 ;;;     g_menu_append_submenu
 ;;;     g_menu_insert_submenu
 ;;;     g_menu_prepend_submenu
 
 (test g-menu-insert-submenu
-  (let ((menu (g:menu-new))
-        (submenu (g:menu-new)))
+  (glib-test:with-check-memory (menu submenu)
+    (setf menu (g:menu-new))
+    (setf submenu (g:menu-new))
     ;; Add threee items to the submenu
     (is-false (g:menu-append submenu "item1" nil))
     (is-false (g:menu-append submenu "item2" nil))
@@ -154,13 +171,17 @@
     (is (= 2 (g:menu-model-n-items menu)))
     ;; Append submenu to the menu
     (is-false (g:menu-append-submenu menu "submenu3" submenu))
-    (is (= 3 (g:menu-model-n-items menu)))))
+    (is (= 3 (g:menu-model-n-items menu)))
+    ;; Remove references
+    (is-false (g:menu-remove-all submenu))
+    (is-false (g:menu-remove-all menu))))
 
 ;;;     g_menu_remove
 ;;;     g_menu_remove_all
 
 (test g-menu-remove
-  (let ((menu (g:menu-new)))
+  (glib-test:with-check-memory (menu)
+    (setf menu (g:menu-new))
     (is-false (g:menu-append menu "append1" nil))
     (is-false (g:menu-append menu "append2" nil))
     (is-false (g:menu-append menu "append3" nil))
@@ -173,7 +194,8 @@
 ;;;     g_menu_item_new
 
 (test g-menu-item-new
-  (is (typep (g:menu-item-new nil nil) 'g:menu-item)))
+  (glib-test:with-check-memory ()
+    (is (typep (g:menu-item-new nil nil) 'g:menu-item))))
 
 ;;;     g_menu_item_new_section
 ;;;     g_menu_item_new_submenu
@@ -191,7 +213,8 @@
 ;;;     g_menu_item_set_attribute_value
 
 (test g-menu-item-attribute-value.1
-  (let ((item (g:menu-item-new "Label" "Action")))
+  (glib-test:with-check-memory (item)
+    (setf item (g:menu-item-new "Label" "Action"))
     (is (string= "Label"
                  (g:variant-string
                      (g:menu-item-attribute-value item
@@ -204,7 +227,8 @@
                                                   (g:variant-type-new "s")))))))
 
 (test g-menu-item-attribute-value.2
-  (let ((item (g:menu-item-new "Label" "Action")))
+  (glib-test:with-check-memory (item)
+    (setf item (g:menu-item-new "Label" "Action"))
     (is (string= "Label"
                  (g:variant-string
                      (g:menu-item-attribute-value item
@@ -237,7 +261,8 @@
                                                   (g:variant-type-new "s")))))))
 
 (test g-menu-item-attribute-value.3
-  (let ((item (g:menu-item-new "Label" "Action")))
+  (glib-test:with-check-memory (item)
+    (setf item (g:menu-item-new "Label" "Action"))
     (is (string= "Label"
                  (g:variant-string
                      (g:menu-item-attribute-value item "label"))))
@@ -261,7 +286,8 @@
                      (g:menu-item-attribute-value item "action"))))))
 
 (test g-menu-item-attribute-value.4
-  (let ((item (g:menu-item-new "Label" "Action")))
+  (glib-test:with-check-memory (item)
+    (setf item (g:menu-item-new "Label" "Action"))
     (is (string= "Label"
                  (g:variant-string
                      (g:menu-item-attribute-value item "label" "s"))))
@@ -291,9 +317,14 @@
 ;;;     g_menu_item_set_link
 
 (test g-menu-item-link
-  (let ((item (g:menu-item-new "Label" "Action"))
-        (submenu (g:menu-new)))
+  (glib-test:with-check-memory (item submenu)
+    (setf item (g:menu-item-new "Label" "Action"))
+    (setf submenu (g:menu-new))
     (is (typep (setf (g:menu-item-link item "submenu") submenu) 'g:menu-model))
-    (is (typep (g:menu-item-link item "submenu") 'g:menu-model))))
+    (is (typep (g:menu-item-link item "submenu") 'g:menu-model))
+    ;; Remove references
+    (is-false (setf (g:menu-item-link item "submenu") nil))
+    (is-false (g:menu-item-link item "submenu"))
+    (is-false (g:menu-remove-all submenu))))
 
-;;; 2024-9-18
+;;; 2024-12-19

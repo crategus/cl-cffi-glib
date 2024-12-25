@@ -53,58 +53,59 @@
 ;;;     g_list_model_get_item
 
 (test g-list-model-get.1
-  (let ((store (g:list-store-new "GObject")))
+  (glib-test:with-check-memory (store)
+    (setf store (g:list-store-new "GObject"))
     ;; Append some objects
     (is-false (g:list-store-append store (make-instance 'g:simple-action)))
     (is-false (g:list-store-append store (make-instance 'g:menu-item)))
     ;; Use the interace functions
     (is (eq (g:gtype "GObject") (g:list-model-item-type store)))
     (is (= 2 (g:list-model-n-items store)))
-
-    (is (cffi:pointerp (g:list-model-item store 0)))
-    (is (typep (cffi:convert-from-foreign (g:list-model-item store 0)
-                                          'g:object)
-               'g:simple-action))
+    ;; Access first item
+    (is (g:is-object (g:list-model-item store 0)))
     (is (typep (g:list-model-item store 0) 'g:simple-action))
-
-    (is (cffi:pointerp (g:list-model-item store 1)))
-    (is (typep (cffi:convert-from-foreign (g:list-model-item store 1)
-                                          'g:object)
-               'g:menu-item))
+    ;; Access second item
+    (is (g:is-object (g:list-model-item store 1)))
     (is (typep (g:list-model-item store 1) 'g:menu-item))
     ;; Access an invalid position
-    (is (cffi:null-pointer-p (g:list-model-item store 2)))
-    (is-false  (g:list-model-item store 2))))
+    (is-false  (g:list-model-item store 2))
+    ;; Remove references
+    (is-false (g:list-store-remove-all store))))
 
 (test g-list-model-get.2
-  (let ((store (g:list-store-new "GAction")))
+  (glib-test:with-check-memory (store)
+    (setf store (g:list-store-new "GAction"))
     ;; Append some objects
     (is-false (g:list-store-append store (make-instance 'g:simple-action)))
     (is-false (g:list-store-append store (make-instance 'g:simple-action)))
     ;; Use the interace functions
     (is (eq (g:gtype "GAction") (g:list-model-item-type store)))
     (is (= 2 (g:list-model-n-items store)))
-    (is (cffi:pointerp (g:list-model-item store 0)))
+    ;; Access an item
+    (is (g:is-object (g:list-model-item store 0)))
     (is (typep (g:list-model-item store 0) 'g:simple-action))
-    (is (typep (g:list-model-item store 1) 'g:simple-action))))
+    ;; Remove references
+    (is-false (g:list-store-remove-all store))))
 
-;;;     g_list_model_get_object
+;;;     g_list_model_get_item
 
-(test g-list-model-object
-  (let ((store (g:list-store-new "GObject"))
-        (object nil))
+(test g-list-model-item
+  (glib-test:with-check-memory (store item)
+    (setf store (g:list-store-new "GObject"))
     ;; Append some objects
     (is-false (g:list-store-append store (make-instance 'g:simple-action)))
     (is-false (g:list-store-append store (make-instance 'g:menu-item)))
-    ;; Get an object from the list store
-    (is (typep (setf object
+    ;; Get an item from the list store
+    (is (typep (setf item
                      (g:list-model-item store 0)) 'g:simple-action))
-    (is (= 2 (g:object-ref-count object)))
-    ;; Get the object a second time from the list store
-    (is (typep (setf object
+    (is (= 2 (g:object-ref-count item)))
+    ;; Get the item a second time from the list store
+    (is (typep (setf item
                      (g:list-model-item store 0)) 'g:simple-action))
-    (is (= 2 (g:object-ref-count object)))))
+    (is (= 2 (g:object-ref-count item)))
+    ;; Remove references
+    (is-false (g:list-store-remove-all store))))
 
 ;;;     g_list_model_items_changed
 
-;;; 2024-12-17
+;;; 2024-12-18

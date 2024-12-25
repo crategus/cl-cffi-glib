@@ -41,14 +41,6 @@
                        :deprecated)))))
 
 ;;;     GParamSpec
-;;;     GParamSpecClass
-
-;;;     G_PARAM_STATIC_STRINGS
-;;;     G_PARAM_MASK
-;;;     G_PARAM_USER_SHIFT
-
-;;;     GParamSpecTypeInfo
-;;;     GParamSpecPool
 
 ;;; --- Functions --------------------------------------------------------------
 
@@ -62,8 +54,6 @@
              (g:type-from-instance
                (g:param-spec-char "Char" "Char" "Doku" 10 50 25 '())))))
 
-;;;     G_PARAM_SPEC
-
 ;;;     g_is_param_spec
 
 (test g-is-param-spec
@@ -71,10 +61,6 @@
              (g:param-spec-boolean "Boolean" "Bool" "Doku" t '())))
   (is-true (g:is-param-spec
              (g:param-spec-char "Char" "Char" "Doku" 10 50 25 '()))))
-
-;;;     G_PARAM_SPEC_CLASS
-;;;     G_IS_PARAM_SPEC_CLASS
-;;;     G_PARAM_SPEC_GET_CLASS
 
 ;;;     g-param-spec-type
 
@@ -108,19 +94,25 @@
 
 ;;;     g_param_spec_ref
 ;;;     g_param_spec_unref
-;;;     g_param_spec_sink
 ;;;     g_param_spec_ref_sink
+
+(test g-param-spec-ref
+  (let ((pspec (g:param-spec-boolean "Boolean" "Bool" "Doku" t nil)))
+    (is (cffi:pointer-eq pspec (g:param-spec-ref-sink pspec)))
+    (is (cffi:pointer-eq pspec (g:param-spec-ref pspec)))
+    (is-false (g:param-spec-unref pspec))
+    (is-false (g:param-spec-unref pspec))))
 
 ;;;     g_param_spec_default_value
 
 (test g-param-spec-default-value
-  (is-true (gobject:parse-g-value
+  (is-true (g:value-get
              (g:param-spec-default-value
                (g:param-spec-boolean "Boolean" "Bool" "Doku" t '()))))
-  (is-false (gobject:parse-g-value
+  (is-false (g:value-get
               (g:param-spec-default-value
                 (g:param-spec-boolean "Boolean" "Bool" "Doku" nil '()))))
-  (is (= 25 (gobject:parse-g-value
+  (is (= 25 (g:value-get
               (g:param-spec-default-value
                 (g:param-spec-int "Integer" "int" "Doku" 10 50 25 '()))))))
 
@@ -131,7 +123,7 @@
     (cffi:with-foreign-object (value '(:struct g:value))
       (g:value-init value "gint")
       (is-false (g:param-value-set-default param value))
-      (is (= 25 (gobject:parse-g-value value))))))
+      (is (= 25 (g:value-get value))))))
 
 ;;;     g_param_value_defaults
 
@@ -150,17 +142,13 @@
     (cffi:with-foreign-object (value '(:struct g:value))
       (g:value-init value "gint")
       (is-true (g:param-value-validate param value))
-      (is (= 10 (gobject:parse-g-value value)))
-      (gobject:set-g-value value 100 "gint")
+      (is (= 10 (g:value-get value)))
+      (gobject:set-gvalue value 100 "gint")
       (is-true (g:param-value-validate param value))
-      (is (= 50 (gobject:parse-g-value value)))
-      (gobject:set-g-value value 25 "gint")
+      (is (= 50 (g:value-get value)))
+      (gobject:set-gvalue value 25 "gint")
       (is-false (g:param-value-validate param value))
-      (is (= 25 (gobject:parse-g-value value))))))
-
-;;;     g_param_value_convert
-;;;     g_param_values_cmp
-;;;     g_param_spec_is_valid_name
+      (is (= 25 (g:value-get value))))))
 
 ;;;     g_param_spec_name
 
@@ -171,8 +159,6 @@
                                       "Doku"
                                       '(:readable :writable))))
     (is (string= "Boolean" (g:param-spec-name pspec)))))
-
-;;;     g_param_spec_get_name_quark
 
 ;;;     g_param_spec_nick
 
@@ -194,12 +180,6 @@
                                       '(:readable :writable))))
     (is (string= "Doku" (g:param-spec-blurb pspec)))))
 
-;;;     g_param_spec_get_qdata
-;;;     g_param_spec_set_qdata
-;;;     g_param_spec_set_qdata_full
-;;;     g_param_spec_steal_qdata
-;;;     g_param_spec_get_redirect_target
-
 ;;;     g_param_spec_internal
 
 (test g-param-spec-internal
@@ -213,13 +193,4 @@
     (is (string= "GParamBoolean" (g:param-spec-type-name pspec)))
     (is (eq (g:gtype "gboolean") (g:param-spec-value-type pspec)))))
 
-;;;     g_param_type_register_static
-
-;;;     g_param_spec_pool_new
-;;;     g_param_spec_pool_insert
-;;;     g_param_spec_pool_remove
-;;;     g_param_spec_pool_lookup
-;;;     g_param_spec_pool_list
-;;;     g_param_spec_pool_list_owned
-
-;;; 2024-9-13
+;;; 2024-12-22

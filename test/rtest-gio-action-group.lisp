@@ -68,12 +68,17 @@
 ;;;     g_action_group_list_actions
 
 (test g-action-group-list-actions
-  (glib-test:with-check-memory (((group 1)) :strong 6)
+  (glib-test:with-check-memory (group)
     (setf group (g:simple-action-group-new))
     (is (equal '() (g:action-group-list-actions group)))
     (is-false (g:action-map-add-action-entries group *action-entries*))
     (is (equal '("markup" "paste" "statusbar" "sources" "copy" "toolbar")
-               (g:action-group-list-actions group)))))
+               (g:action-group-list-actions group)))
+    ;; Remove references
+    (is-false (map nil (lambda (x)
+                         (g:action-map-remove-action group x))
+                       (g:action-group-list-actions group)))
+    (is-false (g:action-group-list-actions group))))
 
 ;;;     g_action_group_query_action
 
@@ -82,28 +87,40 @@
 ;;;     g_action_group_has_action
 
 (test g-action-group-has-action
-  (glib-test:with-check-memory (((group 1)) :strong 6)
+  (glib-test:with-check-memory (group)
     (setf group (g:simple-action-group-new))
     (is-false (g:action-map-add-action-entries group *action-entries*))
     (is-true (g:action-group-has-action group "copy"))
     (is-true (g:action-group-has-action group "paste"))
-    (is-false (g:action-group-has-action group "unknonw"))))
+    (is-false (g:action-group-has-action group "unknonw"))
+    ;; Remove references
+    (is-false (map nil (lambda (x)
+                         (g:action-map-remove-action group x))
+                       (g:action-group-list-actions group)))
+    (is-false (g:action-group-list-actions group))))
 
 ;;;     g_action_group_get_action_enabled
 
 (test g-action-group-action-enabled
-  (let ((group (g:simple-action-group-new)))
+  (glib-test:with-check-memory (group)
+    (setf group (g:simple-action-group-new))
     (is-false (g:action-map-add-action-entries group *action-entries*))
     (is-true (g:action-group-action-enabled group "copy"))
     (is-true (g:action-group-action-enabled group "paste"))
     (is-false (setf (g:action-enabled (g:action-map-lookup-action group "copy"))
               nil))
-    (is-false (g:action-group-action-enabled group "copy"))))
+    (is-false (g:action-group-action-enabled group "copy"))
+    ;; Remove references
+    (is-false (map nil (lambda (x)
+                         (g:action-map-remove-action group x))
+                       (g:action-group-list-actions group)))
+    (is-false (g:action-group-list-actions group))))
 
 ;;;     g_action_group_get_action_parameter_type
 
 (test g-action-group-action-parameter-type
-  (let ((group (g:simple-action-group-new)))
+  (glib-test:with-check-memory (group)
+    (setf group (g:simple-action-group-new))
     (is-false (g:action-map-add-action-entries group *action-entries*))
     ;; Does not return a g:variant-type, but nil
     (is-false (g:action-group-action-parameter-type group "copy"))
@@ -115,12 +132,18 @@
                'g:variant-type))
     (is (string= "s"
                  (g:variant-type-dup-string
-                   (g:action-group-action-parameter-type group "markup"))))))
+                   (g:action-group-action-parameter-type group "markup"))))
+    ;; Remove references
+    (is-false (map nil (lambda (x)
+                         (g:action-map-remove-action group x))
+                       (g:action-group-list-actions group)))
+    (is-false (g:action-group-list-actions group))))
 
 ;;;     g_action_group_get_action_state_type
 
 (test g-action-group-action-state-type
-  (let ((group (g:simple-action-group-new)))
+  (glib-test:with-check-memory (group)
+    (setf group (g:simple-action-group-new))
     (is-false (g:action-map-add-action-entries group *action-entries*))
     ;; Does not return a g:variant-type instance, but nil
     (is-false (g:action-group-action-state-type group "copy"))
@@ -132,14 +155,20 @@
                'g:variant-type))
     (is (string= "b"
                  (g:variant-type-dup-string
-                   (g:action-group-action-parameter-type group "toolbar"))))))
+                   (g:action-group-action-parameter-type group "toolbar"))))
+    ;; Remove references
+    (is-false (map nil (lambda (x)
+                         (g:action-map-remove-action group x))
+                       (g:action-group-list-actions group)))
+    (is-false (g:action-group-list-actions group))))
 
 ;;;     g_action_group_get_action_state_hint
 
 ;; TODO: Create an example for using a state hint
 
 (test g-action-group-action-state-hint
-  (let ((group (g:simple-action-group-new)))
+  (glib-test:with-check-memory (group)
+    (setf group (g:simple-action-group-new))
     (is-false (g:action-map-add-action-entries group *action-entries*))
     ;; We get a null-pointer
     (is (cffi:null-pointer-p (g:action-group-action-state-hint group "copy")))
@@ -152,12 +181,18 @@
     ;; We get a null-pointer
     (is (cffi:null-pointer-p (g:action-group-action-state-hint group "sources")))
     (let ((action (g:action-map-lookup-action group "sources")))
-      (is (cffi:null-pointer-p (g:action-state-hint action))))))
+      (is (cffi:null-pointer-p (g:action-state-hint action))))
+    ;; Remove references
+    (is-false (map nil (lambda (x)
+                         (g:action-map-remove-action group x))
+                       (g:action-group-list-actions group)))
+    (is-false (g:action-group-list-actions group))))
 
 ;;;     g_action_group_get_action_state
 
 (test g-action-group-action-state
-  (let ((group (g:simple-action-group-new)))
+  (glib-test:with-check-memory (group)
+    (setf group (g:simple-action-group-new))
     (is-false (g:action-map-add-action-entries group *action-entries*))
     (is (cffi:null-pointer-p (g:action-group-action-state group "copy")))
     (is (cffi:null-pointer-p (g:action-group-action-state group "paste")))
@@ -168,12 +203,18 @@
                                                                 "sources"))))
     (is (string= "html"
                  (g:variant-string (g:action-group-action-state group
-                                                                "markup"))))))
+                                                                "markup"))))
+    ;; Remove references
+    (is-false (map nil (lambda (x)
+                         (g:action-map-remove-action group x))
+                       (g:action-group-list-actions group)))
+    (is-false (g:action-group-list-actions group))))
 
 ;;;     g_action_group_change_action_state
 
 (test g-action-group-action-change-action-state
-  (let ((group (g:simple-action-group-new)))
+  (glib-test:with-check-memory (group)
+    (setf group (g:simple-action-group-new))
     (is-false (g:action-map-add-action-entries group *action-entries*))
     ;; Change a boolean state
     (is-true (g:variant-boolean (g:action-group-action-state group "toolbar")))
@@ -189,23 +230,34 @@
                                             (g:variant-new-string "new value")))
     (is (string= "new value"
                  (g:variant-string
-                     (g:action-group-action-state group "sources"))))))
+                     (g:action-group-action-state group "sources"))))
+    ;; Remove references
+    (is-false (map nil (lambda (x)
+                         (g:action-map-remove-action group x))
+                       (g:action-group-list-actions group)))
+    (is-false (g:action-group-list-actions group))))
 
 ;;;     g_action_group_activate_action
 
 (test g-action-group-activate-action
-  (let ((group (g:simple-action-group-new)))
+  (glib-test:with-check-memory (group)
+    (setf group (g:simple-action-group-new))
     (is-false (g:action-map-add-action-entries group *action-entries*))
 
     (is-false (g:action-group-activate-action group "copy" (cffi:null-pointer)))
     (is-false (g:action-group-activate-action group "toolbar"
                                                     (g:variant-new-boolean t)))
     (is-false (g:action-group-activate-action group "sources"
-                                              (g:variant-new-string "new value")))))
+                                              (g:variant-new-string "new value")))
+    ;; Remove references
+    (is-false (map nil (lambda (x)
+                         (g:action-map-remove-action group x))
+                       (g:action-group-list-actions group)))
+    (is-false (g:action-group-list-actions group))))
 
 ;;;     g_action_group_action_added
 ;;;     g_action_group_action_removed
 ;;;     g_action_group_action_enabled_changed
 ;;;     g_action_group_action_state_changed
 
-;;; 2024-9-17
+;;; 2024-12-19

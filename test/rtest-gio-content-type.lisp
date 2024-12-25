@@ -3,7 +3,7 @@
 (def-suite gio-content-type :in gio-suite)
 (in-suite gio-content-type)
 
-;; TODO: Check the memory management of this funtions, there may be a problem.
+;; TODO: Check the memory management of the funtions, there may be a problem.
 
 ;;;     g_content_type_equals
 
@@ -14,6 +14,7 @@
 
 ;;;     g_content_type_is_a
 
+#-windows
 (test g-content-type-is-a
   (is-true (g:content-type-is-a "text/plain" "text/plain"))
   (is-true (g:content-type-is-a "text/css" "text/plain"))
@@ -22,12 +23,14 @@
 
 ;;;     g_content_type_is_mime_type
 
+#-windows
 (test g-content-type-is-mime-type
   (is-true (g:content-type-is-mime-type "text/plain" "text/plain"))
   (is-true (g:content-type-is-mime-type "text/css" "text/plain")))
 
 ;;;     g_content_type_is_unknown
 
+#-windows
 (test g-content-type-is-unkown
   (is-true (g:content-type-is-unknown "application/octet-stream")))
 
@@ -87,6 +90,7 @@
 
 ;;;     g_content_type_can_be_executable
 
+#-windows
 (test g-content-type-can-be-executable
   (is-true (g:content-type-can-be-executable "text/html"))
   (is-true (g:content-type-can-be-executable "application/xml")))
@@ -106,4 +110,4 @@
 (test g-content-types-registered
   (is (every #'stringp (g:content-types-registered))))
 
-;;; 2024-12-7
+;;; 2024-12-18

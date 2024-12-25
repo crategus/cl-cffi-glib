@@ -119,25 +119,25 @@
 
 ;;; ----------------------------------------------------------------------------
 
-(test parse-g-value-enum.1
+(test get-gvalue-enum.1
   (gobject:with-value (gvalue "GEmblemOrigin" 0)
-    (is (eq :unknown (gobject::parse-g-value-enum gvalue)))
-    (is (= 1 (gobject::set-g-value-enum gvalue :device)))
-    (is (eq :device (gobject::parse-g-value-enum gvalue)))))
+    (is (eq :unknown (gobject::get-gvalue-enum gvalue)))
+    (is (= 1 (gobject::set-gvalue-enum gvalue :device)))
+    (is (eq :device (gobject::get-gvalue-enum gvalue)))))
 
-(test parse-g-value-enum.2
+(test get-gvalue-enum.2
   (gobject:with-value (gvalue "GEmblemOrigin" 0)
-    (is (eq :unknown (gobject::parse-g-value gvalue)))
-    (is (= 1 (gobject::set-g-value gvalue :device "GEmblemOrigin")))
-    (is (eq :device (gobject::parse-g-value gvalue)))))
+    (is (eq :unknown (g:value-get gvalue)))
+    (is (= 1 (gobject::set-gvalue gvalue :device "GEmblemOrigin")))
+    (is (eq :device (g:value-get gvalue)))))
 
-(test parse-g-value-enum.3
+(test get-gvalue-enum.3
   (gobject:with-value (gvalue "GEmblemOrigin" 0)
     (is (eq :unknown (g:value-get gvalue)))
     (is (= 1 (g:value-set gvalue :device "GEmblemOrigin")))
     (is (eq :device (g:value-get gvalue)))))
 
-(test parse-g-value-enum.4
+(test get-gvalue-enum.4
   (gobject:with-value (gvalue "GEmblemOrigin" 0)
     (is (eq :unknown (g:value-get gvalue)))
     (is (= 1 (g:value-set gvalue 1 "GEmblemOrigin")))
@@ -145,13 +145,13 @@
     (is (= 2 (g:value-set gvalue 2 "GEmblemOrigin")))
     (is (eq :LIVEMETADATA (g:value-get gvalue)))))
 
-(test parse-g-value-enum.5
+(test get-gvalue-enum.5
   (gobject:with-value (gvalue "GEmblemOrigin" 0)
     (is (= 0 (gobject::%value-enum gvalue)))
     (is (= 1 (setf (gobject::%value-enum gvalue) 1)))
     (is (= 1 (gobject::%value-enum gvalue)))))
 
-(test parse-g-value-enum.6
+(test get-gvalue-enum.6
   (gobject:with-value (gvalue "GEmblemOrigin" 0)
     (is (eq :unknown (g:value-enum gvalue)))
     (is (= 1 (setf (g:value-enum gvalue) 1)))
@@ -168,32 +168,32 @@
 
 ;;; ----------------------------------------------------------------------------
 
-(test parse-g-value-flags.1
+(test get-gvalue-flags.1
   (gobject:with-value (gvalue "GApplicationFlags" 0)
-    (is (equal '() (gobject::parse-g-value-flags gvalue)))
-    (is (= 1 (gobject::set-g-value-flags gvalue :is-service)))
-    (is (equal '(:is-service) (gobject::parse-g-value-flags gvalue)))))
+    (is (equal '() (gobject::get-gvalue-flags gvalue)))
+    (is (= 1 (gobject::set-gvalue-flags gvalue :is-service)))
+    (is (equal '(:is-service) (gobject::get-gvalue-flags gvalue)))))
 
-(test parse-g-value-flags.2
+(test get-gvalue-flags.2
   (gobject:with-value (gvalue "GApplicationFlags" 0)
-    (is (equal '() (gobject::parse-g-value gvalue)))
-    (is (= 1 (gobject::set-g-value gvalue :is-service "GApplicationFlags")))
-    (is (equal '(:is-service) (gobject::parse-g-value gvalue)))))
+    (is (equal '() (g:value-get gvalue)))
+    (is (= 1 (gobject::set-gvalue gvalue :is-service "GApplicationFlags")))
+    (is (equal '(:is-service) (g:value-get gvalue)))))
 
-(test parse-g-value-flags.3
+(test get-gvalue-flags.3
   (gobject:with-value (gvalue "GApplicationFlags" 0)
     (is (equal '() (g:value-get gvalue)))
     (is (= 1 (g:value-set gvalue :is-service "GApplicationFlags")))
     (is (equal '(:is-service) (g:value-get gvalue)))))
 
-(test parse-g-value-flags.4
+(test get-gvalue-flags.4
   (gobject:with-value (gvalue "GApplicationFlags" 0)
     (is (equal '() (g:value-get gvalue)))
     (is (= 5 (g:value-set gvalue
                           '(:is-service :handles-open) "GApplicationFlags")))
     (is (equal '(:is-service :handles-open) (g:value-get gvalue)))))
 
-(test parse-g-value-flags.5
+(test get-gvalue-flags.5
   (gobject:with-value (gvalue "GApplicationFlags" 0)
     (is (equal '() (g:value-get gvalue)))
     (is (= 5 (g:value-set gvalue 5 "GApplicationFlags")))
@@ -202,13 +202,13 @@
 ;; TODO: G:VALUE-FLAGS duplicatates the implementation, but does no conversion
 ;; beetween Lisp keywords and C integer values. Consider to change the
 ;; implmentation
-(test parse-g-value-flags.6
+(test get-gvalue-flags.6
   (gobject:with-value (gvalue "GApplicationFlags" 0)
     (is (= 0 (gobject::%value-flags gvalue)))
     (is (= 5 (setf (gobject::%value-flags gvalue) 5)))
     (is (= 5 (gobject::%value-flags gvalue)))))
 
-(test parse-g-value-flags.7
+(test get-gvalue-flags.7
   (gobject:with-value (gvalue "GApplicationFlags" 0)
     (is (equal '() (g:value-flags gvalue)))
 ;    (is (= 5 (setf (g:value-flags gvalue) 5)))

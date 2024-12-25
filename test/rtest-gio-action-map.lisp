@@ -53,19 +53,26 @@
 ;;;     g_action_map_lookup_action
 
 (test g-action-map-lookup-action
-  (let ((group (create-action-group)))
+  (glib-test:with-check-memory (group)
+    (setf group (create-action-group))
     (is (typep (g:action-map-lookup-action group "quit") 'g:simple-action))
     (is (typep (g:action-map-lookup-action group "print") 'g:simple-action))
-    (is-false (g:action-map-lookup-action group "unknown"))))
+    (is-false (g:action-map-lookup-action group "unknown"))
+    ;; Remove references
+    (is-false (map nil (lambda (x)
+                         (g:action-map-remove-action group x))
+                       (g:action-group-list-actions group)))
+    (is-false (g:action-group-list-actions group))))
 
 ;;;     g_action_map_add_action_entries
 
 ;; Example in the documentation of g:action-map-add-action-entries
 
 (test g-action-map-add-action-entries
-  (let* ((group (create-action-group))
-         (action-quit (g:action-map-lookup-action group "quit"))
-         (action-print (g:action-map-lookup-action group "print")))
+  (glib-test:with-check-memory (group action-quit action-print)
+    (setf group (create-action-group))
+    (setf action-quit (g:action-map-lookup-action group "quit"))
+    (setf action-print (g:action-map-lookup-action group "print"))
     ;; Check action QUIT
     (is (typep action-quit 'g:simple-action))
     (is (string= "quit" (g:action-name action-quit)))
@@ -75,13 +82,19 @@
     (is (typep action-print 'g:simple-action))
     (is (string= "print" (g:action-name action-print)))
     ;; Slot parameter-type is initialized with type "s"
-    (is (typep (g:action-parameter-type action-print) 'g:variant-type))))
+    (is (typep (g:action-parameter-type action-print) 'g:variant-type))
+    ;; Remove references
+    (is-false (map nil (lambda (x)
+                         (g:action-map-remove-action group x))
+                       (g:action-group-list-actions group)))
+    (is-false (g:action-group-list-actions group))))
 
 ;;;     g_action_map_add_action
 ;;;     g_action_map_remove_action
 
 (test g-action-map-add-action
-  (let ((group (g:simple-action-group-new)))
+  (glib-test:with-check-memory (group)
+    (setf group (create-action-group))
     (g:action-map-add-action group (g:simple-action-new "quit" nil))
     (is (string= "quit"
                  (g:action-name (g:action-map-lookup-action group "quit"))))
@@ -89,6 +102,13 @@
     (is (string= "close"
                  (g:action-name (g:action-map-lookup-action group "close"))))
     (g:action-map-remove-action group "quit")
-    (is-false (g:action-map-lookup-action group "quit"))))
+    (is-false (g:action-map-lookup-action group "quit"))
+    (g:action-map-remove-action group "close")
+    (is-false (g:action-map-lookup-action group "close"))
+    ;; Remove references
+    (is-false (map nil (lambda (x)
+                         (g:action-map-remove-action group x))
+                       (g:action-group-list-actions group)))
+    (is-false (g:action-group-list-actions group))))
 
-;;; 2024-9-17
+;;; 2024-12-19

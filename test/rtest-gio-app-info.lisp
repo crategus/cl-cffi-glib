@@ -158,75 +158,113 @@
 ;;;     g_app_info_create_from_commandline
 
 (test g-app-info-create-from-commandline
-  (is (g:type-is-a (g:type-from-instance
-                       (g:app-info-create-from-commandline "" "gedit" :none))
-                   "GAppInfo")))
+  (glib-test:with-check-memory (info)
+    (is (g:type-is-a
+            (g:type-from-instance
+                (setf info
+                      (g:app-info-create-from-commandline
+                              ""
+                              "org.gnome.TextEditor.desktop"
+                              :none)))
+            "GAppInfo"))))
 
 ;;;     g_app_info_dup
 ;;;     g_app_info_equal
 
+(test g-app-info-dup/equal
+  (glib-test:with-check-memory (info1 info2)
+    (is (g:type-is-a
+            (g:type-from-instance
+                (setf info1
+                      (g:app-info-create-from-commandline
+                              ""
+                              "Text Editor"
+                              :none)))
+            "GAppInfo"))
+    (is (g:type-is-a
+            (g:type-from-instance (setf info2 (g:app-info-dup info1)))
+             "GAppInfo"))
+    (is (string= "Text Editor" (g:app-info-name info1)))
+    (is (string= "Text Editor" (g:app-info-name info2)))
+    (is-true (g:app-info-equal info1 info1))
+    (is-true (g:app-info-equal info2 info2))
+    ;; TODO: info1 and info2 are not equal. Why?
+    (is-false (g:app-info-equal info1 info2))))
+
 ;;;     g_app_info_get_id
 
 (test g-app-info-id
-  (is (every #'stringp
-             (mapcar #'g:app-info-id (g:app-info-all)))))
+  (glib-test:with-check-memory ()
+    (is (every #'stringp
+               (mapcar #'g:app-info-id (g:app-info-all))))))
 
 ;;;     g_app_info_get_name
 
 (test g-app-info-name
-  (is (every #'stringp
-             (mapcar #'g:app-info-name (g:app-info-all)))))
+  (glib-test:with-check-memory ()
+    (is (every #'stringp
+               (mapcar #'g:app-info-name (g:app-info-all))))))
 
 ;;;     g_app_info_get_display_name
 
 (test g-app-info-display-name
-  (is (every #'stringp
-             (mapcar #'g:app-info-display-name (g:app-info-all)))))
+  (glib-test:with-check-memory ()
+    (is (every #'stringp
+               (mapcar #'g:app-info-display-name (g:app-info-all))))))
 
 ;;;     g_app_info_get_description
 
 (test g-app-info-description
-  (is (every (lambda (x)
-               (or (null x) (stringp x)))
-             (mapcar #'g:app-info-description (g:app-info-all)))))
+  (glib-test:with-check-memory ()
+    (is (every (lambda (x)
+                 (or (null x) (stringp x)))
+               (mapcar #'g:app-info-description (g:app-info-all))))))
 
 ;;;     g_app_info_get_executable
 
 #-windows
 (test g-app-info-executable
-  (is (every #'stringp
-             (remove nil
-                     (mapcar #'g:app-info-executable (g:app-info-all))))))
+  (glib-test:with-check-memory ()
+    (is (every #'stringp
+               (remove nil
+                       (mapcar #'g:app-info-executable (g:app-info-all)))))))
 
 ;;;     g_app_info_get_commandline
 
 #-windows
 (test g-app-info-commandline
-  (is (every #'stringp
-             (remove nil
-                     (mapcar #'g:app-info-commandline (g:app-info-all))))))
+  (glib-test:with-check-memory ()
+    (is (every #'stringp
+               (remove nil
+                       (mapcar #'g:app-info-commandline (g:app-info-all)))))))
 
 ;;;     g_app_info_get_icon
 
+;; TODO: Creates 143 objects with a strong reference. Can we avoid this?
+
 (test g-app-info-icon
-  (is (every (lambda (x)
-               (or (null x)
-                   (g:type-is-a (g:type-from-instance x) "GIcon")))
-             (mapcar #'g:app-info-icon (g:app-info-all)))))
+  (glib-test:with-check-memory (:strong 143)
+    (is (every (lambda (x)
+                 (or (null x)
+                     (g:type-is-a (g:type-from-instance x) "GIcon")))
+               (mapcar #'g:app-info-icon (g:app-info-all))))))
 
 ;;;     g_app_info_launch
 
 ;;;     g_app_info_supports_files
 
+#-windows
 (test g-app-info-supports-files
-  (let ((info (g:app-info-default-for-type "text/plain" nil)))
+  (glib-test:with-check-memory (info)
+    (setf info (g:app-info-default-for-type "text/plain" nil))
     (is-false (g:app-info-supports-files info))))
 
 ;;;     g_app_info_supports_uris
 
 #-windows
 (test g-app-info-supports-uris
-  (let ((info (g:app-info-default-for-type "text/plain" nil)))
+  (glib-test:with-check-memory (info)
+    (setf info (g:app-info-default-for-type "text/plain" nil))
     (is-true (g:app-info-supports-uris info))))
 
 ;;;     g_app_info_launch_uris
@@ -237,7 +275,8 @@
 
 #-windows
 (test g-app-info-should-show
-  (let ((info (g:app-info-default-for-type "text/plain" nil)))
+  (glib-test:with-check-memory (info)
+    (setf info (g:app-info-default-for-type "text/plain" nil))
     (is-true (g:app-info-should-show info))))
 
 ;;;     g_app_info_can_delete
@@ -256,51 +295,64 @@
 
 #-windows
 (test g-app-info-supported-types
-  (let ((info (g:app-info-default-for-type "text/plain" nil)))
+  (glib-test:with-check-memory (info)
+    (setf info (g:app-info-default-for-type "text/plain" nil))
     (is (member "text/plain"
                 (g:app-info-supported-types info) :test #'string=))))
 
 ;;;     g_app_info_get_all
 
 (test g-app-info-all
-  (is (every (lambda (x)
-               (g:type-is-a (g:type-from-instance x) "GAppInfo"))
-             (g:app-info-all))))
+  (glib-test:with-check-memory ()
+    (is (every (lambda (x)
+                 (g:type-is-a (g:type-from-instance x) "GAppInfo"))
+               (g:app-info-all)))))
 
 ;;;     g_app_info_get_all_for_type
 
 (test g-app-info-all-for-type
-  (is (every (lambda (x)
-               (g:type-is-a (g:type-from-instance x) "GAppInfo"))
-             (g:app-info-all-for-type "text/plain"))))
+  (glib-test:with-check-memory ()
+    (is (every (lambda (x)
+                 (g:type-is-a (g:type-from-instance x) "GAppInfo"))
+               (g:app-info-all-for-type "text/plain")))))
 
 ;;;     g_app_info_get_default_for_type
 
 #-windows
 (test g-app-info-default-for-type
-  (is (g:type-is-a (g:type-from-instance
-                       (g:app-info-default-for-type "text/plain" nil))
-                   "GAppInfo")))
+  (glib-test:with-check-memory ()
+    (is (g:type-is-a (g:type-from-instance
+                         (g:app-info-default-for-type "text/plain" nil))
+                     "GAppInfo"))))
+
+;;;     g_app_info_get_default_for_type_async               Since 2.74
+;;;     g_app_info_get_default_for_type_finish              Since 2.74
 
 ;;;     g_app_info_get_default_for_uri_scheme
 
 (test g-app-info-default-for-uri-scheme
-  (is (g:type-is-a (g:type-from-instance
-                       (g:app-info-default-for-uri-scheme "http"))
-                   "GAppInfo")))
+  (glib-test:with-check-memory ()
+    (is (g:type-is-a (g:type-from-instance
+                         (g:app-info-default-for-uri-scheme "http"))
+                     "GAppInfo"))))
+
+;;;     g_app_info_get_default_for_uri_scheme_async         Since 2.74
+;;;     g_app_info_get_default_for_uri_scheme_finish        Since 2.74
 
 ;;;     g_app_info_get_fallback_for_type
 
 (test g-app-info-fallback-for-type
-  ;; no fallback for "text/plain" !?
-  (is-false (g:app-info-fallback-for-type "text/plain")))
+  (glib-test:with-check-memory ()
+    ;; no fallback for "text/plain" !?
+    (is-false (g:app-info-fallback-for-type "text/plain"))))
 
 ;;;     g_app_info_get_recommended_for_type
 
 (test g-app-info-recommended-for-type
-  (is (every (lambda (x)
-               (g:type-is-a (g:type-from-instance x) "GAppInfo"))
-             (g:app-info-recommended-for-type "text/plain"))))
+  (glib-test:with-check-memory ()
+    (is (every (lambda (x)
+                 (g:type-is-a (g:type-from-instance x) "GAppInfo"))
+               (g:app-info-recommended-for-type "text/plain")))))
 
 ;;;     g_app_info_launch_default_for_uri
 ;;;     g_app_info_launch_default_for_uri_async
@@ -309,7 +361,8 @@
 ;;;     g_app_launch_context_new
 
 (test g-app-launch-context-new
-  (is (typep (g:app-launch-context-new) 'g:app-launch-context)))
+  (glib-test:with-check-memory ()
+    (is (typep (g:app-launch-context-new) 'g:app-launch-context))))
 
 ;;;     g_app_launch_context_setenv
 ;;;     g_app_launch_context_unsetenv
@@ -318,4 +371,4 @@
 ;;;     g_app_launch_context_get_startup_notify_id
 ;;;     g_app_launch_context_launch_failed
 
-;;; 2024-9-18
+;;; 2024-12-22

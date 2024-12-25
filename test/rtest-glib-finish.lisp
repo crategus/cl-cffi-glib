@@ -3,10 +3,12 @@
 (in-suite glib-test)
 
 (test glib-test-finished
-  (cond (*first-run-glib-test*
-         (setf *first-run-glib-test* nil)
-         (format t "~%First run of the glib-test suite finished.~%"))
+  (cond (*first-run-testsuite*
+         (setf *first-run-testsuite* nil)
+         (when *test-dribble*
+           (format t "~%First run of the glib-test suite finished.~%")))
         (t
-         (format t "~%Second or more run of the glib-test suite finished.~%"))))
+         (when *test-dribble*
+           (format t "~%Second or more run of the glib-test suite finished.~%")))))
 
-;;; 2024-6-14
+;;; 2024-12-23
