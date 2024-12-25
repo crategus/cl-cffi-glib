@@ -2,7 +2,7 @@
 ;;; gobject.package.lisp
 ;;;
 ;;; The documentation of this file is taken from the GObject Reference Manual
-;;; Version 2.80 and modified to document the Lisp binding to the GObject
+;;; Version 2.82 and modified to document the Lisp binding to the GObject
 ;;; library. See <http://www.gtk.org>. The API documentation of the Lisp binding
 ;;; is available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
@@ -38,8 +38,8 @@
   (:import-from :bordeaux-threads)
   (:export #:get-lisp-name-exception
 
-           #:parse-g-value
-           #:set-g-value
+           #:get-gvalue
+           #:set-gvalue
 
            #:create-fn-ref
 
@@ -67,8 +67,8 @@
 
            #:register-object-type-implementation
 
-           #:parse-g-value-for-type
-           #:set-g-value-for-type
+           #:get-gvalue-for-type
+           #:set-gvalue-for-type
 
            #:create-closure
            #:create-closure-for-instance
@@ -326,6 +326,27 @@
       characters can be letters, numbers or a '-'. All other characters are
       replaced by a '-' during construction.
     @end{subsection}
+    @begin[Functions for GParamSpec]{subsection}
+      @about-symbol{param-flags}
+      @about-symbol{param-spec}
+      @about-function{type-is-param}
+      @about-function{is-param-spec}
+      @about-function{param-spec-type}
+      @about-function{param-spec-type-name}
+      @about-function{param-spec-value-type}
+      @about-function{param-spec-ref}
+      @about-function{param-spec-unref}
+      @about-function{param-spec-sink}
+      @about-function{param-spec-ref-sink}
+      @about-function{param-spec-default-value}
+      @about-function{param-value-set-default}
+      @about-function{param-value-defaults}
+      @about-function{param-value-validate}
+      @about-function{param-spec-name}
+      @about-function{param-spec-nick}
+      @about-function{param-spec-blurb}
+      @about-function{param-spec-internal}
+    @end{subsection}
     @begin[Types and functions for parameters and values]{subsection}
       @about-symbol{param-spec-boolean}
       @about-function{param-spec-boolean}
@@ -410,54 +431,6 @@
       @about-function{value-variant}
       @about-function{value-dup-variant}
       @about-function{value-take-variant}
-    @end{subsection}
-    @begin[Functions for GParamSpec]{subsection}
-      @about-symbol{param-flags}
-      @about-symbol{param-spec}
-      @about-symbol{param-spec-class}
-      @about-symbol{param-spec-type-info}
-      @about-symbol{param-spec-pool}
-      @about-function{type-is-param}
-      @about-function{param-spec}
-      @about-function{is-param-spec}
-      @about-function{param-spec-class}
-      @about-function{is-param-spec-class}
-      @about-function{param-spec-get-class}
-      @about-function{param-spec-type}
-      @about-function{param-spec-type-name}
-      @about-function{param-spec-value-type}
-      @about-function{param-readwrite}
-      @about-function{param-static-strings}
-      @about-function{param-mask}
-      @about-function{param-user-shift}
-      @about-function{param-spec-ref}
-      @about-function{param-spec-unref}
-      @about-function{param-spec-sink}
-      @about-function{param-spec-ref-sink}
-      @about-function{param-spec-default-value}
-      @about-function{param-value-set-default}
-      @about-function{param-value-defaults}
-      @about-function{param-value-validate}
-      @about-function{param-value-convert}
-      @about-function{param-values-cmp}
-      @about-function{param-spec-is-valid-name}
-      @about-function{param-spec-name}
-      @about-function{param-spec-name-quark}
-      @about-function{param-spec-nick}
-      @about-function{param-spec-blurb}
-      @about-function{param-spec-get-qdata}
-      @about-function{param-spec-set-qdata}
-      @about-function{param-spec-set-qdata-full}
-      @about-function{param-spec-steal-qdata}
-      @about-function{param-spec-get-redirect-target}
-      @about-function{param-spec-internal}
-      @about-function{param-type-register-static}
-      @about-function{param-spec-pool-new}
-      @about-function{param-spec-pool-insert}
-      @about-function{param-spec-pool-remove}
-      @about-function{param-spec-pool-lookup}
-      @about-function{param-spec-pool-list}
-      @about-function{param-spec-pool-list-owned}
     @end{subsection}
   @end{section}
   @begin[GObject]{section}

@@ -24,72 +24,74 @@
 
 (in-package :gobject)
 
-(defmethod parse-g-value-for-type (gvalue
-                                   (gtype (eql (glib:gtype "GBoxed")))
-                                   kind)
-  (declare (ignore kind))
-  (cond ((eq (value-type gvalue) (type-strv))
-         ;; Handle a GStrv type
+(glib-init:at-init () (cffi:foreign-funcall "g_strv_get_type" :size))
+(glib-init:at-init () (cffi:foreign-funcall "g_value_get_type" :size))
+
+;;; ----------------------------------------------------------------------------
+
+(defmethod get-gvalue-for-type
+           (gvalue (gtype (eql (glib:gtype "GBoxed"))))
+  (cond (;; Handle a GStrv type
+         (eq (value-type gvalue) (glib:gtype "GStrv"))
          (cffi:convert-from-foreign (value-boxed gvalue)
                                     '(glib:strv-t :free-from-foreign nil)))
         ;; Handle a GValue type
-        ((eq (value-type gvalue) (type-value))
+        ((eq (value-type gvalue) (glib:gtype "GValue"))
          (value-boxed gvalue))
         (t
          (let ((info (glib:get-boxed-info (value-type gvalue))))
-           (boxed-parse-g-value gvalue info)))))
+           (get-gvalue-boxed gvalue info)))))
 
-(defgeneric boxed-parse-g-value (gvalue info))
+(defgeneric get-gvalue-boxed (gvalue info))
 
-(defmethod boxed-parse-g-value (gvalue (info glib:boxed-opaque-info))
+(defmethod get-gvalue-boxed (gvalue (info glib:boxed-opaque-info))
   (cffi:translate-from-foreign (glib:boxed-copy-fn info (value-boxed gvalue))
                                (glib:make-boxed-type info :returnp nil)))
 
-(defmethod boxed-parse-g-value (gvalue (info glib:boxed-cstruct-info))
+(defmethod get-gvalue-boxed (gvalue (info glib:boxed-cstruct-info))
   (cffi:translate-from-foreign (value-boxed gvalue)
                                (glib:make-boxed-type info :returnp nil)))
 
-(defmethod boxed-parse-g-value (gvalue (info glib:boxed-variant-info))
+(defmethod get-gvalue-boxed (gvalue (info glib:boxed-variant-info))
   (cffi:translate-from-foreign (value-boxed gvalue)
                                (glib:make-boxed-type info :returnp nil)))
 
 ;;; ----------------------------------------------------------------------------
 
-(defmethod set-g-value-for-type (gvalue
-                                 (gtype (eql (glib:gtype "GBoxed")))
-                                 value)
-  (cond ((eq (value-type gvalue) (type-strv))
-         ;; Handle a GStrv type
+(defmethod set-gvalue-for-type
+           (gvalue (gtype (eql (glib:gtype "GBoxed"))) value)
+  (cond (;; Handle a GStrv type
+         (eq (value-type gvalue) (glib:gtype "GStrv"))
          (setf (value-boxed gvalue)
                (cffi:convert-to-foreign value
                                         '(glib:strv-t :free-from-foreign nil))))
         ;; Handle a GValue type
-        ((eq (value-type gvalue) (type-value))
+        ((eq (value-type gvalue) (glib:gtype "GValue"))
          (setf (value-boxed gvalue) value))
         (t
          (let ((info (glib:get-boxed-info (value-type gvalue))))
-           (boxed-set-g-value gvalue info value)))))
+           (set-gvalue-boxed gvalue info value)))))
 
-(defgeneric boxed-set-g-value (gvalue info value))
+(defgeneric set-gvalue-boxed (gvalue info value))
 
-(defmethod boxed-set-g-value (gvalue
-                              (info glib:boxed-opaque-info)
-                              value)
+(defmethod set-gvalue-boxed (gvalue
+                             (info glib:boxed-opaque-info)
+                             value)
   (setf (value-boxed gvalue) ; must be value-boxed and not value-take-boxed
         (cffi:translate-to-foreign value
                                    (glib:make-boxed-type info :returnp nil))))
 
-(defmethod boxed-set-g-value (gvalue
-                              (info glib:boxed-cstruct-info)
-                              value)
+(defmethod set-gvalue-boxed (gvalue
+                             (info glib:boxed-cstruct-info)
+                             value)
   (value-take-boxed gvalue
                     (cffi:translate-to-foreign value
                                                (glib:make-boxed-type info
                                                                 :returnp nil))))
 
-(defmethod boxed-set-g-value (gvalue
-                              (info glib:boxed-variant-info)
-                              value)
+(defmethod set-gvalue-boxed (gvalue
+                             (info glib:boxed-variant-info)
+                             value)
   (value-take-boxed gvalue
                     (cffi:translate-to-foreign value
                                                (glib:make-boxed-type info

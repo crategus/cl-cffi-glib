@@ -234,33 +234,13 @@
 ;; Helper function to collect arguments from gvalues
 (defun parse-closure-arguments (count-of-args args)
   (iter (for i from 0 below count-of-args)
-        (collect (parse-g-value (cffi:mem-aptr args '(:struct value) i)))))
+        (collect (value-get (cffi:mem-aptr args '(:struct value) i)))))
 
 (defun call-with-restarts (func args)
   (restart-case
     (apply func args)
     (return-from-closure (&optional v)
                          :report "Return value from closure" v)))
-
-#+nil
-(cffi:defcallback lisp-closure-marshal :void
-    ((closure (:pointer (:struct lisp-closure)))
-     (return-value (:pointer (:struct value)))
-     (count-of-args :uint)
-     (args (:pointer (:struct value)))
-     (invocation-hint :pointer)
-     (marshal-data :pointer))
-  (declare (ignore invocation-hint marshal-data))
-  (let* ((args (parse-closure-arguments count-of-args args))
-         (function-id (lisp-closure-function-id closure))
-         (ptr (lisp-closure-instance closure))
-         (object (get-gobject-for-pointer ptr))
-         (return-type (and (not (cffi:null-pointer-p return-value))
-                           (value-type return-value)))
-         (func (retrieve-handler-from-object object function-id))
-         (result (call-with-restarts func args)))
-    (when return-type
-      (set-g-value return-value result return-type :init-gvalue nil))))
 
 (cffi:defcallback lisp-closure-marshal-for-instance :void
     ((closure (:pointer (:struct lisp-closure)))
@@ -278,7 +258,7 @@
          (func (retrieve-handler-from-instance instance function-id))
          (result (call-with-restarts func args)))
     (when return-type
-      (set-g-value return-value result return-type :init-gvalue nil))))
+      (setf (value-get return-value return-type) result))))
 
 ;;; ----------------------------------------------------------------------------
 
@@ -872,9 +852,54 @@
 ;;; g_signal_emit
 ;;; ----------------------------------------------------------------------------
 
+#+nil
+(defun signal-emit (instance detailed &rest args)
+  (let* ((gtype (type-from-instance (object-pointer instance)))
+         (query (signal-parse-name gtype detailed)))
+    (unless query
+      (error "Signal ~A not found on instance ~A" detailed instance))
+    (let ((count (length (signal-query-param-types query))))
+      (assert (= count (length args)))
+      (cffi:with-foreign-object (params '(:struct value) (1+ count))
+
+        (set-gvalue (cffi:mem-aptr params '(:struct value) 0)
+                    instance
+                    gtype)
+
+        (iter (for i from 0 below count)
+              (for arg in args)
+              (for gtype in (signal-query-param-types query))
+              (set-gvalue (cffi:mem-aptr params '(:struct value) (1+ i))
+                          arg
+                          gtype))
+        (prog1
+          (if (eq (signal-query-return-type query) (glib:gtype "void"))
+              ;; Emit a signal which has no return value
+              (let ((detail (signal-query-signal-detail query)))
+                (%signal-emitv params
+                               (signal-query-signal-id query)
+                               (if detail detail (cffi:null-pointer))
+                               (cffi:null-pointer)))
+
+              ;; Emit a signal which has a return value
+              (cffi:with-foreign-object (return-value '(:struct value))
+                (value-init return-value
+                            (signal-query-return-type query))
+                (let ((detail (signal-query-signal-detail query)))
+                  (%signal-emitv params
+                                 (signal-query-signal-id query)
+                                 (if detail detail (cffi:null-pointer))
+                                 return-value))
+                (prog1
+                  ;; Return value of the signal
+                  (value-get return-value)
+                  (value-unset return-value))))
+          (iter (for i from 0 below (1+ count))
+                (value-unset (cffi:mem-aptr params '(:struct value) i))))))))
+
 (defun signal-emit (instance detailed &rest args)
  #+liber-documentation
- "@version{2024-6-19}
+ "@version{2024-12-21}
   @argument[instance]{a @class{g:object} instance the signal is being emitted
     on}
   @argument[detailed]{a string with the detailed signal name}
@@ -898,43 +923,37 @@
          (query (signal-parse-name gtype detailed)))
     (unless query
       (error "Signal ~A not found on instance ~A" detailed instance))
-    (let ((count (length (signal-query-param-types query))))
-      (assert (= count (length args)))
-      (cffi:with-foreign-object (params '(:struct value) (1+ count))
-        (set-g-value (cffi:mem-aptr params '(:struct value) 0)
-                     instance
-                     gtype
-                     :zero-gvalue t)
-        (iter (for i from 0 below count)
+    (let ((nparams (length (signal-query-param-types query))))
+      (assert (= nparams (length args)))
+      (cffi:with-foreign-object (params '(:struct value) (1+ nparams))
+        (set-gvalue (cffi:mem-aptr params '(:struct value) 0)
+                    instance
+                    gtype)
+        (iter (for i from 0 below nparams)
               (for arg in args)
               (for gtype in (signal-query-param-types query))
-              (set-g-value (cffi:mem-aptr params '(:struct value) (1+ i))
-                           arg
-                           gtype
-                           :zero-gvalue t))
-        (prog1
-          (if (eq (signal-query-return-type query) (glib:gtype "void"))
-              ;; Emit a signal which has no return value
-              (let ((detail (signal-query-signal-detail query)))
+              (set-gvalue (cffi:mem-aptr params '(:struct value) (1+ i))
+                          arg
+                          gtype))
+        (let ((detail (signal-query-signal-detail query))
+              (return-type (signal-query-return-type query)))
+          (unwind-protect
+            (if (eq return-type (glib:gtype "void"))
+                ;; Emit a signal which has no return value
                 (%signal-emitv params
                                (signal-query-signal-id query)
-                               (if detail detail (cffi:null-pointer))
-                               (cffi:null-pointer)))
-              ;; Emit a signal which has a return value
-              (cffi:with-foreign-object (return-value '(:struct value))
-                (value-init return-value
-                            (signal-query-return-type query))
-                (let ((detail (signal-query-signal-detail query)))
+                               (or detail (cffi:null-pointer))
+                               (cffi:null-pointer))
+                ;; Emit a signal which has a return value
+                (with-value (return-value return-type)
                   (%signal-emitv params
                                  (signal-query-signal-id query)
-                                 (if detail detail (cffi:null-pointer))
-                                 return-value))
-                (prog1
+                                 (or detail (cffi:null-pointer))
+                                 return-value)
                   ;; Return value of the signal
-                  (parse-g-value return-value)
-                  (value-unset return-value))))
-          (iter (for i from 0 below (1+ count))
-                (value-unset (cffi:mem-aptr params '(:struct value) i))))))))
+                  (get-gvalue return-value return-type)))
+            (iter (for i from 0 below (1+ nparams))
+                  (value-unset (cffi:mem-aptr params '(:struct value) i)))))))))
 
 (export 'signal-emit)
 

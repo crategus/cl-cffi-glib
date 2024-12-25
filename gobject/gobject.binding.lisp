@@ -494,15 +494,6 @@ object3:propertyC -> object1:propertyA
 
 ;; This callback is not needed. Binding is implemented with closures.
 
-#+nil
-(cffi:defcallback binding-transform-func :boolean
-    ((binding (object binding))
-     (from-value (:pointer (:struct value)))
-     (to-value (:pointer (:struct value)))
-     (data :pointer))
-  (let ((func (glib:get-stable-pointer-value data)))
-      (funcall func binding from-value to-value)))
-
 #+liber-documentation
 (setf (liber:alias-for-symbol 'binding-transform-func)
       "Callback"

@@ -283,12 +283,12 @@
   (assert (type-is-interface gtype))
   (let ((iface (type-default-interface-ref gtype)))
     (unwind-protect
-      (cffi:with-foreign-object (n-props :uint)
-        (let ((pspecs (%object-interface-list-properties iface n-props)))
+      (cffi:with-foreign-object (nprops :uint)
+        (let ((pspecs (%object-interface-list-properties iface nprops)))
           (unwind-protect
-            (loop for count from 0 below (cffi:mem-ref n-props :uint)
-                  for pspec = (cffi:mem-aref pspecs :pointer count)
-                  collect (parse-g-param-spec pspec))
+            (iter (for n from 0 below (cffi:mem-ref nprops :uint))
+                  (for pspec = (cffi:mem-aref pspecs :pointer n))
+                  (collect (parse-param-spec pspec)))
             (glib:free pspecs))))
       (type-default-interface-unref iface))))
 
@@ -345,16 +345,16 @@
 
 (defun class-properties (gtype)
   (assert (type-is-object gtype))
-  (let ((class (type-class-ref gtype)))
+  (let ((cclass (type-class-ref gtype)))
     (unwind-protect
-      (cffi:with-foreign-object (n-props :uint)
-        (let ((pspecs (%object-class-list-properties class n-props)))
+      (cffi:with-foreign-object (nprops :uint)
+        (let ((pspecs (%object-class-list-properties cclass nprops)))
           (unwind-protect
-            (loop for count from 0 below (cffi:mem-ref n-props :uint)
-                  for pspec = (cffi:mem-aref pspecs :pointer count)
-                  collect (parse-g-param-spec pspec))
+            (iter (for n from 0 below (cffi:mem-ref nprops :uint))
+                  (for pspec = (cffi:mem-aref pspecs :pointer n))
+                  (collect (parse-param-spec pspec)))
             (glib:free pspecs))))
-      (type-class-unref class))))
+      (type-class-unref cclass))))
 
 ;;; ----------------------------------------------------------------------------
 

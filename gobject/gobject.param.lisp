@@ -33,161 +33,75 @@
 ;;;
 ;;; Synopsis
 ;;;
-;;;     G_IS_PARAM_SPEC_BOOLEAN
-;;;     G_PARAM_SPEC_BOOLEAN
-;;;     G_VALUE_HOLDS_BOOLEAN
-;;;     G_TYPE_PARAM_BOOLEAN
-;;;
 ;;;     GParamSpecBoolean
-;;;
 ;;;     g_param_spec_boolean
 ;;;     g_value_set_boolean
 ;;;     g_value_get_boolean
 ;;;
-;;;     G_IS_PARAM_SPEC_CHAR
-;;;     G_PARAM_SPEC_CHAR
-;;;     G_VALUE_HOLDS_CHAR
-;;;     G_TYPE_PARAM_CHAR
-;;;
 ;;;     GParamSpecChar
-;;;
 ;;;     g_param_spec_char
 ;;;     g_value_set_char
 ;;;     g_value_get_char
 ;;;     g_value_get_schar
 ;;;     g_value_set_schar
 ;;;
-;;;     G_IS_PARAM_SPEC_UCHAR
-;;;     G_PARAM_SPEC_UCHAR
-;;;     G_VALUE_HOLDS_UCHAR
-;;;     G_TYPE_PARAM_UCHAR
-;;;
 ;;;     GParamSpecUChar
-;;;
 ;;;     g_param_spec_uchar
 ;;;     g_value_set_uchar
 ;;;     g_value_get_uchar
 ;;;
-;;;     G_IS_PARAM_SPEC_INT
-;;;     G_PARAM_SPEC_INT
-;;;     G_VALUE_HOLDS_INT
-;;;     G_TYPE_PARAM_INT
-;;;
 ;;;     GParamSpecInt
-;;;
 ;;;     g_param_spec_int
 ;;;     g_value_set_int
 ;;;     g_value_get_int
 ;;;
-;;;     G_IS_PARAM_SPEC_UINT
-;;;     G_PARAM_SPEC_UINT
-;;;     G_VALUE_HOLDS_UINT
-;;;     G_TYPE_PARAM_UINT
-;;;
 ;;;     GParamSpecUInt
-;;;
 ;;;     g_param_spec_uint
 ;;;     g_value_set_uint
 ;;;     g_value_get_uint
 ;;;
-;;;     G_IS_PARAM_SPEC_LONG
-;;;     G_PARAM_SPEC_LONG
-;;;     G_VALUE_HOLDS_LONG
-;;;     G_TYPE_PARAM_LONG
-;;;
 ;;;     GParamSpecLong
-;;;
 ;;;     g_param_spec_long
 ;;;     g_value_set_long
 ;;;     g_value_get_long
 ;;;
-;;;     G_IS_PARAM_SPEC_ULONG
-;;;     G_PARAM_SPEC_ULONG
-;;;     G_VALUE_HOLDS_ULONG
-;;;     G_TYPE_PARAM_ULONG
-;;;
 ;;;     GParamSpecULong
-;;;
 ;;;     g_param_spec_ulong
 ;;;     g_value_set_ulong
 ;;;     g_value_get_ulong
 ;;;
-;;;     G_IS_PARAM_SPEC_INT64
-;;;     G_PARAM_SPEC_INT64
-;;;     G_VALUE_HOLDS_INT64
-;;;     G_TYPE_PARAM_INT64
-;;;
 ;;;     GParamSpecInt64
-;;;
 ;;;     g_param_spec_int64
 ;;;     g_value_set_int64
 ;;;     g_value_get_int64
 ;;;
-;;;     G_IS_PARAM_SPEC_UINT64
-;;;     G_PARAM_SPEC_UINT64
-;;;     G_VALUE_HOLDS_UINT64
-;;;     G_TYPE_PARAM_UINT64
-;;;
 ;;;     GParamSpecUInt64
-;;;
 ;;;     g_param_spec_uint64
 ;;;     g_value_set_uint64
 ;;;     g_value_get_uint64
 ;;;
-;;;     G_IS_PARAM_SPEC_FLOAT
-;;;     G_PARAM_SPEC_FLOAT
-;;;     G_VALUE_HOLDS_FLOAT
-;;;     G_TYPE_PARAM_FLOAT
-;;;
 ;;;     GParamSpecFloat
-;;;
 ;;;     g_param_spec_float
 ;;;     g_value_set_float
 ;;;     g_value_get_float
 ;;;
-;;;     G_IS_PARAM_SPEC_DOUBLE
-;;;     G_PARAM_SPEC_DOUBLE
-;;;     G_VALUE_HOLDS_DOUBLE
-;;;     G_TYPE_PARAM_DOUBLE
-;;;
 ;;;     GParamSpecDouble
-;;;
 ;;;     g_param_spec_double
 ;;;     g_value_set_double
 ;;;     g_value_get_double
 ;;;
-;;;     G_IS_PARAM_SPEC_ENUM
-;;;     G_PARAM_SPEC_ENUM
-;;;     G_VALUE_HOLDS_ENUM
-;;;     G_TYPE_PARAM_ENUM
-;;;
 ;;;     GParamSpecEnum
-;;;
 ;;;     g_param_spec_enum
 ;;;     g_value_set_enum
 ;;;     g_value_get_enum
 ;;;
-;;;     G_IS_PARAM_SPEC_FLAGS
-;;;     G_PARAM_SPEC_FLAGS
-;;;     G_VALUE_HOLDS_FLAGS
-;;;     G_TYPE_PARAM_FLAGS
-;;;
 ;;;     GParamSpecFlags
-;;;
 ;;;     g_param_spec_flags
 ;;;     g_value_set_flags
 ;;;     g_value_get_flags
 ;;;
-;;;     G_IS_PARAM_SPEC_STRING
-;;;     G_PARAM_SPEC_STRING
-;;;     G_VALUE_HOLDS_STRING
-;;;     G_VALUE_IS_INTERNED_STRING
-;;;     G_TYPE_PARAM_STRING
-;;;     G_VALUE_INTERNED_STRING
-;;;
 ;;;     GParamSpecString
 ;;;     gchararray
-;;;
 ;;;     g_param_spec_string
 ;;;     g_value_set_string
 ;;;     g_value_set_static_string
@@ -197,13 +111,7 @@
 ;;;     g_value_dup_string
 ;;;     g_value_set_interned_string
 ;;;
-;;;     G_IS_PARAM_SPEC_PARAM
-;;;     G_PARAM_SPEC_PARAM
-;;;     G_VALUE_HOLDS_PARAM
-;;;     G_TYPE_PARAM_PARAM
-;;;
 ;;;     GParamSpecParam
-;;;
 ;;;     g_param_spec_param
 ;;;     g_value_set_param
 ;;;     g_value_take_param
@@ -211,13 +119,7 @@
 ;;;     g_value_get_param
 ;;;     g_value_dup_param
 ;;;
-;;;     G_IS_PARAM_SPEC_BOXED
-;;;     G_PARAM_SPEC_BOXED
-;;;     G_VALUE_HOLDS_BOXED
-;;;     G_TYPE_PARAM_BOXED
-;;;
 ;;;     GParamSpecBoxed
-;;;
 ;;;     g_param_spec_boxed
 ;;;     g_value_set_boxed
 ;;;     g_value_set_static_boxed
@@ -226,24 +128,12 @@
 ;;;     g_value_get_boxed
 ;;;     g_value_dup_boxed
 ;;;
-;;;     G_IS_PARAM_SPEC_POINTER
-;;;     G_PARAM_SPEC_POINTER
-;;;     G_VALUE_HOLDS_POINTER
-;;;     G_TYPE_PARAM_POINTER
-;;;
 ;;;     GParamSpecPointer
-;;;
 ;;;     g_param_spec_pointer
 ;;;     g_value_set_pointer
 ;;;     g_value_get_pointer
 ;;;
-;;;     G_IS_PARAM_SPEC_OBJECT
-;;;     G_PARAM_SPEC_OBJECT
-;;;     G_VALUE_HOLDS_OBJECT
-;;;     G_TYPE_PARAM_OBJECT
-;;;
 ;;;     GParamSpecObject
-;;;
 ;;;     g_param_spec_object
 ;;;     g_value_set_object
 ;;;     g_value_take_object
@@ -251,107 +141,29 @@
 ;;;     g_value_get_object
 ;;;     g_value_dup_object
 ;;;
-;;;     G_IS_PARAM_SPEC_UNICHAR
-;;;     G_PARAM_SPEC_UNICHAR
-;;;     G_TYPE_PARAM_UNICHAR
+;;;     GParamSpecUnichar                                   not implemented
+;;;     g_param_spec_unichar                                not implemented
 ;;;
-;;;     GParamSpecUnichar
+;;;     GParamSpecValueArray                                not exported
+;;;     g_param_spec_value_array                            not exported
 ;;;
-;;;     g_param_spec_unichar
-;;;
-;;;     G_IS_PARAM_SPEC_VALUE_ARRAY
-;;;     G_PARAM_SPEC_VALUE_ARRAY
-;;;     G_TYPE_PARAM_VALUE_ARRAY
-;;;
-;;;     GParamSpecValueArray
-;;;
-;;;     g_param_spec_value_array
-;;;
-;;;     G_IS_PARAM_SPEC_OVERRIDE
-;;;     G_PARAM_SPEC_OVERRIDE
-;;;     G_TYPE_PARAM_OVERRIDE
-;;;
-;;;     GParamSpecOverride
-;;;
-;;;     g_param_spec_override
-;;;
-;;;     G_IS_PARAM_SPEC_GTYPE
-;;;     G_PARAM_SPEC_GTYPE
-;;;     G_VALUE_HOLDS_GTYPE
-;;;     G_TYPE_PARAM_GTYPE
+;;;     GParamSpecOverride                                  not implemented
+;;;     g_param_spec_override                               not implemented
 ;;;
 ;;;     GParamSpecGType
-;;;
 ;;;     g_param_spec_gtype
 ;;;     g_value_get_gtype
 ;;;     g_value_set_gtype
 ;;;
-;;;     G_IS_PARAM_SPEC_VARIANT
-;;;     G_PARAM_SPEC_VARIANT
-;;;     G_VALUE_HOLDS_VARIANT
-;;;     G_TYPE_PARAM_VARIANT
-;;;
-;;;     GParamSpecVariant
-;;;
-;;;     g_param_spec_variant
+;;;     GParamSpecVariant                                   not implemented
+;;;     g_param_spec_variant                                not implemented
 ;;;     g_value_get_variant
-;;;     g_value_dup_variant
+;;;     g_value_dup_variant                                 not implemented
 ;;;     g_value_set_variant
-;;;     g_value_take_variant
+;;;     g_value_take_variant                                not implemented
 ;;; ----------------------------------------------------------------------------
 
 (in-package :gobject)
-
-;;; ----------------------------------------------------------------------------
-;;; G_IS_PARAM_SPEC_BOOLEAN()
-;;;
-;;; #define G_IS_PARAM_SPEC_BOOLEAN(pspec)
-;;;         (G_TYPE_CHECK_INSTANCE_TYPE ((pspec), G_TYPE_PARAM_BOOLEAN))
-;;;
-;;; Checks whether the given GParamSpec is of type G_TYPE_PARAM_BOOLEAN.
-;;;
-;;; pspec :
-;;;     a valid GParamSpec instance
-;;;
-;;; Returns :
-;;;     TRUE on success.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_PARAM_SPEC_BOOLEAN()
-;;;
-;;; #define G_PARAM_SPEC_BOOLEAN(pspec)
-;;;         (G_TYPE_CHECK_INSTANCE_CAST ((pspec),
-;;;          G_TYPE_PARAM_BOOLEAN, GParamSpecBoolean))
-;;;
-;;; Cast a GParamSpec instance into a GParamSpecBoolean.
-;;;
-;;; pspec :
-;;;     a valid GParamSpec instance
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_VALUE_HOLDS_BOOLEAN()
-;;;
-;;; #define G_VALUE_HOLDS_BOOLEAN(value)
-;;;         (G_TYPE_CHECK_VALUE_TYPE ((value), G_TYPE_BOOLEAN))
-;;;
-;;; Checks whether the given GValue can hold values of type G_TYPE_BOOLEAN.
-;;;
-;;; value :
-;;;     a valid GValue structure
-;;;
-;;; Returns :
-;;;     TRUE on success.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_TYPE_PARAM_BOOLEAN
-;;;
-;;; #define G_TYPE_PARAM_BOOLEAN (g_param_spec_types[2])
-;;;
-;;; The GType of GParamSpecBoolean.
-;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
 ;;; GParamSpecBoolean
@@ -446,57 +258,6 @@
   (gvalue (:pointer (:struct value))))
 
 (export 'value-boolean)
-
-;;; ----------------------------------------------------------------------------
-;;; G_IS_PARAM_SPEC_CHAR()
-;;;
-;;; #define G_IS_PARAM_SPEC_CHAR(pspec)
-;;;         (G_TYPE_CHECK_INSTANCE_TYPE ((pspec), G_TYPE_PARAM_CHAR))
-;;;
-;;; Checks whether the given GParamSpec is of type G_TYPE_PARAM_CHAR.
-;;;
-;;; pspec :
-;;;     a valid GParamSpec instance
-;;;
-;;; Returns :
-;;;     TRUE on success.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_PARAM_SPEC_CHAR()
-;;;
-;;; #define G_PARAM_SPEC_CHAR(pspec)
-;;;         (G_TYPE_CHECK_INSTANCE_CAST ((pspec),
-;;;          G_TYPE_PARAM_CHAR, GParamSpecChar))
-;;;
-;;; Cast a GParamSpec instance into a GParamSpecChar.
-;;;
-;;; pspec :
-;;;     a valid GParamSpec instance
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_VALUE_HOLDS_CHAR()
-;;;
-;;; #define G_VALUE_HOLDS_CHAR(value)
-;;;         (G_TYPE_CHECK_VALUE_TYPE ((value), G_TYPE_CHAR))
-;;;
-;;; Checks whether the given GValue can hold values of type G_TYPE_CHAR.
-;;;
-;;; value :
-;;;     a valid GValue structure
-;;;
-;;; Returns :
-;;;     TRUE on success.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_TYPE_PARAM_CHAR
-;;;
-;;; #define G_TYPE_PARAM_CHAR (g_param_spec_types[0])
-;;;
-;;; The GType of GParamSpecChar.
-;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
 ;;; GParamSpecChar
@@ -638,57 +399,6 @@
 (export 'value-schar)
 
 ;;; ----------------------------------------------------------------------------
-;;; G_IS_PARAM_SPEC_UCHAR()
-;;;
-;;; #define G_IS_PARAM_SPEC_UCHAR(pspec)
-;;;         (G_TYPE_CHECK_INSTANCE_TYPE ((pspec), G_TYPE_PARAM_UCHAR))
-;;;
-;;; Checks whether the given GParamSpec is of type G_TYPE_PARAM_UCHAR.
-;;;
-;;; pspec :
-;;;     a valid GParamSpec instance
-;;;
-;;; Returns :
-;;;     TRUE on success.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_PARAM_SPEC_UCHAR()
-;;;
-;;; #define G_PARAM_SPEC_UCHAR(pspec)
-;;;         (G_TYPE_CHECK_INSTANCE_CAST ((pspec),
-;;;          G_TYPE_PARAM_UCHAR, GParamSpecUChar))
-;;;
-;;; Cast a GParamSpec instance into a GParamSpecUChar.
-;;;
-;;; pspec :
-;;;     a valid GParamSpec instance
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_VALUE_HOLDS_UCHAR()
-;;;
-;;; #define G_VALUE_HOLDS_UCHAR(value)
-;;;         (G_TYPE_CHECK_VALUE_TYPE ((value), G_TYPE_UCHAR))
-;;;
-;;; Checks whether the given GValue can hold values of type G_TYPE_UCHAR.
-;;;
-;;; value :
-;;;     a valid GValue structure
-;;;
-;;; Returns :
-;;;     TRUE on success.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_TYPE_PARAM_UCHAR
-;;;
-;;; #define G_TYPE_PARAM_UCHAR (g_param_spec_types[1])
-;;;
-;;; The GType of GParamSpecUChar.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
 ;;; GParamSpecUChar
 ;;; ----------------------------------------------------------------------------
 
@@ -793,57 +503,6 @@
 (export 'value-uchar)
 
 ;;; ----------------------------------------------------------------------------
-;;; G_IS_PARAM_SPEC_INT()
-;;;
-;;; #define G_IS_PARAM_SPEC_INT(pspec)
-;;;         (G_TYPE_CHECK_INSTANCE_TYPE ((pspec), G_TYPE_PARAM_INT))
-;;;
-;;; Checks whether the given GParamSpec is of type G_TYPE_PARAM_INT.
-;;;
-;;; pspec :
-;;;     a valid GParamSpec instance
-;;;
-;;; Returns :
-;;;     TRUE on success.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_PARAM_SPEC_INT()
-;;;
-;;; #define G_PARAM_SPEC_INT(pspec)
-;;;         (G_TYPE_CHECK_INSTANCE_CAST ((pspec),
-;;;          G_TYPE_PARAM_INT, GParamSpecInt))
-;;;
-;;; Cast a GParamSpec instance into a GParamSpecInt.
-;;;
-;;; pspec :
-;;;     a valid GParamSpec instance
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_VALUE_HOLDS_INT()
-;;;
-;;; #define G_VALUE_HOLDS_INT(value)
-;;;         (G_TYPE_CHECK_VALUE_TYPE ((value), G_TYPE_INT))
-;;;
-;;; Checks whether the given GValue can hold values of type G_TYPE_INT.
-;;;
-;;; value :
-;;;     a valid GValue structure
-;;;
-;;; Returns :
-;;;     TRUE on success.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_TYPE_PARAM_INT
-;;;
-;;; #define G_TYPE_PARAM_INT (g_param_spec_types[3])
-;;;
-;;; The GType of GParamSpecInt.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
 ;;; GParamSpecInt
 ;;; ----------------------------------------------------------------------------
 
@@ -857,24 +516,26 @@
 (setf (liber:alias-for-symbol 'param-spec-int)
       "CStruct"
       (liber:symbol-documentation 'param-spec-int)
- "@version{#2022-12-31}
-  @begin{short}
-    A @symbol{g:param-spec} derived structure that contains the meta data for
-    integer properties.
-  @end{short}
-  @begin{pre}
+ "@version{2024-12-22}
+  @begin{declaration}
 (cffi:defcstruct param-spec-int
   (:parent-instance (:pointer (:struct param-spec)))
   (:minimum :int)
   (:maximum :int)
   (:default-value :int))
-  @end{pre}
-  @begin[code]{table}
-    @entry[:parent-instance]{Private @symbol{g:param-spec} portion.}
-    @entry[:minimum]{An integer with the minimum value.}
-    @entry[:maximum]{An integer with the maximum value.}
-    @entry[:default-value]{An integer with the default value.}
-  @end{table}
+  @end{declaration}
+  @begin{values}
+    @begin[code]{table}
+      @entry[:parent-instance]{Private @symbol{g:param-spec} portion.}
+      @entry[:minimum]{The integer with the minimum value.}
+      @entry[:maximum]{The integer with the maximum value.}
+      @entry[:default-value]{The integer with the default value.}
+    @end{table}
+  @end{values}
+  @begin{short}
+    A @symbol{g:param-spec} derived structure that contains the meta data for
+    integer properties.
+  @end{short}
   @see-symbol{g:param-spec}
   @see-function{g:param-spec-int}")
 
@@ -887,7 +548,7 @@
 (cffi:defcfun ("g_param_spec_int" param-spec-int)
     (:pointer (:struct param-spec-int))
  #+liber-documentation
- "@version{#2022-12-31}
+ "@version{2024-12-22}
   @argument[name]{a string with the canonical name}
   @argument[nick]{a string with the nick name}
   @argument[blurb]{a string with the description}
@@ -895,7 +556,7 @@
   @argument[maximum]{an integer with the maximum value}
   @argument[default]{an integer with the default value}
   @argument[flags]{a @symbol{g:param-flags} value}
-  @return{A newly created @symbol{g:param-spec-int} parameter specification.}
+  @return{The newly created @symbol{g:param-spec-int} parameter specification.}
   @begin{short}
     Creates a new parameter specification instance specifying a property
     of @code{\"gint\"} type.
@@ -928,69 +589,21 @@
 
 (cffi:defcfun ("g_value_get_int" value-int) :int
  #+liber-documentation
- "@version{#2022-12-31}
+ "@version{2024-12-22}
   @syntax{(g:value-int gvalue) => value}
   @syntax{(setf (g:value-int gvalue) value)}
-  @argument[gvalue]{a @symbol{g:value} of @code{\"gint\"} type}
+  @argument[gvalue]{a @symbol{g:value} instance of @code{\"gint\"} type}
   @argument[value]{an integer value}
   @begin{short}
     Integer contents of @arg{gvalue}.
   @end{short}
-  The @sym{g:value-int} function gets the contents of a @symbol{g:value} of
-  @code{\"gint\"} type. The @sym{(setf value-int)} function sets the contents
-  of a @symbol{g:value} to @arg{value}.
+  The @fun{g:value-int} function gets the contents of a @symbol{g:value}
+  instance of @code{\"gint\"} type. The @setf{value-int} function sets the
+  contents of a @symbol{g:value} instance to @arg{value}.
   @see-symbol{g:value}"
   (gvalue (:pointer (:struct value))))
 
 (export 'value-int)
-
-;;; ----------------------------------------------------------------------------
-;;; G_IS_PARAM_SPEC_UINT()
-;;;
-;;; #define G_IS_PARAM_SPEC_UINT(pspec)
-;;;         (G_TYPE_CHECK_INSTANCE_TYPE ((pspec), G_TYPE_PARAM_UINT))
-;;;
-;;; Checks whether the given GParamSpec is of type G_TYPE_PARAM_UINT.
-;;;
-;;; pspec :
-;;;     a valid GParamSpec instance
-;;;
-;;; Returns :
-;;;     TRUE on success.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_PARAM_SPEC_UINT()
-;;;
-;;; #define G_PARAM_SPEC_UINT(pspec)
-;;;         (G_TYPE_CHECK_INSTANCE_CAST ((pspec),
-;;;          G_TYPE_PARAM_UINT, GParamSpecUInt))
-;;;
-;;; Cast a GParamSpec instance into a GParamSpecUInt.
-;;;
-;;; pspec :
-;;;     a valid GParamSpec instance
-;;; G_VALUE_HOLDS_UINT()
-;;;
-;;; #define G_VALUE_HOLDS_UINT(value)
-;;;         (G_TYPE_CHECK_VALUE_TYPE ((value), G_TYPE_UINT))
-;;;
-;;; Checks whether the given GValue can hold values of type G_TYPE_UINT.
-;;;
-;;; value :
-;;;     a valid GValue structure
-;;;
-;;; Returns :
-;;;     TRUE on success.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_TYPE_PARAM_UINT
-;;;
-;;; #define G_TYPE_PARAM_UINT (g_param_spec_types[4])
-;;;
-;;; The GType of GParamSpecUInt.
-;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
 ;;; GParamSpecUInt
@@ -1006,24 +619,26 @@
 (setf (liber:alias-for-symbol 'param-spec-uint)
       "CStruct"
       (liber:symbol-documentation 'param-spec-uint)
- "@version{#2022-12-31}
-  @begin{short}
-    A @symbol{g:param-spec} derived structure that contains the meta data for
-    unsigned integer properties.
-  @end{short}
-  @begin{pre}
+ "@version{2024-12-22}
+  @begin{declaration}
 (cffi:defcstruct param-spec-uint
   (:parent-instance (:pointer (:struct param-spec)))
   (:minimum :uint)
   (:maximum :uint)
   (:default-value :uint))
-  @end{pre}
-  @begin[code]{table}
-    @entry[:parent-instance]{Private @symbol{g:param-spec} portion.}
-    @entry[:minimum]{An unsigned integer with the minimum value.}
-    @entry[:maximum]{An unsigned integer with the maximum value.}
-    @entry[:default-value]{An unsigned integer with the default value.}
-  @end{table}
+  @end{declaration}
+  @begin{values}
+    @begin[code]{table}
+      @entry[:parent-instance]{Private @symbol{g:param-spec} portion.}
+      @entry[:minimum]{The unsigned integer with the minimum value.}
+      @entry[:maximum]{The unsigned integer with the maximum value.}
+      @entry[:default-value]{The unsigned integer with the default value.}
+    @end{table}
+  @end{values}
+  @begin{short}
+    A @symbol{g:param-spec} derived structure that contains the meta data for
+    unsigned integer properties.
+  @end{short}
   @see-symbol{g:param-spec}
   @see-function{g:param-spec-uint}")
 
@@ -1036,7 +651,7 @@
 (cffi:defcfun ("g_param_spec_uint" param-spec-uint)
     (:pointer (:struct param-spec-uint))
  #+liber-documentation
- "@version{#2022-12-31}
+ "@version{2024-12-22}
   @argument[name]{a string with the canonical name}
   @argument[nick]{a string with the nick name}
   @argument[blurb]{a string with the description}
@@ -1044,7 +659,7 @@
   @argument[maximum]{an unsigned integer with the maximum value}
   @argument[default]{an unsigned integer with default value}
   @argument[flags]{a @symbol{g:param-flags} value}
-  @return{A newly created @symbol{g:param-spec-uint} parameter specification.}
+  @return{The newly created @symbol{g:param-spec-uint} parameter specification.}
   @begin{short}
     Creates a new parameter specificaton instance specifying a property
     of @code{\"guint\"} type.
@@ -1077,72 +692,21 @@
 
 (cffi:defcfun ("g_value_get_uint" value-uint) :uint
  #+liber-documentation
- "@version{#2022-12-31}
+ "@version{2024-12-22}
   @syntax{(g:value-uint gvalue) => value}
   @syntax{(setf (g:value-uint gvalue) value)}
-  @argument[gvalue]{a @symbol{g:value} of @code{\"guint\"} type}
+  @argument[gvalue]{a @symbol{g:value} instance of @code{\"guint\"} type}
   @argument[value]{an unsigned integer value}
   @begin{short}
     Unsigned integer contents of @arg{gvalue}.
   @end{short}
-  The @sym{g:value-uint} function gets the contents of a @symbol{g:value}
-  of @code{\"guint\"} type. The @sym{(setf value-uint)} function sets the
-  contents of a @symbol{g:value} to @arg{value}.
+  The @fun{g:value-uint} function gets the contents of a @symbol{g:value}
+  instance of @code{\"guint\"} type. The @setf{value-uint} function sets the
+  contents of a @symbol{g:value} instance to @arg{value}.
   @see-symbol{g:value}"
   (gvalue (:pointer (:struct value))))
 
 (export 'value-uint)
-
-;;; ----------------------------------------------------------------------------
-;;; G_IS_PARAM_SPEC_LONG()
-;;;
-;;; #define G_IS_PARAM_SPEC_LONG(pspec)
-;;;         (G_TYPE_CHECK_INSTANCE_TYPE ((pspec), G_TYPE_PARAM_LONG))
-;;;
-;;; Checks whether the given GParamSpec is of type G_TYPE_PARAM_LONG.
-;;;
-;;; pspec :
-;;;     a valid GParamSpec instance
-;;;
-;;; Returns :
-;;;     TRUE on success.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_PARAM_SPEC_LONG()
-;;;
-;;; #define G_PARAM_SPEC_LONG(pspec)
-;;;         (G_TYPE_CHECK_INSTANCE_CAST ((pspec),
-;;;          G_TYPE_PARAM_LONG, GParamSpecLong))
-;;;
-;;; Cast a GParamSpec instance into a GParamSpecLong.
-;;;
-;;; pspec :
-;;;     a valid GParamSpec instance
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_VALUE_HOLDS_LONG()
-;;;
-;;; #define G_VALUE_HOLDS_LONG(value)
-;;;         (G_TYPE_CHECK_VALUE_TYPE ((value), G_TYPE_LONG))
-;;;
-;;; Checks whether the given GValue can hold values of type G_TYPE_LONG.
-;;;
-;;; value :
-;;;     a valid GValue structure
-;;;
-;;; Returns :
-;;;     TRUE on success.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_TYPE_PARAM_LONG
-;;;
-;;; #define G_TYPE_PARAM_LONG           (g_param_spec_types[5])
-;;;
-;;; The GType of GParamSpecLong.
-;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
 ;;; GParamSpecLong
@@ -1158,24 +722,26 @@
 (setf (liber:alias-for-symbol 'param-spec-long)
       "CStruct"
       (liber:symbol-documentation 'param-spec-long)
- "@version{#2022-12-31}
-  @begin{short}
-    A @symbol{g:param-spec} derived structure that contains the meta data for
-    long integer properties.
-  @end{short}
-  @begin{pre}
+ "@version{2024-12-22}
+  @begin{declaration}
 (cffi:defcstruct param-spec-long
   (:parent-instance (:pointer (:struct param-spec)))
   (:minimum :long)
   (:maximum :long)
   (:default-value :long))
-  @end{pre}
-  @begin[code]{table}
-    @entry[:parent-instance]{Private @symbol{g:param-spec} portion.}
-    @entry[:minimum]{A long integer with the minimum value.}
-    @entry[:maximum]{A long integer with the maximum value.}
-    @entry[:default-value]{A long integer with the default value.}
-  @end{table}
+  @end{declaration}
+  @begin{values}
+    @begin[code]{table}
+      @entry[:parent-instance]{Private @symbol{g:param-spec} portion.}
+      @entry[:minimum]{The long integer with the minimum value.}
+      @entry[:maximum]{The long integer with the maximum value.}
+      @entry[:default-value]{The long integer with the default value.}
+    @end{table}
+  @end{values}
+  @begin{short}
+    A @symbol{g:param-spec} derived structure that contains the meta data for
+    long integer properties.
+  @end{short}
   @see-symbol{g:param-spec}
   @see-function{g:param-spec-long}")
 
@@ -1188,7 +754,7 @@
 (cffi:defcfun ("g_param_spec_long" param-spec-long)
     (:pointer (:struct param-spec-long))
  #+liber-documentation
- "@version{#2022-12-31}
+ "@version{2024-12-22}
   @argument[name]{a string with the canonical name}
   @argument[nick]{a string with the nick name}
   @argument[blurb]{a string with the description}
@@ -1196,7 +762,7 @@
   @argument[maximum]{a long integer with the maximum value}
   @argument[default]{a long integer with the default value}
   @argument[flags]{a @symbol{g:param-flags} value}
-  @return{A newly created @symbol{g:param-spec-long} parameter specification.}
+  @return{The newly created @symbol{g:param-spec-long} parameter specification.}
   @begin{short}
     Creates a new parameter specification instance specifying a property
     of @code{\"glong\"} type.
@@ -1229,72 +795,21 @@
 
 (cffi:defcfun ("g_value_get_long" value-long) :long
  #+liber-documentation
- "@version{#2022-12-31}
+ "@version{2024-12-22}
   @syntax{(g:value-long gvalue) => value}
   @syntax{(setf (g:value-long gvalue) value)}
-  @argument[gvalue]{a @symbol{g:value} of @code{\"glong\"} type}
+  @argument[gvalue]{a @symbol{g:value} instance of @code{\"glong\"} type}
   @argument[value]{a long integer value}
   @begin{short}
     Long integer contents of @arg{gvalue}.
   @end{short}
-  The @sym{g:value-long} function gets the contents of a @symbol{g:value}
-  of @code{\"glong\"} type. The @sym{(setf value-long)} function sets the
-  contents of a @symbol{g:value} to @arg{value}.
+  The @fun{g:value-long} function gets the contents of a @symbol{g:value}
+  instance of @code{\"glong\"} type. The @setf{value-long} function sets the
+  contents of a @symbol{g:value} instance to @arg{value}.
   @see-symbol{g:value}"
   (gvalue (:pointer (:struct value))))
 
 (export 'value-long)
-
-;;; ----------------------------------------------------------------------------
-;;; G_IS_PARAM_SPEC_ULONG()
-;;;
-;;; #define G_IS_PARAM_SPEC_ULONG(pspec)
-;;;         (G_TYPE_CHECK_INSTANCE_TYPE ((pspec), G_TYPE_PARAM_ULONG))
-;;;
-;;; Checks whether the given GParamSpec is of type G_TYPE_PARAM_ULONG.
-;;;
-;;; pspec :
-;;;     a valid GParamSpec instance
-;;;
-;;; Returns :
-;;;     TRUE on success.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_PARAM_SPEC_ULONG()
-;;;
-;;; #define G_PARAM_SPEC_ULONG(pspec)
-;;;         (G_TYPE_CHECK_INSTANCE_CAST ((pspec),
-;;;          G_TYPE_PARAM_ULONG, GParamSpecULong))
-;;;
-;;; Cast a GParamSpec instance into a GParamSpecULong.
-;;;
-;;; pspec :
-;;;     a valid GParamSpec instance
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_VALUE_HOLDS_ULONG()
-;;;
-;;; #define G_VALUE_HOLDS_ULONG(value)
-;;;         (G_TYPE_CHECK_VALUE_TYPE ((value), G_TYPE_ULONG))
-;;;
-;;; Checks whether the given GValue can hold values of type G_TYPE_ULONG.
-;;;
-;;; value :
-;;;     a valid GValue structure
-;;;
-;;; Returns :
-;;;     TRUE on success.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_TYPE_PARAM_ULONG
-;;;
-;;; #define G_TYPE_PARAM_ULONG (g_param_spec_types[6])
-;;;
-;;; The GType of GParamSpecULong.
-;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
 ;;; GParamSpecULong
@@ -1310,24 +825,26 @@
 (setf (liber:alias-for-symbol 'param-spec-ulong)
       "CStruct"
       (liber:symbol-documentation 'param-spec-ulong)
- "@version{#2022-12-31}
-  @begin{short}
-    A @symbol{g:param-spec} derived structure that contains the meta data for
-    unsigned long integer properties.
-  @end{short}
-  @begin{pre}
+ "@version{2024-12-22}
+  @begin{declaration}
 (cffi:defcstruct param-spec-ulong
   (:parent-instance (:pointer (:struct param-spec)))
   (:minimum :ulong)
   (:maximum :ulong)
   (:default-value :ulong))
-  @end{pre}
-  @begin[code]{table}
-    @entry[:parent-instance]{Private @symbol{g:param-spec} portion.}
-    @entry[:minimum]{An unsigned long integer with the minimum value.}
-    @entry[:maximum]{An unsigned long integer with the maximum value.}
-    @entry[:default-value]{An unsigned long integer with the default value.}
-  @end{table}
+  @end{declaration}
+  @begin{values}
+     @begin[code]{table}
+       @entry[:parent-instance]{Private @symbol{g:param-spec} portion.}
+      @entry[:minimum]{The unsigned long integer with the minimum value.}
+      @entry[:maximum]{The unsigned long integer with the maximum value.}
+      @entry[:default-value]{The unsigned long integer with the default value.}
+    @end{table}
+  @end{values}
+  @begin{short}
+    A @symbol{g:param-spec} derived structure that contains the meta data for
+    unsigned long integer properties.
+  @end{short}
   @see-symbol{g:param-spec}
   @see-function{g:param-spec-ulong}")
 
@@ -1340,7 +857,7 @@
 (cffi:defcfun ("g_param_spec_ulong" param-spec-ulong)
     (:pointer (:struct param-spec-ulong))
  #+liber-documentation
- "@version{#2022-12-31}
+ "@version{2024-12-22}
   @argument[name]{a string with the canonical name}
   @argument[nick]{a string with the nick name}
   @argument[blurb]{a string with the description}
@@ -1348,7 +865,8 @@
   @argument[maximum]{an unsigned long integer with the maximum value}
   @argument[default]{an unsigned long integer with the default value}
   @argument[flags]{a @symbol{g:param-flags} value}
-  @return{A newly created @symbol{g:param-spec-ulong} parameter specification.}
+  @return{The newly created @symbol{g:param-spec-ulong} parameter
+    specification.}
   @begin{short}
     Creates a new parameter specification instance specifying a property
     of @code{\"gulong\"} type.
@@ -1381,72 +899,21 @@
 
 (cffi:defcfun ("g_value_get_ulong" value-ulong) :ulong
  #+liber-documentation
- "@version{#2022-12-31}
+ "@version{2024-12-22}
   @syntax{(g:value-ulong gvalue) => value}
   @syntax{(setf (g:value-ulong gvalue) value)}
-  @argument[gvalue]{a @symbol{g:value} of @code{\"gulong\"} type}
+  @argument[gvalue]{a @symbol{g:value} instance of @code{\"gulong\"} type}
   @argument[value]{an unsigned long integer value}
   @begin{short}
     Unsigned long integer contents of @arg{gvalue}.
   @end{short}
-  The @sym{g:value-ulong} function gets the contents of a @symbol{g:value}
-  of @code{\"gulong\"} type. The @sym{(setf value-ulong)} function sets the
-  contents of a @symbol{g:value} to @arg{value}.
+  The @fun{g:value-ulong} function gets the contents of a @symbol{g:value}
+  instance of @code{\"gulong\"} type. The @setf{g:value-ulong} function sets
+  the contents of a @symbol{g:value} instance to @arg{value}.
   @see-symbol{g:value}"
   (gvalue (:pointer (:struct value))))
 
 (export 'value-ulong)
-
-;;; ----------------------------------------------------------------------------
-;;; G_IS_PARAM_SPEC_INT64()
-;;;
-;;; #define G_IS_PARAM_SPEC_INT64(pspec)
-;;;         (G_TYPE_CHECK_INSTANCE_TYPE ((pspec), G_TYPE_PARAM_INT64))
-;;;
-;;; Checks whether the given GParamSpec is of type G_TYPE_PARAM_INT64.
-;;;
-;;; pspec :
-;;;     a valid GParamSpec instance
-;;;
-;;; Returns :
-;;;     TRUE on success.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_PARAM_SPEC_INT64()
-;;;
-;;; #define G_PARAM_SPEC_INT64(pspec)
-;;;         (G_TYPE_CHECK_INSTANCE_CAST ((pspec),
-;;;          G_TYPE_PARAM_INT64, GParamSpecInt64))
-;;;
-;;; Cast a GParamSpec instance into a GParamSpecInt64.
-;;;
-;;; pspec :
-;;;     a valid GParamSpec instance
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_VALUE_HOLDS_INT64()
-;;;
-;;; #define G_VALUE_HOLDS_INT64(value)
-;;;         (G_TYPE_CHECK_VALUE_TYPE ((value), G_TYPE_INT64))
-;;;
-;;; Checks whether the given GValue can hold values of type G_TYPE_INT64.
-;;;
-;;; value :
-;;;     a valid GValue structure
-;;;
-;;; Returns :
-;;;     TRUE on success.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_TYPE_PARAM_INT64
-;;;
-;;; #define G_TYPE_PARAM_INT64 (g_param_spec_types[7])
-;;;
-;;; The GType of GParamSpecInt64.
-;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
 ;;; GParamSpecInt64
@@ -1462,24 +929,26 @@
 (setf (liber:alias-for-symbol 'param-spec-int64)
       "CStruct"
       (liber:symbol-documentation 'param-spec-int64)
- "@version{#2022-12-31}
-  @begin{short}
-    A @symbol{g:param-spec} derived structure that contains the meta data for
-    64 bit integer properties.
-  @end{short}
-  @begin{pre}
+ "@version{2024-12-22}
+  @begin{declaration}
 (cffi:defcstruct param-spec-int64
   (:parent-instance (:pointer (:struct param-spec)))
   (:minimum :int64)
   (:maximum :int64)
   (:default-value :int64))
-  @end{pre}
-  @begin[code]{table}
-    @entry[:parent-instance]{Private @symbol{g:param-spec} portion.}
-    @entry[:minimum]{A 64-bit integer with the value.}
-    @entry[:maximum]{A 64-bit integer with the maximum value.}
-    @entry[:default-value]{A 64-bit integer with the default value.}
-  @end{table}
+  @end{declaration}
+  @begin{values}
+    @begin[code]{table}
+      @entry[:parent-instance]{Private @symbol{g:param-spec} portion.}
+      @entry[:minimum]{The 64-bit integer with the value.}
+      @entry[:maximum]{The 64-bit integer with the maximum value.}
+      @entry[:default-value]{The 64-bit integer with the default value.}
+    @end{table}
+  @end{values}
+  @begin{short}
+    A @symbol{g:param-spec} derived structure that contains the meta data for
+    64 bit integer properties.
+  @end{short}
   @see-symbol{g:param-spec}
   @see-function{g:param-spec-int64}")
 
@@ -1492,7 +961,7 @@
 (cffi:defcfun ("g_param_spec_int64" param-spec-int64)
     (:pointer (:struct param-spec-int64))
  #+liber-documentation
- "@version{#2022-12-31}
+ "@version{2024-12-22}
   @argument[name]{a string with the canonical name}
   @argument[nick]{a string with the nick name}
   @argument[blurb]{a string with the description}
@@ -1500,7 +969,8 @@
   @argument[maximum]{a 64-bit integer with the maximum value}
   @argument[default]{a 64-bit- integer with the default value}
   @argument[flags]{a @symbol{g:param-flags} value}
-  @return{A newly created @symbol{g:param-spec-int64} parameter specification.}
+  @return{The newly created @symbol{g:param-spec-int64} parameter
+    specification.}
   @begin{short}
     Creates a new parameter specification instance specifying a property
     of @code{\"gint64\"} type.
@@ -1533,7 +1003,7 @@
 
 (cffi:defcfun ("g_value_get_int64" value-int64) :int64
  #+liber-documentation
- "@version{#2022-12-31}
+ "@version{2024-12-22}
   @syntax{(g:value-int64 gvalue) => value}
   @syntax{(setf (g:value-int64 gvalue) value)}
   @argument[gvalue]{a @symbol{g:value} instance of @code{\"gint64\"} type}
@@ -1541,64 +1011,13 @@
   @begin{short}
     The 64-bit integer contents of @arg{gvalue}.
   @end{short}
-  The @sym{g:value-int64} function gets the contents of a @symbol{g:value}
-  instance of @code{\"gint64\"} type. The @sym{(setf value-int64)} function
-  set the contents of a @symbol{g:value} instance to @arg{value}.
+  The @fun{g:value-int64} function gets the contents of a @symbol{g:value}
+  instance of @code{\"gint64\"} type. The @setf{g:value-int64} function sets
+  the contents of a @symbol{g:value} instance to @arg{value}.
   @see-symbol{g:value}"
   (gvalue (:pointer (:struct value))))
 
 (export 'value-int64)
-
-;;; ----------------------------------------------------------------------------
-;;; G_IS_PARAM_SPEC_UINT64()
-;;;
-;;; #define G_IS_PARAM_SPEC_UINT64(pspec)
-;;;         (G_TYPE_CHECK_INSTANCE_TYPE ((pspec), G_TYPE_PARAM_UINT64))
-;;;
-;;; Checks whether the given GParamSpec is of type G_TYPE_PARAM_UINT64.
-;;;
-;;; pspec :
-;;;     a valid GParamSpec instance
-;;;
-;;; Returns :
-;;;     TRUE on success.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_PARAM_SPEC_UINT64()
-;;;
-;;; #define G_PARAM_SPEC_UINT64(pspec)
-;;;         (G_TYPE_CHECK_INSTANCE_CAST ((pspec),
-;;;          G_TYPE_PARAM_UINT64, GParamSpecUInt64))
-;;;
-;;; Cast a GParamSpec instance into a GParamSpecUInt64.
-;;;
-;;; pspec :
-;;;     a valid GParamSpec instance
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_VALUE_HOLDS_UINT64()
-;;;
-;;; #define G_VALUE_HOLDS_UINT64(value)
-;;;         (G_TYPE_CHECK_VALUE_TYPE ((value), G_TYPE_UINT64))
-;;;
-;;; Checks whether the given GValue can hold values of type G_TYPE_UINT64.
-;;;
-;;; value :
-;;;     a valid GValue structure
-;;;
-;;; Returns :
-;;;     TRUE on success.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_TYPE_PARAM_UINT64
-;;;
-;;; #define G_TYPE_PARAM_UINT64 (g_param_spec_types[8])
-;;;
-;;; The GType of GParamSpecUInt64.
-;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
 ;;; GParamSpecUInt64
@@ -1614,24 +1033,27 @@
 (setf (liber:alias-for-symbol 'param-spec-uint64)
       "CStruct"
       (liber:symbol-documentation 'param-spec-uint64)
- "@version{#2022-12-31}
-  @begin{short}
-    A @symbol{g:param-spec} derived structure that contains the meta data for
-    unsigned 64 bit integer properties.
-  @end{short}
-  @begin{pre}
+ "@version{2024-12-22}
+  @begin{declaration}
 (cffi:defcstruct param-spec-uint64
   (:parent-instance (:pointer (:struct param-spec)))
   (:minimum :uint64)
   (:maximum :uint64)
   (:default-value :uint64))
-  @end{pre}
-  @begin[code]{table}
-    @entry[:parent-instance]{Private @symbol{g:param-spec} portion.}
-    @entry[:minimum]{An unsigned 64-bit integer with the minimum value.}
-    @entry[:maximum]{An unsigned 64-bit integer with the maximum value.}
-    @entry[:default-value]{An unsigned 64-bit integer with the default value.}
-  @end{table}
+  @end{declaration}
+  @begin{values}
+    @begin[code]{table}
+      @entry[:parent-instance]{Private @symbol{g:param-spec} portion.}
+      @entry[:minimum]{The unsigned 64-bit integer with the minimum value.}
+      @entry[:maximum]{The unsigned 64-bit integer with the maximum value.}
+      @entry[:default-value]{The unsigned 64-bit integer with the default
+        value.}
+    @end{table}
+  @end{values}
+  @begin{short}
+    A @symbol{g:param-spec} derived structure that contains the meta data for
+    unsigned 64 bit integer properties.
+  @end{short}
   @see-symbol{g:param-spec}
   @see-function{g:param-spec-uint64}")
 
@@ -1644,7 +1066,7 @@
 (cffi:defcfun ("g_param_spec_uint64" param-spec-uint64)
     (:pointer (:struct param-spec-uint64))
  #+liber-documentation
- "@version{#2022-12-31}
+ "@version{2024-12-22}
   @argument[name]{a string with the canonical name}
   @argument[nick]{a string with the nick name}
   @argument[blurb]{a string with the description}
@@ -1652,7 +1074,8 @@
   @argument[maximum]{an unsigned 64-bit integer with the maximum value}
   @argument[default]{an unsigned 64-bit integer with the default value}
   @argument[flags]{a @symbol{g:param-flags} value}
-  @return{A newly created @symbol{g:param-spec-uint64} parameter specification.}
+  @return{The newly created @symbol{g:param-spec-uint64} parameter
+    specification.}
   @begin{short}
     Creates a new parameter specification instance specifying a property
     of @code{\"guint64\"} type.
@@ -1685,72 +1108,21 @@
 
 (cffi:defcfun ("g_value_get_uint64" value-uint64) :uint64
  #+liber-documentation
- "@version{#2022-12-31}
+ "@version{2024-12-22}
   @syntax{(g:value-uint64 gvalue) => value}
   @syntax{(setf (g:value-uint64 gvalue) value)}
-  @argument[gvalue]{a @symbol{g:value} of @code{\"guint64\"} type}
+  @argument[gvalue]{a @symbol{g:value} instance of @code{\"guint64\"} type}
   @argument[value]{an unsigned 64-bit integer value}
   @begin{short}
     Unsigned 64-bit integer contents of @arg{gvalue}.
   @end{short}
-  The @sym{g:value-uint64} function gets the contents of a @symbol{g:value}
-  of @code{\"guint64\"} type. The @sym{(setf value-uint64)} function sets the
-  contents of a @symbol{g:value} to @arg{value}.
+  The @fun{g:value-uint64} function gets the contents of a @symbol{g:value}
+  instance of @code{\"guint64\"} type. The @setf{g:value-uint64} function sets
+  the contents of a @symbol{g:value} instance to @arg{value}.
   @see-symbol{g:value}"
   (gvalue (:pointer (:struct value))))
 
 (export 'value-uint64)
-
-;;; ----------------------------------------------------------------------------
-;;; G_IS_PARAM_SPEC_FLOAT()
-;;;
-;;; #define G_IS_PARAM_SPEC_FLOAT(pspec)
-;;;         (G_TYPE_CHECK_INSTANCE_TYPE ((pspec), G_TYPE_PARAM_FLOAT))
-;;;
-;;; Checks whether the given GParamSpec is of type G_TYPE_PARAM_FLOAT.
-;;;
-;;; pspec :
-;;;     a valid GParamSpec instance
-;;;
-;;; Returns :
-;;;     TRUE on success.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_PARAM_SPEC_FLOAT()
-;;;
-;;; #define G_PARAM_SPEC_FLOAT(pspec)
-;;;         (G_TYPE_CHECK_INSTANCE_CAST ((pspec),
-;;;          G_TYPE_PARAM_FLOAT, GParamSpecFloat))
-;;;
-;;; Cast a GParamSpec instance into a GParamSpecFloat.
-;;;
-;;; pspec :
-;;;     a valid GParamSpec instance
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_VALUE_HOLDS_FLOAT()
-;;;
-;;; #define G_VALUE_HOLDS_FLOAT(value)
-;;;         (G_TYPE_CHECK_VALUE_TYPE ((value), G_TYPE_FLOAT))
-;;;
-;;; Checks whether the given GValue can hold values of type G_TYPE_FLOAT.
-;;;
-;;; value :
-;;;     a valid GValue structure
-;;;
-;;; Returns :
-;;;     TRUE on success.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_TYPE_PARAM_FLOAT
-;;;
-;;; #define G_TYPE_PARAM_FLOAT (g_param_spec_types[12])
-;;;
-;;; The GType of GParamSpecFloat.
-;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
 ;;; GParamSpecFloat
@@ -1767,27 +1139,29 @@
 (setf (liber:alias-for-symbol 'param-spec-float)
       "CStruct"
       (liber:symbol-documentation 'param-spec-float)
- "@version{#2022-12-31}
-  @begin{short}
-    A @symbol{g:param-spec} derived structure that contains the meta data for
-    float properties.
-  @end{short}
-  @begin{pre}
+ "@version{2024-12-22}
+  @begin{declaration}
 (cffi:defcstruct param-spec-float
   (:parent-instance (:pointer (:struct param-spec)))
   (:minimum :float)
   (:maximum :float)
   (:default-value :float)
   (:epsilon :float))
-  @end{pre}
-  @begin[code]{table}
-    @entry[:parent-instance]{Private @symbol{g:param-spec} portion.}
-    @entry[:minimum]{A float with the minimum value.}
-    @entry[:maximum]{A float with the maximum value.}
-    @entry[:default-value]{A float with the default value.}
-    @entry[:epsilon]{A float value, values closer than epsilon will be
-      considered identical, the default value is 1e-30.}
-  @end{table}
+  @end{declaration}
+  @begin{values}
+    @begin[code]{table}
+      @entry[:parent-instance]{Private @symbol{g:param-spec} portion.}
+      @entry[:minimum]{The float with the minimum value.}
+      @entry[:maximum]{The float with the maximum value.}
+      @entry[:default-value]{The float with the default value.}
+      @entry[:epsilon]{The float value, values closer than epsilon will be
+        considered identical, the default value is 1e-30.}
+    @end{table}
+  @end{values}
+  @begin{short}
+    A @symbol{g:param-spec} derived structure that contains the meta data for
+    float properties.
+  @end{short}
   @see-symbol{g:param-spec}
   @see-function{g:param-spec-float}")
 
@@ -1800,7 +1174,7 @@
 (cffi:defcfun ("g_param_spec_float" param-spec-float)
     (:pointer (:struct param-spec-float))
  #+liber-documentation
- "@version{#2022-12-31}
+ "@version{2024-12-22}
   @argument[name]{a string with the canonical name}
   @argument[nick]{a string with the nick name}
   @argument[blurb]{a string with the description}
@@ -1808,7 +1182,8 @@
   @argument[maximum]{a float with the maximum value}
   @argument[default]{a float with the default value}
   @argument[flags]{a @symbol{g:param-flags} value}
-  @return{A newly created @symbol{g:param-spec-float} parameter specification.}
+  @return{The newly created @symbol{g:param-spec-float} parameter
+    specification.}
   @begin{short}
     Creates a new parameter specification instance specifying a property
     of @code{\"gfloat\"} type.
@@ -1841,72 +1216,21 @@
 
 (cffi:defcfun ("g_value_get_float" value-float) :float
  #+liber-documentation
- "@version{#2022-12-31}
+ "@version{2024-12-22}
   @syntax{(g:value-float gvalue) => value}
   @syntax{(setf (g:value-float gvalue) value)}
-  @argument[gvalue]{a @symbol{g:value} of @code{\"gfloat\"} type}
+  @argument[gvalue]{a @symbol{g:value} instance of @code{\"gfloat\"} type}
   @argument[value]{a float value}
   @begin{short}
     Float contents of @arg{gvalue}.
   @end{short}
-  The @sym{g:value-float} function gets the contents of a @symbol{g:value}
-  of @code{\"gfloat\"} type. The @sym{(setf value-float)} function sets the
-  contents of a @symbol{g:value} to @arg{value}.
+  The @fun{g:value-float} function gets the contents of a @symbol{g:value}
+  instance of @code{\"gfloat\"} type. The @setf{g:value-float} function sets
+  the contents of a @symbol{g:value} instance to @arg{value}.
   @see-symbol{g:value}"
   (gvalue (:pointer (:struct value))))
 
 (export 'value-float)
-
-;;; ----------------------------------------------------------------------------
-;;; G_IS_PARAM_SPEC_DOUBLE()
-;;;
-;;; #define G_IS_PARAM_SPEC_DOUBLE(pspec)
-;;;         (G_TYPE_CHECK_INSTANCE_TYPE ((pspec), G_TYPE_PARAM_DOUBLE))
-;;;
-;;; Checks whether the given GParamSpec is of type G_TYPE_PARAM_DOUBLE.
-;;;
-;;; pspec :
-;;;     a valid GParamSpec instance
-;;;
-;;; Returns :
-;;;     TRUE on success.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_PARAM_SPEC_DOUBLE()
-;;;
-;;; #define G_PARAM_SPEC_DOUBLE(pspec)
-;;;         (G_TYPE_CHECK_INSTANCE_CAST ((pspec),
-;;;          G_TYPE_PARAM_DOUBLE, GParamSpecDouble))
-;;;
-;;; Cast a GParamSpec instance into a GParamSpecDouble.
-;;;
-;;; pspec :
-;;;     a valid GParamSpec instance
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_VALUE_HOLDS_DOUBLE()
-;;;
-;;; #define G_VALUE_HOLDS_DOUBLE(value)
-;;;         (G_TYPE_CHECK_VALUE_TYPE ((value), G_TYPE_DOUBLE))
-;;;
-;;; Checks whether the given GValue can hold values of type G_TYPE_DOUBLE.
-;;;
-;;; value :
-;;;     a valid GValue structure
-;;;
-;;; Returns :
-;;;     TRUE on success.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_TYPE_PARAM_DOUBLE
-;;;
-;;; #define G_TYPE_PARAM_DOUBLE (g_param_spec_types[13])
-;;;
-;;; The GType of GParamSpecDouble.
-;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
 ;;; GParamSpecDouble
@@ -1923,27 +1247,29 @@
 (setf (liber:alias-for-symbol 'param-spec-double)
       "CStruct"
       (liber:symbol-documentation 'param-spec-double)
- "@version{#2022-12-31}
-  @begin{short}
-    A @symbol{g:param-spec} derived structure that contains the meta data for
-    double properties.
-  @end{short}
-  @begin{pre}
+ "@version{2024-12-12}
+  @begin{declaration}
 (cffi:defcstruct param-spec-double
   (:parent-instance (:pointer (:struct param-spec)))
   (:minimum :double)
   (:maximum :double)
   (:default-value :double)
   (:epsilon :double))
-  @end{pre}
-  @begin[code]{table}
-    @entry[:parent-instance]{Private @symbol{g:param-spec} portion.}
-    @entry[:minimum]{A double float with the minimum value.}
-    @entry[:maximum]{A double float with the maximum value.}
-    @entry[:default-value]{A double float with the default value.}
-    @entry[:epsilon]{A double float value, values closer than epsilon will be
-      considered identical, the default value is 1e-90.}
-  @end{table}
+  @end{declaration}
+  @begin{values}
+    @begin[code]{table}
+      @entry[:parent-instance]{Private @symbol{g:param-spec} portion.}
+      @entry[:minimum]{The double float with the minimum value.}
+      @entry[:maximum]{The double float with the maximum value.}
+      @entry[:default-value]{The double float with the default value.}
+      @entry[:epsilon]{The double float value, values closer than epsilon will
+        be considered identical, the default value is 1e-90.}
+    @end{table}
+  @end{values}
+  @begin{short}
+    A @symbol{g:param-spec} derived structure that contains the meta data for
+    double properties.
+  @end{short}
   @see-symbol{g:param-spec}
   @see-function{g:param-spec-double}")
 
@@ -1956,7 +1282,7 @@
 (cffi:defcfun ("g_param_spec_double" param-spec-double)
     (:pointer (:struct param-spec-double))
  #+liber-documentation
- "@version{#2022-12-31}
+ "@version{2024-12-22}
   @argument[name]{a string with the canonical name}
   @argument[nick]{a string with the nick name}
   @argument[blurb]{a string with the description}
@@ -1964,7 +1290,8 @@
   @argument[maximum]{a double float with the maximum value}
   @argument[default]{a double float with the default value}
   @argument[flags]{a @symbol{g:param-flags} value}
-  @return{A newly created @symbol{g:param-spec-double} parameter specification.}
+  @return{The newly created @symbol{g:param-spec-double} parameter
+    specification.}
   @begin{short}
     Creates a new parameter specification instance specifying a property
     of @code{\"gdouble\"} type.
@@ -1997,73 +1324,21 @@
 
 (cffi:defcfun ("g_value_get_double" value-double) :double
  #+liber-documentation
- "@version{#2022-12-31}
+ "@version{2024-12-22}
   @syntax{(g:value-double gvalue) => value}
   @syntax{(setf (g:value-double gvalue) value)}
-  @argument[gvalue]{a @symbol{g:value} of @code{\"gdouble\"} type}
+  @argument[gvalue]{a @symbol{g:value} instance of @code{\"gdouble\"} type}
   @argument[value]{a double float value}
   @begin{short}
     Double float contents of @arg{gvalue}.
   @end{short}
-  The @sym{g:value-double} function gets the contents of a @symbol{g:value}
-  of @code{\"gdouble\"} type. The @sym{(setf value-double)} function sets the
-  contents of a @symbol{g:value} to @arg{value}.
+  The @fun{g:value-double} function gets the contents of a @symbol{g:value}
+  instance of @code{\"gdouble\"} type. The @setf{g:value-double} function sets
+  the contents of a @symbol{g:value} instance to @arg{value}.
   @see-symbol{g:value}"
   (gvalue (:pointer (:struct value))))
 
 (export 'value-double)
-
-;;; ----------------------------------------------------------------------------
-;;; G_IS_PARAM_SPEC_ENUM()
-;;;
-;;; #define G_IS_PARAM_SPEC_ENUM(pspec)
-;;;         (G_TYPE_CHECK_INSTANCE_TYPE ((pspec), G_TYPE_PARAM_ENUM))
-;;;
-;;; Checks whether the given GParamSpec is of type G_TYPE_PARAM_ENUM.
-;;;
-;;; pspec :
-;;;     a valid GParamSpec instance
-;;;
-;;; Returns :
-;;;     TRUE on success.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_PARAM_SPEC_ENUM()
-;;;
-;;; #define G_PARAM_SPEC_ENUM(pspec)
-;;;         (G_TYPE_CHECK_INSTANCE_CAST ((pspec),
-;;;          G_TYPE_PARAM_ENUM, GParamSpecEnum))
-;;;
-;;; Cast a GParamSpec instance into a GParamSpecEnum.
-;;;
-;;; pspec :
-;;;     a valid GParamSpec instance
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_VALUE_HOLDS_ENUM()
-;;;
-;;; #define G_VALUE_HOLDS_ENUM(value)
-;;;         (G_TYPE_CHECK_VALUE_TYPE ((value), G_TYPE_ENUM))
-;;;
-;;; Checks whether the given GValue can hold values derived from type
-;;; G_TYPE_ENUM.
-;;;
-;;; value :
-;;;     a valid GValue structure
-;;;
-;;; Returns :
-;;;     TRUE on success.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_TYPE_PARAM_ENUM
-;;;
-;;; #define G_TYPE_PARAM_ENUM (g_param_spec_types[10])
-;;;
-;;; The GType of GParamSpecEnum.
-;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
 ;;; GParamSpecEnum
@@ -2078,22 +1353,25 @@
 (setf (liber:alias-for-symbol 'param-spec-enum)
       "CStruct"
       (liber:symbol-documentation 'param-spec-enum)
- "@version{#2022-12-31}
-  @begin{short}
-    A @symbol{g:param-spec} derived structure that contains the meta data for
-    enum properties.
-  @end{short}
-  @begin{pre}
+ "@version{2024-12-22}
+  @begin{declaration}
 (cffi:defcstruct param-spec-enum
   (:parent-instance (:pointer (:struct param-spec)))
   (:enum-class (:pointer enum-class))
   (:default-value :int))
-  @end{pre}
-  @begin[code]{table}
-    @entry[:parent-instance]{Private @symbol{g:param-spec} portion.}
-    @entry[:enum-class]{A @symbol{g:enum-class} class instance for the enum.}
-    @entry[:default-value]{A integer with the default value.}
-  @end{table}
+  @end{declaration}
+  @begin{values}
+    @begin[code]{table}
+      @entry[:parent-instance]{Private @symbol{g:param-spec} portion.}
+      @entry[:enum-class]{The @symbol{g:enum-class} class instance for the
+        enum.}
+      @entry[:default-value]{The integer with the default value.}
+    @end{table}
+  @end{values}
+  @begin{short}
+    A @symbol{g:param-spec} derived structure that contains the meta data for
+    enum properties.
+  @end{short}
   @see-symbol{g:param-spec}
   @see-function{g:param-spec-enum}")
 
@@ -2110,7 +1388,7 @@
 (cffi:defcfun ("g_param_spec_enum" param-spec-enum)
     (:pointer (:struct param-spec-enum))
  #+liber-documentation
- "@version{#2022-12-31}
+ "@version{2024-12-22}
   @argument[name]{a string with the canonical name}
   @argument[nick]{a string with the nick name}
   @argument[blurb]{a string with the description}
@@ -2118,7 +1396,7 @@
     type}
   @argument[default]{an integer with the default value}
   @argument[flags]{a @symbol{g:param-flags} value}
-  @return{A newly created @symbol{g:param-spec-enum} parameter specification.}
+  @return{The newly created @symbol{g:param-spec-enum} parameter specification.}
   @begin{short}
     Creates a new parameter specification instance specifying a property
     of @code{\"GEnum\"} type.
@@ -2126,6 +1404,7 @@
   See the @fun{g:param-spec-internal} function for details on property names.
   @see-symbol{g:param-spec-enum}
   @see-symbol{g:param-flags}
+  @see-class{g:type-t}
   @see-function{g:param-spec-internal}"
   (name :string)
   (nick :string)
@@ -2141,9 +1420,6 @@
 ;;; g_value_set_enum
 ;;; ----------------------------------------------------------------------------
 
-;; TODO: Consider to move the code for parse-g-value-enum and set-g-value-enum
-;; to this place
-
 (defun (setf %value-enum) (value gvalue)
   (cffi:foreign-funcall "g_value_set_enum"
                         (:pointer (:struct value)) gvalue
@@ -2152,14 +1428,14 @@
   value)
 
 (defun (setf value-enum) (value gvalue)
-  (set-g-value-enum gvalue value))
+  (set-gvalue-enum gvalue value))
 
 (cffi:defcfun ("g_value_get_enum" %value-enum) :int
   (gvalue (:pointer (:struct value))))
 
 (defun value-enum (gvalue)
  #+liber-documentation
- "@version{2024-6-9}
+ "@version{2024-12-22}
   @syntax{(g:value-enum gvalue) => value}
   @syntax{(setf (g:value-enum gvalue) value)}
   @argument[gvalue]{a @symbol{g:value} instance whose type is derived from
@@ -2168,8 +1444,8 @@
   @begin{short}
     Enumeration value contents of @arg{gvalue}.
   @end{short}
-  The @sym{g:value-enum} function gets the contents of a @symbol{g:value}
-  instance of type @code{\"GEnum\"}. The @setf{value-enum} function sets the
+  The @fun{g:value-enum} function gets the contents of a @symbol{g:value}
+  instance of type @code{\"GEnum\"}. The @setf{g:value-enum} function sets the
   contents.
   @begin[Examples]{dictionary}
     @begin{pre}
@@ -2180,61 +1456,9 @@
     @end{pre}
   @end{dictionary}
   @see-symbol{g:value}"
-  (parse-g-value-enum gvalue))
+  (get-gvalue-enum gvalue))
 
 (export 'value-enum)
-
-;;; ----------------------------------------------------------------------------
-;;; G_IS_PARAM_SPEC_FLAGS()
-;;;
-;;; #define G_IS_PARAM_SPEC_FLAGS(pspec)
-;;;         (G_TYPE_CHECK_INSTANCE_TYPE ((pspec), G_TYPE_PARAM_FLAGS))
-;;;
-;;; Checks whether the given GParamSpec is of type G_TYPE_PARAM_FLAGS.
-;;;
-;;; pspec :
-;;;     a valid GParamSpec instance
-;;;
-;;; Returns :
-;;;     TRUE on success.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_PARAM_SPEC_FLAGS()
-;;;
-;;; #define G_PARAM_SPEC_FLAGS(pspec)
-;;;         (G_TYPE_CHECK_INSTANCE_CAST ((pspec),
-;;;          G_TYPE_PARAM_FLAGS, GParamSpecFlags))
-;;;
-;;; Cast a GParamSpec instance into a GParamSpecFlags.
-;;;
-;;; pspec :
-;;;     a valid GParamSpec instance
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_VALUE_HOLDS_FLAGS()
-;;;
-;;; #define G_VALUE_HOLDS_FLAGS(value)
-;;;         (G_TYPE_CHECK_VALUE_TYPE ((value), G_TYPE_FLAGS))
-;;;
-;;; Checks whether the given GValue can hold values derived from type
-;;; G_TYPE_FLAGS.
-;;;
-;;; value :
-;;;     a valid GValue structure
-;;;
-;;; Returns :
-;;;     TRUE on success.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_TYPE_PARAM_FLAGS
-;;;
-;;; #define G_TYPE_PARAM_FLAGS (g_param_spec_types[11])
-;;;
-;;; The GType of GParamSpecFlags.
-;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
 ;;; GParamSpecFlags
@@ -2249,22 +1473,25 @@
 (setf (liber:alias-for-symbol 'param-spec-flags)
       "CStruct"
       (liber:symbol-documentation 'param-spec-flags)
- "@version{#2022-12-31}
-  @begin{short}
-    A @symbol{g:param-spec} derived structure that contains the meta data for
-    flags properties.
-  @end{short}
+ "@version{2024-12-22}
   @begin{pre}
 (cffi:defcstruct param-spec-flags
   (:parent-instance (:pointer (:struct param-spec)))
   (:flags-class (:pointer flags-class))
   (:default-value :uint))
   @end{pre}
-  @begin[code]{table}
-    @entry[:parent-instance]{Private @symbol{g:param-spec} portion.}
-    @entry[:flags-class]{A @symbol{g:flags-class} class instance for the flags.}
-    @entry[:default-value]{An unsigned integer with the default value.}
-  @end{table}
+  @begin{values}
+    @begin[code]{table}
+      @entry[:parent-instance]{Private @symbol{g:param-spec} portion.}
+      @entry[:flags-class]{The @symbol{g:flags-class} class instance for the
+        flags.}
+      @entry[:default-value]{The unsigned integer with the default value.}
+    @end{table}
+  @end{values}
+  @begin{short}
+    A @symbol{g:param-spec} derived structure that contains the meta data for
+    flags properties.
+  @end{short}
   @see-symbol{g:param-spec}
   @see-function{g:param-spec-flags}")
 
@@ -2277,7 +1504,7 @@
 (cffi:defcfun ("g_param_spec_flags" param-spec-flags)
     (:pointer (:struct param-spec-flags))
  #+liber-documentation
- "@version{#2022-12-31}
+ "@version{2024-12-22}
   @argument[name]{a string with the canonical name}
   @argument[nick]{a string with the nick name}
   @argument[blurb]{a string with the description}
@@ -2285,7 +1512,8 @@
     type}
   @argument[default]{an unsigned integer with the default value}
   @argument[flags]{a @symbol{g:param-flags} value}
-  @return{A newly created @symbol{g:param-spec-flags} parameter specification.}
+  @return{The newly created @symbol{g:param-spec-flags} parameter
+    specification.}
   @begin{short}
     Creates a new parameter specification instance specifying a property
     of @code{\"GFlags\"} type.
@@ -2293,6 +1521,7 @@
   See the @fun{g:param-spec-internal} function for details on property names.
   @see-symbol{g:param-spec-flags}
   @see-symbol{g:param-flags}
+  @see-class{g:type-t}
   @see-function{g:param-spec-internal}"
   (name :string)
   (nick :string)
@@ -2308,9 +1537,6 @@
 ;;; g_value_set_flags
 ;;; ----------------------------------------------------------------------------
 
-;; TODO: Consider to move the code for parse-g-value-flags and set-g-value-flags
-;; to this place
-
 (defun (setf %value-flags) (value gvalue)
   (cffi:foreign-funcall "g_value_set_flags"
                         (:pointer (:struct value)) gvalue
@@ -2319,14 +1545,14 @@
   value)
 
 (defun (setf value-flags) (value gvalue)
-  (set-g-value-flags gvalue value))
+  (set-gvalue-flags gvalue value))
 
 (cffi:defcfun ("g_value_get_flags" %value-flags) :uint
   (gvalue (:pointer (:struct value))))
 
 (defun value-flags (gvalue)
  #+liber-documentation
- "@version{2024-6-9}
+ "@version{2024-12-22}
   @syntax{(g:value-flags gvalue) => value}
   @syntax{(setf (g:value-flags gvalue) value)}
   @argument[gvalue]{a @symbol{g:value} instance whose type is derived from
@@ -2336,9 +1562,9 @@
   @begin{short}
     Flags contents of @arg{gvalue}.
   @end{short}
-  The @sym{g:value-flags} function gets the contents of a @symbol{g:value}
-  instance of type @code{\"GFlags\"}. The @setf{value-flags} function sets the
-  contents.
+  The @fun{g:value-flags} function gets the contents of a @symbol{g:value}
+  instance of type @code{\"GFlags\"}. The @setf{g:value-flags} function sets
+  the contents.
   @begin[Examples]{dictionary}
     @begin{pre}
 (gobject:with-value (gvalue \"GApplicationFlags\")
@@ -2348,91 +1574,9 @@
     @end{pre}
   @end{dictionary}
   @see-symbol{g:value}"
-  (parse-g-value-flags gvalue))
+  (get-gvalue-flags gvalue))
 
 (export 'value-flags)
-
-;;; ----------------------------------------------------------------------------
-;;; G_IS_PARAM_SPEC_STRING()
-;;;
-;;; #define G_IS_PARAM_SPEC_STRING(pspec)
-;;;         (G_TYPE_CHECK_INSTANCE_TYPE ((pspec), G_TYPE_PARAM_STRING))
-;;;
-;;; Checks whether the given GParamSpec is of type G_TYPE_PARAM_STRING.
-;;;
-;;; pspec :
-;;;     a valid GParamSpec instance
-;;;
-;;; Returns :
-;;;     TRUE on success.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_PARAM_SPEC_STRING()
-;;;
-;;; #define G_PARAM_SPEC_STRING(pspec)
-;;;         (G_TYPE_CHECK_INSTANCE_CAST ((pspec),
-;;;          G_TYPE_PARAM_STRING, GParamSpecString))
-;;;
-;;; Casts a GParamSpec instance into a GParamSpecString.
-;;;
-;;; pspec :
-;;;     a valid GParamSpec instance
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_VALUE_HOLDS_STRING()
-;;;
-;;; #define G_VALUE_HOLDS_STRING(value)
-;;;         (G_TYPE_CHECK_VALUE_TYPE ((value), G_TYPE_STRING))
-;;;
-;;; Checks whether the given GValue can hold values of type G_TYPE_STRING.
-;;;
-;;; value :
-;;;     a valid GValue structure
-;;;
-;;; Returns :
-;;;     TRUE on success.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_VALUE_IS_INTERNED_STRING()
-;;;
-;;; #define G_VALUE_IS_INTERNED_STRING(value)
-;;;         (G_VALUE_HOLDS_STRING
-;;;           (value) && ((value)->data[1].v_uint
-;;;                   & G_VALUE_INTERNED_STRING)) GLIB_AVAILABLE_MACRO_IN_2_66
-;;;
-;;; Checks whether value contains a string which is canonical.
-;;;
-;;; value:
-;;;     a valid GValue structure
-;;;
-;;; Returns:
-;;;     TRUE if the value contains a string in its canonical representation, as
-;;;     returned by g_intern_string(). See also g_value_set_interned_string().
-;;;
-;;; Since 2.66
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_TYPE_PARAM_STRING
-;;;
-;;; #define G_TYPE_PARAM_STRING (g_param_spec_types[14])
-;;;
-;;; The GType of GParamSpecString.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_VALUE_INTERNED_STRING
-;;;
-;;; #define G_VALUE_INTERNED_STRING (1 << 28) GLIB_AVAILABLE_MACRO_IN_2_66
-;;;
-;;; For string values, indicates that the string contained is canonical and will
-;;; exist for the duration of the process. See g_value_set_interned_string().
-;;;
-;;; Since 2.66
-;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
 ;;; GParamSpecString
@@ -2453,12 +1597,8 @@
 (setf (liber:alias-for-symbol 'param-spec-string)
       "CStruct"
       (liber:symbol-documentation 'param-spec-string)
- "@version{#2022-12-31}
-  @begin{short}
-    A @symbol{g:param-spec} derived structure that contains the meta data for
-    string properties.
-  @end{short}
-  @begin{pre}
+ "@version{2024-12-22}
+  @begin{declaration}
 (cffi:defcstruct param-spec-string
   (:parent-instance (:pointer (:struct param-spec)))
   (:default-value (:string :free-to-foreign nil :free-from-foreign nil))
@@ -2466,31 +1606,29 @@
   (:cset-nth (:string :free-to-foreign nil :free-from-foreign nil))
   (:substitutor :char)
   (:flags-for-null :uint))
-  @end{pre}
-  @begin[code]{table}
-    @entry[:parent-instance]{Private @symbol{g:param-spec} portion.}
-    @entry[:default-value]{A string with the default value.}
-    @entry[:cset-frist]{A string with the containing the allowed values for the
-      first byte.}
-    @entry[:cset-nth]{A string with the containing the allowed values for the
-      subsequent bytes.}
-    @entry[:substitutor]{A character with the replacement byte for bytes
-      which do not match @code{:cset-first} or @code{cset-nth}.}
-    @entry[:flags-for-null]{An unsigned integer, replace empty string by
-      @code{nil} and @code{nil} strings by an empty string.}
-  @end{table}
+  @end{declaration}
+  @begin{values}
+    @begin[code]{table}
+      @entry[:parent-instance]{Private @symbol{g:param-spec} portion.}
+      @entry[:default-value]{The string with the default value.}
+      @entry[:cset-frist]{The string containing the allowed values for the
+        first byte.}
+      @entry[:cset-nth]{The string containing the allowed values for the
+        subsequent bytes.}
+      @entry[:substitutor]{The character with the replacement byte for bytes
+        which do not match @code{:cset-first} or @code{cset-nth}.}
+      @entry[:flags-for-null]{The unsigned integer whether to replace empty
+        string by @code{nil} and @code{nil} strings by an empty string.}
+    @end{table}
+  @end{values}
+  @begin{short}
+    A @symbol{g:param-spec} derived structure that contains the meta data for
+    string properties.
+  @end{short}
   @see-symbol{g:param-spec}
   @see-function{g:param-spec-string}")
 
 (export 'param-spec-string)
-
-;;; ----------------------------------------------------------------------------
-;;; gchararray
-;;;
-;;; typedef gchar* gchararray;
-;;;
-;;; A C representable type name for G_TYPE_STRING.
-;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_param_spec_string
@@ -2499,7 +1637,7 @@
 (cffi:defcfun ("g_param_spec_string" param-spec-string)
     (:pointer (:struct param-spec-string))
  #+liber-documentation
- "@version{#2022-12-31}
+ "@version{2024-12-22}
   @argument[name]{a string with the canonical name}
   @argument[nick]{a string with the nick name}
   @argument[blurb]{a string with the description}
@@ -2537,7 +1675,7 @@
 
 (cffi:defcfun ("g_value_get_string" value-string) :string
  #+liber-documentation
- "@version{#2022-12-31}
+ "@version{2024-12-22}
   @syntax{(g:value-string gvalue) => value}
   @syntax{(setf (g:value-string gvalue) value)}
   @argument[gvalue]{a @symbol{g:value} of @code{\"gchararray\"} type}
@@ -2546,149 +1684,13 @@
   @begin{short}
     String content of @arg{gvalue}.
   @end{short}
-  The @sym{g:value-string} function gets the contents of a @symbol{g:value}
-  of @code{\"gchararray\"} type. The @sym{(setf value-string)} function sets
-  the contents of a @symbol{g:value} to @arg{value}.
+  The @fun{g:value-string} function gets the contents of a @symbol{g:value}
+  instance of @code{\"gchararray\"} type. The @setf{g:value-string} function
+  sets the contents of a @symbol{g:value} instance to @arg{value}.
   @see-symbol{g:value}"
   (gvalue (:pointer (:struct value))))
 
 (export 'value-string)
-
-;;; ----------------------------------------------------------------------------
-;;; g_value_set_static_string ()
-;;;
-;;; void g_value_set_static_string (GValue *value, const gchar *v_string);
-;;;
-;;; Set the contents of a G_TYPE_STRING GValue to v_string. The string is
-;;; assumed to be static, and is thus not duplicated when setting the GValue.
-;;;
-;;; value :
-;;;     a valid GValue of type G_TYPE_STRING
-;;;
-;;; v_string :
-;;;     static string to be set
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_value_take_string ()
-;;;
-;;; void g_value_take_string (GValue *value, gchar *v_string);
-;;;
-;;; Sets the contents of a G_TYPE_STRING GValue to v_string.
-;;;
-;;; value :
-;;;     a valid GValue of type G_TYPE_STRING
-;;;
-;;; v_string :
-;;;     string to take ownership of
-;;;
-;;; Since 2.4
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_value_set_string_take_ownership ()
-;;;
-;;; void g_value_set_string_take_ownership (GValue *value, gchar *v_string);
-;;;
-;;; Warning
-;;;
-;;; g_value_set_string_take_ownership has been deprecated since version 2.4 and
-;;; should not be used in newly written code. Use g_value_take_string() instead.
-;;;
-;;; This is an internal function introduced mainly for C marshallers.
-;;;
-;;; value :
-;;;     a valid GValue of type G_TYPE_STRING
-;;;
-;;; v_string :
-;;;     duplicated unowned string to be set
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_value_dup_string ()
-;;;
-;;; gchar * g_value_dup_string (const GValue *value);
-;;;
-;;; Get a copy the contents of a G_TYPE_STRING GValue.
-;;;
-;;; value :
-;;;     a valid GValue of type G_TYPE_STRING
-;;;
-;;; Returns :
-;;;     a newly allocated copy of the string content of value
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_value_set_interned_string ()
-;;;
-;;; void
-;;; g_value_set_interned_string (GValue *value,
-;;;                              const gchar *v_string);
-;;;
-;;; Set the contents of a G_TYPE_STRING GValue to v_string . The string is
-;;; assumed to be static and interned (canonical, for example from
-;;; g_intern_string()), and is thus not duplicated when setting the GValue.
-;;;
-;;; value:
-;;;     a valid GValue of type G_TYPE_STRING
-;;;
-;;; v_string:
-;;;     static string to be set
-;;;
-;;; Since 2.66
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_IS_PARAM_SPEC_PARAM()
-;;;
-;;; #define G_IS_PARAM_SPEC_PARAM(pspec)
-;;;         (G_TYPE_CHECK_INSTANCE_TYPE ((pspec), G_TYPE_PARAM_PARAM))
-;;;
-;;; Checks whether the given GParamSpec is of type G_TYPE_PARAM_PARAM.
-;;;
-;;; pspec :
-;;;     a valid GParamSpec instance
-;;;
-;;; Returns :
-;;;     TRUE on success.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_PARAM_SPEC_PARAM()
-;;;
-;;; #define G_PARAM_SPEC_PARAM(pspec)
-;;;         (G_TYPE_CHECK_INSTANCE_CAST ((pspec),
-;;;          G_TYPE_PARAM_PARAM, GParamSpecParam))
-;;;
-;;; Casts a GParamSpec instance into a GParamSpecParam.
-;;;
-;;; pspec :
-;;;     a valid GParamSpec instance
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_VALUE_HOLDS_PARAM()
-;;;
-;;; #define G_VALUE_HOLDS_PARAM(value)
-;;;         (G_TYPE_CHECK_VALUE_TYPE ((value), G_TYPE_PARAM))
-;;;
-;;; Checks whether the given GValue can hold values derived from type
-;;; G_TYPE_PARAM.
-;;;
-;;; value :
-;;;     a valid GValue structure
-;;;
-;;; Returns :
-;;;     TRUE on success.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_TYPE_PARAM_PARAM
-;;;
-;;; #define G_TYPE_PARAM_PARAM (g_param_spec_types[15])
-;;;
-;;; The GType of GParamSpecParam.
-;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
 ;;; GParamSpecParam
@@ -2701,18 +1703,20 @@
 (setf (liber:alias-for-symbol 'param-spec-param)
       "CStruct"
       (liber:symbol-documentation 'param-spec-param)
- "@version{#2022-12-31}
+ "@version{2024-12-22}
+  @begin{declaration}
+(cffi:defcstruct param-spec-param
+  (:parent-instance (:pointer (:struct param-spec))))
+  @end{declaration}
+  @begin{values}
+    @begin[code]{table}
+      @entry[:parent-instance]{Private @symbol{g:param-spec} portion.}
+    @end{table}
+  @end{values}
   @begin{short}
     A @symbol{g:param-spec} derived structure that contains the meta data for
     properties of @code{\"GParam\"} type.
   @end{short}
-  @begin{pre}
-(cffi:defcstruct param-spec-param
-  (:parent-instance (:pointer (:struct param-spec))))
-  @end{pre}
-  @begin[code]{table}
-    @entry[:parent-instance]{Private @symbol{g:param-spec} portion.}
-  @end{table}
   @see-symbol{g:param-spec}
   @see-function{g:param-spec-param}")
 
@@ -2725,14 +1729,15 @@
 (cffi:defcfun ("g_param_spec_param" param-spec-param)
     (:pointer (:struct param-spec-param))
  #+liber-documentation
- "@version{#2022-12-31}
+ "@version{2024-12-22}
   @argument[name]{a string with the canonical name}
   @argument[nick]{a string with the nick name}
   @argument[blurb]{a string with the description}
   @argument[gtype]{a @class{g:type-t} type ID derived from the @code{\"GParam\"}
     type}
   @argument[flags]{a @symbol{g:param-flags} value}
-  @return{A newly created @symbol{g:param-spec-param} parameter specification.}
+  @return{The newly created @symbol{g:param-spec-param} parameter
+    specification.}
   @begin{short}
     Creates a new parameter specification instance specifying a property
     of @code{\"GParam\"} type.
@@ -2763,126 +1768,22 @@
 
 (cffi:defcfun ("g_value_get_param" value-param) (:pointer (:struct param-spec))
  #+liber-documentation
- "@version{#2022-12-31}
+ "@version{2024-12-22}
   @syntax{(g:value-param gvalue) => value}
   @syntax{(setf (g:value-param gvalue) value)}
-  @argument[gvalue]{a @symbol{g:value} whose type is derived from
-    @var{+value-param+}}
+  @argument[gvalue]{a @symbol{g:value} instance whose type is derived from
+    @code{\"GParam\"}}
   @argument[value]{a @symbol{g:param-spec} value}
   @begin{short}
     The @symbol{g:param-spec} content of @arg{gvalue}.
   @end{short}
-  The @sym{g:value-param} function gets the contents of a @symbol{g:value}
-  of @code{\"GParam\"} type. The @sym{(setf value-param)} function sets the
-  contents of a @symbol{g:value} to @arg{value}.
+  The @fun{g:value-param} function gets the contents of a @symbol{g:value}
+  instance of @code{\"GParam\"} type. The @setf{g:value-param} function sets
+  the contents of a @symbol{g:value} instance to @arg{value}.
   @see-symbol{g:value}"
   (gvalue (:pointer (:struct value))))
 
 (export 'value-param)
-
-;;; ----------------------------------------------------------------------------
-;;; g_value_take_param ()
-;;;
-;;; void g_value_take_param (GValue *value, GParamSpec *param);
-;;;
-;;; Sets the contents of a G_TYPE_PARAM GValue to param and takes over the
-;;; ownership of the callers reference to param; the caller does not have to
-;;; unref it any more.
-;;;
-;;; value :
-;;;     a valid GValue of type G_TYPE_PARAM
-;;;
-;;; param :
-;;;     the GParamSpec to be set
-;;;
-;;; Since 2.4
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_value_set_param_take_ownership ()
-;;;
-;;; void g_value_set_param_take_ownership (GValue *value, GParamSpec *param);
-;;;
-;;; Warning
-;;;
-;;; g_value_set_param_take_ownership has been deprecated since version 2.4 and
-;;; should not be used in newly written code. Use g_value_take_param() instead.
-;;;
-;;; This is an internal function introduced mainly for C marshallers.
-;;;
-;;; value :
-;;;     a valid GValue of type G_TYPE_PARAM
-;;;
-;;; param :
-;;;     the GParamSpec to be set
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_value_dup_param ()
-;;;
-;;; GParamSpec * g_value_dup_param (const GValue *value);
-;;;
-;;; Get the contents of a G_TYPE_PARAM GValue, increasing its reference count.
-;;;
-;;; value :
-;;;     a valid GValue whose type is derived from G_TYPE_PARAM
-;;;
-;;; Returns :
-;;;     GParamSpec content of value, should be unreferenced when no longer
-;;;     needed.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_IS_PARAM_SPEC_BOXED()
-;;;
-;;; #define G_IS_PARAM_SPEC_BOXED(pspec)
-;;;         (G_TYPE_CHECK_INSTANCE_TYPE ((pspec), G_TYPE_PARAM_BOXED))
-;;;
-;;; Checks whether the given GParamSpec is of type G_TYPE_PARAM_BOXED.
-;;;
-;;; pspec :
-;;;     a valid GParamSpec instance
-;;;
-;;; Returns :
-;;;     TRUE on success.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_PARAM_SPEC_BOXED()
-;;;
-;;; #define G_PARAM_SPEC_BOXED(pspec)
-;;;         (G_TYPE_CHECK_INSTANCE_CAST ((pspec),
-;;;          G_TYPE_PARAM_BOXED, GParamSpecBoxed))
-;;;
-;;; Cast a GParamSpec instance into a GParamSpecBoxed.
-;;;
-;;; pspec :
-;;;     a valid GParamSpec instance
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_VALUE_HOLDS_BOXED()
-;;;
-;;; #define G_VALUE_HOLDS_BOXED(value)
-;;;         (G_TYPE_CHECK_VALUE_TYPE ((value), G_TYPE_BOXED))
-;;;
-;;; Checks whether the given GValue can hold values derived from type
-;;; G_TYPE_BOXED.
-;;;
-;;; value :
-;;;     a valid GValue structure
-;;;
-;;; Returns :
-;;;     TRUE on success.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_TYPE_PARAM_BOXED
-;;;
-;;; #define G_TYPE_PARAM_BOXED (g_param_spec_types[16])
-;;;
-;;; The GType of GParamSpecBoxed.
-;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
 ;;; GParamSpecBoxed
@@ -2895,18 +1796,20 @@
 (setf (liber:alias-for-symbol 'param-spec-boxed)
       "CStruct"
       (liber:symbol-documentation 'param-spec-boxed)
- "@version{#2022-12-31}
+ "@version{2024-12-22}
+  @begin{declaration}
+(cffi:defcstruct param-spec-boxed
+  (:parent-instance (:pointer (:struct param-spec))))
+  @end{declaration}
+  @begin{values}
+    @begin[code]{table}
+      @entry[:parent-instance]{Private @symbol{g:param-spec} portion.}
+    @end{table}
+  @end{values}
   @begin{short}
     A @symbol{g:param-spec} derived structure that contains the meta data for
     boxed properties.
   @end{short}
-  @begin{pre}
-(cffi:defcstruct param-spec-boxed
-  (:parent-instance (:pointer (:struct param-spec))))
-  @end{pre}
-  @begin[code]{table}
-    @entry[:parent-instance]{Private @symbol{g:param-spec} portion.}
-  @end{table}
   @see-symbol{g:param-spec}
   @see-function{g:param-spec-boxed}")
 
@@ -2919,13 +1822,14 @@
 (cffi:defcfun ("g_param_spec_boxed" param-spec-boxed)
     (:pointer (:struct param-spec-boxed))
  #+liber-documentation
- "@version{#2022-12-31}
+ "@version{2024-12-22}
   @argument[name]{a string with the canonical name}
   @argument[nick]{a string with the nick name}
   @argument[blurb]{a string with the description}
   @argument[gtype]{a @code{\"GBoxed\"} derived type of this property}
   @argument[flags]{a @symbol{g:param-flags} value}
-  @return{A newly created @symbol{g:param-spec-boxed} parameter specification.}
+  @return{The newly created @symbol{g:param-spec-boxed} parameter
+    specification.}
   @begin{short}
     Creates a new parameter specification instance specifying a property
     derived of @code{\"GBoxed\"} type.
@@ -2956,16 +1860,16 @@
 
 (cffi:defcfun ("g_value_get_boxed" value-boxed) :pointer
  #+liber-documentation
- "@version{2022-12-28}
+ "@version{2024-12-22}
   @syntax{(g:value-boxed gvalue) => value}
   @syntax{(setf (g:value-boxed gvalue) value)}
-  @argument[gvalue]{a @symbol{g:value} instance of @code{GBoxed} type}
+  @argument[gvalue]{a @symbol{g:value} instance of @code{\"GBoxed\"} type}
   @argument[value]{a boxed value}
   @begin{short}
     Boxed contents of @arg{gvalue}.
   @end{short}
-  The @sym{g:value-boxed} function gets the contents of a @symbol{g:value}
-  derived of the @code{\"GBoxed\"} type. The @sym{(setf g:value-boxed)}
+  The @fun{g:value-boxed} function gets the contents of a @symbol{g:value}
+  instance derived of the @code{\"GBoxed\"} type. The @setf{g:value-boxed}
   function sets the contents of a @symbol{g:value} instance to @arg{value}.
   @see-symbol{g:value}"
   (gvalue (:pointer (:struct value))))
@@ -2973,32 +1877,16 @@
 (export 'value-boxed)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_value_set_static_boxed ()
-;;;
-;;; void g_value_set_static_boxed (GValue *value, gconstpointer v_boxed);
-;;;
-;;; Set the contents of a G_TYPE_BOXED derived GValue to v_boxed. The boxed
-;;; value is assumed to be static, and is thus not duplicated when setting the
-;;; GValue.
-;;;
-;;; value :
-;;;     a valid GValue of G_TYPE_BOXED derived type
-;;;
-;;; v_boxed :
-;;;     static boxed value to be set
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
 ;;; g_value_take_boxed
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_value_take_boxed" value-take-boxed) :void
  #+liber-documentation
- "@version{2022-12-28}
-  @argument[gvalue]{a @symbol{g:value} instance of @code{GBoxed} type}
+ "@version{2024-12-22}
+  @argument[gvalue]{a @symbol{g:value} instance of @code{\"GBoxed\"} type}
   @argument[value]{a value}
   @begin{short}
-    Sets the contents of a @symbol{g:value} instance of @code{GBoxed} type
+    Sets the contents of a @symbol{g:value} instance of @code{\"GBoxed\"} type
     to @arg{value}.
   @end{short}
   The function takes over the ownership of the callers reference to @arg{value}.
@@ -3046,57 +1934,6 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; G_IS_PARAM_SPEC_POINTER()
-;;;
-;;; #define G_IS_PARAM_SPEC_POINTER(pspec)
-;;;         (G_TYPE_CHECK_INSTANCE_TYPE ((pspec), G_TYPE_PARAM_POINTER))
-;;;
-;;; Checks whether the given GParamSpec is of type G_TYPE_PARAM_POINTER.
-;;;
-;;; pspec :
-;;;     a valid GParamSpec instance
-;;;
-;;; Returns :
-;;;     TRUE on success.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_PARAM_SPEC_POINTER()
-;;;
-;;; #define G_PARAM_SPEC_POINTER(pspec)
-;;;         (G_TYPE_CHECK_INSTANCE_CAST ((pspec),
-;;;          G_TYPE_PARAM_POINTER, GParamSpecPointer))
-;;;
-;;; Casts a GParamSpec instance into a GParamSpecPointer.
-;;;
-;;; pspec :
-;;;     a valid GParamSpec instance
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_VALUE_HOLDS_POINTER()
-;;;
-;;; #define G_VALUE_HOLDS_POINTER(value)
-;;;         (G_TYPE_CHECK_VALUE_TYPE ((value), G_TYPE_POINTER))
-;;;
-;;; Checks whether the given GValue can hold values of type G_TYPE_POINTER.
-;;;
-;;; value :
-;;;     a valid GValue structure
-;;;
-;;; Returns :
-;;;     TRUE on success.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_TYPE_PARAM_POINTER
-;;;
-;;; #define G_TYPE_PARAM_POINTER (g_param_spec_types[17])
-;;;
-;;; The GType of GParamSpecPointer.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
 ;;; GParamSpecPointer
 ;;; ----------------------------------------------------------------------------
 
@@ -3107,18 +1944,20 @@
 (setf (liber:alias-for-symbol 'param-spec-pointer)
       "CStruct"
       (liber:symbol-documentation 'param-spec-pointer)
- "@version{#2022-12-31}
+ "@version{#2024-12-22}
+  @begin{declaration}
+(cffi:defcstruct param-spec-pointer
+  (:parent-instance (:pointer (:struct param-spec))))
+  @end{declaration}
+  @begin{values}
+    @begin[code]{table}
+      @entry[:parent-instance]{Private @symbol{g:param-spec} portion.}
+    @end{table}
+  @end{values}
   @begin{short}
     A @symbol{g:param-spec} derived structure that contains the meta data for
     pointer properties.
   @end{short}
-  @begin{pre}
-(cffi:defcstruct param-spec-pointer
-  (:parent-instance (:pointer (:struct param-spec))))
-  @end{pre}
-  @begin[code]{table}
-    @entry[:parent-instance]{Private @symbol{g:param-spec} portion.}
-  @end{table}
   @see-symbol{g:param-spec}
   @see-function{g:param-spec-pointer}")
 
@@ -3131,12 +1970,12 @@
 (cffi:defcfun ("g_param_spec_pointer" param-spec-pointer)
     (:pointer (:struct param-spec-pointer))
  #+liber-documentation
- "@version{#2022-12-31}
+ "@version{#2024-12-22}
   @argument[name]{a string with the canonical name}
   @argument[nick]{a string with the nick name}
   @argument[blurb]{a string with the description}
   @argument[flags]{a @symbol{g:param-flags} value}
-  @return{A newly created @symbol{g:param-spec-pointer} parameter
+  @return{The newly created @symbol{g:param-spec-pointer} parameter
     specification.}
   @begin{short}
     Creates a new parameter specification instance specifying a property
@@ -3167,73 +2006,21 @@
 
 (cffi:defcfun ("g_value_get_pointer" value-pointer) :pointer
  #+liber-documentation
- "@version{#2022-12-31}
+ "@version{#2024-12-22}
   @syntax{(g:value-pointer gvalue) => value}
   @syntax{(setf (g:value-pointer gvalue) value)}
-  @argument[gvalue]{a valid @symbol{g:value} of @code{gpointer}}
+  @argument[gvalue]{a valid @symbol{g:value} instance of @code{gpointer}}
   @argument[value]{pointer value to be set}
   @begin{short}
     Pointer contents of @arg{gvalue}.
   @end{short}
-  The @sym{g:value-pointer} function gets the contents of a @symbol{g:value}
-  of @code{\"gpointer\"} type. The @sym{(setf value-pointer)} function sets the
-  contents of a @symbol{g:value} to @arg{value}.
+  The @fun{g:value-pointer} function gets the contents of a @symbol{g:value}
+  instance of @code{\"gpointer\"} type. The @setf{g:value-pointer} function
+  sets the contents of a @symbol{g:value} instance to @arg{value}.
   @see-symbol{g:value}"
   (gvalue (:pointer (:struct value))))
 
 (export 'value-pointer)
-
-;;; ----------------------------------------------------------------------------
-;;; G_IS_PARAM_SPEC_OBJECT()
-;;;
-;;; #define G_IS_PARAM_SPEC_OBJECT(pspec)
-;;;         (G_TYPE_CHECK_INSTANCE_TYPE ((pspec), G_TYPE_PARAM_OBJECT))
-;;;
-;;; Checks whether the given GParamSpec is of type G_TYPE_PARAM_OBJECT.
-;;;
-;;; pspec :
-;;;     a valid GParamSpec instance
-;;;
-;;; Returns :
-;;;     TRUE on success.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_PARAM_SPEC_OBJECT()
-;;;
-;;; #define G_PARAM_SPEC_OBJECT(pspec)
-;;;         (G_TYPE_CHECK_INSTANCE_CAST ((pspec),
-;;;          G_TYPE_PARAM_OBJECT, GParamSpecObject))
-;;;
-;;; Casts a GParamSpec instance into a GParamSpecObject.
-;;;
-;;; pspec :
-;;;     a valid GParamSpec instance
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_VALUE_HOLDS_OBJECT()
-;;;
-;;; #define G_VALUE_HOLDS_OBJECT(value)
-;;;         (G_TYPE_CHECK_VALUE_TYPE ((value), G_TYPE_OBJECT))
-;;;
-;;; Checks whether the given GValue can hold values derived from type
-;;; G_TYPE_OBJECT.
-;;;
-;;; value :
-;;;     a valid GValue structure
-;;;
-;;; Returns :
-;;;     TRUE on success.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_TYPE_PARAM_OBJECT
-;;;
-;;; #define G_TYPE_PARAM_OBJECT (g_param_spec_types[19])
-;;;
-;;; The GType of GParamSpecObject.
-;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
 ;;; GParamSpecObject
@@ -3246,18 +2033,20 @@
 (setf (liber:alias-for-symbol 'param-spec-object)
       "CStruct"
       (liber:symbol-documentation 'param-spec-object)
- "@version{#2022-12-31}
+ "@version{#2024-12-22}
+  @begin{declaration}
+(cffi:defcstruct param-spec-object
+  (:parent-instance (:pointer (:struct param-spec))))
+  @end{declaration}
+  @begin{values}
+    @begin[code]{table}
+      @entry[:parent-instance]{Private @symbol{g:param-spec} portion}
+    @end{table}
+  @end{values}
   @begin{short}
     A @symbol{g:param-spec} derived structure that contains the meta data for
     object properties.
   @end{short}
-  @begin{pre}
-(cffi:defcstruct param-spec-object
-  (:parent-instance (:pointer (:struct param-spec))))
-  @end{pre}
-  @begin[code]{table}
-    @entry[:parent-instance]{Private @symbol{g:param-spec} portion}
-  @end{table}
   @see-symbol{g:param-spec}
   @see-function{g:param-spec-object}")
 
@@ -3270,13 +2059,14 @@
 (cffi:defcfun ("g_param_spec_object" param-spec-object)
     (:pointer (:struct param-spec-object))
  #+liber-documentation
- "@version{#2022-12-31}
+ "@version{#2024-12-22}
   @argument[name]{a string with the canonical name}
   @argument[nick]{a string with the nick name}
   @argument[blurb]{a string with the description}
   @argument[gtype]{a @code{\"GObject\"} derived type of this property}
   @argument[flags]{a @symbol{g:param-flags} value}
-  @return{The newly created @symbol{g:param-spec-object} parameter specification.}
+  @return{The newly created @symbol{g:param-spec-object} parameter
+    specification.}
   @begin{short}
     Creates a new parameter specification instance specifying a property
     of a @code{\"GObject\"} dervived type.
@@ -3314,124 +2104,33 @@
 
 (defun value-object (gvalue)
  #+liber-documentation
- "@version{#2022-12-31}
+ "@version{#2024-12-22}
   @syntax{(g:value-object gvalue) => value}
   @syntax{(setf (g:value-object gvalue) value)}
-  @argument[gvalue]{a valid @symbol{g:value} of @code{\"GObject\"} derived
-    type}
+  @argument[gvalue]{a valid @symbol{g:value} instance of @code{\"GObject\"}
+    derived type}
   @argument[value]{object value of derived @code{\"GObject\"} type}
   @begin{short}
     Object contents of @arg{gvalue}.
   @end{short}
-  The @sym{g:value-object} function gets the contents of a @symbol{g:value}
-  of a derived @code{\"GObject\"} type. The @sym{(setf value-object)}
-  function sets the contents of a @symbol{g:value} to @arg{value}.
+  The @fun{g:value-object} function gets the contents of a @symbol{g:value}
+  instance of a derived @code{\"GObject\"} type. The @setf{g:value-object)}
+  function sets the contents of a @symbol{g:value} instance to @arg{value}.
 
-  The @sym{(setf value-object)} function increases the reference count of
-  @arg{value}, the @symbol{g:value} holds a reference to @arg{value}. If you do
-  not wish to increase the reference count of the object, i.e. you wish to pass
-  your current reference to the @symbol{g:value} because you no longer need it,
-  use the @fun{g:value-take-object} function instead.
+  The @setf{g:value-object} function increases the reference count of
+  @arg{value}, the @symbol{g:value} instance holds a reference to @arg{value}.
+  If you do not wish to increase the reference count of the object, that is,
+  you wish to pass your current reference to the @symbol{g:value} instance
+  because you no longer need it, use the @fun{g:value-take-object} function
+  instead.
 
-  It is important that your @symbol{g:value} holds a reference to @arg{value},
-  either its own, or one it has taken, to ensure that the object will not be
-  destroyed while the @symbol{g:value} still exists).
+  It is important that your @symbol{g:value} instance holds a reference to
+  @arg{value}, either its own, or one it has taken, to ensure that the object
+  will not be destroyed while the @symbol{g:value} instance still exists).
   @see-symbol{g:value}"
   (get-or-create-gobject-for-pointer (%value-get-object gvalue)))
 
 (export 'value-object)
-
-;;; ----------------------------------------------------------------------------
-;;; g_value_take_object ()
-;;;
-;;; void g_value_take_object (GValue *value, gpointer v_object);
-;;;
-;;; Sets the contents of a G_TYPE_OBJECT derived GValue to v_object and takes
-;;; over the ownership of the callers reference to v_object; the caller does
-;;; not have to unref it any more (i.e. the reference count of the object is
-;;; not increased).
-;;;
-;;; If you want the GValue to hold its own reference to v_object, use
-;;; g_value_set_object() instead.
-;;;
-;;; value :
-;;;     a valid GValue of G_TYPE_OBJECT derived type
-;;;
-;;; v_object :
-;;;     object value to be set
-;;;
-;;; Since 2.4
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_value_set_object_take_ownership ()
-;;;
-;;; void g_value_set_object_take_ownership (GValue *value, gpointer v_object);
-;;;
-;;; Warning
-;;;
-;;; g_value_set_object_take_ownership has been deprecated since version 2.4 and
-;;; should not be used in newly written code. Use g_value_take_object() instead.
-;;;
-;;; This is an internal function introduced mainly for C marshallers.
-;;;
-;;; value :
-;;;     a valid GValue of G_TYPE_OBJECT derived type
-;;;
-;;; v_object :
-;;;     object value to be set
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_value_dup_object ()
-;;;
-;;; gpointer g_value_dup_object (const GValue *value);
-;;;
-;;; Get the contents of a G_TYPE_OBJECT derived GValue, increasing its reference
-;;; count. If the contents of the GValue are NULL, then NULL will be returned.
-;;;
-;;; value :
-;;;     a valid GValue whose type is derived from G_TYPE_OBJECT
-;;;
-;;; Returns :
-;;;     object content of value, should be unreferenced when no longer needed
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_IS_PARAM_SPEC_UNICHAR()
-;;;
-;;; #define G_IS_PARAM_SPEC_UNICHAR(pspec)
-;;;         (G_TYPE_CHECK_INSTANCE_TYPE ((pspec), G_TYPE_PARAM_UNICHAR))
-;;;
-;;; Checks whether the given GParamSpec is of type G_TYPE_PARAM_UNICHAR.
-;;;
-;;; pspec :
-;;;     a valid GParamSpec instance
-;;;
-;;; Returns :
-;;;     TRUE on success.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_PARAM_SPEC_UNICHAR()
-;;;
-;;; #define G_PARAM_SPEC_UNICHAR(pspec)
-;;;         (G_TYPE_CHECK_INSTANCE_CAST ((pspec),
-;;;          G_TYPE_PARAM_UNICHAR, GParamSpecUnichar))
-;;;
-;;; Cast a GParamSpec instance into a GParamSpecUnichar.
-;;;
-;;; pspec :
-;;;     a valid GParamSpec instance
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_TYPE_PARAM_UNICHAR
-;;;
-;;; #define G_TYPE_PARAM_UNICHAR (g_param_spec_types[9])
-;;;
-;;; The GType of GParamSpecUnichar.
-;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
 ;;; struct GParamSpecUnichar
@@ -3487,61 +2186,8 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; G_IS_PARAM_SPEC_VALUE_ARRAY()
-;;;
-;;; #define G_IS_PARAM_SPEC_VALUE_ARRAY(pspec)
-;;;         (G_TYPE_CHECK_INSTANCE_TYPE ((pspec), G_TYPE_PARAM_VALUE_ARRAY))
-;;;
-;;; Warning
-;;;
-;;; G_IS_PARAM_SPEC_VALUE_ARRAY has been deprecated since version 2.32 and
-;;; should not be used in newly written code. Use GArray instead of GValueArray
-;;;
-;;; Checks whether the given GParamSpec is of type G_TYPE_PARAM_VALUE_ARRAY.
-;;;
-;;; pspec :
-;;;     a valid GParamSpec instance
-;;;
-;;; Returns :
-;;;     TRUE on success.
+;;; GParamSpecValueArray                                    not exported
 ;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_PARAM_SPEC_VALUE_ARRAY()
-;;;
-;;; #define G_PARAM_SPEC_VALUE_ARRAY(pspec)
-;;;         (G_TYPE_CHECK_INSTANCE_CAST ((pspec),
-;;;          G_TYPE_PARAM_VALUE_ARRAY, GParamSpecValueArray))
-;;;
-;;; Warning
-;;;
-;;; G_PARAM_SPEC_VALUE_ARRAY has been deprecated since version 2.32 and should
-;;; not be used in newly written code. Use GArray instead of GValueArray
-;;;
-;;; Cast a GParamSpec instance into a GParamSpecValueArray.
-;;;
-;;; pspec :
-;;;     a valid GParamSpec instance
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_TYPE_PARAM_VALUE_ARRAY
-;;;
-;;; #define G_TYPE_PARAM_VALUE_ARRAY (g_param_spec_types[18])
-;;;
-;;; Warning
-;;;
-;;; G_TYPE_PARAM_VALUE_ARRAY has been deprecated since version 2.32 and should
-;;; not be used in newly written code. Use GArray instead of GValueArray
-;;;
-;;; The GType of GParamSpecValueArray.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; GParamSpecValueArray
-;;; ----------------------------------------------------------------------------
-
-;; We do not expot this structure.
 
 (cffi:defcstruct param-spec-value-array
   (:parent-instance (:pointer (:struct param-spec)))
@@ -3552,43 +2198,43 @@
 (setf (liber:alias-for-symbol 'param-spec-value-array)
       "CStruct"
       (liber:symbol-documentation 'param-spec-value-array)
- "@version{#2022-12-31}
-  @begin{short}
-    A @symbol{g:param-spec} derived structure that contains the meta data for
-    @code{GValueArray} properties.
-  @end{short}
-  @begin{pre}
+ "@version{#2024-12-22}
+  @begin{declaration}
 (cffi:defcstruct param-spec-value-array
   (:parent-instance (:pointer (:struct param-spec)))
   (:element-spec (:pointer (:struct param-spec)))
   (:fixed-n-elements :uint))
-  @end{pre}
-  @begin[code]{table}
-    @entry[:private-instance]{Private @symbol{g:param-spec} portion.}
-    @entry[:element-spec]{a @symbol{g:param-spec} describing the elements
-      contained in arrays of this property, may be @code{NULL}}
-    @entry[:fixed-n-elements]{a @code{:uint}, if greater than 0, arrays of this
-      property will always have this many elements}
-  @end{table}
+  @end{declaration}
+  @begin{values}
+    @begin[code]{table}
+      @entry[:private-instance]{Private @symbol{g:param-spec} portion.}
+      @entry[:element-spec]{The @symbol{g:param-spec} describing the elements
+        contained in arrays of this property, may be @code{NULL}}
+      @entry[:fixed-n-elements]{The @code{:uint}, if greater than 0, arrays of
+        this property will always have this many elements}
+    @end{table}
+  @end{values}
+  @begin{short}
+    A @symbol{g:param-spec} derived structure that contains the meta data for
+    @code{GValueArray} properties.
+  @end{short}
   @see-symbol{g:param-spec}")
 
 ;;; ----------------------------------------------------------------------------
-;;; g_param_spec_value_array
+;;; g_param_spec_value_array                                not exported
 ;;; ----------------------------------------------------------------------------
-
-;; We dot not export this function.
 
 (cffi:defcfun ("g_param_spec_value_array" param-spec-value-array)
     (:pointer (:struct param-spec-value-array))
  #+liber-documentation
- "@version{#2020-8-27}
+ "@version{#2024-12-22}
   @argument[name]{a @code{:string} with the canonical name}
   @argument[nick]{a @code{:string} with the nick name}
   @argument[blurb]{a @code{:string} with the description}
   @argument[element-spec]{a @symbol{g:param-spec} describing the elements
     contained in arrays of this property, may be @code{NULL}}
   @argument[flags]{a @symbol{g:param-flags} value}
-  @return{A newly created @symbol{g:param-spec-value-array} parameter
+  @return{The newly created @symbol{g:param-spec-value-array} parameter
     specification.}
   @begin{short}
     Creates a new parameter specificytion instance specifying a
@@ -3606,48 +2252,6 @@
   (blurb :string)
   (element-spec (:pointer (:struct param-spec)))
   (flags param-flags))
-
-;;; ----------------------------------------------------------------------------
-;;; G_IS_PARAM_SPEC_OVERRIDE()
-;;;
-;;; #define G_IS_PARAM_SPEC_OVERRIDE(pspec)
-;;;         (G_TYPE_CHECK_INSTANCE_TYPE ((pspec), G_TYPE_PARAM_OVERRIDE))
-;;;
-;;; Checks whether the given GParamSpec is of type G_TYPE_PARAM_OVERRIDE.
-;;;
-;;; pspec :
-;;;     a GParamSpec
-;;;
-;;; Returns :
-;;;     TRUE on success.
-;;;
-;;; Since 2.4
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_PARAM_SPEC_OVERRIDE()
-;;;
-;;; #define G_PARAM_SPEC_OVERRIDE(pspec)
-;;;         (G_TYPE_CHECK_INSTANCE_CAST ((pspec),
-;;;          G_TYPE_PARAM_OVERRIDE, GParamSpecOverride))
-;;;
-;;; Casts a GParamSpec into a GParamSpecOverride.
-;;;
-;;; pspec :
-;;;     a GParamSpec
-;;;
-;;; Since 2.4
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_TYPE_PARAM_OVERRIDE
-;;;
-;;; #define G_TYPE_PARAM_OVERRIDE (g_param_spec_types[20])
-;;;
-;;; The GType of GParamSpecOverride.
-;;;
-;;; Since 2.4
-;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
 ;;; struct GParamSpecOverride
@@ -3689,65 +2293,6 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; G_IS_PARAM_SPEC_GTYPE()
-;;;
-;;; #define G_IS_PARAM_SPEC_GTYPE(pspec)
-;;;         (G_TYPE_CHECK_INSTANCE_TYPE ((pspec), G_TYPE_PARAM_GTYPE))
-;;;
-;;; Checks whether the given GParamSpec is of type G_TYPE_PARAM_GTYPE.
-;;;
-;;; pspec :
-;;;     a GParamSpec
-;;;
-;;; Returns :
-;;;     TRUE on success.
-;;;
-;;; Since 2.10
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_PARAM_SPEC_GTYPE()
-;;;
-;;; #define G_PARAM_SPEC_GTYPE(pspec)
-;;;         (G_TYPE_CHECK_INSTANCE_CAST ((pspec),
-;;;          G_TYPE_PARAM_GTYPE, GParamSpecGType))
-;;;
-;;; Casts a GParamSpec into a GParamSpecGType.
-;;;
-;;; pspec :
-;;;     a GParamSpec
-;;;
-;;; Since 2.10
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_VALUE_HOLDS_GTYPE()
-;;;
-;;; #define G_VALUE_HOLDS_GTYPE(value)
-;;;         (G_TYPE_CHECK_VALUE_TYPE ((value), G_TYPE_GTYPE))
-;;;
-;;; Checks whether the given GValue can hold values of type G_TYPE_GTYPE.
-;;;
-;;; value :
-;;;     a valid GValue structure
-;;;
-;;; Returns :
-;;;     TRUE on success.
-;;;
-;;; Since 2.12
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_TYPE_PARAM_GTYPE
-;;;
-;;; #define G_TYPE_PARAM_GTYPE (g_param_spec_types[21])
-;;;
-;;; The GType of GParamSpecGType.
-;;;
-;;; Since 2.10
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
 ;;; GParamSpecGType
 ;;; ----------------------------------------------------------------------------
 
@@ -3759,22 +2304,25 @@
 (setf (liber:alias-for-symbol 'param-spec-gtype)
       "CStruct"
       (liber:symbol-documentation 'param-spec-gtype)
- "@version{#2022-12-31}
+ "@version{2024-12-22}
+  @begin{declaration}
+(cffi:defcstruct param-spec-gtype
+  (:parent-instance (:pointer (:struct param-spec)))
+  (:is-a-type type-t))
+  @end{declaration}
+  @begin{values}
+    @begin[code]{table}
+      @entry[:parent-instance]{Private @symbol{g:param-spec} portion.}
+      @entry[:is-a-type]{The @class{g:type-t} type ID whose subtypes can occur
+        as values.}
+    @end{table}
+  @end{values}
   @begin{short}
     A @symbol{g:param-spec} derived structure that contains the meta data for
     @class{g:type-t} type ID properties.
   @end{short}
-  @begin{pre}
-(cffi:defcstruct param-spec-gtype
-  (:parent-instance (:pointer (:struct param-spec)))
-  (:is-a-type type-t))
-  @end{pre}
-  @begin[code]{table}
-    @entry[:parent-instance]{Private @symbol{g:param-spec} portion.}
-    @entry[:is-a-type]{A @class{g:type-t} type ID whose subtypes can occur as
-      values.}
-  @end{table}
   @see-symbol{g:param-spec}
+  @see-symbol{g:type-t}
   @see-function{g:param-spec-gtype}")
 
 (export 'param-spec-gtype)
@@ -3786,16 +2334,17 @@
 (cffi:defcfun ("g_param_spec_gtype" param-spec-gtype)
     (:pointer (:struct param-spec-gtype))
  #+liber-documentation
- "@version{#2022-12-31}
+ "@version{2024-12-22}
   @argument[name]{a string with the canonical name}
   @argument[nick]{a string with the nick name}
   @argument[blurb]{a string with the description}
   @argument[is-a-type]{a @class{g:type-t} type ID whose subtypes are allowed as
     values of the property (use the \"void\" type for any type)}
   @argument[flags]{a @symbol{g:param-flags} value}
-  @return{A newly created @symbol{g:param-spec-gtype} parameter specification.}
+  @return{The newly created @symbol{g:param-spec-gtype} parameter
+    specification.}
   @begin{short}
-    Creates a new parameter specification instance specifying a \"GType\"
+    Creates a new parameter specification instance specifying a @code{\"GType\"}
     property.
   @end{short}
   See the @fun{g:param-spec-internal} function for details on property names.
@@ -3816,16 +2365,19 @@
 ;;; g_value_set_gtype
 ;;; ----------------------------------------------------------------------------
 
+;; TODO: Is this implementation correct?!
+
 (defun (setf value-gtype) (value gvalue)
-  (cffi:foreign-funcall "g_value_set_gtype"
-                        (:pointer (:struct value)) gvalue
-                        type-t value
-                        :void)
-  value)
+  (let ((value (glib:gtype value)))
+    (cffi:foreign-funcall "g_value_set_gtype"
+                          (:pointer (:struct value)) gvalue
+                          type-t value
+                          :void)
+    value))
 
 (cffi:defcfun ("g_value_get_gtype" value-gtype) type-t
  #+liber-documentation
- "@version{#2022-12-31}
+ "@version{2024-12-22}
   @syntax{(g:value-gtype gvalue) => value}
   @syntax{(setf (g:value-gtype gvalue) value)}
   @argument[gvalue]{a valid @symbol{g:value} instance of @class{g:type-t}
@@ -3833,74 +2385,15 @@
   @argument[value]{a @class{g:type-t} type ID value}
   @return{The @class{g:type-t} type ID stored in @arg{gvalue}.}
   @begin{short}
-    The @sym{g:type-gtype} function gets the contents of a @class{g:type-t}
+    The @fun{g:value-gtype} function gets the contents of a @class{g:type-t}
     type ID value.
   @end{short}
-  The @sym{(setf g:value-gtype)} function sets the contents.
+  The @setf{g:value-gtype} function sets the contents.
   @see-symbol{g:value}
   @see-class{g:type-t}"
   (gvalue (:pointer (:struct value))))
 
 (export 'value-gtype)
-
-;;; ----------------------------------------------------------------------------
-;;; G_IS_PARAM_SPEC_VARIANT()
-;;;
-;;; #define G_IS_PARAM_SPEC_VARIANT(pspec)
-;;;         (G_TYPE_CHECK_INSTANCE_TYPE ((pspec), G_TYPE_PARAM_VARIANT))
-;;;
-;;; Checks whether the given GParamSpec is of type G_TYPE_PARAM_VARIANT.
-;;;
-;;; pspec :
-;;;     a GParamSpec
-;;;
-;;; Returns :
-;;;     TRUE on success
-;;;
-;;; Since 2.26
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_PARAM_SPEC_VARIANT()
-;;;
-;;; #define G_PARAM_SPEC_VARIANT(pspec)
-;;;         (G_TYPE_CHECK_INSTANCE_CAST ((pspec),
-;;;          G_TYPE_PARAM_VARIANT, GParamSpecVariant))
-;;;
-;;; Casts a GParamSpec into a GParamSpecVariant.
-;;;
-;;; pspec :
-;;;     a GParamSpec
-;;;
-;;; Since 2.26
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_VALUE_HOLDS_VARIANT()
-;;;
-;;; #define G_VALUE_HOLDS_VARIANT(value)
-;;;         (G_TYPE_CHECK_VALUE_TYPE ((value), G_TYPE_VARIANT))
-;;;
-;;; Checks whether the given GValue can hold values of type G_TYPE_VARIANT.
-;;;
-;;; value :
-;;;     a valid GValue structure
-;;;
-;;; Returns :
-;;;     TRUE on success.
-;;;
-;;; Since 2.26
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_TYPE_PARAM_VARIANT
-;;;
-;;; #define G_TYPE_PARAM_VARIANT (g_param_spec_types[22])
-;;;
-;;; The GType of GParamSpecVariant.
-;;;
-;;; Since 2.26
-;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
 ;;; struct GParamSpecVariant
@@ -3981,17 +2474,17 @@
 (cffi:defcfun ("g_value_get_variant" value-variant)
     (:pointer (:struct glib:variant))
  #+liber-documentation
- "@version{#2022-12-31}
+ "@version{#2024-12-22}
   @syntax{(g:value-variant gvalue) => value}
   @syntax{(setf (g:value-variant gvalue) value)}
-  @argument[gvalue]{a @symbol{g:value} of @code{\"GVariant\"} type}
+  @argument[gvalue]{a @symbol{g:value} instance of @code{\"GVariant\"} type}
   @argument[value]{a @symbol{g:variant} value}
   @begin{short}
     Variant contents of @arg{gvalue}.
   @end{short}
-  The @sym{g:value-variant} function gets the contents of a @symbol{g:value}
-  of type @symbol{g:variant}. The @sym{(setf value-variant)} function sets
-  the contents of a @symbol{g:value} to @arg{value}.
+  The @fun{g:value-variant} function gets the contents of a @symbol{g:value}
+  instance of type @code{\"GVariant\"}. The @setf{g:value-variant} function
+  sets the contents.
   @see-symbol{g:value}
   @see-symbol{g:variant}"
   (gvalue (:pointer (:struct value))))

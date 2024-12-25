@@ -446,7 +446,7 @@
                                                   (format t "Enter new value: ")
                                                   (list (eval (read))))
                                                 value))))
-      (set-g-value g-value value property-type))))
+      (set-gvalue g-value value property-type))))
 
 (cffi:defcallback c-object-property-get :void
     ((instance :pointer)
@@ -471,7 +471,7 @@
                               (subclass-info-properties lisp-type-info)
                               :test 'string= :key 'first))
          (property-set-fn (third property-info))
-         (new-value (parse-g-value value)))
+         (new-value (value-get value)))
     (assert (fifth property-info))
     (restart-case
       (funcall (fdefinition (list 'setf property-set-fn)) new-value lisp-object)

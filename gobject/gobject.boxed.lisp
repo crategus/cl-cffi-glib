@@ -252,6 +252,7 @@
 ;;; G_TYPE_STRV
 ;;; ----------------------------------------------------------------------------
 
+#+nil
 (cffi:defcfun ("g_strv_get_type" type-strv) type-t
  #+liber-documentation
  "@version{#2022-12-17}
@@ -263,9 +264,11 @@
   @see-class{g:type-t}
   @see-type{g:strv-t}")
 
+#+nil
 (export 'type-strv)
 
-(glib-init:at-init nil (type-strv))
+#+nil
+(glib-init:at-init () (type-strv))
 
 ;;; ----------------------------------------------------------------------------
 ;;; G_TYPE_REGEX

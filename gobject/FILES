@@ -8,9 +8,9 @@ Content from the GObject 2.80 Reference Manual
   gobject.base.lisp        - GObject                           - GObject 2.82 .
   gobject.enumeration.lisp - Enumeration and Flag Types        - GObject 2.66
   gobject.boxed.lisp       - Boxed Types                       - GObject 2.66
-  gobject.g-value.lisp     - Generic values                    - GObject 2.66
-  gobject.param.lisp       - Parameters and Values             - GObject 2.66
-  gobject.param-spec.lisp  - GParamSpec                        - GObject 2.80 .
+  gobject.g-value.lisp     - Generic values                    - GObject 2.82 .
+  gobject.param.lisp       - Parameters and Values             - GObject 2.82 .
+  gobject.param-spec.lisp  - GParamSpec                        - GObject 2.82 .
 
   * not implemented *      - Varargs Value Collection
 
@@ -21,4 +21,4 @@ Content from the GObject 2.80 Reference Manual
 
   gobject.binding.lisp     - GBinding                          - GObject 2.82 .
 
-2024-12-11
+2024-12-22

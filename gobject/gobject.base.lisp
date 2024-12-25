@@ -332,7 +332,10 @@ lambda (object pspec)    :no-hooks
       (let ((locks-were-present (not (null gobject-gc-hooks))))
         (push pointer gobject-gc-hooks)
         (unless locks-were-present
-          (glib:idle-add #'activate-gc-hooks))))))
+          (glib:idle-add #'activate-gc-hooks)))))
+
+  (defun get-gobject-gc-hooks ()
+    gobject-gc-hooks))
 
 ;;; ----------------------------------------------------------------------------
 
@@ -478,11 +481,11 @@ lambda (object pspec)    :no-hooks
 ;;; ----------------------------------------------------------------------------
 
 ;; Get the definition of a property for the GObject type. Both arguments are of
-;; type string, e.g. (class-property-info "GtkLabel" "label")
+;; type string, for example (class-property-info "GtkLabel" "label")
 
 ;; TODO: Duplicates the implementation of OBJECT-CLASS-FIND-PROPERTY. But
-;; we return a %PARAM-SPEC instance which is the Lisp side of a GParamSpec
-;; instance. Improve the implementation of GParamSpec!?
+;; we return a %PARAM-SPEC instance which is the Lisp side of GParamSpec.
+;; Improve the implementation of GParamSpec!?
 
 (defun class-property-pspec (gtype name)
   (let ((class (type-class-ref gtype)))
@@ -490,7 +493,7 @@ lambda (object pspec)    :no-hooks
       (unwind-protect
         (let ((pspec (%object-class-find-property class name)))
           (unless (cffi:null-pointer-p pspec)
-            (parse-g-param-spec pspec)))
+            (parse-param-spec pspec)))
         (type-class-unref class)))))
 
 ;; Get the type of a property NAME for a class of type GTYPE
@@ -598,10 +601,7 @@ lambda (object pspec)    :no-hooks
             (for type1 = (or type
                              (class-property-type gtype name)))
             (for gvalue = (cffi:mem-aptr aptr-values '(:struct value) i))
-            (set-g-value gvalue
-                         value
-                         type1
-                         :zero-gvalue t))
+             (set-gvalue gvalue value type1))
       (unwind-protect
         (glib-sys:with-foreign-string-array (aptr-names names)
           (%object-new-with-properties gtype
@@ -1315,12 +1315,8 @@ lambda (object pspec)    :no-hooks
           (class-property-type (type-from-instance object)
                                name
                                :assert-writable t)))
-  (cffi:with-foreign-object (new-value '(:struct value))
-    (unwind-protect
-      (progn
-        (set-g-value new-value value gtype :zero-gvalue t)
-        (%object-set-property object name new-value))
-      (value-unset new-value)))
+  (with-value (gvalue gtype value)
+    (%object-set-property object name gvalue))
   value)
 
 (cffi:defcfun ("g_object_get_property" %object-get-property) :void
@@ -1359,13 +1355,9 @@ lambda (object pspec)    :no-hooks
                                  name
                                  :assert-readable t)))
     (return-nil () (return-from object-property nil)))
-  (cffi:with-foreign-object (value '(:struct value))
-    (unwind-protect
-      (progn
-        (value-init value gtype)
-        (%object-get-property object name value)
-        (parse-g-value value))
-      (value-unset value))))
+  (with-value (gvalue gtype)
+    (%object-get-property object name gvalue)
+    (get-gvalue gvalue gtype)))
 
 (export 'object-property)
 

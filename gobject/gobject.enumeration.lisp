@@ -151,7 +151,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;; Called from the gobject:value-enum function
-(defun parse-g-value-enum (gvalue)
+(defun get-gvalue-enum (gvalue)
   (let* ((gtype (value-type gvalue))
          (enum-type (glib:symbol-for-gtype gtype)))
     (unless enum-type
@@ -159,7 +159,7 @@
     (cffi:convert-from-foreign (%value-enum gvalue) enum-type)))
 
 ;; Called from the (setf gobject:value-enum) function
-(defun set-g-value-enum (gvalue value)
+(defun set-gvalue-enum (gvalue value)
   (let* ((gtype (value-type gvalue))
          (enum-type (glib:symbol-for-gtype gtype)))
     (unless enum-type
@@ -405,16 +405,16 @@
 
 ;;; ----------------------------------------------------------------------------
 
-;; parse-g-value-flags is called from the function parse-g-value
-(defun parse-g-value-flags (gvalue)
+;; get-gvalue-flags is called from the function get-gvalue
+(defun get-gvalue-flags (gvalue)
   (let* ((gtype (value-type gvalue))
          (flags-type (glib:symbol-for-gtype (glib:gtype-name gtype))))
     (unless flags-type
       (error "Flags ~A is not registered." (glib:gtype-name gtype)))
     (cffi:convert-from-foreign (%value-flags gvalue) flags-type)))
 
-;; This function is called from set-g-value to set a GFlag value
-(defun set-g-value-flags (gvalue value)
+;; This function is called from set-gvalue to set a GFlag value
+(defun set-gvalue-flags (gvalue value)
   (let* ((gtype (value-type gvalue))
          (flags-type (glib:symbol-for-gtype (glib:gtype-name gtype))))
     (unless flags-type
