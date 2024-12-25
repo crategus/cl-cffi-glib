@@ -78,7 +78,7 @@
    :interfaces ("GListModel")
    :type-initializer "g_list_store_get_type")
   ((item-type
-    %list-store-item-type ; internal only, not used
+    list-store-item-type
     "item-type" "GType" t t)
    #+glib-2-74
    (n-items
@@ -87,7 +87,7 @@
 
 #+liber-documentation
 (setf (documentation 'list-store 'type)
- "@version{2024-3-31}
+ "@version{2024-12-22}
   @begin{short}
     The @class{g:list-store} object is an implementation of the
     @class{g:list-model} interface that stores all items in memory.
@@ -107,10 +107,6 @@
 
 ;;; --- g:list-store-item-type -------------------------------------------------
 
-;; Note: We define the accessor with the interface function. This way we get
-;; the expected GType for ITEM-TYPE. The accessor %LIST-STORE-ITEM-TYPE returns
-;; a pointer.
-
 #+liber-documentation
 (setf (documentation (liber:slot-documentation "item-type" 'list-store) t)
  "The @code{item-type} property of type @class{g:type-t}
@@ -118,16 +114,11 @@
   The type of items contained in the list store. Items must be subclasses of
   the @class{g:object} class.")
 
-(declaim (inline list-store-item-type))
-
-(defun list-store-item-type (object)
-  (list-model-item-type object))
-
 #+liber-documentation
 (setf (liber:alias-for-function 'list-store-item-type)
       "Accessor"
       (documentation 'list-store-item-type 'function)
- "@version{2024-3-31}
+ "@version{2024-12-22}
   @syntax{(g:list-store-item-type object) => gtype}
   @argument[object]{a @class{g:list-store} object}
   @argument[gtype]{a @class{g:type-t} type ID}
@@ -139,6 +130,14 @@
   the @class{g:object} class.
   @begin[Note]{dictionary}
     This function is equivalent to the @fun{g:list-model-item-type} function.
+  @end{dictionary}
+  @begin[Examples]{dictionary}
+    @begin{pre}
+(g:list-store-new \"GSimpleAction\")
+=> #<GIO:LIST-STORE {1003FCA4C3@}>
+(g:list-store-item-type *)
+=> #<GTYPE :name \"GSimpleAction\" :id 106084831684528>
+    @end{pre}
   @end{dictionary}
   @see-class{g:list-store}
   @see-class{g:type-t}

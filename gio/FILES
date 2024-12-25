@@ -20,7 +20,7 @@ Asynchronous I/O
 File types and applications
 
   gio.content-type.lisp        - Platform-specific content typing     GIO 2.82 .
-  gio.app-info.lisp            - GAppInfo                             GIO 2.76 &
+  gio.app-info.lisp            - GAppInfo                             GIO 2.82&.
 
   not implemented              - GAppInfoMonitor
   not implemented              - GDesktopAppInfo
@@ -80,4 +80,4 @@ Application support
 
   gio.notification.lisp        - GNotification                      - GIO 2.68
 
-2024-10-12
+2024-12-22

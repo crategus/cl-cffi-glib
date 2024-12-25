@@ -77,11 +77,11 @@
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_simple_permission_new" simple-permission-new)
-    (gobject:object permission)
+    (gobject:object permission :return)
  #+liber-documentation
- "@version{2023-5-5}
+ "@version{2024-12-19}
   @argument[allowed]{a boolean whether the action is allowed}
-  @return{A @class{g:simple-permission} instance.}
+  @return{The newly created @class{g:simple-permission} instance.}
   @begin{short}
     Creates a new @class{g:permission} instance that represents an action that
     is either always or never allowed.

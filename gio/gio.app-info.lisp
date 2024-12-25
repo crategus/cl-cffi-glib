@@ -137,7 +137,7 @@
 (setf (liber:alias-for-symbol 'app-info-create-flags)
       "GFlags"
       (liber:symbol-documentation 'app-info-create-flags)
- "@version{2023-7-11}
+ "@version{2024-12-22}
   @begin{declaration}
 (gobject:define-gflags \"GAppInfoCreateFlags\" app-info-create-flags
   (:export t
@@ -174,11 +174,14 @@
 (setf (liber:alias-for-class 'app-info)
       "Interface"
       (documentation 'app-info 'type)
- "@version{2022-12-27}
+ "@version{2024-12-22}
   @begin{short}
     Information about an installed application and methods to launch it with
     file arguments.
   @end{short}
+  The @class{g:app-info} interface and the @class{g:app-launch-context} object
+  are used for describing and launching applications installed on the system.
+  @see-class{g:app-info}
   @see-class{g:app-launch-context}")
 
 ;;; ----------------------------------------------------------------------------
@@ -194,7 +197,7 @@
 
 #+liber-documentation
 (setf (documentation 'app-launch-context 'type)
- "@version{2023-11-26}
+ "@version{2024-12-22}
   @begin{short}
     Integrating the launch with the launching application.
   @end{short}
@@ -208,7 +211,7 @@ lambda (context startup-notify-id)    :run-last
       @begin[code]{table}
         @entry[context]{The @class{g:app-launch-context} object emitting the
           signal.}
-        @entry[startup-notify-id]{A string with the startup notification ID
+        @entry[startup-notify-id]{The string with the startup notification ID
           for the failed launch.}
       @end{table}
       The signal is emitted when a @class{g:app-info} launch fails. The startup
@@ -221,9 +224,9 @@ lambda (context info platform-data)    :run-first
      @begin[code]{table}
        @entry[context]{The @class{g:app-launch-context} object emitting the
          signal.}
-       @entry[info]{A @class{g:app-info} instance that is about to be
+       @entry[info]{The @class{g:app-info} instance that is about to be
          launched.}
-       @entry[platform-data]{A @type{g:variant} value with additional
+       @entry[platform-data]{The @type{g:variant} value with additional
          platform specific data for this launch. The argument can be
          @code{NULL}.}
      @end{table}
@@ -257,7 +260,7 @@ lambda (context info platform-data)    :run-last
         @entry[context]{The @class{g:app-launch-context} object emitting the
           signal.}
         @entry[info]{The @class{g:app-info} object that was just launched.}
-        @entry[platform-data]{A @type{g:variant} instance with additional
+        @entry[platform-data]{The @type{g:variant} instance with additional
           platform specific data for this launch.}
       @end{table}
       The signal is emitted when a @class{g:app-info} object is successfully
@@ -276,33 +279,34 @@ lambda (context info platform-data)    :run-last
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_create_from_commandline"
-                %app-info-create-from-commandline) (gobject:object app-info)
-  (commandline :string)
+                %app-info-create-from-commandline)
+    (gobject:object app-info :return)
+  (cmdline :string)
   (application :string)
   (flags app-info-create-flags)
   (err :pointer))
 
-(defun app-info-create-from-commandline (commandline application flags)
+(defun app-info-create-from-commandline (cmdline application flags)
  #+liber-documentation
- "@version{#2024-11-21}
-  @argument[commandline]{a string with the the commandline to use}
-  @argument[application]{a string the application name, or @code{nil} to use
-    @arg{commandline}}
+ "@version{2024-12-22}
+  @argument[cmdline]{a string with the the commandline to use}
+  @argument[application]{a string with the application name, or @code{nil} to
+    use @arg{cmdline}}
   @argument[flags]{a @symbol{g:app-info-create-flags} value with the flags that
     can specify details of the created @class{g:app-info} instance}
   @return{The new @class{g:app-info} instance.}
   @begin{short}
     Creates a new @class{g:app-info} instance from the given information.
   @end{short}
-  Note that for the @arg{commandline} argument, the quoting rules of the Exec
-  key of the freedesktop.org Desktop Entry Specification are applied. For
-  example, if the @arg{commandline} argument contains percent-encoded URIs, the
-  percent-character must be doubled in order to prevent it from being swallowed
-  by Exec key unquoting. See the specification for exact quoting rules.
+  Note that for the @arg{cmdline} argument, the quoting rules of the Exec key
+  of the freedesktop.org Desktop Entry Specification are applied. For example,
+  if the @arg{cmdline} argument contains percent-encoded URIs, the percent
+  character must be doubled in order to prevent it from being swallowed by Exec
+  key unquoting. See the specification for exact quoting rules.
   @see-class{g:app-info}
   @see-symbol{g:app-info-create-flags}"
   (glib:with-error (err)
-    (%app-info-create-from-commandline commandline application flags err)))
+    (%app-info-create-from-commandline cmdline application flags err)))
 
 (export 'app-info-create-from-commandline)
 
@@ -310,16 +314,16 @@ lambda (context info platform-data)    :run-last
 ;;; g_app_info_dup
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcfun ("g_app_info_dup" app-info-dup) (gobject:object app-info)
+(cffi:defcfun ("g_app_info_dup" app-info-dup) (gobject:object :return)
  #+liber-documentation
- "@version{#2023-7-11}
+ "@version{2024-12-22}
   @argument[info]{a @class{g:app-info} instance}
-  @return{A duplicate of @arg{info}.}
+  @return{The @class{g:app-info} instance with the duplicate of @arg{info}.}
   @begin{short}
     Creates a duplicate of an application info.
   @end{short}
   @see-class{g:app-info}"
-  (info (gobject:object app-info)))
+  (info gobject:object))
 
 (export 'app-info-dup)
 
@@ -329,7 +333,7 @@ lambda (context info platform-data)    :run-last
 
 (cffi:defcfun ("g_app_info_equal" app-info-equal) :boolean
  #+liber-documentation
- "@version{#2023-7-11}
+ "@version{2024-12-22}
   @argument[info1]{a first @class{g:app-info} instance}
   @argument[info2]{a second @class{g:app-info} instance}
   @return{@em{True} if @arg{info1} is equal to @arg{info2}, @em{false}
@@ -338,8 +342,8 @@ lambda (context info platform-data)    :run-last
     Checks if two application infos are equal.
   @end{short}
   @see-class{g:app-info}"
-  (info1 (gobject:object app-info))
-  (info2 (gobject:object app-info)))
+  (info1 gobject:object)
+  (info2 gobject:object))
 
 (export 'app-info-equal)
 
@@ -349,9 +353,9 @@ lambda (context info platform-data)    :run-last
 
 (cffi:defcfun ("g_app_info_get_id" app-info-id) :string
  #+liber-documentation
- "@version{#2023-7-11}
+ "@version{2024-12-22}
   @argument[info]{a @class{g:app-info} instance}
-  @return{A string containing the ID of the application.}
+  @return{The string containing the ID of the application.}
   @begin{short}
     Gets the ID of an application.
   @end{short}
@@ -372,9 +376,9 @@ lambda (context info platform-data)    :run-last
 
 (cffi:defcfun ("g_app_info_get_name" app-info-name) :string
  #+liber-documentation
- "@version{#2023-7-11}
+ "@version{2024-12-22}
   @argument[info]{a @class{g:app-info} instance}
-  @return{A string with the the name of the application for @arg{info}.}
+  @return{The string with the the name of the application for @arg{info}.}
   @begin{short}
     Gets the installed name of the application.
   @end{short}
@@ -390,7 +394,7 @@ lambda (context info platform-data)    :run-last
 
 (cffi:defcfun ("g_app_info_get_display_name" app-info-display-name) :string
  #+liber-documentation
- "@version{2023-11-26}
+ "@version{2024-12-22}
   @argument[info]{a @class{g:app-info} instance}
   @return{The string with the the display name of the application for
     @arg{info}, or the name of the application if no display name is available.}
@@ -411,9 +415,9 @@ lambda (context info platform-data)    :run-last
 
 (cffi:defcfun ("g_app_info_get_description" app-info-description) :string
  #+liber-documentation
- "@version{#2023-7-11}
+ "@version{2024-12-22}
   @argument[info]{a @class{g:app-info} instance}
-  @return{A string containing a description of the application @arg{info},
+  @return{The string containing a description of the application @arg{info},
     or @code{nil} if none.}
   @begin{short}
     Gets a human readable description of an installed application.
@@ -429,9 +433,9 @@ lambda (context info platform-data)    :run-last
 
 (cffi:defcfun ("g_app_info_get_executable" app-info-executable) :string
  #+liber-documentation
- "@version{#2023-7-11}
+ "@version{2024-12-22}
   @argument[info]{a @class{g:app-info} instance}
-  @return{A string containing the application binaries name of @arg{info}.}
+  @return{The string containing the application binaries name of @arg{info}.}
   @begin{short}
     Gets the name of the executable for the installed application.
   @end{short}
@@ -446,9 +450,9 @@ lambda (context info platform-data)    :run-last
 
 (cffi:defcfun ("g_app_info_get_commandline" app-info-commandline) :string
  #+liber-documentation
- "@version{#2023-7-11}
+ "@version{2024-12-22}
   @argument[info]{a @class{g:app-info} instance}
-  @return{A string containing the commandline of @arg{info}, or @code{nil}
+  @return{The string containing the commandline of @arg{info}, or @code{nil}
     if this information is not available.}
   @begin{short}
     Gets the commandline with which the application will be started.
@@ -464,7 +468,7 @@ lambda (context info platform-data)    :run-last
 
 (cffi:defcfun ("g_app_info_get_icon" app-info-icon) (gobject:object icon)
  #+liber-documentation
- "@version{2023-11-26}
+ "@version{2024-12-22}
   @argument[info]{a @class{g:app-info} instance}
   @return{The default @class{g:icon} object for @arg{info} or @code{nil} if
     there is no default icon.}
@@ -492,7 +496,7 @@ lambda (context info platform-data)    :run-last
 
 (defun app-info-launch (info files context)
  #+liber-documentation
- "@version{2024-11-21}
+ "@version{2024-12-22}
   @argument[info]{a @class{g:app-info} instance}
   @argument[files]{a list of @class{g:file} objects}
   @argument[context]{a @class{g:app-launch-context} instance or @code{nil}}
@@ -542,7 +546,7 @@ lambda (context info platform-data)    :run-last
 
 (cffi:defcfun ("g_app_info_supports_files" app-info-supports-files) :boolean
  #+liber-documentation
- "@version{#2023-7-11}
+ "@version{2024-12-22}
   @argument[info]{a @class{g:app-info} instance}
   @return{@em{True} if @arg{info} supports files.}
   @begin{short}
@@ -559,7 +563,7 @@ lambda (context info platform-data)    :run-last
 
 (cffi:defcfun ("g_app_info_supports_uris" app-info-supports-uris) :boolean
  #+liber-documentation
- "@version{#2023-7-11}
+ "@version{2024-12-22}
   @argument[info]{a @class{g:app-info} instance}
   @return{@em{True} if @arg{info} supports URIs.}
   @begin{short}
@@ -582,7 +586,7 @@ lambda (context info platform-data)    :run-last
 
 (defun app-info-launch-uris (info uris context)
  #+liber-documentation
- "@version{#2024-11-21}
+ "@version{#2024-12-22}
   @argument[info]{a @class{g:app-info} instance}
   @argument[uris]{a list of strings with the containing URIs to launch}
   @argument[context]{a @class{g:app-launch-context} instance or @code{nil}}
@@ -676,7 +680,7 @@ lambda (context info platform-data)    :run-last
 
 (cffi:defcfun ("g_app_info_should_show" app-info-should-show) :boolean
  #+liber-documentation
- "@version{#2023-7-11}
+ "@version{2024-12-22}
   @argument[info]{a @class{g:app-info} instance}
   @return{@em{True} if @arg{info} should be shown, @em{false} otherwise.}
   @begin{short}
@@ -694,7 +698,7 @@ lambda (context info platform-data)    :run-last
 
 (cffi:defcfun ("g_app_info_can_delete" app-info-can-delete) :boolean
  #+liber-documentation
- "@version{#2023-7-11}
+ "@version{#2024-12-22}
   @argument[info]{a @class{g:app-info} instance}
   @return{@em{True} if @arg{info} can be deleted.}
   @begin{short}
@@ -713,7 +717,7 @@ lambda (context info platform-data)    :run-last
 
 (cffi:defcfun ("g_app_info_delete" app-info-delete) :boolean
  #+liber-documentation
- "@version{#2023-7-11}
+ "@version{#2024-12-22}
   @argument[info]{a @class{g:app-info} instance}
   @return{@em{True} if @arg{info} has been deleted.}
   @begin{short}
@@ -736,7 +740,7 @@ lambda (context info platform-data)    :run-last
 (cffi:defcfun ("g_app_info_reset_type_associations"
                 app-info-reset-type-associations) :void
  #+liber-documentation
- "@version{#2023-7-11}
+ "@version{#2024-12-22}
   @argument[content-type]{a string with the content type}
   @begin{short}
     Removes all changes to the type associations done by the
@@ -761,21 +765,21 @@ lambda (context info platform-data)    :run-last
 (cffi:defcfun ("g_app_info_set_as_default_for_type"
                 %app-info-set-as-default-for-type) :boolean
   (info gobject:object)
-  (type :string)
+  (content-type :string)
   (err :pointer))
 
-(defun app-info-set-as-default-for-type (info type)
+(defun app-info-set-as-default-for-type (info content-type)
  #+liber-documentation
- "@version{#2024-11-21}
+ "@version{#2024-12-22}
   @argument[info]{a @class{g:app-info} instance}
-  @argument[type]{a string with the content type}
+  @argument[content-type]{a string with the content type}
   @return{@em{True} on success, @em{false} on error.}
   @begin{short}
     Sets the application as the default handler for a given content type.
   @end{short}
   @see-class{g:app-info}"
   (glib:with-error (err)
-    (%app-info-set-as-default-for-type info type err)))
+    (%app-info-set-as-default-for-type info content-type err)))
 
 (export 'app-info-set-as-default-for-type)
 
@@ -791,7 +795,7 @@ lambda (context info platform-data)    :run-last
 
 (defun app-info-set-as-default-for-extension (info extension)
  #+liber-documentation
- "@version{#2024-11-21}
+ "@version{#2024-12-22}
   @argument[info]{a @class{g:app-info} instance}
   @argument[extension]{a string containing the file extension, without the dot}
   @return{@em{True} on success, @em{false} on error.}
@@ -814,22 +818,22 @@ lambda (context info platform-data)    :run-last
   (content-type :string)
   (err :pointer))
 
-(defun app-info-set-as-last-used-for-type (info type)
+(defun app-info-set-as-last-used-for-type (info content-type)
  #+liber-documentation
- "@version{#2024-11-21}
+ "@version{#2024-12-22}
   @argument[info]{a @class{g:app-info} instance}
-  @argument[type]{a string with the content type}
+  @argument[content-type]{a string with the content type}
   @return{@em{True} on success, @em{false} on error.}
   @begin{short}
     Sets the application as the last used application for a given content type.
   @end{short}
   This will make the application appear as first in the list returned by the
-  @fun{g:app-info-get-recommended-for-type} function, regardless of the default
+  @fun{g:app-info-recommended-for-type} function, regardless of the default
   application for that content type.
   @see-class{g:app-info}
-  @see-function{g:app-info-get-recommended-for-type}"
+  @see-function{g:app-info-recommended-for-type}"
   (glib:with-error (err)
-    (%app-info-set-as-last-used-for-type info type err)))
+    (%app-info-set-as-last-used-for-type info content-type err)))
 
 (export 'app-info-set-as-last-used-for-type)
 
@@ -843,11 +847,11 @@ lambda (context info platform-data)    :run-last
   (type :string)
   (err :pointer))
 
-(defun app-info-add-supports-type (info type)
+(defun app-info-add-supports-type (info content-type)
  #+liber-documentation
- "@version{#2024-11-21}
+ "@version{#2024-12-22}
   @argument[info]{a @class{g:app-info} instance}
-  @argument[type]{a string with the content type}
+  @argument[content-type]{a string with the content type}
   @return{@em{True} on success, @em{false} on error.}
   @begin{short}
     Adds a content type to the application information to indicate the
@@ -855,7 +859,7 @@ lambda (context info platform-data)    :run-last
   @end{short}
   @see-class{g:app-info}"
   (glib:with-error (err)
-    (%app-info-add-supports-type info type err)))
+    (%app-info-add-supports-type info content-type err)))
 
 (export 'app-info-add-supports-type)
 
@@ -866,7 +870,7 @@ lambda (context info platform-data)    :run-last
 (cffi:defcfun ("g_app_info_can_remove_supports_type"
                 app-info-can-remove-supports-type) :boolean
  #+liber-documentation
- "@version{#2023-7-11}
+ "@version{#2024-12-22}
   @argument[info]{a @class{g:app-info} instance}
   @return{@em{True} if it is possible to remove supported content types from a
     given @arg{info}, @em{false} if not.}
@@ -885,14 +889,14 @@ lambda (context info platform-data)    :run-last
 (cffi:defcfun ("g_app_info_remove_supports_type" %app-info-remove-supports-type)
     :boolean
   (info gobject:object)
-  (type :string)
+  (content-type :string)
   (err :pointer))
 
-(defun app-info-remove-supports-type (info type)
+(defun app-info-remove-supports-type (info content-type)
  #+liber-documentation
- "@version{#2024-11-21}
+ "@version{#2024-12-22}
   @argument[info]{a @class{g:app-info} instance}
-  @argument[type]{a string with the content type}
+  @argument[content-type]{a string with the content type}
   @return{@em{True} on success, @em{false} on error.}
   @begin{short}
     Removes a supported content type from an application information, if
@@ -900,7 +904,7 @@ lambda (context info platform-data)    :run-last
   @end{short}
   @see-class{g:app-info}"
   (glib:with-error (err)
-    (%app-info-remove-supports-type info type err)))
+    (%app-info-remove-supports-type info content-type err)))
 
 (export 'app-info-remove-supports-type)
 
@@ -909,11 +913,11 @@ lambda (context info platform-data)    :run-last
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_get_supported_types" app-info-supported-types)
-    glib:strv-t
+    (glib:strv-t :free-from-foreign nil)
  #+liber-documentation
- "@version{#2023-7-11}
+ "@version{2024-12-22}
   @argument[info]{a @class{g:app-info} instance}
-  @return{A list of strings with the content types.}
+  @return{The list of strings with the content types.}
   @begin{short}
     Retrieves the list of content types that @arg{info} claims to support.
   @end{short}
@@ -931,12 +935,14 @@ lambda (context info platform-data)    :run-last
 ;;; g_app_info_get_all
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcfun ("g_app_info_get_all" app-info-all) (glib:list-t gobject:object)
+(cffi:defcfun ("g_app_info_get_all" app-info-all)
+    (glib:list-t (gobject:object :return))
  #+liber-documentation
- "@version{2023-11-26}
-  @return{A list of @class{g:app-info} instances.}
+ "@version{2024-12-22}
+  @return{The list of @class{g:app-info} instances.}
   @begin{short}
-    Gets a list of all of the applications currently registered on this system.
+    Gets a list of all application infos for the applications currently
+    registered on this system.
   @end{short}
   For desktop files, this includes applications that have @code{NoDisplay=true}
   set or are excluded from display by means of @code{OnlyShowIn} or
@@ -952,12 +958,12 @@ lambda (context info platform-data)    :run-last
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_get_all_for_type" app-info-all-for-type)
-    (glib:list-t gobject:object)
+    (glib:list-t (gobject:object :return))
  #+liber-documentation
- "@version{#2023-7-11}
+ "@version{2024-12-22}
   @argument[content-type]{a string with the content type}
-  @return{A list of @class{g:app-info} instances for given @arg{content-type}
-    or @code{nil} on error.}
+  @return{The list of @class{g:app-info} instances for the given
+    @arg{content-type} or @code{nil} on error.}
   @begin{short}
     Gets a list of all application infos for a given content type, including
     the recommended and fallback application infos.
@@ -976,13 +982,13 @@ lambda (context info platform-data)    :run-last
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_get_default_for_type" app-info-default-for-type)
-    (gobject:object app-info)
+    (gobject:object app-info :return)
  #+liber-documentation
- "@version{#2023-7-11}
+ "@version{2024-12-22}
   @argument[content-type]{a string with the content type}
   @argument[must-support-uris]{if @em{true}, the application info is expected
     to support URIs}
-  @return{The @class{g:app-info} instance for given @arg{content-type} or
+  @return{The @class{g:app-info} instance for the given @arg{content-type} or
     @code{nil} on error.}
   @begin{short}
     Gets the default application info for a given content type.
@@ -1006,17 +1012,18 @@ lambda (context info platform-data)    :run-last
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_get_default_for_uri_scheme"
-                app-info-default-for-uri-scheme) (gobject:object app-info)
+                app-info-default-for-uri-scheme)
+    (gobject:object app-info :return)
  #+liber-documentation
- "@version{#2023-7-11}
+ "@version{2024-12-22}
   @argument[uri-scheme]{a string containing a URI scheme}
-  @return{The @class{g:app-info} instance for given @arg{uri-scheme} or
+  @return{The @class{g:app-info} instance for the given @arg{uri-scheme} or
     @code{nil} on error.}
   @begin{short}
     Gets the default application for handling URIs with the given URI scheme.
   @end{short}
-  A URI scheme is the initial part of the URI, up to but not including the ':',
-  for example, \"http\", \"ftp\" or \"sip\".
+  A URI scheme is the initial part of the URI, up to but not including the
+  @file{':'}, for example, @file{\"http\"}, @file{\"ftp\"} or @file{\"sip\"}.
   @see-class{g:app-info}"
   (uri-scheme :string))
 
@@ -1035,12 +1042,12 @@ lambda (context info platform-data)    :run-last
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_get_fallback_for_type" app-info-fallback-for-type)
-    (glib:list-t gobject:object)
+    (glib:list-t (gobject:object :return))
  #+liber-documentation
- "@version{#2023-7-11}
+ "@version{2024-12-22}
   @argument[content-type]{a string with the content type}
-  @return{A list of @class{g:app-info} instances for given @arg{content-type}
-    or @code{nil} on error.}
+  @return{The list of @class{g:app-info} instances for the given
+    @arg{content-type} or @code{nil} on error.}
   @begin{short}
     Gets a list of fallback application infos for a given content type, that is,
     those applications which claim to support the given content type by MIME
@@ -1056,12 +1063,13 @@ lambda (context info platform-data)    :run-last
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_get_recommended_for_type"
-                app-info-recommended-for-type) (glib:list-t gobject:object)
+                app-info-recommended-for-type)
+    (glib:list-t (gobject:object :return))
  #+liber-documentation
- "@version{#2023-7-11}
+ "@version{2024-12-22}
   @argument[content-type]{a string with the content type}
-  @return{A list of @class{g:app-info} instances for given @arg{content-type}
-    or @code{nil} on error.}
+  @return{The list of @class{g:app-info} instances for the given
+    @arg{content-type} or @code{nil} on error.}
   @begin{short}
     Gets a list of recommended application infos for a given content type, that
     is, those applications which claim to support the given content type
@@ -1088,7 +1096,7 @@ lambda (context info platform-data)    :run-last
 
 (defun app-info-launch-default-for-uri (uri &optional context)
  #+liber-documentation
- "@version{2024-11-21}
+ "@version{2024-12-22}
   @argument[uri]{a string with the URI to show}
   @argument[context]{an optional @class{g:app-launch-context} object,
     the argument can be @code{nil}, that is the default}
@@ -1120,7 +1128,7 @@ lambda (context info platform-data)    :run-last
 
 (defun app-info-launch-default-for-uri-async (uri context cancellable func)
  #+liber-documentation
- "@version{2023-9-18}
+ "@version{2024-12-22}
   @argument[uri]{a string with the URI to show}
   @argument[context]{an optional @class{g:app-launch-context} object, or
     @code{nil}}
@@ -1163,7 +1171,7 @@ lambda (context info platform-data)    :run-last
 
 (defun app-info-launch-default-for-uri-finish (result)
  #+liber-documentation
- "@version{2024-11-21}
+ "@version{2024-12-22}
   @argument[result]{a @class{g:async-result} object}
   @return{@em{True} if the launch was successful, @em{false} otherwise}
   @begin{short}
@@ -1185,8 +1193,8 @@ lambda (context info platform-data)    :run-last
 
 (defun app-launch-context-new ()
  #+liber-documentation
- "@version{#2023-7-14}
-  @return{A @class{g:app-launch-context} instance}
+ "@version{2024-12-22}
+  @return{The @class{g:app-launch-context} instance.}
   @begin{short}
     Creates a new application launch context.
   @end{short}
@@ -1204,7 +1212,7 @@ lambda (context info platform-data)    :run-last
 
 (cffi:defcfun ("g_app_launch_context_setenv" app-launch-context-setenv) :void
  #+liber-documentation
- "@version{#2023-7-14}
+ "@version{#2024-12-22}
   @argument[context]{a @class{g:app-launch-context} instance}
   @argument[variable]{a string with the enviroment variable to set}
   @argument[value]{a string with the value for to set the variabel to}
@@ -1226,7 +1234,7 @@ lambda (context info platform-data)    :run-last
 (cffi:defcfun ("g_app_launch_context_unsetenv" app-launch-context-unsetenv)
     :void
  #+liber-documentation
- "@version{#2023-7-14}
+ "@version{#204-12-22}
   @argument[context]{a @class{g:app-launch-context} instance}
   @argument[variable]{a string with the enviroment variable to remove}
   @begin{short}
@@ -1246,9 +1254,9 @@ lambda (context info platform-data)    :run-last
 (cffi:defcfun ("g_app_launch_context_get_environment"
                 app-launch-context-environment) glib:strv-t
  #+liber-documentation
- "@version{#2023-7-14}
+ "@version{#2024-12-22}
   @argument[context]{a @class{g:app-launch-context} instance}
-  @return{A list of strings with the child's enviroment.}
+  @return{The list of strings with the child's enviroment.}
   @begin{short}
     Gets the complete environment variable list to be passed to the child
     process when @arg{context} is used to launch an application.
@@ -1266,11 +1274,11 @@ lambda (context info platform-data)    :run-last
 (cffi:defcfun ("g_app_launch_context_get_display" app-launch-context-display)
     :string
  #+liber-documentation
- "@version{#2023-7-14}
+ "@version{#2024-12-22}
   @argument[context]{a @class{g:app-launch-context} instance}
   @argument[info]{a @class{g:app-info} instance}
   @argument[files]{a list of @class{g:file} objects}
-  @return{A display string for the display.}
+  @return{The display string for the display.}
   @begin{short}
     Gets the display string for the context.
   @end{short}
@@ -1293,11 +1301,11 @@ lambda (context info platform-data)    :run-last
 (cffi:defcfun ("g_app_launch_context_get_startup_notify_id"
                 app-launch-context-startup-notify-id) :string
  #+liber-documentation
- "@version{#2023-7-14}
+ "@version{#2024-12-22}
   @argument[context]{a @class{g:app-launch-context} instance}
   @argument[info]{a @class{g:app-info} instance}
   @argument[files]{a list of @class{g:file} objects}
-  @return{A string with a startup notification ID for the application, or
+  @return{The string with a startup notification ID for the application, or
     @code{nil} if not supported.}
   @begin{short}
     Initiates startup notification for the application and returns the
@@ -1321,7 +1329,7 @@ lambda (context info platform-data)    :run-last
 (cffi:defcfun ("g_app_launch_context_launch_failed"
                 app-launch-context-launch-failed) :void
  #+liber-documentation
- "@version{#2023-7-14}
+ "@version{#2024-12-22}
   @argument[context]{a @class{g:app-launch-context} instance}
   @argument[startup-notify-id]{a string with the startup notification ID}
   @begin{short}

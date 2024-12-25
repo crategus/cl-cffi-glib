@@ -585,7 +585,8 @@
 ;;; g_menu_item_new
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcfun ("g_menu_item_new" %menu-item-new) (gobject:object menu-item)
+(cffi:defcfun ("g_menu_item_new" %menu-item-new)
+    (gobject:object menu-item :return)
   (label :string)
   (action :string))
 
@@ -616,7 +617,7 @@
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_menu_item_new_section" %menu-item-new-section)
-    (gobject:object menu-item)
+    (gobject:object menu-item :return)
   (label :string)
   (section (gobject:object menu-model)))
 
@@ -698,7 +699,7 @@
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_menu_item_new_submenu" %menu-item-new-submenu)
-    (gobject:object menu-item)
+    (gobject:object menu-item :return)
   (label :string)
   (submenu (gobject:object menu-model)))
 
@@ -727,7 +728,7 @@
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_menu_item_new_from_model" menu-item-new-from-model)
-    (gobject:object menu-item)
+    (gobject:object menu-item :return)
  #+liber-documentation
  "@version{#2022-12-29}
   @argument[model]{a @class{g:menu-model} object}
@@ -1141,7 +1142,7 @@
   value)
 
 (cffi:defcfun ("g_menu_item_get_link" menu-item-link)
-    (gobject:object menu-model)
+    (gobject:object menu-model :return)
  #+liber-documentation
  "@version{#2022-12-29}
   @syntax{(g:menu-item-link item link) => model}

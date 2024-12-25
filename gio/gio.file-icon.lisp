@@ -68,11 +68,11 @@
    :type-initializer "g_file_icon_get_type")
   ((file
     file-icon-file
-    "file" "GFile" t t)))
+    "file" "GFile" t nil)))
 
 #+liber-documentation
 (setf (documentation 'file-icon 'type)
- "@version{2024-10-23}
+ "@version{2024-12-18}
   @begin{short}
     The @class{g:file-icon} class specifies an icon by pointing to an image
     file to be used as icon.
