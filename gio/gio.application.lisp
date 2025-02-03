@@ -1,12 +1,12 @@
 ;;; ----------------------------------------------------------------------------
 ;;; gio.application.lisp
 ;;;
-;;; The documentation of this file is taken from the GIO Reference Manual
-;;; Version 2.82 and modified to document the Lisp binding to the GIO library.
-;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
-;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
+;;; The documentation in this file is taken from the GIO Reference Manual
+;;; Version 2.82 and modified to document the Lisp binding to the GIO library,
+;;; see <http://www.gtk.org>. The API documentation of the Lisp binding is
+;;; available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2012 - 2024 Dieter Kaiser
+;;; Copyright (C) 2012 - 2025 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -151,7 +151,7 @@
 (setf (liber:alias-for-symbol 'application-flags)
       "GFlags"
       (liber:symbol-documentation 'application-flags)
- "@version{2024-5-24}
+ "@version{2025-2-3}
   @begin{declaration}
 (gobject:define-gflags \"GApplicationFlags\" application-flags
   (:export t
@@ -259,7 +259,7 @@
 
 #+liber-documentation
 (setf (documentation 'application 'type)
- "@version{2024-5-25}
+ "@version{2025-2-3}
   @begin{short}
     The @class{g:application} class is the foundation of an application.
   @end{short}
@@ -294,10 +294,10 @@
   instance should do very little more than instantiating the application
   instance, possibly connecting signal handlers, then calling the
   @fun{g:application-run} function. All checks for uniqueness are done
-  internally. If the application is the primary instance then the startup
-  signal is emitted and the main loop runs. If the application is not the
-  primary instance then a signal is sent to the primary instance and the
-  @fun{g:application-run} function promptly returns.
+  internally. If the application is the primary instance then the
+  @code{\"startup\"} signal is emitted and the main loop runs. If the
+  application is not the primary instance then a signal is sent to the primary
+  instance and the @fun{g:application-run} function promptly returns.
 
   If used, the expected form of an application identifier is the same as that
   of of a D-Bus well-known bus name. Examples include: \"com.example.MyApp\",
@@ -342,14 +342,14 @@
 
   Regardless of which of these entry points is used to start the application,
   the @class{g:application} instance passes some platform data from the
-  launching instance to the primary instance, in the form of a @type{g:variant}
-  dictionary mapping strings to variants. To use platform data, override the
-  @code{before_emit} or @code{after_emit} virtual functions in your
-  @class{g:application} subclass. When dealing with
+  launching instance to the primary instance, in the form of a
+  @symbol{g:variant} dictionary mapping strings to variants. To use platform
+  data, override the @code{before_emit()} or @code{after_emit()} virtual
+  functions in your @class{g:application} subclass. When dealing with
   @class{g:application-command-line} objects, the platform data is directly
   available via the @fun{g:application-command-line-cwd},
   @fun{g:application-command-line-environ} and
-  @fun{g:application-command-line-get-platform-data} functions.
+  @fun{g:application-command-line-platform-data} functions.
 
   As the name indicates, the platform data may vary depending on the operating
   system, but it always includes the current directory, @code{\"cwd\"} key, and
@@ -357,7 +357,7 @@
   their values, of the calling process, @code{\"environ\"} key. The environment
   is only added to the platform data if the @code{:send-enviroment} flag is set.
   A @class{g:application} subclass can add own platform data by overriding the
-  @code{add_platform_data} virtual function. For instance, the
+  @code{add_platform_data()} virtual function. For instance, the
   @class{gtk:application} class adds startup notification data in this way.
 
   To parse command line arguments you may handle the @code{\"command-line\"}
@@ -393,14 +393,14 @@
                       ))
     ;; Signal handler \"open\"
     (g:signal-connect app \"open\"
-                      (lambda (application files n-files hint)
+                      (lambda (application files nfiles hint)
                         (declare (ignore application))
                           (format t \"The application is in OPEN~%\")
-                          (format t \"  n-files : ~A~%\" n-files)
+                          (format t \"  nfiles : ~A~%\" nfiles)
                           (format t \"     hint : ~A~%\" hint)
                           ;; The argument FILES is a C pointer to an array of
                           ;; GFile objects. We list the pathnames of the files.
-                          (dotimes (i n-files)
+                          (dotimes (i nfiles)
                             (let ((file (mem-aref files '(g:object g:file) i)))
                               (format t \" ~a~%\" (g:file-path file))))))
     ;; Signal handler \"shutdown\"
@@ -487,9 +487,9 @@ lambda (application cmdline)    :run-last
       @begin[code]{table}
         @entry[application]{The @class{g:application} instance which received
           the signal.}
-        @entry[cmdline]{A @class{g:application-command-line} object representing
-          the passed command line.}
-        @entry[Returns]{An integer that is set as the exit status for the
+        @entry[cmdline]{The @class{g:application-command-line} instance
+          representing the passed command line.}
+        @entry[Returns]{The integer that is set as the exit status for the
           calling process.}
       @end{table}
       The signal is emitted on the primary instance when a command line is not
@@ -503,7 +503,7 @@ lambda (application options)    :run-last
         @entry[application]{The @class{g:application} instance which received
           the signal.}
         @entry[options]{The options dictionary of @class{g:variant-dict} type.}
-        @entry[Returns]{An exit code. If you have handled your options and want
+        @entry[Returns]{The exit code. If you have handled your options and want
           to exit the process, return a non-negative option, 0 for success, and
           a positive value for failure. Return -1 to let the default option
           processing continue.}
@@ -544,7 +544,6 @@ lambda (application options)    :run-last
       Note that this signal is emitted from the default implementation of the
       @code{local_command_line()} virtual function. If you override that
       function and do not chain up then this signal will never be emitted.
-
       You can override the @code{local_command_line()} virtual function if you
       need more powerful capabilities than what is provided here, but this
       should not normally be required.
@@ -563,14 +562,14 @@ lambda (application)    :run-last
       calls the @fun{g:application-quit} function. Since 2.60.
     @subheading{The \"open\" signal}
       @begin{pre}
-lambda (application files n-files hint)    :run-last
+lambda (application files nfiles hint)    :run-last
       @end{pre}
       @begin[code]{table}
         @entry[application]{The @class{g:application} instance which received
           the signal.}
-        @entry[files]{A C array of @class{g:file} objects.}
-        @entry[n-files]{An integer with the length of @arg{files}.}
-        @entry[hint]{A string with a hint provided by the calling instance.}
+        @entry[files]{The C array of @class{g:file} objects.}
+        @entry[nfiles]{The integer with the length of @arg{files}.}
+        @entry[hint]{The string with a hint provided by the calling instance.}
       @end{table}
       The signal is emitted on the primary instance when there are files to
       open. See the @fun{g:application-open} function for more information.
@@ -616,6 +615,8 @@ lambda (application)    :run-first
 
 ;;; --- g:application-action-group ---------------------------------------------
 
+;; TODO: Consider to remove the accessor from the Lisp API
+
 #+liber-documentation
 (setf (documentation (liber:slot-documentation "action-group" 'application) t)
  "The @code{action-group} property of type @class{g:action-group} (Write) @br{}
@@ -627,10 +628,10 @@ lambda (application)    :run-first
 (setf (liber:alias-for-function 'application-action-group)
       "Accessor"
       (documentation 'application-action-group 'function)
- "@version{2023-4-23}
+ "@version{2025-2-3}
   @syntax{(setf (g:application-action-group object) group)}
   @argument[object]{a @class{g:application} instance}
-  @argument[group]{a @class{g:action-group} object, or @code{nil}}
+  @argument[group]{a @class{g:action-group} instance, or @code{nil}}
   @begin{short}
     Accessor of the @slot[g:application]{action-group} slot of the
     @class{g:application} class.
@@ -662,7 +663,7 @@ lambda (application)    :run-first
 (setf (liber:alias-for-function 'application-application-id)
       "Accessor"
       (documentation 'application-application-id 'function)
- "@version{2023-4-23}
+ "@version{2025-2-3}
   @syntax{(g:application-application-id object) => id}
   @syntax{(setf (g:application-application-id object) id)}
   @argument[object]{a @class{g:application} instance}
@@ -687,13 +688,14 @@ lambda (application)    :run-first
 (setf (documentation (liber:slot-documentation "flags" 'application) t)
  "The @code{flags} property of type @symbol{g:application-flags}
   (Read / Write) @br{}
-  Flags specifying the behaviour of the application.")
+  Flags specifying the behaviour of the application. @br{}
+  Default value: @code{'()}")
 
 #+liber-documentation
 (setf (liber:alias-for-function 'application-flags)
       "Accessor"
       (documentation 'application-flags 'function)
- "@version{2023-4-23}
+ "@version{2025-2-3}
   @syntax{(g:application-flags object) => flags}
   @syntax{(setf (g:application-flags object) flags)}
   @argument[object]{a @class{g:application} instance}
@@ -724,7 +726,7 @@ lambda (application)    :run-first
 (setf (liber:alias-for-function 'application-inactivity-timeout)
       "Accessor"
       (documentation 'application-inactivity-timeout 'function)
- "@version{2023-4-23}
+ "@version{2025-2-3}
   @syntax{(g:application-inactivity-timeout object) => timeout}
   @syntax{(setf (g:application-inactivity-timeout object) timeout)}
   @argument[object]{a @class{g:application} instance}
@@ -757,7 +759,7 @@ lambda (application)    :run-first
 (setf (liber:alias-for-function 'application-is-busy)
       "Accessor"
       (documentation 'application-is-busy 'function)
- "@version{2023-4-23}
+ "@version{2025-2-3}
   @syntax{(g:application-is-busy object) => setting}
   @argument[object]{a @class{g:application} instance}
   @argument[setting]{@em{true} if the application is currenty marked as busy}
@@ -784,7 +786,7 @@ lambda (application)    :run-first
 (setf (liber:alias-for-function 'application-is-registered)
       "Accessor"
       (documentation 'application-is-registered 'function)
- "@version{2023-4-23}
+ "@version{2025-2-3}
   @syntax{(g:application-is-registered object) => setting}
   @argument[object]{a @class{g:application} instance}
   @argument[setting]{@em{true} if the application is registered}
@@ -809,7 +811,7 @@ lambda (application)    :run-first
 (setf (liber:alias-for-function 'application-is-remote)
       "Accessor"
       (documentation 'application-is-remote 'function)
- "@version{2023-4-23}
+ "@version{2025-2-3}
   @syntax{(g:application-is-remote object) => setting}
   @argument[object]{a @class{g:application} instance}
   @argument[setting]{@em{true} if the application is remote}
@@ -841,7 +843,7 @@ lambda (application)    :run-first
 (setf (liber:alias-for-function 'application-resource-base-path)
       "Accessor"
       (documentation 'application-resource-base-path 'function)
- "@version{2024-5-24}
+ "@version{2025-2-3}
   @syntax{(g:application-resource-base-path object) => path}
   @syntax{(setf (g:application-resource-base-path object) path)}
   @argument[object]{a @class{g:application} instance}
@@ -886,13 +888,14 @@ lambda (application)    :run-first
 #+(and glib-2-80 liber-documentation)
 (setf (documentation (liber:slot-documentation "version" 'application) t)
  "The @code{version} property of type @code{:string} (Read / Write) @br{}
-  The human-readable version number of the application.")
+  The human-readable version number of the application. Since 2.80 @br{}
+  Default value: @code{nil}")
 
 #+(and glib-2-80 liber-documentation)
 (setf (liber:alias-for-function 'application-version)
       "Accessor"
       (documentation 'application-version 'function)
- "@version{2024-5-25}
+ "@version{2025-2-3}
   @syntax{(g:application-version object) => version}
   @syntax{(setf (g:application-version object) version)}
   @argument[object]{a @class{g:application} instance}
@@ -902,10 +905,9 @@ lambda (application)    :run-first
     @class{g:application} class.
   @end{short}
   The @fun{g:application-version} function gets the version of the application.
-  The @setf{g:application-version} function sets the version number of the
-  application. This will be used to implement a @code{--version} command line
-  argument. The application version can only be modified if the application has
-  not yet been registered.
+  The @setf{g:application-version} function sets the version. This will be used
+  to implement a @code{--version} command line argument. The application version
+  can only be modified if the application has not yet been registered.
 
   Since 2.80
   @see-class{g:application}")
@@ -916,8 +918,8 @@ lambda (application)    :run-first
 
 (cffi:defcfun ("g_application_id_is_valid" application-id-is-valid) :boolean
  #+liber-documentation
- "@version{2023-7-8}
-  @argument[id]{a string with a potential application identifier}
+ "@version{2025-2-3}
+  @argument[id]{a string for a potential application identifier}
   @return{@em{True} if @arg{id} is a valid application ID.}
   @begin{short}
     Checks if the @arg{id} argument is a valid application identifier.
@@ -958,7 +960,7 @@ lambda (application)    :run-first
 
 (defun application-new (id flags)
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{#2025-2-3}
   @argument[id]{a string with the application ID}
   @argument[flags]{a @symbol{g:application-flags} value}
   @return{The new @class{g:application} instance.}
@@ -1045,7 +1047,7 @@ lambda (application)    :run-first
 
 (defun application-register (application)
  #+liber-documentation
- "@version{#2024-11-21}
+ "@version{#2025-2-3}
   @argument[application]{a @class{g:application} instance}
   @return{@em{True} if registration succeeded.}
   @begin{short}
@@ -1065,7 +1067,7 @@ lambda (application)    :run-first
   with no work performed. The @code{\"startup\"} signal is emitted if
   registration succeeds and the application is the primary instance. In the
   event of an error @em{false} is returned.
-  @begin[Note]{dictionary}
+  @begin[Notes]{dictionary}
     The return value of this function is not an indicator that this instance is
     or is not the primary instance of the application. See the
     @fun{g:application-is-remote} function for that.
@@ -1083,7 +1085,7 @@ lambda (application)    :run-first
 
 (cffi:defcfun ("g_application_hold" application-hold) :void
  #+liber-documentation
- "@version{2023-8-2}
+ "@version{2025-2-3}
   @argument[application]{a @class{g:application} instance}
   @begin{short}
     Increases the use count of the application.
@@ -1104,7 +1106,7 @@ lambda (application)    :run-first
 
 (cffi:defcfun ("g_application_release" application-release) :void
  #+liber-documentation
- "@version{2023-8-2}
+ "@version{2025-2-3}
   @argument[application]{a @class{g:application} instance}
   @begin{short}
     Decrease the use count of the application.
@@ -1124,7 +1126,7 @@ lambda (application)    :run-first
 
 (cffi:defcfun ("g_application_quit" application-quit) :void
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{#2025-2-3}
   @argument[application]{a @class{g:application} instance}
   @begin{short}
     Immediately quits the application.
@@ -1145,7 +1147,7 @@ lambda (application)    :run-first
 
 (cffi:defcfun ("g_application_activate" application-activate) :void
  #+liber-documentation
- "@version{2023-7-8}
+ "@version{2025-2-3}
   @argument[application]{a @class{g:application} instance}
   @begin{short}
     Activates the application.
@@ -1165,15 +1167,16 @@ lambda (application)    :run-first
 (cffi:defcfun ("g_application_open" %application-open) :void
   (application (gobject:object application))
   (files :pointer)
-  (n-files :int)
+  (nfiles :int)
   (hint :string))
 
-(defun application-open (application files hint)
+(defun application-open (application files &optional (hint ""))
  #+liber-documentation
- "@version{2023-7-8}
+ "@version{2025-2-3}
   @argument[application]{a @class{g:application} instance}
-  @argument[files]{a list of strings with the file names}
-  @argument[hint]{a string with a hint or an empty string \"\"}
+  @argument[files]{a list of strings for the file names}
+  @argument[hint]{an optional string for a hint or the default empty string
+    \"\"}
   @begin{short}
     This results in the @code{\"open\"} signal being emitted in the primary
     instance.
@@ -1185,21 +1188,16 @@ lambda (application)    :run-first
 
   The application must be registered before calling this function and it must
   have the @code{:handles-open} flag set.
-  @begin[Note]{dictionary}
-    The Lisp implementation converts the list of file names with the
-    @fun{g:file-new-for-path} function to an foreign C array of @class{g:file}
-    objects.
-  @end{dictionary}
   @see-class{g:application}
   @see-class{g:file}
   @see-function{g:file-new-for-path}"
-  (let ((n-files (length files)))
-    (cffi:with-foreign-object (files-ptr :pointer n-files)
-      (iter (for i from 0 below n-files)
+  (let ((nfiles (length files)))
+    (cffi:with-foreign-object (files-ptr :pointer nfiles)
+      (iter (for i from 0 below nfiles)
             (for file in files)
             (for file-ptr = (gobject:object-pointer (file-new-for-path file)))
             (setf (cffi:mem-aref files-ptr :pointer i) file-ptr))
-      (%application-open application files-ptr n-files hint))))
+      (%application-open application files-ptr nfiles hint))))
 
 (export 'application-open)
 
@@ -1210,9 +1208,9 @@ lambda (application)    :run-first
 (cffi:defcfun ("g_application_send_notification" application-send-notification)
     :void
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{#2025-2-3}
   @argument[application]{a @class{g:application} instance}
-  @argument[id]{a string with the ID of the notification, or @code{nil}}
+  @argument[id]{a string for the ID of the notification, or @code{nil}}
   @argument[notification]{a @class{g:notification} instance to send}
   @begin{short}
     Sends a notification on behalf of the application to the desktop shell.
@@ -1228,9 +1226,9 @@ lambda (application)    :run-first
   notification about new messages. If a previous notification was sent with the
   same @arg{id}, it will be replaced with notification and shown again as if it
   was a new notification. This works even for notifications sent from a previous
-  execution of the application, as long as id is the same string. The @arg{id}
-  argument may be @code{nil}, but it is impossible to replace or withdraw
-  notifications without an ID.
+  execution of the application, as long as @arg{id} is the same string. The
+  @arg{id} argument may be @code{nil}, but it is impossible to replace or
+  withdraw notifications without an ID.
 
   If the notification is no longer relevant, it can be withdrawn with the
   @fun{g:application-withdraw-notification} function.
@@ -1250,9 +1248,9 @@ lambda (application)    :run-first
 (cffi:defcfun ("g_application_withdraw_notification"
                 application-withdraw-notification) :void
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{#2025-2-3}
   @argument[application]{a @class{g:application} instance}
-  @argument[id]{a string with the ID of a previously sent notification}
+  @argument[id]{a string for the ID of a previously sent notification}
   @begin{short}
     Withdraws a notification that was sent with the
     @fun{g:application-send-notification} function.
@@ -1284,7 +1282,7 @@ lambda (application)    :run-first
 
 (defun application-run (application argv)
  #+liber-documentation
- "@version{2022-12-30}
+ "@version{2025-2-3}
   @argument[application]{a @class{g:application} instance}
   @argument[argv]{a list of strings with command line parameters, or @code{nil}}
   @return{The integer with the exit status.}
@@ -1348,7 +1346,7 @@ lambda (application)    :run-first
   Applications that are not explicitly flagged as services or launchers, that
   is, neither the @code{:is-service} or the @code{:is-launcher} values are
   given as flags, will check, from the default handler for the
-  @code{local_command_line} virtual function, if the
+  @code{local_command_line()} virtual function, if the
   @code{--gapplication-service} option was given in the command line. If this
   flag is present then normal command line processing is interrupted and the
   @code{:is-service} flag is set. This provides a \"compromise\" solution
@@ -1385,7 +1383,7 @@ lambda (application)    :run-first
 
 (defun application-add-main-option-entries (application entries)
  #+liber-documentation
- "@version{2024-3-26}
+ "@version{2025-2-3}
   @argument[application]{a @class{g:application} instance}
   @argument[entries]{a list of option entries, see the
     @fun{g:option-context-add-main-entries} function for a documentation of
@@ -1407,9 +1405,9 @@ lambda (application)    :run-first
   dictionary is sent to the primary instance, where the
   @fun{g:application-command-line-options-dict} function will return it. This
   \"packing\" is done according to the type of the argument - booleans for
-  normal flags, strings for strings, bytestrings for filenames, etc. The
+  normal flags, strings for strings, bytestrings for filenames, and so on. The
   packing only occurs if the flag is given, that is, we do not pack a
-  @type{g:variant} parameter in the case that a flag is missing.
+  @symbol{g:variant} parameter in the case that a flag is missing.
 
   In general, it is recommended that all command line arguments are parsed
   locally. The options dictionary should then be used to transmit the result
@@ -1434,7 +1432,7 @@ lambda (application)    :run-first
   consumed, they will no longer be visible to the default handling, which treats
   them as filenames to be opened.
 
-  It is important to use the proper @type{g:variant} parameter format when
+  It is important to use the proper @symbol{g:variant} parameter format when
   retrieving the options with the @fun{g:variant-dict-lookup} function:
   @begin{itemize}
     @item{for @code{:none}, use \"b\"}
@@ -1526,17 +1524,17 @@ lambda (application)    :run-first
 (defun application-add-main-option (application
                                     long short flags arg desc argdesc)
  #+liber-documentation
- "@version{2024-3-26}
+ "@version{2025-2-3}
   @argument[application]{a @class{g:application} instance}
-  @argument[long]{a string with the long name of an option used to specify it
+  @argument[long]{a string for the long name of an option used to specify it
     in a command line}
-  @argument[short]{a printable ASCII @type{g:unichar} character with the short
+  @argument[short]{a printable ASCII @type{g:unichar} character for the short
     name of an option}
   @argument[flags]{a @symbol{g:option-flags} value for the flags}
   @argument[arg]{a @symbol{g:option-arg} value for the type of the option}
-  @argument[desc]{a string with the description for the option in
+  @argument[desc]{a string for the description for the option in
     @code{--help} output}
-  @argument[argdesc]{a string with the placeholder to use for the extra
+  @argument[argdesc]{a string for the placeholder to use for the extra
     argument parsed by the option in @code{--help} output}
   @begin{short}
     Adds an option to be handled by the application.
@@ -1577,14 +1575,13 @@ lambda (application)    :run-first
 (cffi:defcfun ("g_application_add_option_group" application-add-option-group)
     :void
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{#2025-2-3}
   @argument[application]{a @class{g:application} instance}
   @argument[group]{a @type{g:option-group} instance}
   @begin{short}
     Adds a @type{g:option-group} instance to the command line handling of the
     application.
   @end{short}
-
   This function is comparable to the @fun{g:option-context-add-group} function.
 
   Unlike the @fun{g:application-add-main-option-entries} function, this function
@@ -1624,13 +1621,13 @@ lambda (application)    :run-first
 (cffi:defcfun ("g_application_set_option_context_parameter_string"
                 application-set-option-context-parameter-string) :void
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{#2025-2-3}
   @argument[application]{a @class{g:application} instance}
   @argument[parameter]{a string which is displayed in the first line of
     @code{--help} output}
   @begin{short}
     Sets the parameter string to be used by the command line handling of the
-    application .
+    application.
   @end{short}
   This function registers the argument to be passed to the
   @fun{g:option-context-new} function when the internal @type{g:option-context}
@@ -1653,7 +1650,7 @@ lambda (application)    :run-first
 (cffi:defcfun ("g_application_set_option_context_summary"
                 application-set-option-context-summary) :void
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{#2025-2-3}
   @argument[application]{a @class{g:application} instance}
   @argument[summary]{a string to be shown in @code{--help} output before the
     list of options, or @code{nil}}
@@ -1675,7 +1672,7 @@ lambda (application)    :run-first
 (cffi:defcfun ("g_application_set_option_context_description"
                 application-set-option-context-description) :void
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{#2025-2-3}
   @argument[application]{a @class{g:application} instance}
   @argument[description]{a string to be shown in @code{--help} output after the
     list of options, or @code{nil}}
@@ -1704,10 +1701,10 @@ lambda (application)    :run-first
 (cffi:defcfun ("g_application_get_default" application-default)
     (gobject:object application)
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{#2025-2-3}
   @syntax{(g:application-default) => application}
   @syntax{(setf (g:application-default) application)}
-  @argument[application]{the @class{g:application} instance to set as default,
+  @argument[application]{a @class{g:application} instance to set as default,
     or @code{nil}}
   @begin{short}
     Accessor of the default application for the process.
@@ -1731,7 +1728,7 @@ lambda (application)    :run-first
 
 (cffi:defcfun ("g_application_mark_busy" application-mark-busy) :void
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{#2025-2-3}
   @argument[application]{a @class{g:application} instance}
   @begin{short}
     Increases the busy count of the application.
@@ -1753,7 +1750,7 @@ lambda (application)    :run-first
 
 (cffi:defcfun ("g_application_unmark_busy" application-unmark-busy) :void
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{#2025-2-3}
   @argument[application]{a @class{g:application} instance}
   @begin{short}
     Decreases the busy count of the application.
@@ -1774,10 +1771,10 @@ lambda (application)    :run-first
 (cffi:defcfun ("g_application_bind_busy_property"
                 application-bind-busy-property) :void
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{#2025-2-3}
   @argument[application]{a @class{g:application} instance}
   @argument[object]{a @class{g:object} instance}
-  @argument[property]{a string with the name of a boolean property of
+  @argument[property]{a string for the name of a boolean property of
     @arg{object}}
   @begin{short}
     Marks the application as busy while the property on the object is @em{true}.
@@ -1801,10 +1798,10 @@ lambda (application)    :run-first
 (cffi:defcfun ("g_application_unbind_busy_property"
                 application-unbind-busy-property) :void
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{#2025-2-3}
   @argument[application]{a @class{g:application} instance}
   @argument[object]{a @class{g:object} instance}
-  @argument[property]{a string with the name of a boolean property of
+  @argument[property]{a string for the name of a boolean property of
     @arg{object}}
   @begin{short}
     Destroys a binding between the property and the busy state of the

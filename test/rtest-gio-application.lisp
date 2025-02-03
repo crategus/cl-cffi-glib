@@ -75,28 +75,102 @@
              (glib-test:list-signals "GApplication")))
   ;; Check class definition
   (is (equal '(GOBJECT:DEFINE-GOBJECT "GApplication" GIO:APPLICATION
-                       (:SUPERCLASS GOBJECT:OBJECT
-                        :EXPORT T
-                        :INTERFACES ("GActionGroup" "GActionMap")
-                        :TYPE-INITIALIZER "g_application_get_type")
-                       ((ACTION-GROUP APPLICATION-ACTION-GROUP
-                         "action-group" "GActionGroup" NIL T)
-                        (APPLICATION-ID APPLICATION-APPLICATION-ID
-                         "application-id" "gchararray" T T)
-                        (FLAGS APPLICATION-FLAGS
-                         "flags" "GApplicationFlags" T T)
-                        (INACTIVITY-TIMEOUT APPLICATION-INACTIVITY-TIMEOUT
-                         "inactivity-timeout" "guint" T T)
-                        (IS-BUSY APPLICATION-IS-BUSY "is-busy" "gboolean" T NIL)
-                        (IS-REGISTERED APPLICATION-IS-REGISTERED
-                         "is-registered" "gboolean" T NIL)
-                        (IS-REMOTE APPLICATION-IS-REMOTE
-                         "is-remote" "gboolean" T NIL)
-                        (RESOURCE-BASE-PATH APPLICATION-RESOURCE-BASE-PATH
-                         "resource-base-path" "gchararray" T T)
-                        (VERSION APPLICATION-VERSION
-                         "version" "gchararray" T T)))
+                      (:SUPERCLASS GOBJECT:OBJECT
+                       :EXPORT T
+                       :INTERFACES ("GActionGroup" "GActionMap")
+                       :TYPE-INITIALIZER "g_application_get_type")
+                      ((ACTION-GROUP APPLICATION-ACTION-GROUP
+                        "action-group" "GActionGroup" NIL T)
+                       (APPLICATION-ID APPLICATION-APPLICATION-ID
+                        "application-id" "gchararray" T T)
+                       (FLAGS APPLICATION-FLAGS
+                        "flags" "GApplicationFlags" T T)
+                       (INACTIVITY-TIMEOUT APPLICATION-INACTIVITY-TIMEOUT
+                        "inactivity-timeout" "guint" T T)
+                       (IS-BUSY APPLICATION-IS-BUSY "is-busy" "gboolean" T NIL)
+                       (IS-REGISTERED APPLICATION-IS-REGISTERED
+                        "is-registered" "gboolean" T NIL)
+                       (IS-REMOTE APPLICATION-IS-REMOTE
+                        "is-remote" "gboolean" T NIL)
+                       (RESOURCE-BASE-PATH APPLICATION-RESOURCE-BASE-PATH
+                        "resource-base-path" "gchararray" T T)
+                       (VERSION APPLICATION-VERSION
+                        "version" "gchararray" T T)))
              (gobject:get-gtype-definition "GApplication"))))
+
+;;; --- Signals ----------------------------------------------------------------
+
+;;     activate
+;;     command-line
+;;     handle-local-options
+;;     name-lost
+;;     open
+;;     shutdown
+;;     startup
+
+;; TODO: This example does not work on Windows. The "open" signal handler is
+;; not exectuted, but the "activate" signal handler.
+
+(defun example-application-open (&optional (argv nil))
+  (let ((in-startup nil) (in-activate nil) (in-open nil) (in-shutdown nil))
+    (let ((app (make-instance 'g:application
+                              :application-id "com.crategus.application-open"
+                              :inactivity-timeout 2000
+                              :flags :handles-open)))
+      ;; Signal handler "startup"
+      (g:signal-connect app "startup"
+                        (lambda (application)
+                          (declare (ignore application))
+                          (setf in-startup t)
+                          (when *verbose-g-application*
+                            (format t "~&The application is in startup.~%"))))
+      ;; Signal handler "activate"
+      (g:signal-connect app "activate"
+                        (lambda (application)
+                          (declare (ignore application))
+                          (g:application-hold app)
+                          (setf in-activate t)
+                          (when *verbose-g-application*
+                            (format t "The application is in activate.~%"))
+                          ;; Note: when doing a longer-lasting action that
+                          ;; returns to the main loop, you should use
+                          ;; g-application-hold and g-application-release to
+                          ;; keep the application alive until the action is
+                          ;; completed.
+                          (g:application-release app)))
+      ;; Signal handler "open"
+      (g:signal-connect app "open"
+                        (lambda (application files n-files hint)
+                          (declare (ignore application files n-files hint))
+                          (setf in-open t)
+                          (when *verbose-g-application*
+                            (format t "The application is in open.~%"))
+                          ;; TODO: The argument "files" is a C pointer to an
+                          ;; array of GFiles. The conversion to a list of
+                          ;; strings with the call
+                          ;; (cffi:convert-from-foreign files 'g-strv)
+                          ;; does not work. Search a better implementation to
+                          ;; get a list of GFiles.
+                        ))
+      ;; Signal handler "shutdown"
+      (g:signal-connect app "shutdown"
+                        (lambda (application)
+                          (declare (ignore application))
+                          (setf in-shutdown t)
+                          (when *verbose-g-application*
+                            (format t "The application is in shutdown.~%"))))
+      ;; Start the application
+      (g:application-run app argv))
+      ;; Return the results
+      (list in-startup in-activate in-open in-shutdown)))
+
+#-windows
+(test g-application-signals
+  (glib-test:with-check-memory ()
+    (is (equal '(t t nil t)
+               (example-application-open)))
+    (is (equal '(t nil t t)
+               (example-application-open '("demo" "file1" "file2"))))))
 
 ;;; --- Properties and Accessors -----------------------------------------------
 
@@ -183,80 +257,6 @@
     (is-false (g:application-resource-base-path app))
     (is (string= "/test" (setf (g:application-resource-base-path app) "/test")))
     (is (string= "/test" (g:application-resource-base-path app)))))
-
-;;; --- Signals ----------------------------------------------------------------
-
-;;     activate
-;;     command-line
-;;     handle-local-options
-;;     name-lost
-;;     open
-;;     shutdown
-;;     startup
-
-;; TODO: This example does not work on Windows. The "open" signal handler is
-;; not exectuted, but the "activate" signal handler.
-
-(defun example-application-open (&optional (argv nil))
-  (let ((in-startup nil) (in-activate nil) (in-open nil) (in-shutdown nil))
-    (let ((app (make-instance 'g:application
-                              :application-id "com.crategus.application-open"
-                              :inactivity-timeout 2000
-                              :flags :handles-open)))
-      ;; Signal handler "startup"
-      (g:signal-connect app "startup"
-                        (lambda (application)
-                          (declare (ignore application))
-                          (setf in-startup t)
-                          (when *verbose-g-application*
-                            (format t "~&The application is in startup.~%"))))
-      ;; Signal handler "activate"
-      (g:signal-connect app "activate"
-                        (lambda (application)
-                          (declare (ignore application))
-                          (g:application-hold app)
-                          (setf in-activate t)
-                          (when *verbose-g-application*
-                            (format t "The application is in activate.~%"))
-                          ;; Note: when doing a longer-lasting action that
-                          ;; returns to the main loop, you should use
-                          ;; g-application-hold and g-application-release to
-                          ;; keep the application alive until the action is
-                          ;; completed.
-                          (g:application-release app)))
-      ;; Signal handler "open"
-      (g:signal-connect app "open"
-                        (lambda (application files n-files hint)
-                          (declare (ignore application files n-files hint))
-                          (setf in-open t)
-                          (when *verbose-g-application*
-                            (format t "The application is in open.~%"))
-                          ;; TODO: The argument "files" is a C pointer to an
-                          ;; array of GFiles. The conversion to a list of
-                          ;; strings with the call
-                          ;; (cffi:convert-from-foreign files 'g-strv)
-                          ;; does not work. Search a better implementation to
-                          ;; get a list of GFiles.
-                        ))
-      ;; Signal handler "shutdown"
-      (g:signal-connect app "shutdown"
-                        (lambda (application)
-                          (declare (ignore application))
-                          (setf in-shutdown t)
-                          (when *verbose-g-application*
-                            (format t "The application is in shutdown.~%"))))
-      ;; Start the application
-      (g:application-run app argv))
-      ;; Return the results
-      (list in-startup in-activate in-open in-shutdown)))
-
-#-windows
-(test g-application-signals
-  (glib-test:with-check-memory ()
-    (is (equal '(t t nil t)
-               (example-application-open)))
-    (is (equal '(t nil t t)
-               (example-application-open '("demo" "file1" "file2"))))))
 
 ;;; --- Functions --------------------------------------------------------------
 
