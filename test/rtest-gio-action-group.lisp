@@ -20,10 +20,10 @@
   (setf (g:action-state action) parameter))
 
 (defparameter *action-entries*
-              (list (list"paste" nil nil nil nil)
+              (list (list "paste" nil nil nil nil)
                     (list "copy" nil nil nil nil)
                     (list "toolbar" nil "b" "true" #'change-state)
-                    (list "statusbar" nil"b" "false" #'change-state)
+                    (list "statusbar" nil "b" "false" #'change-state)
                     (list "sources" nil "s" "'vala'" #'change-radio-state)
                     (list "markup" nil "s" "'html'" #'change-radio-state)))
 
@@ -52,16 +52,83 @@
              (glib-test:list-signals "GActionGroup")))
   ;; Check interface definition
   (is (equal '(GOBJECT:DEFINE-GINTERFACE "GActionGroup" GIO:ACTION-GROUP
-                       (:EXPORT T
-                        :TYPE-INITIALIZER "g_action_group_get_type"))
+                      (:EXPORT T
+                       :TYPE-INITIALIZER "g_action_group_get_type"))
              (gobject:get-gtype-definition "GActionGroup"))))
 
 ;;; --- Signals ----------------------------------------------------------------
 
 ;;;     action-added
+
+(test g-action-group-action-added-signal
+  (let* ((name "action-added")
+         (gtype (g:gtype "GActionGroup"))
+         (query (g:signal-query (g:signal-lookup name gtype))))
+    ;; Retrieve name and gtype
+    (is (string= name (g:signal-query-signal-name query)))
+    (is (eq gtype (g:signal-query-owner-type query)))
+    ;; Check flags
+    (is (equal '(:DETAILED :RUN-LAST)
+               (sort (g:signal-query-signal-flags query) #'string<)))
+    ;; Check return type
+    (is (eq (g:gtype "void") (g:signal-query-return-type query)))
+    ;; Check parameter types
+    (is (equal '("gchararray")
+               (mapcar #'g:type-name (g:signal-query-param-types query))))))
+
 ;;;     action-enabled-changed
+
+(test g-action-group-action-enabled-changed-signal
+  (let* ((name "action-enabled-changed")
+         (gtype (g:gtype "GActionGroup"))
+         (query (g:signal-query (g:signal-lookup name gtype))))
+    ;; Retrieve name and gtype
+    (is (string= name (g:signal-query-signal-name query)))
+    (is (eq gtype (g:signal-query-owner-type query)))
+    ;; Check flags
+    (is (equal '(:DETAILED :RUN-LAST)
+               (sort (g:signal-query-signal-flags query) #'string<)))
+    ;; Check return type
+    (is (eq (g:gtype "void") (g:signal-query-return-type query)))
+    ;; Check parameter types
+    (is (equal '("gchararray" "gboolean")
+               (mapcar #'g:type-name (g:signal-query-param-types query))))))
+
 ;;;     action-removed
+
+(test g-action-group-action-removed-signal
+  (let* ((name "action-removed")
+         (gtype (g:gtype "GActionGroup"))
+         (query (g:signal-query (g:signal-lookup name gtype))))
+    ;; Retrieve name and gtype
+    (is (string= name (g:signal-query-signal-name query)))
+    (is (eq gtype (g:signal-query-owner-type query)))
+    ;; Check flags
+    (is (equal '(:DETAILED :RUN-LAST)
+               (sort (g:signal-query-signal-flags query) #'string<)))
+    ;; Check return type
+    (is (eq (g:gtype "void") (g:signal-query-return-type query)))
+    ;; Check parameter types
+    (is (equal '("gchararray")
+               (mapcar #'g:type-name (g:signal-query-param-types query))))))
+
 ;;;     action-state-changed
+
+(test g-action-group-action-state-changed-signal
+  (let* ((name "action-state-changed")
+         (gtype (g:gtype "GActionGroup"))
+         (query (g:signal-query (g:signal-lookup name gtype))))
+    ;; Retrieve name and gtype
+    (is (string= name (g:signal-query-signal-name query)))
+    (is (eq gtype (g:signal-query-owner-type query)))
+    ;; Check flags
+    (is (equal '(:DETAILED :MUST-COLLECT :RUN-LAST)
+               (sort (g:signal-query-signal-flags query) #'string<)))
+    ;; Check return type
+    (is (eq (g:gtype "void") (g:signal-query-return-type query)))
+    ;; Check parameter types
+    (is (equal '("gchararray" "GVariant")
+               (mapcar #'g:type-name (g:signal-query-param-types query))))))
 
 ;;; --- Functions --------------------------------------------------------------
 
@@ -80,9 +147,7 @@
                        (g:action-group-list-actions group)))
     (is-false (g:action-group-list-actions group))))
 
-;;;     g_action_group_query_action
-
-;; not implemented
+;;;     g_action_group_query_action                         not implemented
 
 ;;;     g_action_group_has_action
 
@@ -108,7 +173,7 @@
     (is-true (g:action-group-action-enabled group "copy"))
     (is-true (g:action-group-action-enabled group "paste"))
     (is-false (setf (g:action-enabled (g:action-map-lookup-action group "copy"))
-              nil))
+                    nil))
     (is-false (g:action-group-action-enabled group "copy"))
     ;; Remove references
     (is-false (map nil (lambda (x)
@@ -164,8 +229,6 @@
 
 ;;;     g_action_group_get_action_state_hint
 
-;; TODO: Create an example for using a state hint
-
 (test g-action-group-action-state-hint
   (glib-test:with-check-memory (group)
     (setf group (g:simple-action-group-new))
@@ -182,6 +245,19 @@
     (is (cffi:null-pointer-p (g:action-group-action-state-hint group "sources")))
     (let ((action (g:action-map-lookup-action group "sources")))
       (is (cffi:null-pointer-p (g:action-state-hint action))))
+    ;; Set a state hint and retrieve the state hint
+    (let* ((str1 (g:variant-new-string "html"))
+           (str2 (g:variant-new-string "xml"))
+           (hint (g:variant-new-tuple str1 str2))
+           (action (g:action-map-lookup-action group "markup")))
+      ;; Set a state hint
+      (is-false (g:simple-action-set-state-hint action hint))
+      ;; Get the state hint
+      (is (string= "('html', 'xml')"
+                   (g:variant-print (g:action-state-hint action))))
+      (is (string= "('html', 'xml')"
+                   (g:variant-print
+                       (g:action-group-action-state-hint group "markup")))))
     ;; Remove references
     (is-false (map nil (lambda (x)
                          (g:action-map-remove-action group x))
@@ -260,4 +336,4 @@
 ;;;     g_action_group_action_enabled_changed
 ;;;     g_action_group_action_state_changed
 
-;;; 2024-12-19
+;;; 2025-2-3
