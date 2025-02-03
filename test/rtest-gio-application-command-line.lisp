@@ -53,14 +53,8 @@
 
 (test g-application-command-line-properties
   (let ((cmdline (make-instance 'g:application-command-line)))
-    ;; Property arguments is not readable
-    (signals (error) (g:application-command-line-arguments cmdline))
     ;; Default value is nil
-    (is-false (g:application-command-line-is-remote cmdline))
-    ;; Property options is not readable
-    (signals (error) (g:application-command-line-options cmdline))
-    ;; Property platform-data is not readable
-    (signals (error) (g:application-command-line-platform-data cmdline))))
+    (is-false (g:application-command-line-is-remote cmdline))))
 
 ;;; --- Functions --------------------------------------------------------------
 
@@ -70,7 +64,7 @@
 ;; passed to the "comand-line" signal handler.
 
 #-windows
-(test g-application-command-line-get-arguments
+(test g-application-command-line-arguments
   (let ((app (make-instance 'g:application
                             :flags :handles-command-line
                             :inactivity-timeout 1000)))
@@ -80,9 +74,9 @@
           (g:application-hold application)
           (when *verbose-g-application-command-line*
             (format t "~%The application is in command-line.~%")
-            (format t "~A~%" (g:application-command-line-get-arguments cmdline)))
+            (format t "~A~%" (g:application-command-line-arguments cmdline)))
           (is (equal '("file1" "file2" "file3")
-                     (g:application-command-line-get-arguments cmdline)))
+                     (g:application-command-line-arguments cmdline)))
           (g:application-release application)
           0))
     (g:application-run app '("file1" "file2" "file3"))))
