@@ -1,12 +1,12 @@
 ;;; ----------------------------------------------------------------------------
 ;;; gio.action-map.lisp
 ;;;
-;;; The documentation of this file is taken from the GIO Reference Manual
-;;; Version 2.82 and modified to document the Lisp binding to the GIO library.
-;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
-;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
+;;; The documentation in this file is taken from the GIO Reference Manual
+;;; Version 2.82 and modified to document the Lisp binding to the GIO library,
+;;; see <http://www.gtk.org>. The API documentation of the Lisp binding is
+;;; available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2012 - 2024 Dieter Kaiser
+;;; Copyright (C) 2012 - 2025 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -72,7 +72,7 @@
 (setf (liber:alias-for-class 'action-map)
       "Interface"
       (documentation 'action-map 'type)
- "@version{2024-5-14}
+ "@version{2025-2-3}
   @begin{short}
     The @class{g:action-map} interface is implemented by @class{g:action-group}
     implementations that operate by containing a number of named
@@ -94,9 +94,9 @@
 (cffi:defcfun ("g_action_map_lookup_action" action-map-lookup-action)
     (gobject:object action)
  #+liber-documentation
- "@version{2023-12-23}
+ "@version{2025-2-3}
   @argument[map]{a @class{g:action-map} object}
-  @argument[name]{a string with the name of an action}
+  @argument[name]{a string for the name of an action}
   @return{The @class{g:action} object, or @code{nil}.}
   @begin{short}
     Looks up the action with the given name in the action map.
@@ -110,7 +110,7 @@
 (export 'action-map-lookup-action)
 
 ;;; ----------------------------------------------------------------------------
-;;; struct GActionEntry
+;;; GActionEntry
 ;;; ----------------------------------------------------------------------------
 
 ;; This structure is not used in the Lisp implementation
@@ -143,7 +143,7 @@
       @class{g:variant-type} parameter type string, or @code{nil} for no
       parameter.}
     @entry[state]{The initial state for this action, given in
-      @type{g:variant} text format. The state is parsed with no extra type
+      @symbol{g:variant} text format. The state is parsed with no extra type
       information, so type tags must be added to the string if they are
       necessary. Stateless actions should give @code{nil} here.}
     @entry[change-state]{The callback function to connect to the
@@ -173,7 +173,7 @@
   @end{dictionary}
   @see-class{g:action-map}
   @see-class{g:simple-action}
-  @see-type{g:variant}
+  @see-symbol{g:variant}
   @see-class{g:variant-type}"
   (dolist (entry entries)
     (let* ((action nil)
@@ -222,9 +222,9 @@
 
 (cffi:defcfun ("g_action_map_remove_action" action-map-remove-action) :void
  #+liber-documentation
- "@version{2023-12-23}
+ "@version{2025-2-3}
   @argument[map]{a @class{g:action-map} object}
-  @argument[name]{a string with the name of the action}
+  @argument[name]{a string for the name of the action}
   @begin{short}
     Removes the named action from the action map.
   @end{short}
