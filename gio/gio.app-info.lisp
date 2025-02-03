@@ -1,12 +1,12 @@
 ;;; ----------------------------------------------------------------------------
 ;;; gio.app-info.lisp
 ;;;
-;;; The documentation of this file is taken from the GIO Reference Manual
-;;; Version 2.82 and modified to document the Lisp binding to the GIO library.
-;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
-;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
+;;; The documentation in this file is taken from the GIO Reference Manual
+;;; Version 2.82 and modified to document the Lisp binding to the GIO library,
+;;; see <http://www.gtk.org>. The API documentation of the Lisp binding is
+;;; available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2012 - 2024 Dieter Kaiser
+;;; Copyright (C) 2012 - 2025 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -197,7 +197,7 @@
 
 #+liber-documentation
 (setf (documentation 'app-launch-context 'type)
- "@version{2024-12-22}
+ "@version{2025-2-3}
   @begin{short}
     Integrating the launch with the launching application.
   @end{short}
@@ -226,15 +226,16 @@ lambda (context info platform-data)    :run-first
          signal.}
        @entry[info]{The @class{g:app-info} instance that is about to be
          launched.}
-       @entry[platform-data]{The @type{g:variant} value with additional
+       @entry[platform-data]{The @symbol{g:variant} parameter with additional
          platform specific data for this launch. The argument can be
          @code{NULL}.}
      @end{table}
      The signal is emitted when a @class{g:app-info} instance is about to be
-     launched. If non-@code{null} the @arg{platform-data} is a @type{g:variant}
-     dictionary mapping strings to variants, that is @code{a{sv@}}, which
-     contains additional, platform specific data about this launch. On UNIX, at
-     least the @code{startup-notification-id} keys will be present.
+     launched. If non-@code{null} the @arg{platform-data} is a
+     @symbol{g:variant} dictionary mapping strings to variants, that is
+     @code{a{sv@}}, which contains additional, platform specific data about
+     this launch. On UNIX, at least the @code{startup-notification-id} keys
+     will be present.
 
      The value of the @code{startup-notification-id} key (type @code{s}) is a
      startup notification ID corresponding to the format from the startup
@@ -260,11 +261,11 @@ lambda (context info platform-data)    :run-last
         @entry[context]{The @class{g:app-launch-context} object emitting the
           signal.}
         @entry[info]{The @class{g:app-info} object that was just launched.}
-        @entry[platform-data]{The @type{g:variant} instance with additional
+        @entry[platform-data]{The @symbol{g:variant} parameter with additional
           platform specific data for this launch.}
       @end{table}
       The signal is emitted when a @class{g:app-info} object is successfully
-      launched. The argument @arg{platform-data} is an @type{g:variant}
+      launched. The argument @arg{platform-data} is a @symbol{g:variant}
       dictionary mapping strings to variants, that is @code{a{sv@}}, which
       contains additional, platform-specific data about this launch. On UNIX,
       at least the @code{\"pid\"} and @code{\"startup-notification-id\"} keys
@@ -279,7 +280,7 @@ lambda (context info platform-data)    :run-last
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_create_from_commandline"
-                %app-info-create-from-commandline)
+               %app-info-create-from-commandline)
     (gobject:object app-info :return)
   (cmdline :string)
   (application :string)
@@ -288,11 +289,11 @@ lambda (context info platform-data)    :run-last
 
 (defun app-info-create-from-commandline (cmdline application flags)
  #+liber-documentation
- "@version{2024-12-22}
-  @argument[cmdline]{a string with the the commandline to use}
-  @argument[application]{a string with the application name, or @code{nil} to
+ "@version{2025-2-3}
+  @argument[cmdline]{a string for the commandline to use}
+  @argument[application]{a string for the application name, or @code{nil} to
     use @arg{cmdline}}
-  @argument[flags]{a @symbol{g:app-info-create-flags} value with the flags that
+  @argument[flags]{a @symbol{g:app-info-create-flags} value for the flags that
     can specify details of the created @class{g:app-info} instance}
   @return{The new @class{g:app-info} instance.}
   @begin{short}
@@ -770,9 +771,9 @@ lambda (context info platform-data)    :run-last
 
 (defun app-info-set-as-default-for-type (info content-type)
  #+liber-documentation
- "@version{#2024-12-22}
+ "@version{#2025-2-3}
   @argument[info]{a @class{g:app-info} instance}
-  @argument[content-type]{a string with the content type}
+  @argument[content-type]{a string for the content type}
   @return{@em{True} on success, @em{false} on error.}
   @begin{short}
     Sets the application as the default handler for a given content type.
@@ -1171,11 +1172,12 @@ lambda (context info platform-data)    :run-last
 
 (defun app-info-launch-default-for-uri-finish (result)
  #+liber-documentation
- "@version{2024-12-22}
+ "@version{2025-1-4}
   @argument[result]{a @class{g:async-result} object}
   @return{@em{True} if the launch was successful, @em{false} otherwise}
   @begin{short}
-    Finishes an asynchronous launch-default-for-uri operation.
+    Finishes an asynchronous @fun{g:app-info-launch-default-for-uri-async}
+    operation.
   @end{short}
   @see-class{g:app-launch-context}
   @see-class{g:async-result}
@@ -1234,7 +1236,7 @@ lambda (context info platform-data)    :run-last
 (cffi:defcfun ("g_app_launch_context_unsetenv" app-launch-context-unsetenv)
     :void
  #+liber-documentation
- "@version{#204-12-22}
+ "@version{#2024-12-22}
   @argument[context]{a @class{g:app-launch-context} instance}
   @argument[variable]{a string with the enviroment variable to remove}
   @begin{short}
