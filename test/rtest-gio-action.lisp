@@ -29,15 +29,15 @@
              (glib-test:list-signals "GAction")))
   ;; Check interface definition
   (is (equal '(GOBJECT:DEFINE-GINTERFACE "GAction" GIO:ACTION
-                       (:EXPORT T
-                        :TYPE-INITIALIZER "g_action_get_type")
-                       (ENABLED ACTION-ENABLED "enabled" "gboolean" T NIL)
-                       (NAME ACTION-NAME "name" "gchararray" T NIL)
-                       (PARAMETER-TYPE ACTION-PARAMETER-TYPE
-                        "parameter-type" "GVariantType" T NIL)
-                       (STATE ACTION-STATE "state" "GVariant" T NIL)
-                       (STATE-TYPE ACTION-STATE-TYPE
-                        "state-type" "GVariantType" T NIL))
+                      (:EXPORT T
+                       :TYPE-INITIALIZER "g_action_get_type")
+                      (ENABLED ACTION-ENABLED "enabled" "gboolean" T NIL)
+                      (NAME ACTION-NAME "name" "gchararray" T NIL)
+                      (PARAMETER-TYPE ACTION-PARAMETER-TYPE
+                       "parameter-type" "GVariantType" T NIL)
+                      (STATE ACTION-STATE "state" "GVariant" T NIL)
+                      (STATE-TYPE ACTION-STATE-TYPE
+                       "state-type" "GVariantType" T NIL))
              (gobject:get-gtype-definition "GAction"))))
 
 ;;; --- Properties and Accessors -----------------------------------------------
@@ -135,7 +135,15 @@
 
 ;;;     g_action_get_state_hint
 
-;; TODO: Example for usage of this function
+(test g-action-state-hint
+  (let ((action (g:simple-action-new-stateful "simple"
+                                              "i"
+                                              (g:variant-new-int16 15)))
+        (hint (g:variant-new-tuple (g:variant-new-int16 10)
+                                   (g:variant-new-int16 20))))
+    (is (cffi:null-pointer-p (g:action-state-hint action)))
+    (is-false (g:simple-action-set-state-hint action hint))
+    (is (string= "(10, 20)" (g:variant-print (g:action-state-hint action))))))
 
 ;;;     g_action_change_state
 ;;;     g_action_activate

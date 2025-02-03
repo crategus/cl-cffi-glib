@@ -1,12 +1,12 @@
 ;;; ----------------------------------------------------------------------------
 ;;; gio.action.lisp
 ;;;
-;;; The documentation of this file is taken from the GIO Reference Manual
-;;; Version 2.82 and modified to document the Lisp binding to the GIO library.
-;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
-;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
+;;; The documentation in this file is taken from the GIO Reference Manual
+;;; Version 2.82 and modified to document the Lisp binding to the GIO library,
+;;; see <http://www.gtk.org>. The API documentation of the Lisp binding is
+;;; available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2012 - 2024 Dieter Kaiser
+;;; Copyright (C) 2012 - 2025 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -67,11 +67,11 @@
 ;;;
 ;;; Prerequisites
 ;;;
-;;;     GAction requires GObject.
+;;;     GAction requires GObject
 ;;;
 ;;; Known Implementations
 ;;;
-;;;     GAction is implemented by GPropertyAction and GSimpleAction.
+;;;     GAction is implemented by GPropertyAction and GSimpleAction
 ;;; ----------------------------------------------------------------------------
 
 (in-package :gio)
@@ -85,7 +85,7 @@
    :type-initializer "g_action_get_type")
   ((enabled
     action-enabled
-    "enabled" "gboolean" t nil)
+    "enabled" "gboolean" t t)
    (name
     action-name
     "name" "gchararray" t nil)
@@ -103,22 +103,21 @@
 (setf (liber:alias-for-class 'action)
       "Interface"
       (documentation 'action 'type)
- "@version{2024-5-14}
+ "@version{2025-2-3}
   @begin{short}
     The @class{g:action} interface represents a single named action.
   @end{short}
   The main interface to an action is that it can be activated with the
   @fun{g:action-activate} function. This results in the @code{\"activate\"}
-  signal being emitted. An activation has a @type{g:variant} parameter, which
+  signal being emitted. An activation has a @symbol{g:variant} parameter, which
   may be @code{nil}. The correct type for the parameter is determined by a
   static parameter type, which is given at construction time.
 
   An action may optionally have a state, in which case the state may be set
   with the @fun{g:action-change-state} function. This call takes a
-  @type{g:variant} parameter. The correct type for the state is determined by
-  a static state type, which is given at construction time.
-
-  The state may have a hint associated with it, specifying its valid range.
+  @symbol{g:variant} parameter. The correct type for the state is determined by
+  a static state type, which is given at construction time. The state may have
+  a hint associated with it, specifying its valid range.
 
   The @class{g:action} interface is merely the interface to the concept of an
   action, as described above. Various implementations of actions exist,
@@ -151,7 +150,7 @@
 
 #+liber-documentation
 (setf (documentation (liber:slot-documentation "enabled" 'action) t)
- "The @code{enabled} property of type @code{:boolean} (Read) @br{}
+ "The @code{enabled} property of type @code{:boolean} (Read / Write) @br{}
   Whether the action is currently enabled. If the action is disabled then calls
   to the @fun{g:action-activate} and @fun{g:action-change-state} functions
   have no effect. @br{}
@@ -161,7 +160,7 @@
 (setf (liber:alias-for-function 'action-enabled)
       "Accessor"
       (documentation 'action-enabled 'function)
- "@version{2024-5-14}
+ "@version{2025-2-3}
   @syntax{(g:action-enabled object) => enabled}
   @syntax{(setf (g:action-enabled object) enabled)}
   @argument[object]{a @class{g:action} object}
@@ -181,22 +180,25 @@
 (setf (documentation (liber:slot-documentation "name" 'action) t)
  "The @code{name} property of type @code{:string} (Read) @br{}
   The name of the action. This is mostly meaningful for identifying the action
-  once it has been added to a @class{g:action-group} object. @br{}
+  once it has been added to a @class{g:action-map} instance. @br{}
   Default value: @code{nil}")
 
 #+liber-documentation
 (setf (liber:alias-for-function 'action-name)
       "Accessor"
       (documentation 'action-name 'function)
- "@version{2024-5-14}
+ "@version{2025-2-3}
   @syntax{(g:action-name object) => name}
   @argument[action]{a @class{g:action} object}
-  @argument[name]{a string with the name of the action}
+  @argument[name]{a string for the name of the action}
   @begin{short}
     Accessor of the @slot[g:action]{name} slot of the @class{g:action} class.
   @end{short}
-  The @fun{g:action-name} function queries the name of the action.
-  @see-class{g:action}")
+  The @fun{g:action-name} function queries the name of the action. This is
+  mostly meaningful for identifying the action once it has been added to a
+  @class{g:action-map} instance.
+  @see-class{g:action}
+  @see-class{g:action-map}")
 
 ;;; --- g:action-parameter-type ------------------------------------------------
 
@@ -209,7 +211,7 @@
 (setf (liber:alias-for-function 'action-parameter-type)
       "Accessor"
       (documentation 'action-parameter-type 'function)
- "@version{2024-5-14}
+ "@version{2025-2-3}
   @syntax{(g:action-parameter-type object) => vtype}
   @argument[object]{a @class{g:action} object}
   @argument[vtype]{a @class{g:variant-type} parameter type}
@@ -219,43 +221,43 @@
   @end{short}
   Queries the type of the parameter that must be given when activating the
   action. When activating the action using the @fun{g:action-activate} function,
-  the @type{g:variant} parameter given to that function must be of the type
+  the @symbol{g:variant} parameter given to that function must be of the type
   returned by this function.
 
   In the case that this function returns a @code{nil} value, you must not give
-  any @type{g:variant} parameter, but a @code{cffi:null-pointer} instead.
+  any @symbol{g:variant} parameter, but a @code{cffi:null-pointer} value
+  instead.
   @see-class{g:action}
   @see-class{g:variant-type}
-  @see-type{g:variant}
+  @see-symbol{g:variant}
   @see-function{g:action-activate}")
 
-;;; --- g:application-state ----------------------------------------------------
+;;; --- g:action-state ---------------------------------------------------------
 
 #+liber-documentation
 (setf (documentation (liber:slot-documentation "state" 'action) t)
- "The @code{state} property of type @type{g:variant} (Read) @br{}
-  The state of the action, or @code{nil} if the action is stateless. @br{}
-  Allowed values: @code{GVariant<*>} @br{}
-  Default value: @code{nil}")
+ "The @code{state} property of type @symbol{g:variant} (Read) @br{}
+  The state of the action, or the @code{cffi:null-pointer} value if the action
+  is stateless.")
 
 #+liber-documentation
 (setf (liber:alias-for-function 'action-state)
       "Accessor"
       (documentation 'action-state 'function)
- "@version{2024-5-14}
+ "@version{2025-2-3}
   @syntax{(g:action-state object) => state}
   @syntax{(setf (g:action-state object) state)}
   @argument[object]{a @class{g:action} object}
-  @argument[state]{a @type{g:variant} state of the action}
+  @argument[state]{a @symbol{g:variant} parameter for the state of the action}
   @begin{short}
     Accessor of the @slot[g:action]{state} slot of the @class{g:action} class.
   @end{short}
   Queries the current state of the action. If the action is not stateful then a
-  @code{cffi:null-pointer} will be returned. If the action is stateful then the
-  type of the return value is the type given by the @fun{g:action-state-type}
-  function.
+  @code{cffi:null-pointer} value will be returned. If the action is stateful
+  then the type of the return value is the type given by the
+  @fun{g:action-state-type} function.
   @begin[Examples]{dictionary}
-    A stateful action with an integer value.
+    A stateful action with an integer.
     @begin{pre}
 (defvar state (g:variant-new-int32 123)) => STATE
 (defvar action (g:simple-action-new-stateful \"stateful\" nil state)) => ACTION
@@ -274,7 +276,7 @@
     @end{pre}
   @end{dictionary}
   @see-class{g:action}
-  @see-type{g:variant}
+  @see-symbol{g:variant}
   @see-function{g:action-state-type}")
 
 ;;; --- g:action-state-type ----------------------------------------------------
@@ -289,11 +291,11 @@
 (setf (liber:alias-for-function 'action-state-type)
       "Accessor"
       (documentation 'action-state-type 'function)
- "@version{2024-5-14}
+ "@version{2025-2-3}
   @syntax{(g:action-state-type object) => vtype}
   @argument[object]{a @class{g:action} object}
-  @argument[vtype]{a @class{g:variant-type} state type, if the action is
-    stateful}
+  @argument[vtype]{a @class{g:variant-type} parameter type, for the state type
+    if the action is stateful}
   @begin{short}
     Accessor of the @slot[g:action]{state-type} slot of the @class{action}
     class.
@@ -302,9 +304,9 @@
   example created with the @fun{g:simple-action-new-stateful} function, then
   this function returns the @class{g:variant-type} parameter type of the state.
   This is the type of the initial value given as the state. All calls to the
-  @fun{g:action-change-state} function must give a @type{g:variant} parameter of
-  this type and the @fun{g:action-state} function will return a @type{g:variant}
-  parameter of the same type.
+  @fun{g:action-change-state} function must give a @symbol{g:variant} parameter
+  of this type and the @fun{g:action-state} function will return a
+  @symbol{g:variant} parameter of the same type.
 
   If the action is not stateful, for example created with the
   @fun{g:simple-action-new} function, then this function will return @code{nil}.
@@ -313,7 +315,7 @@
   @fun{g:action-change-state} function.
   @see-class{g:action}
   @see-class{g:variant-type}
-  @see-type{g:variant}
+  @see-symbol{g:variant}
   @see-function{g:simple-action-new}
   @see-function{g:simple-action-new-stateful}
   @see-function{g:action-change-state}
@@ -325,8 +327,8 @@
 
 (cffi:defcfun ("g_action_name_is_valid" action-name-is-valid) :boolean
  #+liber-documentation
- "@version{2024-5-14}
-  @argument[name]{a string with an action name}
+ "@version{2025-2-3}
+  @argument[name]{a string for an action name}
   @return{@em{True} if the @arg{name} argument is a valid action name.}
   @begin{short}
     Checks if the action name is valid.
@@ -355,9 +357,9 @@
 (cffi:defcfun ("g_action_get_state_hint" action-state-hint)
     (:pointer (:struct glib:variant))
  #+liber-documentation
- "@version{#2024-5-14}
+ "@version{2025-2-3}
   @argument[action]{a @class{g:action} object}
-  @return{The @type{g:variant} state range hint.}
+  @return{The @symbol{g:variant} parameter for the state range hint.}
   @begin{short}
     Requests a hint about the valid range of values for the state of the action.
   @end{short}
@@ -365,16 +367,16 @@
   action is not stateful or that there is no hint about the valid range of
   values for the state of the action.
 
-  If a @type{g:variant} parameter array is returned then each item in the array
-  is a possible value for the state. If a @type{g:variant} parameter pair, for
-  example two-tuple, is returned then the tuple specifies the inclusive lower
-  and upper bound of valid values for the state.
+  If a @symbol{g:variant} parameter array is returned then each item in the
+  array is a possible value for the state. If a @symbol{g:variant} parameter
+  pair, for example two-tuple, is returned then the tuple specifies the
+  inclusive lower and upper bound of valid values for the state.
 
   In any case, the information is merely a hint. It may be possible to have a
   state value outside of the hinted range and setting a value within the range
   may fail.
   @see-class{g:action}
-  @see-type{g:variant}"
+  @see-symbol{g:variant}"
   (action (gobject:object action)))
 
 (export 'action-state-hint)
@@ -385,9 +387,9 @@
 
 (cffi:defcfun ("g_action_change_state" action-change-state) :void
  #+liber-documentation
- "@version{2022-12-26}
+ "@version{2025-2-3}
   @argument[action]{a @class{g:action} object}
-  @argument[value]{a new @type{g:variant} state}
+  @argument[value]{a @symbol{g:variant} parameter for the new state}
   @begin{short}
     Request for the state of the action to be changed to @arg{value}.
   @end{short}
@@ -398,7 +400,7 @@
   state or may change its state to something other than @arg{value}. See the
   @fun{g:action-state-hint} function.
   @see-class{g:action}
-  @see-type{g:variant}
+  @see-symbol{g:variant}
   @see-function{g:action-state-type}
   @see-function{g:action-state-hint}"
   (action (gobject:object action))
@@ -416,7 +418,7 @@
 
 (defun action-activate (action &optional (parameter nil))
  #+liber-documentation
- "@version{2024-5-14}
+ "@version{2025-2-3}
   @argument[action]{a @class{g:action} object}
   @argument[parameter]{an optional @class{g:variant} parameter to the
     activation}
@@ -428,7 +430,7 @@
   time. If the parameter type was a @code{cffi:null-pointer} value then the
   @arg{parameter} argument must be @code{nil}, this is the default value.
   @see-class{g:action}
-  @see-type{g:variant}"
+  @see-symbol{g:variant}"
   (let ((parameter (or parameter (cffi:null-pointer))))
     (%action-activate (gobject:object-pointer action) parameter)))
 
@@ -447,11 +449,11 @@
 
 (defun action-parse-detailed-name (detailed)
  #+liber-documentation
- "@version{2024-11-21}
-  @argument[detailed]{a string with a detailed action name}
+ "@version{2025-2-3}
+  @argument[detailed]{a string for a detailed action name}
   @begin{return}
      @arg{name} -- a string with the action name @br{}
-     @arg{value} -- a @type{g:variant} target value, or a
+     @arg{value} -- a @symbol{g:variant} parameter for the target value, or a
        @code{cffi:null-pointer} value for no target
   @end{return}
   @begin{short}
@@ -502,7 +504,7 @@
     @end{pre}
   @end{dictionary}
   @see-class{g:action}
-  @see-type{g:variant}
+  @see-symbol{g:variant}
   @see-function{g:variant-parse}"
   (glib:with-error (err)
     (cffi:with-foreign-objects ((name :string)
@@ -524,9 +526,10 @@
 
 (defun action-print-detailed-name (name &optional (value nil))
  #+liber-documentation
- "@version{2024-5-14}
-  @argument[name]{a string with a valid action name}
-  @argument[value]{an optional @type{g:variant} target value}
+ "@version{2025-2-3}
+  @argument[name]{a string for a valid action name}
+  @argument[value]{an optional @symbol{g:variant} parameter for the target
+    value}
   @begin{short}
     Formats a detailed action name from an action name and a target value.
   @end{short}
@@ -546,10 +549,9 @@
     @end{pre}
   @end{dictionary}
   @see-class{g:action}
-  @see-type{g:variant}
+  @see-symbol{g:variant}
   @see-function{g:action-parse-detailed-name}"
-  (%action-print-detailed-name name
-                               (or value (cffi:null-pointer))))
+  (%action-print-detailed-name name (or value (cffi:null-pointer))))
 
 (export 'action-print-detailed-name)
 
