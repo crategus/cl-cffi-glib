@@ -200,8 +200,7 @@
     (is (equal '(:is-service :handles-open) (g:value-get gvalue)))))
 
 ;; TODO: G:VALUE-FLAGS duplicatates the implementation, but does no conversion
-;; beetween Lisp keywords and C integer values. Consider to change the
-;; implmentation
+;; beetween Lisp keywords and C integers. Consider to change the implementation
 (test get-gvalue-flags.6
   (gobject:with-value (gvalue "GApplicationFlags" 0)
     (is (= 0 (gobject::%value-flags gvalue)))

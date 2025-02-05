@@ -975,9 +975,9 @@
 
 (defun signal-connect (instance signal handler &key after)
  #+liber-documentation
- "@version{2024-5-24}
+ "@version{2025-1-4}
   @argument[instance]{a @class{g:object} instance to connect to}
-  @argument[signal]{a string of the form \"signal-name::detail\"}
+  @argument[signal]{a string of the form @code{\"signal-name::detail\"}}
   @argument[handler]{a Lisp callback function to connect}
   @argument[after]{if @em{true} the handler is called after the default handler}
   @return{The unsigned long integer with the handler ID.}
@@ -992,7 +992,8 @@
     function, which is implemented with the @arg{after} keyword argument.
   @end{dictionary}
   @begin[Examples]{dictionary}
-    Connect a Lisp lambda function to the signal \"toggled\" of a toggle button:
+    Connect a Lisp lambda function to the @code{\"toggled\"} signal of a toggle
+    button:
     @begin{pre}
 (g:signal-connect button \"toggled\"
    (lambda (widget)

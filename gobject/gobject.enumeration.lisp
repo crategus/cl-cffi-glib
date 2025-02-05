@@ -111,7 +111,7 @@
 ;;;     a symbol denoting a foreign type, default value :int
 ;;;
 ;;; allow-undeclared-values :
-;;;     whether to pass through integer values that were not explicitly declared
+;;;     whether to pass through integers that were not explicitly declared
 ;;;     in the enumeration when translating from foreign memory
 ;;;
 ;;; type-initializer :

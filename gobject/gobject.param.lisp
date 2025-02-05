@@ -593,7 +593,7 @@
   @syntax{(g:value-int gvalue) => value}
   @syntax{(setf (g:value-int gvalue) value)}
   @argument[gvalue]{a @symbol{g:value} instance of @code{\"gint\"} type}
-  @argument[value]{an integer value}
+  @argument[value]{an integer}
   @begin{short}
     Integer contents of @arg{gvalue}.
   @end{short}
@@ -696,7 +696,7 @@
   @syntax{(g:value-uint gvalue) => value}
   @syntax{(setf (g:value-uint gvalue) value)}
   @argument[gvalue]{a @symbol{g:value} instance of @code{\"guint\"} type}
-  @argument[value]{an unsigned integer value}
+  @argument[value]{an unsigned integer}
   @begin{short}
     Unsigned integer contents of @arg{gvalue}.
   @end{short}
@@ -799,7 +799,7 @@
   @syntax{(g:value-long gvalue) => value}
   @syntax{(setf (g:value-long gvalue) value)}
   @argument[gvalue]{a @symbol{g:value} instance of @code{\"glong\"} type}
-  @argument[value]{a long integer value}
+  @argument[value]{a long integer}
   @begin{short}
     Long integer contents of @arg{gvalue}.
   @end{short}
@@ -903,7 +903,7 @@
   @syntax{(g:value-ulong gvalue) => value}
   @syntax{(setf (g:value-ulong gvalue) value)}
   @argument[gvalue]{a @symbol{g:value} instance of @code{\"gulong\"} type}
-  @argument[value]{an unsigned long integer value}
+  @argument[value]{an unsigned long integer}
   @begin{short}
     Unsigned long integer contents of @arg{gvalue}.
   @end{short}
@@ -1007,7 +1007,7 @@
   @syntax{(g:value-int64 gvalue) => value}
   @syntax{(setf (g:value-int64 gvalue) value)}
   @argument[gvalue]{a @symbol{g:value} instance of @code{\"gint64\"} type}
-  @argument[value]{a 64-bit integer value}
+  @argument[value]{a 64-bit integer}
   @begin{short}
     The 64-bit integer contents of @arg{gvalue}.
   @end{short}
@@ -1112,7 +1112,7 @@
   @syntax{(g:value-uint64 gvalue) => value}
   @syntax{(setf (g:value-uint64 gvalue) value)}
   @argument[gvalue]{a @symbol{g:value} instance of @code{\"guint64\"} type}
-  @argument[value]{an unsigned 64-bit integer value}
+  @argument[value]{an unsigned 64-bit integer}
   @begin{short}
     Unsigned 64-bit integer contents of @arg{gvalue}.
   @end{short}
@@ -1151,10 +1151,10 @@
   @begin{values}
     @begin[code]{table}
       @entry[:parent-instance]{Private @symbol{g:param-spec} portion.}
-      @entry[:minimum]{The float with the minimum value.}
-      @entry[:maximum]{The float with the maximum value.}
-      @entry[:default-value]{The float with the default value.}
-      @entry[:epsilon]{The float value, values closer than epsilon will be
+      @entry[:minimum]{The single float for the minimum value.}
+      @entry[:maximum]{The single float for the maximum value.}
+      @entry[:default-value]{The single float for the default value.}
+      @entry[:epsilon]{The  single float, values closer than epsilon will be
         considered identical, the default value is 1e-30.}
     @end{table}
   @end{values}
@@ -1220,7 +1220,7 @@
   @syntax{(g:value-float gvalue) => value}
   @syntax{(setf (g:value-float gvalue) value)}
   @argument[gvalue]{a @symbol{g:value} instance of @code{\"gfloat\"} type}
-  @argument[value]{a float value}
+  @argument[value]{a single float}
   @begin{short}
     Float contents of @arg{gvalue}.
   @end{short}
@@ -1262,7 +1262,7 @@
       @entry[:minimum]{The double float with the minimum value.}
       @entry[:maximum]{The double float with the maximum value.}
       @entry[:default-value]{The double float with the default value.}
-      @entry[:epsilon]{The double float value, values closer than epsilon will
+      @entry[:epsilon]{The double float, values closer than epsilon will
         be considered identical, the default value is 1e-90.}
     @end{table}
   @end{values}
@@ -1283,12 +1283,12 @@
     (:pointer (:struct param-spec-double))
  #+liber-documentation
  "@version{2024-12-22}
-  @argument[name]{a string with the canonical name}
-  @argument[nick]{a string with the nick name}
-  @argument[blurb]{a string with the description}
-  @argument[minimum]{a double float with the minimum value}
-  @argument[maximum]{a double float with the maximum value}
-  @argument[default]{a double float with the default value}
+  @argument[name]{a string for the canonical name}
+  @argument[nick]{a string for the nick name}
+  @argument[blurb]{a string for the description}
+  @argument[minimum]{a double float for the minimum value}
+  @argument[maximum]{a double float for the maximum value}
+  @argument[default]{a double float for the default value}
   @argument[flags]{a @symbol{g:param-flags} value}
   @return{The newly created @symbol{g:param-spec-double} parameter
     specification.}
@@ -1328,7 +1328,7 @@
   @syntax{(g:value-double gvalue) => value}
   @syntax{(setf (g:value-double gvalue) value)}
   @argument[gvalue]{a @symbol{g:value} instance of @code{\"gdouble\"} type}
-  @argument[value]{a double float value}
+  @argument[value]{a double float}
   @begin{short}
     Double float contents of @arg{gvalue}.
   @end{short}
@@ -2478,7 +2478,7 @@
   @syntax{(g:value-variant gvalue) => value}
   @syntax{(setf (g:value-variant gvalue) value)}
   @argument[gvalue]{a @symbol{g:value} instance of @code{\"GVariant\"} type}
-  @argument[value]{a @symbol{g:variant} value}
+  @argument[value]{a @symbol{g:variant} parameter}
   @begin{short}
     Variant contents of @arg{gvalue}.
   @end{short}

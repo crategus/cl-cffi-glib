@@ -814,12 +814,11 @@ ID     NAME               CFFI type      Lisp type
 
 (defun type-from-instance (instance)
  #+liber-documentation
- "@version{2024-12-8}
+ "@version{2025-1-4}
   @argument[instance]{a valid @symbol{g:type-instance} instance}
   @return{The @class{g:type-t} type ID of @arg{instance}.}
-  @short{Get the type identifier from a given instance.}
-  This function should only be used in type implementations.
-  @begin[Note]{dictionary}
+  @short{Gets the type identifier from a given instance.}
+  @begin[Notes]{dictionary}
     Signals an error if the @arg{instance} argument is not a valid
     @symbol{g:type-instance} instance.
   @end{dictionary}
@@ -847,11 +846,10 @@ ID     NAME               CFFI type      Lisp type
 
 (defun type-from-class (class)
  #+liber-documentation
- "@version{2024-12-8}
+ "@version{2025-1-4}
   @argument[class]{a valid @symbol{g:type-class} instance}
   @return{The @class{g:type-t} type ID of @arg{class}.}
-  @short{Get the type identifier from a given class instance.}
-  This function should only be used in type implementations.
+  @short{Gets the type identifier from a given class instance.}
   @begin[Examples]{dictionary}
     @begin{pre}
 (g:type-from-class (g:type-class-ref \"GObject\"))
@@ -872,11 +870,10 @@ ID     NAME               CFFI type      Lisp type
 
 (defun type-from-interface (iface)
  #+liber-documentation
- "@version{2024-12-8}
+ "@version{2025-1-4}
   @argument[iface]{a valid @symbol{g:type-interface} instance}
   @return{The @class{g:type-t} type ID of @arg{iface}.}
-  @short{Get the type identifier from a given interface instance.}
-  This function should only be used in type implementations.
+  @short{Gets the type identifier from a given interface instance.}
   @begin[Examples]{dictionary}
     @begin{pre}
 (g:type-from-interface (g:type-default-interface-ref \"GtkOrientable\"))

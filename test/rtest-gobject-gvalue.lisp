@@ -238,7 +238,7 @@
     (format t "gtype  = ~a~%" (g:value-type value2))
     (format t "name   = ~a~%~%" (g:value-type-name value2))
 
-    ;; Reuse value1 for an integer value
+    ;; Reuse value1 for an integer
     (g:value-unset value1)
     (g:value-set value1 42 "gint" )
     (format t "value1 = ~a~%" (g:value-get value1))
