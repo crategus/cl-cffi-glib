@@ -143,7 +143,30 @@
 ;;;
 ;;;     g_variant_new_maybe
 ;;;     g_variant_new_array
+
 ;;;     g_variant_new_tuple
+
+(test g-variant-new-tuple
+  (let* ((vtype1 (g:variant-type-new "i"))
+         (child1 (g:variant-new-int16 10))
+         (vtype2 (g:variant-type-new "i"))
+         (child2 (g:variant-new-int16 20))
+         ;; Tuple type for two integer
+         (tuple (g:variant-type-new-tuple vtype1 vtype2))
+         value)
+    ;; Tuple from g:variant-parse
+    (is-true (setf value (g:variant-parse tuple "(10,20)")))
+    (is (string= "(10, 20)" (g:variant-print value)))
+    ;; Tuple from g:variant-new-tuple for two values
+    (is-true (setf value (g:variant-new-tuple child1 child2)))
+    (is (string= "(10, 20)" (g:variant-print value)))
+    ;; Tuple from g:variant-new-tuple for one value
+    (is-true (setf value (g:variant-new-tuple child1)))
+    (is (string= "(10,)" (g:variant-print value)))
+    ;; Tuple from g:variant-new-tuple for no value
+    (is-true (setf value (g:variant-new-tuple)))
+    (is (string= "()" (g:variant-print value)))))
+
 ;;;     g_variant_new_dict_entry
 ;;;     g_variant_new_fixed_array
 ;;;
@@ -460,4 +483,4 @@
 ;;;     g_variant_new_parsed_va
 ;;;     g_variant_new_parsed
 
-;;; 2024-11-20
+;;; 2025-2-2

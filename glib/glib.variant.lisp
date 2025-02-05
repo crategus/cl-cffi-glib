@@ -256,8 +256,8 @@
       @entry[:dict-entry]{The variant is a dictionary entry.}
     @end{table}
   @end{values}
-  @short{The range of possible toplevel types of @type{g:variant} instances.}
-  @see-type{g:variant}")
+  @short{The range of possible toplevel types of @symbol{g:variant} parameters.}
+  @see-symbol{g:variant}")
 
 (export 'variant-class)
 
@@ -271,43 +271,45 @@
 (cffi:defcstruct variant)
 
 #+liber-documentation
-(setf (liber:alias-for-type 'variant)
+(setf (liber:alias-for-symbol 'variant)
       "CStruct"
-      (documentation 'variant 'type)
- "@version{2024-11-20}
+      (liber:symbol-documentation 'variant)
+ "@version{2025-2-3}
   @begin{short}
-    The @type{g:variant} structure is a variant datatype.
+    The @symbol{g:variant} structure is a variant datatype.
   @end{short}
   It stores a value along with information about the type of that value. The
   range of possible values is determined by the type. The type system used by
-  @type{g:variant} instances is the @class{g:variant-type} type.
+  @symbol{g:variant} instances is the @class{g:variant-type} type.
 
-  @type{g:variant} instances always have a type and a value, which are given at
-  construction time. The variant type and value of a @type{g:variant} instance
-  can never change other than by the @type{g:variant} instance itself being
-  destroyed. A @type{g:variant} instance cannot contain a pointer.
+  @symbol{g:variant} instances always have a type and a value, which are given
+  at construction time. The variant type and value of a @symbol{g:variant}
+  instance can never change other than by the @symbol{g:variant} instance itself
+  being destroyed. A @symbol{g:variant} instance cannot contain a pointer.
 
-  A @type{g:variant} instance is reference counted using the @fun{g:variant-ref}
-  and @fun{g:variant-unref} functions. The @type{g:variant} instance also has
-  floating reference counts, see the @fun{g:variant-ref-sink} function.
+  A @symbol{g:variant} instance is reference counted using the
+  @fun{g:variant-ref} and @fun{g:variant-unref} functions. The
+  @symbol{g:variant} instance also has floating reference counts, see the
+  @fun{g:variant-ref-sink} function.
 
-  The @type{g:variant} structure is completely threadsafe. A @type{g:variant}
-  instance can be concurrently accessed in any way from any number of threads
-  without problems.
+  The @symbol{g:variant} structure is completely threadsafe. A
+  @symbol{g:variant} instance can be concurrently accessed in any way from any
+  number of threads without problems.
 
-  The @type{g:variant} structure is heavily optimised for dealing with data in
-  serialised form. It works particularly well with data located in memory
+  The @symbol{g:variant} structure is heavily optimised for dealing with data
+  in serialised form. It works particularly well with data located in memory
   mapped files. It can perform nearly all deserialisation operations in a small
   constant time, usually touching only a single memory page. Serialised
-  @type{g:variant} data can also be sent over the network.
+  @symbol{g:variant} data can also be sent over the network.
 
-  The @type{g:variant} structure is largely compatible with D-Bus. Almost all
-  types of @type{g:variant} instances can be sent over D-Bus. See the
-  @class{g:variant-type} documentation for exceptions. However, @type{g:variant}
-  structures serialisation format is not the same as the serialisation format of
-  a D-Bus message body: use @code{GDBusMessage}, in the gio library, for those.
+  The @symbol{g:variant} structure is largely compatible with D-Bus. Almost all
+  types of @symbol{g:variant} instances can be sent over D-Bus. See the
+  @class{g:variant-type} documentation for exceptions. However,
+  @symbol{g:variant} structures serialisation format is not the same as the
+  serialisation format of a D-Bus message body: use @code{GDBusMessage}, in the
+  GIO library, for those.
 
-  For space-efficiency, the @type{g:variant} serialisation format does not
+  For space-efficiency, the @symbol{g:variant} serialisation format does not
   automatically include the variant's length, type or endianness, which must
   either be implied from context (such as knowledge that a particular file
   format always contains a little-endian \"v\" which occupies the whole length
@@ -315,19 +317,19 @@
   endianness indicator could be placed at the beginning of a file, network
   message or network stream).
 
-  A @type{g:variant} instance size is limited mainly by any lower level
+  A @symbol{g:variant} instance size is limited mainly by any lower level
   operating system constraints, such as the number of bits in @code{:size}.
   For example, it is reasonable to have a 2 GB file mapped into memory with
   @code{GMappedFile}, and call the @code{g_variant_new_from_data()} function
   on it.
 
-  For convenience to C programmers, the @type{g:variant} values features
+  For convenience to C programmers, the @symbol{g:variant} values features
   powerful varargs-based value construction and destruction. This feature is
   designed to be embedded in other libraries.
 
-  There is a Python-inspired text language for describing @type{g:variant}
-  values. The @type{g:variant} structure includes a printer for this language
-  and a parser with type inferencing.
+  There is a Python-inspired text language for describing @symbol{g:variant}
+  parameters. The @symbol{g:variant} structure includes a printer for this
+  language and a parser with type inferencing.
   @see-class{g:variant-type}
   @see-function{g:variant-ref}
   @see-function{g:variant-unref}")
@@ -379,19 +381,19 @@
  "@version{2024-11-20}
   @begin{short}
     The @class{g:variant-dict} structure is a mutable interface to
-    @type{g:variant} dictionaries.
+    @symbol{g:variant} dictionaries.
   @end{short}
   It can be used for doing a sequence of dictionary lookups in an efficient
-  way on an existing @type{g:variant} dictionary or it can be used to construct
-  new dictionaries with a hashtable-like interface. It can also be used for
-  taking existing dictionaries and modifying them in order to create new ones.
-  The @class{g:variant-dict} structure can only be used with @code{a(sv)}
-  dictionaries.
+  way on an existing @symbol{g:variant} dictionary or it can be used to
+  construct new dictionaries with a hashtable-like interface. It can also be
+  used for taking existing dictionaries and modifying them in order to create
+  new ones. The @class{g:variant-dict} structure can only be used with
+  @code{a(sv)} dictionaries.
 
   You allocate a @class{g:variant-dict} instance with the
   @fun{g:variant-dict-new} function. The @fun{g:variant-dict-end} function is
   used to convert the @class{g:variant-dict} instance back into a
-  @type{g:variant} dictionary type. This also implicitly frees all associated
+  @symbol{g:variant} dictionary type. This also implicitly frees all associated
   memory.
   @begin[Examples]{dictionary}
     Using a  @class{g:variant-dict} instance:
@@ -406,7 +408,7 @@
     @end{pre}
   @end{dictionary}
   @see-constructor{g:variant-dict-new}
-  @see-type{g:variant}")
+  @see-symbol{g:variant}")
 
 (export 'variant-dict)
 
@@ -513,10 +515,10 @@
 (cffi:defcfun ("g_variant_ref" variant-ref) (:pointer (:struct variant))
  #+liber-documentation
  "@version{2024-11-20}
-  @argument[value]{a @type{g:variant} instance}
-  @return{The same @type{g:variant} instance.}
+  @argument[value]{a @symbol{g:variant} instance}
+  @return{The same @symbol{g:variant} instance.}
   @short{Increases the reference count of @arg{value}.}
-  @see-type{g:variant}
+  @see-symbol{g:variant}
   @see-function{g:variant-unref}
   @see-function{g:variant-ref-sink}"
   (value (:pointer (:struct variant))))
@@ -530,12 +532,12 @@
 (cffi:defcfun ("g_variant_unref" variant-unref) :void
  #+liber-documentation
  "@version{2024-11-20}
-  @argument[value]{a @type{g:variant} instance}
+  @argument[value]{a @symbol{g:variant} instance}
   @begin{short}
     Decreases the reference count of @arg{value}.
   @end{short}
   When its reference count drops to 0, the memory used by the variant is freed.
-  @see-type{g:variant}
+  @see-symbol{g:variant}
   @see-function{g:variant-ref}
   @see-function{g:variant-ref-sink}"
   (value (:pointer (:struct variant))))
@@ -550,18 +552,18 @@
     (:pointer (:struct variant))
  #+liber-documentation
  "@version{2024-11-20}
-  @argument[value]{a @type{g:variant} instance}
-  @return{The same @type{g:variant} instance.}
+  @argument[value]{a @symbol{g:variant} instance}
+  @return{The same @symbol{g:variant} instance.}
   @begin{short}
-    The @type{g:variant} structure uses a floating reference count system.
+    The @symbol{g:variant} structure uses a floating reference count system.
   @end{short}
   All functions with names starting with @code{g:variant-new-} return floating
   references.
 
-  Calling the @fun{g:variant-ref-sink} function on a @type{g:variant} instance
+  Calling the @fun{g:variant-ref-sink} function on a @symbol{g:variant} instance
   with a floating reference will convert the floating reference into a full
   reference. Calling the @fun{g:variant-ref-sink} function on a non-floating
-  @type{g:variant} instance results in an additional normal reference being
+  @symbol{g:variant} instance results in an additional normal reference being
   added.
 
   In other words, if @arg{value} is floating, then this call
@@ -569,14 +571,14 @@
   reference. If @arg{value} is not floating, then this call adds a new normal
   reference increasing the reference count by one.
 
-  All calls that result in a @type{g:variant} instance being inserted into a
+  All calls that result in a @symbol{g:variant} instance being inserted into a
   container will call the @fun{g:variant-ref-sink} function on the instance.
   This means that if the value was just created (and has only its floating
   reference) then the container will assume sole ownership of the value at that
   point and the caller will not need to unreference it. This makes certain
   common styles of programming much easier while still maintaining normal
   refcounting semantics in situations where values are not floating.
-  @see-type{g:variant}
+  @see-symbol{g:variant}
   @see-function{g:variant-ref}
   @see-function{g:variant-unref}"
   (value (:pointer (:struct variant))))
@@ -590,8 +592,8 @@
 (cffi:defcfun ("g_variant_take_ref" variant-take-ref) (boxed variant-type)
  #+liber-documentation
  "@version{#2024-11-20}
-  @argument[value]{a @type{g:variant} instance}
-  @return{The same @type{g:variant} instance.}
+  @argument[value]{a @symbol{g:variant} instance}
+  @return{The same @symbol{g:variant} instance.}
   @begin{short}
     If @arg{value} is floating, sink it. Otherwise, do nothing.
   @end{short}
@@ -600,14 +602,14 @@
   references, but there is one specific scenario where this function is helpful.
 
   The situation where this function is helpful is when creating an API that
-  allows the user to provide a callback function that returns a @type{g:variant}
-  instance. We certainly want to allow the user the flexibility to return a
-  non-floating reference from this callback (for the case where the value that
-  is being returned already exists).
+  allows the user to provide a callback function that returns a
+  @symbol{g:variant} instance. We certainly want to allow the user the
+  flexibility to return a non-floating reference from this callback (for the
+  case where the value that is being returned already exists).
 
-  At the same time, the style of the @type{g:variant} API makes it likely that
-  for newly-created @type{g:variant} instances, the user can be saved some
-  typing if they are allowed to return a @type{g:variant} instance with a
+  At the same time, the style of the @symbol{g:variant} API makes it likely that
+  for newly-created @symbol{g:variant} instances, the user can be saved some
+  typing if they are allowed to return a @symbol{g:variant} instance with a
   floating reference.
 
   Using this function on the return value of the user's callback allows the
@@ -618,13 +620,13 @@
 
   This function has an odd interaction when combined with the
   @fun{g:variant-ref-sink} function running at the same time in another thread
-  on the same @type{g:variant} instance. If the @fun{g:variant-ref-sink}
+  on the same @symbol{g:variant} instance. If the @fun{g:variant-ref-sink}
   function runs first then the result will be that the floating reference is
   converted to a hard reference. If the @fun{g:variant-take-ref} function runs
   first then the result will be that the floating reference is converted to a
   hard reference and an additional reference on top of that one is added. It is
   best to avoid this situation.
-  @see-type{g:variant}
+  @see-symbol{g:variant}
   @see-function{g:variant-ref-sink}"
   (value (:pointer (:struct variant))))
 
@@ -637,7 +639,7 @@
 (cffi:defcfun ("g_variant_is_floating" variant-is-floating) :boolean
  #+liber-documentation
  "@version{2024-11-20}
-  @argument[value]{a @type{g:variant} instance}
+  @argument[value]{a @symbol{g:variant} instance}
   @return{The boolean whether @arg{value} is floating.}
   @begin{short}
     Checks whether @arg{value} has a floating reference count.
@@ -649,7 +651,7 @@
 
   See the @fun{g:variant-ref-sink} function for more information about floating
   reference counts.
-  @see-type{g:variant}
+  @see-symbol{g:variant}
   @see-function{g:variant-ref-sink}
   @see-function{g:variant-take-ref}"
   (value (:pointer (:struct variant))))
@@ -663,13 +665,13 @@
 (cffi:defcfun ("g_variant_get_type" variant-type) (boxed variant-type)
  #+liber-documentation
  "@version{2024-11-20}
-  @argument[value]{a @type{g:variant} instance}
+  @argument[value]{a @symbol{g:variant} instance}
   @return{The @class{g:variant-type} instance.}
   @begin{short}
     Determines the variant type of @arg{value}.
   @end{short}
   The return value is valid for the lifetime of @arg{value}.
-  @see-type{g:variant}
+  @see-symbol{g:variant}
   @see-class{g:variant-type}"
   (value (:pointer (:struct variant))))
 
@@ -682,7 +684,7 @@
 (cffi:defcfun ("g_variant_get_type_string" variant-type-string) :string
  #+liber-documentation
  "@version{2024-11-20}
-  @argument[value]{a @type{g:variant} instance}
+  @argument[value]{a @symbol{g:variant} instance}
   @return{The variant type string for the variant type of @arg{value}.}
   @begin{short}
     Returns the variant type string of @arg{value}.
@@ -693,7 +695,7 @@
 (g:variant-type-string (g:variant-new-string \"test\")) => \"s\"
     @end{pre}
   @end{dictionary}
-  @see-type{g:variant}"
+  @see-symbol{g:variant}"
   (value (:pointer (:struct variant))))
 
 (export 'variant-type-string)
@@ -705,14 +707,14 @@
 (cffi:defcfun ("g_variant_is_of_type" variant-is-of-type) :boolean
  #+liber-documentation
  "@version{2024-11-20}
-  @argument[value]{a @type{g:variant} instance}
+  @argument[value]{a @symbol{g:variant} instance}
   @argument[vtype]{a @class{g:variant-type} instance}
   @return{@em{True} if the variant type of @arg{value} matches @arg{vtype}.}
   @begin{short}
     Checks if a @arg{value} has a variant type matching the provided
     @arg{vtype}.
   @end{short}
-  @see-type{g:variant}
+  @see-symbol{g:variant}
   @see-class{g:variant-type}"
   (value (:pointer (:struct variant)))
   (vtype (boxed variant-type)))
@@ -726,12 +728,12 @@
 (cffi:defcfun ("g_variant_is_container" variant-is-container) :boolean
  #+liber-documentation
  "@version{2024-11-20}
-  @argument[value]{a @type{g:variant} instance}
+  @argument[value]{a @symbol{g:variant} instance}
   @return{@em{True} if @arg{value} is a container.}
   @begin{short}
     Checks if @arg{value} is a container.
   @end{short}
-  @see-type{g:variant}"
+  @see-symbol{g:variant}"
   (value (:pointer (:struct variant))))
 
 (export 'variant-is-container)
@@ -743,8 +745,8 @@
 (cffi:defcfun ("g_variant_compare" variant-compare) :int
  #+liber-documentation
  "@version{2024-11-20}
-  @argument[value1]{a basic-typed @type{g:variant} instance}
-  @argument[value2]{a @type{g:variant} instance of the same type}
+  @argument[value1]{a basic-typed @symbol{g:variant} instance}
+  @argument[value2]{a @symbol{g:variant} instance of the same type}
   @return{The integer with a negative value if a < b, zero if a = b, positive
     value if a > b.}
   @begin{short}
@@ -752,7 +754,7 @@
   @end{short}
   The variant types of @arg{value1} and @arg{value2} are @code{:pointer} only
   to allow use of this function with @code{GTree}, @code{GPtrArray}, etc. They
-  must each be a @type{g:variant} instance.
+  must each be a @symbol{g:variant} instance.
 
   Comparison is only defined for basic types, that is booleans, numbers,
   strings. For booleans, @em{false} is less than @em{true}. Numbers are ordered
@@ -767,7 +769,7 @@
 
   If you only require an equality comparison, the @fun{g:variant-equal} function
   is more general.
-  @see-type{g:variant}
+  @see-symbol{g:variant}
   @see-function{g:variant-equal}"
   (value1 (:pointer (:struct variant)))
   (value2 (:pointer (:struct variant))))
@@ -781,12 +783,12 @@
 (cffi:defcfun ("g_variant_classify" variant-classify) variant-class
  #+liber-documentation
  "@version{2024-11-20}
-  @argument[value]{a @type{g:variant} instance}
+  @argument[value]{a @symbol{g:variant} instance}
   @return{The @symbol{g:variant-class} value of @arg{value}.}
   @begin{short}
     Classifies @arg{value} according to its toplevel type.
   @end{short}
-  @see-type{g:variant}
+  @see-symbol{g:variant}
   @see-symbol{g:variant-class}"
   (value (:pointer (:struct variant))))
 
@@ -989,9 +991,9 @@
  #+liber-documentation
  "@version{2024-11-20}
   @argument[value]{a boolean value}
-  @return{The floating reference to a new @type{g:variant} instance.}
+  @return{The floating reference to a new @symbol{g:variant} instance.}
   @begin{short}
-    Creates a new @type{g:variant} instance with the boolean value.
+    Creates a new @symbol{g:variant} instance with the boolean value.
   @end{short}
   @begin[Examples]{dictionary}
     @begin{pre}
@@ -1001,7 +1003,7 @@
 (g:variant-boolean *) => T
     @end{pre}
   @end{dictionary}
-  @see-type{g:variant}"
+  @see-symbol{g:variant}"
   (value :boolean))
 
 (export 'variant-new-boolean)
@@ -1013,7 +1015,7 @@
 (cffi:defcfun ("g_variant_get_boolean" variant-boolean) :boolean
  #+liber-documentation
  "@version{2024-11-20}
-  @argument[value]{a @type{g:variant} instance with a boolean value}
+  @argument[value]{a @symbol{g:variant} instance with a boolean value}
   @return{The boolean values @em{true} or @em{false}.}
   @short{Returns the boolean value of @arg{value}.}
   It is an error to call this function with a value of any type other than
@@ -1024,7 +1026,7 @@
 (g:variant-boolean (g:variant-new-boolean t)) => T
     @end{pre}
   @end{dictionary}
-  @see-type{g:variant}
+  @see-symbol{g:variant}
   @see-class{g:variant-type}"
   (value (:pointer (:struct variant))))
 
@@ -1039,9 +1041,10 @@
  #+liber-documentation
  "@version{2024-11-20}
   @argument[value]{a @code{:uchar} value}
-  @return{The floating reference to a new @type{g:variant} instance.}
-  @short{Creates a new @type{g:variant} instance with the @code{:uchar} value.}
-  @see-type{g:variant}"
+  @return{The floating reference to a new @symbol{g:variant} instance.}
+  @short{Creates a new @symbol{g:variant} instance with the @code{:uchar}
+    value.}
+  @see-symbol{g:variant}"
   (value :uchar))
 
 (export 'variant-new-byte)
@@ -1053,12 +1056,12 @@
 (cffi:defcfun ("g_variant_get_byte" variant-byte) :uchar
  #+liber-documentation
  "@version{#2024-11-20}
-  @argument[value]{a @type{g:variant} instance with a @code{:uchar} value}
+  @argument[value]{a @symbol{g:variant} instance with a @code{:uchar} value}
   @return{The @code{:uchar} value.}
   @short{Returns the @code{:uchar} value of @arg{value}.}
   It is an error to call this function with a value of any type other than
   a @class{g:variant-type} type with the @code{\"y\"} type string.
-  @see-type{g:variant}
+  @see-symbol{g:variant}
   @see-class{g:variant-type}"
   (value (:pointer (:struct variant))))
 
@@ -1073,9 +1076,10 @@
  #+liber-documentation
  "@version{2024-11-20}
   @argument[value]{a @code{:int16} value}
-  @return{The floating reference to a new @type{g:variant} instance.}
-  @short{Creates a new @type{g:variant} instance with the @code{:int16} value.}
-  @see-type{g:variant}"
+  @return{The floating reference to a new @symbol{g:variant} instance.}
+  @short{Creates a new @symbol{g:variant} instance with the @code{:int16}
+    value.}
+  @see-symbol{g:variant}"
   (value :int16))
 
 (export 'variant-new-int16)
@@ -1087,12 +1091,12 @@
 (cffi:defcfun ("g_variant_get_int16" variant-int16) :int16
  #+liber-documentation
  "@version{#2024-11-20}
-  @argument[value]{a @type{g:variant} instance with a @code{:int16} value}
+  @argument[value]{a @symbol{g:variant} instance with a @code{:int16} value}
   @return{The @code{:int16} value.}
-  @short{Returns the 16-bit signed integer value of @arg{value}.}
+  @short{Returns the 16-bit signed integer of @arg{value}.}
   It is an error to call this function with a value of any type other than
   a @class{g:variant-type} type with the @code{\"n\"} type string.
-  @see-type{g:variant}
+  @see-symbol{g:variant}
   @see-class{g:variant-type}"
   (value (:pointer (:struct variant))))
 
@@ -1107,9 +1111,10 @@
  #+liber-documentation
  "@version{2024-11-20}
   @argument[value]{a @code{:uint16} value}
-  @return{The floating reference to a new @type{g:variant} instance.}
-  @short{Creates a new @type{g:variant} instance with the @code{:uint16} value.}
-  @see-type{g:variant}"
+  @return{The floating reference to a new @symbol{g:variant} instance.}
+  @short{Creates a new @symbol{g:variant} instance with the @code{:uint16}
+    value.}
+  @see-symbol{g:variant}"
   (value :uint16))
 
 (export 'variant-new-uint16)
@@ -1121,12 +1126,12 @@
 (cffi:defcfun ("g_variant_get_uint16" variant-uint16) :uint16
  #+liber-documentation
  "@version{#2024-11-20}
-  @argument[value]{a @type{g:variant} instance with a @code{:uint16} value}
+  @argument[value]{a @symbol{g:variant} instance with a @code{:uint16} value}
   @return{The @code{:uint16} value.}
-  @short{Returns the 16-bit unsigned integer value of @arg{value}.}
+  @short{Returns the 16-bit unsigned integer of @arg{value}.}
   It is an error to call this function with a value of any type other than
   a @class{g:variant-type} type with the @code{\"q\"} type string.
-  @see-type{g:variant}
+  @see-symbol{g:variant}
   @see-class{g:variant-type}"
   (value (:pointer (:struct variant))))
 
@@ -1141,9 +1146,10 @@
  #+liber-documentation
  "@version{2024-11-20}
   @argument[value]{a @code{:int32} value}
-  @return{The floating reference to a new @type{g:variant} instance.}
-  @short{Creates a new @type{g:variant} instance with the @code{:int32} value.}
-  @see-type{g:variant}"
+  @return{The floating reference to a new @symbol{g:variant} instance.}
+  @short{Creates a new @symbol{g:variant} instance with the @code{:int32}
+    value.}
+  @see-symbol{g:variant}"
   (value :int32))
 
 (export 'variant-new-int32)
@@ -1155,12 +1161,12 @@
 (cffi:defcfun ("g_variant_get_int32" variant-int32) :int32
  #+liber-documentation
  "@version{2024-11-20}
-  @argument[value]{a @type{g:variant} instance with a @code{:int32} value}
+  @argument[value]{a @symbol{g:variant} instance with a @code{:int32} value}
   @return{The @code{:int32} value.}
-  @short{Returns the 32-bit signed integer value of @arg{value}.}
+  @short{Returns the 32-bit signed integer of @arg{value}.}
   It is an error to call this function with a value of any type other than
   a @class{g:variant-type} type with the @code{\"i\"} type string.
-  @see-type{g:variant}
+  @see-symbol{g:variant}
   @see-class{g:variant-type}"
   (value (:pointer (:struct variant))))
 
@@ -1175,9 +1181,10 @@
  #+liber-documentation
  "@version{2024-11-20}
   @argument[value]{a @code{:uint32} value}
-  @return{The floating reference to a new @type{g:variant} instance.}
-  @short{Creates a new @type{g:variant} instance with the @code{:uint32} value.}
-  @see-type{g:variant}"
+  @return{The floating reference to a new @symbol{g:variant} instance.}
+  @short{Creates a new @symbol{g:variant} instance with the @code{:uint32}
+    value.}
+  @see-symbol{g:variant}"
   (value :uint32))
 
 (export 'variant-new-uint32)
@@ -1189,9 +1196,9 @@
 (cffi:defcfun ("g_variant_get_uint32" variant-uint32) :uint32
  #+liber-documentation
  "@version{#2024-11-20}
-  @argument[value]{a @type{g:variant} instance with a @code{:uint32} value}
+  @argument[value]{a @symbol{g:variant} instance with a @code{:uint32} value}
   @return{The @code{:uint32} value.}
-  @short{Returns the 32-bit unsigned integer value of @arg{value}.}
+  @short{Returns the 32-bit unsigned integer of @arg{value}.}
   It is an error to call this function with a value of any type other than
   a @class{g:variant-type} type with the @code{\"u\"} type string.
   @see-symbol{g:variant}
@@ -1209,9 +1216,11 @@
  #+liber-documentation
  "@version{2024-11-20}
   @argument[value]{a @code{:int64} value}
-  @return{The floating reference to a new @type{g:variant} instance.}
-  @short{Creates a new @type{g:variant} instance with the @code{:int64} value.}
-  @see-type{g:variant}"
+  @return{The floating reference to a new @symbol{g:variant} instance.}
+  @begin{short}
+    Creates a new @symbol{g:variant} instance with the @code{:int64} value.
+  @end{short}
+  @see-symbol{g:variant}"
   (value :int64))
 
 (export 'variant-new-int64)
@@ -1223,12 +1232,14 @@
 (cffi:defcfun ("g_variant_get_int64" variant-int64) :int64
  #+liber-documentation
  "@version{#2024-11-20}
-  @argument[value]{a @type{g:variant} instance with a @code{:int64} value}
+  @argument[value]{a @symbol{g:variant} instance with a @code{:int64} value}
   @return{The @code{:int64} value.}
-  @short{Returns the 64-bit signed integer value of @arg{value}.}
+  @begin{short}
+    Returns the 64-bit signed integer of @arg{value}.
+  @end{short}
   It is an error to call this function with a value of any type other than
   a @class{g:variant-type} type with the @code{\"x\"} type string.
-  @see-type{g:variant}
+  @see-symbol{g:variant}
   @see-class{g:variant-type}"
   (value (:pointer (:struct variant))))
 
@@ -1243,9 +1254,11 @@
  #+liber-documentation
  "@version{2024-11-20}
   @argument[value]{a @code{:uint64} value}
-  @return{The floating reference to a new @type{g:variant} instance.}
-  @short{Creates a new @type{g:variant} instance with the @code{:uint64} value.}
-  @see-type{g:variant}"
+  @return{The floating reference to a new @symbol{g:variant} instance.}
+  @begin{short}
+    Creates a new @symbol{g:variant} instance with the @code{:uint64} value.
+  @end{short}
+  @see-symbol{g:variant}"
   (value :uint64))
 
 (export 'variant-new-uint64)
@@ -1257,12 +1270,14 @@
 (cffi:defcfun ("g_variant_get_uint64" variant-uint64) :uint64
  #+liber-documentation
  "@version{#2024-11-20}
-  @argument[value]{a @type{g:variant} instance with a @code{:uint64} value}
+  @argument[value]{a @symbol{g:variant} instance with a @code{:uint64} value}
   @return{The @code{:uint64} value.}
-  @short{Returns the 64-bit unsigned integer value of @arg{value}.}
+  @begin{short}
+    Returns the 64-bit unsigned integer of @arg{value}.
+  @end{short}
   It is an error to call this function with a value of any type other than
   a @class{g:variant-type} type with the @code{\"t\"} type string.
-  @see-type{g:variant}
+  @see-symbol{g:variant}
   @see-class{g:variant-type}"
   (value (:pointer (:struct variant))))
 
@@ -1277,12 +1292,14 @@
  #+liber-documentation
  "@version{2024-11-20}
   @argument[value]{a @code{:int32} value}
-  @return{The floating reference to a new @type{g:variant} instance.}
-  @short{Creates a new @type{g:variant} instance with a handle.}
+  @return{The floating reference to a new @symbol{g:variant} instance.}
+  @begin{short}
+    Creates a new @symbol{g:variant} instance with a handle.
+  @end{short}
   By convention, handles are indexes into an array of file descriptors that
   are sent alongside a D-Bus message. If you are not interacting with D-Bus,
   you probably do not need them.
-  @see-type{g:variant}"
+  @see-symbol{g:variant}"
   (value :int32))
 
 (export 'variant-new-handle)
@@ -1294,16 +1311,18 @@
 (cffi:defcfun ("g_variant_get_handle" variant-handle) :int32
  #+liber-documentation
  "@version{#2024-11-20}
-  @argument[value]{a @type{g:variant} instance with a handle}
+  @argument[value]{a @symbol{g:variant} instance with a handle}
   @return{The @code{:int32} value.}
-  @short{Returns the 32-bit signed integer value of @arg{value}.}
+  @begin{short}
+    Returns the 32-bit signed integer of @arg{value}.
+  @end{short}
   It is an error to call this function with a value of any type other than
   a @class{g:variant-type} type with the @code{\"h\"} type string.
 
   By convention, handles are indexes into an array of file descriptors that
   are sent alongside a D-Bus message. If you are not interacting with D-Bus,
   you probably do not need them.
-  @see-type{g:variant}
+  @see-symbol{g:variant}
   @see-class{g:variant-type}"
   (value (:pointer (:struct variant))))
 
@@ -1317,10 +1336,12 @@
     (:pointer (:struct variant))
  #+liber-documentation
  "@version{2024-11-20}
-  @argument[value]{a @code{:double} floating point value}
-  @return{The floating reference to a @type{g:variant} instance.}
-  @short{Creates a new @type{g:variant} instance with a double float value.}
-  @see-type{g:variant}"
+  @argument[value]{a double float}
+  @return{The floating reference to a @symbol{g:variant} instance.}
+  @begin{short}
+    Creates a new @symbol{g:variant} instance with a double float.
+  @end{short}
+  @see-symbol{g:variant}"
   (value :double))
 
 (export 'variant-new-double)
@@ -1332,12 +1353,14 @@
 (cffi:defcfun ("g_variant_get_double" variant-double) :double
  #+liber-documentation
  "@version{#2024-11-20}
-  @argument[value]{a @type{variant} instance with a double float value}
-  @return{The double float value.}
-  @short{Returns the double precision floating point value of @arg{value}.}
+  @argument[value]{a @symbol{g:variant} instance for a double float}
+  @return{The double float.}
+  @begin{short}
+    Returns the double precision floating point value of @arg{value}.
+  @end{short}
   It is an error to call this function with a value of any type other than
   a @class{g:variant-type} type with the @code{\"d\"} type string.
-  @see-type{g:variant}
+  @see-symbol{g:variant}
   @see-class{g:variant-type}"
   (value (:pointer (:struct variant))))
 
@@ -1352,9 +1375,9 @@
  #+liber-documentation
  "@version{2024-11-20}
   @argument[string]{a normal UTF-8 string}
-  @return{The floating reference to a @type{g:variant} instance.}
+  @return{The floating reference to a @symbol{g:variant} instance.}
   @begin{short}
-    Creates a @type{g:variant} instance with a string value.
+    Creates a @symbol{g:variant} instance with a string value.
   @end{short}
   The string must be valid UTF-8. Use the @fun{g:variant-string} function to
   retrieve the string.
@@ -1365,7 +1388,7 @@
 (g:variant-string *) => \"This is a string.\"
     @end{pre}
   @end{dictionary}
-  @see-type{g:variant}
+  @see-symbol{g:variant}
   @see-function{g:variant-string}"
   (value :string))
 
@@ -1382,7 +1405,7 @@
 (defun variant-string (value)
  #+liber-documentation
  "@version{2024-11-20}
-  @argument[value]{a @type{g:variant} instance with a string}
+  @argument[value]{a @symbol{g:variant} instance with a string}
   @return{The constant string, UTF-8 encoded.}
   @begin{short}
     Returns the string value of @arg{value}.
@@ -1392,7 +1415,7 @@
   encoded. It is an error to call this function with a value of any type other
   than those three. The return value remains valid as long as @arg{value}
   exists. See the @fun{g:variant-new-string} function for an example.
-  @see-type{g:variant}
+  @see-symbol{g:variant}
   @see-class{g:variant-type}
   @see-function{g:variant-new-string}"
   (%variant-string value (cffi:null-pointer)))
@@ -1458,14 +1481,14 @@
  #+liber-documentation
  "@version{#2024-11-20}
   @argument[path]{a string with a D-Bus object path}
-  @return{The floating reference to a new @type{g:variant} instance.}
+  @return{The floating reference to a new @symbol{g:variant} instance.}
   @begin{short}
-    Creates a @type{g:variant} instance with the D-Bus object path in
+    Creates a @symbol{g:variant} instance with the D-Bus object path in
     @arg{string}.
   @end{short}
   The @arg{string} argument must be a valid D-Bus object path. Use the
   @fun{g:variant-is-object-path} function if you are not sure.
-  @see-type{g:variant}
+  @see-symbol{g:variant}
   @see-function{g:variant-is-object-path}"
   (path :string))
 
@@ -1490,7 +1513,7 @@
   characters separated by '/' characters. Each sequence must contain only the
   characters \"[A-Z][a-z][0-9]_\". No sequence (including the one following the
   final '/' character) may be empty.
-  @see-type{g:variant}
+  @see-symbol{g:variant}
   @see-function{g:variant-new-object-path}"
   (string :string))
 
@@ -1505,14 +1528,14 @@
  #+liber-documentation
  "@version{#2024-11-20}
   @argument[signature]{a string with a signature}
-  @return{The floating reference to a new @type{g:variant} instance.}
+  @return{The floating reference to a new @symbol{g:variant} instance.}
   @begin{short}
-    Creates a @type{g:variant} instance with a D-Bus type signature in
+    Creates a @symbol{g:variant} instance with a D-Bus type signature in
     @arg{string}.
   @end{short}
   The @arg{string} argument must be a valid D-Bus type signature. Use the
   @fun{g:variant-is-signature} function if you are not sure.
-  @see-type{g:variant}
+  @see-symbol{g:variant}
   @see-function{g:variant-is-signature}"
   (signature :string))
 
@@ -1535,7 +1558,7 @@
 
   D-Bus type signatures consist of zero or more definite @class{g:variant-type}
   strings in sequence.
-  @see-type{g:variant}
+  @see-symbol{g:variant}
   @see-class{g:variant-type}
   @see-function{g:variant-new-signature}"
   (string :string))
@@ -1550,15 +1573,15 @@
     (:pointer (:struct variant))
  #+liber-documentation
  "@version{#2024-11-20}
-  @argument[value]{a @type{g:variant} instance}
-  @return{The floating reference to a new @type{g:variant} instance.}
+  @argument[value]{a @symbol{g:variant} instance}
+  @return{The floating reference to a new @symbol{g:variant} instance.}
   @begin{short}
-    The result is a @type{g:variant} instance representing a variant containing
-    the original value.
+    The result is a @symbol{g:variant} instance representing a variant
+    containing the original value.
   @end{short}
   If child is a floating reference, see the @fun{g:variant-ref-sink} function,
   the new instance takes ownership of child.
-  @see-type{g:variant}
+  @see-symbol{g:variant}
   @see-function{g:variant-ref-sink}"
   (value (:pointer (:struct variant))))
 
@@ -1967,31 +1990,41 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_variant_new_tuple ()
-;;;
-;;; GVariant * g_variant_new_tuple (GVariant * const *children,
-;;;                                 gsize n_children);
-;;;
-;;; Creates a new tuple GVariant out of the items in children. The type is
-;;; determined from the types of children. No entry in the children array may be
-;;; NULL.
-;;;
-;;; If n_children is 0 then the unit tuple is constructed.
-;;;
-;;; If the children are floating references (see g_variant_ref_sink()), the new
-;;; instance takes ownership of them as if via g_variant_ref_sink().
-;;;
-;;; children :
-;;;     the items to make the tuple out of
-;;;
-;;; n_children :
-;;;     the length of children
-;;;
-;;; Returns :
-;;;     a floating reference to a new GVariant tuple
-;;;
-;;; Since 2.24
+;;; g_variant_new_tuple
 ;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("g_variant_new_tuple" %variant-new-tuple) :pointer
+  (children :pointer)
+  (n-children :size))
+
+(defun variant-new-tuple (&rest items)
+ #+liber-documentation
+ "@version{2025-2-2}
+  @argument[items]{@symbol{g:variant} instances with the items to make the tuple
+    out of}
+  @return{The new @symbol{g:variant} instance with the tuple.}
+  @begin{short}
+    Creates a new tuple @symbol{g:variant} instance out of the items.
+  @end{short}
+  The type is determined from the types of @arg{items}.
+  @begin[Examples]{dictionary}
+    @begin{pre}
+(g:variant-new-tuple (g:variant-new-int16 10) (g:variant-new-int16 20))
+=> #.(SB-SYS:INT-SAP #X6195B5F9ED70)
+(g:variant-print *)
+=> \"(10, 20)\"
+    @end{pre}
+  @end{dictionary}
+  @see-symbol{g:variant}
+  @see-function{g:variant-type-new-tuple}"
+  (let ((n (length items)))
+    (cffi:with-foreign-object (children :pointer n)
+      (iter (for item in items)
+            (for i from 0)
+            (setf (cffi:mem-aref children :pointer i) item))
+      (%variant-new-tuple children n))))
+
+(export 'variant-new-tuple)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_variant_new_dict_entry ()
@@ -2591,13 +2624,13 @@
 (cffi:defcfun ("g_variant_equal" variant-equal) :boolean
  #+liber-documentation
  "@version{#2024-11-20}
-  @argument[value1]{a @type{g:variant} instance}
-  @argument[value2]{a @type{g:variant} instance}
+  @argument[value1]{a @symbol{g:variant} instance}
+  @argument[value2]{a @symbol{g:variant} instance}
   @return{@em{True} if @arg{value} and @arg{value} are equal.}
   @begin{short}
     Checks if @arg{value} and @arg{value} have the same type and value.
   @end{short}
-  @see-type{g:variant}"
+  @see-symbol{g:variant}"
   (value1 (:pointer (:struct variant)))
   (value2 (:pointer (:struct variant))))
 
@@ -2614,7 +2647,7 @@
 (defun variant-print (value &optional (annotate nil))
  #+liber-documentation
  "@version{2024-11-20}
-  @argument[value]{a @type{g:variant} instance}
+  @argument[value]{a @symbol{g:variant} instance}
   @argument[annotate]{@em{true} if type information should be included in the
     output}
   @return{The string holding the result.}
@@ -2624,7 +2657,7 @@
   @end{short}
   If the @arg{annotate} argument is @em{true}, then type information is included
   in the output.
-  @see-type{g:variant}
+  @see-symbol{g:variant}
   @see-function{g:variant-parse}"
   (%variant-print value annotate))
 
@@ -3349,14 +3382,14 @@
     (boxed variant-dict :return)
  #+liber-documentation
  "@version{2024-11-20}
-  @argument[from-asv]{a @type{g:variant} instance with which to initialize the
+  @argument[from-asv]{a @symbol{g:variant} instance with which to initialize the
     dictionary}
   @return{The newly created @class{g:variant-dict} instance.}
   @begin{short}
     Allocates and initialises a new @class{g:variant-dict} instance.
   @end{short}
   @see-class{g:variant-dict}
-  @see-type{g:variant}"
+  @see-symbol{g:variant}"
   (from-asv (:pointer (:struct variant))))
 
 (export 'variant-dict-new)
@@ -3550,12 +3583,12 @@
  "@version{2024-11-20}
   @argument[dict]{a @class{g:variant-dict} instance}
   @argument[key]{a string with the key to insert a value for}
-  @argument[value]{a @type{g:variant} instance with the value to insert}
+  @argument[value]{a @symbol{g:variant} instance with the value to insert}
   @begin{short}
     Inserts, or replaces, a key in a @class{g:variant-dict} instance.
   @end{short}
   @see-class{g:variant-dict}
-  @see-type{g:variant}"
+  @see-symbol{g:variant}"
   (dict (boxed variant-dict))
   (key :string)
   (value (:pointer (:struct variant))))
@@ -3591,16 +3624,16 @@
  #+liber-documentation
  "@version{2024-11-20}
   @argument[dict]{a @class{g:variant-dict} instance}
-  @return{The new @type{g:variant} instance.}
+  @return{The new @symbol{g:variant} instance.}
   @begin{short}
-    Returns the current value of @arg{dict} as a @type{g:variant} instance,
+    Returns the current value of @arg{dict} as a @symbol{g:variant} instance,
     clearing it in the process.
   @end{short}
 
   It is not permissible to use @arg{dict} in any way after this call except for
   reference counting operations.
   @see-class{g:variant-dict}
-  @see-type{g:variant}"
+  @see-symbol{g:variant}"
   (dict (boxed variant-dict)))
 
 (export 'variant-dict-end)
@@ -3629,10 +3662,11 @@
  #+liber-documentation
  "@version{2024-11-21}
   @argument[vtype]{a @class{g:variant-type} instance, or a valid type string}
-  @argument[text]{a string containing a @type{g:variant} in text form}
-  @return{The @type{g:variant} instance.}
+  @argument[text]{a string containing a @symbol{g:variant} instance in text
+    form}
+  @return{The @symbol{g:variant} instance.}
   @begin{short}
-    Parses a @type{g:variant} instance from a text representation.
+    Parses a @symbol{g:variant} instance from a text representation.
   @end{short}
   If @arg{vtype} is non-@code{nil} then the value will be parsed to have that
   type. This may result in additional parse errors, in the case that the parsed
@@ -3640,7 +3674,7 @@
   the case that the variant type would have been ambiguous, such as with empty
   arrays.
 
-  In the event that the parsing is successful, the resulting @type{g:variant}
+  In the event that the parsing is successful, the resulting @symbol{g:variant}
   instance is returned. In case of any error, @code{nil} will be returned.
 
   Officially, the language understood by the parser is any string produced by
@@ -3661,7 +3695,7 @@
 (g:variant-print *) => \"100.0\"
     @end{pre}
   @end{dictionary}
-  @see-type{g:variant}
+  @see-symbol{g:variant}
   @see-function{g:variant-print}"
   (with-error (err)
     (cond ((stringp vtype)

@@ -1,7 +1,7 @@
 ;;; ----------------------------------------------------------------------------
 ;;; glib-user.package.lisp
 ;;;
-;;; Copyright (C) 2022 - 2023 Dieter Kaiser
+;;; Copyright (C) 2022 - 2025 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -166,6 +166,7 @@
            ;; Symbols from glib.key-file.lisp
            #:with-key-file
            #:with-key-file-from-file
+           #:with-key-file-from-data
            #:key-file
            #:key-file-flags
            #:key-file-new
@@ -263,6 +264,7 @@
            #:variant-new-signature
            #:variant-is-signature
            #:variant-new-variant
+           #:variant-new-tuple
            #:variant-boolean
            #:variant-byte
            #:variant-int16
@@ -848,21 +850,16 @@
 
            ;; Symbols from gio.application-command-line.lisp
            #:application-command-line
-           #:application-command-line-arguments
            #:application-command-line-is-remote
-           #:application-command-line-options
-           #:application-command-line-platform-data
-           #:application-command-line-get-arguments
+           #:application-command-line-arguments
            #:application-command-line-cwd
            #:application-command-line-environ
            #:application-command-line-options-dict
            #:application-command-line-stdin
            #:application-command-line-create-file-for-arg
            #:application-command-line-getenv
-           #:application-command-line-get-platform-data
+           #:application-command-line-platform-data
            #:application-command-line-exit-status
-           #:application-command-line-print
-           #:application-command-line-printerr
 
            ;; Symbols from gio.menu-model.lisp
            #:menu-model

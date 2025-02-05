@@ -20,7 +20,7 @@
   (let ((symbols (iter (for sym in-package "GLIB-USER" external-only t)
                        (collect (symbol-name sym))))
         (ptr nil) (result nil))
-    (is (<= 920 (length symbols)))
+    (is (<= 916 (length symbols)))
     (is-false (member nil symbols))
     ;; Convert to foreign
     (is (cffi:pointerp (setf ptr (cffi:convert-to-foreign symbols 'g:strv-t))))

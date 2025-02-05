@@ -449,8 +449,8 @@
   @end{short}
   The @type{g:unichar} type specifier performs automatic conversion from the C
   @code{gunichar} type to a Lisp character and a Lisp character to the C type.
-  An integer value as argument to the @sym{cffi:convert-to-foreign} function
-  is passed through.
+  An integer as argument to the @sym{cffi:convert-to-foreign} function is
+  passed through.
   @begin[Examples]{dictionary}
     Convert a Lisp character to a C @code{gunichar} value:
     @begin{pre}
@@ -466,7 +466,7 @@
 (cffi:convert-from-foreign 13 'g:unichar) => #\return
 (cffi:convert-from-foreign 32 'g:unichar) => #\space
     @end{pre}
-    An integer value argument is passed through:
+    An integer argument is passed through:
     @begin{pre}
 (cffi:convert-to-foreign 65 'g:unichar) => 65
     @end{pre}

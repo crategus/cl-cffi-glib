@@ -268,11 +268,11 @@
 
 (defun bytes-data (bytes)
  #+liber-documentation
- "@version{2024-11-6}
+ "@version{2024-12-29}
   @argument[bytes]{a @class{g:bytes} instance}
   @begin{return}
-    @arg{data} -- a pointer to the byte data, or a @code{null-pointer} value
-    @br{}
+    @arg{data} -- a pointer to the byte data, or a @code{cffi:null-pointer}
+    value @br{}
     @arg{size} -- an integer with the size of the byte data
   @end{return}
   @begin{short}
@@ -281,11 +281,11 @@
   This function will always return the same pointer for a given @class{g:bytes}
   instance.
 
-  A @code{null-pointer} value may be returned if the @arg{size} value is 0. This
-  is not guaranteed, as the @class{g:bytes} instance may represent an empty
-  string with @arg{data} not a @code{null-pointer} value and the @arg{size}
-  value as 0. A @code{null-pointer} value will not be returned if the @arg{size}
-  value is non-zero.
+  A @code{cffi:null-pointer} value may be returned if the @arg{size} value is 0.
+  This is not guaranteed, as the @class{g:bytes} instance may represent an empty
+  string with @arg{data} not a @code{cffi:null-pointer} value and the @arg{size}
+  value as 0. A @code{cffi:null-pointer} value will not be returned if the
+  @arg{size} value is non-zero.
   @see-class{g:bytes}"
   (cffi:with-foreign-object (size :size)
     (let ((ptr (%bytes-data bytes size)))

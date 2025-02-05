@@ -94,7 +94,7 @@
     with two major changes and some minor lifting of restrictions.
   @end{short}
   The D-Bus specification, therefore, provides a significant amount of
-  information that is useful when working with @type{g:variant} values.
+  information that is useful when working with @symbol{g:variant} parameters.
 
   The first major change with respect to the D-Bus type system is the
   introduction of maybe (or \"nullable\") types. Any type in the GVariant type
@@ -239,7 +239,7 @@
   @see-constructor{g:variant-type-new-dict-entry}
   @see-constructor{g:variant-type-new-maybe}
   @see-constructor{g:variant-type-new-tuple}
-  @see-type{g:variant}
+  @see-symbol{g:variant}
   @see-function{g:variant-type}
   @see-function{g:variant-is-of-type}
   @see-function{g:variant-type-is-basic}
@@ -734,6 +734,8 @@
 ;;; g_variant_type_new_tuple
 ;;; ----------------------------------------------------------------------------
 
+;; TODO: Improve the implementation for using type strings
+
 (cffi:defcfun ("g_variant_type_new_tuple" %variant-type-new-tuple)
     (boxed variant-type :return)
   (items :pointer)
@@ -741,13 +743,14 @@
 
 (defun variant-type-new-tuple (&rest items)
  #+liber-documentation
- "@version{2024-11-20}
-  @argument[items]{a list of @class{g:variant-type} types, one for each item}
+ "@version{2025-2-2}
+  @argument[items]{@class{g:variant-type} instances, one for each item}
   @return{The new tuple @class{g:variant-type} instance.}
   @begin{short}
     Constructs a new tuple type, from @arg{items}.
   @end{short}
-  @see-class{g:variant-type}"
+  @see-class{g:variant-type}
+  @see-function{g:variant-new-tuple}"
   (let ((n-items (length items)))
     (cffi:with-foreign-object (items-ar :pointer n-items)
       (iter (for i from 0 below n-items)

@@ -250,6 +250,7 @@
     @about-type{key-file}
     @about-macro{with-key-file}
     @about-macro{with-key-file-from-file}
+    @about-macro{with-key-file-from-data}
     @about-function{key-file-new}
     @about-function{key-file-free}
     @about-function{key-file-ref}
@@ -320,7 +321,7 @@
   @end{section}
   @begin[GVariant]{section}
     @about-symbol{variant-class}
-    @about-type{variant}
+    @about-symbol{variant}
     @about-symbol{variant-iter}
     @about-symbol{variant-builder}
     @about-symbol{variant-parse-error}
