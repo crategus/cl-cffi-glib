@@ -8,7 +8,7 @@ Content from the GIO Reference Manual for Version 2.80
 
 File Operations
 
-  gio.file-lisp                - File and Directory Handling          GIO 2.82 %
+  gio.file-lisp                - File and Directory Handling          GIO 2.82%.
   gio.file-info.lisp           - File Information and Attributes      GIO 2.82 +
 
 Asynchronous I/O
@@ -43,28 +43,28 @@ Settings
 
 Resources
 
-  gio.resource.lisp            - GResource                          - GIO 2.76 &
+  gio.resource.lisp            - GResource                          - GIO 2.82 &
 
 Permissions
 
-  gio.permission.lisp          - GPermission                        - GIO 2.76 &
-  gio.simple-permission.lisp   - GSimplePermission                  - GIO 2.76
+  gio.permission.lisp          - GPermission                        - GIO 2.82 &
+  gio.simple-permission.lisp   - GSimplePermission                  - GIO 2.82
 
 Data Models
 
-  gio.list-model.lisp          - GListModel                         - GIO 2.76 +
-  gio.list-store.lisp          - GListStore                         - GIO 2.76
+  gio.list-model.lisp          - GListModel                         - GIO 2.82 +
+  gio.list-store.lisp          - GListStore                         - GIO 2.82
 
 Application support
 
-  gio.application.lisp         - GApplication                       - GIO 2.74 &
-  gio.appliation-command-line  - GApplicationCommandLine            - GIO 2.68 &
-  gio.action-group.lisp        - GActionGroup                       - GIO 2.62 &
-  gio.action-map.lisp          - GActionMap                         - GIO 2.68
-  gio.simple-action-group.lisp - GSimpleActionGroup                 - GIO 2.62
-  gio.action.lisp              - GAction                            - GIO 2.62
-  gio.simple-action.lisp       - GSimpleAction                      - GIO 2.62
-  gio.property-action.lisp     - GPropertyAction                    - GIO 2.64 &
+  gio.application.lisp         - GApplication                       - GIO 2.82&.
+  gio.appliation-command-line  - GApplicationCommandLine            - GIO 2.82&.
+  gio.action-group.lisp        - GActionGroup                       - GIO 2.82 .
+  gio.action-map.lisp          - GActionMap                         - GIO 2.82 .
+  gio.simple-action-group.lisp - GSimpleActionGroup                 - GIO 2.82 .
+  gio.action.lisp              - GAction                            - GIO 2.82 .
+  gio.simple-action.lisp       - GSimpleAction                      - GIO 2.82 .
+  gio.property-action.lisp     - GPropertyAction                    - GIO 2.82 .
 
   not implemented              - GRemoteActionGroup
   not implemented              - GActionGroup exporter
@@ -72,12 +72,12 @@ Application support
 
   not implemented              - GMemoryMonitor
 
-  gio.menu-model.lisp          - GMenuModel                         - GIO 2.36 %
-  gio.menu.lisp                - GMenu                              - GIO 2.38 %
+  gio.menu-model.lisp          - GMenuModel                         - GIO 2.82 .
+  gio.menu.lisp                - GMenu                              - GIO 2.82 .
 
   not implemented              - GMenuModel exporter
   not implemented              - GDBusMenuModel
 
-  gio.notification.lisp        - GNotification                      - GIO 2.68
+  gio.notification.lisp        - GNotification                      - GIO 2.82&.
 
-2024-12-22
+2024-12-29

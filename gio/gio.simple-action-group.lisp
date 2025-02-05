@@ -2,7 +2,7 @@
 ;;; gio.simple-action-group.lisp
 ;;;
 ;;; The documentation of this file is taken from the GIO Reference Manual
-;;; Version 2.76 and modified to document the Lisp binding to the GIO library.
+;;; Version 2.82 and modified to document the Lisp binding to the GIO library.
 ;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
 ;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
@@ -69,10 +69,10 @@
 
 #+liber-documentation
 (setf (documentation 'simple-action-group 'type)
- "@version{#2022-12-30}
+ "@version{#2024-12-27}
   @begin{short}
-    The @sym{g:simple-action-group} class is a hash table filled with
-    @class{g:action} objects, implementing the @class{g:action-group} and
+    The @class{g:simple-action-group} class is a hash table filled with
+    @class{g:action} instances, implementing the @class{g:action-group} and
     @class{g:action-map} interfaces.
   @end{short}
   @see-class{g:action}
@@ -87,8 +87,8 @@
 
 (defun simple-action-group-new ()
  #+liber-documentation
- "@version{2024-5-13}
-  @return{The new @class{g:simple-action-group} object.}
+ "@version{2024-12-27}
+  @return{The new @class{g:simple-action-group} instance.}
   @short{Creates a new, empty, action group.}
   @see-class{g:simple-action-group}"
   (make-instance 'simple-action-group))
@@ -96,22 +96,22 @@
 (export 'simple-action-group-new)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_simple_action_group_lookup ()                        deprecated
+;;; g_simple_action_group_lookup                            deprecated
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_simple_action_group_lookup" simple-action-group-lookup)
     (gobject:object action)
  #+liber-documentation
- "@version{#2022-12-31}
-  @argument[group]{a @class{g:simple-action-group} object}
+ "@version{#2024-12-27}
+  @argument[group]{a @class{g:simple-action-group} instance}
   @argument[name]{a string with the name of an action}
-  @return{A @class{g:action} object, or @code{nil}.}
+  @return{The @class{g:action} instance, or @code{nil}.}
   @begin{short}
     Looks up the action with the name @arg{name} in the action group.
   @end{short}
   If no such action exists, returns @code{nil}.
   @begin[Warning]{dictionary}
-    The @sym{g:simple-action-group-lookup} function has been deprecated since
+    The @fun{g:simple-action-group-lookup} function has been deprecated since
     version 2.38 and should not be used in newly written code. Use the
     @fun{g:action-map-lookup-action} function.
   @end{dictionary}
@@ -124,14 +124,14 @@
 (export 'simple-action-group-lookup)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_simple_action_group_insert ()                        deprecated
+;;; g_simple_action_group_insert                            deprecated
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_simple_action_group_insert" simple-action-group-insert) :void
  #+liber-documentation
- "@version{#2022-12-31}
-  @argument[group]{a @class{g:simple-action-group} object}
-  @argument[action]{a @class{g:action} object}
+ "@version{#2024-12-27}
+  @argument[group]{a @class{g:simple-action-group} instance}
+  @argument[action]{a @class{g:action} instance}
   @begin{short}
     Adds an action to the action group.
   @end{short}
@@ -139,7 +139,7 @@
   @arg{action} then the old action is dropped from the action group. The action
   group takes its own reference on @arg{action}.
   @begin[Warning]{dictionary}
-    The @sym{g:simple-action-group-insert} function has been deprecated since
+    The @fun{g:simple-action-group-insert} function has been deprecated since
     version 2.38 and should not be used in newly written code. Use the
     @fun{g:action-map-add-action} function.
   @end{dictionary}
@@ -152,20 +152,20 @@
 (export 'simple-action-group-insert)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_simple_action_group_remove ()                        deprecated
+;;; g_simple_action_group_remove                            deprecated
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_simple_action_group_remove" simple-action-group-remove) :void
  #+liber-documentation
- "@version{#2022-12-31}
-  @argument[group]{a @class{g:simple-action-group} object}
+ "@version{#2024-12-27}
+  @argument[group]{a @class{g:simple-action-group} instance}
   @argument[name]{a string with the name of the action}
   @begin{short}
     Removes the named action from the action group.
   @end{short}
   If no action of this name is in the action group then nothing happens.
   @begin[Warning]{dictionary}
-    The @sym{g:simple-action-group-remove} function has been deprecated since
+    The @fun{g:simple-action-group-remove} function has been deprecated since
     version 2.38 and should not be used in newly written code. Use the
     @fun{g:action-map-remove-action} function.
   @end{dictionary}
@@ -178,15 +178,15 @@
 (export 'simple-action-group-remove)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_simple_action_group_add_entries ()                   deprecated
+;;; g_simple_action_group_add_entries                       deprecated
 ;;; ----------------------------------------------------------------------------
 
 (declaim (inline simple-action-group-add-entries))
 
 (defun simple-action-group-add-entries (group entries)
  #+liber-documentation
- "@version{#2022-12-31}
-  @argument[group]{a @class{g:simple-action-group} object}
+ "@version{#2024-12-27}
+  @argument[group]{a @class{g:simple-action-group} instance}
   @argument[entries]{a list of descriptions for the actions}
   @begin{short}
     A convenience function for creating multiple @class{g:simple-action}
@@ -199,7 +199,7 @@
     the parameters in the list to describe an action.
   @end{dictionary}
   @begin[Warning]{dictionary}
-    The @sym{g:simple-action-group-add-entries} function has been deprecated
+    The @fun{g:simple-action-group-add-entries} function has been deprecated
     since version 2.38 and should not be used in newly written code. Use the
     @fun{g:action-map-add-action-entries} function.
   @end{dictionary}

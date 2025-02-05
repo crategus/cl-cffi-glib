@@ -246,8 +246,8 @@
   @syntax{lambda (a b) => result}
   @argument[a]{a @class{g:object} instance}
   @argument[b]{a @class{g:object} instance to compare with}
-  @argument[result]{negative integer value if @code{a < b}, zero if
-    @code{a = b}, positive integer value if @code{a > b}}
+  @argument[result]{negative integer if @code{a < b}, zero if @code{a = b},
+    positive integer if @code{a > b}}
   @begin{short}
     Specifies the type of a comparison function used to compare two values.
   @end{short}

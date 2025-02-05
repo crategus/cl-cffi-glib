@@ -43,13 +43,13 @@
 ;;;     g_notification_set_body
 ;;;     g_notification_set_icon
 ;;;     g_notification_set_priority
-;;;     g_notification_set_urgent
+;;;     g_notification_set_urgent                           not implemented
 ;;;     g_notification_set_default_action
-;;;     g_notification_set_default_action_and_target
-;;;     g_notification_set_default_action_and_target_value
+;;;     g_notification_set_default_action_and_target        not implemented
+;;;     g_notification_set_default_action_and_target_value  not implemented
 ;;;     g_notification_add_button
-;;;     g_notification_add_button_with_target
-;;;     g_notification_add_button_with_target_value
+;;;     g_notification_add_button_with_target               not implemented
+;;;     g_notification_add_button_with_target_value         not implemented
 ;;;
 ;;; Object Hierarchy
 ;;;
@@ -78,7 +78,7 @@
 (setf (liber:alias-for-symbol 'notification-priority)
       "GEnum"
       (liber:symbol-documentation 'notification-priority)
- "@version{#2022-12-30}
+ "@version{2024-12-28}
   @begin{declaration}
 (gobject:define-genum \"GNotificationPriority\" notification-priority
   (:export t
@@ -92,9 +92,9 @@
     @begin[code]{table}
       @entry[:normal]{The default priority, to be used for the majority of
         notifications, for example email messages, software updates, completed
-        download/sync operations.}
-      @entry[:low]{For notifications that do not require immediate attention -
-        typically used for contextual background information, such as contact
+        download operations.}
+      @entry[:low]{For notifications that do not require immediate attention.
+        Typically used for contextual background information, such as contact
         birthdays or local weather.}
       @entry[:high]{For events that require more attention, usually because
         responses are time-sensitive, for example chat and SMS messages or
@@ -105,7 +105,7 @@
     @end{table}
   @end{values}
   @begin{short}
-    Priority levels for @class{g:notification} objects.
+    Priority levels for @class{g:notification} instances.
   @end{short}
   @see-class{g:notification}")
 
@@ -122,21 +122,21 @@
 
 #+liber-documentation
 (setf (documentation 'notification 'type)
- "@version{#2022-12-30}
+ "@version{2024-12-28}
   @begin{short}
-    The @sym{g:notification} class is a mechanism for creating a notification to
-    be shown to the user -- typically as a pop-up notification presented by the
+    The @class{g:notification} class is a mechanism for creating a notification
+    to be shown to the user, typically as a pop-up notification presented by the
     desktop environment shell.
   @end{short}
 
-  The key difference between the @sym{g:notification} implementation and other
+  The key difference between the @class{g:notification} implementation and other
   similar APIs is that, if supported by the desktop environment, notifications
-  sent with the @sym{g:notification} class will persist after the application
+  sent with the @class{g:notification} class will persist after the application
   has exited, and even across system reboots.
 
   Since the user may click on a notification while the application is not
-  running, applications using the @sym{g:notification} class should be able to
-  be started as a D-Bus service, using the @class{g:application} class.
+  running, applications using the @class{g:notification} class should be able
+  to be started as a D-Bus service, using the @class{g:application} class.
 
   User interaction with a notification, either the default action, or buttons,
   must be associated with actions on the application, that is, @code{\"app.\"}
@@ -146,18 +146,19 @@
 
   A notification can be sent with the @fun{g:application-send-notification}
   function.
-  @see-class{g:application}")
+  @see-class{g:application}
+  @see-function{g:application-send-notification}")
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_notification_new
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_notification_new" notification-new)
-    (gobject:object notification)
+    (gobject:object notification :return)
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2024-12-28}
   @argument[title]{a string with the title of the notification}
-  @return{A new @class{g:notification} instance.}
+  @return{The new @class{g:notification} instance.}
   @begin{short}
     Creates a new notification with @arg{title} as its title.
   @end{short}
@@ -177,7 +178,7 @@
 
 (cffi:defcfun ("g_notification_set_title" notification-set-title) :void
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2024-12-28}
   @argument[notification]{a @class{g:notification} instance}
   @argument[title]{a string with the new title for the notification}
   @begin{short}
@@ -195,7 +196,7 @@
 
 (cffi:defcfun ("g_notification_set_body" notification-set-body) :void
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2024-12-28}
   @argument[notification]{a @class{g:notification} instance}
   @argument[body]{a string with the body for the notification, or @code{nil}}
   @begin{short}
@@ -213,9 +214,10 @@
 
 (cffi:defcfun ("g_notification_set_icon" notification-set-icon) :void
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2024-12-28}
   @argument[notification]{a @class{g:notification} instance}
-  @argument[icon]{a @class{g:icon} icon to be shown in the notification}
+  @argument[icon]{a @class{g:icon} instance with the icon to be shown in the
+    notification}
   @begin{short}
     Sets the icon of the notification.
   @end{short}
@@ -232,7 +234,7 @@
 
 (cffi:defcfun ("g_notification_set_priority" notification-set-priority) :void
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2024-12-28}
   @argument[notification]{a @class{g:notification} instance}
   @argument[priority]{a @symbol{g:notification-priority} value}
   @begin{short}
@@ -247,27 +249,8 @@
 (export 'notification-set-priority)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_notification_set_urgent
+;;; g_notification_set_urgent                               deprecated
 ;;; ----------------------------------------------------------------------------
-
-(cffi:defcfun ("g_notification_set_urgent" notification-set-urgent) :void
- #+liber-documentation
- "@version{#2022-12-30}
-  @argument[notification]{a @class{g:notification} instance}
-  @argument[urgent]{@em{true} if the notification is urgent}
-  @begin{short}
-    Deprecated in favor of the @fun{g:notification-set-priority} function.
-  @end{short}
-  @begin[Warning]{dictionary}
-    The @sym{g:notification-set-urgent} function has been deprecated since
-    version 2.42 and should not be used in newly written code.
-  @end{dictionary}
-  @see-class{g:notification}
-  @see-function{g:notification-set-priority}"
-  (notification (gobject:object notification))
-  (urgent :boolean))
-
-(export 'notification-set-urgent)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_notification_set_default_action
@@ -276,7 +259,7 @@
 (cffi:defcfun ("g_notification_set_default_action"
                 notification-set-default-action) :void
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2024-12-28}
   @argument[notifiaction]{a @class{g:notification} instance}
   @argument[action]{a string with a detailed action name}
   @begin{short}
@@ -285,8 +268,8 @@
   The action is activated when the notification is clicked on.
 
   The action in @arg{action} must be an application wide action, it must start
-  with \"app.\". If the @arg{action} argument contains a target, the given
-  action will be activated with that target as its parameter. See the
+  with @code{\"app.\"}. If the @arg{action} argument contains a target, the
+  given action will be activated with that target as its parameter. See the
   @fun{g:action-parse-detailed-name} function for a description of the format
   for @arg{action}.
 
@@ -374,7 +357,7 @@
 
 (cffi:defcfun ("g_notification_add_button" notification-add-button) :void
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2024-12-28}
   @argument[notification]{a @class{g:notification} instance}
   @argument[label]{a string with the label of the button}
   @argument[action]{a string with the detailed action name}
@@ -382,7 +365,7 @@
     Adds a button to the notification that activates the action in
     @arg{action} when clicked.
   @end{short}
-  That action must be an application wide action, starting with \"app.\".
+  That action must be an application wide action, starting with @code{\"app.\"}.
   If @arg{action} contains a target, the action will be activated with that
   target as its parameter. See the @fun{g:action-parse-detailed-name} function
   for a description of the format for @arg{action}.

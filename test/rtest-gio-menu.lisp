@@ -32,11 +32,11 @@
              (glib-test:list-signals "GMenu")))
   ;; Check class definition
   (is (equal '(GOBJECT:DEFINE-GOBJECT "GMenu" GIO:MENU
-                       (:SUPERCLASS GIO:MENU-MODEL
-                        :EXPORT T
-                        :INTERFACES NIL
-                        :TYPE-INITIALIZER "g_menu_get_type")
-                       NIL)
+                      (:SUPERCLASS GIO:MENU-MODEL
+                       :EXPORT T
+                       :INTERFACES NIL
+                       :TYPE-INITIALIZER "g_menu_get_type")
+                      NIL)
              (gobject:get-gtype-definition "GMenu"))))
 
 ;;;     GMenuItem
@@ -63,11 +63,11 @@
              (glib-test:list-properties "GMenuItem")))
   ;; Check class definition
   (is (equal '(GOBJECT:DEFINE-GOBJECT "GMenuItem" GIO:MENU-ITEM
-                       (:SUPERCLASS GOBJECT:OBJECT
-                        :EXPORT T
-                        :INTERFACES NIL
-                        :TYPE-INITIALIZER "g_menu_item_get_type")
-                       NIL)
+                      (:SUPERCLASS GOBJECT:OBJECT
+                       :EXPORT T
+                       :INTERFACES NIL
+                       :TYPE-INITIALIZER "g_menu_item_get_type")
+                      NIL)
              (gobject:get-gtype-definition "GMenuItem"))))
 
 ;;; --- Functions --------------------------------------------------------------
@@ -198,16 +198,90 @@
     (is (typep (g:menu-item-new nil nil) 'g:menu-item))))
 
 ;;;     g_menu_item_new_section
+
+(test g-menu-item-new-section
+  (glib-test:with-check-memory (model section)
+    (is (typep (setf model (g:menu-new)) 'g:menu-model))
+    (is (typep (setf section
+                     (g:menu-item-new-section "section" model))
+        'g:menu-item))
+    (is-false (g:menu-item-set-section section nil))))
+
 ;;;     g_menu_item_new_submenu
+
+(test g-menu-item-new-submenu
+  (glib-test:with-check-memory (model submenu)
+    (is (typep (setf model (g:menu-new)) 'g:menu-model))
+    (is (typep (setf submenu
+                     (g:menu-item-new-submenu "submenu" model))
+               'g:menu-item))
+    (is-false (g:menu-item-set-submenu submenu nil))))
+
 ;;;     g_menu_item_new_from_model
 
+(test g-menu-item-new-from-model
+  (glib-test:with-check-memory (item model)
+    (is (typep (setf model (g:menu-new)) 'g:menu-model))
+    (is-false (g:menu-append-item model
+                                  (setf item
+                                        (g:menu-item-new "append" nil))))
+    (is (typep (setf item
+                     (g:menu-item-new-from-model model 0)) 'g:menu-item))))
+
 ;;;     g_menu_item_set_label
+
+(test g-menu-item-set-label
+  (glib-test:with-check-memory (item)
+    (is (typep (setf item (g:menu-item-new nil nil)) 'g:menu-item))
+    (is-false (g:menu-item-set-label item "label"))
+    (is-false (g:menu-item-set-label item nil))))
+
 ;;;     g_menu_item_set_icon
+
+(test g-menu-item-set-icon
+  (glib-test:with-check-memory (item icon)
+    (is (typep (setf icon (g:themed-icon-new "gnome-dev-cdrom")) 'g:icon))
+    (is (typep (setf item (g:menu-item-new nil nil)) 'g:menu-item))
+    (is-false (g:menu-item-set-icon item icon))
+    (is-false (g:menu-item-set-icon item nil))))
+
 ;;;     g_menu_item_set_action_and_target_value
-;;;     g_menu_item_set_action_and_target
+
+(test g-menu-item-set-action-and-target-value
+  (glib-test:with-check-memory (item)
+    (let ((value (g:variant-new-int32 123)))
+      (is (typep (setf item (g:menu-item-new nil nil)) 'g:menu-item))
+      (is-false (g:menu-item-set-action-and-target-value item "action" value))
+      (is-false (g:menu-item-set-action-and-target-value item "action" nil))
+      (is-false (g:menu-item-set-action-and-target-value item nil nil)))))
+
 ;;;     g_menu_item_set_detailed_action
+
+(test g-menu-item-set-detailed-action
+  (glib-test:with-check-memory (item)
+    (is (typep (setf item (g:menu-item-new nil nil)) 'g:menu-item))
+    (is-false (g:menu-item-set-detailed-action item "action"))
+    (is-false (g:menu-item-set-detailed-action item "app.action"))
+    (is-false (g:menu-item-set-detailed-action item "app.action(123)"))
+    (is-false (g:menu-item-set-detailed-action item "app.action::123"))))
+
 ;;;     g_menu_item_set_section
+
+(test g-menu-item-set-section
+  (glib-test:with-check-memory (item model)
+    (is (typep (setf model (g:menu-new)) 'g:menu))
+    (is (typep (setf item (g:menu-item-new nil nil)) 'g:menu-item))
+    (is-false (g:menu-item-set-section item model))
+    (is-false (g:menu-item-set-section item nil))))
+
 ;;;     g_menu_item_set_submenu
+
+(test g-menu-item-set-submenu
+  (glib-test:with-check-memory (item model)
+    (is (typep (setf model (g:menu-new)) 'g:menu))
+    (is (typep (setf item (g:menu-item-new nil nil)) 'g:menu-item))
+    (is-false (g:menu-item-set-submenu item model))
+    (is-false (g:menu-item-set-submenu item nil))))
 
 ;;;     g_menu_item_get_attribute_value
 ;;;     g_menu_item_set_attribute_value
@@ -310,9 +384,6 @@
                  (g:variant-string
                      (g:menu-item-attribute-value item "action" "s"))))))
 
-;;;     g_menu_item_get_attribute
-;;;     g_menu_item_set_attribute
-
 ;;;     g_menu_item_get_link
 ;;;     g_menu_item_set_link
 
@@ -327,4 +398,4 @@
     (is-false (g:menu-item-link item "submenu"))
     (is-false (g:menu-remove-all submenu))))
 
-;;; 2024-12-19
+;;; 2024-12-30

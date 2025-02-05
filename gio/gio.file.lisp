@@ -43,13 +43,13 @@
 ;;;     g_file_new_for_commandline_arg
 ;;;     g_file_new_for_commandline_arg_and_cwd
 ;;;
+;;;     g_file_query_info
+;;;
 ;;;     g_file_parse_name
 ;;;     g_file_get_basename
 ;;;     g_file_get_path
 ;;;     g_file_get_uri
 ;;;     g_file_get_parse_name
-;;;
-;;;     g_file_query_info
 ;;;
 ;;; Object Hierarchy
 ;;;
@@ -132,6 +132,10 @@
   pathname. For normal files the system pathname is what is stored internally,
   but as @class{g:file} objects are extensible it could also be something else
   that corresponds to a pathname in a userspace implementation of a filesystem.
+  @see-constructor{g:file-new-for-path}
+  @see-constructor{g:file-new-for-uri}
+  @see-constructor{g:file-new-for-commandline-arg}
+  @see-constructor{g:file-new-for-comandline-arg-and-cwd}
   @see-type{g:file-as-namestring}")
 
 ;;; ----------------------------------------------------------------------------
@@ -145,15 +149,13 @@
   (:actual-type :pointer)
   (:simple-parser file-as-namestring))
 
-(defmethod cffi:translate-to-foreign
-    (value (type file-as-namestring-type))
+(defmethod cffi:translate-to-foreign (value (type file-as-namestring-type))
   (gobject:object-pointer
       (cffi:foreign-funcall "g_file_parse_name"
                             :string (namestring value)
                             (gobject:object :return))))
 
-(defmethod cffi:translate-from-foreign
-    (value (type file-as-namestring-type))
+(defmethod cffi:translate-from-foreign (value (type file-as-namestring-type))
   (when value
     (setf value
           (if (cffi:pointerp value)
@@ -168,11 +170,27 @@
 (setf (liber:alias-for-class 'file-as-namestring)
       "Type"
       (documentation 'file-as-namestring 'type)
- "@version{2024-10-12}
+ "@version{2024-12-28}
   @begin{short}
-    The @class{g:file-as-namestring} types specifier represents the
-    @class{g:file} type for files on a virtual file system.
+    The @class{g:file-as-namestring} type specifier represents and performs
+    automatic conversion between a Lisp namestring and a @class{g:file} object
+    for files on a virtual file system.
   @end{short}
+  A Lisp namestring or pathname is converted to the corresponding @class{g:file}
+  object using the @fun{g:file-parse-name} function. The conversion from a
+  @class{g:file} object back to a Lisp namestring is done with the
+  @fun{g:file-get-parse-name} function.
+  @begin[Examples]{dictionary}
+    Conversion of a Lisp namestring to @class{g:file} object and back:
+    @begin{pre}
+(setf path \"/home/lisp/github/glib/gio/gio.file.lisp\")
+=> \"/home/lisp/github/glib/gio/gio.file.lisp\"
+(cffi:convert-to-foreign path 'g:file-as-namestring)
+=> #.(SB-SYS:INT-SAP #X60BCAD6BD5B0)
+(cffi:convert-from-foreign * 'g:file-as-namestring)
+=> \"/home/lisp/github/glib/gio/gio.file.lisp\"
+    @end{pre}
+  @end{dictionary}
   @see-class{g:file}")
 
 (export 'file-as-namestring)
@@ -290,6 +308,64 @@
 (export 'file-new-for-commandline-arg-and-cwd)
 
 ;;; ----------------------------------------------------------------------------
+;;; g_file_query_info
+;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("g_file_query_info" %file-query-info)
+    (gobject:object file-info :return)
+  (file gobject:object)
+  (attributes :string)
+  (flags file-query-info-flags)
+  (cancellable (gobject:object cancellable))
+  (err :pointer))
+
+(defun file-query-info (file attributes flags &optional cancellable)
+ #+liber-documentation
+ "@version{2024-12-28}
+  @argument[file]{a @class{g:file} instance}
+  @argument[attributes]{an attribute query string}
+  @argument[flags]{a @symbol{g:file-query-info-flags} value}
+  @argument[cancellable]{an optional @class{g:cancellable} instance}
+  @return{The @symbol{g:file-info} instance for the given @arg{file} or
+    @code{nil} on error.}
+  @begin{short}
+    Gets the requested information about the specified file.
+  @end{short}
+  The result is a @class{g:file-info} instance that contains key-value
+  attributes, such as the type or size of the file.
+
+  The @arg{attributes} value is a string that specifies the file attributes
+  that should be gathered. It is not an error if it is not possible to read a
+  particular requested attribute from a file, it just will not be set.
+  The @arg{attributes} argument should be a comma-separated list of attributes
+  or attribute wildcards. The wildcard @code{\"\"} means all attributes, and a
+  wildcard like @code{\"standard::\"} means all attributes in the standard
+  namespace. An example attribute query be @code{\"standard::*,owner::user\"}.
+
+  If the @arg{cancellable} argument is not @code{nil}, then the operation can
+  be cancelled by triggering the @arg{cancellable} instance from another thread.
+  If the operation was cancelled, the error @code{G_IO_ERROR_CANCELLED} will be
+  returned.
+
+  For symlinks, normally the information about the target of the symlink is
+  returned, rather than information about the symlink itself. However if you
+  pass @code{:nofollow-symlinks} in @arg{flags} the information about the
+  symlink itself will be returned. Also, for symlinks that point to non-existing
+  files the information about the symlink itself will be returned.
+
+  If the file does not exist, the @code{G_IO_ERROR_NOT_FOUND} error will be
+  returned. Other errors are possible too, and depend on what kind of filesystem
+  the file is on.
+  @see-class{g:file}
+  @see-class{g:file-info}
+  @see-symbol{g:file-query-info-flags}"
+  (glib:with-error (err)
+    (let ((cancellable (or cancellable (cffi:null-pointer))))
+      (%file-query-info file attributes flags cancellable err))))
+
+(export 'file-query-info)
+
+;;; ----------------------------------------------------------------------------
 ;;; g_file_parse_name
 ;;; ----------------------------------------------------------------------------
 
@@ -345,7 +421,7 @@
 
 (cffi:defcfun ("g_file_get_path" file-path) (:string :free-from-foreign t)
  #+liber-documentation
- "@version{2024-10-12}
+ "@version{2024-12-30}
   @argument[file]{a @class{g:file} object}
   @begin{return}
     The string containing the path for the file, or @code{nil} if no such path
@@ -354,7 +430,7 @@
   @begin{short}
     Gets the local pathname for @arg{file}, if one exists.
   @end{short}
-  If non-@code{nil}, this is guaranteed to be an absolute, canonical path. It
+  If not @code{nil}, this is guaranteed to be an absolute, canonical path. It
   might contain symlinks. This call does no blocking I/O.
   @see-class{g:file}"
   (file gobject:object))
@@ -367,7 +443,7 @@
 
 (cffi:defcfun ("g_file_get_uri" file-uri) (:string :free-from-foreign t)
  #+liber-documentation
- "@version{2024-10-12}
+ "@version{2024-12-30}
   @argument[file]{a @class{g:file} object}
   @begin{return}
     The string containing the URI for the file, or @code{nil} if no such path
@@ -376,7 +452,7 @@
   @begin{short}
     Gets the local pathname for @arg{file}, if one exists.
   @end{short}
-  If non-@code{nil}, this is guaranteed to be an absolute, canonical path. It
+  If  not @code{nil}, this is guaranteed to be an absolute, canonical path. It
   might contain symlinks. This call does no blocking I/O.
   @see-class{g:file}"
   (file gobject:object))
@@ -409,24 +485,5 @@
   (file gobject:object))
 
 (export 'file-get-parse-name)
-
-;;; ----------------------------------------------------------------------------
-;;; g_file_query_info
-;;; ----------------------------------------------------------------------------
-
-(cffi:defcfun ("g_file_query_info" %file-query-info)
-    (gobject:object file-info :return)
-  (file gobject:object)
-  (attributes :string)
-  (flags file-query-info-flags)
-  (cancellable (gobject:object cancellable))
-  (err :pointer))
-
-(defun file-query-info (file attributes flags &optional cancellable)
-  (glib:with-error (err)
-    (let ((cancellable (or cancellable (cffi:null-pointer))))
-      (%file-query-info file attributes flags cancellable err))))
-
-(export 'file-query-info)
 
 ;;; --- End of file gio.file.lisp ----------------------------------------------

@@ -232,18 +232,18 @@
  #+liber-documentation
  "@version{2024-10-23}
   @argument[icon]{a @class{g:icon} object}
-  @return{The @type{g:variant} value, or @code{nil} when serialization fails.
-    The @type{g:variant} value will not be floating.}
+  @return{The @symbol{g:variant} parameter, or @code{nil} when serialization
+    fails. The @symbol{g:variant} parameter will not be floating.}
   @begin{short}
-    Serializes a @class{g:icon} object into a @type{g:variant} value.
+    Serializes a @class{g:icon} object into a @symbol{g:variant} parameter.
   @end{short}
   An equivalent @class{g:icon} object can be retrieved back by calling the
   @fun{g:icon-deserialize} function on the returned value. As serialization will
   avoid using raw icon data when possible, it only makes sense to transfer the
-  @type{g:variant} value between processes on the same machine, as opposed to
-  over the network, and within the same file system namespace.
+  @symbol{g:variant} parameter between processes on the same machine, as opposed
+  to over the network, and within the same file system namespace.
   @see-class{g:icon}
-  @see-type{g:variant}
+  @see-symbol{g:variant}
   @see-function{g:icon-deserialize}"
   (let ((value (%icon-serialize icon)))
     (unless (cffi:null-pointer-p value) value)))
@@ -258,7 +258,7 @@
     (gobject:object icon :return)
  #+liber-documentation
  "@version{2024-10-23}
-  @argument[value]{a @type{g:variant} value created with the
+  @argument[value]{a @symbol{g:variant} parameter created with the
     @fun{g:icon-serialize} function}
   @return{The @class{g:icon} object, or @code{nil} when deserialization fails.}
   @begin{short}

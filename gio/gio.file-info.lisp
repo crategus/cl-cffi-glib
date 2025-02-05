@@ -1,12 +1,12 @@
 ;;; ----------------------------------------------------------------------------
 ;;; gio.file-info.lisp
 ;;;
-;;; The documentation of this file is taken from the GIO Reference Manual
-;;; Version 2.82 and modified to document the Lisp binding to the GIO library.
-;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
-;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
+;;; The documentation in this file is taken from the GIO Reference Manual
+;;; Version 2.82 and modified to document the Lisp binding to the GIO library,
+;;; see <http://www.gtk.org>. The API documentation of the Lisp binding is
+;;; available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2020 - 2024 Dieter Kaiser
+;;; Copyright (C) 2020 - 2025 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -38,7 +38,10 @@
 ;;;     g_file_info_clear_status
 ;;;     g_file_info_copy_into
 ;;;     g_file_info_dup
+;;;
 ;;;     g_file_info_get_access_date_time                    Since 2.70
+;;;     g_file_info_set_access_date_time                    Since 2.70
+;;;
 ;;;     g_file_info_get_attribute_as_string
 ;;;     g_file_info_get_attribute_boolean
 ;;;     g_file_info_get_attribute_byte_string
@@ -75,7 +78,8 @@
 ;;;     g_file_info_has_namespace
 ;;;     g_file_info_list_attributes
 ;;;     g_file_info_remove_attribute
-;;;     g_file_info_set_access_date_time                    Since 2.70
+
+
 ;;;     g_file_info_set_attribute
 ;;;     g_file_info_set_attribute_boolean
 ;;;     g_file_info_set_attribute_byte_string
@@ -122,23 +126,18 @@
 
 #+liber-documentation
 (setf (documentation 'file-info 'type)
- "@version{2024-10-23}
+ "@version{2024-12-28}
   @begin{short}
-    The @class{g:file-info} object implements methods for getting information
+    The @class{g:file-info} class implements methods for getting information
     that all files should contain, and allows for manipulation of extended
     attributes.
   @end{short}
   See the file attributes document for more information on how GIO handles file
-  attributes.
-
-  To obtain a @class{g:file-info} instance for a @class{g:file} instance, use
-  the @fun{g:file-query-info} function or its async variant. To obtain a
-  @class{g:file-info} instance for a file input or output stream, use the
-  @fun{g:file-input-stream-query-info} or @fun{g:file-output-stream-query-info}
-  functions or their async variants.
+  attributes. To obtain a @class{g:file-info} object for a @class{g:file}
+  object, use the @fun{g:file-query-info} function or its async variant.
 
   To change the actual attributes of a file, you should then set the attribute
-  in the @class{g:file-info} instance and call the
+  in the @class{g:file-info} object and call the
   @fun{g:file-set-attributes-from-info} or @fun{g:file-set-attributes-async}
   functions on a @class{g:file} instance.
 
@@ -171,7 +170,7 @@
  #+liber-documentation
  "@version{2024-10-23}
   @return{The newly created @class{g:file-info} instance.}
-  @short{Creates a new file info instance.}
+  @short{Creates a new @class{g:file-info} instance.}
   @see-class{g:file-info}"
   (make-instance 'file-info))
 
@@ -202,12 +201,35 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
+;;; g_file_info_set_access_date_time
+;;;
+;;; Sets the G_FILE_ATTRIBUTE_TIME_ACCESS and
+;;; G_FILE_ATTRIBUTE_TIME_ACCESS_USEC attributes in the file info to the given
+;;; date/time value.
+;;;
+;;; Since 2.70
+;;; ----------------------------------------------------------------------------
+
+(defun (setf file-info-access-date-time) (value info)
+  (cffi:foreign-funcall "g_file_info_set_access_date_time"
+                        (gobject:object file-info) info
+                        glib:date-time value
+                        :void)
+  value)
+
+;;; ----------------------------------------------------------------------------
 ;;; g_file_info_get_access_date_time
 ;;;
 ;;; Gets the access time of the current info and returns it as a GDateTime.
 ;;;
 ;;; Since 2.70
 ;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("g_file_info_get_access_date_time" file-info-access-date-time)
+    glib:date-time
+  (info (gobject:object file-info)))
+
+(export 'file-info-access-date-time)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_file_info_get_attribute_as_string
@@ -216,12 +238,25 @@
 ;;; as needed to make the string valid UTF-8.
 ;;; ----------------------------------------------------------------------------
 
+(cffi:defcfun ("g_file_info_get_attribute_as_string"
+               file-info-attribute-as-string) :string
+  (info (gobject:object file-info))
+  (attribute :string))
+
+(export 'file-info-attribute-as-string)
+
 ;;; ----------------------------------------------------------------------------
 ;;; g_file_info_get_attribute_boolean
 ;;;
 ;;; Gets the value of a boolean attribute. If the attribute does not contain a
 ;;; boolean value, FALSE will be returned.
 ;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("g_file_info_get-attribute_boolean"
+               file-info-attribute-boolean) :boolean
+  (info (gobject:object file-info)))
+
+(export 'file-info-attribute-boolean)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_file_info_get_attribute_byte_string
@@ -393,6 +428,12 @@
 ;;; Since 2.62
 ;;; ----------------------------------------------------------------------------
 
+(cffi:defcfun ("g_file_info_get_modification_date_time"
+               file-info-modification-date-time) glib:date-time
+  (info (gobject:object file-info)))
+
+(export 'file-info-modification-date-time)
+
 ;;; ----------------------------------------------------------------------------
 ;;; g_file_info_get_modification_time
 ;;;
@@ -452,6 +493,12 @@
 ;;; Checks if a file info structure has an attribute named attribute.
 ;;; ----------------------------------------------------------------------------
 
+(cffi:defcfun ("g_file_info_has_attribute" file-info-has-attribute) :boolean
+  (info (gobject:object file-info))
+  (attribute :string))
+
+(export 'file-info-has-attribute)
+
 ;;; ----------------------------------------------------------------------------
 ;;; g_file_info_has_namespace
 ;;;
@@ -459,26 +506,32 @@
 ;;; name_space.
 ;;; ----------------------------------------------------------------------------
 
+(cffi:defcfun ("g_file_info_has_namespace" file-info-has-namespace) :boolean
+  (info (gobject:object file-info))
+  (namespace :string))
+
+(export 'file-info-has-namespace)
+
 ;;; ----------------------------------------------------------------------------
 ;;; g_file_info_list_attributes
 ;;;
 ;;; Lists the file info structure’s attributes.
 ;;; ----------------------------------------------------------------------------
 
+(cffi:defcfun ("g_file_info_list_attributes" %file-info-list-attributes)
+    glib:strv-t
+  (info (gobject:object file-info))
+  (namespace :string))
+
+(defun file-info-list-attributes (info &optional namespace)
+  (%file-info-list-attributes info (or namespace (cffi:null-pointer))))
+
+(export 'file-info-list-attributes)
+
 ;;; ----------------------------------------------------------------------------
 ;;; g_file_info_remove_attribute
 ;;;
 ;;; Removes all cases of attribute from info if it exists.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_file_info_set_access_date_time
-;;;
-;;; Sets the G_FILE_ATTRIBUTE_TIME_ACCESS and
-;;; G_FILE_ATTRIBUTE_TIME_ACCESS_USEC attributes in the file info to the given
-;;; date/time value.
-;;;
-;;; Since 2.70
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------

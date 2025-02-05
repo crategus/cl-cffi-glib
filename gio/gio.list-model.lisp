@@ -77,7 +77,7 @@
 (setf (liber:alias-for-class 'list-model)
       "Interface"
       (documentation 'list-model 'type)
- "@version{2024-3-31}
+ "@version{2024-12-29}
   @begin{short}
     The @class{g:list-model} interface is an interface that represents a mutable
     list of @class{g:object} instances.
@@ -108,7 +108,7 @@
   @fun{g:list-model-item} function returns an item at a (0-based) position. In
   order to allow implementations to calculate the list length lazily, you can
   also iterate over items. Starting from 0, repeatedly call the
-  @fun{g:list-model-item} function until it returns @code{null-pointer}.
+  @fun{g:list-model-item} function until it returns @code{cffi:null-pointer}.
 
   An implementation may create objects lazily, but must take care to return the
   same object for a given position until all references to it are gone.
@@ -234,12 +234,12 @@ lambda (model pos removed added)    :run-last
 (export 'list-model-item-type)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_list_model_get_n_items ()
+;;; g_list_model_get_n_items
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_list_model_get_n_items" list-model-n-items) :uint
  #+liber-documentation
- "@version{2024-3-31}
+ "@version{2024-12-29}
   @argument[model]{a @class{g:list-model} object}
   @return{The integer with the number of items in @arg{model}.}
   @begin{short}
@@ -247,8 +247,8 @@ lambda (model pos removed added)    :run-last
   @end{short}
   Depending on the list model implementation, calling this function may be less
   efficient than iterating the list model with increasing values for @arg{pos}
-  until the @fun{g:list-model-item} functions returns the @code{null-pointer}
-  value.
+  until the @fun{g:list-model-item} functions returns the
+  @code{cffi:null-pointer} value.
   @see-class{g:list-model}
   @see-function{g:list-model-item}"
   (model (gobject:object list-model)))

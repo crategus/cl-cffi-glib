@@ -57,12 +57,14 @@
   higher-level, document-centric interfaces.
   @begin[File Operations]{section}
     @begin[GFile]{subsection}
+      @about-symbol{file-query-info-flags}
       @about-class{file}
       @about-type{file-as-namestring}
       @about-function{file-new-for-path}
       @about-function{file-new-for-uri}
       @about-function{file-new-for-commandline-arg}
       @about-function{file-new-for-commandline-arg-and-cwd}
+      @about-function{file-query-info}
       @about-function{file-parse-name}
       @about-function{file-basename}
       @about-function{file-path}
@@ -174,7 +176,7 @@
       @about-function{task-had-error}
       @about-function{task-run-in-thread}
       @about-function{task-run-in-thread-sync}
-      @about-symbol{task-threadfunc}
+      @about-symbol{task-thread-func}
       @about-function{task-attach-source}
       @about-function{task-task-is-valid}
     @end{subsection}
@@ -418,21 +420,15 @@
     @end{subsection}
     @begin[GApplicationCommandLine]{subsection}
       @about-class{application-command-line}
-      @about-generic{application-command-line-arguments}
       @about-generic{application-command-line-is-remote}
-      @about-generic{application-command-line-options}
-      @about-generic{application-command-line-platform-data}
-      @about-function{application-command-line-get-arguments}
+      @about-function{application-command-line-arguments}
       @about-function{application-command-line-cwd}
       @about-function{application-command-line-environ}
       @about-function{application-command-line-options-dict}
-      @about-function{application-command-line-stdin}
       @about-function{application-command-line-create-file-for-arg}
       @about-function{application-command-line-getenv}
-      @about-function{application-command-line-get-platform-data}
+      @about-function{application-command-line-platform-data}
       @about-function{application-command-line-exit-status}
-      @about-function{application-command-line-print}
-      @about-function{application-command-line-printerr}
     @end{subsection}
     @begin[GActionGroup]{subsection}
       @about-class{action-group}
@@ -507,22 +503,19 @@
       @about-class{menu-model}
       @about-function{menu-model-is-mutable}
       @about-function{menu-model-n-items}
-      @about-function{menu-model-get-item-attribute-value}
-      @about-function{menu-model-get-item-attribute}
-      @about-function{menu-model-get-item-link}
+      @about-function{menu-model-item-attribute-value}
+      @about-function{menu-model-item-link}
       @about-function{menu-model-iterate-item-attributes}
       @about-function{menu-model-iterate-item-links}
       @about-function{menu-model-items-changed}
-      @about-symbol{menu-attribute-iter}
-      @about-function{menu-attribute-iter-get-next}
-      @about-function{menu-attribute-iter-get-name}
-      @about-function{menu-attribute-iter-get-value}
+      @about-class{menu-attribute-iter}
       @about-function{menu-attribute-iter-next}
-      @about-function{menu-link-iter}
-      @about-function{menu-link-iter-get-name}
-      @about-function{menu-link-iter-get-next}
-      @about-function{menu-link-iter-get-value}
+      @about-function{menu-attribute-iter-name}
+      @about-function{menu-attribute-iter-value}
+      @about-class{menu-link-iter}
       @about-function{menu-link-iter-next}
+      @about-function{menu-link-iter-name}
+      @about-function{menu-link-iter-value}
     @end{subsection}
     @begin[GMenu]{subsection}
       @about-class{menu}

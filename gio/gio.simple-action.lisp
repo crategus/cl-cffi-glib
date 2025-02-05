@@ -96,10 +96,10 @@
 
 #+liber-documentation
 (setf (documentation 'simple-action 'type)
- "@version{2022-12-26}
+ "@version{2024-12-29}
   @begin{short}
-    A @sym{g:simple-action} object is the obvious simple implementation of the
-    @class{g:action} interface.
+    The @class{g:simple-action} class is the obvious simple implementation of
+    the @class{g:action} interface.
   @end{short}
   This is the easiest way to create an action for purposes of adding it to a
   @class{g:simple-action-group} object.
@@ -109,8 +109,8 @@
 lambda (action parameter)    :run-last
       @end{pre}
       @begin[code]{table}
-        @entry[action]{The @sym{g:simple-action} object.}
-        @entry[parameter]{The @type{g:variant} parameter to the activation.}
+        @entry[action]{The @class{g:simple-action} object.}
+        @entry[parameter]{The @symbol{g:variant} parameter to the activation.}
       @end{table}
       Indicates that the action was just activated. The @arg{parameter} argument
       will always be of the expected type. In the event that an incorrect type
@@ -121,7 +121,7 @@ lambda (action value)    :run-last
       @end{pre}
       @begin[code]{table}
         @entry[action]{The @sym{g:simple-action} object.}
-        @entry[value]{The requested @type{g:variant} value for the state.}
+        @entry[value]{The requested @symbol{g:variant} parameter for the state.}
       @end{table}
       Indicates that the action just received a request to change its state.
       The @arg{value} argument will always be of the correct state type. In the
@@ -131,7 +131,7 @@ lambda (action value)    :run-last
       requested value. If you connect a signal handler then no default action
       is taken. If the state should change then you must call the
       @fun{g:simple-action-state} function from the handler. @break{}
-      @b{Example:} Implementation of a \"change-state\" handler
+      @b{Examples:} Implementation of a @code{\"change-state\"} signal handler:
       @begin{pre}
 (g:signal-connect action \"change-state\"
                   (lambda (simple value)
@@ -157,7 +157,7 @@ lambda (action value)    :run-last
 ;;; Property and Accessor Details
 ;;; ----------------------------------------------------------------------------
 
-;;; --- simple-action-enabled --------------------------------------------------
+;;; --- g:simple-action-enabled ------------------------------------------------
 
 #+liber-documentation
 (setf (documentation (liber:slot-documentation "enabled" 'simple-action) t)
@@ -171,13 +171,13 @@ lambda (action value)    :run-last
 (setf (liber:alias-for-function 'simple-action-enabled)
       "Accessor"
       (documentation 'simple-action-enabled 'function)
- "@version{2022-12-26}
+ "@version{2024-12-29}
   @syntax{(g:simple-action-enabled object) => enabled}
   @syntax{(setf (g:simple-action-enabled object) enabled)}
   @argument[object]{a @class{g:simple-action} object}
   @argument[enabled]{a boolean whether the action is enabled}
   @begin{short}
-    Accessor of the @slot[simple-action]{enabled} slot of the
+    Accessor of the @slot[g:simple-action]{enabled} slot of the
     @class{g:simple-action} class.
   @end{short}
   Sets the action as enabled or not. An action must be enabled in order to be
@@ -186,21 +186,21 @@ lambda (action value)    :run-last
   should not attempt to modify its enabled flag.
   @see-class{g:simple-action}")
 
-;;; --- simple-action-name -----------------------------------------------------
+;;; --- g:simple-action-name ---------------------------------------------------
 
 #+liber-documentation
 (setf (documentation (liber:slot-documentation "name" 'simple-action) t)
  "The @code{name} property of type @code{:string}
   (Read / Write / Construct Only) @br{}
   The name of the action. This is mostly meaningful for identifying the action
-  once it has been added to a @class{g:simple-action-group} object. @br{}
+  once it has been added to a @class{g:action-map} instance. @br{}
   Default value: @code{nil}")
 
 #+liber-documentation
 (setf (liber:alias-for-function 'simple-action-name)
       "Accessor"
       (documentation 'simple-action-name 'function)
- "@version{2022-12-26}
+ "@version{2024-12-29}
   @syntax{(g:simple-action-name object) => name}
   @argument[object]{a @class{g:simple-action} object}
   @argument[name]{a string with the name of the action}
@@ -209,11 +209,11 @@ lambda (action value)    :run-last
     @class{g:simple-action} class.
   @end{short}
   The name of the action. This is mostly meaningful for identifying the action
-  once it has been added to a @class{g:simple-action-group} object.
+  once it has been added to a @class{g:action-map} instance.
   @see-class{g:simple-action}
-  @see-class{g:simple-action-group}")
+  @see-class{g:action-map}")
 
-;;; --- simple-action-parameter-type -------------------------------------------
+;;; --- g:simple-action-parameter-type -----------------------------------------
 
 #+liber-documentation
 (setf (documentation (liber:slot-documentation "parameter-type"
@@ -226,10 +226,10 @@ lambda (action value)    :run-last
 (setf (liber:alias-for-function 'simple-action-parameter-type)
       "Accessor"
       (documentation 'simple-action-parameter-type 'function)
- "@version{2022-12-26}
+ "@version{2024-12-29}
   @syntax{(g:simple-action-parameter-type object) => vtype}
   @argument[object]{a @class{g:simple-action} object}
-  @argument[vtype]{a @class{g:variant-type} instance}
+  @argument[vtype]{a @class{g:variant-type} parameter type}
   @begin{short}
     Accessor of the @slot[g:simple-action]{parameter-type} slot of the
     @class{g:simple-action} class.
@@ -238,25 +238,24 @@ lambda (action value)    :run-last
   @see-class{g:simple-action}
   @see-class{g:variant-type}")
 
-;;; --- simple-action-state ----------------------------------------------------
+;;; --- g:simple-action-state --------------------------------------------------
 
 #+liber-documentation
 (setf (documentation (liber:slot-documentation "state" 'simple-action) t)
- "The @code{state} property of type @type{g:variant} (Read / Write / Construct)
-  @br{}
-  The state of the action, or @code{nil} if the action is stateless. @br{}
-  Allowed values: @code{GVariant<*>} @br{}
-  Default value: @code{nil}")
+ "The @code{state} property of type @symbol{g:variant}
+  (Read / Write / Construct) @br{}
+  The state of the action, or the @code{cffi:null-pointer} value if the action
+  is stateless.")
 
 #+liber-documentation
 (setf (liber:alias-for-function 'simple-action-state)
       "Accessor"
       (documentation 'simple-action-state 'function)
- "@version{2022-12-26}
+ "@version{2024-12-29}
   @syntax{(g:simple-action-state object) => value}
   @syntax{(setf (g:simple-action-state object) value)}
   @argument[object]{a @class{g:simple-action} object}
-  @argument[value]{a @type{g:variant} value for the state}
+  @argument[value]{a @symbol{g:variant} parameter for the state}
   @begin{short}
     Accessor of the @slot[g:simple-action]{state} slot of the
     @class{g:simple-action} class.
@@ -268,10 +267,10 @@ lambda (action value)    :run-last
   Instead, they should call the @fun{g:action-change-state} function to request
   the change.
   @see-class{g:simple-action}
-  @see-type{g:variant}
+  @see-symbol{g:variant}
   @see-function{g:action-change-state}")
 
-;;; --- simple-action-state-type -----------------------------------------------
+;;; --- g:simple-action-state-type ---------------------------------------------
 
 #+liber-documentation
 (setf (documentation (liber:slot-documentation "state-type" 'simple-action) t)
@@ -283,10 +282,10 @@ lambda (action value)    :run-last
 (setf (liber:alias-for-function 'simple-action-state-type)
       "Accessor"
       (documentation 'simple-action-state-type 'function)
- "@version{2022-12-26}
+ "@version{2024-12-29}
   @syntax{(g:simple-action-state-type object) => vtype}
   @argument[object]{a @class{g:simple-action} object}
-  @argument[vtype]{a @class{g:variant-type} instance}
+  @argument[vtype]{a @class{g:variant-type} parameter type}
   @begin{short}
     Accessor of the @slot[g:simple-action]{state-type} slot of the
     @class{g:simple-action} class.
@@ -297,24 +296,25 @@ lambda (action value)    :run-last
   @see-class{g:variant-type}")
 
 ;;; ----------------------------------------------------------------------------
-;;; g_simple_action_new ()
+;;; g_simple_action_new
 ;;; ----------------------------------------------------------------------------
 
 (defun simple-action-new (name vtype)
  #+liber-documentation
- "@version{2022-12-26}
+ "@version{2024-12-29}
   @argument[name]{a string with the name of the action}
-  @argument[vtype]{a @class{g:variant-type} type or a type string for the
-    parameter to the activate function}
-  @return{A new @class{g:simple-action} object.}
+  @argument[vtype]{a @class{g:variant-type} parameter type or a type string for
+    the parameter to the activate function}
+  @return{The new @class{g:simple-action} object.}
   @begin{short}
     Creates a new action.
   @end{short}
   The created action is stateless. See the @fun{g:simple-action-new-stateful}
   function for a stateful action.
-  @begin[Note]{dictionary}
+  @begin[Notes]{dictionary}
     A type string for the @arg{vtype} argument is converted to the
-    @class{g:variant-type} type with the @fun{g:variant-type-new} function.
+    @class{g:variant-type} parameter type with the @fun{g:variant-type-new}
+    function.
   @end{dictionary}
   @begin[Examples]{dictionary}
     A simple action with no parameter type.
@@ -341,73 +341,71 @@ lambda (action value)    :run-last
   @see-class{g:variant-type}
   @see-function{g:simple-action-new-stateful}
   @see-function{g:variant-type-new}"
-  (if (stringp vtype)
-      (let ((vtype1 (glib:variant-type-new vtype)))
-        (make-instance 'simple-action
-                       :name name
-                       :parameter-type vtype1))
-      (make-instance 'simple-action
-                     :name name
-                     :parameter-type vtype)))
+  (let ((vtype1 (if (stringp vtype)
+                    (glib:variant-type-new vtype)
+                    vtype)))
+    (make-instance 'simple-action
+                   :name name
+                   :parameter-type vtype1)))
 
 (export 'simple-action-new)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_simple_action_new_stateful ()
+;;; g_simple_action_new_stateful
 ;;; ----------------------------------------------------------------------------
 
 (defun simple-action-new-stateful (name vtype state)
  #+liber-documentation
- "@version{2022-12-26}
+ "@version{2024-12-29}
   @argument[name]{a string with the name of the action}
-  @argument[vtype]{a @class{g:variant-type} type or a type string of the
-    parameter to the activate function}
-  @argument[state]{an initial @symbol{g:variant} state of the action}
-  @return{A new @class{g:simple-action} object.}
+  @argument[vtype]{a @class{g:variant-type} parameter type or a type string for
+    the parameter to the activate function}
+  @argument[state]{a @symbol{g:variant} parameter for the initial state of the
+    action}
+  @return{The new @class{g:simple-action} object.}
   @begin{short}
     Creates a new stateful action.
   @end{short}
   The @arg{state} argument is the initial state of the action. All future state
-  values must have the same @class{g:variant-type} type as the initial state.
-  @begin[Note]{dictionary}
+  values must have the same @class{g:variant-type} parameter type as the initial
+  state.
+  @begin[Notes]{dictionary}
     A type string for the @arg{vtype} argument is converted to the
-    @class{g:variant-type} type with the @fun{g:variant-type-new} function.
+    @class{g:variant-type} parameter type with the @fun{g:variant-type-new}
+    function.
   @end{dictionary}
   @see-class{g:simple-action}
-  @see-type{g:variant}
+  @see-symbol{g:variant}
   @see-class{g:variant-type}
   @see-function{g:simple-action-new}
   @see-function{g:variant-type-new}"
-  (if (stringp vtype)
-      (let ((vtype1 (glib:variant-type-new vtype)))
-        (make-instance 'simple-action
-                       :name name
-                       :parameter-type vtype1
-                       :state state))
-      (make-instance 'simple-action
-                     :name name
-                     :parameter-type vtype
-                     :state state)))
+  (let ((vtype1 (if (stringp vtype)
+                    (glib:variant-type-new vtype)
+                    vtype)))
+    (make-instance 'simple-action
+                   :name name
+                   :parameter-type vtype1
+                   :state state)))
 
 (export 'simple-action-new-stateful)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_simple_action_set_state_hint ()
+;;; g_simple_action_set_state_hint
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_simple_action_set_state_hint" simple-action-set-state-hint)
     :void
  #+liber-documentation
- "@version{#2022-12-26}
+ "@version{#2024-12-29}
   @argument[action]{a @class{g:simple-action} object}
-  @argument[hint]{a @type{g:variant} value representing the state hint}
+  @argument[hint]{a @symbol{g:variant} parameter representing the state hint}
   @begin{short}
     Sets the state hint for the action.
   @end{short}
   See the @fun{g:action-state-hint} function for more information about action
   state hints.
   @see-class{g:simple-action}
-  @see-type{g:variant}
+  @see-symbol{g:variant}
   @see-function{g:action-state-hint}"
   (action (gobject:object simple-action))
   (hint (:pointer (:struct glib:variant))))

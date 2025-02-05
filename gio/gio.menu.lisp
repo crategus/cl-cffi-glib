@@ -62,7 +62,7 @@
 ;;;     g_menu_item_set_label
 ;;;     g_menu_item_set_icon
 ;;;     g_menu_item_set_action_and_target_value
-;;;     g_menu_item_set_action_and_target
+;;;     g_menu_item_set_action_and_target                   not implemented
 ;;;     g_menu_item_set_detailed_action
 ;;;     g_menu_item_set_section
 ;;;     g_menu_item_set_submenu
@@ -71,7 +71,7 @@
 ;;;     g_menu_item_get_attribute
 ;;;     g_menu_item_get_link
 ;;;     g_menu_item_set_attribute_value
-;;;     g_menu_item_set_attribute
+;;;     g_menu_item_set_attribute                           not implemented
 ;;;     g_menu_item_set_link
 ;;;
 ;;; Object Hierarchy
@@ -97,12 +97,12 @@
 
 #+liber-documentation
 (setf (documentation 'menu 'type)
- "@version{2023-8-2}
+ "@version{2024-12-30}
   @begin{short}
-    The @sym{g:menu} class is an implementation of the abstract
+    The @class{g:menu} class is an implementation of the abstract
     @class{g:menu-model} class.
   @end{short}
-  You populate a @sym{g:menu} object by adding @class{g:menu-item} objects to
+  You populate a @class{g:menu} object by adding @class{g:menu-item} objects to
   it.
 
   There are some convenience functions to allow you to directly add items,
@@ -122,8 +122,8 @@
 
 (defun menu-new ()
  #+liber-documentation
- "@version{#2022-12-29}
-  @return{A new @class{g:menu} object.}
+ "@version{2024-12-30}
+  @return{The new @class{g:menu} object.}
   @short{Creates a new @class{g:menu} object.}
   The new menu has no items.
   @see-class{g:menu}"
@@ -137,7 +137,7 @@
 
 (cffi:defcfun ("g_menu_freeze" menu-freeze) :void
  #+liber-documentation
- "@version{#2022-12-29}
+ "@version{2024-12-30}
   @argument[menu]{a @class{g:menu} object}
   @begin{short}
     Marks the menu as frozen.
@@ -157,19 +157,22 @@
 ;;; g_menu_insert
 ;;; ----------------------------------------------------------------------------
 
+;; TODO: Consider to combine the g:menu-insert, g:menu-append and g:menu-prepend
+;; functions in one g:menu-add function.
+
 (cffi:defcfun ("g_menu_insert" %menu-insert) :void
   (menu (gobject:object menu))
-  (position :int)
+  (pos :int)
   (label :string)
   (action :string))
 
-(defun menu-insert (menu position label action)
+(defun menu-insert (menu pos label action)
  #+liber-documentation
- "@version{#2022-12-29}
+ "@version{2024-12-30}
   @argument[menu]{a @class{g:menu} object}
-  @argument[position]{an integer with the position at which to insert the item}
+  @argument[pos]{an integer with the position at which to insert the menu item}
   @argument[label]{a string with the section label, or @code{nil}}
-  @argument[action]{the detailed action string, or @code{nil}}
+  @argument[action]{a detailed action string, or @code{nil}}
   @begin{short}
     Convenience function for inserting a normal menu item into the menu.
   @end{short}
@@ -179,7 +182,7 @@
   @see-function{g:menu-item-new}
   @see-function{g:menu-insert-item}"
   (%menu-insert menu
-                position
+                pos
                 (or label (cffi:null-pointer))
                 (or action (cffi:null-pointer))))
 
@@ -196,7 +199,7 @@
 
 (defun menu-prepend (menu label action)
  #+liber-documentation
- "@version{#2022-12-29}
+ "@version{2024-12-30}
   @argument[menu]{a @class{g:menu} object}
   @argument[label]{a string with the section label, or @code{nil}}
   @argument[action]{a detailed action string, or @code{nil}}
@@ -226,7 +229,7 @@
 
 (defun menu-append (menu label action)
  #+liber-documentation
- "@version{#2022-12-29}
+ "@version{2024-12-30}
   @argument[menu]{a @class{g:menu} object}
   @argument[label]{a string with the section label, or @code{nil}}
   @argument[action]{a detailed action string, or @code{nil}}
@@ -249,11 +252,14 @@
 ;;; g_menu_insert_item
 ;;; ----------------------------------------------------------------------------
 
+;; TODO: Consider to combine the g:menu-insert-item, g:menu-append-item and
+;; g:menu-prepend-item functions in one g:menu-add-item function.
+
 (cffi:defcfun ("g_menu_insert_item" menu-insert-item) :void
  #+liber-documentation
- "@version{#2022-12-29}
+ "@version{2024-12-30}
   @argument[menu]{a @class{g:menu} object}
-  @argument[position]{an integer with the position at which to insert the item}
+  @argument[pos]{an integer with the position at which to insert @arg{item}}
   @argument[item]{a @class{g:menu-item} object to insert}
   @begin{short}
     Inserts a menu item into the menu.
@@ -265,8 +271,7 @@
 
   This means that @arg{item} is essentially useless after the insertion occurs.
   Any changes you make to it are ignored unless it is inserted again, at which
-  point its updated values will be copied. You should probably just free
-  @arg{item} once you are done.
+  point its updated values will be copied.
 
   There are many convenience functions to take care of common cases. See the
   @fun{g:menu-insert}, @fun{g:menu-insert-section} and
@@ -278,7 +283,7 @@
   @see-function{g:menu-insert-section}
   @see-function{g:menu-insert-submenu}"
   (menu (gobject:object menu))
-  (position :int)
+  (pos :int)
   (item (gobject:object menu-item)))
 
 (export 'menu-insert-item)
@@ -289,7 +294,7 @@
 
 (cffi:defcfun ("g_menu_append_item" menu-append-item) :void
  #+liber-documentation
- "@version{#2022-12-29}
+ "@version{2024-12-30}
   @argument[menu]{a @class{g:menu} object}
   @argument[item]{a @class{g:menu-item} object to append}
   @begin{short}
@@ -310,7 +315,7 @@
 
 (cffi:defcfun ("g_menu_prepend_item" menu-prepend-item) :void
  #+liber-documentation
- "@version{#2022-12-29}
+ "@version{2024-12-30}
   @argument[menu]{a @class{g:menu} object}
   @argument[item]{a @class{g:menu-item} object to prepend}
   @begin{short}
@@ -329,17 +334,20 @@
 ;;; g_menu_insert_section
 ;;; ----------------------------------------------------------------------------
 
+;; TODO: Consider to combine the g:menu-insert-section, g:menu-append-section
+;; and g:menu-prepend-section functions in one g:menu-add-section function.
+
 (cffi:defcfun ("g_menu_insert_section" %menu-insert-section) :void
   (menu (gobject:object menu))
-  (position :int)
+  (pos :int)
   (label :string)
   (section (gobject:object menu-model)))
 
-(defun menu-insert-section (menu position label section)
+(defun menu-insert-section (menu pos label section)
  #+liber-documentation
- "@version{#2022-12-29}
+ "@version{2024-12-30}
   @argument[menu]{a @class{g:menu} object}
-  @argument[position]{an integer with the position at which to insert the item}
+  @argument[pos]{an integer with the position at which to insert @arg{section}}
   @argument[label]{a string with the section label, or @code{nil}}
   @argument[section]{a @class{g:menu-model} object with the items of the
     section}
@@ -353,7 +361,7 @@
   @see-function{g:menu-item-new-section}
   @see-function{g:menu-insert-item}"
   (%menu-insert-section menu
-                        position
+                        pos
                         (or label (cffi:null-pointer))
                         section))
 
@@ -370,14 +378,13 @@
 
 (defun menu-prepend-section (menu label section)
  #+liber-documentation
- "@version{#2022-12-29}
+ "@version{2024-12-30}
   @argument[menu]{a @class{g:menu} object}
   @argument[label]{a string with the section label, or @code{nil}}
   @argument[section]{a @class{g:menu-model} object with the items of the
     section}
   @begin{short}
-    Convenience function for prepending a section menu item to the start of
-    the menu.
+    Convenience function for prepending a section menu to the start of the menu.
   @end{short}
   Combine the @fun{g:menu-item-new-section} and @fun{g:menu-insert-item}
   functions for a more flexible alternative.
@@ -402,14 +409,13 @@
 
 (defun menu-append-section (menu label section)
  #+liber-documentation
- "@version{#2022-12-29}
+ "@version{2024-12-30}
   @argument[menu]{a @class{g:menu} object}
   @argument[label]{a string with the section label, or @code{nil}}
   @argument[section]{a @class{g:menu-model} object with the items of the
     section}
   @begin{short}
-    Convenience function for appending a section menu item to the emd of
-    the menu.
+    Convenience function for appending a section menu to the emd of the menu.
   @end{short}
   Combine the @fun{g:menu-item-new-section} and @fun{g:menu-insert-item}
   functions for a more flexible alternative.
@@ -424,6 +430,43 @@
 (export 'menu-append-section)
 
 ;;; ----------------------------------------------------------------------------
+;;; g_menu_insert_submenu
+;;; ----------------------------------------------------------------------------
+
+;; TODO: Consider to combine the g:menu-insert-submenu, g:menu-append-submenu
+;; and g:menu-prepend-submenu functions in one g:menu-add-submenu function.
+
+(cffi:defcfun ("g_menu_insert_submenu" %menu-insert-submenu) :void
+  (menu (gobject:object menu))
+  (pos :int)
+  (label :string)
+  (submenu (gobject:object menu-model)))
+
+(defun menu-insert-submenu (menu pos label submenu)
+ #+liber-documentation
+ "@version{2024-12-30}
+  @argument[menu]{a @class{g:menu} object}
+  @argument[pos]{an integer with the position at which to insert @arg{submenu}}
+  @argument[label]{a string with the section label, or @code{nil}}
+  @argument[submenu]{a @class{g:menu-model} object with the items of the
+    submenu}
+  @begin{short}
+    Convenience function for inserting a submenu into the menu.
+  @end{short}
+  Combine the @fun{g:menu-item-new-submenu} and @fun{g:menu-insert-item}
+  functions for a more flexible alternative.
+  @see-class{g:menu}
+  @see-class{g:menu-model}
+  @see-function{g:menu-item-new-submenu}
+  @see-function{g:menu-insert-item}"
+  (%menu-insert-submenu menu
+                        pos
+                        (or label (cffi:null-pointer))
+                        submenu))
+
+(export 'menu-insert-submenu)
+
+;;; ----------------------------------------------------------------------------
 ;;; g_menu_append_submenu
 ;;; ----------------------------------------------------------------------------
 
@@ -434,14 +477,13 @@
 
 (defun menu-append-submenu (menu label submenu)
  #+liber-documentation
- "@version{#2022-12-29}
+ "@version{2024-12-30}
   @argument[menu]{a @class{g:menu} object}
   @argument[label]{a string with the section label, or @code{nil}}
   @argument[submenu]{a @class{g:menu-model} object with the items of the
     submenu}
   @begin{short}
-    Convenience function for appending a submenu menu item to the end of the
-    menu.
+    Convenience function for appending a submenu to the end of the menu.
   @end{short}
   Combine the @fun{g:menu-item-new-submenu} and @fun{g:menu-insert-item}
   functions for a more flexible alternative.
@@ -449,43 +491,11 @@
   @see-class{g:menu-model}
   @see-function{g:menu-item-new-submenu}
   @see-function{g:menu-insert-item}"
-  (%menu-append-submenu menu (or label (cffi:null-pointer)) submenu))
-
-(export 'menu-append-submenu)
-
-;;; ----------------------------------------------------------------------------
-;;; g_menu_insert_submenu
-;;; ----------------------------------------------------------------------------
-
-(cffi:defcfun ("g_menu_insert_submenu" %menu-insert-submenu) :void
-  (menu (gobject:object menu))
-  (position :int)
-  (label :string)
-  (submenu (gobject:object menu-model)))
-
-(defun menu-insert-submenu (menu position label submenu)
- #+liber-documentation
- "@version{#2022-12-29}
-  @argument[menu]{a @class{g:menu} object}
-  @argument[position]{an integer with the position at which to insert the item}
-  @argument[label]{a string with the section label, or @code{nil}}
-  @argument[submenu]{a @class{g:menu-model} object with the items of the
-    submenu}
-  @begin{short}
-    Convenience function for inserting a submenu menu item into the menu.
-  @end{short}
-  Combine the @fun{g:menu-item-new-submenu} and @fun{g:menu-insert-item}
-  functions for a more flexible alternative.
-  @see-class{g:menu}
-  @see-class{g:menu-model}
-  @see-function{g:menu-item-new-submenu}
-  @see-function{g:menu-insert-item}"
-  (%menu-insert-submenu menu
-                        position
+  (%menu-append-submenu menu
                         (or label (cffi:null-pointer))
                         submenu))
 
-(export 'menu-insert-submenu)
+(export 'menu-append-submenu)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_menu_prepend_submenu
@@ -498,14 +508,13 @@
 
 (defun menu-prepend-submenu (menu label submenu)
  #+liber-documentation
- "@version{#2022-12-29}
+ "@version{2024-12-30}
   @argument[menu]{a @class{g:menu} object}
   @argument[label]{a string with the section label, or @code{nil}}
   @argument[submenu]{a @class{g:menu-model} object with the items of the
     submenu}
   @begin{short}
-    Convenience function for prepending a submenu menu item to the start of the
-    menu.
+    Convenience function for prepending a submenu to the start of the menu.
   @end{short}
   Combine the @fun{g:menu-item-new-submenu} and @fun{g:menu-insert-item}
   functions for a more flexible alternative.
@@ -525,23 +534,22 @@
 
 (cffi:defcfun ("g_menu_remove" menu-remove) :void
  #+liber-documentation
- "@version{#2022-12-29}
+ "@version{2024-12-30}
   @argument[menu]{a @class{g:menu} object}
-  @argument[position]{an integer with the position of the menu item to remove}
+  @argument[pos]{an integer with the position of the menu item to remove}
   @begin{short}
     Removes an item from the menu.
   @end{short}
-  The argument @arg{position} gives the index of the menu item to remove.
-
-  It is an error if @arg{position} is not in the range from 0 to one less than
-  the number of menu items in the menu.
+  The @arg{pos} argument gives the index of the menu item to remove. It is an
+  error if @arg{pos} is not in the range from 0 to one less than the number of
+  menu items in the menu.
 
   It is not possible to remove items by identity since items are added to the
   menu simply by copying their links and attributes, that is, identity of the
   menu item itself is not preserved.
   @see-class{g:menu}"
   (menu (gobject:object menu))
-  (position :int))
+  (pos :int))
 
 (export 'menu-remove)
 
@@ -551,7 +559,7 @@
 
 (cffi:defcfun ("g_menu_remove_all" menu-remove-all) :void
  #+liber-documentation
- "@version{#2022-12-29}
+ "@version{2024-12-30}
   @begin{short}
     Removes all items in the menu.
   @end{short}
@@ -573,12 +581,15 @@
 
 #+liber-documentation
 (setf (documentation 'menu-item 'type)
- "@version{#2022-12-29}
+ "@version{2024-12-30}
   @begin{short}
-    The @sym{g:menu-item} object is an opaque structure type.
+    The @class{g:menu-item} object is an opaque structure type.
   @end{short}
   You must access it using the API functions.
   @see-constructor{g:menu-item-new}
+  @see-constructor{g:menu-item-new-section}
+  @see-constructor{g:menu-item-new-submenu}
+  @see-constructor{g:menu-item-new-for-model}
   @see-class{g:menu}")
 
 ;;; ----------------------------------------------------------------------------
@@ -592,17 +603,17 @@
 
 (defun menu-item-new (label action)
  #+liber-documentation
- "@version{#2022-12-29}
+ "@version{2024-12-30}
   @argument[label]{a string with the section label, or @code{nil}}
   @argument[action]{a detailed action string, or @code{nil}}
-  @return{A new @class{g:menu-item} object.}
+  @return{The new @class{g:menu-item} object.}
   @begin{short}
     Creates a new @class{g:menu-item} object.
   @end{short}
-  If @arg{label} is non-@code{nil} it is used to set the @code{\"label\"}
+  If @arg{label} is not @code{nil} it is used to set the @code{\"label\"}
   attribute of the new menu item.
 
-  If @arg{action} is non-@code{nil} it is used to set the @code{\"action\"} and
+  If @arg{action} is not @code{nil} it is used to set the @code{\"action\"} and
   possibly the @code{\"target\"} attribute of the new item. See the
   @fun{g:menu-item-set-detailed-action} function for more information.
   @see-class{g:menu-item}
@@ -623,11 +634,11 @@
 
 (defun menu-item-new-section (label section)
  #+liber-documentation
- "@version{#2022-12-29}
+ "@version{2024-12-30}
   @argument[label]{a string with the section label, or @code{nil}}
   @argument[section]{a @class{g:menu-model} object with the menu items of the
     section}
-  @return{A new @class{g:menu-item} object.}
+  @return{The new @class{g:menu-item} object.}
   @begin{short}
     Creates a new @class{g:menu-item} object representing a section.
   @end{short}
@@ -635,23 +646,23 @@
   @fun{g:menu-item-set-section} functions.
 
   The effect of having one menu appear as a section of another is exactly as
-  it sounds: the items from section become a direct part of the menu that
-  @arg{item} is added to.
+  it sounds: the items from @arg{section} become a direct part of the menu that
+  the items are added to.
 
   Visual separation is typically displayed between two non-empty sections. If
-  label is non-@code{nil} then it will be encorporated into this visual
+  @arg{label} is not @code{nil} then it will be encorporated into this visual
   indication. This allows for labeled subsections of a menu.
+  @begin[Examples]{dictionary}
+    As a simple example, consider a typical \"Edit\" menu from a simple program.
+    It probably contains an \"Undo\" and \"Redo\" item, followed by a separator,
+    followed by \"Cut\", \"Copy\" and \"Paste\".
 
-  As a simple example, consider a typical \"Edit\" menu from a simple program.
-  It probably contains an \"Undo\" and \"Redo\" item, followed by a separator,
-  followed by \"Cut\", \"Copy\" and \"Paste\".
-
-  This would be accomplished by creating three @class{g:menu} objects. The first
-  would be populated with the \"Undo\" and \"Redo\" items, and the second with
-  the \"Cut\", \"Copy\" and \"Paste\" items. The first and second menus would
-  then be added as submenus of the third. In XML format, this would look
-  something like the following:
-  @begin{pre}
+    This would be accomplished by creating three @class{g:menu} objects. The
+    first would be populated with the \"Undo\" and \"Redo\" items, and the
+    second with the \"Cut\", \"Copy\" and \"Paste\" items. The first and second
+    menus would then be added as submenus of the third. In XML format, this
+    would look something like the following:
+    @begin{pre}
 <menu id='edit-menu'>
   <section>
     <item label='Undo'/>
@@ -663,14 +674,14 @@
     <item label='Paste'/>
   </section>
 </menu>
-  @end{pre}
-  The following example is exactly equivalent. It is more illustrative of the
-  exact relationship between the menus and items, keeping in mind that the
-  'link' element defines a new menu that is linked to the containing one. The
-  style of the second example is more verbose and difficult to read, and
-  therefore not recommended except for the purpose of understanding what is
-  really going on.
-  @begin{pre}
+    @end{pre}
+    The following example is exactly equivalent. It is more illustrative of the
+    exact relationship between the menus and items, keeping in mind that the
+    @code{link} element defines a new menu that is linked to the containing one.
+    The style of the second example is more verbose and difficult to read, and
+    therefore not recommended except for the purpose of understanding what is
+    really going on.
+    @begin{pre}
 <menu id='edit-menu'>
   <item>
     <link name='section'>
@@ -686,7 +697,8 @@
     </link>
   </item>
 </menu>
-  @end{pre}
+    @end{pre}
+  @end{dictionary}
   @see-class{g:menu-item}
   @see-function{g:menu-item-new}
   @see-function{g:menu-item-set-section}"
@@ -705,11 +717,11 @@
 
 (defun menu-item-new-submenu (label submenu)
  #+liber-documentation
- "@version{#2022-12-29}
+ "@version{2024-12-30}
   @argument[label]{a string with the section label, or @code{nil}}
   @argument[submenu]{a @class{g:menu-model} object with the menu items of the
     submenu}
-  @return{A new @class{g:menu-item} object.}
+  @return{The new @class{g:menu-item} object.}
   @begin{short}
     Creates a new @class{g:menu-item} object representing a submenu.
   @end{short}
@@ -730,10 +742,10 @@
 (cffi:defcfun ("g_menu_item_new_from_model" menu-item-new-from-model)
     (gobject:object menu-item :return)
  #+liber-documentation
- "@version{#2022-12-29}
+ "@version{2024-12-30}
   @argument[model]{a @class{g:menu-model} object}
-  @argument[index]{an integer with the index of an menu item in @arg{model}}
-  @return{A new @class{g:menu-item} object.}
+  @argument[index]{an integer with the index of a menu item in @arg{model}}
+  @return{The new @class{g:menu-item} object.}
   @begin{short}
     Creates a @class{g:menu-item} object as an exact copy of an existing menu
     item in a @class{g:menu-model} object.
@@ -752,20 +764,22 @@
 ;;; g_menu_item_set_label
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcfun ("g_menu-item_set_label" %menu-item-set-label) :void
+(cffi:defcfun ("g_menu_item_set_label" %menu-item-set-label) :void
   (item (gobject:object menu-item))
   (label :string))
 
 (defun menu-item-set-label (item label)
  #+liber-documentation
- "@version{#2022-12-29}
+ "@version{2024-12-30}
   @argument[item]{a @class{g:menu-item} object}
-  @argument[label]{a string with the label to set, or @code{nil}}
+  @argument[label]{a string with the @code{\"label\"} attribute to set, or
+    @code{nil}}
   @begin{short}
     Sets or unsets the @code{\"label\"} attribute of the menu item.
   @end{short}
-  If @arg{label} is non-@code{nil} it is used as the label for the menu item.
-  If it is @code{nil} then the label attribute is unset.
+  If @arg{label} is not @code{nil} it is used as the @code{\"label\"} attribute
+  for the menu item. If it is @code{nil} then the @code{\"label\"} attribute is
+  unset.
   @see-class{g:menu-item}"
   (%menu-item-set-label item (or label (cffi:null-pointer))))
 
@@ -777,21 +791,22 @@
 
 (cffi:defcfun ("g_menu_item_set_icon" menu-item-set-icon) :void
  #+liber-documentation
- "@version{#2022-12-29}
+ "@version{2024-12-30}
   @argument[item]{a @class{g:menu-item} object}
   @argument[icon]{a @class{g:icon} object}
   @begin{short}
-    Sets or unsets the icon on the menu item.
+    Sets or unsets the @code{\"icon\"} attribute on the menu item.
   @end{short}
   This call is the same as calling the @fun{g:icon-serialize} function and using
   the result as the value to the @fun{g:menu-item-attribute-value} function
-  for \"icon\".
+  for the @code{\"icon\"} attribute.
 
   This API is only intended for use with \"noun\" menu items. Things like
   bookmarks or applications in an \"Open With\" menu. Do not use it on menu
   items that correspond to verbs, such as the stock icons for 'Save' or 'Quit'.
 
-  If the @arg{icon} argument is @code{nil} then the icon is unset.
+  If the @arg{icon} argument is @code{nil} then the @code{\"icon\"} attribute
+  is unset.
   @see-class{g:menu-item}
   @see-function{g:icon-serialize}
   @see-function{g:menu-item-attribute-value}"
@@ -812,10 +827,11 @@
 
 (defun menu-item-set-action-and-target-value (item action value)
  #+liber-documentation
- "@version{#2022-12-29}
+ "@version{2024-12-30}
   @argument[item]{a @class{g:menu-item} object}
-  @argument[action]{a string with the name of the action for this menu item}
-  @argument[value]{a @symbol{g:variant} instance to use as the action target}
+  @argument[action]{a string with the name of the @code{\"action\"} attribute
+    for this menu item}
+  @argument[value]{a @symbol{g:variant} parameter to use as the action target}
   @begin{short}
     Sets or unsets the @code{\"action\"} and @code{\"target\"} attributes of
     the menu item.
@@ -823,15 +839,15 @@
   If @arg{action} is @code{nil} then both the @code{\"action\"} and
   @code{\"target\"} attributes are unset, and @arg{value} is ignored.
 
-  If @arg{action} is non-@code{nil} then the @code{\"action\"} attribute is set.
+  If @arg{action} is not @code{nil} then the @code{\"action\"} attribute is set.
   The @code{\"target\"} attribute is then set to the value of @arg{value} if it
-  is non-@code{nil} or unset otherwise.
+  is not @code{nil} or unset otherwise.
 
   Normal menu items, that is not submenu, section or other custom item types,
   are expected to have the @code{\"action\"} attribute set to identify the
   action that they are associated with. The state type of the action help to
-  determine the disposition of the menu item. See the @class{g:action} and
-  @class{g:action-group} documentation for an overview of actions.
+  determine the disposition of the menu item. See the @class{g:action}
+  documentation for an overview of actions.
 
   In general, clicking on the menu item will result in activation of the named
   action with the @code{\"target\"} attribute given as the parameter to the
@@ -851,12 +867,11 @@
   item should be marked as 'selected' when the string state is equal to the
   value of the target property.
 
-  See the @fun{g:menu-item-set-action-and-target} or
-  @fun{g:menu-item-set-detailed-action} functions for two equivalent calls that
-  are probably more convenient for most uses.
+  See the  @fun{g:menu-item-set-detailed-action} function for a equivalent call
+  that is probably more convenient for most uses.
   @see-class{g:menu-item}
+  @see-class{g:action}
   @see-symbol{g:variant}
-  @see-function{g:menu-item-set-action-and-target}
   @see-function{g:menu-item-set-detailed-action}"
   (%menu-item-set-action-and-target-value item
                                           (or action (cffi:null-pointer))
@@ -865,44 +880,9 @@
 (export 'menu-item-set-action-and-target-value)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_menu_item_set_action_and_target ()
-;;;
-;;; void g_menu_item_set_action_and_target (GMenuItem *menu_item,
-;;;                                         const gchar *action,
-;;;                                         const gchar *format_string,
-;;;                                         ...);
+;;; g_menu_item_set_action_and_target
 ;;;
 ;;; Sets or unsets the "action" and "target" attributes of menu_item.
-;;;
-;;; If action is NULL then both the "action" and "target" attributes are unset
-;;; (and format_string is ignored along with the positional parameters).
-;;;
-;;; If action is non-NULL then the "action" attribute is set. format_string is
-;;; then inspected. If it is non-NULL then the proper position parameters are
-;;; collected to create a GVariant instance to use as the target value. If it is
-;;; NULL then the positional parameters are ignored and the "target" attribute
-;;; is unset.
-;;;
-;;; See also g_menu_item_set_action_and_target_value() for an equivalent call
-;;; that directly accepts a GVariant. See g_menu_item_set_detailed_action() for
-;;; a more convenient version that works with string-typed targets.
-;;;
-;;; See also g_menu_item_set_action_and_target_value() for a description of the
-;;; semantics of the action and target attributes.
-;;;
-;;; menu_item :
-;;;     a GMenuItem
-;;;
-;;; action :
-;;;     the name of the action for this item. [allow-none]
-;;;
-;;; format_string :
-;;;     a GVariant format string. [allow-none]
-;;;
-;;; ... :
-;;;     positional parameters, as per format_string
-;;;
-;;; Since 2.32
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -912,22 +892,20 @@
 (cffi:defcfun ("g_menu_item_set_detailed_action" menu-item-set-detailed-action)
     :void
  #+liber-documentation
- "@version{#2022-12-29}
+ "@version{2024-12-30}
   @argument[item]{a @class{g:menu-item} object}
   @argument[action]{a detailed action string}
   @begin{short}
-    Sets the @code{\"action\"} and possibly the @code{\"target\"} attribute of
-    the menu item.
+    Sets the @code{\"action\"} attribute and possibly the @code{\"target\"}
+    attribute of the menu item.
   @end{short}
   The format of @arg{action} is the same format parsed by the
   @fun{g:action-parse-detailed-name} function.
 
-  See the @fun{g:menu-item-set-action-and-target} or
-  @fun{g:menu-item-set-action-and-target-value} functions for more flexible,
-  but slightly less convenient, alternatives.
-
-  See also the @fun{g:menu-item-set-action-and-target-value} function for a
-  description of the semantics of the action and target attributes.
+  See the @fun{g:menu-item-set-action-and-target-value} function for a more
+  flexible, but slightly less convenient, alternative. See also the
+  @fun{g:menu-item-set-action-and-target-value} function  for a description of
+  the semantics of the @code{\"action\"} and @code{\"target\"} attributes.
   @see-class{g:menu-item}
   @see-function{g:action-parse-detailed-name}
   @see-function{g:menu-item-set-action-and-target}
@@ -947,11 +925,12 @@
 
 (defun menu-item-set-section (item section)
  #+liber-documentation
- "@version{#2022-12-29}
+ "@version{2024-12-30}
   @argument[item]{a @class{g:menu-item} object}
   @argument[section]{a @class{g:menu-model}, or @code{nil}}
   @begin{short}
-    Sets or unsets the \"section\" link of the menu item to @arg{section}.
+    Sets or unsets the @code{\"section\"} link of the menu item to
+    @arg{section}.
   @end{short}
   The effect of having one menu appear as a section of another is exactly as
   it sounds: the items from @arg{section} become a direct part of the menu that
@@ -974,13 +953,14 @@
 
 (defun menu-item-set-submenu (item submenu)
  #+liber-documentation
- "@version{#2022-12-29}
+ "@version{2024-12-30}
   @argument[item]{a @class{g:menu-item} object}
   @argument[submenu]{a @class{g:menu-model} object, or @code{nil}}
   @begin{short}
-    Sets or unsets the \"submenu\" link of the menu item to @arg{submenu}.
+    Sets or unsets the @code{\"submenu\"} link of the menu item to
+    @arg{submenu}.
   @end{short}
-  If @arg{submenu} is non-@code{nil}, it is linked to. If it is @code{nil} then
+  If @arg{submenu} is not @code{nil}, it is linked to. If it is @code{nil} then
   the link is unset.
 
   The effect of having one menu appear as a submenu of another is exactly as
@@ -1012,120 +992,56 @@
 
 (defun menu-item-attribute-value (item attribute &optional (vtype nil))
  #+liber-documentation
- "@version{#2022-12-29}
+ "@version{2024-12-30}
   @syntax{(g:menu-item-attribute-value item attribute) => value}
   @syntax{(g:menu-item-attribute-value item attribute vtype) => value}
   @syntax{(setf (g:menu-item-attribute-value item attribute) value)}
   @argument[item]{a @class{g:menu-item} object}
   @argument[attribute]{a string with the attribute name}
-  @argument[vtype]{the optional expected @class{g:variant-type} type or a type
-    string of the attribute}
-  @argument[value]{a @symbol{g:variant} value to use as the value, or
+  @argument[vtype]{an optional expected @class{g:variant-type} parameter type
+    or a type string for the the attribute}
+  @argument[value]{a @symbol{g:variant} parameter to use as the value, or
     @code{nil}}
   @begin{short}
-    The @sym{g:menu-item-attribute-value} function queries the named attribute
+    The @fun{g:menu-item-attribute-value} function queries the named attribute
     on the menu item.
   @end{short}
-  The @sym{(setf g:menu-item-attribute-value)} function sets or unsets an
-  attribute.
+  The @setf{g:menu-item-attribute-value} function sets or unsets an attribute.
 
-  If the argument @arg{vtype} is specified and the attribute does not have this
-  type, @code{nil} is returned. @code{Nil} is also returned if the attribute
+  If the @arg{vtype} argument is specified and the attribute does not have this
+  type, @code{nil} is returned. @code{nil} is also returned if the attribute
   simply does not exist.
 
   The attribute to set or unset is specified by @arg{attribute}. This can be
-  one of the standard attribute names \"label\", \"action\", \"target\", or a
-  custom attribute name. Attribute names are restricted to lowercase
-  characters, numbers and '-'. Furthermore, the names must begin with a
-  lowercase character, must not end with a '-', and must not contain
+  one of the standard attribute names @code{\"label\"}, @code{\"action\"},
+  @code{\"target\"}, or a custom attribute name. Attribute names are restricted
+  to lowercase characters, numbers and '-'. Furthermore, the names must begin
+  with a lowercase character, must not end with a '-', and must not contain
   consecutive dashes.
 
-  If @arg{value} is non-@code{nil} then it is used as the new value for the
+  If @arg{value} is not @code{nil} then it is used as the new value for the
   attribute. If @arg{value} is @code{nil} then the attribute is unset. If the
-  @symbol{g:variant} value is floating, it is consumed.
+  @symbol{g:variant} parameter is floating, it is consumed.
   @see-class{g:menu-item}
   @see-symbol{g:variant}
   @see-class{g:variant-type}"
-  (if (stringp vtype)
-      (let ((vtype1 (glib:variant-type-new vtype)))
-        (%menu-item-attribute-value item attribute vtype1))
-      (%menu-item-attribute-value item attribute vtype)))
+  (let ((vtype1 (if (stringp vtype)
+                    (glib:variant-type-new vtype)
+                    vtype)))
+    (%menu-item-attribute-value item attribute vtype1)))
 
 (export 'menu-item-attribute-value)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_menu_item_get_attribute ()
-;;;
-;;; gboolean g_menu_item_get_attribute (GMenuItem *menu_item,
-;;;                                     const gchar *attribute,
-;;;                                     const gchar *format_string,
-;;;                                     ...);
+;;; g_menu_item_get_attribute
 ;;;
 ;;; Queries the named attribute on menu_item.
-;;;
-;;; If the attribute exists and matches the GVariantType corresponding to
-;;; format_string then format_string is used to deconstruct the value into the
-;;; positional parameters and TRUE is returned.
-;;;
-;;; If the attribute does not exist, or it does exist but has the wrong type,
-;;; then the positional parameters are ignored and FALSE is returned.
-;;;
-;;; menu_item :
-;;;     a GMenuItem
-;;;
-;;; attribute :
-;;;     the attribute name to query
-;;;
-;;; format_string :
-;;;     a GVariant format string
-;;;
-;;; ... :
-;;;     positional parameters, as per format_string
-;;;
-;;; Returns :
-;;;     TRUE if the named attribute was found with the expected type
-;;;
-;;; Since 2.34
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_menu_item_set_attribute ()
-;;;
-;;; void g_menu_item_set_attribute (GMenuItem *menu_item,
-;;;                                 const gchar *attribute,
-;;;                                 const gchar *format_string,
-;;;                                 ...);
+;;; g_menu_item_set_attribute
 ;;;
 ;;; Sets or unsets an attribute on menu_item.
-;;;
-;;; The attribute to set or unset is specified by attribute. This can be one of
-;;; the standard attribute names G_MENU_ATTRIBUTE_LABEL,
-;;; G_MENU_ATTRIBUTE_ACTION, G_MENU_ATTRIBUTE_TARGET, or a custom attribute
-;;; name. Attribute names are restricted to lowercase characters, numbers and
-;;; '-'. Furthermore, the names must begin with a lowercase character, must not
-;;; end with a '-', and must not contain consecutive dashes.
-;;;
-;;; If format_string is non-NULL then the proper position parameters are
-;;; collected to create a GVariant instance to use as the attribute value. If it
-;;; is NULL then the positional parameterrs are ignored and the named attribute
-;;; is unset.
-;;;
-;;; See also g_menu_item_set_attribute_value() for an equivalent call that
-;;; directly accepts a GVariant.
-;;;
-;;; menu_item :
-;;;     a GMenuItem
-;;;
-;;; attribute :
-;;;     the attribute to set
-;;;
-;;; format_string :
-;;;     a GVariant format string, or NULL. [allow-none]
-;;;
-;;; ... :
-;;;     positional parameters, as per format_string
-;;;
-;;; Since 2.32
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -1144,26 +1060,27 @@
 (cffi:defcfun ("g_menu_item_get_link" menu-item-link)
     (gobject:object menu-model :return)
  #+liber-documentation
- "@version{#2022-12-29}
+ "@version{2024-12-31}
   @syntax{(g:menu-item-link item link) => model}
   @syntax{(setf (g:menu-item-link item link) model)}
   @argument[item]{a @class{g:menu-item} object}
   @argument[link]{a string with the type of link to establish or unset}
-  @argument[model]{the @class{g:menu-model} object to link to, or @code{nil} to
+  @argument[model]{a @class{g:menu-model} object to link to, or @code{nil} to
     unset}
   @begin{short}
     The @sym{g:menu-item-link} function queries the named link on @arg{item}.
   @end{short}
-  The @sym{(set g:menu-item-link)} function creates a link from @arg{item} to
-  @arg{model} if non-@code{nil}, or unsets it.
+  The @setf{g:menu-item-link} function creates a link from @arg{item} to
+  @arg{model} if not @code{nil}, or unsets it.
 
   Links are used to establish a relationship between a particular menu item
-  and another menu. For example, \"submenu\" is used to associate a submenu with
-  a particular menu item, and \"section\" is used to create a section. Other
-  types of link can be used, but there is no guarantee that clients will be able
-  to make sense of them. Link types are restricted to lowercase characters,
-  numbers and '-'. Furthermore, the names must begin with a lowercase character,
-  must not end with a '-', and must not contain consecutive dashes.
+  and another menu. For example, the @code{\"submenu\"} attribute is used to
+  associate a submenu with a particular menu item, and the @code{\"section\"}
+  attribute is used to create a section. Other types of link can be used, but
+  there is no guarantee that clients will be able to make sense of them. Link
+  types are restricted to lowercase characters, numbers and '-'. Furthermore,
+  the names must begin with a lowercase character, must not end with a '-', and
+  must not contain consecutive dashes.
   @see-class{g:menu-item}
   @see-class{g:menu-model}"
   (item (gobject:object menu-item))
