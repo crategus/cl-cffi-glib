@@ -16,7 +16,7 @@
     (g:signal-connect app "command-line"
         (lambda (application cmdline)
           (declare (ignore application))
-          (let ((args (g:application-command-line-get-arguments cmdline)))
+          (let ((args (g:application-command-line-arguments cmdline)))
             (format t "Signal handler COMMAND-LINE~%")
             (format t "  arguments : ~a~%" args)
             ;; Return the exit status
