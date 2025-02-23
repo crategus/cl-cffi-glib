@@ -127,15 +127,16 @@
         (glib:free-stable-pointer data))
     (declare (ignorable class-name))
     (let* ((vtable (get-vtable-info interface-name))
-           (vtable-cstruct (vtable-info-cstruct-name vtable)))
-      (iter (for method in (vtable-info-methods vtable))
-            (for cb = (cffi:get-callback
-                          (vtable-method-info-callback-name method)))
-            (for slot-name = (vtable-method-info-slot-name method))
-            (setf (cffi:foreign-slot-value iface
-                                          `(:struct ,vtable-cstruct)
-                                           slot-name)
-                  cb)))))
+           (vtable-cstruct (when vtable (vtable-info-cstruct-name vtable))))
+      (when vtable
+        (iter (for method in (vtable-info-methods vtable))
+              (for cb = (cffi:get-callback
+                            (vtable-method-info-callback-name method)))
+              (for slot-name = (vtable-method-info-slot-name method))
+              (setf (cffi:foreign-slot-value iface
+                                            `(:struct ,vtable-cstruct)
+                                             slot-name)
+                    cb))))))
 
 (cffi:defcallback c-interface-init :void
     ((iface :pointer) (data :pointer))
@@ -154,7 +155,8 @@
                                      '(:struct interface-info) :interface-data)
             interface-info-ptr)
       (type-add-interface-static (glib:gtype name)
-                                 (glib:gtype interface) info))))
+                                 (glib:gtype interface)
+                                 info))))
 
 (defun add-interfaces (name)
   (let* ((subclass-info (get-subclass-info name))
@@ -483,6 +485,44 @@
 
 ;;; ----------------------------------------------------------------------------
 
+#|
+(cffi:defcstruct object-class
+  (:type-class (:pointer (:struct type-class)))
+  (:construct-properties :pointer)
+  (:constructor :pointer)
+  (:set-property :pointer)
+  (:get-property :pointer)
+  (:dispose :pointer)
+  (:finalize :pointer)
+  (:dispatch-properties-changed :pointer)
+  (:notify :pointer)
+  (:constructed :pointer)
+  (:pdummy :pointer :count 7))
+|#
+
+#+nil
+(define-vtable ("GObject" object)
+  (:skip type-class :pointer)
+  (:skip construct-properties :pointer)
+  ;; Virtual functions for GObject class
+  (:skip constructor :pointer)
+  (:skip set-property :pointer)
+  (:skip get-property :pointer)
+  (dispose (:void (object object)))
+  (finalize (:void (object object)))
+  (:skip dispatch-properties-changed :pointer)
+  (notify (:void (object object) (pspec :pointer)))
+  (constructed (:void (object object)))
+  (:skip dummy1 :pointer)
+  (:skip dummy2 :pointer)
+  (:skip dummy3 :pointer)
+  (:skip dummy4 :pointer)
+  (:skip dummy5 :pointer)
+  (:skip dummy6 :pointer)
+  (:skip dummy7 :pointer))
+
+;;; ----------------------------------------------------------------------------
+
 (defun class-init (cclass data)
   (declare (ignore data))
   (let* ((gname (glib:gtype-name (type-from-class cclass)))
@@ -491,11 +531,15 @@
     ;; Set SUBCLASS as the symbol for the GType
     ;; FIXME: This seems to be to late. Do this more early.
     (setf (glib:symbol-for-gtype gname) subclass)
+
     ;; Initialize the getter and setter methods for the object class
+    ;; Consider to generalize this to allow overriding the virtual functions
+    ;; of C classes.
     (setf (object-class-get-property cclass)
           (cffi:callback c-object-property-get)
           (object-class-set-property cclass)
           (cffi:callback c-object-property-set))
+
     ;; Install the properties for the object class
     (iter (for property in (subclass-info-properties subclass-info))
           (for pspec = (property->param-spec property))
@@ -550,6 +594,34 @@
                (call-gobject-constructor ,name nil nil)
                (object-has-reference object) t)))
      ,name))
+
+;;; ----------------------------------------------------------------------------
+
+(defun install-vtable (gname)
+
+    (let* ((class (type-class-ref gname))
+           (vtable (get-vtable-info gname))
+           (vtable-cstruct (when vtable (vtable-info-cstruct-name vtable))))
+
+      (format t "   gname : ~a~%" gname)
+      (format t "   class : ~a~%" class)
+      (format t "  vtable : ~a~%" vtable)
+      (format t " cstruct : ~a~%" vtable-cstruct)
+
+      (when vtable
+        (iter (for method in (vtable-info-methods vtable))
+              (for cb = (cffi:get-callback
+                            (vtable-method-info-callback-name method)))
+              (for slot-name = (vtable-method-info-slot-name method))
+
+              (format t "  method : ~a~%" method)
+              (format t "      cb : ~a~%" cb)
+              (format t "    slot : ~a~%" slot-name)
+
+              (setf (cffi:foreign-slot-value class
+                                            `(:struct ,vtable-cstruct)
+                                             slot-name)
+                    cb)))))
 
 ;;; ----------------------------------------------------------------------------
 
