@@ -332,7 +332,6 @@
            #:type-check-instance-type
            #:type-check-class-type
            #:type-name
-           #:type-from-name
            #:type-parent
            #:type-depth
            #:type-next-base
@@ -516,6 +515,9 @@
            #:object-set-data-full
            #:object-object-steal-data
            #:object-property
+           #:object-class-init
+           #:object-instance-init
+           #:object-install-vtable
 
            ;; Symbols from gobject.closures.lisp
            #:closure
