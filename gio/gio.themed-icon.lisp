@@ -1,12 +1,12 @@
 ;;; ----------------------------------------------------------------------------
 ;;; gio.themed-icon.lisp
 ;;;
-;;; The documentation of this file is taken from the GIO Reference Manual
-;;; Version 2.82 and modified to document the Lisp binding to the GIO library.
-;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
-;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
+;;; The documentation in this file is taken from the GIO Reference Manual
+;;; Version 2.82 and modified to document the Lisp binding to the GIO library,
+;;; see <http://www.gtk.org>. The API documentation of the Lisp binding is
+;;; available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2013 - 2024 Dieter Kaiser
+;;; Copyright (C) 2013 - 2025 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -242,12 +242,12 @@
 
 (defun themed-icon-new-with-default-fallbacks (name)
  #+liber-documentation
- "@version{2024-10-23}
+ "@version{2025-3-2}
   @argument[name]{a string containing an icon name}
   @return{The new @class{g:themed-icon} object.}
   @begin{short}
     Creates a new themed icon for @arg{name}, and all the names that can
-    be created by shortening iconname at '-' characters.
+    be created by shortening the icon name at '-' characters.
   @end{short}
   @begin[Examples]{dictionary}
     In the following example, @code{icon1} and @code{icon2} are equivalent:
