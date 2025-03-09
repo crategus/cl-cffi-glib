@@ -1,12 +1,12 @@
 ;;; ----------------------------------------------------------------------------
 ;;; glib.main-loop.lisp
 ;;;
-;;; The documentation of this file is taken from the GLib 2.82 Reference
-;;; Manual and modified to document the Lisp binding to the GLib library.
-;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
-;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
+;;; The documentation in this file is taken from the GLib 2.82 Reference
+;;; Manual and modified to document the Lisp binding to the GLib library,
+;;; see <http://www.gtk.org>. The API documentation of the Lisp binding is
+;;; available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2011 - 2024 Dieter Kaiser
+;;; Copyright (C) 2011 - 2025 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -1324,20 +1324,20 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 (cffi:defcfun ("g_timeout_add_full" %timeout-add-full) :uint
   (priority :int)
   (interval-milliseconds :uint)
-  (function :pointer)
+  (func :pointer)
   (data :pointer)
-  (destroy-notify :pointer))
+  (notify :pointer))
 
 (defun timeout-add (interval func &key (priority +priority-default+))
  #+liber-documentation
- "@version{2024-11-6}
-  @argument[interval]{an integer with the time between calls to @arg{func},
+ "@version{2025-3-1}
+  @argument[interval]{an integer for the time between calls to @arg{func},
     in milliseconds}
   @argument[func]{a @symbol{g:source-func} callback function to call}
-  @argument[priority]{an integer with the priority of the timeout source,
+  @argument[priority]{an integer for the priority of the timeout source,
     typically this will be in the range between the @var{g:+priority-default+}
     and @var{g:+priority-high+} values}
-  @return{The unsigned integer ID greater than 0 of the event source.}
+  @return{The unsigned integer ID greater than 0 for the event source.}
   @begin{short}
     Sets a function to be called at regular intervals, with @arg{priority}.
   @end{short}

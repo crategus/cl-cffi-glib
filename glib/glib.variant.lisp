@@ -1,12 +1,12 @@
 ;;; ----------------------------------------------------------------------------
 ;;; glib.variant.lisp
 ;;;
-;;; The documentation of this file is taken from the GLib 2.82 Reference
-;;; Manual and modified to document the Lisp binding to the GLib library.
-;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
-;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
+;;; The documentation in this file is taken from the GLib 2.82 Reference
+;;; Manual and modified to document the Lisp binding to the GLib library,
+;;; see <http://www.gtk.org>. The API documentation of the Lisp binding is
+;;; available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2012 - 2024 Dieter Kaiser
+;;; Copyright (C) 2012 - 2025 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -591,7 +591,7 @@
 
 (cffi:defcfun ("g_variant_take_ref" variant-take-ref) (boxed variant-type)
  #+liber-documentation
- "@version{#2024-11-20}
+ "@version{#2025-3-9}
   @argument[value]{a @symbol{g:variant} instance}
   @return{The same @symbol{g:variant} instance.}
   @begin{short}
@@ -604,11 +604,11 @@
   The situation where this function is helpful is when creating an API that
   allows the user to provide a callback function that returns a
   @symbol{g:variant} instance. We certainly want to allow the user the
-  flexibility to return a non-floating reference from this callback (for the
-  case where the value that is being returned already exists).
+  flexibility to return a non-floating reference from this callback for the
+  case where the value that is being returned already exists.
 
   At the same time, the style of the @symbol{g:variant} API makes it likely that
-  for newly-created @symbol{g:variant} instances, the user can be saved some
+  for newly created @symbol{g:variant} instances, the user can be saved some
   typing if they are allowed to return a @symbol{g:variant} instance with a
   floating reference.
 

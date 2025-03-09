@@ -1,12 +1,12 @@
 ;;; ----------------------------------------------------------------------------
 ;;; gobject.base.lisp
 ;;;
-;;; The documentation of this file is taken from the GObject Reference Manual
+;;; The documentation in this file is taken from the GObject Reference Manual
 ;;; Version 2.82 and modified to document the Lisp binding to the GObject
-;;; library. See <http://www.gtk.org>. The API documentation of the Lisp
-;;; binding is available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
+;;; library, see <http://www.gtk.org>. The API documentation of the Lisp
+;;; binding is available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2011 - 2024 Dieter Kaiser
+;;; Copyright (C) 2011 - 2025 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -1261,6 +1261,9 @@ lambda (object pspec)    :no-hooks
 ;;; g_object_set_data_full
 ;;; ----------------------------------------------------------------------------
 
+;; TODO: Improve the documentation. We dot not store data, but a pointer
+;; to a callback function.
+
 (cffi:defcfun ("g_object_set_data_full" %object-set-data-full) :void
   (object object)
   (key :string)
@@ -1269,17 +1272,15 @@ lambda (object pspec)    :no-hooks
 
 (defun object-set-data-full (object key func)
  #+liber-documentation
- "@version{2024-12-14}
+ "@version{2025-3-1}
   @argument[object]{a @class{g:object} instance containing the associations}
-  @argument[key]{a string with the name of the key}
+  @argument[key]{a string for the name of the key}
   @argument[func]{a @symbol{g:destroy-notify} callback function}
   @begin{short}
     Like the @fun{g:object-data} function except it adds notification for
     when the association is destroyed, either by setting it to a different
     value or when the object is destroyed.
   @end{short}
-  Note that the @arg{func} callback function is not called if the @arg{data}
-  argument is @code{nil}.
   @begin[Examples]{dictionary}
     Set a destroy notify callback function for a window. This function is
     called when the window is destroyed or when the data is set to @code{nil}.

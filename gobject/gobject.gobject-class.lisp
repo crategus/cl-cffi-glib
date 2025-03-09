@@ -169,7 +169,7 @@
     (setf (glib:symbol-for-gtype (gobject-class-direct-gname class))
           (class-name class))
     (glib-init:at-init (class)
-        (initialize-gobject-class-g-type class))))
+      (initialize-gobject-class-g-type class))))
 
 (defmethod reinitialize-instance :around
            ((class gobject-class) &rest initargs
@@ -206,7 +206,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;; Called from the method initialize-instance for a gobject-class.
-;; This functions calls the type iniatilizer of a GTK class and does
+;; This functions calls the type initializer for a GTK class and does
 ;; a lot of checks. Consider to simplify the code.
 
 (defun initialize-gobject-class-g-type (class)
