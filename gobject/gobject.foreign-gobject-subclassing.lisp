@@ -1,7 +1,7 @@
 ;;; ----------------------------------------------------------------------------
 ;;; gobject.foreign-gobject-subclassing.lisp
 ;;;
-;;; Copyright (C) 2011 - 2024 Dieter Kaiser
+;;; Copyright (C) 2011 - 2025 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -237,17 +237,22 @@
 
 ;;; ----------------------------------------------------------------------------
 
-(defun instance-init (instance cclass)
+(defgeneric object-instance-init (subclass instance class))
+
+(defmethod object-instance-init (subclass instance class)
   (unless (or *current-creating-object*
               *currently-making-object-p*
               (get-gobject-for-pointer instance))
-    (let* ((gname (glib:gtype-name (type-from-class cclass)))
+    (let* ((gname (glib:gtype-name (type-from-class class)))
            (subclass (subclass-info-class (get-subclass-info gname))))
       (make-instance subclass :pointer instance))))
 
 (cffi:defcallback instance-init-cb :void
-    ((instance :pointer) (class :pointer))
-  (instance-init instance class))
+                  ((instance :pointer) (class :pointer))
+  (let ((subclass (glib:symbol-for-gtype (type-from-class class))))
+    (object-instance-init (find-class subclass) instance class)))
+
+(export 'object-instance-init)
 
 ;;; ----------------------------------------------------------------------------
 
@@ -485,21 +490,6 @@
 
 ;;; ----------------------------------------------------------------------------
 
-#|
-(cffi:defcstruct object-class
-  (:type-class (:pointer (:struct type-class)))
-  (:construct-properties :pointer)
-  (:constructor :pointer)
-  (:set-property :pointer)
-  (:get-property :pointer)
-  (:dispose :pointer)
-  (:finalize :pointer)
-  (:dispatch-properties-changed :pointer)
-  (:notify :pointer)
-  (:constructed :pointer)
-  (:pdummy :pointer :count 7))
-|#
-
 #+nil
 (define-vtable ("GObject" object)
   (:skip type-class :pointer)
@@ -523,32 +513,28 @@
 
 ;;; ----------------------------------------------------------------------------
 
-(defun class-init (cclass data)
-  (declare (ignore data))
-  (let* ((gname (glib:gtype-name (type-from-class cclass)))
-         (subclass-info (get-subclass-info gname))
-         (subclass (subclass-info-class subclass-info)))
-    ;; Set SUBCLASS as the symbol for the GType
-    ;; FIXME: This seems to be to late. Do this more early.
-    (setf (glib:symbol-for-gtype gname) subclass)
+(defgeneric object-class-init (subclass class data))
 
+(defmethod object-class-init (subclass class data)
+  (let* ((gname (glib:gtype-name (type-from-class class)))
+         (subclass-info (get-subclass-info gname)))
     ;; Initialize the getter and setter methods for the object class
-    ;; Consider to generalize this to allow overriding the virtual functions
-    ;; of C classes.
-    (setf (object-class-get-property cclass)
+    (setf (object-class-get-property class)
           (cffi:callback c-object-property-get)
-          (object-class-set-property cclass)
+          (object-class-set-property class)
           (cffi:callback c-object-property-set))
-
     ;; Install the properties for the object class
     (iter (for property in (subclass-info-properties subclass-info))
           (for pspec = (property->param-spec property))
-          (for property-id from 123) ; FIXME: ???
-          (%object-class-install-property cclass property-id pspec))))
+          (for property-id from 123) ; FIXME: This is a magic number!?
+          (%object-class-install-property class property-id pspec))))
 
 (cffi:defcallback class-init-cb :void
-    ((class :pointer) (data :pointer))
-  (class-init class data))
+                  ((class :pointer) (data :pointer))
+  (let ((subclass (glib:symbol-for-gtype (type-from-class class))))
+    (object-class-init (find-class subclass) class data)))
+
+(export 'object-class-init)
 
 ;;; ----------------------------------------------------------------------------
 
@@ -669,7 +655,7 @@
          `(,(property-name property)
            ,@(cl-property-args property)))))
 
-(defmacro define-gobject-subclass (g-type-name name
+(defmacro define-gobject-subclass (gname name
                                     (&key (superclass 'object)
                                           (export t)
                                           interfaces)
@@ -687,8 +673,8 @@
 
     `(progn
        ;; Store the definition as subclass-info
-       (setf (get-subclass-info ,g-type-name)
-             (make-subclass-info :gname ,g-type-name
+       (setf (get-subclass-info ,gname)
+             (make-subclass-info :gname ,gname
                                  :class ',name
                                  :parent ,parent
                                  :interfaces ',interfaces
@@ -702,24 +688,26 @@
          (,@(mapcar (lambda (property)
                        (subclass-property->slot name property t))
                      props))
-         (:gname . ,g-type-name)
+         (:gname . ,gname)
          (:metaclass gobject-class))
 
        ;; Register the class
        (glib-init:at-init (',name)
          (log-for :subclass
                   "Debug subclass: Registering GObject type ~A for type ~A~%"
-                  ',name ,g-type-name)
+                  ',name ,gname)
          (cffi:with-foreign-object (query '(:struct type-query))
            (type-query (glib:gtype ,parent) query)
            (type-register-static-simple
                (glib:gtype ,parent)
-               ,g-type-name
+               ,gname
                (cffi:foreign-slot-value query '(:struct type-query):class-size)
                (cffi:callback class-init-cb)
                (cffi:foreign-slot-value query '(:struct type-query) :instance-size)
                (cffi:callback instance-init-cb) nil))
-         (add-interfaces ,g-type-name))
+         (add-interfaces ,gname)
+         ;; Register Lisp symbol for GType
+         (setf (glib:symbol-for-gtype ,gname) ',name))
 
        ;; Initializer for the instance of the subclass
        (defmethod initialize-instance :before ((object ,name) &key pointer)
@@ -731,7 +719,7 @@
                           (object-pointer object)))
            (log-for :subclass ":subclass calling g-object-constructor~%")
            (setf (object-pointer object)
-                 (call-gobject-constructor ,g-type-name nil nil)
+                 (call-gobject-constructor ,gname nil nil)
                  (object-has-reference object) t)))
 
        ;; Export the accessible symbols
