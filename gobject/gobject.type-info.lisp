@@ -6,7 +6,7 @@
 ;;; library. See <http://www.gtk.org>. The API documentation of the Lisp
 ;;; binding is available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2011 - 2024 Dieter Kaiser
+;;; Copyright (C) 2011 - 2025 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -88,7 +88,7 @@
 ;;;     g_type_init_with_debug_flags                       Deprecated 2.36
 ;;;     g_type_name
 ;;;     g_type_qname                                       not implemented
-;;;     g_type_from_name
+;;;     g_type_from_name                                   not implemented
 ;;;     g_type_parent
 ;;;     g_type_depth
 ;;;     g_type_next_base
@@ -1063,64 +1063,19 @@ ID     NAME               CFFI type      Lisp type
 => NIL
     @end{pre}
   @end{dictionary}
-  @see-class{g:type-t}
-  @see-function{g:type-from-name}"
+  @see-class{g:type-t}"
   (let ((gtype (glib:gtype gtype)))
     (when gtype (glib:gtype-name gtype))))
 
 (export 'type-name)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_type_qname                                            not exported
+;;; g_type_qname                                            not implemented
 ;;; ----------------------------------------------------------------------------
 
-;; This function is not exported. In the Lisp binding there is no difference
-;; to the function type-name.
-
-#+nil
-(cffi:defcfun ("g_type_qname" type-qname) glib:quark-as-string
- #+liber-documentation
- "@version{#2013-4-1}
-  @argument[gtype]{type to return quark of @arg{gtype} name for}
-  @return{The @arg{gtype} names quark or 0.}
-  Get the corresponding quark of the @arg{gtype} IDs name."
-  (gtype type-t))
-
 ;;; ----------------------------------------------------------------------------
-;;; g_type_from_name
+;;; g_type_from_name                                        not implemented
 ;;; ----------------------------------------------------------------------------
-
-;; TODO: Implemented with the G:GTYPE function and does not use the
-;; C function. Should we change the implemenation?
-
-#+nil
-(cffi:defcfun ("g_type_from_name" %type-from-name) :size
-  (name :string))
-
-#+nil
-(defun type-from-name (name)
- #+liber-documentation
- "@version{2024-6-11}
-  @argument[name]{a string with the type name to lookup}
-  @return{Corresponding @class{g:type-t} type ID for @arg{name}.}
-  @begin{short}
-    Lookup the type ID from a given type name.
-  @end{short}
-  This is the preferred method to find out by name whether a specific type has
-  been registered yet.
-  @begin[Examples]{dictionary}
-    @begin{pre}
-(g:type-from-name \"gdouble\") => #<GTYPE :name \"gdouble\" :id 60>
-(g:type-from-name \"GAction\")
-=> #<GTYPE :name \"GAction\" :id 102395834702912>
-    @end{pre}
-  @end{dictionary}
-  @see-class{g:type-t}
-  @see-function{g:type-name}"
-  (glib:gtype name))
-
-#+nil
-(export 'type-from-name)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_type_parent

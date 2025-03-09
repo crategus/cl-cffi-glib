@@ -165,7 +165,6 @@
       @about-function{type-init-with-debug-flags}
       @about-function{type-name}
       @about-function{type-qname}
-      @about-function{type-from-name}
       @about-function{type-parent}
       @about-function{type-children}
       @about-function{type-depth}
@@ -454,6 +453,9 @@
     @about-symbol{destroy-notify}
     @about-function{object-set-data-full}
     @about-function{object-property}
+    @about-function{object-class-init}
+    @about-function{object-instance-init}
+    @about-function{object-install-vtable}
   @end{section}
   @begin[Signals]{section}
     @begin[Introduction to signals]{subsection}
