@@ -462,14 +462,6 @@
 
 ;;;     g_type_qname
 
-;;;   g_type_from_name
-
-#+nil
-(test g-type-from-name
-  (is (eq (g:gtype "gdouble") (g:type-from-name "gdouble")))
-  (is (eq (g:gtype "GBoxed") (g:type-from-name "GBoxed")))
-  (is (eq (g:gtype "GApplication") (g:type-from-name "GApplication"))))
-
 ;;;     g_type_parent
 
 (test g-type-parent

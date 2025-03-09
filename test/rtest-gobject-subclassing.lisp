@@ -3,6 +3,8 @@
 (def-suite gobject-subclassing :in gobject-suite)
 (in-suite gobject-subclassing)
 
+(defvar *verbose-gobject-subclassing* nil)
+
 ;;; --- filter-properties-to-register ------------------------------------------
 
 (test filter-properties-to-register
@@ -24,155 +26,6 @@
     (is (equal '(("use-header-bar" "gint" DIALOG-USE-HEADER-BAR T T)
                  ("title" "gchararray" DIALOG-TITLE T NIL))
                (gobject::filter-properties-to-register properties)))))
-
-;;; --- register-object-type-implementation ------------------------------------
-
-;; Define a GClock1
-
-(defclass clock1 (gio:icon)
-  (;; Initialize with the UTC timezone
-   (timezone :initform local-time:+utc-zone+
-             :accessor clock-timezone)
-   ;; Initialize with the name of the UTC timezone
-   (location :initform "UTC"
-             :accessor clock-location))
-  (:gname . "GClock1")
-  (:metaclass gobject::gobject-class))
-
-(gobject:register-object-type-implementation "GClock1"         ; name
-                                             clock1            ; class
-                                             "GObject"         ; parent
-                                             ()                ; interfaces
-                                             nil)              ; properties
-
-(test clock1-class
-  ;; Check type
-  (is (g:type-is-object "GClock1"))
-  ;; Check registered symbol
-  (is (eq 'clock1
-          (glib:symbol-for-gtype "GClock1")))
-  ;; Check type initializer
-  ;; no type initializer
-  ;; Check parent
-  (is (eq (g:gtype "GObject")
-          (g:type-parent "GClock1")))
-  ;; Check children
-  (is (equal '()
-             (glib-test:list-children "GClock1")))
-  ;; Check interfaces
-  (is (equal '()
-             (glib-test:list-interfaces "GClock1")))
-  ;; Check class properties
-  (is (equal '()
-             (glib-test:list-properties "GClock1")))
-  ;; Check signals
-  (is (equal '()
-             (glib-test:list-signals "GClock1")))
-  ;; Check the class definition
-  (is (equal '(GOBJECT:DEFINE-GOBJECT "GClock1" CLOCK1
-                       (:SUPERCLASS GOBJECT:OBJECT
-                        :EXPORT T
-                        :INTERFACES NIL)
-                       NIL)
-             (gobject:get-gtype-definition "GClock1"))))
-
-(test register-object-type-implementation.1
-  (let ((info (gobject::get-subclass-info "GClock1"))
-        (clock nil))
-    ;; Check subclass-info
-    (is (string= "GClock1" (gobject::subclass-info-gname info)))
-    (is (eq 'clock1 (gobject::subclass-info-class info)))
-    (is (string= "GObject" (gobject::subclass-info-parent info)))
-    (is (equal '() (gobject::subclass-info-interfaces info)))
-    (is (equal '() (gobject::subclass-info-properties info)))
-    ;; Create an instance and access the properties
-    (is (typep (setf clock (make-instance 'clock1)) 'clock1))
-    (is (typep (clock-timezone clock) 'local-time::timezone))
-    (is (string= "UTC" (clock-location clock)))
-))
-
-;;; ----------------------------------------------------------------------------
-
-;;     Define a GClock2
-
-(defclass clock2 (gio:icon)
-  (;; Initialize with the UTC timezone
-   (timezone :initform local-time:+utc-zone+
-             :accessor clock2-timezone)
-   ;; Initialize with the name of the UTC timezone
-   (location :initform "UTC"
-             :accessor clock2-location))
-  (:gname . "GClock2")
-  (:metaclass gobject::gobject-class))
-
-(gobject:register-object-type-implementation "GClock2"         ; name
-                                             clock2            ; class
-                                             "GObject"         ; parent
-                                             ()                ; interfaces
-                                             (("location"      ; properties
-                                               "gchararray"
-                                               clock2-location
-                                               t t)))
-
-(test clock2-class
-  ;; Check type
-  (is (g:type-is-object "GClock2"))
-  ;; Check registered symbol
-  (is (eq 'clock2
-          (glib:symbol-for-gtype "GClock2")))
-  ;; Check type initializer
-  ;; no type initializer
-  ;; Check parent
-  (is (eq (g:gtype "GObject")
-          (g:type-parent "GClock2")))
-  ;; Check children
-  (is (equal '()
-             (glib-test:list-children "GClock2")))
-  ;; Check interfaces
-  (is (equal '()
-             (glib-test:list-interfaces "GClock2")))
-  ;; Check class properties
-  (is (equal '("location")
-             (glib-test:list-properties "GClock2")))
-  ;; Check signals
-  (is (equal '()
-             (glib-test:list-signals "GClock2")))
-  ;; Check class definition
-  (is (equal '(GOBJECT:DEFINE-GOBJECT "GClock2" CLOCK2
-                       (:SUPERCLASS GOBJECT:OBJECT
-                        :EXPORT T
-                        :INTERFACES NIL)
-                       ((LOCATION CLOCK2-LOCATION "location" "gchararray" T T)))
-             (gobject:get-gtype-definition "GClock2"))))
-
-(test register-object-type-implementation.2
-  (let ((info (gobject::get-subclass-info "GClock2"))
-        (clock nil) (pspec nil))
-    ;; Check subclass-info
-    (is (string= "GClock2" (gobject::subclass-info-gname info)))
-    (is (eq 'clock2 (gobject::subclass-info-class info)))
-    (is (string= "GObject" (gobject::subclass-info-parent info)))
-    (is (equal '() (gobject::subclass-info-interfaces info)))
-    (is (equal '(("location" "gchararray" CLOCK2-LOCATION T T))
-               (gobject::subclass-info-properties info)))
-    ;; Create an instance and access the properties
-    (is (typep (setf clock (make-instance 'clock2)) 'clock2))
-    (is (typep (clock2-timezone clock) 'local-time::timezone))
-    (is (string= "UTC" (clock2-location clock)))
-    ;; Use GObject functions for the registered property
-    ;; Slot TIMEZONE is not registered to GTK
-    (is-false (g:object-class-find-property "GClock2" "timezone"))
-    ;; Get GParamSpec for registered LOCATION property
-    (is (cffi:pointerp (setf pspec
-                             (g:object-class-find-property "GClock2"
-                                                           "location"))))
-    ;; TIMEZONE is not registered as property
-    (signals (error) (g:object-property clock "timezone"))
-    (is (typep (clock2-timezone clock) 'local-time::timezone))
-    ;; LOCATION is registered, we can access the property
-    (is (string= "UTC" (g:object-property clock "location")))
-    (is (string= "UTC" (clock2-location clock)))
-))
 
 ;;; ----------------------------------------------------------------------------
 
@@ -218,63 +71,60 @@
 
 ;;; ----------------------------------------------------------------------------
 
-;;     Define a GClock3
+;;     Define a Clock3
 
-(defclass clock3 (gio:icon)
-  (;; Initialize with the UTC timezone
-   (timezone :initform local-time:+utc-zone+
-             :accessor clock3-timezone)
-   ;; Initialize with the name of the UTC timezone
-   (location :initform "UTC"
-             :accessor clock3-location))
-  (:gname . "GClock3")
-  (:metaclass gobject::gobject-class))
+(gobject:define-gobject-subclass "Clock3" clock3
+  (:superclass g:object
+   :export nil
+   :interfaces ("GIcon"))
+  ((:cl timezone
+        :initform local-time:+utc-zone+
+        :accessor clock3-timezone)
+   (location
+    clock3-location
+    "location" "gchararray" t t)))
 
-(gobject:register-object-type-implementation "GClock3"         ; name
-                                             clock3            ; class
-                                             "GObject"         ; parent
-                                             ("GIcon")         ; interfaces
-                                             (("location"      ; properties
-                                               "gchararray"
-                                               clock3-location
-                                               t t)))
+;; Initialize a slot
+(defmethod initialize-instance :after
+           ((obj clock3) &key &allow-other-keys)
+  (setf (clock3-location obj) "UTC"))
 
 (test clock3-class
   ;; Check type
-  (is (g:type-is-object "GClock3"))
+  (is (g:type-is-object "Clock3"))
   ;; Check registered symbol
   (is (eq 'clock3
-          (glib:symbol-for-gtype "GClock3")))
+          (glib:symbol-for-gtype "Clock3")))
   ;; Check type initializer
   ;; no type initializer
   ;; Check parent
   (is (eq (g:gtype "GObject")
-          (g:type-parent "GClock3")))
+          (g:type-parent "Clock3")))
   ;; Check children
   (is (equal '()
-             (glib-test:list-children "GClock3")))
+             (glib-test:list-children "Clock3")))
   ;; Check interfaces
   (is (equal '("GIcon")
-             (glib-test:list-interfaces "GClock3")))
+             (glib-test:list-interfaces "Clock3")))
   ;; Check class properties
   (is (equal '("location")
-             (glib-test:list-properties "GClock3")))
+             (glib-test:list-properties "Clock3")))
   ;; Check signals
   (is (equal '()
-             (glib-test:list-signals "GClock3")))
+             (glib-test:list-signals "Clock3")))
   ;; Check class definition
-  (is (equal '(GOBJECT:DEFINE-GOBJECT "GClock3" CLOCK3
-                       (:SUPERCLASS GOBJECT:OBJECT
-                        :EXPORT T
-                        :INTERFACES ("GIcon"))
-                       ((LOCATION CLOCK3-LOCATION "location" "gchararray" T T)))
-             (gobject:get-gtype-definition "GClock3"))))
+  (is (equal '(GOBJECT:DEFINE-GOBJECT "Clock3" CLOCK3
+                      (:SUPERCLASS GOBJECT:OBJECT
+                       :EXPORT T
+                       :INTERFACES ("GIcon"))
+                      ((LOCATION CLOCK3-LOCATION "location" "gchararray" T T)))
+             (gobject:get-gtype-definition "Clock3"))))
 
-(test register-object-type-implementation.3
-  (let ((info (gobject::get-subclass-info "GClock3"))
+(test check-implementation-clock3
+  (let ((info (gobject::get-subclass-info "Clock3"))
         (clock nil) (pspec nil))
     ;; Check subclass-info
-    (is (string= "GClock3" (gobject::subclass-info-gname info)))
+    (is (string= "Clock3" (gobject::subclass-info-gname info)))
     (is (eq 'clock3 (gobject::subclass-info-class info)))
     (is (string= "GObject" (gobject::subclass-info-parent info)))
     (is (equal '("GIcon") (gobject::subclass-info-interfaces info)))
@@ -286,24 +136,23 @@
     (is (string= "UTC" (clock3-location clock)))
     ;; Use GObject functions for the registered property
     ;; Slot TIMEZONE is not registered to GTK
-    (is-false (g:object-class-find-property "GClock3" "timezone"))
+    (is-false (g:object-class-find-property "Clock3" "timezone"))
     ;; Get GParamSpec for registered LOCATION property
     (is (cffi:pointerp (setf pspec
-                             (g:object-class-find-property "GClock3"
+                             (g:object-class-find-property "Clock3"
                                                            "location"))))
     ;; TIMEZONE is not registered as property
     (signals (error) (g:object-property clock "timezone"))
     (is (typep (clock3-timezone clock) 'local-time::timezone))
     ;; LOCATION is registered, we can access the property
     (is (string= "UTC" (g:object-property clock "location")))
-    (is (string= "UTC" (clock3-location clock)))
-))
+    (is (string= "UTC" (clock3-location clock)))))
 
 ;;; ----------------------------------------------------------------------------
 
 ;;;     Define clock4
 
-(gobject:define-gobject-subclass "GClock4" clock4
+(gobject:define-gobject-subclass "Clock4" clock4
   (:superclass g:object
    :export t
    :interfaces ())
@@ -314,36 +163,41 @@
         :initform "UTC"
         :accessor clock4-location)))
 
+(defmethod g:object-class-init :after
+           ((subclass (eql (find-class 'clock4))) class data)
+  (when *verbose-gobject-subclassing*
+    (format t "in CLASS-INIT for ~a~%" subclass)))
+
 (test clock4-class
   ;; Check type
-  (is (g:type-is-object "GClock4"))
+  (is (g:type-is-object "Clock4"))
   ;; Check registered symbol
   (is (eq 'clock4
-          (glib:symbol-for-gtype "GClock4")))
+          (glib:symbol-for-gtype "Clock4")))
   ;; Check type initializer
   ;; no type initializer
   ;; Check parent
   (is (eq (g:gtype "GObject")
-          (g:type-parent "GClock4")))
+          (g:type-parent "Clock4")))
   ;; Check children
   (is (equal '()
-             (glib-test:list-children "GClock4")))
+             (glib-test:list-children "Clock4")))
   ;; Check interfaces
   (is (equal '()
-             (glib-test:list-interfaces "GClock4")))
+             (glib-test:list-interfaces "Clock4")))
   ;; Check class properties
   (is (equal '()
-             (glib-test:list-properties "GClock4")))
+             (glib-test:list-properties "Clock4")))
   ;; Check signals
   (is (equal '()
-             (glib-test:list-signals "GClock4")))
+             (glib-test:list-signals "Clock4")))
   ;; Check class definition
-  (is (equal '(GOBJECT:DEFINE-GOBJECT "GClock4" CLOCK4
+  (is (equal '(GOBJECT:DEFINE-GOBJECT "Clock4" CLOCK4
                        (:SUPERCLASS GOBJECT:OBJECT
                         :EXPORT T
                         :INTERFACES NIL)
                        NIL)
-             (gobject:get-gtype-definition "GClock4"))))
+             (gobject:get-gtype-definition "Clock4"))))
 
 (test filter-properties-to-register.clock4
   (let ((properties '((:cl timezone
@@ -375,10 +229,10 @@
                        properties)))))
 
 (test check-implementation-clock4
-  (let ((info (gobject::get-subclass-info "GClock4"))
+  (let ((info (gobject::get-subclass-info "Clock4"))
         (clock nil))
     ;; Check subclass-info
-    (is (string= "GClock4" (gobject::subclass-info-gname info)))
+    (is (string= "Clock4" (gobject::subclass-info-gname info)))
     (is (eq 'clock4 (gobject::subclass-info-class info)))
     (is (string= "GObject" (gobject::subclass-info-parent info)))
     (is (equal '() (gobject::subclass-info-interfaces info)))
@@ -391,9 +245,9 @@
 
 ;;; ----------------------------------------------------------------------------
 
-;;;     Define clock5
+;;;     Define Clock5
 
-(gobject:define-gobject-subclass "GClock5" clock5
+(gobject:define-gobject-subclass "Clock5" clock5
   (:superclass g:object
    :export nil
    :interfaces ())
@@ -404,36 +258,49 @@
     clock5-location
     "location" "gchararray" t t)))
 
+(defmethod g:object-class-init :after
+           ((subclass (eql (find-class 'clock5))) class data)
+  (when *verbose-gobject-subclassing*
+    (format t "~&in G:OBJECT-CLASS-INIT for ~a~%" subclass)))
+
+(defmethod g:object-instance-init :after
+           ((subclass (eql (find-class 'clock5))) instance data)
+  (when *verbose-gobject-subclassing*
+    (format t "~&in G:OBJECT-INSTANCE-INIT~%")
+    (format t "   subclass : ~a~%" subclass)
+    (format t "   instance : ~a~%" instance)
+    (format t "       data : ~a~%" data)))
+
 (test clock5-class
   ;; Check type
-  (is (g:type-is-object "GClock5"))
+  (is (g:type-is-object "Clock5"))
   ;; Check registered symbol
   (is (eq 'clock5
-          (glib:symbol-for-gtype "GClock5")))
+          (glib:symbol-for-gtype "Clock5")))
   ;; Check type initializer
   ;; no type initializer
   ;; Check parent
   (is (eq (g:gtype "GObject")
-          (g:type-parent "GClock5")))
+          (g:type-parent "Clock5")))
   ;; Check children
   (is (equal '()
-             (glib-test:list-children "GClock5")))
+             (glib-test:list-children "Clock5")))
   ;; Check interfaces
   (is (equal '()
-             (glib-test:list-interfaces "GClock5")))
+             (glib-test:list-interfaces "Clock5")))
   ;; Check class properties
   (is (equal '("location")
-             (glib-test:list-properties "GClock5")))
+             (glib-test:list-properties "Clock5")))
   ;; Check signals
   (is (equal '()
-             (glib-test:list-signals "GClock5")))
+             (glib-test:list-signals "Clock5")))
   ;; Check class definition
-  (is (equal '(GOBJECT:DEFINE-GOBJECT "GClock5" CLOCK5
+  (is (equal '(GOBJECT:DEFINE-GOBJECT "Clock5" CLOCK5
                        (:SUPERCLASS GOBJECT:OBJECT
                         :EXPORT T
                         :INTERFACES NIL)
                        ((LOCATION CLOCK5-LOCATION "location" "gchararray" T T)))
-             (gobject:get-gtype-definition "GClock5"))))
+             (gobject:get-gtype-definition "Clock5"))))
 
 (test filter-properties-to-register.clock5
   (let ((properties '((:cl timezone
@@ -468,10 +335,10 @@
                        properties)))))
 
 (test check-implementation-clock5
-  (let ((info (gobject::get-subclass-info "GClock5"))
+  (let ((info (gobject::get-subclass-info "Clock5"))
         (clock nil) (pspec nil))
     ;; Check subclass-info
-    (is (string= "GClock5" (gobject::subclass-info-gname info)))
+    (is (string= "Clock5" (gobject::subclass-info-gname info)))
     (is (eq 'clock5 (gobject::subclass-info-class info)))
     (is (string= "GObject" (gobject::subclass-info-parent info)))
     (is (equal '() (gobject::subclass-info-interfaces info)))
@@ -484,10 +351,10 @@
     (is (string= "" (clock5-location clock)))
     ;; Use GObject functions for the registered property
     ;; Slot TIMEZONE is not registered to GTK
-    (is-false (g:object-class-find-property "GClock5" "timezone"))
+    (is-false (g:object-class-find-property "Clock5" "timezone"))
     ;; Get GParamSpec for registered LOCATION property
     (is (cffi:pointerp (setf pspec
-                             (g:object-class-find-property "GClock5"
+                             (g:object-class-find-property "Clock5"
                                                            "location"))))
     ;; TIMEZONE is not registered as property
     (signals (error) (g:object-property clock "timezone"))
@@ -497,4 +364,4 @@
     (is (string= "UTC" (g:object-property clock "location")))
     (is (string= "abc" (setf (clock5-location clock) "abc")))))
 
-;;; 2024-12-12
+;;; 2025-3-8
