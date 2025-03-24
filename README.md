@@ -11,7 +11,7 @@ binding to Pango.
 The `cl-cffi-glib` library was part of the `cl-cffi-gtk` library and was
 separated out to be used independently. The former `cl-cffi-gtk` library is
 replaced with the `cl-cffi-gtk3` and `cl-cffi-gtk4` libraries for GTK 3 and
-GTK 4, respectivly.
+GTK 4, respectively.
 
 This work is based on the `cl-gtk2` library developed by Kalyanov Dmitry.
 
@@ -46,7 +46,7 @@ The `cl-cffi-glib` library depends on the following Lisp libraries:
     function interface for Common Lisp.
     See [common-lisp.net/project/cffi/](http://common-lisp.net/project/cffi/).
 
-    **Warning:** Yout must use the version 0.22.0 or newer of the CFFI library.
+    **Warning:** You must use the version 0.22.0 or newer of the CFFI library.
     Older versions of CFFI are not compatible with the implementation of the
     `cl-cffi-glib` library.
 
