@@ -3,14 +3,14 @@
 ### General information
 
 `cl-cffi-glib` is a Lisp binding of parts of the GLib, GObject and GIO libraries
-that forms the basics for projects such as GTK and Pango. The library is loaded 
+that forms the basics for projects such as GTK and Pango. The library is loaded
 from the `cl-cffi-gtk3` library for a Lisp binding to GTK 3, the `cl-cffi-gtk4`
-library for a Lisp binding to GTK 4, and the `cl-cffi-pango` library  for a Lisp 
+library for a Lisp binding to GTK 4, and the `cl-cffi-pango` library  for a Lisp
 binding to Pango.
 
-The `cl-cffi-glib` library was part of the `cl-cffi-gtk` library and was 
-separated out to be used independently. The former `cl-cffi-gtk` library is 
-replaced with the `cl-cffi-gtk3` and `cl-cffi-gtk4` libraries for GTK 3 and 
+The `cl-cffi-glib` library was part of the `cl-cffi-gtk` library and was
+separated out to be used independently. The former `cl-cffi-gtk` library is
+replaced with the `cl-cffi-gtk3` and `cl-cffi-gtk4` libraries for GTK 3 and
 GTK 4, respectivly.
 
 This work is based on the `cl-gtk2` library developed by Kalyanov Dmitry.
@@ -47,7 +47,7 @@ The `cl-cffi-glib` library depends on the following Lisp libraries:
     See [common-lisp.net/project/cffi/](http://common-lisp.net/project/cffi/).
 
     **Warning:** Yout must use the version 0.22.0 or newer of the CFFI library.
-    Older versions of CFFI are not compatible with the implementation of the 
+    Older versions of CFFI are not compatible with the implementation of the
     `cl-cffi-glib` library.
 
 * `iterate`
@@ -62,13 +62,13 @@ The `cl-cffi-glib` library depends on the following Lisp libraries:
 
 * `closer-mop`
 
-    Closer to MOP is a compatibility layer that rectifies many of the absent or 
-    incorrect MOP features as detected by MOP Feature Tests. 
+    Closer to MOP is a compatibility layer that rectifies many of the absent or
+    incorrect MOP features as detected by MOP Feature Tests.
     See [common-lisp.net/project/closer/closer-mop.html](http://common-lisp.net/project/closer/closer-mop.html)
 
 * `trivial-garbage`
 
-    Provides a portable API to finalizers, weak hash-tables and weak pointers 
+    Provides a portable API to finalizers, weak hash-tables and weak pointers
     on all major CL implementations.
     See [common-lisp.net/project/trivial-garbage/](http://common-lisp.net/project/trivial-garbage/).
 
@@ -97,7 +97,7 @@ The `cl-cffi-glib` library defines the following packages:
 
     Imports all symbols from the `glib`, `gobject`, and `gio` packages and
     exports the symbols for usage with the nickname `g`. Therefore you can
-    access a symbol, e.g. the `gobject:signal-connect` function in the `gobject` 
+    access a symbol, e.g. the `gobject:signal-connect` function in the `gobject`
     package as `g:signal-connect`, or the `gio:application-run` function in the
     `gio` package as `g:application-run`.
 
