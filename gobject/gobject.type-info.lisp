@@ -1,10 +1,10 @@
 ;;; ----------------------------------------------------------------------------
 ;;; gobject.type-info.lisp
 ;;;
-;;; The documentation of this file is taken from the GObject Reference Manual
-;;; Version 2.82 and modified to document the Lisp binding to the GObject
-;;; library. See <http://www.gtk.org>. The API documentation of the Lisp
-;;; binding is available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
+;;; The documentation in this file is taken from the GObject Reference Manual
+;;; version 2.84 and modified to document the Lisp binding for the GObject
+;;; library, see <http://www.gtk.org>. The API documentation for the Lisp
+;;; binding is available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
 ;;; Copyright (C) 2011 - 2025 Dieter Kaiser
 ;;;
@@ -1361,14 +1361,13 @@ ID     NAME               CFFI type      Lisp type
 (export 'type-class-unref)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_type_class_peek_parent                                not exported
+;;; g_type_class_peek_parent
 ;;; ----------------------------------------------------------------------------
 
-#+nil
 (cffi:defcfun ("g_type_class_peek_parent" type-class-peek-parent)
     (:pointer (:struct type-class))
  #+liber-documentation
- "@version{#2022-12-29}
+ "@version{#2025-3-27}
   @argument[class]{a @symbol{g:type-class} instance to retrieve the parent
     class for}
   @return{The parent class of @arg{class}.}
@@ -1383,8 +1382,12 @@ ID     NAME               CFFI type      Lisp type
   @begin{pre}
 (g:type-class-peek (g:type-parent class))
   @end{pre}
-  @see-symbol{g:type-class}"
-  (g-class (:pointer (:struct type-class))))
+  @see-symbol{g:type-class}
+  @see-function{g:type-parent}
+  @see-function{g:type-class-peek}"
+  (class (:pointer (:struct type-class))))
+
+(export 'type-class-peek-parent)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_type_class_add_private                                not exported
