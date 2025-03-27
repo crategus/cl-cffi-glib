@@ -87,6 +87,8 @@
      (:file "gio.themed-icon")         ; Icon theming support
      (:file "gio.emblemed-icon")       ; Icon with emblems
      (:file "gio.emblem")              ; An object for emblems
+     ;; Settings
+     (:file "gio.settings")
      ;; Resources
      (:file "gio.resource")            ; Resource framework
      ;; Permissions
