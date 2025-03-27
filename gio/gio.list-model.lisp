@@ -1,12 +1,12 @@
 ;;; ----------------------------------------------------------------------------
 ;;; gio.list-model.lisp
 ;;;
-;;; The documentation of this file is taken from the GIO Reference Manual
-;;; Version 2.82 and modified to document the Lisp binding to the GIO library.
-;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
-;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
+;;; The documentation in this file is taken from the GIO Reference Manual
+;;; version 2.84 and modified to document the Lisp binding for the GIO library,
+;;; see <http://www.gtk.org>. The API documentation for the Lisp binding is
+;;; available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2021 - 2024 Dieter Kaiser
+;;; Copyright (C) 2021 - 2025 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -77,7 +77,7 @@
 (setf (liber:alias-for-class 'list-model)
       "Interface"
       (documentation 'list-model 'type)
- "@version{2024-12-29}
+ "@version{2025-3-24}
   @begin{short}
     The @class{g:list-model} interface is an interface that represents a mutable
     list of @class{g:object} instances.
@@ -108,7 +108,7 @@
   @fun{g:list-model-item} function returns an item at a (0-based) position. In
   order to allow implementations to calculate the list length lazily, you can
   also iterate over items. Starting from 0, repeatedly call the
-  @fun{g:list-model-item} function until it returns @code{cffi:null-pointer}.
+  @fun{g:list-model-item} function until it returns @code{nil}.
 
   An implementation may create objects lazily, but must take care to return the
   same object for a given position until all references to it are gone.
@@ -132,7 +132,7 @@ lambda (model pos removed added)    :run-last
         @entry[pos]{The unsigned integer with the position at which @arg{model}
           changed.}
         @entry[removed]{The unsigned integer with the number of items removed.}
-        @entry[added]{The unsigned integer with the number of items addes.}
+        @entry[added]{The unsigned integer with the number of items added.}
       @end{table}
       This signal is emitted whenever items were added to or removed from
       @arg{model}. At @arg{pos}, removed items were removed and added items
@@ -143,61 +143,6 @@ lambda (model pos removed added)    :run-last
 
 ;;; ----------------------------------------------------------------------------
 ;;; GListModelInterface
-;;;
-;;; struct GioListModelInterface {
-;;;   GTypeInterface g_iface;
-;;;   GType (* get_item_type) (
-;;;     GListModel* list
-;;;   );
-;;;
-;;;   guint (* get_n_items) (
-;;;     GListModel* list
-;;;   );
-;;;   GObject* (* get_item) (
-;;;     GListModel* list,
-;;;     guint position
-;;;   );
-;;; }
-;;;
-;;; The virtual function table for GListModel.
-;;;
-;;; Interface members
-;;;
-;;; g_iface
-;;; GTypeInterface
-;;;
-;;; Parent GTypeInterface.
-;;;
-;;; get_item_type
-;;; GType (* get_item_type) (GListModel* list)
-;;;
-;;; No description available.
-;;;
-;;; get_n_items
-;;; guint (* get_n_items) (GListModel* list)
-;;;
-;;; No description available.
-;;;
-;;; get_item
-;;;
-;;; GObject* (* get_item) (GListModel* list, guint position)
-;;;
-;;; No description available.
-;;;
-;;; Virtual methods
-;;;
-;;; Gio.ListModel.get_item
-;;;
-;;; Get the item at position. If position is greater than the number of items
-;;; in list, NULL is returned.
-;;;
-;;; Gio.ListModel.get_item_type
-;
-;;; Gets the type of the items in list.
-;;;
-;;; Gio.ListModel.get_n_items
-;;;
-;;; Gets the number of items in list.
 ;;; ----------------------------------------------------------------------------
 
 (gobject:define-vtable ("GListModel" list-model)
@@ -205,20 +150,146 @@ lambda (model pos removed added)    :run-last
   ;; Methods of the GListModel interface
   (get-item-type (gobject:type-t (model (gobject:object list-model))))
   (get-n-items (:uint (model (gobject:object list-model))))
-  (get-item (:pointer (model (gobject:object list-model))
-                      (position :uint))))
+  (get-item (gobject:object (model (gobject:object list-model))
+                            (pos :uint))))
+
+#+liber-documentation
+(setf (liber:alias-for-symbol 'list-model-vtable)
+      "VTable"
+      (liber:symbol-documentation 'list-model-vtable)
+ "@version{2025-3-24}
+  @begin{declaration}
+(gobject:define-vtable (\"GListModel\" list-model)
+  (:skip parent-instance (:struct gobject:type-interface))
+  ;; Methods of the GListModel interface
+  (get-item-type                               ; virtual function
+     (gobject:type-t                           ; return type
+       (model (gobject:object list-model))))   ; argument
+  (get-n-items (:uint
+                (model (gobject:object list-model))))
+  (get-item (gobject:object
+             (model (gobject:object list-model))
+             (pos :uint))))
+  @end{declaration}
+  @begin{values}
+    @begin[code]{table}
+      @entry[get-item-type]{Virtual function called by the
+        @fun{g:list-model-item-type} function. You must implement the
+        @fun{g:list-model-get-item-type-impl} method, when subclassing from
+        the @class{g:list-model} interface.}
+      @entry[get-n-items]{Virtual function called by the
+        @fun{g:list-model-n-items} function. You must implement the
+        @fun{g:list-model-get-n-items-impl} method, when subclassing from the
+        @class{g:list-model} interface.}
+      @entry[get-item]{Virtual function called by the @fun{g:list-model-item}
+        function. You must implement the @fun{g:list-model-get-item-impl}
+        method, when subclassing from the @class{g:list-model} interface.}
+    @end{table}
+  @end{values}
+  The virtual function table for the @class{g:list-model} interface.
+  @begin[Examples]{dictionary}
+    Simple example of subclassing the @class{g:list-model} interface. The
+    model is internally represented as a Lisp list.
+    @begin{pre}
+;; Simple implementation which uses a Lisp list
+(gobject:define-gobject-subclass \"CLListStore\" cl-list-store
+  (:superclass g:object
+   :export t
+   :interfaces (\"GListModel\"))
+  ((:cl list
+        :initform '()
+        :accessor cl-list-store-list)))
+
+(defmethod gio:list-model-get-item-type-impl ((store cl-list-store))
+  (g:gtype \"GAction\"))
+
+(defmethod gio:list-model-get-n-items-impl ((store cl-list-store))
+  (length (cl-list-store-list store)))
+
+(defmethod gio:list-model-get-item-impl ((store cl-list-store) pos)
+  (let ((item (nth pos (cl-list-store-list store))))
+    (when item
+      ;; We must add a reference to the returned item
+      (g:object-ref item))))
+    @end{pre}
+  @end{dictionary}
+  @see-class{g:list-model}
+  @see-function{g:list-model-get-item-type-impl}
+  @see-function{g:list-model-get-n-items-impl}
+  @see-function{g:list-model-get-item-impl}")
+
+(export 'list-model-vtable)
+
+;;; --- g:list-model-get-item-type-impl ----------------------------------------
+
+#+liber-documentation
+(setf (liber:alias-for-function 'list-model-get-item-type-impl)
+      "Generic"
+      (documentation 'list-model-get-item-type-impl 'function)
+ "@version{2025-3-24}
+  @argument[model]{a @class{g:object} instance}
+  @return{The @class{g:type-t} type ID for the items contained in @arg{model}.}
+  @begin{short}
+    Method called from the @fun{g:list-model-item-type} function for a
+    subclass of the @class{g:list-model} interface.
+  @end{short}
+  You must implement the method, when subclassing the interface.
+  @see-class{g:list-model}
+  @see-symbol{g:list-model-vtable}")
 
 (export 'list-model-get-item-type-impl)
+
+;;; --- g:list-model-get-n-items-impl ------------------------------------------
+
+#+liber-documentation
+(setf (liber:alias-for-function 'list-model-get-n-items-impl)
+      "Generic"
+      (documentation 'list-model-get-n-items-impl 'function)
+ "@version{2025-3-24}
+  @argument[model]{a @class{g:object} instance}
+  @return{The unsigned integer with the number of items in @arg{model}.}
+  @begin{short}
+    Method called from the @fun{g:list-model-n-items} function for a
+    subclass of the @class{g:list-model} interface.
+  @end{short}
+  You must implement the method, when subclassing the interface.
+  @see-class{g:list-model}
+  @see-symbol{g:list-model-vtable}")
+
 (export 'list-model-get-n-items-impl)
+
+;;; --- g:list-model-get-item-impl ---------------------------------------------
+
+#+liber-documentation
+(setf (liber:alias-for-function 'list-model-get-item-impl)
+      "Generic"
+      (documentation 'list-model-get-item-impl 'function)
+ "@version{2025-3-24}
+  @argument[model]{a @class{g:object} instance}
+  @argument[pos]{an unsigned integer for the postion of the item to fetch}
+  @return{The @class{g:object} instance at @arg{pos}.}
+  @begin{short}
+    Method called from the @fun{g:list-model-item} function for a
+    subclass of the @class{g:list-model} interface.
+  @end{short}
+  You must implement the method, when subclassing the interface.
+  @begin[Notes]{dictionary}
+   You must add a reference with the @fun{g:object-ref} function to the
+   returned item.
+  @end{dictionary}
+  @see-class{g:list-model}
+  @see-symbol{g:list-model-vtable}
+  @see-function{g:object-ref}")
+
 (export 'list-model-get-item-impl)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_list_model_get_item_type ()
+;;; g_list_model_get_item_type
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_list_model_get_item_type" list-model-item-type) gobject:type-t
  #+liber-documentation
- "@version{2024-3-31}
+ "@version{2025-3-24}
   @argument[model]{a @class{g:list-model} object}
   @return{The @class{g:type-t} type ID of the items contained in @arg{model}.}
   @begin{short}
@@ -239,7 +310,7 @@ lambda (model pos removed added)    :run-last
 
 (cffi:defcfun ("g_list_model_get_n_items" list-model-n-items) :uint
  #+liber-documentation
- "@version{2024-12-29}
+ "@version{2025-3-24}
   @argument[model]{a @class{g:list-model} object}
   @return{The integer with the number of items in @arg{model}.}
   @begin{short}
@@ -247,8 +318,7 @@ lambda (model pos removed added)    :run-last
   @end{short}
   Depending on the list model implementation, calling this function may be less
   efficient than iterating the list model with increasing values for @arg{pos}
-  until the @fun{g:list-model-item} functions returns the
-  @code{cffi:null-pointer} value.
+  until the @fun{g:list-model-item} functions returns the @code{nil} value.
   @see-class{g:list-model}
   @see-function{g:list-model-item}"
   (model (gobject:object list-model)))
@@ -265,12 +335,12 @@ lambda (model pos removed added)    :run-last
 (cffi:defcfun ("g_list_model_get_object" list-model-item)
     (gobject:object :return)
  #+liber-documentation
- "@version{2024-12-17}
+ "@version{2025-3-24}
   @argument[model]{a @class{g:list-model} object}
-  @argument[pos]{an unsigned integer with the position of the item to fetch}
+  @argument[pos]{an unsigned integer for the position of the item to fetch}
   @return{The @class{g:object} instance at @arg{pos}.}
   @begin{short}
-    Get the item at @arg{pos}.
+    Gets the item at @arg{pos}.
   @end{short}
   If the @arg{pos} argument is greater than the number of items in the list
   model, @code{nil} is returned. The @code{nil} value is never returned for an
@@ -285,17 +355,17 @@ lambda (model pos removed added)    :run-last
 (export 'list-model-item)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_list_model_items_changed ()
+;;; g_list_model_items_changed
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_list_model_items_changed" list-model-items-changed) :void
  #+liber-documentation
- "@version{#2024-3-31}
+ "@version{2025-3-24}
   @argument[model]{a @class{g:list-model} object}
-  @argument[pos]{an unsigned integer with the position at which @arg{model}
+  @argument[pos]{an unsigned integer for the position at which @arg{model}
     changed}
-  @argument[removed]{an unsigned integer with the number of items removed}
-  @argument[added]{an unsigned integer with the number of items added}
+  @argument[removed]{an unsigned integer for the number of items removed}
+  @argument[added]{an unsigned integer for the number of items added}
   @begin{short}
     Emits the @code{\"items-changed\"} signal on @arg{model}.
   @end{short}

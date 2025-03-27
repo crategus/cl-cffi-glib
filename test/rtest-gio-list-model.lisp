@@ -27,8 +27,8 @@
              (glib-test:list-signals "GListModel")))
   ;; Check interface definition
   (is (equal '(GOBJECT:DEFINE-GINTERFACE "GListModel" GIO:LIST-MODEL
-                       (:EXPORT T
-                        :TYPE-INITIALIZER "g_list_model_get_type"))
+                      (:EXPORT T
+                       :TYPE-INITIALIZER "g_list_model_get_type"))
              (gobject:get-gtype-definition "GListModel"))))
 
 ;;; --- Signals ----------------------------------------------------------------
@@ -58,7 +58,7 @@
     ;; Append some objects
     (is-false (g:list-store-append store (make-instance 'g:simple-action)))
     (is-false (g:list-store-append store (make-instance 'g:menu-item)))
-    ;; Use the interace functions
+    ;; Use the interface functions
     (is (eq (g:gtype "GObject") (g:list-model-item-type store)))
     (is (= 2 (g:list-model-n-items store)))
     ;; Access first item
@@ -103,9 +103,49 @@
     (is (typep (setf item
                      (g:list-model-item store 0)) 'g:simple-action))
     (is (= 2 (g:object-ref-count item)))
+    ;; No item at position 2
+    (is-false (g:list-model-item store 2))
     ;; Remove references
     (is-false (g:list-store-remove-all store))))
 
 ;;;     g_list_model_items_changed
 
-;;; 2024-12-18
+;;; --- Subclassing G:LIST-MODEL -----------------------------------------------
+
+;; Simple implementation which uses a Lisp list
+(gobject:define-gobject-subclass "CLListStore" cl-list-store
+  (:superclass g:object
+   :export t
+   :interfaces ("GListModel"))
+  ((:cl list
+        :initform '()
+        :accessor cl-list-store-list)))
+
+(defmethod gio:list-model-get-item-type-impl ((store cl-list-store))
+  (g:gtype "GAction"))
+
+(defmethod gio:list-model-get-n-items-impl ((store cl-list-store))
+  (length (cl-list-store-list store)))
+
+(defmethod gio:list-model-get-item-impl ((store cl-list-store) pos)
+  (let ((item (nth pos (cl-list-store-list store))))
+    (when item
+      ;; We must add a reference to the returned object
+      (g:object-ref item))))
+
+(test g-list-model-subclassing
+  (glib-test:with-check-memory (model)
+    ;; Create model and add two items
+    (setf model (make-instance 'cl-list-store))
+    (push (make-instance 'g:simple-action) (cl-list-store-list model))
+    (push (make-instance 'g:simple-action) (cl-list-store-list model))
+    ;; Check functions for the interface
+    (is (g:gtype "GAction") (g:list-model-item-type model))
+    (is (= 2 (g:list-model-n-items model)))
+    (is (typep (g:list-model-item model 0) 'g:simple-action))
+    (is (typep (g:list-model-item model 1) 'g:simple-action))
+    (is (typep (g:list-model-item model 0) 'g:simple-action))
+    (is (typep (g:list-model-item model 1) 'g:simple-action))
+    (is-false (g:list-model-item model 2))))
+
+;;; 2025-3-24
