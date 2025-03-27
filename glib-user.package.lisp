@@ -681,6 +681,11 @@
            #:emblem-new-with-origin
            #:emblem-icon
 
+           ;; Symbols from gio.settings.lisp
+           #:settings
+           #:settings-new
+           #:settings-new-with-path
+
            ;; Symbols from gio.resource.lisp
            #:resource
            #:resource-flags
@@ -721,6 +726,10 @@
 
            ;; Symbols from gio.list-model.lisp
            #:list-model
+           #:list-model-vtable
+           #:list-model-get-item-type-impl
+           #:list-model-get-n-items-impl
+           #:list-model-get-item-impl
            #:list-model-item-type
            #:list-model-n-items
            #:list-model-item

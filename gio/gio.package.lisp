@@ -1,12 +1,12 @@
 ;;; ----------------------------------------------------------------------------
 ;;; gio.package.lisp
 ;;;
-;;; The documentation of this file is taken from the GIO Reference Manual
-;;; Version 2.82 and modified to document the Lisp binding to the GIO library.
-;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
-;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
+;;; The documentation in this file is taken from the GIO Reference Manual
+;;; version 2.84 and modified to document the Lisp binding to the GIO library,
+;;; see <http://www.gtk.org>. The API documentation for the Lisp binding is
+;;; available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2012 - 2024 Dieter Kaiser
+;;; Copyright (C) 2012 - 2025 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -312,6 +312,22 @@
       @about-function{emblemed-icon-clear-emblems}
     @end{subsection}
   @end{section}
+  @begin[Settings]{section}
+
+    @begin[GSettings]{subsection}
+      @about-class{settings}
+      @about-generic{settings-backend}
+      @about-generic{settings-delay-apply}
+      @about-generic{settings-has-unapplied}
+      @about-generic{settings-path}
+      @about-generic{settings-schema}
+      @about-generic{settings-schema-id}
+      @about-generic{settings-settings-schema}
+      @about-function{settings-new}
+      @about-function{settings-new-with-path}
+    @end{subsection}
+
+  @end{section}
   @begin[Resources]{section}
     @about-symbol{resource-flags}
     @about-symbol{resource-lookup-flags}
@@ -355,6 +371,10 @@
   @begin[Data models]{section}
     @begin[GListModel]{subsection}
       @about-class{list-model}
+      @about-symbol{list-model-vtable}
+      @about-generic{list-model-get-item-type-impl}
+      @about-generic{list-model-get-n-items-impl}
+      @about-generic{list-model-get-item-impl}
       @about-function{list-model-item-type}
       @about-function{list-model-n-items}
       @about-function{list-model-item}
@@ -366,10 +386,10 @@
       @about-generic{list-store-item-type}
       @about-generic{list-store-n-items}
       @about-function{list-store-new}
+      @about-function{list-store-append}
       @about-function{list-store-insert}
       @about-symbol{compare-data-func}
       @about-function{list-store-insert-sorted}
-      @about-function{list-store-append}
       @about-function{list-store-remove}
       @about-function{list-store-remove-all}
       @about-function{list-store-splice}

@@ -37,7 +37,8 @@ Icons
 
 Settings
 
-  GSettings - High-level API for application settings
+  gio.settings.lisp            - GSettings                            GIO 2.84 +
+
   GSettingsBackend - Interface for settings backend implementations
   GSettingsSchema - Loading of GSettings schemas
 
@@ -52,8 +53,8 @@ Permissions
 
 Data Models
 
-  gio.list-model.lisp          - GListModel                         - GIO 2.82 +
-  gio.list-store.lisp          - GListStore                         - GIO 2.82
+  gio.list-model.lisp          - GListModel                         - GIO 2.84 +
+  gio.list-store.lisp          - GListStore                         - GIO 2.84
 
 Application support
 
