@@ -490,29 +490,6 @@
 
 ;;; ----------------------------------------------------------------------------
 
-#+nil
-(define-vtable ("GObject" object)
-  (:skip type-class :pointer)
-  (:skip construct-properties :pointer)
-  ;; Virtual functions for GObject class
-  (:skip constructor :pointer)
-  (:skip set-property :pointer)
-  (:skip get-property :pointer)
-  (dispose (:void (object object)))
-  (finalize (:void (object object)))
-  (:skip dispatch-properties-changed :pointer)
-  (notify (:void (object object) (pspec :pointer)))
-  (constructed (:void (object object)))
-  (:skip dummy1 :pointer)
-  (:skip dummy2 :pointer)
-  (:skip dummy3 :pointer)
-  (:skip dummy4 :pointer)
-  (:skip dummy5 :pointer)
-  (:skip dummy6 :pointer)
-  (:skip dummy7 :pointer))
-
-;;; ----------------------------------------------------------------------------
-
 (defgeneric object-class-init (subclass class data))
 
 (defmethod object-class-init (subclass class data)
@@ -538,72 +515,15 @@
 
 ;;; ----------------------------------------------------------------------------
 
-(defmacro register-object-type-implementation (name
-                                               class
-                                               parent
-                                               interfaces
-                                               properties)
-  (let ((*warn-unknown-gtype* nil))
-    (unless (stringp parent)
-      (setf parent (glib:gtype-name (glib:gtype parent)))))
-
-  `(progn
-     (setf (get-subclass-info ,name)
-           (make-subclass-info :gname ,name
-                               :class ',class
-                               :parent ,parent
-                               :interfaces ',interfaces
-                               :properties ',properties))
-     (glib-init:at-init (',class)
-       (log-for :subclass
-                "Registering GObject type implementation ~A for type ~A~%"
-                ',class ,name)
-       (cffi:with-foreign-object (query '(:struct type-query))
-         (type-query (glib:gtype ,parent) query)
-         (type-register-static-simple
-             (glib:gtype ,parent)
-             ,name
-             (cffi:foreign-slot-value query '(:struct type-query) :class-size)
-             (cffi:callback class-init-cb)
-             (cffi:foreign-slot-value query '(:struct type-query) :instance-size)
-             (cffi:callback instance-init-cb) nil))
-       (add-interfaces ,name))
-     (defmethod initialize-instance :before ((object ,class) &key pointer)
-       (log-for :subclass
-                ":subclass INITIAlIZE-INSTANCE :before ~A :pointer ~A~%"
-                object pointer)
-       (unless (or pointer
-                   (and (slot-boundp object 'pointer)
-                        (object-pointer object)))
-         (log-for :subclass "calling g-object-constructor~%")
-         (setf (object-pointer object)
-               (call-gobject-constructor ,name nil nil)
-               (object-has-reference object) t)))
-     ,name))
-
-;;; ----------------------------------------------------------------------------
-
 (defun install-vtable (gname)
-
     (let* ((class (type-class-ref gname))
            (vtable (get-vtable-info gname))
            (vtable-cstruct (when vtable (vtable-info-cstruct-name vtable))))
-
-      (format t "   gname : ~a~%" gname)
-      (format t "   class : ~a~%" class)
-      (format t "  vtable : ~a~%" vtable)
-      (format t " cstruct : ~a~%" vtable-cstruct)
-
       (when vtable
         (iter (for method in (vtable-info-methods vtable))
               (for cb = (cffi:get-callback
                             (vtable-method-info-callback-name method)))
               (for slot-name = (vtable-method-info-slot-name method))
-
-              (format t "  method : ~a~%" method)
-              (format t "      cb : ~a~%" cb)
-              (format t "    slot : ~a~%" slot-name)
-
               (setf (cffi:foreign-slot-value class
                                             `(:struct ,vtable-cstruct)
                                              slot-name)

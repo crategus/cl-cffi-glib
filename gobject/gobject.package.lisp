@@ -65,8 +65,6 @@
            #:enum-item-value
            #:enum-item-nick
 
-           #:register-object-type-implementation
-
            #:get-gvalue-for-type
            #:set-gvalue-for-type
 
