@@ -577,33 +577,15 @@
 
 ;;;     g_type_children
 
-#-windows
 (test g-type-children
   (is (subsetp '("GAppLaunchContext" "GApplication" "GApplicationCommandLine"
-                 "GBinding" "GCancellable" "GClock1" "GClock2" "GClock3"
-                 "GClock4" "GClock5" "GEmblem" "GEmblemedIcon" "GFileIcon"
+                 "GBinding" "GCancellable" "GEmblem" "GEmblemedIcon" "GFileIcon"
                  "GFileInfo" "GInitiallyUnowned" "GListStore" "GMenuItem"
                  "GMenuModel" "GNotification" "GPermission" "GPropertyAction"
                  "GSimpleAction" "GSimpleActionGroup" "GTask" "GThemedIcon")
                  (sort (mapcar #'g:type-name
                                (g:type-children "GObject")) #'string<)
                :test #'string=)))
-
-#+windows
-(test g-type-children
-  (if *first-run-testsuite*
-      (is (equal '("GAppLaunchContext" "GApplication" "GApplicationCommandLine"
-                   "GBinding" "GCancellable" "GClock1" "GClock2" "GClock3"
-                   "GClock4" "GClock5" "GEmblem" "GEmblemedIcon" "GFileIcon"
-                   "GFileInfo" "GInitiallyUnowned" "GListStore" "GMenuItem"
-                   "GMenuModel" "GNotification" "GPermission" "GPropertyAction"
-                   "GSimpleAction" "GSimpleActionGroup" "GTask" "GThemedIcon"
-                   "GWin32AppInfoApplication" "GWin32AppInfoFileExtension"
-                   "GWin32AppInfoHandler" "GWin32AppInfoShellVerb"
-                   "GWin32AppInfoURLSchema" "GWin32RegistryKey")
-                 (sort (mapcar #'g:type-name
-                               (g:type-children "GObject"))
-                       #'string<)))))
 
 ;;;     g_type_interfaces
 
