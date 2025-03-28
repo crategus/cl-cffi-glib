@@ -215,7 +215,10 @@
                   (value4 "gchararray" "string"))
     (is (string= "FALSE" (g:strdup-value-contents value1)))
     (is (string= "199" (g:strdup-value-contents value2)))
+    #-windows
     (is (string= "2.000000" (g:strdup-value-contents value3)))
+    #+windows
+    (is (string= "2,000000" (g:strdup-value-contents value3)))
     (is (string= "\"string\"" (g:strdup-value-contents value4)))))
 
 ;;; ----------------------------------------------------------------------------
@@ -250,4 +253,4 @@
     (format t "value holds integer is ~a~%" (g:value-holds value1 "gint"))
     (format t "value is integer ~a~%~%" (g:type-is-value "gint"))))
 
-;;; 2024-12-21
+;;; 2025-3-28

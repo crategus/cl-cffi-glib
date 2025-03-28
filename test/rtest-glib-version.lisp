@@ -18,9 +18,15 @@
   (is (member :glib-2-80 *features*))
   (is (member :glib-2-82 *features*)))
 
+#-windows
 (test check-glib-version
   (is (= 2 glib:+major-version+))
   (is (= 82 glib:+minor-version+)))
+
+#+windows
+(test check-glib-version
+  (is (= 2 glib:+major-version+))
+  (is (= 84 glib:+minor-version+)))
 
 (test g-check-version
   (is-true (integerp glib:+major-version+))
@@ -38,4 +44,4 @@
       (is-false (glib:cl-cffi-glib-build-info s))
       (is (stringp result)))))
 
-;;; 2024-10-13
+;;; 2025-3-28

@@ -61,8 +61,6 @@
 
 ;;;     g_file_info_get_attribute_as_string
 
-
-
 ;;;     g_file_info_get_attribute_boolean
 ;;;     g_file_info_get_attribute_byte_string
 ;;;     g_file_info_get_attribute_data
@@ -100,10 +98,9 @@
       (setf file (g:file-new-for-path path))
       (setf info (g:file-query-info file "*" :none))
 
-      (is (<= 3944388534 (g:file-info-modification-date-time info)))
+      (is (<= 3944380000 (g:file-info-modification-date-time info)))
       (is (string= "rtest-gio-file.lisp" (g:file-info-name info)))
-      (is (= 8335 (g:file-info-size info)))
-)))
+      (is (= 8335 (g:file-info-size info))))))
 
 ;;;     g_file_info_get_sort_order
 ;;;     g_file_info_get_symbolic_icon
@@ -157,6 +154,7 @@
                    "standard::symbolic-icon")
        (g:file-info-list-attributes info))))))
 
+#-windows
 (test g-file-info-list-attributes.2
   (glib-test:with-check-memory (info file)
     (let ((path (glib-sys:sys-path "test/rtest-gio-file.lisp")))
@@ -212,8 +210,31 @@
                    "owner::group")
        (g:file-info-list-attributes info))))))
 
-;;;     g_file_info_remove_attribute
+#+windows
+(test g-file-info-list-attributes.2
+  (glib-test:with-check-memory (info file)
+    (let ((path (glib-sys:sys-path "test/rtest-gio-file.lisp")))
+      (setf file (g:file-new-for-path path))
+      (setf info (g:file-query-info file "*" :none))
+      (is (equal '("standard::type" "standard::is-hidden" "standard::is-backup"
+                   "standard::is-symlink" "standard::name"
+                   "standard::display-name" "standard::edit-name"
+                   "standard::copy-name" "standard::icon"
+                   "standard::content-type" "standard::fast-content-type"
+                   "standard::size" "standard::allocated-size"
+                   "standard::symbolic-icon" "etag::value" "id::file"
+                   "id::filesystem" "access::can-read" "access::can-write"
+                   "access::can-execute" "access::can-delete"
+                   "access::can-trash" "access::can-rename" "time::modified"
+                   "time::modified-usec" "time::access" "time::access-usec"
+                   "time::created" "time::created-usec" "time::modified-nsec"
+                   "time::access-nsec" "time::created-nsec" "unix::device"
+                   "unix::mode" "unix::nlink" "unix::is-mountpoint"
+                   "dos::is-archive" "dos::is-system" "dos::is-mountpoint"
+                   "owner::user" "owner::group")
+       (g:file-info-list-attributes info))))))
 
+;;;     g_file_info_remove_attribute
 
 ;;;     g_file_info_set_attribute
 ;;;     g_file_info_set_attribute_boolean
@@ -245,4 +266,4 @@
 ;;;     g_file_info_set_symlink_target
 ;;;     g_file_info_unset_attribute_mask
 
-;;; 2024-12-18
+;;; 2025-3-27

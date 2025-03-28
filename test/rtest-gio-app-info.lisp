@@ -188,8 +188,10 @@
     (is (string= "Text Editor" (g:app-info-name info2)))
     (is-true (g:app-info-equal info1 info1))
     (is-true (g:app-info-equal info2 info2))
-    ;; TODO: info1 and info2 are not equal. Why?
-    (is-false (g:app-info-equal info1 info2))))
+    #-windows ;; not equal for Linux ?!
+    (is-false (g:app-info-equal info1 info2))
+    #+windows
+    (is-true (g:app-info-equal info1 info2))))
 
 ;;;     g_app_info_get_id
 
@@ -366,4 +368,4 @@
 ;;;     g_app_launch_context_get_startup_notify_id
 ;;;     g_app_launch_context_launch_failed
 
-;;; 2024-12-22
+;;; 2025-3-28

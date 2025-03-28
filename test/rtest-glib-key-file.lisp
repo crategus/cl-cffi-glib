@@ -121,6 +121,7 @@
 
 ;;;     g_key_file_load_from_dirs
 
+#-windows
 (test g-key-file-load-from-dirs.1
   (glib:with-key-file (keyfile)
     (let ((dirs (list (namestring (glib-sys:sys-path "test/resource")))))
@@ -130,6 +131,7 @@
                                               dirs
                                               :none))))))
 
+#-windows
 (test g-key-file-load-from-dirs.2
   (glib:with-key-file (keyfile)
     (let ((dirs (list "/usr/share/ubuntu/applications")))
@@ -462,4 +464,4 @@
         (error "Error saving key file."))
       (is (stringp data)))))
 
-;;; 2025-1-12
+;;; 2025-3-28
