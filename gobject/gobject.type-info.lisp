@@ -541,7 +541,6 @@ ID     NAME               CFFI type      Lisp type
 ;;; G_TYPE_MAKE_FUNDAMENTAL                                 not exported
 ;;; ----------------------------------------------------------------------------
 
-#+nil
 (defun type-make-fundamental (x)
  #+liber-documentation
  "@version{#2020-11-1}
@@ -567,6 +566,8 @@ ID     NAME               CFFI type      Lisp type
   @see-class{g:type-t}
   @see-function{g:type-fundamental-next}"
   (ash x +type-fundamental-shift+))
+
+(export 'type-make-fundamental)
 
 ;;; ----------------------------------------------------------------------------
 ;;; G_TYPE_IS_ABSTRACT
