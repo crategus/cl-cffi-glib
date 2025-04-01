@@ -46,7 +46,7 @@ The `cl-cffi-glib` library depends on the following Lisp libraries:
     function interface for Common Lisp.
     See [common-lisp.net/project/cffi](http://common-lisp.net/project/cffi/).
 
-    **Warning:** Yout must use the version 0.22.0 or newer of the CFFI library.
+    **Warning:** You must use the version 0.22.0 or newer of the CFFI library.
     Older versions of CFFI are not compatible with the implementation of the
     `cl-cffi-glib` library.
 
