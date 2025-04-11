@@ -48,14 +48,14 @@
 ;;;     g_list_store_remove_all
 ;;;     g_list_store_splice
 ;;;     g_list_store_sort
-;;;     g_list_store_find                                  Since 2.64
-;;;     g_list_store_find_with_equal_func                  Since 2.64
-;;;     g_list_store_find_with_equal_func_full             Since 2.74
+;;;     g_list_store_find                                   Since 2.64
+;;;     g_list_store_find_with_equal_func                   Since 2.64
+;;;     g_list_store_find_with_equal_func_full              Since 2.74
 ;;;
 ;;; Properties
 ;;;
 ;;;     item-type
-;;;     n-items                                            Since 2.74
+;;;     n-items                                             Since 2.74
 ;;;
 ;;; Object Hierarchy
 ;;;
@@ -178,19 +178,28 @@
 ;;; g_list_store_new
 ;;; ----------------------------------------------------------------------------
 
-;; Use the C implementation and not MAKE-INSTANCE because we have to pass
-;; a pointer to a GType for the ITEM-TYPE property.
-
 (cffi:defcfun ("g_list_store_new" list-store-new)
     (gobject:object list-store :return)
  #+liber-documentation
- "@version{2025-3-24}
+ "@version{2025-4-11}
   @argument[gtype]{a @class{g:type-t} type ID for the items in the list}
   @return{The new @class{g:list-store} object.}
   @begin{short}
     Creates a new list store with items of @arg{gtype} type.
   @end{short}
   The @arg{gtype} type must be a subclass of the @class{g:object} class.
+  @begin[Examples]{dictionary}
+    Create a list store for @class{g:app-info} objects containing all
+    applications registered on the system.
+    @begin{pre}
+(defun create-application-list ()
+  (let ((store (g:list-store-new \"GAppInfo\"))
+        (apps (g:app-info-all)))
+    (dolist (app apps)
+      (g:list-store-append store app))
+  store))
+    @end{pre}
+  @end{dictionary}
   @see-class{g:list-store}
   @see-class{g:type-t}
   @see-class{g:object}"
