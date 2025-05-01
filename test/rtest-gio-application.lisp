@@ -166,7 +166,7 @@
 
 #-windows
 (test g-application-signals
-  (glib-test:with-check-memory ()
+  (glib-test:with-check-memory (:strong 1)
     (is (equal '(t t nil t)
                (example-application-open)))
     (is (equal '(t nil t t)
