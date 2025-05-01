@@ -50,8 +50,12 @@
 
 ;;;     g_content_type_get_mime_dirs
 
+(test g-context-type-mime-dirs.1
+  (is (every #'stringp
+             (g:content-type-mime-dirs))))
+
 #+crategus
-(test g-content-type-mime-dirs
+(test g-content-type-mime-dirs.2
   (is (equal '("/home/dieter/.local/share/mime"
                "/usr/share/ubuntu/mime"
                "/usr/share/gnome/mime"
@@ -64,21 +68,17 @@
 ;;;     g_content_type_get_icon
 
 (test g-content-type-icon
-  (let (icon)
+  (glib-test:with-check-memory (icon)
     (is (typep (setf icon
-                     (g:content-type-icon "image/cgm")) 'g:themed-icon))
-    ;; Check memory management
-    (is (= 1 (g:object-ref-count icon)))))
+                     (g:content-type-icon "image/cgm")) 'g:themed-icon))))
 
 ;;;     g_content_type_get_symbolic_icon
 
 (test g-content-type-symbolic-icon
-  (let (icon)
+  (glib-test:with-check-memory (icon)
     (is (typep (setf icon
                      (g:content-type-symbolic-icon "image/cgm"))
-               'g:themed-icon))
-    ;; Check memory management
-    (is (= 1 (g:object-ref-count icon)))))
+               'g:themed-icon))))
 
 ;;;     g_content_type_get_generic_icon_name
 
@@ -110,4 +110,4 @@
 (test g-content-types-registered
   (is (every #'stringp (g:content-types-registered))))
 
-;;; 2024-12-18
+;;; 2025-5-1

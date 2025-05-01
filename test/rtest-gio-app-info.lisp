@@ -63,8 +63,8 @@
              (glib-test:list-signals "GAppInfo")))
   ;; Check interface definition
   (is (equal '(GOBJECT:DEFINE-GINTERFACE "GAppInfo" GIO:APP-INFO
-                       (:EXPORT T
-                        :TYPE-INITIALIZER "g_app_info_get_type"))
+                      (:EXPORT T
+                       :TYPE-INITIALIZER "g_app_info_get_type"))
              (gobject:get-gtype-definition "GAppInfo"))))
 
 ;;;     GAppLaunchContext
@@ -96,11 +96,11 @@
              (glib-test:list-signals "GAppLaunchContext")))
   ;; Check class definition
   (is (equal '(GOBJECT:DEFINE-GOBJECT "GAppLaunchContext" GIO:APP-LAUNCH-CONTEXT
-                       (:SUPERCLASS GOBJECT:OBJECT
-                        :EXPORT T
-                        :INTERFACES NIL
-                        :TYPE-INITIALIZER "g_app_launch_context_get_type")
-                       NIL)
+                      (:SUPERCLASS GOBJECT:OBJECT
+                       :EXPORT T
+                       :INTERFACES NIL
+                       :TYPE-INITIALIZER "g_app_launch_context_get_type")
+                      NIL)
              (gobject:get-gtype-definition "GAppLaunchContext"))))
 
 ;;; --- Signals ----------------------------------------------------------------
@@ -325,6 +325,17 @@
 ;;;     g_app_info_get_default_for_type_async               Since 2.74
 ;;;     g_app_info_get_default_for_type_finish              Since 2.74
 
+;; TODO: Does not work in the testsuite
+
+(test g-app-info-default-for-type-async
+  (let ((msg '()))
+    (g:app-info-default-for-type-async "text/plain" nil nil
+            (lambda (source result)
+              (let ((info (g:app-info-default-for-type-finish result)))
+                (push (format nil "in GAsyncReadyCallback for ~a~%" source) msg)
+                (push (format nil "    result : ~a~%" info) msg))))
+    (is-false msg)))
+
 ;;;     g_app_info_get_default_for_uri_scheme
 
 (test g-app-info-default-for-uri-scheme
@@ -335,6 +346,17 @@
 
 ;;;     g_app_info_get_default_for_uri_scheme_async         Since 2.74
 ;;;     g_app_info_get_default_for_uri_scheme_finish        Since 2.74
+
+;; TODO: Does not work in the testsuite
+
+(test g-app-info-default-for-uri-scheme-async
+  (let ((msg '()))
+    (g:app-info-default-for-uri-scheme-async "http" nil
+            (lambda (source result)
+              (let ((info (g:app-info-default-for-uri-scheme-finish result)))
+                (push (format nil "in GAsyncReadyCallback for ~a~%" source) msg)
+                (push (format nil "    result : ~a~%" info) msg))))
+    (is-false msg)))
 
 ;;;     g_app_info_get_fallback_for_type
 

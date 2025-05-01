@@ -1,12 +1,12 @@
 ;;; ----------------------------------------------------------------------------
 ;;; gio.content-type.lisp
 ;;;
-;;; The documentation of this file is taken from the GIO Reference Manual
-;;; Version 2.82 and modified to document the Lisp binding to the GIO library.
-;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
-;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
+;;; The documentation in this file is taken from the GIO Reference Manual
+;;; version 2.84 and modified to document the Lisp binding to the GIO library,
+;;; see <http://www.gtk.org>. The API documentation for the Lisp binding is
+;;; available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2013 - 2024 Dieter Kaiser
+;;; Copyright (C) 2013 - 2025 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -39,15 +39,15 @@
 ;;;     g_content_type_is_unknown
 ;;;     g_content_type_get_description
 ;;;     g_content_type_get_mime_type
-;;;     g_content_type_set_mime_dirs                       Since 2.60
-;;;     g_content_type_get_mime_dirs                       Since 2.60
+;;;     g_content_type_set_mime_dirs
+;;;     g_content_type_get_mime_dirs
 ;;;     g_content_type_get_icon
 ;;;     g_content_type_get_symbolic_icon
 ;;;     g_content_type_get_generic_icon_name
 ;;;     g_content_type_can_be_executable
 ;;;     g_content_type_from_mime_type
-;;;     g_content_type_guess                               not implemented
-;;;     g_content_type_guess_for_tree                      not implemented
+;;;     g_content_type_guess                                not implemented
+;;;     g_content_type_guess_for_tree                       not implemented
 ;;;     g_content_types_get_registered
 ;;; ----------------------------------------------------------------------------
 
@@ -59,11 +59,13 @@
 
 (cffi:defcfun ("g_content_type_equals" content-type-equals) :boolean
  #+liber-documentation
- "@version{2024-12-7}
+ "@version{2025-05-01}
   @argument[ctype1]{a content type string}
   @argument[ctype2]{a content type string}
-  @return{@em{True} if the two content types are identical or equivalent,
-    @em{false} otherwise.}
+  @begin{return}
+    @em{True} if the two content types are identical or equivalent, @em{false}
+    otherwise.
+  @end{return}
   @begin{short}
     Compares two content types for equality.
   @end{short}
@@ -79,11 +81,12 @@
 
 (cffi:defcfun ("g_content_type_is_a" content-type-is-a) :boolean
  #+liber-documentation
- "@version{2024-12-7}
+ "@version{2025-05-01}
   @argument[ctype]{a content type string}
   @argument[supertype]{a content type string}
-  @return{@em{True} if @arg{ctype} is a kind of @arg{supertype}, @em{false}
-    otherwise.}
+  @begin{return}
+    @em{True} if @arg{ctype} is a kind of @arg{supertype}, @em{false} otherwise.
+  @end{return}
   @begin{short}
     Determines if @arg{ctype} is a subset of @arg{supertype}.
   @end{short}
@@ -99,11 +102,12 @@
 
 (cffi:defcfun ("g_content_type_is_mime_type" content-type-is-mime-type) :boolean
  #+liber-documentation
- "@version{2024-12-7}
+ "@version{2025-05-01}
   @argument[ctype]{a content type string}
   @argument[mimetype]{a MIME type string}
-  @return{@em{True} if @arg{ctype} is a kind of @arg{mimetype}, @em{false}
-    otherwise.}
+  @begin{return}
+    @em{True} if @arg{ctype} is a kind of @arg{mimetype}, @em{false} otherwise.
+  @end{return}
   @begin{short}
     Determines if @arg{ctype} is a subset of @arg{mimetype}.
   @end{short}
@@ -120,7 +124,7 @@
 
 (cffi:defcfun ("g_content_type_is_unknown" content-type-is-unknown) :boolean
  #+liber-documentation
- "@version{2024-12-7}
+ "@version{2025-05-01}
   @argument[ctype]{a content type string}
   @return{@em{True} if @arg{ctype} is the unknown content type.}
   @begin{short}
@@ -144,7 +148,7 @@
 (cffi:defcfun ("g_content_type_get_description" content-type-description)
     (:string :free-from-foreign t)
  #+liber-documentation
- "@version{2024-12-7}
+ "@version{2025-05-01}
   @argument[ctype]{a content type string}
   @begin{return}
     The string with a short description of the content type.
@@ -169,7 +173,7 @@
 
 (cffi:defcfun ("g_content_type_get_mime_type" content-type-mime-type) :string
  #+liber-documentation
- "@version{2024-12-7}
+ "@version{2025-05-01}
   @argument[ctype]{a content type string}
   @begin{return}
     The string with the registered MIME type for the given @arg{ctype}, or
@@ -189,7 +193,7 @@
 ;;; ---------------------------------------------------------------------------
 
 ;; FIXME: This implementation does not work. The type conversion glib:strv-t
-;; is not the correct implementation.
+;; is not the correct implementation to pass in the arguments.
 
 #+nil
 (defun (setf content-type-mime-dirs) (dirs)
@@ -198,11 +202,10 @@
                         :void)
   dirs)
 
-#+glib-2-60
 (cffi:defcfun ("g_content_type_get_mime_dirs" content-type-mime-dirs)
     (glib:strv-t :free-from-foreign nil)
  #+liber-documentation
- "@version{2024-12-7}
+ "@version{2025-05-01}
   @syntax{(g:content-type-mime-dirs) => dirs}
   @argument[dirs]{a list of directories to load MIME data from, including any
     @file{file/} subdirectory, and with the first directory to try listed first}
@@ -212,14 +215,11 @@
   @end{short}
   This function is intended to be used when writing tests that depend on
   information stored in the MIME database, in order to control the data.
-
-  Since 2.60
   @begin[Notes]{dictionary}
     The corresponding @code{g_content_type_set_mime_dirs()} setter function is
-    not implemented in the Lisp library.
+    not implemented for the Lisp binding.
   @end{dictionary}")
 
-#+glib-2-60
 (export 'content-type-mime-dirs)
 
 ;;; ----------------------------------------------------------------------------
@@ -229,7 +229,7 @@
 (cffi:defcfun ("g_content_type_get_icon" content-type-icon)
     (gobject:object icon :return)
  #+liber-documentation
- "@version{2024-12-7}
+ "@version{2025-05-01}
   @argument[ctype]{a content type string}
   @begin{return}
     The @class{g:icon} object corresponding to the content type.
@@ -257,7 +257,7 @@
 (cffi:defcfun ("g_content_type_get_symbolic_icon" content-type-symbolic-icon)
     (gobject:object icon :return)
  #+liber-documentation
- "@version{2024-12-7}
+ "@version{2025-05-01}
   @argument[ctype]{a content type string}
   @begin{return}
     The symbolic @class{g:icon} object corresponding to the content type.
@@ -277,7 +277,7 @@
 (cffi:defcfun ("g_content_type_get_generic_icon_name"
                 content-type-generic-icon-name) (:string :free-from-foreign t)
  #+liber-documentation
- "@version{2024-12-7}
+ "@version{2025-05-01}
   @argument[ctype]{a content type string}
   @begin{return}
     The string with the registered generic icon name for the given @arg{ctype},
@@ -308,10 +308,12 @@
 (cffi:defcfun ("g_content_type_can_be_executable"
                 content-type-can-be-executable) :boolean
  #+liber-documentation
- "@version{2024-12-7}
+ "@version{2025-05-01}
   @argument[ctype]{a content type string}
-  @return{@em{True} if the file type corresponds to a content type that can be
-    executable, @em{false} otherwise.}
+  @begin{return}
+    @em{True} if the file type corresponds to a content type that can be
+    executable, @em{false} otherwise.
+  @end{return}
   @begin{short}
     Checks if a content type can be executable.
   @end{short}
@@ -328,7 +330,7 @@
 (cffi:defcfun ("g_content_type_from_mime_type" content-type-from-mime-type)
     :string
  #+liber-documentation
- "@version{2024-12-7}
+ "@version{2025-05-01}
   @argument[mimetype]{a MIME type string}
   @return{The string with the content type or @code{nil}.}
   @begin{short}
@@ -341,55 +343,17 @@
 ;;; ----------------------------------------------------------------------------
 ;;; g_content_type_guess ()
 ;;;
-;;; gchar * g_content_type_guess (const gchar *filename,
-;;;                               const guchar *data,
-;;;                               gsize data_size,
-;;;                               gboolean *result_uncertain);
-;;;
 ;;; Guesses the content type based on example data. If the function is
 ;;; uncertain, result_uncertain will be set to TRUE. Either filename or data may
 ;;; be NULL, in which case the guess will be based solely on the other argument.
-;;;
-;;; filename :
-;;;     a string, or NULL
-;;;
-;;; data :
-;;;     a stream of data, or NULL
-;;;
-;;; data_size :
-;;;     the size of data
-;;;
-;;; result_uncertain :
-;;;     return location for the certainty of the result, or NULL
-;;;
-;;; Returns :
-;;;     a string indicating a guessed content type for the given data.
-;;;     Free with g_free()
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_content_type_guess_for_tree ()
 ;;;
-;;; gchar ** g_content_type_guess_for_tree (GFile *root);
-;;;
 ;;; Tries to guess the type of the tree with root root, by looking at the files
 ;;; it contains. The result is an array of content types, with the best guess
 ;;; coming first.
-;;;
-;;; The types returned all have the form x-content/foo, for example,
-;;; x-content/audio-cdda (for audio CDs) or x-content/image-dcf (for a camera
-;;; memory card). See the shared-mime-info specification for more on x-content
-;;; types.
-;;;
-;;; This function is useful in the implementation of
-;;; g_mount_guess_content_type().
-;;;
-;;; root :
-;;;     the root of the tree to guess a type for
-;;;
-;;; Returns :
-;;;     an NULL-terminated array of zero or more content types. Free with
-;;;     g_strfreev().
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -399,7 +363,7 @@
 (cffi:defcfun ("g_content_types_get_registered" content-types-registered)
     (glib:list-t (:string :free-from-foreign t) :free-from-foreign t)
  #+liber-documentation
- "@version{2024-12-7}
+ "@version{2025-05-01}
   @return{The list of strings with the registered content types.}
   @begin{short}
     Gets a list of strings containing all the registered content types known to

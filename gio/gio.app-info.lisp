@@ -2,8 +2,8 @@
 ;;; gio.app-info.lisp
 ;;;
 ;;; The documentation in this file is taken from the GIO Reference Manual
-;;; Version 2.82 and modified to document the Lisp binding to the GIO library,
-;;; see <http://www.gtk.org>. The API documentation of the Lisp binding is
+;;; version 2.84 and modified to document the Lisp binding to the GIO library,
+;;; see <http://www.gtk.org>. The API documentation for the Lisp binding is
 ;;; available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
 ;;; Copyright (C) 2012 - 2025 Dieter Kaiser
@@ -50,12 +50,8 @@
 ;;;     g_app_info_get_executable
 ;;;     g_app_info_get_commandline
 ;;;     g_app_info_get_icon
-;;;     g_app_info_launch
 ;;;     g_app_info_supports_files
 ;;;     g_app_info_supports_uris
-;;;     g_app_info_launch_uris
-;;;     g_app_info_launch_uris_async
-;;;     g_app_info_launch_uris_finish
 ;;;     g_app_info_should_show
 ;;;     g_app_info_can_delete
 ;;;     g_app_info_delete
@@ -69,18 +65,18 @@
 ;;;     g_app_info_get_supported_types
 ;;;     g_app_info_get_all
 ;;;     g_app_info_get_all_for_type
-;;;     g_app_info_get_default_for_type
-;;;
-;;;     g_app_info_get_default_for_type_async              Since 2.74
-;;;     g_app_info_get_default_for_type_finish             Since 2.74
-;;;
-;;;     g_app_info_get_default_for_uri_scheme
-;;;
-;;;     g_app_info_get_default_for_uri_scheme_async        Since 2.74
-;;;     g_app_info_get_default_for_uri_scheme_finish       Since 2.74
-;;;
 ;;;     g_app_info_get_fallback_for_type
 ;;;     g_app_info_get_recommended_for_type
+;;;     g_app_info_get_default_for_type
+;;;     g_app_info_get_default_for_type_async               Since 2.74
+;;;     g_app_info_get_default_for_type_finish              Since 2.74
+;;;     g_app_info_get_default_for_uri_scheme
+;;;     g_app_info_get_default_for_uri_scheme_async         Since 2.74
+;;;     g_app_info_get_default_for_uri_scheme_finish        Since 2.74
+;;;     g_app_info_launch
+;;;     g_app_info_launch_uris
+;;;     g_app_info_launch_uris_async
+;;;     g_app_info_launch_uris_finish
 ;;;     g_app_info_launch_default_for_uri
 ;;;     g_app_info_launch_default_for_uri_async
 ;;;     g_app_info_launch_default_for_uri_finish
@@ -96,7 +92,7 @@
 ;;; Signals
 ;;;
 ;;;     launch-failed
-;;;     launch-started                                     Since 2.72
+;;;     launch-started                                      Since 2.72
 ;;;     launched
 ;;;
 ;;; Object Hierarchy
@@ -137,7 +133,7 @@
 (setf (liber:alias-for-symbol 'app-info-create-flags)
       "GFlags"
       (liber:symbol-documentation 'app-info-create-flags)
- "@version{2024-12-22}
+ "@version{2025-05-01}
   @begin{declaration}
 (gobject:define-gflags \"GAppInfoCreateFlags\" app-info-create-flags
   (:export t
@@ -174,7 +170,7 @@
 (setf (liber:alias-for-class 'app-info)
       "Interface"
       (documentation 'app-info 'type)
- "@version{2024-12-22}
+ "@version{2025-05-01}
   @begin{short}
     Information about an installed application and methods to launch it with
     file arguments.
@@ -197,7 +193,7 @@
 
 #+liber-documentation
 (setf (documentation 'app-launch-context 'type)
- "@version{2025-2-3}
+ "@version{2025-05-01}
   @begin{short}
     Integrating the launch with the launching application.
   @end{short}
@@ -219,12 +215,12 @@ lambda (context startup-notify-id)    :run-last
       notification.
    @subheading{The \"launch-started\" signal}
      @begin{pre}
-lambda (context info platform-data)    :run-first
+lambda (context appinfo platform-data)    :run-first
      @end{pre}
      @begin[code]{table}
        @entry[context]{The @class{g:app-launch-context} object emitting the
          signal.}
-       @entry[info]{The @class{g:app-info} instance that is about to be
+       @entry[appinfo]{The @class{g:app-info} instance that is about to be
          launched.}
        @entry[platform-data]{The @symbol{g:variant} parameter with additional
          platform specific data for this launch. The argument can be
@@ -255,12 +251,12 @@ lambda (context info platform-data)    :run-first
      Since 2.72
     @subheading{The \"launched\" signal}
       @begin{pre}
-lambda (context info platform-data)    :run-last
+lambda (context appinfo platform-data)    :run-last
       @end{pre}
       @begin[code]{table}
         @entry[context]{The @class{g:app-launch-context} object emitting the
           signal.}
-        @entry[info]{The @class{g:app-info} object that was just launched.}
+        @entry[appinfo]{The @class{g:app-info} object that was just launched.}
         @entry[platform-data]{The @symbol{g:variant} parameter with additional
           platform specific data for this launch.}
       @end{table}
@@ -289,7 +285,7 @@ lambda (context info platform-data)    :run-last
 
 (defun app-info-create-from-commandline (cmdline application flags)
  #+liber-documentation
- "@version{2025-2-3}
+ "@version{2025-05-01}
   @argument[cmdline]{a string for the commandline to use}
   @argument[application]{a string for the application name, or @code{nil} to
     use @arg{cmdline}}
@@ -317,14 +313,14 @@ lambda (context info platform-data)    :run-last
 
 (cffi:defcfun ("g_app_info_dup" app-info-dup) (gobject:object :return)
  #+liber-documentation
- "@version{2024-12-22}
-  @argument[info]{a @class{g:app-info} instance}
-  @return{The @class{g:app-info} instance with the duplicate of @arg{info}.}
+ "@version{2025-05-01}
+  @argument[appinfo]{a @class{g:app-info} instance}
+  @return{The @class{g:app-info} instance with the duplicate of @arg{appinfo}.}
   @begin{short}
     Creates a duplicate of an application info.
   @end{short}
   @see-class{g:app-info}"
-  (info gobject:object))
+  (appinfo gobject:object))
 
 (export 'app-info-dup)
 
@@ -334,17 +330,19 @@ lambda (context info platform-data)    :run-last
 
 (cffi:defcfun ("g_app_info_equal" app-info-equal) :boolean
  #+liber-documentation
- "@version{2024-12-22}
-  @argument[info1]{a first @class{g:app-info} instance}
-  @argument[info2]{a second @class{g:app-info} instance}
-  @return{@em{True} if @arg{info1} is equal to @arg{info2}, @em{false}
-    otherwise.}
+ "@version{2025-05-01}
+  @argument[appinfo1]{a first @class{g:app-info} instance}
+  @argument[appinfo2]{a second @class{g:app-info} instance}
+  @begin{return}
+    @em{True} if @arg{appinfo1} is equal to @arg{appinfo2}, @em{false}
+    otherwise.
+  @end{return}
   @begin{short}
     Checks if two application infos are equal.
   @end{short}
   @see-class{g:app-info}"
-  (info1 gobject:object)
-  (info2 gobject:object))
+  (appinfo1 gobject:object)
+  (appinfo2 gobject:object))
 
 (export 'app-info-equal)
 
@@ -354,8 +352,8 @@ lambda (context info platform-data)    :run-last
 
 (cffi:defcfun ("g_app_info_get_id" app-info-id) :string
  #+liber-documentation
- "@version{2024-12-22}
-  @argument[info]{a @class{g:app-info} instance}
+ "@version{2025-05-01}
+  @argument[appinfo]{a @class{g:app-info} instance}
   @return{The string containing the ID of the application.}
   @begin{short}
     Gets the ID of an application.
@@ -364,10 +362,10 @@ lambda (context info platform-data)    :run-last
   is platform dependent. For instance, on Unix this is the desktop file ID from
   the xdg menu specification.
 
-  Note that the returned ID may be @code{nil}, depending on how @arg{info}
+  Note that the returned ID may be @code{nil}, depending on how @arg{appinfo}
   has been constructed.
   @see-class{g:app-info}"
-  (info gobject:object))
+  (appinfo gobject:object))
 
 (export 'app-info-id)
 
@@ -377,15 +375,15 @@ lambda (context info platform-data)    :run-last
 
 (cffi:defcfun ("g_app_info_get_name" app-info-name) :string
  #+liber-documentation
- "@version{2024-12-22}
-  @argument[info]{a @class{g:app-info} instance}
-  @return{The string with the the name of the application for @arg{info}.}
+ "@version{2025-05-01}
+  @argument[appinfo]{a @class{g:app-info} instance}
+  @return{The string with the the name of the application for @arg{appinfo}.}
   @begin{short}
     Gets the installed name of the application.
   @end{short}
   @see-class{g:app-info}
   @see-function{g:app-info-display-name}"
-  (info gobject:object))
+  (appinfo gobject:object))
 
 (export 'app-info-name)
 
@@ -395,10 +393,12 @@ lambda (context info platform-data)    :run-last
 
 (cffi:defcfun ("g_app_info_get_display_name" app-info-display-name) :string
  #+liber-documentation
- "@version{2024-12-22}
-  @argument[info]{a @class{g:app-info} instance}
-  @return{The string with the the display name of the application for
-    @arg{info}, or the name of the application if no display name is available.}
+ "@version{2025-05-01}
+  @argument[appinfo]{a @class{g:app-info} instance}
+  @begin{return}
+    The string with the the display name of the application for @arg{appinfo},
+    or the name of the application if no display name is available.
+  @end{return}
   @begin{short}
     Gets the display name of the application.
   @end{short}
@@ -406,7 +406,7 @@ lambda (context info platform-data)    :run-last
   application name itself.
   @see-class{g:app-info}
   @see-function{g:app-info-name}"
-  (info gobject:object))
+  (appinfo gobject:object))
 
 (export 'app-info-display-name)
 
@@ -416,15 +416,15 @@ lambda (context info platform-data)    :run-last
 
 (cffi:defcfun ("g_app_info_get_description" app-info-description) :string
  #+liber-documentation
- "@version{2024-12-22}
-  @argument[info]{a @class{g:app-info} instance}
-  @return{The string containing a description of the application @arg{info},
+ "@version{2025-05-01}
+  @argument[appinfo]{a @class{g:app-info} instance}
+  @return{The string containing a description of the application @arg{appinfo},
     or @code{nil} if none.}
   @begin{short}
     Gets a human readable description of an installed application.
   @end{short}
   @see-class{g:app-info}"
-  (info gobject:object))
+  (appinfo gobject:object))
 
 (export 'app-info-description)
 
@@ -434,14 +434,14 @@ lambda (context info platform-data)    :run-last
 
 (cffi:defcfun ("g_app_info_get_executable" app-info-executable) :string
  #+liber-documentation
- "@version{2024-12-22}
-  @argument[info]{a @class{g:app-info} instance}
-  @return{The string containing the application binaries name of @arg{info}.}
+ "@version{2025-05-01}
+  @argument[appinfo]{a @class{g:app-info} instance}
+  @return{The string containing the application binaries name of @arg{appinfo}.}
   @begin{short}
     Gets the name of the executable for the installed application.
   @end{short}
   @see-class{g:app-info}"
-  (info gobject:object))
+  (appinfo gobject:object))
 
 (export 'app-info-executable)
 
@@ -451,15 +451,15 @@ lambda (context info platform-data)    :run-last
 
 (cffi:defcfun ("g_app_info_get_commandline" app-info-commandline) :string
  #+liber-documentation
- "@version{2024-12-22}
-  @argument[info]{a @class{g:app-info} instance}
-  @return{The string containing the commandline of @arg{info}, or @code{nil}
+ "@version{2025-05-01}
+  @argument[appinfo]{a @class{g:app-info} instance}
+  @return{The string containing the commandline of @arg{appinfo}, or @code{nil}
     if this information is not available.}
   @begin{short}
     Gets the commandline with which the application will be started.
   @end{short}
   @see-class{g:app-info}"
-  (info gobject:object))
+  (appinfo gobject:object))
 
 (export 'app-info-commandline)
 
@@ -469,18 +469,627 @@ lambda (context info platform-data)    :run-last
 
 (cffi:defcfun ("g_app_info_get_icon" app-info-icon) (gobject:object icon)
  #+liber-documentation
- "@version{2024-12-22}
-  @argument[info]{a @class{g:app-info} instance}
-  @return{The default @class{g:icon} object for @arg{info} or @code{nil} if
-    there is no default icon.}
+ "@version{2025-05-01}
+  @argument[appinfo]{a @class{g:app-info} instance}
+  @begin{return}
+    The default @class{g:icon} object for @arg{appinfo} or @code{nil} if there
+    is no default icon.
+  @end{return}
   @begin{short}
     Gets the icon for the application.
   @end{short}
   @see-class{g:app-info}
   @see-class{g:icon}"
-  (info gobject:object))
+  (appinfo gobject:object))
 
 (export 'app-info-icon)
+
+;;; ----------------------------------------------------------------------------
+;;; g_app_info_supports_files
+;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("g_app_info_supports_files" app-info-supports-files) :boolean
+ #+liber-documentation
+ "@version{2025-05-01}
+  @argument[appinfo]{a @class{g:app-info} instance}
+  @return{@em{True} if @arg{appinfo} supports files.}
+  @begin{short}
+    Checks if the application accepts files as arguments.
+  @end{short}
+  @see-class{g:app-info}"
+  (appinfo gobject:object))
+
+(export 'app-info-supports-files)
+
+;;; ----------------------------------------------------------------------------
+;;; g_app_info_supports_uris
+;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("g_app_info_supports_uris" app-info-supports-uris) :boolean
+ #+liber-documentation
+ "@version{2025-05-01}
+  @argument[appinfo]{a @class{g:app-info} instance}
+  @return{@em{True} if @arg{appinfo} supports URIs.}
+  @begin{short}
+    Checks if the application supports reading files and directories from URIs.
+  @end{short}
+  @see-class{g:app-info}"
+  (appinfo gobject:object))
+
+(export 'app-info-supports-uris)
+
+;;; ----------------------------------------------------------------------------
+;;; g_app_info_should_show
+;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("g_app_info_should_show" app-info-should-show) :boolean
+ #+liber-documentation
+ "@version{2025-05-01}
+  @argument[appinfo]{a @class{g:app-info} instance}
+  @return{@em{True} if @arg{appinfo} should be shown, @em{false} otherwise.}
+  @begin{short}
+    Checks if the application info should be shown in menus that list available
+    applications.
+  @end{short}
+  @see-class{g:app-info}"
+  (appinfo gobject:object))
+
+(export 'app-info-should-show)
+
+;;; ----------------------------------------------------------------------------
+;;; g_app_info_can_delete
+;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("g_app_info_can_delete" app-info-can-delete) :boolean
+ #+liber-documentation
+ "@version{#2025-05-01}
+  @argument[appinfo]{a @class{g:app-info} instance}
+  @return{@em{True} if @arg{appinfo} can be deleted.}
+  @begin{short}
+    Obtains the information whether the application info can be deleted.
+  @end{short}
+  See the @fun{g:app-info-delete} function.
+  @see-class{g:app-info}
+  @see-function{g:app-info-delete}"
+  (appinfo gobject:object))
+
+(export 'app-info-can-delete)
+
+;;; ----------------------------------------------------------------------------
+;;; g_app_info_delete
+;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("g_app_info_delete" app-info-delete) :boolean
+ #+liber-documentation
+ "@version{#2025-05-01}
+  @argument[appinfo]{a @class{g:app-info} instance}
+  @return{@em{True} if @arg{appinfo} has been deleted.}
+  @begin{short}
+    Tries to delete an application info.
+  @end{short}
+
+  On some platforms, there may be a difference between user-defined application
+  infos which can be deleted, and system-wide ones which cannot. See the
+  @fun{g:app-info-can-delete} function.
+  @see-class{g:app-info}
+  @see-function{g:app-info-can-delete}"
+  (appinfo gobject:object))
+
+(export 'app-info-delete)
+
+;;; ----------------------------------------------------------------------------
+;;; g_app_info_reset_type_associations
+;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("g_app_info_reset_type_associations"
+                app-info-reset-type-associations) :void
+ #+liber-documentation
+ "@version{#2025-05-01}
+  @argument[ctype]{a string for the content type}
+  @begin{short}
+    Removes all changes to the type associations done by the
+    @fun{g:app-info-set-as-default-for-type},
+    @fun{g:app-info-set-as-default-for-extension},
+    @fun{g:app-info-add-supports-type} or @fun{g:app-info-remove-supports-type}
+    function.
+  @end{short}
+  @see-class{g:app-info}
+  @see-function{g:app-info-set-as-default-for-type}
+  @see-function{g:app-info-set-as-default-for-extension}
+  @see-function{g:app-info-add-supports-type}
+  @see-function{g:app-info-remove-supports-type}"
+  (ctype :string))
+
+(export 'app-info-reset-type-associations)
+
+;;; ----------------------------------------------------------------------------
+;;; g_app_info_set_as_default_for_type
+;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("g_app_info_set_as_default_for_type"
+                %app-info-set-as-default-for-type) :boolean
+  (appinfo gobject:object)
+  (ctype :string)
+  (err :pointer))
+
+(defun app-info-set-as-default-for-type (appinfo ctype)
+ #+liber-documentation
+ "@version{#2025-05-01}
+  @argument[appinfo]{a @class{g:app-info} instance}
+  @argument[ctype]{a string for the content type}
+  @return{@em{True} on success, @em{false} on error.}
+  @begin{short}
+    Sets the application as the default handler for a given content type.
+  @end{short}
+  @see-class{g:app-info}"
+  (glib:with-error (err)
+    (%app-info-set-as-default-for-type appinfo ctype err)))
+
+(export 'app-info-set-as-default-for-type)
+
+;;; ----------------------------------------------------------------------------
+;;; g_app_info_set_as_default_for_extension
+;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("g_app_info_set_as_default_for_extension"
+                %app-info-set-as-default-for-extension) :boolean
+  (appinfo gobject:object)
+  (extension :string)
+  (err :pointer))
+
+(defun app-info-set-as-default-for-extension (appinfo extension)
+ #+liber-documentation
+ "@version{#2025-05-01}
+  @argument[appinfo]{a @class{g:app-info} instance}
+  @argument[extension]{a string containing the file extension, without the dot}
+  @return{@em{True} on success, @em{false} on error.}
+  @begin{short}
+    Sets the application as the default handler for the given file extension.
+  @end{short}
+  @see-class{g:app-info}"
+  (glib:with-error (err)
+    (%app-info-set-as-default-for-extension appinfo extension err)))
+
+(export 'app-info-set-as-default-for-extension)
+
+;;; ----------------------------------------------------------------------------
+;;; g_app_info_set_as_last_used_for_type
+;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("g_app_info_set_as_last_used_for_type"
+                %app-info-set-as-last-used-for-type) :boolean
+  (appinfo gobject:object)
+  (ctype :string)
+  (err :pointer))
+
+(defun app-info-set-as-last-used-for-type (appinfo ctype)
+ #+liber-documentation
+ "@version{#2025-05-01}
+  @argument[appinfo]{a @class{g:app-info} instance}
+  @argument[ctype]{a string for the content type}
+  @return{@em{True} on success, @em{false} on error.}
+  @begin{short}
+    Sets the application as the last used application for a given content type.
+  @end{short}
+  This will make the application appear as first in the list returned by the
+  @fun{g:app-info-recommended-for-type} function, regardless of the default
+  application for that content type.
+  @see-class{g:app-info}
+  @see-function{g:app-info-recommended-for-type}"
+  (glib:with-error (err)
+    (%app-info-set-as-last-used-for-type appinfo ctype err)))
+
+(export 'app-info-set-as-last-used-for-type)
+
+;;; ----------------------------------------------------------------------------
+;;; g_app_info_add_supports_type
+;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("g_app_info_add_supports_type" %app-info-add-supports-type)
+    :boolean
+  (appinfo gobject:object)
+  (ctype :string)
+  (err :pointer))
+
+(defun app-info-add-supports-type (appinfo ctype)
+ #+liber-documentation
+ "@version{#2025-05-01}
+  @argument[appinfo]{a @class{g:app-info} instance}
+  @argument[ctype]{a string for the content type}
+  @return{@em{True} on success, @em{false} on error.}
+  @begin{short}
+    Adds a content type to the application information to indicate the
+    application is capable of opening files with the given content type.
+  @end{short}
+  @see-class{g:app-info}"
+  (glib:with-error (err)
+    (%app-info-add-supports-type appinfo ctype err)))
+
+(export 'app-info-add-supports-type)
+
+;;; ----------------------------------------------------------------------------
+;;; g_app_info_can_remove_supports_type
+;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("g_app_info_can_remove_supports_type"
+                app-info-can-remove-supports-type) :boolean
+ #+liber-documentation
+ "@version{#2025-05-01}
+  @argument[appinfo]{a @class{g:app-info} instance}
+  @begin{return}
+    @em{True} if it is possible to remove supported content types from a
+    given @arg{appinfo}, @em{false} if not.
+  @end{return}
+  @begin{short}
+    Checks if a supported content type can be removed from an application.
+  @end{short}
+  @see-class{g:app-info}"
+  (appinfo gobject:object))
+
+(export 'app-info-can-remove-supports-type)
+
+;;; ----------------------------------------------------------------------------
+;;; g_app_info_remove_supports_type
+;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("g_app_info_remove_supports_type" %app-info-remove-supports-type)
+    :boolean
+  (appinfo gobject:object)
+  (ctype :string)
+  (err :pointer))
+
+(defun app-info-remove-supports-type (appinfo ctype)
+ #+liber-documentation
+ "@version{#2025-05-01}
+  @argument[appinfo]{a @class{g:app-info} instance}
+  @argument[ctype]{a string for the content type}
+  @return{@em{True} on success, @em{false} on error.}
+  @begin{short}
+    Removes a supported content type from an application information, if
+    possible.
+  @end{short}
+  @see-class{g:app-info}"
+  (glib:with-error (err)
+    (%app-info-remove-supports-type appinfo ctype err)))
+
+(export 'app-info-remove-supports-type)
+
+;;; ----------------------------------------------------------------------------
+;;; g_app_info_get_supported_types
+;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("g_app_info_get_supported_types" app-info-supported-types)
+    (glib:strv-t :free-from-foreign nil)
+ #+liber-documentation
+ "@version{2025-05-01}
+  @argument[appinfo]{a @class{g:app-info} instance}
+  @return{The list of strings with the content types.}
+  @begin{short}
+    Retrieves the list of content types that @arg{appinfo} claims to support.
+  @end{short}
+  If this information is not provided by the environment, this function will
+  return @code{nil}. This function does not take in consideration associations
+  added with the @fun{g:app-info-add-supports-type} function, but only those
+  exported directly by the application.
+  @see-class{g:app-info}
+  @see-function{g:app-info-add-supports-type}"
+  (appinfo gobject:object))
+
+(export 'app-info-supported-types)
+
+;;; ----------------------------------------------------------------------------
+;;; g_app_info_get_all
+;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("g_app_info_get_all" app-info-all)
+    (glib:list-t (gobject:object :return))
+ #+liber-documentation
+ "@version{2025-05-01}
+  @return{The list of @class{g:app-info} instances.}
+  @begin{short}
+    Gets a list of all application infos for the applications currently
+    registered on this system.
+  @end{short}
+  For desktop files, this includes applications that have @code{NoDisplay=true}
+  set or are excluded from display by means of @code{OnlyShowIn} or
+  @code{NotShowIn}. See the @fun{g:app-info-should-show} function. The returned
+  list does not include applications which have the @code{Hidden} key set.
+  @see-class{g:app-info}
+  @see-function{g:app-info-should-show}")
+
+(export 'app-info-all)
+
+;;; ----------------------------------------------------------------------------
+;;; g_app_info_get_all_for_type
+;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("g_app_info_get_all_for_type" app-info-all-for-type)
+    (glib:list-t (gobject:object :return))
+ #+liber-documentation
+ "@version{2025-05-01}
+  @argument[ctype]{a string for the content type}
+  @begin{return}
+    The list of @class{g:app-info} instances for the given @arg{ctype} or
+    @code{nil} on error.
+  @end{return}
+  @begin{short}
+    Gets a list of all application infos for a given content type, including
+    the recommended and fallback application infos.
+  @end{short}
+  See the @fun{g:app-info-recommended-for-type} and
+  @fun{g:app-info-fallback-for-type} functions.
+  @see-class{g:app-info}
+  @see-function{g:app-info-recommended-for-type}
+  @see-function{g:app-info-fallback-for-type}"
+  (ctype :string))
+
+(export 'app-info-all-for-type)
+
+;;; ----------------------------------------------------------------------------
+;;; g_app_info_get_fallback_for_type
+;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("g_app_info_get_fallback_for_type" app-info-fallback-for-type)
+    (glib:list-t (gobject:object :return))
+ #+liber-documentation
+ "@version{2025-05-01}
+  @argument[ctype]{a string for the content type}
+  @begin{return}
+    The list of @class{g:app-info} instances for the given @arg{ctype} or
+    @code{nil} on error.
+  @end{return}
+  @begin{short}
+    Gets a list of fallback application infos for a given content type, that is,
+    those applications which claim to support the given content type by MIME
+    type subclassing and not directly.
+  @end{short}
+  @see-class{g:app-info}"
+  (ctype :string))
+
+(export 'app-info-fallback-for-type)
+
+;;; ----------------------------------------------------------------------------
+;;; g_app_info_get_recommended_for_type
+;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("g_app_info_get_recommended_for_type"
+                app-info-recommended-for-type)
+    (glib:list-t (gobject:object :return))
+ #+liber-documentation
+ "@version{2025-05-01}
+  @argument[ctype]{a string for the content type}
+  @begin{return}
+    The list of @class{g:app-info} instances for the given @arg{ctype} or
+    @code{nil} on error.
+  @end{return}
+  @begin{short}
+    Gets a list of recommended application infos for a given content type, that
+    is, those applications which claim to support the given content type
+    exactly, and not by MIME type subclassing.
+  @end{short}
+  Note that the first application of the list is the last used one, that is,
+  the last one for which the @fun{g:app-info-set-as-last-used-for-type} function
+  has been called.
+  @see-class{g:app-info}
+  @see-function{g:app-info-set-as-last-used-for-type}"
+  (ctype :string))
+
+(export 'app-info-recommended-for-type)
+
+;;; ----------------------------------------------------------------------------
+;;; g_app_info_get_default_for_type
+;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("g_app_info_get_default_for_type" app-info-default-for-type)
+    (gobject:object app-info :return)
+ #+liber-documentation
+ "@version{2025-05-01}
+  @argument[ctype]{a string for the content type}
+  @argument[must-support-uris]{if @em{true}, the application info is expected
+    to support URIs}
+  @begin{return}
+    The @class{g:app-info} instance for the given @arg{ctype} or @code{nil}
+    on error.
+  @end{return}
+  @begin{short}
+    Gets the default application info for a given content type.
+  @end{short}
+  @see-class{g:app-info}"
+  (ctype :string)
+  (must-support-uris :boolean))
+
+(export 'app-info-default-for-type)
+
+;;; ----------------------------------------------------------------------------
+;;; g_app_info_get_default_for_type_async                   Since 2.74
+;;; ----------------------------------------------------------------------------
+
+#+glib-2-74
+(cffi:defcfun ("g_app_info_get_default_for_type_async"
+               %app-info-default-for-type-async) :void
+  (ctype :string)
+  (must-support-uris :boolean)
+  (cancellable (gobject:object cancellable))
+  (func :pointer)
+  (data :pointer))
+
+#+glib-2-74
+(defun app-info-default-for-type-async (ctype
+                                        must-support-uris
+                                        cancellable
+                                        func)
+ #+liber-documentation
+ "@version{2025-05-01}
+  @argument[ctype]{a string for the content type}
+  @argument[must-support-uris]{if @em{true}, the application info is expected
+    to support URIs}
+  @argument[cancellable]{a @class{g:cancellable} object, can be @code{nil}}
+  @argument[func]{a @symbol{g:async-ready-callback} callback function to
+    call when the request is done}
+  @begin{return}
+    The @class{g:app-info} instance for the given @arg{ctype} or @code{nil}
+    on error.
+  @end{return}
+  @begin{short}
+    Asynchronously gets the default @class{g:app-info} instance for a given
+    content type.
+  @end{short}
+
+  This function completes asynchronously. Use the
+  @fun{g:app-info-default-for-type-finish} function inside the
+  @symbol{g:async-ready-callback} callback function to obtain the result of the
+  operation.
+
+  Since 2.74
+  @see-class{g:app-info}
+  @see-class{g:cancellable}
+  @see-symbol{g:async-ready-callback}
+  @see-function{g:app-info-default-for-type}
+  @see-function{g:app-info-default-for-type-finish}"
+  (let ((ptr (glib:allocate-stable-pointer func)))
+    (%app-info-default-for-type-async ctype
+                                      must-support-uris
+                                      (or cancellable (cffi:null-pointer))
+                                      (cffi:callback async-ready-callback)
+                                      ptr)))
+
+#+glib-2-74
+(export 'app-info-default-for-type-async)
+
+;;; ----------------------------------------------------------------------------
+;;; g_app_info_get_default_for_type_finish                  Since 2.74
+;;; ----------------------------------------------------------------------------
+
+#+glib-2-74
+(cffi:defcfun ("g_app_info_get_default_for_type_finish"
+               %app-info-default-for-type-finish)
+    (gobject:object app-info :return)
+  (result (gobject:object async-result))
+  (err :pointer))
+
+#+glib-2-74
+(defun app-info-default-for-type-finish (result)
+ #+liber-documentation
+ "@version{2025-05-01}
+  @argument[result]{a @class{g:async-result} object}
+  @return{The @class{g:app-info} instance for the given content type.}
+  @begin{short}
+    Finishes a default @class{g:app-info} instance lookup started by the
+    @fun{g:app-info-default-for-type-async} function.
+  @end{short}
+
+  Since 2.74
+  @see-class{g:app-info}
+  @see-class{g:async-result}
+  @see-function{g:app-info-default-for-type-async}"
+  (glib:with-ignore-error (err)
+    (%app-info-default-for-type-finish result err)))
+
+#+glib-2-74
+(export 'app-info-default-for-type-finish)
+
+;;; ----------------------------------------------------------------------------
+;;; g_app_info_get_default_for_uri_scheme
+;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("g_app_info_get_default_for_uri_scheme"
+                app-info-default-for-uri-scheme)
+    (gobject:object app-info :return)
+ #+liber-documentation
+ "@version{2025-05-01}
+  @argument[uri-scheme]{a string containing a URI scheme}
+  @begin{return}
+    The @class{g:app-info} instance for the given @arg{uri-scheme} or
+    @code{nil} on error.
+  @end{return}
+  @begin{short}
+    Gets the default application for handling URIs with the given URI scheme.
+  @end{short}
+  A URI scheme is the initial part of the URI, up to but not including the
+  @file{':'}, for example, @file{\"http\"}, @file{\"ftp\"} or @file{\"sip\"}.
+  @see-class{g:app-info}"
+  (uri-scheme :string))
+
+(export 'app-info-default-for-uri-scheme)
+
+;;; ----------------------------------------------------------------------------
+;;; g_app_info_get_default_for_uri_scheme_async            Since 2.74
+;;; ----------------------------------------------------------------------------
+
+#+glib-2-74
+(cffi:defcfun ("g_app_info_get_default_for_uri_scheme_async"
+               %app-info-default-for-uri-scheme-async) :void
+  (uri-scheme :string)
+  (cancellable (gobject:object cancellable))
+  (func :pointer)
+  (data :pointer))
+
+#+glib-2-74
+(defun app-info-default-for-uri-scheme-async (uri-scheme cancellable func)
+ #+liber-documentation
+ "@version{#2025-05-01}
+  @argument[uri-scheme]{a string containing a URI scheme}
+  @argument[cancellable]{a @class{g:cancellable} object, can be @code{nil}}
+  @argument[func]{a @symbol{g:async-ready-callback} callback function to
+    call when the request is done}
+  @begin{short}
+    Asynchronously gets the default application for handling URIs with the given
+    URI scheme.
+  @end{short}
+  A URI scheme is the initial part of the URI, up to but not including the
+  @file{:}, for example, @file{http}, @file{ftp} or @file{sip}.
+
+  This function completes asynchronously. Use the
+  @fun{g:app-info-default-for-uri-scheme-finish} function inside the
+  @symbol{g:async-ready-callback} callback function to obtain the result of the
+  operation.
+
+  Since 2.74
+  @see-class{g:app-info}
+  @see-class{g:cancellable}
+  @see-symbol{g:async-ready-callback}
+  @see-function{g:app-info-default-for-type}
+  @see-function{g:app-info-default-for-type-finish}"
+  (let ((ptr (glib:allocate-stable-pointer func)))
+    (%app-info-default-for-uri-scheme-async uri-scheme
+                                            (or cancellable (cffi:null-pointer))
+                                            (cffi:callback async-ready-callback)
+                                            ptr)))
+
+#+glib-2-74
+(export 'app-info-default-for-uri-scheme-async)
+
+;;; ----------------------------------------------------------------------------
+;;; g_app_info_get_default_for_uri_scheme_finish           Since 2.74
+;;; ----------------------------------------------------------------------------
+
+#+glib-2-74
+(cffi:defcfun ("g_app_info_get_default_for_uri_scheme_finish"
+               %app-info-default-for-uri-scheme-finish)
+    (gobject:object app-info)
+  (result (gobject:object async-result))
+  (err :pointer))
+
+#+glib-2-74
+(defun app-info-default-for-uri-scheme-finish (result)
+ #+liber-documentation
+ "@version{#2025-05-01}
+  @argument[result]{a @class{g:async-result} object}
+  @return{The @class{g:app-info} instance for the given Uri scheme.}
+  @begin{short}
+    Finishes a default @class{g:app-info} instance lookup started by the
+    @fun{g:app-info-default-for-uri-scheme-async} function.
+  @end{short}
+
+  Since 2.74
+  @see-class{g:app-info}
+  @see-class{g:async-result}
+  @see-function{g:app-info-default-for-uri-scheme-async}"
+  (glib:with-ignore-error (err)
+    (%app-info-default-for-uri-scheme-finish result err)))
+
+#+glib-2-74
+(export 'app-info-default-for-uri-scheme-finish)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_app_info_launch
@@ -490,15 +1099,15 @@ lambda (context info platform-data)    :run-last
 ;; or namestring arguments.
 
 (cffi:defcfun ("g_app_info_launch" %app-info-launch) :boolean
-  (info gobject:object)
+  (appinfo gobject:object)
   (files (glib:list-t gobject:object))
   (context (gobject:object app-launch-context))
   (err :pointer))
 
-(defun app-info-launch (info files context)
+(defun app-info-launch (appinfo files context)
  #+liber-documentation
- "@version{2024-12-22}
-  @argument[info]{a @class{g:app-info} instance}
+ "@version{2025-05-01}
+  @argument[appinfo]{a @class{g:app-info} instance}
   @argument[files]{a list of @class{g:file} objects}
   @argument[context]{a @class{g:app-launch-context} instance or @code{nil}}
   @return{@em{True} on successful launch, @em{false} otherwise.}
@@ -537,59 +1146,25 @@ lambda (context info platform-data)    :run-last
   @see-function{g:app-launch-context-setenv}
   @see-function{g:app-launch-context-unsetenv}"
   (glib:with-error (err)
-    (%app-info-launch info files context err)))
+    (%app-info-launch appinfo files context err)))
 
 (export 'app-info-launch)
-
-;;; ----------------------------------------------------------------------------
-;;; g_app_info_supports_files
-;;; ----------------------------------------------------------------------------
-
-(cffi:defcfun ("g_app_info_supports_files" app-info-supports-files) :boolean
- #+liber-documentation
- "@version{2024-12-22}
-  @argument[info]{a @class{g:app-info} instance}
-  @return{@em{True} if @arg{info} supports files.}
-  @begin{short}
-    Checks if the application accepts files as arguments.
-  @end{short}
-  @see-class{g:app-info}"
-  (info gobject:object))
-
-(export 'app-info-supports-files)
-
-;;; ----------------------------------------------------------------------------
-;;; g_app_info_supports_uris
-;;; ----------------------------------------------------------------------------
-
-(cffi:defcfun ("g_app_info_supports_uris" app-info-supports-uris) :boolean
- #+liber-documentation
- "@version{2024-12-22}
-  @argument[info]{a @class{g:app-info} instance}
-  @return{@em{True} if @arg{info} supports URIs.}
-  @begin{short}
-    Checks if the application supports reading files and directories from URIs.
-  @end{short}
-  @see-class{g:app-info}"
-  (info gobject:object))
-
-(export 'app-info-supports-uris)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_app_info_launch_uris
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_app_info_launch_uris" %app-info-launch-uris) :boolean
-  (info gobject:object)
+  (appinfo gobject:object)
   (uris (glib:list-t :string))
   (context (gobject:object app-launch-context))
   (err :pointer))
 
-(defun app-info-launch-uris (info uris context)
+(defun app-info-launch-uris (appinfo uris context)
  #+liber-documentation
- "@version{#2024-12-22}
-  @argument[info]{a @class{g:app-info} instance}
-  @argument[uris]{a list of strings with the containing URIs to launch}
+ "@version{#2025-05-01}
+  @argument[appinfo]{a @class{g:app-info} instance}
+  @argument[uris]{a list of strings containing the URIs to launch}
   @argument[context]{a @class{g:app-launch-context} instance or @code{nil}}
   @return{@em{True} on successful launch, @em{false} otherwise.}
   @begin{short}
@@ -607,483 +1182,85 @@ lambda (context info platform-data)    :run-last
   @see-class{g:app-info}
   @see-class{g:app-launch-context}"
   (glib:with-error (err)
-    (%app-info-launch-uris info uris context err)))
+    (%app-info-launch-uris appinfo uris context err)))
 
 (export 'app-info-launch-uris)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_app_info_launch_uris_async ()
-;;;
-;;; void
-;;; g_app_info_launch_uris_async (GAppInfo *appinfo,
-;;;                               GList *uris,
-;;;                               GAppLaunchContext *context,
-;;;                               GCancellable *cancellable,
-;;;                               GAsyncReadyCallback callback,
-;;;                               gpointer user_data);
-;;;
-;;; Async version of g_app_info_launch_uris().
-;;;
-;;; The callback is invoked immediately after the application launch, but it
-;;; waits for activation in case of D-Bus–activated applications and also
-;;; provides extended error information for sandboxed applications, see notes
-;;; for g_app_info_launch_default_for_uri_async().
-;;;
-;;; appinfo :
-;;;     a GAppInfo
-;;;
-;;; uris :
-;;;     a GList containing URIs to launch.
-;;;
-;;; context :
-;;;     a GAppLaunchContext or NULL.
-;;;
-;;; cancellable :
-;;;     a GCancellable.
-;;;
-;;; callback :
-;;;     a GAsyncReadyCallback to call when the request is done.
-;;;
-;;; user_data :
-;;;     data to pass to callback .
-;;;
-;;; Since 2.60
+;;; g_app_info_launch_uris_async
 ;;; ----------------------------------------------------------------------------
 
-;;; ----------------------------------------------------------------------------
-;;; g_app_info_launch_uris_finish ()
-;;;
-;;; gboolean
-;;; g_app_info_launch_uris_finish (GAppInfo *appinfo,
-;;;                                GAsyncResult *result,
-;;;                                GError **error);
-;;;
-;;; Finishes a g_app_info_launch_uris_async() operation.
-;;;
-;;; appinfo :
-;;;     a GAppInfo
-;;;
-;;; result :
-;;;     a GAsyncResult
-;;;
-;;; error :
-;;;     a GError.
-;;;
-;;; Returns :
-;;;     TRUE on successful launch, FALSE otherwise.
-;;;
-;;; Since 2.60
-;;; ----------------------------------------------------------------------------
+(cffi:defcfun ("g_app_info_launch_uris_async"
+               %app-info-launch-uris-async) :void
+  (appinfo gobject:object)
+  (uris (glib:list-t :string))
+  (context (gobject:object app-launch-context))
+  (cancellable (gobject:object cancellable))
+  (func :pointer)
+  (data :pointer))
 
-;;; ----------------------------------------------------------------------------
-;;; g_app_info_should_show
-;;; ----------------------------------------------------------------------------
-
-(cffi:defcfun ("g_app_info_should_show" app-info-should-show) :boolean
+(defun app-info-launch-uris-async (appinfo uris context cancellable func)
  #+liber-documentation
- "@version{2024-12-22}
-  @argument[info]{a @class{g:app-info} instance}
-  @return{@em{True} if @arg{info} should be shown, @em{false} otherwise.}
+ "@version{#2025-05-01}
+  @argument[appinfo]{a @class{g:app-info} instance}
+  @argument[uris]{a list of strings containing URIs to launch}
+  @argument[context]{a @class{g:app-launch-context} instance or @code{nil}}
+  @argument[canellable]{a @class{g:cancellable} instance}
+  @argument[func]{a @symbol{g:async-ready-callback} callback function to
+    call when the request is done}
   @begin{short}
-    Checks if the application info should be shown in menus that list available
-    applications.
+    Asynchronous version of the @fun{g:app-info-launch-uris} function.
   @end{short}
-  @see-class{g:app-info}"
-  (info gobject:object))
+  The callback is invoked immediately after the application launch, but it
+  waits for activation in case of D-Bus–activated applications and also provides
+  extended error information for sandboxed applications, see notes for
+  the @fun{g:app-info-launch-default-for-uri-async} function.
 
-(export 'app-info-should-show)
-
-;;; ----------------------------------------------------------------------------
-;;; g_app_info_can_delete
-;;; ----------------------------------------------------------------------------
-
-(cffi:defcfun ("g_app_info_can_delete" app-info-can-delete) :boolean
- #+liber-documentation
- "@version{#2024-12-22}
-  @argument[info]{a @class{g:app-info} instance}
-  @return{@em{True} if @arg{info} can be deleted.}
-  @begin{short}
-    Obtains the information whether the application info can be deleted.
-  @end{short}
-  See the @fun{g:app-info-delete} function.
+  This method completes asynchronously. Use the
+  @fun{g:app-info-launch-uris-finish} function inside the
+  @symbol{g:async-ready-callback} callback function to obtain the result of the
+  operation.
   @see-class{g:app-info}
-  @see-function{g:app-info-delete}"
-  (info gobject:object))
+  @see-class{g:app-launch-context}
+  @see-class{g:cancellable}
+  @see-symbol{g:async-ready-callback}
+  @see-function{g:app-info-launch-uris}
+  @see-function{g:app-info-launch-uris-finish}"
+  (let ((ptr (glib:allocate-stable-pointer func)))
+    (%app-info-launch-uris-async appinfo
+                                 uris
+                                 context
+                                 (or cancellable (cffi:null-pointer))
+                                 (cffi:callback async-ready-callback)
+                                 ptr)))
 
-(export 'app-info-can-delete)
-
-;;; ----------------------------------------------------------------------------
-;;; g_app_info_delete
-;;; ----------------------------------------------------------------------------
-
-(cffi:defcfun ("g_app_info_delete" app-info-delete) :boolean
- #+liber-documentation
- "@version{#2024-12-22}
-  @argument[info]{a @class{g:app-info} instance}
-  @return{@em{True} if @arg{info} has been deleted.}
-  @begin{short}
-    Tries to delete an application info.
-  @end{short}
-
-  On some platforms, there may be a difference between user-defined application
-  infos which can be deleted, and system-wide ones which cannot. See the
-  @fun{g:app-info-can-delete} function.
-  @see-class{g:app-info}
-  @see-function{g:app-info-can-delete}"
-  (info gobject:object))
-
-(export 'app-info-delete)
+(export 'app-info-launch-uris-async)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_app_info_reset_type_associations
+;;; g_app_info_launch_uris_finish
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcfun ("g_app_info_reset_type_associations"
-                app-info-reset-type-associations) :void
- #+liber-documentation
- "@version{#2024-12-22}
-  @argument[content-type]{a string with the content type}
-  @begin{short}
-    Removes all changes to the type associations done by the
-    @fun{g:app-info-set-as-default-for-type},
-    @fun{g:app-info-set-as-default-for-extension},
-    @fun{g:app-info-add-supports-type} or @fun{g:app-info-remove-supports-type}
-    function.
-  @end{short}
-  @see-class{g:app-info}
-  @see-function{g:app-info-set-as-default-for-type}
-  @see-function{g:app-info-set-as-default-for-extension}
-  @see-function{g:app-info-add-supports-type}
-  @see-function{g:app-info-remove-supports-type}"
-  (content-type :string))
-
-(export 'app-info-reset-type-associations)
-
-;;; ----------------------------------------------------------------------------
-;;; g_app_info_set_as_default_for_type
-;;; ----------------------------------------------------------------------------
-
-(cffi:defcfun ("g_app_info_set_as_default_for_type"
-                %app-info-set-as-default-for-type) :boolean
-  (info gobject:object)
-  (content-type :string)
+(cffi:defcfun ("g_app_info_launch_uris_finish"
+               %app-info-launch-uris-finish) :boolean
+  (result (gobject:object async-result))
   (err :pointer))
 
-(defun app-info-set-as-default-for-type (info content-type)
+(defun app-info-launch-uris-finish (result)
  #+liber-documentation
- "@version{#2025-2-3}
-  @argument[info]{a @class{g:app-info} instance}
-  @argument[content-type]{a string for the content type}
-  @return{@em{True} on success, @em{false} on error.}
+ "@version{#2025-05-01}
+  @argument[appinfo]{a @class{g:app-info} instance}
+  @argument[result]{a @class{g:async-result} object}
+  @return{@em{True} on sucessful launch, @em{false} otherwise.}
   @begin{short}
-    Sets the application as the default handler for a given content type.
+    Finishes a @fun{g:app-info-launch-uris-async} operation.
   @end{short}
-  @see-class{g:app-info}"
-  (glib:with-error (err)
-    (%app-info-set-as-default-for-type info content-type err)))
-
-(export 'app-info-set-as-default-for-type)
-
-;;; ----------------------------------------------------------------------------
-;;; g_app_info_set_as_default_for_extension
-;;; ----------------------------------------------------------------------------
-
-(cffi:defcfun ("g_app_info_set_as_default_for_extension"
-                %app-info-set-as-default-for-extension) :boolean
-  (info gobject:object)
-  (extension :string)
-  (err :pointer))
-
-(defun app-info-set-as-default-for-extension (info extension)
- #+liber-documentation
- "@version{#2024-12-22}
-  @argument[info]{a @class{g:app-info} instance}
-  @argument[extension]{a string containing the file extension, without the dot}
-  @return{@em{True} on success, @em{false} on error.}
-  @begin{short}
-    Sets the application as the default handler for the given file extension.
-  @end{short}
-  @see-class{g:app-info}"
-  (glib:with-error (err)
-    (%app-info-set-as-default-for-extension info extension err)))
-
-(export 'app-info-set-as-default-for-extension)
-
-;;; ----------------------------------------------------------------------------
-;;; g_app_info_set_as_last_used_for_type
-;;; ----------------------------------------------------------------------------
-
-(cffi:defcfun ("g_app_info_set_as_last_used_for_type"
-                %app-info-set-as-last-used-for-type) :boolean
-  (info gobject:object)
-  (content-type :string)
-  (err :pointer))
-
-(defun app-info-set-as-last-used-for-type (info content-type)
- #+liber-documentation
- "@version{#2024-12-22}
-  @argument[info]{a @class{g:app-info} instance}
-  @argument[content-type]{a string with the content type}
-  @return{@em{True} on success, @em{false} on error.}
-  @begin{short}
-    Sets the application as the last used application for a given content type.
-  @end{short}
-  This will make the application appear as first in the list returned by the
-  @fun{g:app-info-recommended-for-type} function, regardless of the default
-  application for that content type.
   @see-class{g:app-info}
-  @see-function{g:app-info-recommended-for-type}"
+  @see-class{g:async-result}
+  @see-function{g:app-info-launch-uris-async}"
   (glib:with-error (err)
-    (%app-info-set-as-last-used-for-type info content-type err)))
+    (%app-info-launch-uris-finish result err)))
 
-(export 'app-info-set-as-last-used-for-type)
-
-;;; ----------------------------------------------------------------------------
-;;; g_app_info_add_supports_type
-;;; ----------------------------------------------------------------------------
-
-(cffi:defcfun ("g_app_info_add_supports_type" %app-info-add-supports-type)
-    :boolean
-  (info gobject:object)
-  (type :string)
-  (err :pointer))
-
-(defun app-info-add-supports-type (info content-type)
- #+liber-documentation
- "@version{#2024-12-22}
-  @argument[info]{a @class{g:app-info} instance}
-  @argument[content-type]{a string with the content type}
-  @return{@em{True} on success, @em{false} on error.}
-  @begin{short}
-    Adds a content type to the application information to indicate the
-    application is capable of opening files with the given content type.
-  @end{short}
-  @see-class{g:app-info}"
-  (glib:with-error (err)
-    (%app-info-add-supports-type info content-type err)))
-
-(export 'app-info-add-supports-type)
-
-;;; ----------------------------------------------------------------------------
-;;; g_app_info_can_remove_supports_type
-;;; ----------------------------------------------------------------------------
-
-(cffi:defcfun ("g_app_info_can_remove_supports_type"
-                app-info-can-remove-supports-type) :boolean
- #+liber-documentation
- "@version{#2024-12-22}
-  @argument[info]{a @class{g:app-info} instance}
-  @return{@em{True} if it is possible to remove supported content types from a
-    given @arg{info}, @em{false} if not.}
-  @begin{short}
-    Checks if a supported content type can be removed from an application.
-  @end{short}
-  @see-class{g:app-info}"
-  (info gobject:object))
-
-(export 'app-info-can-remove-supports-type)
-
-;;; ----------------------------------------------------------------------------
-;;; g_app_info_remove_supports_type
-;;; ----------------------------------------------------------------------------
-
-(cffi:defcfun ("g_app_info_remove_supports_type" %app-info-remove-supports-type)
-    :boolean
-  (info gobject:object)
-  (content-type :string)
-  (err :pointer))
-
-(defun app-info-remove-supports-type (info content-type)
- #+liber-documentation
- "@version{#2024-12-22}
-  @argument[info]{a @class{g:app-info} instance}
-  @argument[content-type]{a string with the content type}
-  @return{@em{True} on success, @em{false} on error.}
-  @begin{short}
-    Removes a supported content type from an application information, if
-    possible.
-  @end{short}
-  @see-class{g:app-info}"
-  (glib:with-error (err)
-    (%app-info-remove-supports-type info content-type err)))
-
-(export 'app-info-remove-supports-type)
-
-;;; ----------------------------------------------------------------------------
-;;; g_app_info_get_supported_types
-;;; ----------------------------------------------------------------------------
-
-(cffi:defcfun ("g_app_info_get_supported_types" app-info-supported-types)
-    (glib:strv-t :free-from-foreign nil)
- #+liber-documentation
- "@version{2024-12-22}
-  @argument[info]{a @class{g:app-info} instance}
-  @return{The list of strings with the content types.}
-  @begin{short}
-    Retrieves the list of content types that @arg{info} claims to support.
-  @end{short}
-  If this information is not provided by the environment, this function will
-  return @code{nil}. This function does not take in consideration associations
-  added with the @fun{g:app-info-add-supports-type} function, but only those
-  exported directly by the application.
-  @see-class{g:app-info}
-  @see-function{g:app-info-add-supports-type}"
-  (info gobject:object))
-
-(export 'app-info-supported-types)
-
-;;; ----------------------------------------------------------------------------
-;;; g_app_info_get_all
-;;; ----------------------------------------------------------------------------
-
-(cffi:defcfun ("g_app_info_get_all" app-info-all)
-    (glib:list-t (gobject:object :return))
- #+liber-documentation
- "@version{2024-12-22}
-  @return{The list of @class{g:app-info} instances.}
-  @begin{short}
-    Gets a list of all application infos for the applications currently
-    registered on this system.
-  @end{short}
-  For desktop files, this includes applications that have @code{NoDisplay=true}
-  set or are excluded from display by means of @code{OnlyShowIn} or
-  @code{NotShowIn}. See the @fun{g:app-info-should-show} function. The returned
-  list does not include applications which have the @code{Hidden} key set.
-  @see-class{g:app-info}
-  @see-function{g:app-info-should-show}")
-
-(export 'app-info-all)
-
-;;; ----------------------------------------------------------------------------
-;;; g_app_info_get_all_for_type
-;;; ----------------------------------------------------------------------------
-
-(cffi:defcfun ("g_app_info_get_all_for_type" app-info-all-for-type)
-    (glib:list-t (gobject:object :return))
- #+liber-documentation
- "@version{2024-12-22}
-  @argument[content-type]{a string with the content type}
-  @return{The list of @class{g:app-info} instances for the given
-    @arg{content-type} or @code{nil} on error.}
-  @begin{short}
-    Gets a list of all application infos for a given content type, including
-    the recommended and fallback application infos.
-  @end{short}
-  See the @fun{g:app-info-recommended-for-type} and
-  @fun{g:app-info-fallback-for-type} functions.
-  @see-class{g:app-info}
-  @see-function{g:app-info-recommended-for-type}
-  @see-function{g:app-info-fallback-for-type}"
-  (content-type :string))
-
-(export 'app-info-all-for-type)
-
-;;; ----------------------------------------------------------------------------
-;;; g_app_info_get_default_for_type
-;;; ----------------------------------------------------------------------------
-
-(cffi:defcfun ("g_app_info_get_default_for_type" app-info-default-for-type)
-    (gobject:object app-info :return)
- #+liber-documentation
- "@version{2024-12-22}
-  @argument[content-type]{a string with the content type}
-  @argument[must-support-uris]{if @em{true}, the application info is expected
-    to support URIs}
-  @return{The @class{g:app-info} instance for the given @arg{content-type} or
-    @code{nil} on error.}
-  @begin{short}
-    Gets the default application info for a given content type.
-  @end{short}
-  @see-class{g:app-info}"
-  (content-type :string)
-  (must-support-uris :boolean))
-
-(export 'app-info-default-for-type)
-
-;;; ----------------------------------------------------------------------------
-;;; g_app_info_get_default_for_type_async                  Since 2.74
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_app_info_get_default_for_type_finish                 Since 2.74
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_app_info_get_default_for_uri_scheme
-;;; ----------------------------------------------------------------------------
-
-(cffi:defcfun ("g_app_info_get_default_for_uri_scheme"
-                app-info-default-for-uri-scheme)
-    (gobject:object app-info :return)
- #+liber-documentation
- "@version{2024-12-22}
-  @argument[uri-scheme]{a string containing a URI scheme}
-  @return{The @class{g:app-info} instance for the given @arg{uri-scheme} or
-    @code{nil} on error.}
-  @begin{short}
-    Gets the default application for handling URIs with the given URI scheme.
-  @end{short}
-  A URI scheme is the initial part of the URI, up to but not including the
-  @file{':'}, for example, @file{\"http\"}, @file{\"ftp\"} or @file{\"sip\"}.
-  @see-class{g:app-info}"
-  (uri-scheme :string))
-
-(export 'app-info-default-for-uri-scheme)
-
-;;; ----------------------------------------------------------------------------
-;;; g_app_info_get_default_for_uri_scheme_async            Since 2.74
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_app_info_get_default_for_uri_scheme_finish           Since 2.74
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_app_info_get_fallback_for_type
-;;; ----------------------------------------------------------------------------
-
-(cffi:defcfun ("g_app_info_get_fallback_for_type" app-info-fallback-for-type)
-    (glib:list-t (gobject:object :return))
- #+liber-documentation
- "@version{2024-12-22}
-  @argument[content-type]{a string with the content type}
-  @return{The list of @class{g:app-info} instances for the given
-    @arg{content-type} or @code{nil} on error.}
-  @begin{short}
-    Gets a list of fallback application infos for a given content type, that is,
-    those applications which claim to support the given content type by MIME
-    type subclassing and not directly.
-  @end{short}
-  @see-class{g:app-info}"
-  (content-type :string))
-
-(export 'app-info-fallback-for-type)
-
-;;; ----------------------------------------------------------------------------
-;;; g_app_info_get_recommended_for_type
-;;; ----------------------------------------------------------------------------
-
-(cffi:defcfun ("g_app_info_get_recommended_for_type"
-                app-info-recommended-for-type)
-    (glib:list-t (gobject:object :return))
- #+liber-documentation
- "@version{2024-12-22}
-  @argument[content-type]{a string with the content type}
-  @return{The list of @class{g:app-info} instances for the given
-    @arg{content-type} or @code{nil} on error.}
-  @begin{short}
-    Gets a list of recommended application infos for a given content type, that
-    is, those applications which claim to support the given content type
-    exactly, and not by MIME type subclassing.
-  @end{short}
-  Note that the first application of the list is the last used one, that is,
-  the last one for which the @fun{g:app-info-set-as-last-used-for-type} function
-  has been called.
-  @see-class{g:app-info}
-  @see-function{g:app-info-set-as-last-used-for-type}"
-  (content-type :string))
-
-(export 'app-info-recommended-for-type)
+(export 'app-info-launch-uris-finish)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_app_info_launch_default_for_uri
@@ -1097,8 +1274,8 @@ lambda (context info platform-data)    :run-last
 
 (defun app-info-launch-default-for-uri (uri &optional context)
  #+liber-documentation
- "@version{2024-12-22}
-  @argument[uri]{a string with the URI to show}
+ "@version{2025-05-01}
+  @argument[uri]{a string for the URI to show}
   @argument[context]{an optional @class{g:app-launch-context} object,
     the argument can be @code{nil}, that is the default}
   @return{@em{True} on sucess, @em{false} on error.}
@@ -1129,8 +1306,8 @@ lambda (context info platform-data)    :run-last
 
 (defun app-info-launch-default-for-uri-async (uri context cancellable func)
  #+liber-documentation
- "@version{2024-12-22}
-  @argument[uri]{a string with the URI to show}
+ "@version{2025-05-01}
+  @argument[uri]{a string for the URI to show}
   @argument[context]{an optional @class{g:app-launch-context} object, or
     @code{nil}}
   @argument[cancellable]{a @class{g:cancellable} object}
@@ -1172,7 +1349,7 @@ lambda (context info platform-data)    :run-last
 
 (defun app-info-launch-default-for-uri-finish (result)
  #+liber-documentation
- "@version{2025-1-4}
+ "@version{2025-05-01}
   @argument[result]{a @class{g:async-result} object}
   @return{@em{True} if the launch was successful, @em{false} otherwise}
   @begin{short}
@@ -1195,7 +1372,7 @@ lambda (context info platform-data)    :run-last
 
 (defun app-launch-context-new ()
  #+liber-documentation
- "@version{2024-12-22}
+ "@version{2025-05-01}
   @return{The @class{g:app-launch-context} instance.}
   @begin{short}
     Creates a new application launch context.
@@ -1214,13 +1391,13 @@ lambda (context info platform-data)    :run-last
 
 (cffi:defcfun ("g_app_launch_context_setenv" app-launch-context-setenv) :void
  #+liber-documentation
- "@version{#2024-12-22}
+ "@version{#2025-05-01}
   @argument[context]{a @class{g:app-launch-context} instance}
-  @argument[variable]{a string with the enviroment variable to set}
-  @argument[value]{a string with the value for to set the variabel to}
+  @argument[variable]{a string for the enviroment variable to set}
+  @argument[value]{a string for the value to set the variabel to}
   @begin{short}
-    Arranges for variable to be set to value in the child's environment when
-    @arg{context} is used to launch an application.
+    Arranges for @arg{variable} to be set to @arg{value} in the child's
+    environment when @arg{context} is used to launch an application.
   @end{short}
   @see-class{g:app-launch-context}"
   (context (gobject:object app-launch-context))
@@ -1236,9 +1413,9 @@ lambda (context info platform-data)    :run-last
 (cffi:defcfun ("g_app_launch_context_unsetenv" app-launch-context-unsetenv)
     :void
  #+liber-documentation
- "@version{#2024-12-22}
+ "@version{#2025-05-01}
   @argument[context]{a @class{g:app-launch-context} instance}
-  @argument[variable]{a string with the enviroment variable to remove}
+  @argument[variable]{a string for the enviroment variable to remove}
   @begin{short}
     Arranges for @arg{variable} to be unset in the child's environment when
     @arg{context} is used to launch an application.
@@ -1256,7 +1433,7 @@ lambda (context info platform-data)    :run-last
 (cffi:defcfun ("g_app_launch_context_get_environment"
                 app-launch-context-environment) glib:strv-t
  #+liber-documentation
- "@version{#2024-12-22}
+ "@version{#2025-05-01}
   @argument[context]{a @class{g:app-launch-context} instance}
   @return{The list of strings with the child's enviroment.}
   @begin{short}
@@ -1276,9 +1453,9 @@ lambda (context info platform-data)    :run-last
 (cffi:defcfun ("g_app_launch_context_get_display" app-launch-context-display)
     :string
  #+liber-documentation
- "@version{#2024-12-22}
+ "@version{#2025-05-01}
   @argument[context]{a @class{g:app-launch-context} instance}
-  @argument[info]{a @class{g:app-info} instance}
+  @argument[appinfo]{a @class{g:app-info} instance}
   @argument[files]{a list of @class{g:file} objects}
   @return{The display string for the display.}
   @begin{short}
@@ -1289,7 +1466,7 @@ lambda (context info platform-data)    :run-last
   @see-class{g:app-launch-context}
   @see-class{g:app-info}"
   (context (gobject:object app-launch-context))
-  (info gobject:object)
+  (appinfo gobject:object)
   (files (glib:list-t gobject:object)))
 
 (export 'app-launch-context-display)
@@ -1303,12 +1480,14 @@ lambda (context info platform-data)    :run-last
 (cffi:defcfun ("g_app_launch_context_get_startup_notify_id"
                 app-launch-context-startup-notify-id) :string
  #+liber-documentation
- "@version{#2024-12-22}
+ "@version{#2025-05-01}
   @argument[context]{a @class{g:app-launch-context} instance}
-  @argument[info]{a @class{g:app-info} instance}
+  @argument[appinfo]{a @class{g:app-info} instance}
   @argument[files]{a list of @class{g:file} objects}
-  @return{The string with a startup notification ID for the application, or
-    @code{nil} if not supported.}
+  @begin{return}
+    The string with a startup notification ID for the application, or
+    @code{nil} if not supported.
+  @end{return}
   @begin{short}
     Initiates startup notification for the application and returns the
     @code{DESKTOP_STARTUP_ID} for the launched operation, if supported.
@@ -1319,7 +1498,7 @@ lambda (context info platform-data)    :run-last
   @see-class{g:app-info}
   @see-class{g:file}"
   (context (gobject:object app-launch-context))
-  (info gobject:object)
+  (appinfo gobject:object)
   (files (glib:list-t gobject:object)))
 
 (export 'app-launch-context-startup-notify-id)
@@ -1331,9 +1510,9 @@ lambda (context info platform-data)    :run-last
 (cffi:defcfun ("g_app_launch_context_launch_failed"
                 app-launch-context-launch-failed) :void
  #+liber-documentation
- "@version{#2024-12-22}
+ "@version{#2025-05-01}
   @argument[context]{a @class{g:app-launch-context} instance}
-  @argument[startup-notify-id]{a string with the startup notification ID}
+  @argument[startup-notify-id]{a string for the startup notification ID}
   @begin{short}
     Called when an application has failed to launch, so that it can cancel the
     application startup notification started in the
