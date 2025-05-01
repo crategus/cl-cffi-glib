@@ -157,10 +157,10 @@
 (setf (liber:alias-for-function 'list-store-n-items)
       "Accessor"
       (documentation 'list-store-n-items 'function)
- "@version{2025-3-24}
+ "@version{2025-4-26}
   @syntax{(g:list-store-n-items object) => n-items}
   @argument[object]{a @class{g:list-store} object}
-  @argument[n-items]{an unsigned integer with the number of items contained in
+  @argument[n-items]{an unsigned integer for the number of items contained in
     the list store}
   @begin{short}
     Accessor of the @slot[g:list-store]{n-items} slot of the
@@ -213,9 +213,9 @@
 
 (cffi:defcfun ("g_list_store_append" list-store-append) :void
  #+liber-documentation
- "@version{2025-3-24}
+ "@version{2025-4-26}
   @argument[store]{a @class{g:list-store} object}
-  @argument[item]{a @class{g:object} object with the new item}
+  @argument[item]{a @class{g:object} object for the new item}
   @begin{short}
     Appends the item to the list store.
   @end{short}
@@ -237,9 +237,9 @@
 
 (cffi:defcfun ("g_list_store_insert" list-store-insert) :void
  #+liber-documentation
- "@version{2025-3-24}
+ "@version{2025-4-26}
   @argument[store]{a @class{g:list-store} object}
-  @argument[pos]{an unsigned integer with the position at which to insert the
+  @argument[pos]{an unsigned integer for the position at which to insert the
     new item}
   @argument[item]{a @class{g:object} instance for the new item}
   @begin{short}
@@ -339,9 +339,9 @@
 
 (cffi:defcfun ("g_list_store_remove" list-store-remove) :void
  #+liber-documentation
- "@version{2025-3-24}
+ "@version{2025-4-26}
   @argument[store]{a @class{g:list-store} object}
-  @argument[pos]{an unsigned integer with the position of the item that is to
+  @argument[pos]{an unsigned integer for the position of the item that is to
     be removed}
   @begin{short}
     Removes the item from the list store that is at @arg{pos}.
@@ -383,11 +383,11 @@
 
 (defun list-store-splice (store pos n &rest additions)
  #+liber-documentation
- "@version{2025-3-24}
+ "@version{2025-4-26}
   @argument[store]{a @class{g:list-store} object}
-  @argument[pos]{an unsigned integer with the position at which to make
-    the change}
-  @argument[n]{an unsigned integer with the number of items to remove}
+  @argument[pos]{an unsigned integer for the position at which to make the
+    change}
+  @argument[n]{an unsigned integer for the number of items to remove}
   @argument[additions]{@class{g:object} instances to add}
   @begin{short}
     Changes the list store by removing @arg{n} items and adding @arg{additions}
@@ -457,9 +457,9 @@
 #+glib-2-64
 (defun list-store-find (store item)
  #+liber-documentation
- "@version{2025-3-24}
+ "@version{2025-4-26}
   @argument[store]{a @class{g:list-store} object}
-  @argument[item]{a @class{g:object} item}
+  @argument[item]{a @class{g:object} instance for the item}
   @begin{return}
     The unsigned integer with the first position of the item, if it was found,
     otherwise @code{nil}.
@@ -543,9 +543,9 @@
 #+glib-2-74
 (defun list-store-find-with-equal-func (store item func)
  #+liber-documentation
- "@version{2025-3-24}
+ "@version{2025-4-26}
   @argument[store]{a @class{g:list-store} object}
-  @argument[item]{a @class{g:object} object}
+  @argument[item]{a @class{g:object} instance}
   @argument[func]{a @symbol{g:equal-func-full} callback function}
   @begin{return}
     The unsigned integer with the first position of the item, if it was found,

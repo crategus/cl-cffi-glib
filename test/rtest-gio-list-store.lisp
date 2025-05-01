@@ -33,14 +33,14 @@
              (glib-test:list-signals "GListStore")))
   ;; Check class definition
   (is (equal '(GOBJECT:DEFINE-GOBJECT "GListStore" GIO:LIST-STORE
-                       (:SUPERCLASS GOBJECT:OBJECT
-                        :EXPORT T
-                        :INTERFACES ("GListModel")
-                        :TYPE-INITIALIZER "g_list_store_get_type")
-                       ((ITEM-TYPE LIST-STORE-ITEM-TYPE
-                         "item-type" "GType" T NIL)
-                        (N-ITEMS LIST-STORE-N-ITEMS
-                         "n-items" "guint" T NIL)))
+                      (:SUPERCLASS GOBJECT:OBJECT
+                       :EXPORT T
+                       :INTERFACES ("GListModel")
+                       :TYPE-INITIALIZER "g_list_store_get_type")
+                      ((ITEM-TYPE LIST-STORE-ITEM-TYPE
+                        "item-type" "GType" T NIL)
+                       (N-ITEMS LIST-STORE-N-ITEMS
+                        "n-items" "guint" T NIL)))
              (gobject:get-gtype-definition "GListStore"))))
 
 ;;; --- Properties -------------------------------------------------------------
@@ -296,4 +296,4 @@
     ;; Remove references
     (is-false (g:list-store-remove-all store))))
 
-;;; 2024-12-22
+;;; 2025-4-26
