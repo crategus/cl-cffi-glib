@@ -1,12 +1,12 @@
 ;;; ----------------------------------------------------------------------------
 ;;; gio.resource.lisp
 ;;;
-;;; The documentation of this file is taken from the GIO Reference Manual
-;;; Version 2.82 and modified to document the Lisp binding to the GIO library.
-;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
-;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
+;;; The documentation in this file is taken from the GIO Reference Manual
+;;; version 2.84 and modified to document the Lisp binding to the GIO library,
+;;; see <http://www.gtk.org>. The API documentation for the Lisp binding is
+;;; available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2019 - 2024 Dieter Kaiser
+;;; Copyright (C) 2019 - 2025 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -34,42 +34,34 @@
 ;;; Types and Values
 ;;;
 ;;;     GResource
-;;;     GResourceFlags
+;;;     GResourceFlags                                      not needed
 ;;;     GResourceLookupFlags
-;;;     GStaticResource
-;;;
-;;;     G_RESOURCE_ERROR
-;;;     GResourceError
 ;;;
 ;;; Functions
 ;;;
-;;;     g_resource_load
 ;;;     g_resource_new_from_data
-;;;     g_resource_ref
-;;;     g_resource_unref
-;;;     g_resource_lookup_data
-;;;     g_resource_open_stream
-;;;     g_resource_enumerate_children
+;;;     g_resource_load
+;;;     g_resource_ref                                      not needed
+;;;     g_resource_unref                                    not needed
 ;;;     g_resource_get_info
-;;;
-;;;     g_static_resource_init
-;;;     g_static_resource_fini
-;;;     g_static_resource_get_resource
+;;;     g_resource_lookup_data
+;;;     g_resource_open_stream                              not implemented
+;;;     g_resource_has_children                             Since 2.84
+;;;     g_resource_enumerate_children
+
 ;;;
 ;;;     g_resources_register
 ;;;     g_resources_unregister
-;;;     g_resources_lookup_data
-;;;     g_resources_open_stream
-;;;     g_resources_enumerate_children
 ;;;     g_resources_get_info
+;;;     g_resources_lookup_data
+;;;     g_resources_open_stream                             not implemented
+;;;     g_resources_has_children                            Since 2.84
+;;;     g_resources_enumerate_children
 ;;;
 ;;; Object Hierarchy
 ;;;
 ;;;     GBoxed
 ;;;     ╰── GResource
-;;;
-;;;     GEnum
-;;;     ╰── GResourceError
 ;;;
 ;;;     GFlags
 ;;;     ├── GResourceFlags
@@ -79,38 +71,8 @@
 (in-package :gio)
 
 ;;; ----------------------------------------------------------------------------
-;;; GResourceFlags
+;;; GResourceFlags                                          not needed
 ;;; ----------------------------------------------------------------------------
-
-(gobject:define-gflags "GResourceFlags" resource-flags
-  (:export t
-   :type-initializer "g_resource_flags_get_type")
-  (:none 0)
-  (:compressed #.(ash 1 0)))
-
-#+liber-documentation
-(setf (liber:alias-for-symbol 'resource-flags)
-      "GFlags"
-      (liber:symbol-documentation 'resource-flags)
- "@version{2024-5-12}
-  @begin{declaration}
-(gobject:define-gflags \"GResourceFlags\" resource-flags
-  (:export t
-   :type-initializer \"g_resource_flags_get_type\")
-  (:none 0)
-  (:compressed #.(ash 1 0)))
-  @end{declaration}
-  @begin{values}
-    @begin[code]{table}
-      @entry[:none]{No flags set.}
-      @entry[:compressed]{The file is compressed.}
-    @end{table}
-  @end{values}
-  @begin{short}
-    The @symbol{g:resource-flags} flags give information about a particular
-    file inside a resource bundle.
-  @end{short}
-  @see-class{g:resource}")
 
 ;;; ----------------------------------------------------------------------------
 ;;; GResourceLookupFlags
@@ -125,7 +87,7 @@
 (setf (liber:alias-for-symbol 'resource-lookup-flags)
       "GFlags"
       (liber:symbol-documentation 'resource-lookup-flags)
- "@version{2024-5-12}
+ "@version{2025-05-01}
   @begin{declaration}
 (gobject:define-gflags \"GResourceLookupFlags\" resource-lookup-flags
   (:export t
@@ -141,39 +103,13 @@
     The @symbol{g:resource-lookup-flags} flags determine how resource path
     lookups are handled.
   @end{short}
+  @begin[Notes]{dictionary}
+    Currently the only value is @code{:none}. This may change in the future.
+    All functions that receives a @symbol{g:resource-lookup-flags} value, take
+    the argument as an optional value, with the default value being
+    @code{:none}.
+  @end{dictionary}
   @see-class{g:resource}")
-
-;;; ----------------------------------------------------------------------------
-;;; struct GStaticResource
-;;;
-;;; GStaticResource is an opaque data structure and can only be accessed using
-;;; the following functions.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_RESOURCE_ERROR
-;;;
-;;; #define G_RESOURCE_ERROR (g_resource_error_quark ())
-;;;
-;;; Error domain for GResource. Errors in this domain will be from the
-;;; GResourceError enumeration. See GError for more information on error
-;;; domains.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; enum GResourceError
-;;;
-;;; An error code used with G_RESOURCE_ERROR in a GError returned from a
-;;; GResource routine.
-;;;
-;;; G_RESOURCE_ERROR_NOT_FOUND
-;;;     no file was found at the requested path
-;;;
-;;; G_RESOURCE_ERROR_INTERNAL
-;;;     unknown error
-;;;
-;;; Since 2.32
-;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
 ;;; GResource
@@ -190,7 +126,7 @@
 (setf (liber:alias-for-class 'resource)
       "GBoxed"
       (documentation 'resource 'type)
- "@version{2024-5-12}
+ "@version{2025-05-01}
   @begin{declaration}
 (glib:define-gboxed-opaque resource \"GResource\"
   :export t
@@ -202,9 +138,9 @@
     really part of the application, rather than user data.
   @end{short}
   For instance @class{gtk:builder} @code{.ui} files, splashscreen images,
-  @class{g:menu} markup XML, CSS files, icons, etc. These are often shipped as
-  files in @code{$datadir/appname}, or manually included as literal strings in
-  the code.
+  @class{g:menu} markup XML, CSS files, icons, and so on. These are often
+  shipped as files in @code{$datadir/appname}, or manually included as literal
+  strings in the code.
 
   The @class{g:resource} API and the @code{glib-compile-resources} program
   provide a convenient and efficient alternative to this which has some nice
@@ -352,10 +288,10 @@
 
 (defmacro with-resource ((resource path) &body body)
  #+liber-documentation
- "@version{2024-5-12}
+ "@version{2025-05-01}
   @syntax{(g:with-resource (resource path) body) => result}
   @argument[resource]{a @class{g:resource} instance to create and register}
-  @argument[path]{a pathname or namestring with the path of a file to load}
+  @argument[path]{a pathname or namestring for the path of a file to load}
   @argument[body]{a body that uses the binding @arg{resource}}
   @begin{short}
     The @macro{g:with-resource} macro allocates a new @class{g:resource}
@@ -379,11 +315,11 @@
 
 (defmacro with-resources (vars &body body)
  #+liber-documentation
- "@version{2024-5-12}
+ "@version{2025-05-01}
   @syntax{(g:with-resources ((resource1 path1) ... (resourcen pathn)) body)
     => result}
   @argument[resource1 ... resourcen]{newly created @class{g:resource} instances}
-  @argument[path1 ... pathn]{pathnames or namestrings with the path of a file
+  @argument[path1 ... pathn]{pathnames or namestrings for the path of a file
     to load}
   @argument[body]{a body that uses the bindings @arg{resource1 ... resourcen}}
   @begin{short}
@@ -403,6 +339,38 @@
 (export 'with-resources)
 
 ;;; ----------------------------------------------------------------------------
+;;; g_resource_new_from_data
+;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("g_resource_new_from_data" %resource-new-from-data)
+    (glib:boxed resource :return)
+  (data (glib:boxed glib:bytes))
+  (err :pointer))
+
+(defun resource-new-from-data (data)
+ #+liber-documentation
+ "@version{2025-05-01}
+  @argument[data]{a @class{g:bytes} instance for the data}
+  @return{The new @class{g:resource} instance, or @code{nil} on error.}
+  @begin{short}
+    Creates a @class{g:resource} instance from a reference to the binary
+    resource bundle.
+  @end{short}
+  This will keep a reference to @arg{data} while the resource lives, so the
+  data should not be modified or freed. If @arg{data} is empty or corrupt,
+  @code{nil} will be returned.
+
+  If you want to use this resource in the global resource namespace you need to
+  register it with the @fun{g:resources-register} function.
+  @see-class{g:resource}
+  @see-class{g:bytes}
+  @see-function{g:resources-register}"
+  (glib:with-ignore-error (err)
+    (%resource-new-from-data data err)))
+
+(export 'resource-new-from-data)
+
+;;; ----------------------------------------------------------------------------
 ;;; g_resource_load
 ;;; ----------------------------------------------------------------------------
 
@@ -412,8 +380,8 @@
 
 (defun resource-load (path)
  #+liber-documentation
- "@version{2024-11-21}
-  @argument[path]{a pathname or namestring with the path of a file to load, in
+ "@version{2025-05-01}
+  @argument[path]{a pathname or namestring for the path of a file to load, in
     the GLib filenname encoding}
   @return{The new @class{g:resource} instance.}
   @begin{short}
@@ -431,88 +399,75 @@
 (export 'resource-load)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_resource_new_from_data ()
-;;;
-;;; GResource *
-;;; g_resource_new_from_data (GBytes *data, GError **error);
-;;;
-;;; Creates a GResource from a reference to the binary resource bundle. This
-;;; will keep a reference to data while the resource lives, so the data should
-;;; not be modified or freed.
-;;;
-;;; If you want to use this resource in the global resource namespace you need
-;;; to register it with g_resources_register().
-;;;
-;;; Note: data must be backed by memory that is at least pointer aligned.
-;;; Otherwise this function will internally create a copy of the memory since
-;;; GLib 2.56, or in older versions fail and exit the process.
-;;;
-;;; If data is empty or corrupt, G_RESOURCE_ERROR_INTERNAL will be returned.
-;;;
-;;; data :
-;;;     A GBytes
-;;;
-;;; error :
-;;;     return location for a GError, or NULL
-;;;
-;;; Returns :
-;;;     a new GResource, or NULL on error.
-;;;
-;;; Since 2.32
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
 ;;; g_resource_ref                                          not needed
 ;;; ----------------------------------------------------------------------------
-
-(cffi:defcfun ("g_resource_ref" resource-ref) (glib:boxed resource)
- #+liber-documentation
- "@version{#2022-12-30}
-  @argument[resource]{a @class{g:resource} instance}
-  @return{The passed in @class{g:resource} instance}
-  @begin{short}
-    Atomically increments the reference count of @arg{resource} by one.
-  @end{short}
-  This function is MT-safe and may be called from any thread.
-  @see-class{g:resource}"
-  (resource (glib:boxed resource)))
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_resource_unref                                        not needed
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcfun ("g_resource_unref" resource-unref) :void
+;;; ----------------------------------------------------------------------------
+;;; g_resource_get_info
+;;; ----------------------------------------------------------------------------
+
+;; TODO: Returns an unsigned integer for the flags about the file.
+;; Can we translate the integer in a list of flags? What is the flags type?
+
+(cffi:defcfun ("g_resource_get_info" %resource-info) :boolean
+  (resource (glib:boxed resource))
+  (path :string)
+  (lookup resource-lookup-flags)
+  (size (:pointer :size))
+  (flags (:pointer :uint32))
+  (err :pointer))
+
+(defun resource-info (resource path &optional (lookup :none))
  #+liber-documentation
- "@version{#2022-12-30}
+ "@version{2025-05-01}
+  @syntax{(g:resource-info resource path lookup) => size, flags}
   @argument[resource]{a @class{g:resource} instance}
+  @argument[path]{a string for a pathname inside the resource}
+  @argument[lookup]{an optional @symbol{g:resource-lookup-flags} value,
+    the default value is @code{:none}}
+  @argument[size]{an integer for the length of the contents of the file}
+  @argument[flags]{an unsigned integer for the flags about the file}
   @begin{short}
-    Atomically decrements the reference count of @arg{resource} by one.
+    Looks for a file at the specified path in the resource and if found returns
+    information about it.
   @end{short}
-  If the reference count drops to 0, all memory allocated by the resource is
-  released. This function is MT-safe and may be called from any thread.
-  @see-class{g:resource}"
-  (resource (glib:boxed resource)))
+  The @arg{lookup} argument controls the behaviour of the lookup.
+  @see-class{g:resource}
+  @see-symbol{g:resource-lookup-flags}"
+  (glib:with-error (err)
+    (cffi:with-foreign-objects ((size :size) (flags :uint32))
+      (when (%resource-info resource path lookup size flags err)
+        (values (cffi:mem-ref size :size)
+                (cffi:mem-ref flags :uint32))))))
+
+(export 'resource-info)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_resource_lookup_data
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcfun ("g_resource_lookup_data" %resource-lookup-data) :pointer
+(cffi:defcfun ("g_resource_lookup_data" %resource-lookup-data)
+    (glib:boxed glib:bytes :return)
   (resource (glib:boxed resource))
   (path :string)
   (lookup resource-lookup-flags)
   (err :pointer))
 
-(defun resource-lookup-data (resource path lookup)
+(defun resource-lookup-data (resource path &optional (lookup :none))
  #+liber-documentation
- "@version{2024-11-21}
+ "@version{2025-05-01}
   @argument[resource]{a @class{g:resource} instance}
-  @argument[path]{a string with a pathname inside the resource}
-  @argument[lookup]{a @symbol{g:resource-lookup-flags} value}
-  @return{The pointer to the data, @code{cffi:null-pointer} on error.}
+  @argument[path]{a string for a pathname inside the resource}
+  @argument[lookup]{an optional @symbol{g:resource-lookup-flags} value,
+    the default value is @code{:none}}
+  @return{The @class{g:bytes} instance with the data, or @code{nil} on error.}
   @begin{short}
-    Looks for a file at the specified path in the resource and returns a pointer
-    that lets you directly access the data in memory.
+    Looks for a file at the specified path in the resource and returns a
+    @class{g:bytes} instance that lets you directly access the data in memory.
   @end{short}
 
   The data is always followed by a zero byte, so you can safely use the data
@@ -532,37 +487,35 @@
 (export 'resource-lookup-data)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_resource_open_stream ()
-;;;
-;;; GInputStream *
-;;; g_resource_open_stream (GResource *resource,
-;;;                        const char *path,
-;;;                        GResourceLookupFlags lookup_flags,
-;;;                        GError **error);
+;;; g_resource_open_stream ()                               not implemented
 ;;;
 ;;; Looks for a file at the specified path in the resource and returns a
 ;;; GInputStream that lets you read the data.
-;;;
-;;; lookup_flags controls the behaviour of the lookup.
-;;;
-;;; resource :
-;;;     A GResource
-;;;
-;;; path :
-;;;     A pathname inside the resource
-;;;
-;;; lookup_flags :
-;;;     A GResourceLookupFlags
-;;;
-;;; error :
-;;;     return location for a GError, or NULL
-;;;
-;;; Returns :
-;;;     GInputStream or NULL on error. Free the returned object with
-;;;     g_object_unref().
-;;;
-;;; Since 2.32
 ;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_resource_has_children                                 Since 2.84
+;;; ----------------------------------------------------------------------------
+
+#+glib-2-84
+(cffi:defcfun ("g_resource_has_children" resource-has-children) :boolean
+ #+liber-documentation
+ "@version{#2025-05-01}
+  @argument[resource]{a @class{g:resource} instance}
+  @argument[path]{a string for a pathname inside the resource}
+  @return{@em{True} if @arg{path} has children.}
+  @begin{short}
+    Returns whether the specified path in the resource has children.
+  @end{short}
+
+  Since 2.84
+  @see-class{g:resource}
+  @see-function{g:resource-enumerate-children}"
+  (resource (glib:boxed resource))
+  (path :string))
+
+#+glib-2-84
+(export 'resource-has-children)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_resource_enumerate_children
@@ -575,12 +528,13 @@
   (lookup resource-lookup-flags)
   (err :pointer))
 
-(defun resource-enumerate-children (resource path lookup)
+(defun resource-enumerate-children (resource path &optional (lookup :none))
  #+liber-documentation
- "@version{2024-11-21}
+ "@version{2025-05-01}
   @argument[resource]{a @class{g:resource} instance}
-  @argument[path]{a string with a pathname inside the resource}
-  @argument[lookup]{a @symbol{g:resource-lookup-flags} value}
+  @argument[path]{a string for a pathname inside the resource}
+  @argument[lookup]{an optional @symbol{g:resource-lookup-flags} value,
+    the default value is @code{:none}}
   @return{The list of strings.}
   @begin{short}
     Returns all the names of children at the specified path in the resource.
@@ -595,104 +549,12 @@
 (export 'resource-enumerate-children)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_resource_get_info
-;;; ----------------------------------------------------------------------------
-
-(cffi:defcfun ("g_resource_get_info" %resource-info) :boolean
-  (resource (glib:boxed resource))
-  (path :string)
-  (lookup resource-lookup-flags)
-  (size (:pointer :size))
-  (flags (:pointer :uint32))
-  (err :pointer))
-
-(defun resource-info (resource path lookup)
- #+liber-documentation
- "@version{2024-11-21}
-  @argument[resource]{a @class{g:resource} instance}
-  @argument[path]{a string with a pathname inside the resource}
-  @argument[lookup]{a @symbol{g:resource-lookup-flags} value}
-  @begin{return}
-    @arg{size} -- an integer with the length of the contents of the file @br{}
-    @arg{flags} -- an unsigned integer with the flags about the file
-  @end{return}
-  @begin{short}
-    Looks for a file at the specified path in the resource and if found returns
-    information about it.
-  @end{short}
-  The @arg{lookup} argument controls the behaviour of the lookup.
-  @see-class{g:resource}
-  @see-symbol{g:resource-lookup-flags}"
-  (glib:with-error (err)
-    (cffi:with-foreign-objects ((size :size) (flags :uint32))
-      (when (%resource-info resource path lookup size flags err)
-        (values (cffi:mem-ref size :size)
-                (cffi:mem-ref flags :uint32))))))
-
-(export 'resource-info)
-
-;;; ----------------------------------------------------------------------------
-;;; g_static_resource_init ()
-;;;
-;;; void
-;;; g_static_resource_init (GStaticResource *static_resource);
-;;;
-;;; Initializes a GResource from static data using a GStaticResource.
-;;;
-;;; This is normally used by code generated by glib-compile-resources and is
-;;; not typically used by other code.
-;;;
-;;; static_resource :
-;;;     pointer to a static GStaticResource
-;;;
-;;; Since 2.32
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_static_resource_fini ()
-;;;
-;;; void
-;;; g_static_resource_fini (GStaticResource *static_resource);
-;;;
-;;; Finalized a GResource initialized by g_static_resource_init().
-;;;
-;;; This is normally used by code generated by glib-compile-resources and is
-;;; not typically used by other code.
-;;;
-;;; static_resource :
-;;;     pointer to a static GStaticResource
-;;;
-;;; Since 2.32
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_static_resource_get_resource ()
-;;;
-;;; GResource *
-;;; g_static_resource_get_resource (GStaticResource *static_resource);
-;;;
-;;; Gets the GResource that was registered by a call to
-;;; g_static_resource_init().
-;;;
-;;; This is normally used by code generated by glib-compile-resources and is
-;;; not typically used by other code.
-;;;
-;;; static_resource :
-;;;     pointer to a static GStaticResource
-;;;
-;;; Returns :
-;;;     a GResource.
-;;;
-;;; Since 2.32
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
 ;;; g_resources_register
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_resources_register" resources-register) :void
  #+liber-documentation
- "@version{2024-5-12}
+ "@version{2025-05-01}
   @argument[resource]{a @class{g:resource} instance}
   @begin{short}
     Registers the resource with the process-global set of resources.
@@ -712,7 +574,7 @@
 
 (cffi:defcfun ("g_resources_unregister" resources-unregister) :void
  #+liber-documentation
- "@version{2024-5-12}
+ "@version{2025-05-01}
   @argument[resource]{a @class{g:resource} instance}
   @begin{short}
     Unregisters the resource from the process-global set of resources.
@@ -724,28 +586,65 @@
 (export 'resources-unregister)
 
 ;;; ----------------------------------------------------------------------------
+;;; g_resources_get_info
+;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("g_resources_get_info" %resources-info) :boolean
+  (path :string)
+  (lookup resource-lookup-flags)
+  (size (:pointer :size))
+  (flags (:pointer :uint32))
+  (err :pointer))
+
+(defun resources-info (path &optional (lookup :none))
+ #+liber-documentation
+ "@version{2025-05-01}
+  @syntax{(g:resources-info path lookup) => size, flags}
+  @argument[path]{a string for a pathname inside the resource}
+  @argument[lookup]{an optional @symbol{g:resource-lookup-flags} value,
+    the default value is @code{:none}}
+  @argument[size]{an integer for the length of the contents of the file}
+  @argument[flags]{an unsigned integer for the flags about the file}
+  @begin{short}
+    Looks for a file at the specified path in the set of globally registered
+    resources and if found returns information about it.
+  @end{short}
+  The @arg{lookup} argument controls the behaviour of the lookup.
+  @see-class{g:resource}
+  @see-symbol{g:resource-lookup-flags}"
+  (glib:with-error (err)
+    (cffi:with-foreign-objects ((size :size) (flags :uint32))
+      (when (%resources-info path lookup size flags err)
+        (values (cffi:mem-ref size :size)
+                (cffi:mem-ref flags :uint32))))))
+
+(export 'resources-info)
+
+;;; ----------------------------------------------------------------------------
 ;;; g_resources_lookup_data
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcfun ("g_resources_lookup_data" %resources-lookup-data) :pointer
+(cffi:defcfun ("g_resources_lookup_data" %resources-lookup-data)
+    (glib:boxed glib:bytes :return)
   (path :string)
   (lookup resource-lookup-flags)
   (err :pointer))
 
 (defun resources-lookup-data (path &optional (lookup :none))
  #+liber-documentation
- "@version{2024-11-21}
-  @argument[path]{a string with a pathname inside the resource}
+ "@version{2025-05-01}
+  @argument[path]{a string for a pathname inside the resource}
   @argument[lookup]{an optional @symbol{g:resource-lookup-flags} value,
     the default value is @code{:none}}
-  @return{The pointer or @code{cffi:null-pointer}.}
+  @return{The @class{g:bytes} instance with the data, or @code{nil} on error.}
   @begin{short}
     Looks for a file at the specified path in the set of globally registered
-    resources and returns a pointer that lets you directly access the data in
-    memory.
+    resources and returns a @class{g:bytes} instance that lets you directly
+    access the data in memory.
   @end{short}
   The data is always followed by a zero byte, so you can safely use the data
-  as a C string.
+  as a C string. However, that byte is not included in the size of the
+  @class{g:bytes} instance.
 
   For uncompressed resource files this is a pointer directly into the resource
   bundle, which is typically in some readonly data section in the program
@@ -761,33 +660,34 @@
 (export 'resources-lookup-data)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_resources_open_stream ()
-;;;
-;;; GInputStream *
-;;; g_resources_open_stream (const char *path,
-;;;                          GResourceLookupFlags lookup_flags,
-;;;                          GError **error);
+;;; g_resources_open_stream ()                              not implemented
 ;;;
 ;;; Looks for a file at the specified path in the set of globally registered
 ;;; resources and returns a GInputStream that lets you read the data.
-;;;
-;;; lookup_flags controls the behaviour of the lookup.
-;;;
-;;; path :
-;;;     A pathname inside the resource
-;;;
-;;; lookup_flags :
-;;;     A GResourceLookupFlags
-;;;
-;;; error :
-;;;     return location for a GError, or NULL
-;;;
-;;; Returns :
-;;;     GInputStream or NULL on error. Free the returned object with
-;;;     g_object_unref().
-;;;
-;;; Since 2.32
 ;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_resources_has_children                                Since 2.84
+;;; ----------------------------------------------------------------------------
+
+#+glib-2-84
+(cffi:defcfun ("g_resource_has_children" resources-has-children) :boolean
+ #+liber-documentation
+ "@version{#2025-05-01}
+  @argument[path]{a string for a pathname}
+  @return{@em{True} if @arg{path} has children.}
+  @begin{short}
+    Returns whether the specified @arg{path} in the set of globally registered
+    resources has children.
+  @end{short}
+
+  Since 2.84
+  @see-class{g:resource}
+  @see-function{g:resources-enumerate-children}"
+  (path :string))
+
+#+glib-2-84
+(export 'resources-has-children)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_resources_enumerate_children
@@ -799,11 +699,12 @@
   (lookup resource-lookup-flags)
   (err :pointer))
 
-(defun resources-enumerate-children (path lookup)
+(defun resources-enumerate-children (path &optional (lookup :none))
  #+liber-documentation
- "@version{2024-11-21}
-  @argument[path]{a string with a pathname inside the resource}
-  @argument[lookup]{a @symbol{g:resource-lookup-flags} value}
+ "@version{2025-05-01}
+  @argument[path]{a string for a pathname inside the resource}
+  @argument[lookup]{an optional @symbol{g:resource-lookup-flags} value,
+    the default value is @code{:none}}
   @return{The list of strings.}
   @begin{short}
     Returns all the names of children at the specified path in the set of
@@ -816,40 +717,5 @@
     (%resources-enumerate-children path lookup err)))
 
 (export 'resources-enumerate-children)
-
-;;; ----------------------------------------------------------------------------
-;;; g_resources_get_info
-;;; ----------------------------------------------------------------------------
-
-(cffi:defcfun ("g_resources_get_info" %resources-info) :boolean
-  (path :string)
-  (lookup resource-lookup-flags)
-  (size (:pointer :size))
-  (flags (:pointer :uint32))
-  (err :pointer))
-
-(defun resources-info (path lookup)
- #+liber-documentation
- "@version{2024-11-21}
-  @argument[path]{a string with a pathname inside the resource}
-  @argument[lookup]{a @symbol{g:resource-lookup-flags} value}
-  @begin{return}
-    @arg{size} -- an integer with the length of the contents of the file @br{}
-    @arg{flags} -- an unsigned integer with the flags about the file
-  @end{return}
-  @begin{short}
-    Looks for a file at the specified path in the set of globally registered
-    resources and if found returns information about it.
-  @end{short}
-  The @arg{lookup} argument controls the behaviour of the lookup.
-  @see-class{g:resource}
-  @see-symbol{g:resource-lookup-flags}"
-  (glib:with-error (err)
-    (cffi:with-foreign-objects ((size :size) (flags :uint32))
-      (when (%resources-info path lookup size flags err)
-        (values (cffi:mem-ref size :size)
-                (cffi:mem-ref flags :uint32))))))
-
-(export 'resources-info)
 
 ;;; --- End of file gio.resource.lisp ------------------------------------------

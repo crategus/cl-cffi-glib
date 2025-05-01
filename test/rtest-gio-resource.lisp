@@ -13,6 +13,9 @@
 
 ;;;     GResourceFlags
 
+;; TODO:  Not needed for the Lisp binding. Consider to remove it.
+
+#+nil
 (test g-resource-flags
   ;; Check type
   (is (g:type-is-flags "GResourceFlags"))
@@ -82,11 +85,28 @@
   (is (eq 'g:resource
           (glib:symbol-for-gtype "GResource"))))
 
-;;;     GStaticResource
-;;;     G_RESOURCE_ERROR
-;;;     GResourceError
-
 ;;; --- Functions --------------------------------------------------------------
+
+;;;     g_resource_new_from_data
+
+;; FIXME: Does not create the resource from the given data. What is wrong?
+;; The function is implemented with glib:with-ignore-error. If we do not
+;; ignore the error, we will get:
+;; --------------------------------
+;; G-RESOURCE-NEW-FROM-DATA in GIO-RESOURCE []:
+;;      Unexpected Error: #<GLIB::G-ERROR-CONDITION {1003D75FE3}>
+;; GError: Domain: "g-resource-error-quark", Code: 1, Message: invalid gvdb header.
+;; --------------------------------
+
+(test g-resource-new-from-data
+  (multiple-value-bind (data len) (cffi:foreign-string-alloc "a test string")
+    (let ((bytes (g:bytes-new data len))
+          resource)
+
+      ;; Does not create the resource
+      (is-false (setf resource (g:resource-new-from-data bytes)))
+
+      (cffi:foreign-string-free data))))
 
 ;;;     g_resource_load
 
@@ -97,38 +117,6 @@
 
 (test g-resource-load.2
   (signals (error) (g:resource-load "unknown")))
-
-;;;     g_resource_new_from_data
-;;;     g_resource_ref
-;;;     g_resource_unref
-
-;;;     g_resource_lookup_data
-
-(test g-resource-lookup-data
-  (let ((path (glib-sys:sys-path "test/resource/rtest-gio-resource.gresource")))
-    (g:with-resource (resource path)
-      (is (cffi:pointerp
-              (g:resource-lookup-data resource
-                                      "/com/crategus/test/ducky.png"
-                                      :none)))
-      (is (cffi:pointerp
-          (g:resource-lookup-data resource
-                                  "/com/crategus/test/dialog.ui"
-                                  :none))))))
-
-;;;     g_resource_open_stream
-
-;;;     g_resource_enumerate_children
-
-(test g-resource-enumerate-children
-  (let ((path (glib-sys:sys-path "test/resource/rtest-gio-resource.gresource")))
-    (g:with-resource (resource path)
-      (is (equal '("application.ui" "dialog.ui" "dialog2.ui" "ducky.png"
-                   "floppybuddy.gif" "gtk-logo-24.png")
-                 (sort (g:resource-enumerate-children resource
-                                                      "/com/crategus/test"
-                                                      :none)
-                       #'string<))))))
 
 ;;;     g_resource_get_info
 
@@ -151,37 +139,34 @@
                                       "/com/crategus/test/application.ui"
                                       :none)))))))
 
-;;;     g_static_resource_init
-;;;     g_static_resource_fini
-;;;     g_static_resource_get_resource
+;;;     g_resource_lookup_data
 
-;;;     g_resources_register
-;;;     g_resources_unregister
-
-;;;     g_resources_lookup_data
-
-(test g-resources-lookup-data
+(test g-resource-lookup-data
   (let ((path (glib-sys:sys-path "test/resource/rtest-gio-resource.gresource")))
     (g:with-resource (resource path)
-      (is (cffi:pointerp
-              (g:resources-lookup-data "/com/crategus/test/ducky.png"
-                                       :none)))
-      (is (cffi:pointerp
-              (g:resources-lookup-data "/com/crategus/test/dialog.ui"
-                                       :none))))))
+      (is (typep (g:resource-lookup-data resource
+                                         "/com/crategus/test/ducky.png"
+                                         :none) 'g:bytes))
+      (is (typep (g:resource-lookup-data resource
+                                         "/com/crategus/test/dialog.ui"
+                                         :none) 'g:bytes)))))
 
-;;;     g_resources_open_stream
+;;;     g_resource_has_children
 
-;;;     g_resources_enumerate_children
+;;;     g_resource_enumerate_children
 
-(test g-resources-enumerate-children
+(test g-resource-enumerate-children
   (let ((path (glib-sys:sys-path "test/resource/rtest-gio-resource.gresource")))
     (g:with-resource (resource path)
       (is (equal '("application.ui" "dialog.ui" "dialog2.ui" "ducky.png"
                    "floppybuddy.gif" "gtk-logo-24.png")
-                 (sort (g:resources-enumerate-children "/com/crategus/test"
-                                                       :none)
+                 (sort (g:resource-enumerate-children resource
+                                                      "/com/crategus/test"
+                                                      :none)
                        #'string<))))))
+
+;;;     g_resources_register
+;;;     g_resources_unregister
 
 ;;;     g_resources_get_info
 
@@ -201,4 +186,27 @@
                      (g:resources-info "/com/crategus/test/application.ui"
                                        :none)))))))
 
-;;; 2024-9-17
+;;;     g_resources_lookup_data
+
+(test g-resources-lookup-data
+  (let ((path (glib-sys:sys-path "test/resource/rtest-gio-resource.gresource")))
+    (g:with-resource (resource path)
+      (is (typep (g:resources-lookup-data "/com/crategus/test/ducky.png"
+                                          :none) 'g:bytes))
+      (is (typep (g:resources-lookup-data "/com/crategus/test/dialog.ui"
+                                          :none) 'g:bytes)))))
+
+;;;     g_resources_has_children
+
+;;;     g_resources_enumerate_children
+
+(test g-resources-enumerate-children
+  (let ((path (glib-sys:sys-path "test/resource/rtest-gio-resource.gresource")))
+    (g:with-resource (resource path)
+      (is (equal '("application.ui" "dialog.ui" "dialog2.ui" "ducky.png"
+                   "floppybuddy.gif" "gtk-logo-24.png")
+                 (sort (g:resources-enumerate-children "/com/crategus/test"
+                                                       :none)
+                       #'string<))))))
+
+;;; 2025-05-01
