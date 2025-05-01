@@ -1,9 +1,9 @@
 ;;; ----------------------------------------------------------------------------
 ;;; glib.variant.lisp
 ;;;
-;;; The documentation in this file is taken from the GLib 2.82 Reference
-;;; Manual and modified to document the Lisp binding to the GLib library,
-;;; see <http://www.gtk.org>. The API documentation of the Lisp binding is
+;;; The documentation in this file is taken from the GLIB Reference Manual
+;;; version 2.84 and modified to document the Lisp binding to the GLIB library,
+;;; see <http://www.gtk.org>. The API documentation for the Lisp binding is
 ;;; available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
 ;;; Copyright (C) 2012 - 2025 Dieter Kaiser
@@ -339,16 +339,6 @@
   (setf (glib:symbol-for-gtype "GVariant") 'variant))
 
 (export 'variant)
-
-;;; ----------------------------------------------------------------------------
-;;; struct GVariantIter
-;;;
-;;; struct GVariantIter {
-;;; };
-;;;
-;;; GVariantIter is an opaque data structure and can only be accessed using the
-;;; following functions.
-;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
 ;;; struct GVariantBuilder
@@ -2513,6 +2503,20 @@
 ;;; Since 2.36
 ;;; ----------------------------------------------------------------------------
 
+(cffi:defcfun ("g_variant_new_from_bytes" %variant-new-from-bytes)
+    (:pointer (:struct variant))
+  (vtype (boxed variant-type))
+  (bytes (boxed bytes))
+  (trusted :boolean))
+
+(defun variant-new-from-bytes (vtype bytes trusted)
+  (let ((vtype (if (stringp vtype)
+                   (variant-type-new vtype)
+                   vtype)))
+    (%variant-new-from-bytes vtype bytes trusted)))
+
+(export 'variant-new-from-bytes)
+
 ;;; ----------------------------------------------------------------------------
 ;;; g_variant_byteswap ()
 ;;;
@@ -2691,6 +2695,20 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
+;;; struct GVariantIter
+;;;
+;;; struct GVariantIter {
+;;; };
+;;;
+;;; GVariantIter is an opaque data structure and can only be accessed using the
+;;; following functions.
+;;; ----------------------------------------------------------------------------
+
+(cffi:defcstruct variant-iter)
+
+(export 'variant-iter)
+
+;;; ----------------------------------------------------------------------------
 ;;; g_variant_iter_copy ()
 ;;;
 ;;; GVariantIter * g_variant_iter_copy (GVariantIter *iter);
@@ -2794,6 +2812,12 @@
 ;;; Since 2.24
 ;;; ----------------------------------------------------------------------------
 
+(cffi:defcfun ("g_variant_iter_new" variant-iter-new)
+    (:pointer (:struct variant-iter))
+  (value (:pointer (:struct variant))))
+
+(export 'variant-iter-new)
+
 ;;; ----------------------------------------------------------------------------
 ;;; g_variant_iter_next_value ()
 ;;;
@@ -2835,6 +2859,17 @@
 ;;;
 ;;; Since 2.24
 ;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("g_variant_iter_next_value" %variant-iter-next-value)
+    (:pointer (:struct variant))
+  (iter (:pointer (:struct variant-iter))))
+
+(defun variant-iter-next-value (iter)
+  (let ((variant (%variant-iter-next-value iter)))
+    (unless (cffi:null-pointer-p variant)
+      variant)))
+
+(export 'variant-iter-next-value)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_variant_iter_next ()
