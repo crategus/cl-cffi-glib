@@ -1,12 +1,12 @@
 ;;; ----------------------------------------------------------------------------
 ;;; glib.package.lisp
 ;;;
-;;; The documentation of this file is taken from the GLIB Reference Manual
-;;; Version 2.82 and modified to document the Lisp binding to the GLIB library.
-;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
-;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
+;;; The documentation in this file is taken from the GLIB Reference Manual
+;;; version 2.84 and modified to document the Lisp binding to the GLIB library,
+;;; see <http://www.gtk.org>. The API documentation for the Lisp binding is
+;;; available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2011 - 2024 Dieter Kaiser
+;;; Copyright (C) 2011 - 2025 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -322,7 +322,6 @@
   @begin[GVariant]{section}
     @about-symbol{variant-class}
     @about-symbol{variant}
-    @about-symbol{variant-iter}
     @about-symbol{variant-builder}
     @about-symbol{variant-parse-error}
     @about-function{variant-ref}
@@ -408,6 +407,7 @@
     @about-function{variant-equal}
     @about-function{variant-print}
     @about-function{variant-print-string}
+    @about-symbol{variant-iter}
     @about-function{variant-iter-copy}
     @about-function{variant-iter-free}
     @about-function{variant-iter-init}

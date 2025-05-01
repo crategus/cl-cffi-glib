@@ -1,4 +1,4 @@
-Content from the GIO Reference Manual for Version 2.80
+Content from the GIO Reference Manual for Version 2.84
 
     *   - needs update
     +   - work needed
@@ -19,8 +19,8 @@ Asynchronous I/O
 
 File types and applications
 
-  gio.content-type.lisp        - Platform-specific content typing     GIO 2.82 .
-  gio.app-info.lisp            - GAppInfo                             GIO 2.82&.
+  gio.content-type.lisp        - Platform-specific content typing     GIO 2.84
+  gio.app-info.lisp            - GAppInfo                             GIO 2.84
 
   not implemented              - GAppInfoMonitor
   not implemented              - GDesktopAppInfo
@@ -44,7 +44,7 @@ Settings
 
 Resources
 
-  gio.resource.lisp            - GResource                          - GIO 2.82 &
+  gio.resource.lisp            - GResource                          - GIO 2.84
 
 Permissions
 
@@ -53,7 +53,7 @@ Permissions
 
 Data Models
 
-  gio.list-model.lisp          - GListModel                         - GIO 2.84 +
+  gio.list-model.lisp          - GListModel                         - GIO 2.84
   gio.list-store.lisp          - GListStore                         - GIO 2.84
 
 Application support
@@ -81,4 +81,4 @@ Application support
 
   gio.notification.lisp        - GNotification                      - GIO 2.82&.
 
-2024-12-29
+2025-05-01

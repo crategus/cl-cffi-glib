@@ -276,6 +276,7 @@
            #:variant-handle
            #:variant-double
            #:variant-string
+           #:variant-new-from-bytes
            #:variant-equal
            #:variant-print
            #:variant-dict-unref
@@ -291,6 +292,10 @@
            #:variant-dict-remove
            #:variant-dict-end
            #:variant-parse
+
+           #:variant-iter
+           #:variant-iter-new
+           #:variant-iter-next-value
 
            ;; Symbols from glib.bytes.lisp
            #:bytes
@@ -595,12 +600,8 @@
            #:app-info-executable
            #:app-info-commandline
            #:app-info-icon
-           #:app-info-launch
            #:app-info-supports-files
            #:app-info-supports-uris
-           #:app-info-launch-uris
-;           #:app-info-launch-uris-async
-;           #:app-info-launch-uris-finish
            #:app-info-should-show
            #:app-info-can-delete
            #:app-info-delete
@@ -614,14 +615,18 @@
            #:app-info-supported-types
            #:app-info-all
            #:app-info-all-for-type
-           #:app-info-default-for-type
-;           #:app-info-default-for-type-async
-;           #:app-info-default-for-type-finish
-           #:app-info-default-for-uri-scheme
-;           #:app-info-default-for-uri-scheme-async
-;           #:app-info-default-for-uri-scheme-finish
            #:app-info-fallback-for-type
            #:app-info-recommended-for-type
+           #:app-info-default-for-type
+           #:app-info-default-for-type-async
+           #:app-info-default-for-type-finish
+           #:app-info-default-for-uri-scheme
+           #:app-info-default-for-uri-scheme-async
+           #:app-info-default-for-uri-scheme-finish
+           #:app-info-launch
+           #:app-info-launch-uris
+           #:app-info-launch-uris-async
+           #:app-info-launch-uris-finish
            #:app-info-launch-default-for-uri
            #:app-info-launch-default-for-uri-async
            #:app-info-launch-default-for-uri-finish
@@ -688,24 +693,21 @@
 
            ;; Symbols from gio.resource.lisp
            #:resource
-           #:resource-flags
            #:resource-lookup-flags
            #:with-resource
            #:with-resources
-           #:resource-load
            #:resource-new-from-data
-           #:resource-ref
-           #:resource-unref
-           #:resource-lookup-data
-           #:resource-open-stream
-           #:resource-enumerate-children
+           #:resource-load
            #:resource-info
+           #:resource-lookup-data
+           #:resource-has-children
+           #:resource-enumerate-children
            #:resources-register
            #:resources-unregister
-           #:resources-lookup-data
-           #:resources-open-stream
-           #:resources-enumerate-children
            #:resources-info
+           #:resources-lookup-data
+           #:resources-has-children
+           #:resources-enumerate-children
 
            ;; Symbols from gio.permission.lisp
            #:permission

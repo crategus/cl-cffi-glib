@@ -222,12 +222,8 @@
       @about-function{app-info-executable}
       @about-function{app-info-commandline}
       @about-function{app-info-icon}
-      @about-function{app-info-launch}
       @about-function{app-info-supports-files}
       @about-function{app-info-supports-uris}
-      @about-function{app-info-launch-uris}
-      @about-function{app-info-launch-uris-async}
-      @about-function{app-info-launch-uris-finish}
       @about-function{app-info-should-show}
       @about-function{app-info-can-delete}
       @about-function{app-info-delete}
@@ -241,17 +237,23 @@
       @about-function{app-info-supported-types}
       @about-function{app-info-all}
       @about-function{app-info-all-for-type}
+      @about-function{app-info-fallback-for-type}
+      @about-function{app-info-recommended-for-type}
       @about-function{app-info-default-for-type}
       @about-function{app-info-default-for-type-async}
       @about-function{app-info-default-for-type-finish}
       @about-function{app-info-default-for-uri-scheme}
       @about-function{app-info-default-for-uri-scheme-async}
       @about-function{app-info-default-for-uri-scheme-finish}
-      @about-function{app-info-fallback-for-type}
-      @about-function{app-info-recommended-for-type}
+      @about-function{app-info-launch}
+      @about-function{app-info-launch-uris}
+      @about-function{app-info-launch-uris-async}
+      @about-function{app-info-launch-uris-finish}
       @about-function{app-info-launch-default-for-uri}
       @about-function{app-info-launch-default-for-uri-async}
       @about-function{app-info-launch-default-for-uri-finish}
+    @end{subsection}
+    @begin[GAppLaunchContext]{subsection}
       @about-class{app-launch-context}
       @about-function{app-launch-context-new}
       @about-function{app-launch-context-setenv}
@@ -313,7 +315,6 @@
     @end{subsection}
   @end{section}
   @begin[Settings]{section}
-
     @begin[GSettings]{subsection}
       @about-class{settings}
       @about-generic{settings-backend}
@@ -326,28 +327,24 @@
       @about-function{settings-new}
       @about-function{settings-new-with-path}
     @end{subsection}
-
   @end{section}
   @begin[Resources]{section}
-    @about-symbol{resource-flags}
     @about-symbol{resource-lookup-flags}
     @about-class{resource}
     @about-macro{with-resource}
     @about-macro{with-resources}
-    @about-function{resource-load}
     @about-function{resource-new-from-data}
-    @about-function{resource-ref}
-    @about-function{resource-unref}
-    @about-function{resource-lookup-data}
-    @about-function{resource-open-stream}
-    @about-function{resource-enumerate-children}
+    @about-function{resource-load}
     @about-function{resource-info}
+    @about-function{resource-lookup-data}
+    @about-function{resource-has-children}
+    @about-function{resource-enumerate-children}
     @about-function{resources-register}
     @about-function{resources-unregister}
-    @about-function{resources-lookup-data}
-    @about-function{resources-open-stream}
-    @about-function{resources-enumerate-children}
     @about-function{resources-info}
+    @about-function{resources-lookup-data}
+    @about-function{resources-has-children}
+    @about-function{resources-enumerate-children}
   @end{section}
   @begin[Permissions]{section}
     @begin[GPermission]{subsection}
