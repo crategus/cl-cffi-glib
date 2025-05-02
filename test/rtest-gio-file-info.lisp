@@ -88,7 +88,7 @@
 
 ;;;     g_file_info_get_modification_time                   Deprecated 2.62
 
-;;;     g_file_info_get_modification_date_time              Since 2.62
+;;;     g_file_info_get_modification_date_time
 ;;;     g_file_info_get_name
 ;;;     g_file_info_get_size
 
@@ -257,7 +257,7 @@
 ;;;     g_file_info_set_icon
 ;;;     g_file_info_set_is_hidden
 ;;;     g_file_info_set_is_symlink
-;;;     g_file_info_set_modification_date_time              Since 2.62
+;;;     g_file_info_set_modification_date_time
 ;;;     g_file_info_set_modification_time                   Deprecated 2.62
 ;;;     g_file_info_set_name
 ;;;     g_file_info_set_size

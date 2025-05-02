@@ -1,9 +1,9 @@
 ;;; ----------------------------------------------------------------------------
 ;;; glib.main-loop.lisp
 ;;;
-;;; The documentation in this file is taken from the GLib 2.82 Reference
-;;; Manual and modified to document the Lisp binding to the GLib library,
-;;; see <http://www.gtk.org>. The API documentation of the Lisp binding is
+;;; The documentation in this file is taken from the GLib Reference Manual
+;;; version 2.84 and modified to document the Lisp binding to the GLib library,
+;;; see <http://www.gtk.org>. The API documentation for the Lisp binding is
 ;;; available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
 ;;; Copyright (C) 2011 - 2025 Dieter Kaiser
@@ -1230,8 +1230,6 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 ;;;
 ;;; data :
 ;;;     data to pass to function
-;;;
-;;; Since 2.28
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -1267,8 +1265,6 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 ;;;
 ;;; notify :
 ;;;     a function to call when data is no longer in use, or NULL
-;;;
-;;; Since 2.28
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -1515,8 +1511,6 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 ;;;
 ;;; source :
 ;;;     GSource that is currently being disposed
-;;;
-;;; Since 2.64
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -1588,9 +1582,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
   @begin{short}
     Sets the source functions of an unattached source.
   @end{short}
-  This function can be used to override default implementations.
-
-  Since 2.12"
+  This function can be used to override default implementations."
   (source (:pointer (:struct source)))
   (funcs (:pointer (:struct source-funcs))))
 
@@ -1623,8 +1615,6 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 ;;;
 ;;; dispose :
 ;;;     GSourceDisposeFunc to set on the source
-;;;
-;;; Since 2.64
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -2056,8 +2046,6 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 ;;;
 ;;; Returns :
 ;;;     an opaque tag
-;;;
-;;; Since 2.36
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -2078,8 +2066,6 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 ;;;
 ;;; tag :
 ;;;     the tag from g_source_add_unix_fd()
-;;;
-;;; Since 2.36
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -2107,8 +2093,6 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 ;;;
 ;;; new_events :
 ;;;     the new event mask to watch
-;;;
-;;; Since 2.36
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -2132,8 +2116,6 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 ;;;
 ;;; Returns :
 ;;;     the conditions reported on the fd
-;;;
-;;; Since 2.36
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------

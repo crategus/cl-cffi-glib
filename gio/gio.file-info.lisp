@@ -2,8 +2,8 @@
 ;;; gio.file-info.lisp
 ;;;
 ;;; The documentation in this file is taken from the GIO Reference Manual
-;;; Version 2.82 and modified to document the Lisp binding to the GIO library,
-;;; see <http://www.gtk.org>. The API documentation of the Lisp binding is
+;;; version 2.84 and modified to document the Lisp binding to the GIO library,
+;;; see <http://www.gtk.org>. The API documentation for the Lisp binding is
 ;;; available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
 ;;; Copyright (C) 2020 - 2025 Dieter Kaiser
@@ -67,7 +67,7 @@
 ;;;     g_file_info_get_is_backup
 ;;;     g_file_info_get_is_hidden
 ;;;     g_file_info_get_is_symlink
-;;;     g_file_info_get_modification_date_time              Since 2.62
+;;;     g_file_info_get_modification_date_time
 ;;;     g_file_info_get_modification_time                   Deprecated 2.62
 ;;;     g_file_info_get_name
 ;;;     g_file_info_get_size
@@ -101,7 +101,7 @@
 ;;;     g_file_info_set_icon
 ;;;     g_file_info_set_is_hidden
 ;;;     g_file_info_set_is_symlink
-;;;     g_file_info_set_modification_date_time              Since 2.62
+;;;     g_file_info_set_modification_date_time
 ;;;     g_file_info_set_modification_time                   Deprecated 2.62
 ;;;     g_file_info_set_name
 ;;;     g_file_info_set_size
@@ -210,6 +210,7 @@
 ;;; Since 2.70
 ;;; ----------------------------------------------------------------------------
 
+#+glib-2-70
 (defun (setf file-info-access-date-time) (value info)
   (cffi:foreign-funcall "g_file_info_set_access_date_time"
                         (gobject:object file-info) info
@@ -225,10 +226,12 @@
 ;;; Since 2.70
 ;;; ----------------------------------------------------------------------------
 
+#+glib-2-70
 (cffi:defcfun ("g_file_info_get_access_date_time" file-info-access-date-time)
     glib:date-time
   (info (gobject:object file-info)))
 
+#+glib-2-70
 (export 'file-info-access-date-time)
 
 ;;; ----------------------------------------------------------------------------
@@ -320,8 +323,6 @@
 ;;;
 ;;; Gets the value of a stringv attribute. If the attribute does not contain a
 ;;; stringv, NULL will be returned.
-;;;
-;;; Since 2.22
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -366,8 +367,6 @@
 ;;; Returns the GDateTime representing the deletion date of the file, as
 ;;; available in G_FILE_ATTRIBUTE_TRASH_DELETION_DATE. If the
 ;;; G_FILE_ATTRIBUTE_TRASH_DELETION_DATE attribute is unset, NULL is returned.
-;;;
-;;; Since 2.36
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -424,8 +423,6 @@
 ;;;
 ;;; Gets the modification time of the current info and returns it as a
 ;;; GDateTime.
-;;;
-;;; Since 2.62
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_file_info_get_modification_date_time"
@@ -477,8 +474,6 @@
 ;;; g_file_info_get_symbolic_icon
 ;;;
 ;;; Gets the symbolic icon for a file.
-;;;
-;;; Since 2.34
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -591,8 +586,6 @@
 ;;; Sets the attribute status for an attribute key. This is only needed by
 ;;; external code that implement g_file_set_attributes_from_info() or similar
 ;;; functions.
-;;;
-;;; Since 2.22
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -683,8 +676,6 @@
 ;;; Sets the G_FILE_ATTRIBUTE_TIME_MODIFIED and
 ;;; G_FILE_ATTRIBUTE_TIME_MODIFIED_USEC attributes in the file info to the
 ;;; given date/time value.
-;;;
-;;; Since 2.62
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -723,8 +714,6 @@
 ;;;
 ;;; Sets the symbolic icon for a given GFileInfo. See
 ;;; G_FILE_ATTRIBUTE_STANDARD_SYMBOLIC_ICON.
-;;;
-;;; Since 2.34
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------

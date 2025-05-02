@@ -2,8 +2,8 @@
 ;;; gobject.base.lisp
 ;;;
 ;;; The documentation in this file is taken from the GObject Reference Manual
-;;; Version 2.82 and modified to document the Lisp binding to the GObject
-;;; library, see <http://www.gtk.org>. The API documentation of the Lisp
+;;; version 2.84 and modified to document the Lisp binding to the GObject
+;;; library, see <http://www.gtk.org>. The API documentation for the Lisp
 ;;; binding is available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
 ;;; Copyright (C) 2011 - 2025 Dieter Kaiser
@@ -55,7 +55,7 @@
 ;;;     g_object_interface_list_properties
 ;;;
 ;;;     g_object_new
-;;;     g_object_new_with_properties                        Since 2.54
+;;;     g_object_new_with_properties
 ;;;     g_object_newv                                       Deprecated 2.54
 ;;;     g_object_ref
 ;;;     g:object-ref-count

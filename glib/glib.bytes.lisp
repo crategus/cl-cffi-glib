@@ -1,12 +1,12 @@
 ;;; ----------------------------------------------------------------------------
 ;;; glib.bytes.lisp
 ;;;
-;;; The documentation of this file is taken from the GLib 2.82 Reference
-;;; Manual and modified to document the Lisp binding to the GLib library.
-;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
-;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
+;;; The documentation in this file is taken from the GLib Reference Manual
+;;; version 2.84 and modified to document the Lisp binding to the GLib library,
+;;; see <http://www.gtk.org>. The API documentation for the Lisp binding is
+;;; available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2021 -2024 Dieter Kaiser
+;;; Copyright (C) 2021 -2025 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -239,7 +239,7 @@
 ;;; A reference to bytes will be held by the newly created GBytes until the byte
 ;;; data is no longer needed.
 ;;;
-;;; Since 2.56, if offset is 0 and length matches the size of bytes , then bytes
+;;; If offset is 0 and length matches the size of bytes , then bytes
 ;;; will be returned with the reference count incremented by 1. If bytes is a
 ;;; slice of another GBytes, then the resulting GBytes will reference the same
 ;;; GBytes instead of bytes . This allows consumers to simplify the usage of

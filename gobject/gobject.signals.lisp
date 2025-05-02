@@ -2,8 +2,8 @@
 ;;; gobject.signals.lisp
 ;;;
 ;;; The documentation in this file is taken from the GObject Reference Manual
-;;; Version 2.82 and modified to document the Lisp binding to the GObject
-;;; library, see <http://www.gtk.org>. The API documentation of the Lisp
+;;; version 2.84 and modified to document the Lisp binding to the GObject
+;;; library, see <http://www.gtk.org>. The API documentation for the Lisp
 ;;; binding is available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
 ;;; Copyright (C) 2011 - 2025 Dieter Kaiser
@@ -88,7 +88,7 @@
 ;;;     g_signal_chain_from_overridden_handler
 ;;;     g_signal_add_emission_hook
 ;;;     g_signal_remove_emission_hook
-;;;     g_signal_is_valid_name
+;;;     g_signal_is_valid_name                              Since 2.66
 ;;;     g_signal_parse_name                                 internal
 ;;;     g_signal_get_invocation_hint
 ;;;     g_signal_type_cclosure_new
@@ -1493,8 +1493,6 @@
 ;;; Disconnects a handler from instance so it will not be called during any
 ;;; future or currently ongoing emissions of the signal it has been connected
 ;;; to.
-;;;
-;;; Since 2.62
 ;;; ----------------------------------------------------------------------------
 
 ;;; --- End of file gobject.signals.lisp ---------------------------------------

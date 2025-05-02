@@ -1,12 +1,12 @@
 ;;; ----------------------------------------------------------------------------
 ;;; gobject.param.lisp
 ;;;
-;;; The documentation of this file is taken from the GObject Reference Manual
-;;; Version 2.82 and modified to document the Lisp binding to the GObject
-;;; library. See <http://www.gtk.org>. The API documentation of the Lisp
-;;; binding is available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
+;;; The documentation in this file is taken from the GObject Reference Manual
+;;; version 2.84 and modified to document the Lisp binding to the GObject
+;;; library, see <http://www.gtk.org>. The API documentation for the Lisp
+;;; binding is available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2011 - 2024 Dieter Kaiser
+;;; Copyright (C) 2011 - 2025 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -2266,8 +2266,6 @@
 ;;; overidden property. GParamSpecOverride is used in implementing
 ;;; g_object_class_override_property(), and will not be directly useful unless
 ;;; you are implementing a new base type similar to GObject.
-;;;
-;;; Since 2.4
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -2288,8 +2286,6 @@
 ;;;
 ;;; Returns :
 ;;;     the newly created GParamSpec
-;;;
-;;; Since 2.4
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -2415,8 +2411,6 @@
 ;;;
 ;;; GVariant *default_value;
 ;;;     a GVariant, or NULL
-;;;
-;;; Since 2.26
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -2455,8 +2449,6 @@
 ;;;
 ;;; Returns :
 ;;;     the newly created GParamSpec
-;;;
-;;; Since 2.26
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -2504,8 +2496,6 @@
 ;;; Returns :
 ;;;     variant contents of value, should be unrefed using g_variant_unref()
 ;;;     when no longer needed
-;;;
-;;; Since 2.26
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -2531,8 +2521,6 @@
 ;;;
 ;;; variant :
 ;;;     a GVariant, or NULL
-;;;
-;;; Since 2.26
 ;;; ----------------------------------------------------------------------------
 
 ;;; --- End of file gobject.param.lisp -----------------------------------------

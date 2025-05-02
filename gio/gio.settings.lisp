@@ -277,9 +277,16 @@ An example for ranges, choices and enumerated types:
     </key>
   </schema>
 </schemalist>
-Copy
+
 Vendor overrides
-Default values are defined in the schemas that get installed by an application. Sometimes, it is necessary for a vendor or distributor to adjust these defaults. Since patching the XML source for the schema is inconvenient and error-prone, glib-compile-schemas reads so-called ‘vendor override’ files. These are keyfiles in the same directory as the XML schema sources which can override default values. The schema ID serves as the group name in the key file, and the values are expected in serialized GVariant form, as in the following example:
+
+Default values are defined in the schemas that get installed by an application.
+Sometimes, it is necessary for a vendor or distributor to adjust these defaults.
+Since patching the XML source for the schema is inconvenient and error-prone,
+glib-compile-schemas reads so-called ‘vendor override’ files. These are keyfiles
+in the same directory as the XML schema sources which can override default
+values. The schema ID serves as the group name in the key file, and the values
+are expected in serialized GVariant form, as in the following example:
 
 [org.gtk.Example]
 key1='string'
@@ -375,21 +382,12 @@ Copy
 GSettings will use gettext to look up translations for the <summary> and <description> elements, and also any <default> elements which have a l10n attribute set.
 
 Translations must not be included in the .gschema.xml file by the build system, for example by using a rule to generate the XML file from a template.
-
-[−]
-Ancestors
-GObject
-[−]
 |#
-
-
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_settings_new
 ;;;
 ;;; Creates a new GSettings object with the schema specified by schema_id.
-;;;
-;;; Since 2.26
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_settings_new" settings-new) (gobject:object settings :return)
@@ -401,17 +399,11 @@ GObject
 g_settings_new_full
 Creates a new GSettings object with a given schema, backend and path.
 
-since: 2.32
-
 g_settings_new_with_backend
 Creates a new GSettings object with the schema specified by schema_id and a given GSettingsBackend.
 
-since: 2.26
-
 g_settings_new_with_backend_and_path
 Creates a new GSettings object with the schema specified by schema_id and a given GSettingsBackend and path.
-
-since: 2.26
 |#
 
 ;;; ----------------------------------------------------------------------------
@@ -419,8 +411,6 @@ since: 2.26
 ;;;
 ;;; Creates a new GSettings object with the relocatable schema specified by
 ;;; schema_id and a given path.
-;;;
-;;; Since 2.26
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_settings_new_with_path" settings-new-with-path)
@@ -435,7 +425,7 @@ Functions
 g_settings_list_relocatable_schemas
 Deprecated.
 
-deprecated: 2.40 since: 2.28
+deprecated: 2.40
 |#
 
 ;;; ----------------------------------------------------------------------------
@@ -443,7 +433,7 @@ deprecated: 2.40 since: 2.28
 ;;;
 ;;; Deprecated.
 ;;;
-;;; deprecated: 2.40 since: 2.26
+;;; deprecated: 2.40
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_settings_list_schemas" settings-list-schemas)
@@ -458,9 +448,6 @@ Ensures that all pending operations are complete for the default backend.
 g_settings_unbind
 Removes an existing binding for property on object.
 
-since: 2.26
-
-[−]
 Instance methods
 g_settings_apply
 Applies any changes that have been made to the settings. This function does nothing unless settings is in ‘delay-apply’ mode; see g_settings_delay(). In the normal case settings are always applied immediately.
@@ -468,12 +455,8 @@ Applies any changes that have been made to the settings. This function does noth
 g_settings_bind
 Create a binding between the key in the settings object and the property property of object.
 
-since: 2.26
-
 g_settings_bind_with_mapping
 Create a binding between the key in the settings object and the property property of object.
-
-since: 2.26
 
 g_settings_bind_with_mapping_closures
 Version of g_settings_bind_with_mapping() using closures instead of callbacks for easier binding in other languages.
@@ -483,67 +466,41 @@ since: 2.82
 g_settings_bind_writable
 Create a binding between the writability of key in the settings object and the property property of object. The property must be boolean; “sensitive” or “visible” properties of widgets are the most likely candidates.
 
-since: 2.26
-
 g_settings_create_action
 Creates a GAction corresponding to a given GSettings key.
-
-since: 2.32
 
 g_settings_delay
 Changes the GSettings object into ‘delay-apply’ mode. In this mode, changes to settings are not immediately propagated to the backend, but kept locally until g_settings_apply() is called.
 
-since: 2.26
-
 g_settings_get
 Gets the value that is stored at key in settings.
-
-since: 2.26
 
 g_settings_get_boolean
 Gets the value that is stored at key in settings.
 
-since: 2.26
-
 g_settings_get_child
 Creates a child settings object which has a base path of base-path/name`, wherebase-pathis the base path ofsettings`.
-
-since: 2.26
 
 g_settings_get_default_value
 Gets the “default value” of a key.
 
-since: 2.40
-
 g_settings_get_double
 Gets the value that is stored at key in settings.
-
-since: 2.26
 
 g_settings_get_enum
 Gets the value that is stored in settings for key and converts it to the enum value that it represents.
 
-since: 2.26
-
 g_settings_get_flags
 Gets the value that is stored in settings for key and converts it to the flags value that it represents.
-
-since: 2.26
 
 g_settings_get_has_unapplied
 Returns whether the GSettings object has any unapplied changes. This can only be the case if it is in ‘delayed-apply’ mode.
 
-since: 2.26
-
 g_settings_get_int
 Gets the value that is stored at key in settings.
 
-since: 2.26
-
 g_settings_get_int64
 Gets the value that is stored at key in settings.
-
-since: 2.50
 
 g_settings_get_mapped
 Gets the value that is stored at key in settings, subject to application-level validation/mapping.
@@ -551,42 +508,28 @@ Gets the value that is stored at key in settings, subject to application-level v
 g_settings_get_range
 Queries the range of a key.
 
-deprecated: 2.40 since: 2.28
+deprecated: 2.40
 
 g_settings_get_string
 Gets the value that is stored at key in settings.
 
-since: 2.26
-
 g_settings_get_strv
 A convenience variant of g_settings_get() for string arrays.
-
-since: 2.26
 
 g_settings_get_uint
 Gets the value that is stored at key in settings.
 
-since: 2.30
-
 g_settings_get_uint64
 Gets the value that is stored at key in settings.
-
-since: 2.50
 
 g_settings_get_user_value
 Checks the “user value” of a key, if there is one.
 
-since: 2.40
-
 g_settings_get_value
 Gets the value that is stored in settings for key.
 
-since: 2.26
-
 g_settings_is_writable
 Finds out if a key can be written or not.
-
-since: 2.26
 
 g_settings_list_children
 Gets the list of children on settings.
@@ -599,7 +542,7 @@ deprecated: 2.46
 g_settings_range_check
 Checks if the given value is of the correct type and within the permitted range for key.
 
-deprecated: 2.40 since: 2.28
+deprecated: 2.40
 
 g_settings_reset
 Resets key to its default value.
@@ -610,17 +553,11 @@ Reverts all non-applied changes to the settings. This function does nothing unle
 g_settings_set
 Sets key in settings to value.
 
-since: 2.26
-
 g_settings_set_boolean
 Sets key in settings to value.
 
-since: 2.26
-
 g_settings_set_double
 Sets key in settings to value.
-
-since: 2.26
 
 g_settings_set_enum
 Looks up the enumerated type nick for value and writes it to key, within settings.
@@ -631,37 +568,23 @@ Looks up the flags type nicks for the bits specified by value, puts them in an a
 g_settings_set_int
 Sets key in settings to value.
 
-since: 2.26
-
 g_settings_set_int64
 Sets key in settings to value.
-
-since: 2.50
 
 g_settings_set_string
 Sets key in settings to value.
 
-since: 2.26
-
 g_settings_set_strv
 Sets key in settings to value.
-
-since: 2.26
 
 g_settings_set_uint
 Sets key in settings to value.
 
-since: 2.30
-
 g_settings_set_uint64
 Sets key in settings to value.
 
-since: 2.50
-
 g_settings_set_value
 Sets key in settings to value.
-
-since: 2.26
 
 [+]
 Methods inherited from GObject (43)
@@ -672,8 +595,6 @@ The name of the context that the settings are stored in.
 
 Gio.Settings:delay-apply
 Whether the GSettings object is in ‘delay-apply’ mode. See g_settings_delay() for details.
-
-since: 2.28
 
 Gio.Settings:has-unapplied
 If this property is TRUE, the GSettings object has outstanding changes that will be applied when g_settings_apply() is called.

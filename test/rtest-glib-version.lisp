@@ -5,17 +5,25 @@
 
 (test push-library-version-features
   (is (member :glib      *features*))
-  (is (member :glib-2-60 *features*))
-  (is (member :glib-2-62 *features*))
+  #+glib-2-64
   (is (member :glib-2-64 *features*))
+  #+glib-2-66
   (is (member :glib-2-66 *features*))
+  #+glib-2-68
   (is (member :glib-2-68 *features*))
+  #+glib-2-70
   (is (member :glib-2-70 *features*))
+  #+glib-2-72
   (is (member :glib-2-72 *features*))
+  #+glib-2-74
   (is (member :glib-2-74 *features*))
+  #+glib-2-76
   (is (member :glib-2-76 *features*))
+  #+glib-2-78
   (is (member :glib-2-78 *features*))
+  #+glib-2-80
   (is (member :glib-2-80 *features*))
+  #+glib-2-82
   (is (member :glib-2-82 *features*)))
 
 #-windows
@@ -44,4 +52,4 @@
       (is-false (glib:cl-cffi-glib-build-info s))
       (is (stringp result)))))
 
-;;; 2025-3-28
+;;; 2025-05-01

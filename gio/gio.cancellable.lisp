@@ -2,8 +2,8 @@
 ;;; gio.cancellable.lisp
 ;;;
 ;;; The documentation in this file is taken from the GIO Reference Manual
-;;; Version 2.82 and modified to document the Lisp binding to the GIO library,
-;;; see <http://www.gtk.org>. The API documentation of the Lisp binding is
+;;; version 2.84 and modified to document the Lisp binding to the GIO library,
+;;; see <http://www.gtk.org>. The API documentation for the Lisp binding is
 ;;; available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
 ;;; Copyright (C) 2024 - 2025 Dieter Kaiser
@@ -264,8 +264,6 @@ my_data_free (my_data);
 ;;; Returns :
 ;;;     TRUE if pollfd was successfully initialized, FALSE on failure to prepare
 ;;;     the cancellable.
-;;;
-;;; Since 2.22
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -285,8 +283,6 @@ my_data_free (my_data);
 ;;;
 ;;; cancellable :
 ;;;     a GCancellable
-;;;
-;;; Since 2.22
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -461,8 +457,6 @@ lambda (cancellable) => result
 ;;; Returns :
 ;;;     The id of the signal handler or 0 if cancellable has already been
 ;;;     cancelled.
-;;;
-;;; Since 2.22
 ;;; ----------------------------------------------------------------------------
 
 ;; TODO: This has to be implemented like gobject:signal-connect.
@@ -490,8 +484,6 @@ lambda (cancellable) => result
 ;;;
 ;;; handler_id :
 ;;;     Handler id of the handler to be disconnected, or 0.
-;;;
-;;; Since 2.22
 ;;; ----------------------------------------------------------------------------
 
 ;; TODO: This has to be implemented like gobject:signal-disconnect.

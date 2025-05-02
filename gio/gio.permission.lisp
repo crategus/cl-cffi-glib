@@ -1,12 +1,12 @@
 ;;; ----------------------------------------------------------------------------
 ;;; gio.permission.lisp
 ;;;
-;;; The documentation of this file is taken from the GIO Reference Manual
-;;; Version 2.82 and modified to document the Lisp binding to the GIO library.
-;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
-;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
+;;; The documentation in this file is taken from the GIO Reference Manual
+;;; version 2.84 and modified to document the Lisp binding to the GIO library,
+;;; see <http://www.gtk.org>. The API documentation for the Lisp binding is
+;;; available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2021 - 2024 Dieter Kaiser
+;;; Copyright (C) 2021 - 2025 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -252,8 +252,6 @@
 ;;;
 ;;; user_data :
 ;;;     the user data to pass to callback
-;;;
-;;; Since: 2.26
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -281,8 +279,6 @@
 ;;;
 ;;; Returns :
 ;;;     TRUE if the permission was successfully acquired
-;;;
-;;; Since: 2.26
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -346,8 +342,6 @@
 ;;;
 ;;; user_data :
 ;;;     the user data to pass to callback
-;;;
-;;; Since: 2.26
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -375,8 +369,6 @@
 ;;;
 ;;; Returns :
 ;;;     TRUE if the permission was successfully released
-;;;
-;;; Since: 2.26
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -405,8 +397,6 @@
 ;;;
 ;;; can_release :
 ;;;     the new value for the 'can-release' property
-;;;
-;;; Since: 2.26
 ;;; ----------------------------------------------------------------------------
 
 ;;; --- End of file gio.permission.lisp ----------------------------------------

@@ -2,8 +2,8 @@
 ;;; gio.application.lisp
 ;;;
 ;;; The documentation in this file is taken from the GIO Reference Manual
-;;; Version 2.82 and modified to document the Lisp binding to the GIO library,
-;;; see <http://www.gtk.org>. The API documentation of the Lisp binding is
+;;; version 2.84 and modified to document the Lisp binding to the GIO library,
+;;; see <http://www.gtk.org>. The API documentation for the Lisp binding is
 ;;; available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
 ;;; Copyright (C) 2012 - 2025 Dieter Kaiser
@@ -142,9 +142,7 @@
   (:send-enviroment 16)
   (:non-unique 32)
   (:can-override-app-id 64)
-  #+glib-2-60
   (:allow-replacement 128)
-  #+glib-2-60
   (:replace 256))
 
 #+liber-documentation
@@ -167,9 +165,7 @@
   (:send-enviroment 16)
   (:non-unique 32)
   (:can-override-app-id 64)
-  #+glib-2-60
   (:allow-replacement 128)
-  #+glib-2-60
   (:replace 256))
   @end{declaration}
   @begin{values}
@@ -205,10 +201,10 @@
       @entry[:can-override-app-id]{Allow users to override the application ID
         from the command line with the @code{--gapplication-app-id} option.}
       @entry[:allow-replacement]{Allow another instance to take over the bus
-        name. Since 2.60}
-      @entry[:replace]{Take over from another instance. This flag is usually set
-        by passing the @code{--gapplication-replace} option on the command line.
-        Since 2.60}
+        name.}
+      @entry[:replace]{Take over from another instance. This flag is usually
+        set by passing the @code{--gapplication-replace} option on the command
+        line.}
     @end{table}
   @end{values}
   @begin{short}
@@ -559,7 +555,7 @@ lambda (application)    :run-last
       The signal is emitted only on the registered primary instance when a new
       instance has taken over. This can only happen if the application is using
       the @code{:allow-replacement} flag. The default handler for this signal
-      calls the @fun{g:application-quit} function. Since 2.60.
+      calls the @fun{g:application-quit} function.
     @subheading{The \"open\" signal}
       @begin{pre}
 lambda (application files nfiles hint)    :run-last
@@ -1001,9 +997,7 @@ lambda (application)    :run-first
 ;;;     a GApplication
 ;;;
 ;;; Returns :
-;;;     a GDBusConnection, or NULL. [transfer none]
-;;;
-;;; Since 2.34
+;;;     a GDBusConnection, or NULL
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -1032,8 +1026,6 @@ lambda (application)    :run-first
 ;;;
 ;;; Returns :
 ;;;     the object path, or NULL
-;;;
-;;; Since 2.34
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------

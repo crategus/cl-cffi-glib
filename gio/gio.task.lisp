@@ -1,12 +1,12 @@
 ;;; ----------------------------------------------------------------------------
 ;;; gio.task.lisp
 ;;;
-;;; The documentation of this file is taken from the GIO Reference Manual
-;;; Version 2.82 and modified to document the Lisp binding to the GIO library.
-;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
-;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
+;;; The documentation in this file is taken from the GIO Reference Manual
+;;; version 2.84 and modified to document the Lisp binding to the GIO library,
+;;; see <http://www.gtk.org>. The API documentation for the Lisp binding is
+;;; available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2023 - 2024 Dieter Kaiser
+;;; Copyright (C) 2023 - 2025 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -935,8 +935,6 @@ baker_bake_cake_sync (Baker               *self,
 ;;;
 ;;; name :
 ;;;     a human readable name for the task, or NULL to unset it.
-;;;
-;;; Since 2.60
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -952,8 +950,6 @@ baker_bake_cake_sync (Baker               *self,
 ;;;
 ;;; Returns :
 ;;;     task ’s name, or NULL.
-;;;
-;;; Since 2.60
 ;;; ----------------------------------------------------------------------------
 
 #|
@@ -1239,8 +1235,6 @@ The value is a NUL terminated UTF-8 string.
 ;;;
 ;;; result :
 ;;;     the GValue result of a task function.
-;;;
-;;; Since 2.64
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -1433,8 +1427,6 @@ The value is a NUL terminated UTF-8 string.
 ;;;
 ;;; Returns :
 ;;;     TRUE if task succeeded, FALSE on error.
-;;;
-;;; Since 2.64
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------

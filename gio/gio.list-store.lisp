@@ -48,8 +48,8 @@
 ;;;     g_list_store_remove_all
 ;;;     g_list_store_splice
 ;;;     g_list_store_sort
-;;;     g_list_store_find                                   Since 2.64
-;;;     g_list_store_find_with_equal_func                   Since 2.64
+;;;     g_list_store_find
+;;;     g_list_store_find_with_equal_func
 ;;;     g_list_store_find_with_equal_func_full              Since 2.74
 ;;;
 ;;; Properties
@@ -448,13 +448,11 @@
 ;;; g_list_store_find
 ;;; ----------------------------------------------------------------------------
 
-#+glib-2-64
 (cffi:defcfun ("g_list_store_find" %list-store-find) :boolean
   (store (gobject:object list-store))
   (item gobject:object)
   (pos (:pointer :uint)))
 
-#+glib-2-64
 (defun list-store-find (store item)
  #+liber-documentation
  "@version{2025-4-26}
@@ -474,8 +472,6 @@
   If you need to compare the two items with a custom comparison function, use
   the @fun{g:list-store-find-with-equal-func} function with a custom
   @symbol{g:equal-func-full} callback function instead.
-
-  Since 2.64
   @see-class{g:list-store}
   @see-class{g:object}
   @see-symbol{g:equal-func-full}
@@ -484,7 +480,6 @@
     (when (%list-store-find store item pos)
       (cffi:mem-ref pos :uint))))
 
-#+glib-2-64
 (export 'list-store-find)
 
 ;;; ----------------------------------------------------------------------------
