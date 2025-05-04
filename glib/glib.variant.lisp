@@ -2404,33 +2404,7 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_variant_new_from_bytes ()
-;;;
-;;; GVariant * g_variant_new_from_bytes (const GVariantType *type,
-;;;                                      GBytes *bytes,
-;;;                                      gboolean trusted);
-;;;
-;;; Constructs a new serialised-mode GVariant instance. This is the inner
-;;; interface for creation of new serialised values that gets called from
-;;; various functions in gvariant.c.
-;;;
-;;; A reference is taken on bytes.
-;;;
-;;; The data in bytes must be aligned appropriately for the type being loaded.
-;;; Otherwise this function will internally create a copy of the memory (since
-;;; GLib 2.60) or (in older versions) fail and exit the process.
-;;;
-;;; type :
-;;;     a GVariantType
-;;;
-;;; bytes :
-;;;     a GBytes
-;;;
-;;; trusted :
-;;;     if the contents of bytes are trusted
-;;;
-;;; Returns :
-;;;     a new GVariant with a floating reference
+;;; g_variant_new_from_bytes
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_variant_new_from_bytes" %variant-new-from-bytes)
@@ -2439,7 +2413,25 @@
   (bytes (boxed bytes))
   (trusted :boolean))
 
-(defun variant-new-from-bytes (vtype bytes trusted)
+(defun variant-new-from-bytes (vtype bytes &optional trusted)
+ #+liber-documentation
+ "@version{2025-05-04}
+  @argument[vtype]{a @class{g:variant-type} instance, or a valid type string}
+  @argument[bytes]{a @class{g:bytes} instance}
+  @argument[trusted]{an optional boolean whether the contents of @arg{bytes}
+    are trusted, or the default @em{false} value}
+  @return{The new @symbol{g:variant} instance with a floating reference.}
+  @begin{short}
+    Constructs a new serialised-mode @symbol{g:variant} instance.
+  @end{short}
+  This is the inner interface for creation of new serialised values that gets
+  called from various functions in the C library. A reference is taken on bytes.
+
+  The data in @arg{bytes} must be aligned appropriately for the type being
+  loaded. Otherwise this function will internally create a copy of the memory.
+  @see-symbol{g:variant}
+  @see-class{g:variant-type}
+  @see-class{g:bytes}"
   (let ((vtype (if (stringp vtype)
                    (variant-type-new vtype)
                    vtype)))
@@ -2615,53 +2607,72 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; struct GVariantIter
-;;;
-;;; struct GVariantIter {
-;;; };
-;;;
-;;; GVariantIter is an opaque data structure and can only be accessed using the
-;;; following functions.
+;;; GVariantIter
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcstruct variant-iter)
 
+#+liber-documentation
+(setf (liber:alias-for-symbol 'variant-iter)
+      "CStruct"
+      (liber:symbol-documentation 'variant-iter)
+ "@version{2025-05-04}
+  @begin{short}
+    The @symbol{g:variant-iter} structure is an opaque data structure and can
+    only be accessed using the following functions.
+  @end{short}
+  @see-function{g:variant-iter-new}
+  @see-function{g:variant-iter-next-value}")
+
 (export 'variant-iter)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_variant_iter_copy ()
-;;;
-;;; GVariantIter * g_variant_iter_copy (GVariantIter *iter);
-;;;
-;;; Creates a new heap-allocated GVariantIter to iterate over the container that
-;;; was being iterated over by iter. Iteration begins on the new iterator from
-;;; the current position of the old iterator but the two copies are independent
-;;; past that point.
-;;;
-;;; Use g_variant_iter_free() to free the return value when you no longer need
-;;; it.
-;;;
-;;; A reference is taken to the container that iter is iterating over and will
-;;; be releated only when g_variant_iter_free() is called.
-;;;
-;;; iter :
-;;;     a GVariantIter
-;;;
-;;; Returns :
-;;;     a new heap-allocated GVariantIter
+;;; g_variant_iter_copy
 ;;; ----------------------------------------------------------------------------
 
+(cffi:defcfun ("g_variant_iter_copy" variant-iter-copy)
+    (:pointer (:struct variant-iter))
+ #+liber-documentation
+ "@version{#2025-05-04}
+  @argument[iter]{a @symbol{g:variant-iter} instance}
+  @return{The new heap-allocated @symbol{g:variant-iter} instance.}
+  @begin{short}
+    Creates a new heap-allocated @symbol{g:variant-iter} instance to iterate
+    over the container that was being iterated over by @arg{iter}.
+  @end{short}
+  Iteration begins on the new iterator from the current position of the old
+  iterator but the two copies are independent past that point.
+
+  Use the @fun{g:variant-iter-free} function to free the return value when you
+  no longer need it.
+
+  A reference is taken to the container that @arg{iter} is iterating over and
+  will be released only when the @fun{g:variant-iter-free} function is called.
+  @see-symbol{g:variant-iter}
+  @see-function{g:variant-iter-free}"
+  (iter (:pointer (:struct variant-iter))))
+
+(export 'variant-iter-copy)
+
 ;;; ----------------------------------------------------------------------------
-;;; g_variant_iter_free ()
-;;;
-;;; void g_variant_iter_free (GVariantIter *iter);
-;;;
-;;; Frees a heap-allocated GVariantIter. Only call this function on iterators
-;;; that were returned by g_variant_iter_new() or g_variant_iter_copy().
-;;;
-;;; iter :
-;;;     a heap-allocated GVariantIter
+;;; g_variant_iter_free
 ;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("g_variant_iter_free" variant-iter-free) :void
+ #+liber-documentation
+ "@version{2025-05-04}
+  @argument[iter]{a heap-allocated @symbol{g:variant-iter} instance}
+  @begin{short}
+    Frees a heap-allocated @symbol{g:variant-iter} instance.
+  @end{short}
+  Only call this function on iterators that were returned by the
+  @fun{g:variant-iter-new} or @fun{g:variant-iter-copy} functions.
+  @see-symbol{g:variant-iter}
+  @see-function{g:variant-iter-new}
+  @see-function{g:variant-iter-free}"
+  (iter (:pointer (:struct variant-iter))))
+
+(export 'variant-iter-free)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_variant_iter_init ()
@@ -2703,69 +2714,32 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_variant_iter_new ()
-;;;
-;;; GVariantIter * g_variant_iter_new (GVariant *value);
-;;;
-;;; Creates a heap-allocated GVariantIter for iterating over the items in value.
-;;;
-;;; Use g_variant_iter_free() to free the return value when you no longer need
-;;; it.
-;;;
-;;; A reference is taken to value and will be released only when
-;;; g_variant_iter_free() is called.
-;;;
-;;; value :
-;;;     a container GVariant
-;;;
-;;; Returns :
-;;;     a new heap-allocated GVariantIter
+;;; g_variant_iter_new
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_variant_iter_new" variant-iter-new)
     (:pointer (:struct variant-iter))
+ #+liber-documentation
+ "@version{2025-05-04}
+  @argument[value]{a @symbol{g:variant} instance}
+  @return{The new heap-allocated @symbol{g:variant-iter} instance.}
+  @begin{short}
+    Creates a heap-allocated @symbol{g:variant-iter} instance for iterating
+    over the items in @arg{value}.
+  @end{short}
+  Use the @fun{g:variant-iter-free} function to free the return value when you
+  no longer need it.
+
+  A reference is taken to @arg{value} and will be released only when the
+  @fun{g:variant-iter-free} function is called.
+  @see-symbol{g:variant-iter}
+  @see-function{g:variant-iter-free}"
   (value (:pointer (:struct variant))))
 
 (export 'variant-iter-new)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_variant_iter_next_value ()
-;;;
-;;; GVariant * g_variant_iter_next_value (GVariantIter *iter);
-;;;
-;;; Gets the next item in the container. If no more items remain then NULL is
-;;; returned.
-;;;
-;;; Use g_variant_unref() to drop your reference on the return value when you
-;;; no longer need it.
-;;;
-;;; Example 18. Iterating with g_variant_iter_next_value()
-;;;
-;;; /* recursively iterate a container */
-;;; void
-;;; iterate_container_recursive (GVariant *container)
-;;; {
-;;;   GVariantIter iter;
-;;;   GVariant *child;
-;;;
-;;;   g_variant_iter_init (&iter, container);
-;;;   while ((child = g_variant_iter_next_value (&iter)))
-;;;     {
-;;;       g_print ("type '%s'\n", g_variant_get_type_string (child));
-;;;
-;;;       if (g_variant_is_container (child))
-;;;         iterate_container_recursive (child);
-;;;
-;;;       g_variant_unref (child);
-;;;     }
-;;; }
-;;;
-;;;
-;;; iter :
-;;;     a GVariantIter
-;;;
-;;; Returns :
-;;;     a GVariant, or NULL
+;;; g_variant_iter_next_value
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_variant_iter_next_value" %variant-iter-next-value)
@@ -2773,6 +2747,33 @@
   (iter (:pointer (:struct variant-iter))))
 
 (defun variant-iter-next-value (iter)
+ #+liber-documentation
+ "@version{2025-05-04}
+  @argument[iter]{a @symbol{g:variant-iter} instance}
+  @return{The @symbol{g:variant} instance, or @code{nil}.}
+  @begin{short}
+    Gets the next item in the container.
+  @end{short}
+  If no more items remain then @code{nil} is returned.
+
+  Use the @fun{g:variant-unref} function to drop your reference on the return
+  value when you no longer need it.
+  @begin[Examples]{dictionary}
+    Iterating with the @fun{g:variant-iter-next-value} function.
+    @begin{pre}
+(defun iterate-container (container)
+  (let ((iter (g:variant-iter-new container)))
+    (iter (for value = (g:variant-iter-next-value iter))
+          (while value)
+          ;; Do something with VALUE
+          ...
+          (g:variant-unref value))
+    (g:variant-iter-free iter)))
+    @end{pre}
+  @end{dictionary}
+  @see-symbol{g:variant-iter}
+  @see-symbol{g:variant}
+  @see-function{g:variant-unref}"
   (let ((variant (%variant-iter-next-value iter)))
     (unless (cffi:null-pointer-p variant)
       variant)))

@@ -292,9 +292,10 @@
            #:variant-dict-remove
            #:variant-dict-end
            #:variant-parse
-
            #:variant-iter
            #:variant-iter-new
+           #:variant-iter-copy
+           #:variant-iter-free
            #:variant-iter-next-value
 
            ;; Symbols from glib.bytes.lisp
