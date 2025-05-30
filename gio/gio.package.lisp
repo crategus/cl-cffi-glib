@@ -122,13 +122,13 @@
   @begin[Asynchronous I/O]{section}
     @begin[GCancellable]{subsection}
       @about-class{cancellable}
-      @about-symbol{cancellable-source-func}
       @about-function{cancellable-new}
       @about-function{cancellable-is-cancelled}
       @about-function{cancellable-set-error-if-cancelled}
       @about-function{cancellable-fd}
       @about-function{cancellable-make-pollfd}
       @about-function{cancellable-release-fd}
+      @about-symbol{cancellable-source-func}
       @about-function{cancellable-source-new}
       @about-function{cancellable-current}
       @about-function{cancellable-pop-current}
@@ -136,7 +136,7 @@
       @about-function{cancellable-reset}
       @about-function{cancellable-connect}
       @about-function{cancellable-disconnect}
-      @about-function{cancellable-cancel\}
+      @about-function{cancellable-cancel}
     @end{subsection}
     @begin[GAsyncResult]{subsection}
       @about-class{async-result}

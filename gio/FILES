@@ -13,8 +13,8 @@ File Operations
 
 Asynchronous I/O
 
-  gio.cancellable.lisp         - Thread-safe Cancellation Stack       GIO 2.82 +
-  gio.async-result.lisp        - Asynchronous Function Results        GIO 2.82 +
+  gio.cancellable.lisp         - Thread-safe Cancellation Stack       GIO 2.84 .
+  gio.async-result.lisp        - Asynchronous Function Results        GIO 2.84 .
   gio.task.lisp                - Cancellable task and result          GIO 2.82 +
 
 File types and applications
@@ -48,8 +48,8 @@ Resources
 
 Permissions
 
-  gio.permission.lisp          - GPermission                        - GIO 2.82 &
-  gio.simple-permission.lisp   - GSimplePermission                  - GIO 2.82
+  gio.permission.lisp          - GPermission                        - GIO 2.84 .
+  gio.simple-permission.lisp   - GSimplePermission                  - GIO 2.84 .
 
 Data Models
 
@@ -58,7 +58,7 @@ Data Models
 
 Application support
 
-  gio.application.lisp         - GApplication                       - GIO 2.82&.
+  gio.application.lisp         - GApplication                       - GIO 2.84&.
   gio.appliation-command-line  - GApplicationCommandLine            - GIO 2.82&.
   gio.action-group.lisp        - GActionGroup                       - GIO 2.82 .
   gio.action-map.lisp          - GActionMap                         - GIO 2.82 .
@@ -81,4 +81,4 @@ Application support
 
   gio.notification.lisp        - GNotification                      - GIO 2.82&.
 
-2025-05-01
+2025-05-30

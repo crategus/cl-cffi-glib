@@ -58,7 +58,7 @@
 ;;;
 ;;;     g_application_get_dbus_connection
 ;;;     g_application_get_dbus_object_path
-;;;     g_application_set_action_group                     Deprecated 2.32
+;;;     g_application_set_action_group                      Deprecated 2.32
 ;;;     g_application_register
 ;;;     g_application_hold
 ;;;     g_application_release
@@ -83,7 +83,7 @@
 ;;;
 ;;;     g_application_mark_busy
 ;;;     g_application_unmark_busy
-;;;     g_application_get_is_busy                          Accessor
+;;;     g_application_get_is_busy                           Accessor
 ;;;     g_application_bind_busy_property
 ;;;     g_application_unbind_busy_property
 ;;;
@@ -659,11 +659,11 @@ lambda (application)    :run-first
 (setf (liber:alias-for-function 'application-application-id)
       "Accessor"
       (documentation 'application-application-id 'function)
- "@version{2025-2-3}
+ "@version{2025-05-12}
   @syntax{(g:application-application-id object) => id}
   @syntax{(setf (g:application-application-id object) id)}
   @argument[object]{a @class{g:application} instance}
-  @argument[id]{a string with the identifier of the application}
+  @argument[id]{a string for the identifier of the application}
   @begin{short}
     Accessor of the @slot[g:application]{application-id} slot of the
     @class{g:application} class.
@@ -722,11 +722,11 @@ lambda (application)    :run-first
 (setf (liber:alias-for-function 'application-inactivity-timeout)
       "Accessor"
       (documentation 'application-inactivity-timeout 'function)
- "@version{2025-2-3}
+ "@version{2025-05-12}
   @syntax{(g:application-inactivity-timeout object) => timeout}
   @syntax{(setf (g:application-inactivity-timeout object) timeout)}
   @argument[object]{a @class{g:application} instance}
-  @argument[timeout]{an unsigned integer with the timeout in milliseconds}
+  @argument[timeout]{an unsigned integer for the timeout in milliseconds}
   @begin{short}
     Accessor of the @slot[g:application]{inactivity-timeout} slot of the
     @class{g:application} class.
@@ -839,11 +839,11 @@ lambda (application)    :run-first
 (setf (liber:alias-for-function 'application-resource-base-path)
       "Accessor"
       (documentation 'application-resource-base-path 'function)
- "@version{2025-2-3}
+ "@version{2025-05-12}
   @syntax{(g:application-resource-base-path object) => path}
   @syntax{(setf (g:application-resource-base-path object) path)}
   @argument[object]{a @class{g:application} instance}
-  @argument[path]{a string with the resource base path to use}
+  @argument[path]{a string for the resource base path to use}
   @begin{short}
     Accessor of the @slot[g:application]{resource-base-path} slot of the
     @class{g:application} class.
@@ -891,11 +891,11 @@ lambda (application)    :run-first
 (setf (liber:alias-for-function 'application-version)
       "Accessor"
       (documentation 'application-version 'function)
- "@version{2025-2-3}
+ "@version{2025-05-12}
   @syntax{(g:application-version object) => version}
   @syntax{(setf (g:application-version object) version)}
   @argument[object]{a @class{g:application} instance}
-  @argument[version]{a string with the version number of the application}
+  @argument[version]{a string for the version number of the application}
   @begin{short}
     Accessor of the @slot[g:application]{version} slot of the
     @class{g:application} class.
@@ -956,8 +956,8 @@ lambda (application)    :run-first
 
 (defun application-new (id flags)
  #+liber-documentation
- "@version{#2025-2-3}
-  @argument[id]{a string with the application ID}
+ "@version{#2025-05-12}
+  @argument[id]{a string for the application ID}
   @argument[flags]{a @symbol{g:application-flags} value}
   @return{The new @class{g:application} instance.}
   @begin{short}
@@ -1274,9 +1274,9 @@ lambda (application)    :run-first
 
 (defun application-run (application argv)
  #+liber-documentation
- "@version{2025-2-3}
+ "@version{2025-05-12}
   @argument[application]{a @class{g:application} instance}
-  @argument[argv]{a list of strings with command line parameters, or @code{nil}}
+  @argument[argv]{a list of strings for command line parameters, or @code{nil}}
   @return{The integer with the exit status.}
   @begin{short}
     Runs the application.

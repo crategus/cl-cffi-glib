@@ -1,12 +1,12 @@
 ;;; ----------------------------------------------------------------------------
 ;;; gio.async-result.lisp
 ;;;
-;;; The documentation of this file is taken from the GIO Reference Manual
-;;; Version 2.82 and modified to document the Lisp binding to the GIO library.
-;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
-;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
+;;; The documentation in this file is taken from the GIO Reference Manual
+;;; version 2.84 and modified to document the Lisp binding to the GIO library,
+;;; see <http://www.gtk.org>. The API documentation for the Lisp binding is
+;;; available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2023 - 2024 Dieter Kaiser
+;;; Copyright (C) 2023 - 2025 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -42,7 +42,7 @@
 ;;;     g_async_result_get_user_data
 ;;;     g_async_result_get_source_object
 ;;;     g_async_result_is_tagged
-;;;     g_async_result_legacy_propagate_error
+;;;     g_async_result_legacy_propagate_error               not implemented
 ;;;
 ;;; Object Hierarchy
 ;;;
@@ -65,7 +65,7 @@
 (setf (liber:alias-for-class 'async-result)
       "Interface"
       (documentation 'async-result 'type)
- "@version{2024-10-23}
+ "@version{2025-05-27}
   @begin{short}
     Provides a base class for implementing asynchronous function results.
   @end{short}
@@ -168,7 +168,7 @@ int main (int argc, void *argv[])
 (setf (liber:alias-for-symbol 'async-ready-callback)
       "Callback"
       (liber:symbol-documentation 'async-ready-callback)
- "@version{#2024-10-23}
+ "@version{#2025-05-27}
   @begin{declaration}
 lambda (source result)
   @end{declaration}
@@ -188,7 +188,9 @@ lambda (source result)
   context where the @class{g:task} object was created. All other users of the
   @symbol{g:async-ready-callback} function must likewise call it asynchronously
   in a later iteration of the main context.
-  @see-class{g:async-result}")
+  @see-class{g:async-result}
+  @see-class{g:object}
+  @see-class{g:task}")
 
 (export 'async-ready-callback)
 
@@ -200,9 +202,9 @@ lambda (source result)
 
 (cffi:defcfun ("g_async_result_get_user_data" async-result-user-data) :pointer
  #+liber-documentation
- "@version{#2024-10-23}
+ "@version{#2025-05-27}
   @argument[result]{a @class{g:async-result} instance}
-  @return{The pointer to the user data for @arg{result}.}
+  @return{The foreign pointer to the user data for @arg{result}.}
   @begin{short}
     Gets the user data from a @class{g:async-result} instance.
   @end{short}
@@ -220,10 +222,12 @@ lambda (source result)
 (cffi:defcfun ("g_async_result_get_source_object" async-result-source-object)
     gobject:object
  #+liber-documentation
- "@version{#2024-10-23}
+ "@version{#2025-05-27}
   @argument[result]{a @class{g:async-result} instance}
-  @return{The new reference to the source object for @arg{result}, or
-  @code{nil} if there is none.}
+  @begin{return}
+    The @class{g:object} instance with the new reference to the source object
+    for @arg{result}, or @code{nil} if there is none.
+  @end{return}
   @begin{short}
     Gets the source object from a @class{g:async-result} instance.
   @end{short}
@@ -238,11 +242,12 @@ lambda (source result)
 
 (cffi:defcfun ("g_async_result_is_tagged" async-result-is-tagged) :boolean
  #+liber-documentation
- "@version{#2024-10-23}
+ "@version{#2025-05-27}
   @argument[result]{a @class{g:async-result} instance}
-  @argument[tag]{a pointer to an application defined tag}
-  @return{@em{True} if @arg{result} has the indicated @arg{tag}, @em{false}
-    if not.}
+  @argument[tag]{a foreign pointer to an application defined tag}
+  @begin{return}
+    @em{True} if @arg{result} has the indicated @arg{tag}, @em{false} if not.
+  @end{return}
   @begin{short}
     Checks if @arg{result} has the given @arg{tag}, generally a function
     pointer indicating the @arg{result} function was created by.

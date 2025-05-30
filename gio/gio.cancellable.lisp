@@ -41,10 +41,10 @@
 ;;;
 ;;;     g_cancellable_new
 ;;;     g_cancellable_is_cancelled
-;;;     g_cancellable_set_error_if_cancelled
-;;;     g_cancellable_get_fd
-;;;     g_cancellable_make_pollfd
-;;;     g_cancellable_release_fd
+;;;     g_cancellable_set_error_if_cancelled                not implemented
+;;;     g_cancellable_get_fd                                not implemented
+;;;     g_cancellable_make_pollfd                           not implemented
+;;;     g_cancellable_release_fd                            not implemented
 ;;;     g_cancellable_source_new
 ;;;     g_cancellable_get_current
 ;;;     g_cancellable_pop_current
@@ -79,7 +79,7 @@
 
 #+liber-documentation
 (setf (documentation 'cancellable 'type)
- "@version{2025-1-30}
+ "@version{2025-05-27}
   @begin{short}
     The @class{gio:cancellable} object allows operations to be cancelled.
   @end{short}
@@ -110,38 +110,27 @@ lambda (cancellable)    :run-last
       emitted, and checking before connecting to the signal leaves a race
       condition where this is still happening.
 
-      In order to make it safe and easy to connect handlers there are two helper
-      functions: the @fun{g:cancellable-connect} and
+      In order to make it safe and easy to connect handlers there are two
+      helper functions: the @fun{g:cancellable-connect} and
       @fun{g:cancellable-disconnect} functions which protect against problems
-      like this.
-
-      An example of how to us this:
+      like this. An example of how to us this:
       @begin{pre}
-/* Make sure we don't do any unnecessary work if already cancelled */
-if (g_cancellable_set_error_if_cancelled (cancellable))
-  return;
-/* Set up all the data needed to be able to
- * handle cancellation of the operation */
-my_data = my_data_new (...);
+;; Make sure we do not do any unnecessary work if already cancelled
+(unless (g:cancellable-is-cancelled cancellable)
+  (when cancellable
+    (let ((id (g:cancellable-connect cancellable #'cancelled-handler)))
 
-id = 0;
-if (cancellable)
-  id = g_cancellable_connect (cancellable,
-                  G_CALLBACK (cancelled_handler)
-                  data, NULL);
+      ;; cancellable operation here ...
 
-/* cancellable operation here... */
-
-g_cancellable_disconnect (cancellable, id);
-
-/* cancelled_handler is never called after this, it
- * is now safe to free the data */
-my_data_free (my_data);
+     (g:cancellable-disconnect cancellable id))))
       @end{pre}
       Note that the cancelled signal is emitted in the thread that the user
       cancelled from, which may be the main thread. So, the cancellable signal
       should not do something that can block.
-  @end{dictionary}")
+  @end{dictionary}
+  @see-constructor{g:cancellable-new}
+  @see-function{g:cancellable-connect}
+  @see-function{g:cancellable-disconnect}")
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_cancellable_new
@@ -151,8 +140,8 @@ my_data_free (my_data);
 
 (defun cancellable-new ()
  #+liber-documentation
- "@version{2024-10-23}
-  @return{The @class{g:cancellable} object.}
+ "@version{2025-05-27}
+  @return{The newly created @class{g:cancellable} object.}
   @begin{short}
     Creates a new @class{g:cancellable} object.
   @end{short}
@@ -173,10 +162,12 @@ my_data_free (my_data);
 
 (cffi:defcfun ("g_cancellable_is_cancelled" cancellable-is-cancelled) :boolean
  #+liber-documentation
- "@version{2024-10-23}
+ "@version{2025-05-27}
   @argument[cancellable]{a @class{g:cancellable} object, or @code{nil}}
-  @return{@em{True} if @arg{cancellable} is cancelled, @em{false} if called
-    with @code{nil} or if not cancelled.}
+  @begin{return}
+    @em{True} if @arg{cancellable} is cancelled, @em{false} if called
+    with @code{nil} or if not cancelled.
+  @end{return}
   @begin{short}
     Checks if a cancellable job has been cancelled.
   @end{short}
@@ -292,16 +283,16 @@ my_data_free (my_data);
 (cffi:defcallback cancellable-source-func :boolean
     ((cancellable (gobject:object cancellable))
      (data :pointer))
-  (let ((fn (glib:get-stable-pointer-value data)))
+  (let ((func (glib:get-stable-pointer-value data)))
     (restart-case
-      (funcall fn cancellable)
+      (funcall func cancellable)
       (return-from-cancellable-source-func () nil))))
 
 #+liber-documentation
 (setf (liber:alias-for-symbol 'cancellable-source-func)
       "Callback"
       (liber:symbol-documentation 'cancellable-source-func)
- "@version{#2024-10-23}
+ "@version{#2025-05-27}
   @begin{declaration}
 lambda (cancellable) => result
   @end{declaration}
@@ -316,6 +307,7 @@ lambda (cancellable) => result
     instance returned by the @fun{g:cancellable-source-new} function.
   @end{short}
   @see-class{g:cancellable}
+  @see-type{g:source}
   @see-function{g:cancellable-source-new}")
 
 (export 'cancellable-source-func)
@@ -327,7 +319,7 @@ lambda (cancellable) => result
 (cffi:defcfun ("g_cancellable_soure_new" cancellable-source-new)
     (:pointer (:struct glib:source))
  #+liber-documentation
- "@version{#2024-10-23}
+ "@version{#2025-05-27}
   @argument[cancellable]{a @class{g:cancellable} object}
   @return{The new @type{g:source} instance.}
   @begin{short}
@@ -340,6 +332,7 @@ lambda (cancellable) => result
   For convenience, you can call this function with a @code{nil} value for
   @arg{cancellable}, in which case the source will never trigger.
   @see-class{g:cancellable}
+  @see-type{g:source}
   @see-symbol{g:cancellable-source-func}
   @see-function{g:source-add-child-source}"
   (cancellable (gobject:object cancellable)))
@@ -353,9 +346,11 @@ lambda (cancellable) => result
 (cffi:defcfun ("g_cancellable_get_current" cancellable-current)
     (gobject:object cancellable)
  #+liber-documentation
- "@version{#2024-10-23}
-  @return{The @class{g:cancellable} object from the top of the stack,
-    or @code{nil} if the stack is empty.}
+ "@version{#2025-05-27}
+  @begin{return}
+    The @class{g:cancellable} object from the top of the stack, or @code{nil}
+    if the stack is empty.
+  @end{return}
   @short{Gets the top cancellable from the stack.}
   @see-class{g:cancellable}")
 
@@ -367,11 +362,11 @@ lambda (cancellable) => result
 
 (cffi:defcfun ("g_cancellable_pop_current" cancellable-pop-current) :void
  #+liber-documentation
- "@version{#2024-10-23}
+ "@version{#2025-05-27}
   @argument[cancellable]{a @class{g:cancellable} object}
   @begin{short}
-    Pops @arg{cancellable} off the cancellable stack (verifying that cancellable
-    is on the top of the stack).
+    Pops @arg{cancellable} off the cancellable stack, verifying that cancellable
+    is on the top of the stack.
   @end{short}
   @see-class{g:cancellable}"
   (cancellalbe (gobject:object cancellable)))
@@ -384,7 +379,7 @@ lambda (cancellable) => result
 
 (cffi:defcfun ("g_cancellable_push_current" cancellable-push-current) :void
  #+liber-documentation
- "@version{#2024-10-23}
+ "@version{#2025-05-27}
   @argument[cancellable]{a @class{g:cancellable} object}
   @begin{short}
     Pushes @arg{cancellable} onto the cancellable stack.
@@ -409,7 +404,7 @@ lambda (cancellable) => result
 
 (cffi:defcfun ("g_cancellable_reset" cancellable-reset) :void
  #+liber-documentation
- "@version{2024-10-23}
+ "@version{2025-05-27}
   @argument[cancellable]{a @class{g:cancellable} object}
   @begin{short}
     Resets @arg{cancellable} to its uncancelled state.
@@ -422,71 +417,74 @@ lambda (cancellable) => result
 (export 'cancellable-reset)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_cancellable_connect ()
-;;;
-;;; gulong g_cancellable_connect (GCancellable *cancellable,
-;;;                               GCallback callback,
-;;;                               gpointer data,
-;;;                               GDestroyNotify data_destroy_func);
-;;;
-;;; Convenience function to connect to the "cancelled" signal. Also handles the
-;;; race condition that may happen if the cancellable is cancelled right before
-;;; connecting.
-;;;
-;;; callback is called at most once, either directly at the time of the connect
-;;; if cancellable is already cancelled, or when cancellable is cancelled in
-;;; some thread.
-;;;
-;;; data_destroy_func will be called when the handler is disconnected, or
-;;; immediately if the cancellable is already cancelled.
-;;;
-;;; See "cancelled" for details on how to use this.
-;;;
-;;; cancellable :
-;;;     A GCancellable.
-;;;
-;;; callback :
-;;;     The GCallback to connect.
-;;;
-;;; data :
-;;;     Data to pass to callback.
-;;;
-;;; data_destroy_func :
-;;;     Free function for data or NULL
-;;;
-;;; Returns :
-;;;     The id of the signal handler or 0 if cancellable has already been
-;;;     cancelled.
+;;; g_cancellable_connect
 ;;; ----------------------------------------------------------------------------
 
-;; TODO: This has to be implemented like gobject:signal-connect.
+(cffi:defcfun ("g_cancellable_connect" %cancellable-connect) :ulong
+  (cancellable (gobject:object cancellable))
+  (callback :pointer)
+  (data :pointer)
+  (notify :pointer))
+
+(defun cancellable-connect (cancellable func)
+ #+liber-documentation
+ "@version{2025-05-27}
+  @argument[cancellable]{a @class{g:cancellable} object}
+  @argument[func]{a @symbol{g:callback} callback function}
+  @begin{return}
+    The ID of the signal handler or 0 if @arg{cancellable} has already been
+    cancelled.
+  @end{return}
+  @begin{short}
+    Convenience function to connect to the @code{\"cancelled\"} signal.
+  @end{short}
+  Also handles the race condition that may happen if the cancellable is
+  cancelled right before connecting.
+
+  The @arg{func} function is called at most once, either directly at the time
+  of the connect if cancellable is already cancelled, or when cancellable is
+  cancelled in some thread.
+
+  See the @code{\"cancelled\"} signal for details on how to use this.
+  @see-class{g:cancellable}"
+  (let ((ptr (glib:allocate-stable-pointer func)))
+    (%cancellable-connect cancellable
+                          (cffi:callback gobject:callback)
+                          ptr
+                          (cffi:callback glib:stable-pointer-destroy-notify))))
+
+(export 'cancellable-connect)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_cancellable_disconnect ()
-;;;
-;;; void
-;;; g_cancellable_disconnect (GCancellable *cancellable, gulong handler_id);
-;;;
-;;; Disconnects a handler from a cancellable instance similar to
-;;; g_signal_handler_disconnect(). Additionally, in the event that a signal
-;;; handler is currently running, this call will block until the handler has
-;;; finished. Calling this function from a "cancelled" signal handler will
-;;; therefore result in a deadlock.
-;;;
-;;; This avoids a race condition where a thread cancels at the same time as the
-;;; cancellable operation is finished and the signal handler is removed. See
-;;; "cancelled" for details on how to use this.
-;;;
-;;; If cancellable is NULL or handler_id is 0 this function does nothing.
-;;;
-;;; cancellable :
-;;;     A GCancellable or NULL.
-;;;
-;;; handler_id :
-;;;     Handler id of the handler to be disconnected, or 0.
+;;; g_cancellable_disconnect
 ;;; ----------------------------------------------------------------------------
 
-;; TODO: This has to be implemented like gobject:signal-disconnect.
+(cffi:defcfun ("g_cancellable_disconnect" cancellable-disconnect) :void
+ #+liber-documentation
+ "@version{2025-05-27}
+  @argument[cancellable]{a @class{g:cancellable} object}
+  @argument[id]{an unsigned integer for the handler ID of the handler to be
+    disconnected, or 0}
+  @begin{short}
+    Disconnects a handler from a cancellable instance similar to the
+    @fun{g:signal-handler-disconnect} function.
+  @end{short}
+  Additionally, in the event that a signal handler is currently running, this
+  call will block until the handler has finished. Calling this function from a
+  @code{\"cancelled\"} signal handler will therefore result in a deadlock.
+
+  This avoids a race condition where a thread cancels at the same time as the
+  cancellable operation is finished and the signal handler is removed. See the
+  @code{\"cancelled\"} signal handler for details on how to use this.
+
+  If @arg{cancellable} is @code{nil} or @arg{ID} is 0 this function does
+  nothing.
+  @see-class{g:cancellable}
+  @see-symbol{g:object}"
+  (cancellable (gobject:object cancellable))
+  (id :ulong))
+
+(export 'cancellable-disconnect)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_cancellable_cancel
@@ -494,7 +492,7 @@ lambda (cancellable) => result
 
 (cffi:defcfun ("g_cancellable_cancel" cancellable-cancel) :void
  #+liber-documentation
- "@version{2024-10-23}
+ "@version{2025-05-27}
   @argument[cancellable]{a @class{g:cancellable} object}
   @begin{short}
     Will set @arg{cancellable} to cancelled, and will emit the

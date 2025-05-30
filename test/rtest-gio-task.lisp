@@ -33,11 +33,11 @@
              (glib-test:list-signals "GTask")))
   ;; Check class definition
   (is (equal '(GOBJECT:DEFINE-GOBJECT "GTask" GIO:TASK
-                       (:SUPERCLASS GOBJECT:OBJECT
-                        :EXPORT T
-                        :INTERFACES ("GAsyncResult")
-                        :TYPE-INITIALIZER "g_task_get_type")
-                       ((COMPLETED TASK-COMPLETED "completed" "gboolean" T NIL)))
+                      (:SUPERCLASS GOBJECT:OBJECT
+                       :EXPORT T
+                       :INTERFACES ("GAsyncResult")
+                       :TYPE-INITIALIZER "g_task_get_type")
+                      ((COMPLETED TASK-COMPLETED "completed" "gboolean" T NIL)))
              (gobject:get-gtype-definition "GTask"))))
 
 ;;; --- Properties -------------------------------------------------------------
@@ -59,19 +59,28 @@
 ;;;     g_task_get_source_tag
 ;;;     g_task_set_name
 ;;;     g_task_get_name
-;;;     g_taske_set_static_name                            Since 2.76
+;;;     g_taske_set_static_name                             Since 2.76
 ;;;     g_task_report_error
 ;;;     g_task_report_new_error
 ;;;     g_task_get_cancellable
 ;;;     g_task_get_context
+
 ;;;     g_task_get_source_object
+
+(test g-task-source-object
+  (let* ((source (g:file-info-new))
+         (task (g:task-new source nil (lambda () ))))
+    (is (eq source (g:task-source-object task)))))
+
 ;;;     g_task_return_boolean
 ;;;     g_task_return_int
 ;;;     g_task_return_pointer
 ;;;     g_task_return_value
 ;;;     g_task_return_error
-;;;     g_task_return_new_error
 ;;;     g_task_return_error_if_cancelled
+;;;     g_task_return_new_error
+;;;     g_task_return_new_error_literal                     Since 2.80
+;;;     g_task_return_prefixed_error                        Since 2.80
 ;;;     g_task_propagate_boolean
 ;;;     g_task_propagate_int
 ;;;     g_task_propagate_pointer
@@ -81,6 +90,23 @@
 ;;;     g_task_run_in_thread_sync
 ;;;     GTaskThreadFunc
 ;;;     g_task_attach_source
+
 ;;;     g_task_is_valid
 
-;;; 2024-10-23
+(test g-task-is-valid.1
+  (let ((task (g:task-new nil nil (lambda ()))))
+    (is-true (g:task-is-valid task nil))))
+
+(test g-task-is-valid.2
+  (let* ((source (g:file-info-new))
+         (task (g:task-new source nil (lambda ()))))
+    (is-true (g:task-is-valid task source))))
+
+(test g-task-is-valid.3
+  (let* ((source (g:file-info-new))
+         (cancellable (g:cancellable-new))
+         (task (g:task-new source cancellable (lambda ()))))
+    (is (eq source (g:task-source-object task)))
+    (is-true (g:task-is-valid task source))))
+
+;;; 2025-05-28

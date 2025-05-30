@@ -1,12 +1,12 @@
 ;;; ----------------------------------------------------------------------------
 ;;; gio.simple-permission.lisp
 ;;;
-;;; The documentation of this file is taken from the GIO Reference Manual
-;;; Version 2.82 and modified to document the Lisp binding to the GIO library.
-;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
-;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
+;;; The documentation in this file is taken from the GIO Reference Manual
+;;; version 2.84 and modified to document the Lisp binding to the GIO library,
+;;; see <http://www.gtk.org>. The API documentation for the Lisp binding is
+;;; available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2023 - 2024 Dieter Kaiser
+;;; Copyright (C) 2023 - 2025 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -61,9 +61,9 @@
 
 #+liber-documentation
 (setf (documentation 'simple-permission 'type)
- "@version{2023-5-5}
+ "@version{2025-05-26}
   @begin{short}
-    The @sym{g:simple-permission} class is a trivial implementation of
+    The @class{g:simple-permission} class is a trivial implementation of
     the @class{g:permission} class that represents a permission that is either
     always or never allowed.
   @end{short}
@@ -79,12 +79,12 @@
 (cffi:defcfun ("g_simple_permission_new" simple-permission-new)
     (gobject:object permission :return)
  #+liber-documentation
- "@version{2024-12-19}
+ "@version{2025-05-26}
   @argument[allowed]{a boolean whether the action is allowed}
-  @return{The newly created @class{g:simple-permission} instance.}
+  @return{The newly created @class{g:simple-permission} object.}
   @begin{short}
-    Creates a new @class{g:permission} instance that represents an action that
-    is either always or never allowed.
+    Creates a new @class{g:simple-permission} object that represents an action
+    that is either always or never allowed.
   @end{short}
   @see-class{g:simple-permission}
   @see-class{g:permission}"

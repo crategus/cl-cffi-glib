@@ -33,11 +33,11 @@
              (glib-test:list-signals "GCancellable")))
   ;; Check class definition
   (is (equal '(GOBJECT:DEFINE-GOBJECT "GCancellable" GIO:CANCELLABLE
-                       (:SUPERCLASS GOBJECT:OBJECT
-                        :EXPORT T
-                        :INTERFACES NIL
-                        :TYPE-INITIALIZER "g_cancellable_get_type")
-                       NIL)
+                      (:SUPERCLASS GOBJECT:OBJECT
+                       :EXPORT T
+                       :INTERFACES NIL
+                       :TYPE-INITIALIZER "g_cancellable_get_type")
+                      NIL)
              (gobject:get-gtype-definition "GCancellable"))))
 
 ;;; --- Signals ----------------------------------------------------------------
@@ -67,9 +67,8 @@
 ;;;     g_cancellable_new
 
 (test g-cancellable-new
-  (let (cancellable)
-    (is (typep (setf cancellable (g:cancellable-new)) 'g:cancellable))
-    (is (= 1 (g:object-ref-count cancellable)))))
+  (glib-test:with-check-memory (cancellable)
+    (is (typep (setf cancellable (g:cancellable-new)) 'g:cancellable))))
 
 ;;;     g_cancellable_is_cancelled
 
@@ -91,6 +90,24 @@
 ;;;     g_cancellable_connect
 ;;;     g_cancellable_disconnect
 
+(test g-cancellable-connect
+
+  (glib-test:with-check-memory (cancellable)
+    (setf cancellable (g:cancellable-new))
+
+    (when cancellable
+      ;; Make sure we do not do any unnecessary work if already cancelled
+      (unless (g:cancellable-is-cancelled cancellable)
+        (let ((id (g:cancellable-connect cancellable
+                                         (lambda ()
+                                           (format t "cancellable handler~%")))))
+
+          ;; cancellable operation here ...
+
+          (g:cancellable-disconnect cancellable id))))
+
+))
+
 ;;;     g_cancellable_cancel
 ;;;     g_cancellable_reset
 
@@ -102,4 +119,4 @@
     (is-false (g:cancellable-reset cancellable))
     (is-false (g:cancellable-is-cancelled cancellable))))
 
-;;; 2024-10-23
+;;; 2025-05-27

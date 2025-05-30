@@ -46,7 +46,7 @@
 ;;;     g_permission_release
 ;;;     g_permission_release_async
 ;;;     g_permission_release_finish
-;;;     g_permission_impl_update
+;;;     g_permission_impl_update                            not implemented
 ;;;
 ;;; Properties
 ;;;
@@ -84,20 +84,20 @@
 
 #+liber-documentation
 (setf (documentation 'permission 'type)
- "@version{2023-5-5}
+ "@version{2025-05-26}
   @begin{short}
-    A @sym{g:permission} object represents the status of the permission of the
-    caller to perform a certain action.
+    The @class{g:permission} class represents the status of the permission of
+    the caller to perform a certain action.
   @end{short}
   You can query if the action is currently allowed and if it is possible to
-  acquire the permission so that the action will be allowed in the future. There
-  is also an API to actually acquire the permission and one to release it.
+  acquire the permission so that the action will be allowed in the future.
+  There is also an API to actually acquire the permission and one to release it.
 
-  As an example, a @sym{g:permission} object might represent the ability for the
-  user to write to a @class{gtk:settings} object. This @sym{g:permission} object
-  could then be used to decide if it is appropriate to show a \"Click here to
-  unlock\" button in a dialog and to provide the mechanism to invoke when that
-  button is clicked.
+  As an example, a @class{g:permission} object might represent the ability for
+  the user to write to a @class{g:settings} object. This @class{g:permission}
+  object could then be used to decide if it is appropriate to show a \"Click
+  here to unlock\" button in a dialog and to provide the mechanism to invoke
+  when that button is clicked.
   @see-slot{g:permission-allowed}
   @see-slot{g:permission-can-acquire}
   @see-slot{g:permission-can-release}
@@ -113,23 +113,23 @@
 (setf (documentation (liber:slot-documentation "allowed" 'permission) t)
  "The @code{allowed} property of type @code{:boolean} (Read) @br{}
   @em{True} if the caller currently has permission to perform the action that
-  the @sym{g:permission} object represents the permission to perform. @br{}
+  the @class{g:permission} object represents the permission to perform. @br{}
   Default value: @em{false}")
 
 #+liber-documentation
 (setf (liber:alias-for-function 'permission-allowed)
       "Accessor"
       (documentation 'permission-allowed 'function)
- "@version{2023-5-5}
+ "@version{2025-05-26}
   @syntax{(g:permission-allowed object) => allowed}
   @argument[object]{a @class{g:permission} object}
   @argument[allowed]{a boolean whether the caller currently has permission to
     perform the action}
   @begin{short}
-    Accessor of the @slot[permission]{allowed} slot of the
+    Accessor of the @slot[g:permission]{allowed} slot of the
     @class{g:permission} class.
   @end{short}
-  The @sym{g:permission-allowed} function gets the value of the property. This
+  The @fun{g:permission-allowed} function gets the value of the property. This
   property is @em{true} if the caller currently has permission to perform the
   action that the @class{g:permission} object represents the permission to
   perform.
@@ -148,16 +148,16 @@
 (setf (liber:alias-for-function 'permission-can-acquire)
       "Accessor"
       (documentation 'permission-can-acquire 'function)
- "@version{2023-5-5}
+ "@version{2025-05-26}
   @syntax{(g:permission-can-acquire object) => can-acquire}
   @argument[object]{a @class{g:permission} object}
   @argument[can-acquire]{a boolean whether it is generally possible to acquire
     the permission}
   @begin{short}
-    Accessor of the @slot[permission]{can-acquire} slot of the
+    Accessor of the @slot[g:permission]{can-acquire} slot of the
     @class{g:permission} class.
   @end{short}
-  The @sym{g:permission-can-acquire} function gets the value of the property.
+  The @fun{g:permission-can-acquire} function gets the value of the property.
   This property is @em{true} if it is generally possible to acquire the
   permission by calling the @fun{g:permission-acquire} function.
   @see-class{g:permission}
@@ -176,16 +176,16 @@
 (setf (liber:alias-for-function 'permission-can-release)
       "Accessor"
       (documentation 'permission-can-release 'function)
- "@version{2023-5-5}
+ "@version{2025-06-26}
   @syntax{(g:permission-can-release object) => can-release}
   @argument[object]{a @class{g:permission} object}
   @argument[can-release]{a boolean whether it is generally possible to release
     the permission}
   @begin{short}
-    Accessor of the @slot[permission]{can-release} slot of the
+    Accessor of the @slot[g:permission]{can-release} slot of the
     @class{g:permission} class.
   @end{short}
-  The @sym{g:permission-can-release} function gets the value of the property.
+  The @fun{g:permission-can-release} function gets the value of the property.
   This property is @em{true} if it is generally possible to release the
   permission by calling the @fun{g:permission-release} function.
   @see-class{g:permission}
@@ -202,9 +202,9 @@
 
 (defun permission-acquire (permission &optional (cancellable nil))
  #+liber-documentation
- "@version{#2024-11-21}
-  @argument[permission]{a @class{g:permission} instance}
-  @argument[cancellable]{a @code{GCanellable} instance, or @code{nil}}
+ "@version{#2025-05-26}
+  @argument[permission]{a @class{g:permission} object}
+  @argument[cancellable]{a @class{g:cancellable} instance, or @code{nil}}
   @return{@em{True} if the permission was successfully acquired.}
   @begin{short}
     Attempts to acquire the permission represented by @arg{permission}.
@@ -220,6 +220,7 @@
   This call is blocking, likely for a very long time, in the case that user
   interaction is required.
   @see-class{g:permission}
+  @see-class{g:cancellable}
   @see-function{g:permission-can-acquire}"
   (let ((cancellable (or cancellable (cffi:null-pointer))))
     (glib:with-error (err)
@@ -228,58 +229,70 @@
 (export 'permission-acquire)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_permission_acquire_async ()
-;;;
-;;; void
-;;; g_permission_acquire_async (GPermission *permission,
-;;;                             GCancellable *cancellable,
-;;;                             GAsyncReadyCallback callback,
-;;;                             gpointer user_data);
-;;;
-;;; Attempts to acquire the permission represented by permission .
-;;;
-;;; This is the first half of the asynchronous version of
-;;; g_permission_acquire().
-;;;
-;;; permission :
-;;;     a GPermission instance
-;;;
-;;; cancellable :
-;;;     a GCancellable, or NULL.
-;;;
-;;; callback :
-;;;     the GAsyncReadyCallback to call when done
-;;;
-;;; user_data :
-;;;     the user data to pass to callback
+;;; g_permission_acquire_async
 ;;; ----------------------------------------------------------------------------
 
+(cffi:defcfun ("g_permission_acquire_async" %permission-acquire-async) :void
+  (permission (gobject:object permission))
+  (cancellable (gobject:object cancellable))
+  (func :pointer)
+  (data :pointer))
+
+(defun permission-acquire-async (permission cancellable func)
+ #+liber-documentation
+ "@version{#2025-05-26}
+  @argument[permission]{a @class{g:permission} object}
+  @argument[cancellable]{a @class{g:cancellable} object, can be @code{nil}}
+  @argument[func]{a @symbol{g:async-ready-callback} callback function to
+    call when the request is done}
+  @begin{short}
+    Attempts to acquire the permission represented by @arg{permission}.
+  @end{short}
+  This is the first half of the asynchronous version of the
+  @fun{g:permission-acquire} function.
+  @see-class{g:permission}
+  @see-class{g:cancellable}
+  @see-symbol{g:async-ready-callback}
+  @see-function{g:permission-acquire}
+  @see-function{g:permission-acquire-finish}"
+  (let ((ptr (glib:allocate-stable-pointer func)))
+    (%permission-acquire-async permission
+                               (or cancellable (cffi:null-pointer))
+                               (cffi:callback async-ready-callback)
+                               ptr)))
+
+(export 'permission-acquire-async)
+
 ;;; ----------------------------------------------------------------------------
-;;; g_permission_acquire_finish ()
-;;;
-;;; gboolean
-;;; g_permission_acquire_finish (GPermission *permission,
-;;;                              GAsyncResult *result,
-;;;                              GError **error);
-;;;
-;;; Collects the result of attempting to acquire the permission represented by
-;;; permission .
-;;;
-;;; This is the second half of the asynchronous version of
-;;; g_permission_acquire().
-;;;
-;;; permission :
-;;;     a GPermission instance
-;;;
-;;; result :
-;;;     the GAsyncResult given to the GAsyncReadyCallback
-;;;
-;;; error :
-;;;     a pointer to a NULL GError, or NULL
-;;;
-;;; Returns :
-;;;     TRUE if the permission was successfully acquired
+;;; g_permission_acquire_finish
 ;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("g_permission_acquire_finish" %permission-acquire-finish)
+    :boolean
+  (permission (gobject:object permission))
+  (result (gobject:object async-result))
+  (err :pointer))
+
+(defun permission-acquire-finish (permission result)
+ #+liber-documentation
+ "@version{#2025-05-26}
+  @argument[permission]{a @class{g:permission} object}
+  @argument[result]{a @class{g:async-result} object}
+  @return{@em{True} if the permission was successfully acquired.}
+  @begin{short}
+    Collects the result of attempting to acquire the permission represented by
+    @arg{permission}.
+  @end{short}
+  This is the second half of the asynchronous version of the
+  @fun{g:permission-acquire} function.
+  @see-class{g:permission}
+  @see-class{g:async-result}
+  @see-function{g:permission-acquire}
+  @see-function{g:permission-acquire-async}"
+  (glib:with-ignore-error (err)
+    (%permission-acquire-finish permission result err)))
+
+(export 'permission-acquire-finish)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_permission_release
@@ -292,9 +305,9 @@
 
 (defun permission-release (permission &optional (cancellable nil))
  #+liber-documentation
- "@version{#2024-11-21}
-  @argument[permission]{a @class{g:permission} instance}
-  @argument[cancellable]{a @code{GCanellable} instance, or @code{nil}}
+ "@version{#2025-05-26}
+  @argument[permission]{a @class{g:permission} object}
+  @argument[cancellable]{a @class{g:cancellable} instance, or @code{nil}}
   @return{@em{True} if the permission was successfully released.}
   @begin{short}
     Attempts to release the permission represented by @arg{permission}.
@@ -310,6 +323,7 @@
   This call is blocking, likely for a very long time, in the case that user
   interaction is required.
   @see-class{g:permission}
+  @see-class{g:cancellable}
   @see-function{g:permission-can-release}"
   (let ((cancellable (or cancellable (cffi:null-pointer))))
     (glib:with-error (err)
@@ -318,58 +332,70 @@
 (export 'permission-release)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_permission_release_async ()
-;;;
-;;; void
-;;; g_permission_release_async (GPermission *permission,
-;;;                             GCancellable *cancellable,
-;;;                             GAsyncReadyCallback callback,
-;;;                             gpointer user_data);
-;;;
-;;; Attempts to release the permission represented by permission .
-;;;
-;;; This is the first half of the asynchronous version of
-;;; g_permission_release().
-;;;
-;;; permission :
-;;;     a GPermission instance
-;;;
-;;; cancellable :
-;;;     a GCancellable, or NULL.
-;;;
-;;; callback :
-;;;     the GAsyncReadyCallback to call when done
-;;;
-;;; user_data :
-;;;     the user data to pass to callback
+;;; g_permission_release_async
 ;;; ----------------------------------------------------------------------------
 
+(cffi:defcfun ("g_permission_release_async" %permission-release-async) :void
+  (permission (gobject:object permission))
+  (cancellable (gobject:object cancellable))
+  (func :pointer)
+  (data :pointer))
+
+(defun permission-release-async (permission cancellable func)
+ #+liber-documentation
+ "@version{#2025-05-26}
+  @argument[permission]{a @class{g:permission} object}
+  @argument[cancellable]{a @class{g:cancellable} object, can be @code{nil}}
+  @argument[func]{a @symbol{g:async-ready-callback} callback function to
+    call when the request is done}
+  @begin{short}
+    Attempts to release the permission represented by @arg{permission}.
+  @end{short}
+  This is the first half of the asynchronous version of the
+  @fun{g:permission-release} function.
+  @see-class{g:permission}
+  @see-class{g:cancellable}
+  @see-symbol{g:async-ready-callback}
+  @see-function{g:permission-release}
+  @see-function{g:permission-release-finish}"
+  (let ((ptr (glib:allocate-stable-pointer func)))
+    (%permission-release-async permission
+                               (or cancellable (cffi:null-pointer))
+                               (cffi:callback async-ready-callback)
+                               ptr)))
+
+(export 'permission-release-async)
+
 ;;; ----------------------------------------------------------------------------
-;;; g_permission_release_finish ()
-;;;
-;;; gboolean
-;;; g_permission_release_finish (GPermission *permission,
-;;;                              GAsyncResult *result,
-;;;                              GError **error);
-;;;
-;;; Collects the result of attempting to release the permission represented by
-;;; permission .
-;;;
-;;; This is the second half of the asynchronous version of
-;;; g_permission_release().
-;;;
-;;; permission :
-;;;     a GPermission instance
-;;;
-;;; result :
-;;;     the GAsyncResult given to the GAsyncReadyCallback
-;;;
-;;; error :
-;;;     a pointer to a NULL GError, or NULL
-;;;
-;;; Returns :
-;;;     TRUE if the permission was successfully released
+;;; g_permission_release_finish
 ;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("g_permission_release_finish" %permission-release-finish)
+    :boolean
+  (permission (gobject:object permission))
+  (result (gobject:object async-result))
+  (err :pointer))
+
+(defun permission-release-finish (permission result)
+ #+liber-documentation
+ "@version{#2025-05-26}
+  @argument[permission]{a @class{g:permission} object}
+  @argument[result]{a @class{g:async-result} object}
+  @return{@em{True} if the permission was successfully released.}
+  @begin{short}
+    Collects the result of attempting to release the permission represented by
+    @arg{permission}.
+  @end{short}
+  This is the second half of the asynchronous version of the
+  @fun{g:permission-release} function.
+  @see-class{g:permission}
+  @see-class{g:async-result}
+  @see-function{g:permission-release}
+  @see-function{g:permission-release-async}"
+  (glib:with-ignore-error (err)
+    (%permission-release-finish permission result err)))
+
+(export 'permission-release-finish)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_permission_impl_update ()

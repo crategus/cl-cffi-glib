@@ -183,7 +183,7 @@
      (:file "rtest-gio-resource")
      ;; Permissions
      (:file "rtest-gio-permission")
-;    (:file "gio.simple-permission")
+     (:file "rtest-gio-simple-permission")
      ;; Data models
      (:file "rtest-gio-list-model")
      (:file "rtest-gio-list-store")

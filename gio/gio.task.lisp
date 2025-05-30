@@ -54,7 +54,7 @@
 ;;;     g_task_get_source_tag
 ;;;     g_task_set_name
 ;;;     g_task_get_name
-;;;     g_taske_set_static_name                            Since 2.76
+;;;     g_taske_set_static_name                             Since 2.76
 ;;;     g_task_report_error
 ;;;     g_task_report_new_error
 ;;;     g_task_get_cancellable
@@ -65,8 +65,10 @@
 ;;;     g_task_return_pointer
 ;;;     g_task_return_value
 ;;;     g_task_return_error
-;;;     g_task_return_new_error
 ;;;     g_task_return_error_if_cancelled
+;;;     g_task_return_new_error
+;;;     g_task_return_new_error_literal                     Since 2.80
+;;;     g_task_return_prefixed_error                        Since 2.80
 ;;;     g_task_propagate_boolean
 ;;;     g_task_propagate_int
 ;;;     g_task_propagate_pointer
@@ -109,7 +111,7 @@
 
 #+liber-documentation
 (setf (documentation 'task 'type)
- "@version{2024-10-23}
+ "@version{2025-05-28}
   @begin{short}
     The @class{g:task} class represents and manages a cancellable \"task\".
   @end{short}
@@ -564,9 +566,9 @@ baker_bake_cake_sync (Baker               *self,
       handling for cancellation. In addition, cancellation overrides any other
       @class{g:task} return value by default, like the
       @class{g:simple-async-result} function does when the
-      @fun{g:simple-async-result-set-check-cancellable} function is called. (You
-      can use the @fun{g:task-set-check-cancellable} function to turn off that
-      behavior.) On the other hand, the @fun{g:task-run-in-thread} function
+      @fun{g:simple-async-result-set-check-cancellable} function is called.
+      (You can use the @fun{g:task-set-check-cancellable} function to turn off
+      that behavior.) On the other hand, the @fun{g:task-run-in-thread} function
       guarantees that it will always run your @code{task_func}, even if the
       task's @class{g:cancellable} object is already cancelled before the task
       gets a chance to run; you can start your @code{task_func} with a
@@ -631,8 +633,8 @@ baker_bake_cake_sync (Baker               *self,
 (setf (liber:alias-for-function 'task-completed)
       "Accessor"
       (documentation 'task-completed 'function)
- "@version{#2024-10-23}
-  @syntax{(setf (g:task-completed object) completed)}
+ "@version{#2025-05-28}
+  @syntax{(g:task-completed object) => completed}
   @argument[object]{a @class{g:task} object}
   @argument[completed]{a boolean whether the task has completed}
   @begin{short}
@@ -657,13 +659,13 @@ baker_bake_cake_sync (Baker               *self,
 
 (defun task-new (source cancellable func)
  #+liber-documentation
- "@version{#2023-7-13}
+ "@version{#2025-05-28}
   @argument[source]{a @class{g:object} instance that owns this task, or
     @code{nil}}
   @argument[canellable]{an optional @class{g:cancellable} instance, @code{nil}
     to ignore}
   @argument[func]{a @symbol{g:async-ready-callback} callback function}
-  @return{A @class{g:task} instance.}
+  @return{The newly created @class{g:task} instance.}
   @begin{short}
     Creates a @class{g:task} instance acting on @arg{source}, which will
     eventually be used to invoke callback in the current thread-default main
@@ -683,8 +685,8 @@ baker_bake_cake_sync (Baker               *self,
   on have been destroyed. If you do not want this behavior, you can use the
   @fun{g:task-set-check-cancellable} function to change it.
   @see-class{g:task}"
-  (%task-new (gobject:object-pointer source)
-             cancellable
+  (%task-new (if source (gobject:object-pointer source) (cffi:null-pointer))
+             (or cancellable (cffi:null-pointer))
              (cffi:callback async-ready-callback)
              (glib:allocate-stable-pointer func)))
 
@@ -1111,15 +1113,17 @@ The value is a NUL terminated UTF-8 string.
 (export 'task-context)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_task_get_source_object ()
+;;; g_task_get_source_object
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcfun ("g_task_get_source_object" task-source-object) :pointer
+(cffi:defcfun ("g_task_get_source_object" task-source-object) gobject:object
  #+liber-documentation
- "@version{#2023-7-13}
+ "@version{#2025-05-28}
   @argument[task]{a @class{g:task} instance}
-  @return{A pointer to the source object of the @class{g:task} instance, or
-    @code{nil}.}
+  @begin{return}
+    The @class{g:object} instance with the source object of the @class{g:task}
+    instance, or @code{nil}.
+  @end{return}
   @begin{short}
     Gets the source object from @arg{task}.
   @end{short}
@@ -1263,6 +1267,23 @@ The value is a NUL terminated UTF-8 string.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
+;;; g_task_return_error_if_cancelled ()
+;;;
+;;; gboolean
+;;; g_task_return_error_if_cancelled (GTask *task);
+;;;
+;;; Checks if task 's GCancellable has been cancelled, and if so, sets task 's
+;;; error accordingly and completes the task (see g_task_return_pointer() for
+;;; more discussion of exactly what this means).
+;;;
+;;; task :
+;;;     a GTask
+;;;
+;;; Returns :
+;;;     TRUE if task has been cancelled, FALSE if not
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
 ;;; g_task_return_new_error ()
 ;;;
 ;;; void
@@ -1295,20 +1316,11 @@ The value is a NUL terminated UTF-8 string.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_task_return_error_if_cancelled ()
-;;;
-;;; gboolean
-;;; g_task_return_error_if_cancelled (GTask *task);
-;;;
-;;; Checks if task 's GCancellable has been cancelled, and if so, sets task 's
-;;; error accordingly and completes the task (see g_task_return_pointer() for
-;;; more discussion of exactly what this means).
-;;;
-;;; task :
-;;;     a GTask
-;;;
-;;; Returns :
-;;;     TRUE if task has been cancelled, FALSE if not
+;;;     g_task_return_new_error_literal                     Since 2.80
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;;     g_task_return_prefixed_error                        Since 2.80
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
@@ -1590,6 +1602,13 @@ The value is a NUL terminated UTF-8 string.
 ;;;     the callback to invoke when source triggers
 ;;; ----------------------------------------------------------------------------
 
+(cffi:defcfun ("g_task_attach_source" %task-attach-source) :void
+  (task (gobject:object task))
+  (source (:pointer (:struct glib:source)))
+  (func :pointer))
+
+(export 'task-attach-source)
+
 ;;; ----------------------------------------------------------------------------
 ;;; g_task_is_valid ()
 ;;;
@@ -1610,5 +1629,14 @@ The value is a NUL terminated UTF-8 string.
 ;;; Returns :
 ;;;     TRUE if result and source_object are valid, FALSE if not
 ;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("g_task_is_valid" %task-is-valid) :boolean
+  (result (gobject:object async-result))
+  (source gobject:object))
+
+(defun task-is-valid (result source)
+  (%task-is-valid result (or source (cffi:null-pointer))))
+
+(export 'task-is-valid)
 
 ;;; --- End of file gio.task.lisp ----------------------------------------------
