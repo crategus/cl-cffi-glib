@@ -41,6 +41,8 @@
 ;;;
 ;;; Functions
 ;;;
+;;;     GCallback
+;;;
 ;;;     G_TYPE_IS_OBJECT
 ;;;     G_IS_OBJECT
 ;;;
@@ -656,6 +658,31 @@ lambda (object pspec)    :no-hooks
   (:value (:pointer (:struct value))))
 
 ;;; ----------------------------------------------------------------------------
+;;; GCallback
+;;; ----------------------------------------------------------------------------
+
+(cffi:defcallback callback :void () )
+
+#+liber-documentation
+(setf (liber:alias-for-symbol 'callback)
+      "Callback"
+      (liber:symbol-documentation 'callback)
+ "@version{#2025-05-27}
+  @begin{declaration}
+lambda ()
+  @end{declaration}
+  @begin{short}
+    The type used for callback functions in structure definitions and function
+    signatures.
+  @end{short}
+  This does not mean that all callback functions must take no parameters and
+  return void. The required signature of a callback function is determined by
+  the context in which is used, for example, the signal to which it is
+  connected.")
+
+(export 'callback)
+
+;;; ----------------------------------------------------------------------------
 ;;; G_TYPE_IS_OBJECT
 ;;; ----------------------------------------------------------------------------
 
@@ -1098,9 +1125,9 @@ lambda (object pspec)    :no-hooks
 
 (cffi:defcfun ("g_object_notify" object-notify) :void
  #+liber-documentation
- "@version{2024-12-14}
+ "@version{2025-05-09}
   @argument[object]{a @class{g:object} instance}
-  @argument[name]{a string with the name of a property installed on the class
+  @argument[name]{a string for the name of a property installed on the class
     of @arg{object}}
   @begin{short}
     Emits a @code{\"notify\"} signal for the property on the object.
