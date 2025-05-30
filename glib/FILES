@@ -5,14 +5,14 @@ Content from the Glib Reference Manual for Version 2.84
     &   - objects and structures are implemented, some functions are missing
    (**) - deprecated
 
-  glib.version.lisp            - Version Information               - Glib 2.82
-  glib.misc.lisp               - Basic Types                       - Glib 2.82
-  glib.main-loop.lisp          - The Main Event Loop               - Glib 2.82
-  glib.error.lisp              - Error Reporting                   - Glib 2.80%.
-  glib.option.lisp             - parses command line options       - Glib 2.82&.
-  glib.key-file.lisp           - parses .ini-like config files     - Glib 2.64 &
-  glib.bytes.lisp              - arrays of bytes                   - Glib 2.82
-  glib.variant-type.lisp       - GVariantType                      - Glib 2.82 .
-  glib.variant.lisp            - GVariant                          - Glib 2.84&.
+  glib.version.lisp            - Version Information               - Glib 2.84
+  glib.misc.lisp               - Basic Types                       - Glib 2.84
+  glib.main-loop.lisp          - The Main Event Loop               - Glib 2.84
+  glib.error.lisp              - Error Reporting                   - Glib 2.84
+  glib.bytes.lisp              - arrays of bytes                   - Glib 2.84
+  glib.option.lisp             - parses command line options       - Glib 2.84
+  glib.key-file.lisp           - parses .ini-like config files     - Glib 2.84
+  glib.variant-type.lisp       - GVariantType                      - Glib 2.84
+  glib.variant.lisp            - GVariant                          - Glib 2.84
 
-2025-05-04
+2025-05-25

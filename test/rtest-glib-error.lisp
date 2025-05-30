@@ -16,7 +16,7 @@
 ;;;     with-error
 
 (test with-error
-  ;; Successfully loaded.
+  ;; Successfully loaded
   (is-true (glib:with-error (err)
              (glib::%key-file-load-from-file
                  (g:key-file-new)
@@ -55,4 +55,4 @@
 ;; TODO: The WITH-CATCHING-TO-ERROR is for usage in callback functions which
 ;; have an error argument. We have no example at this time.
 
-;;; 2024-11-21
+;;; 2025-05-18

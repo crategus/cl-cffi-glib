@@ -1,12 +1,12 @@
 ;;; ----------------------------------------------------------------------------
 ;;; glib.misc.lisp
 ;;;
-;;; The documentation of this file is taken from the GLib 2.82 Reference
-;;; Manual and modified to document the Lisp binding to the GLib library.
-;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
-;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
+;;; The documentation in this file is taken from the GLib Reference Manual
+;;; version 2.84 and modified to document the Lisp binding to the GLib library,
+;;; see <http://www.gtk.org>. The API documentation for the Lisp binding is
+;;; available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2011 - 2024 Dieter Kaiser
+;;; Copyright (C) 2011 - 2025 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -38,7 +38,6 @@
 ;;;     GQuark
 ;;;     GDateTime
 ;;;     gunichar
-;;;     GError
 ;;;
 ;;; Memory Allocation
 ;;;
@@ -58,8 +57,6 @@
 ;;; ----------------------------------------------------------------------------
 ;;; GStrv
 ;;; ----------------------------------------------------------------------------
-
-;; TODO: Consider allowing a single string and making a list out of it.
 
 (cffi:define-foreign-type strv-type ()
   ((free-from-foreign :initarg :free-from-foreign
@@ -105,20 +102,39 @@
 
 #+liber-documentation
 (setf (documentation 'strv-t 'type)
- "@version{2024-10-12}
+ "@version{2025-05-19}
   @begin{short}
-    The @type{g:strv-t} type specifier represents and performs automatic
-    conversion between a list of Lisp strings and an array of C strings of the
-    CFFI @code{:string} type.
+    The @type{g:strv-t} type specifier performs automatic conversion between a
+    list of Lisp strings and an array of C strings of the CFFI @code{:string}
+    type.
   @end{short}
   @begin[Examples]{dictionary}
+    Convert a list of strings to and from a C array of strings.
     @begin{pre}
 (setq str (cffi:convert-to-foreign (list \"Hello\" \"World\") 'g:strv-t))
 => #.(SB-SYS:INT-SAP #X01541998)
 (cffi:convert-from-foreign str 'g:strv-t)
 => (\"Hello\" \"World\")
     @end{pre}
-  @end{dictionary}")
+    The @slot[g:themed-icon]{names} property of the @class{g:themed-icon} class
+    is an example for the use of the @class{g:strv-t} type specifier. The
+    @fun{g:themed-icon-new-from-names} function creates a themed icon from
+    strings. The accessor for the @slot[g:themed-icon]{names} property returns
+    the names of the themed icon as a list of strings. Internally, the list
+    list of strings is converted to and from a C array of strings via the
+    @class{g:strv-t} type specifier.
+    @begin{pre}
+(let ((icon (g:themed-icon-new-from-names \"gnome-dev-cdrom-audio\"
+                                          \"gnome-dev-cdrom\"
+                                          \"gnome-dev\"
+                                          \"gnome\")))
+  (g:themed-icon-names icon))
+=> (\"gnome-dev-cdrom-audio\" \"gnome-dev-cdrom\" \"gnome-dev\" \"gnome\")
+    @end{pre}
+  @end{dictionary}
+  @see-class{g:themed-icon}
+  @see-function{g:themed-icon-new-from-names}
+  @see-function{g:themed-icon-names}")
 
 (export 'strv-t)
 
@@ -126,7 +142,7 @@
 ;;; GList
 ;;; ----------------------------------------------------------------------------
 
-;; TODO: Check the memory management in more detail.
+;; TODO: Check the memory management in more detail
 
 (cffi:defcstruct %list-t
   (data :pointer)
@@ -172,22 +188,30 @@
 
 #+liber-documentation
 (setf (documentation 'list-t 'type)
- "@version{2024-10-12}
+ "@version{2025-05-19}
   @begin{short}
-    The @type{g:list-t} type specifier represents a C doubly linked list with
-    elements of the @code{GList} structure.
+    The @type{g:list-t} type specifier performs automatic conversion from a C
+    @code{GList} instance to a Lisp list.
   @end{short}
-  The @type{g:list-t} type specifier performs automatic conversion from a C list
-  to a Lisp list. The elements of the list can be pointers, strings or GObjects.
+ The elements of the list can be pointers, strings or GObjects.
   @begin[Examples]{dictionary}
+    Convert a list of strings to and from a C @code{GList} instance.
     @begin{pre}
 (cffi:convert-to-foreign (list \"a\" \"b\" \"c\") '(g:list-t :string))
 => #.(SB-SYS:INT-SAP #X03B92220)
 (cffi:convert-from-foreign * '(g:list-t :string))
 => (\"a\" \"b\" \"c\")
     @end{pre}
+    The @fun{g:content-types-registered} function is an example for the use of
+    the @class{g:list-t} type specifier in the Lisp implementation. It returns
+    a list of strings which is converted from a C @code{GList} instance.
+    @begin{pre}
+(g:content-types-registered)
+=> (\"application/x-sc\" \"application/vnd.squashfs\" ... )
+    @end{pre}
   @end{dictionary}
-  @see-type{g:slist-t}")
+  @see-type{g:slist-t}
+  @see-function{g:content-types-registered}")
 
 (export 'list-t)
 
@@ -274,14 +298,17 @@
 
 #+liber-documentation
 (setf (documentation 'slist-t 'type)
- "@version{2024-10-12}
+ "@version{2025-05-19}
   @begin{short}
-    The @type{g:slist-t} type specifier represents a C singly linked list with
-    elements of the @code{GSList} structure.
+    The @type{g:slist-t} type specifier performs automatic conversion from a C
+    @code{GSList} instance to a Lisp list.
   @end{short}
-  The @type{g:slist-t} type specifier performs automatic conversion from a C
-  list to a Lisp list. The elements of the list can be pointers, strings or
-  GObjects.
+  The elements of the list can be pointers, strings or GObjects.
+
+  The @fun{gtk:builder-objects} and @fun{gtk:size-group-widgets} functions are
+  examples for the use of the @class{g:slist-t} type specifier in the Lisp
+  implementation. These functions return a list of @class{g:object} instances
+  which are converted from C @code{GSList} instances.
   @begin[Examples]{dictionary}
     @begin{pre}
 (cffi:convert-to-foreign (list \"a\" \"b\" \"c\") '(g:slist-t :string))
@@ -290,7 +317,9 @@
 => (\"a\" \"b\" \"c\")
     @end{pre}
   @end{dictionary}
-  @see-type{g:list-t}")
+  @see-type{g:list-t}
+  @see-function{gtk:builder-objects}
+  @see-function{gtk:size-group-widgets}")
 
 (export 'slist-t)
 
@@ -339,7 +368,7 @@
 
 #+liber-documentation
 (setf (documentation 'quark-as-string 'type)
- "@version{2024-10-12}
+ "@version{2025-05-19}
   @begin{short}
     Quarks are associations between strings and integer identifiers.
   @end{short}
@@ -405,14 +434,20 @@
 (setf (liber:alias-for-class 'date-time)
       "Type"
       (documentation 'date-time 'type)
- "@version{2024-12-18}
+ "@version{2025-05-19}
   @begin{short}
-    The @type{g:date-time} type specifier represents the C @code{GDateTime}
-    type which represents a date and time.
+    The @type{g:date-time} type specifier performs automatic conversion between
+    the @code{GDateTime} time representation and the Lisp universal time, that
+    is measured as an offset from the beginning of the year 1900.
   @end{short}
-  The @type{g:date-time} type specifier performs automatic conversion between
-  the @code{GDateTime} time representation and the Lisp universal time, that is
-  measured as an offset from the beginning of the year 1900.
+  @begin[Notes]{dictionary}
+    The Lisp implementation uses the @code{g_date_time_new_from_unix_utc()} and
+    @code{g_date_time_to_unix()} functions for conversion. The
+    @class{g:date-time} type specifier takes into account the offset between
+    the Unix time that is the number of seconds that have elapsed since
+    1970-01-01 00:00:00 UTC and the Lisp universal time that is counted from
+    1900-01-01 00:00:00 UTC.
+  @end{dictionary}
   @begin[Examples]{dictionary}
     @begin{pre}
 (cffi:convert-to-foreign 0 'g:date-time)
@@ -442,7 +477,7 @@
 (setf (liber:alias-for-class 'unichar)
       "Type"
       (documentation 'unichar 'type)
- "@version{2024-10-12}
+ "@version{2025-05-19}
   @begin{short}
     The @type{g:unichar} type specifier represents the C @code{gunichar} type
     which can hold any UCS-4 character code.
@@ -480,9 +515,9 @@
 
 (cffi:defcfun ("g_malloc" malloc) :pointer
  #+liber-documentation
- "@version{2024-10-12}
-  @argument[nbytes]{an integer of @code{:size} type with the number of bytes
-  to allocate}
+ "@version{2025-05-19}
+  @argument[nbytes]{an integer of @code{:size} type for the number of bytes
+    to allocate}
   @return{The foreign pointer to the allocated memory.}
   @begin{short}
     Allocates @arg{nbytes} bytes of memory.
@@ -510,7 +545,7 @@
 
 (cffi:defcfun ("g_free" free) :void
  #+liber-documentation
- "@version{2024-10-12}
+ "@version{2025-05-19}
   @argument[mem]{a foreign pointer to the memory to free}
   @begin{short}
     Frees the memory pointed to by the @arg{mem} foreign pointer.
@@ -533,10 +568,10 @@
 
 (cffi:defcfun ("g_get_application_name" application-name) :string
  #+liber-documentation
- "@version{2024-10-12}
+ "@version{2025-05-19}
   @syntax{(g:application-name) => name}
   @syntax{(setf (g:application-name) name)}
-  @argument[name]{a string with the localized name of the application}
+  @argument[name]{a string for the localized name of the application}
   @begin{short}
     Accessor of a human readable name for the application.
   @end{short}
@@ -567,10 +602,10 @@
 
 (cffi:defcfun ("g_get_prgname" prgname) :string
  #+liber-documentation
- "@version{2024-10-12}
+ "@version{2025-05-19}
   @syntax{(g:prgname) => prgname}
   @syntax{(setf (g:prgname) prgname)}
-  @argument[prgname]{a string with the name of the program}
+  @argument[prgname]{a string for the name of the program}
   @begin{short}
     Accessor of the name of the program.
   @end{short}

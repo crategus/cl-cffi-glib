@@ -1,12 +1,12 @@
 ;;; ----------------------------------------------------------------------------
 ;;; glib.option.lisp
 ;;;
-;;; The documentation of this file is taken from the GLib 2.82 Reference
-;;; Manual and modified to document the Lisp binding to the GLib library.
-;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
-;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
+;;; The documentation in this file is taken from the GLib Reference Manual
+;;; version 2.84 and modified to document the Lisp binding to the GLib library,
+;;; see <http://www.gtk.org>. The API documentation for the Lisp binding is
+;;; available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2013 - 2024 Dieter Kaiser
+;;; Copyright (C) 2013 - 2025 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -32,8 +32,6 @@
 ;;;     Parses command line options
 ;;;
 ;;; Types and Values
-;;;
-;;;     GOptionError                                        not implemented
 ;;;
 ;;;     GOptionArg
 ;;;     GOptionFlags
@@ -91,7 +89,7 @@
 
 (defmacro with-option-context ((context &rest args) &body body)
  #+liber-documentation
- "@version{2024-11-19}
+ "@version{2025-05-22}
   @syntax{(g:with-option-context (context) body) => result}
   @syntax{(g:with-option-context (context parameter) body) => result}
   @argument[context]{a @type{g:option-context} instance to create and
@@ -117,15 +115,13 @@
 
 (defmacro with-option-group ((group &rest args) &body body)
  #+liber-documentation
- "@version{2024-11-19}
-  @syntax{(g:with-option-group (group name description help-description)
-    body) => result}
+ "@version{2025-05-22}
+  @syntax{(g:with-option-group (group name description help) body) => result}
   @argument[group]{a @type{g:option-group} instance to create and initialize}
-  @argument[name]{a string with the name for the option group}
-  @argument[description]{a string with a description for this option group to
+  @argument[name]{a string for the name of the option group}
+  @argument[description]{a string for a description of this option group to
     be shown in @code{--help} output}
-  @argument[help-description]{a string with a description for the
-    @code{--help-name} option}
+  @argument[help]{a string for a description of the @code{--help-name} option}
   @begin{short}
     The @fun{g:with-option-group} macro allocates a new @type{g:option-group}
     instance, initializes the option group with the given arguments and executes
@@ -142,10 +138,6 @@
        (option-group-unref ,group))))
 
 (export 'with-option-group)
-
-;;; ----------------------------------------------------------------------------
-;;; enum GOptionError                                       not implemented
-;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
 ;;; GOptionArg
@@ -166,7 +158,7 @@
 (setf (liber:alias-for-symbol 'option-arg)
       "CEnum"
       (liber:symbol-documentation 'option-arg)
- "@version{2024-11-19}
+ "@version{2025-05-22}
   @begin{declaration}
 (cffi:defcenum option-arg
   :none
@@ -213,7 +205,7 @@
 ;;;-----------------------------------------------------------------------------
 
 (cffi:defbitfield option-flags
-  (:none 0)
+  :none
   :hidden
   :in-main
   :reverse
@@ -226,7 +218,7 @@
 (setf (liber:alias-for-symbol 'option-flags)
       "Bitfield"
       (liber:symbol-documentation 'option-flags)
- "@version{2024-11-19}
+ "@version{2025-05-22}
   @begin{declaration}
 (cffi:defbitfield option-flags
   :none
@@ -247,20 +239,20 @@
       @entry[:reverse]{For options of the @code{:none} kind, this flag indicates
         that the sense of the option is reversed.}
       @entry[:no-arg]{For options of the @code{:callback} kind, this flag
-        indicates that the callback function does not take any argument, like a
-        @code{:none} option.}
+        indicates that the callback function does not take any argument, like
+        a @code{:none} option.}
       @entry[:filename]{For options of the @code{:callback} kind, this flag
-        indicates that the argument should be passed to the callback function in
-        the GLib filename encoding rather than UTF-8.}
+        indicates that the argument should be passed to the callback function
+        in the GLib filename encoding rather than UTF-8.}
       @entry[:optional-arg]{For options of the @code{:callback} kind, this flag
         indicates that the argument supply is optional. If no argument is
-        given then data of the @code{GOptionParseFunc} callback function will be
-        set to @code{NULL}.}
+        given then data of the @code{GOptionParseFunc} callback function will
+        be set to @code{NULL}.}
       @entry[:noalias]{This flag turns off the automatic conflict resolution
         which prefixes long option names with a group name, if there is a
         conflict. This option should only be used in situations where aliasing
-        is necessary to model some legacy command line interface. It is not safe
-        to use this option, unless all option groups are under your direct
+        is necessary to model some legacy command line interface. It is not
+        safe to use this option, unless all option groups are under your direct
         control.}
     @end{table}
   @end{values}
@@ -292,7 +284,10 @@
 (setf (liber:alias-for-type 'option-context)
       "CStruct"
       (documentation 'option-context 'type)
- "@version{2024-11-19}
+ "@version{2025-05-22}
+  @begin{declaration}
+(cffi:defcstruct option-context)
+  @end{declaration}
   @begin{short}
     The GOption command line parser is intended to be a simpler replacement for
     the popt library.
@@ -324,7 +319,8 @@ testtreemodel -r 1 --max-size 20 --rand --display=:1.0 -vb -- file1 file2
   @fun{g:option-context-help-enabled} function, GOption will recognize the
   @code{--help}, @code{-?}, @code{--help-all} and @code{--help-groupname}
   options, where @code{groupname} is the name of a @type{g:option-group}
-  instance, and write a text similar to the one shown in the following example.  @begin{pre}
+  instance, and write a text similar to the one shown in the following example.
+  @begin{pre}
 Usage:
   testtreemodel [OPTION...] - test tree model performance
 
@@ -451,7 +447,10 @@ Application Options:
 (setf (liber:alias-for-type 'option-group)
       "CStruct"
       (documentation 'option-group 'type)
- "@version{2024-11-19}
+ "@version{2025-05-22}
+  @begin{declaration}
+(cffi:defcstruct option-group)
+  @end{declaration}
   @begin{short}
     The @type{g:option-group} structure defines the options in a single group.
   @end{short}
@@ -508,7 +507,7 @@ Application Options:
 
 (defun option-context-new (&optional (parameter nil))
  #+liber-documentation
- "@version{2024-11-19}
+ "@version{2025-05-22}
   @argument[parameter]{a string which is displayed in the first line of
     @code{--help} output}
   @begin{return}
@@ -561,7 +560,7 @@ Hilfeoptionen:
 
 (cffi:defcfun ("g_option_context_free" option-context-free) :void
  #+liber-documentation
- "@version{2024-11-19}
+ "@version{2025-05-22}
   @argument[context]{a @type{g:option-context} instance}
   @begin{short}
     Frees @arg{context} and all the groups which have been added to it.
@@ -586,7 +585,7 @@ Hilfeoptionen:
 
 (cffi:defcfun ("g_option_context_get_summary" option-context-summary) :string
  #+liber-documentation
- "@version{2024-11-19}
+ "@version{2025-05-22}
   @syntax{(g:option-context-summary context) => summary}
   @syntax{(setf (g:option-context-summary context) summary)}
   @argument[context]{a @type{g:option-context} instance}
@@ -643,7 +642,7 @@ Hilfeoptionen:
 (cffi:defcfun ("g_option_context_get_description" option-context-description)
     :string
  #+liber-documentation
- "@version{2024-11-19}
+ "@version{2025-05-22}
   @syntax{(g:option-context-description context) => description}
   @syntax{(setf (g:option-context-descripton context) description)}
   @argument[context]{a @type{g:option-context} instance}
@@ -698,10 +697,10 @@ More descriptions.
 (setf (liber:alias-for-symbol 'translate-func)
       "Callback"
       (liber:symbol-documentation 'translate-func)
- "@version{2024-11-19}
+ "@version{2025-05-22}
   @syntax{lambda (str) => result}
-  @argument[str]{a untranslated string}
-  @argument[result]{a string with the translation for the current locale}
+  @argument[str]{an untranslated string}
+  @argument[result]{a string for the translation of the current locale}
   @begin{short}
     The type of functions which are used to translate user visible strings, for
     @code{--help} output.
@@ -725,7 +724,7 @@ More descriptions.
 
 (defun option-context-set-translate-func (context func)
  #+liber-documentation
- "@version{2024-11-19}
+ "@version{2025-05-22}
   @argument[context]{a @type{g:option-context} instance}
   @argument[func]{a @symbol{g:translate-func} callback function, or @code{nil}}
   @begin{short}
@@ -768,9 +767,9 @@ More descriptions.
 (cffi:defcfun ("g_option_context_set_translation_domain"
                 option-context-set-translation-domain) :void
  #+liber-documentation
- "@version{#2024-11-19}
+ "@version{#2025-05-22}
   @argument[context]{a @type{g:option-context} instance}
-  @argument[domain]{a string with the translation domain to use}
+  @argument[domain]{a string for the translation domain to use}
   @begin{short}
     A convenience function to use GNU gettext for translating user visible
     strings.
@@ -796,11 +795,12 @@ More descriptions.
 
 (defun option-context-parse (context &rest argv)
  #+liber-documentation
- "@version{#2024-11-19}
+ "@version{#2025-05-22}
   @argument[context]{a @type{g:option-context} instance}
-  @argument[argv]{a list of strings with the command line arguments}
-  @return{@em{True} if the parsing was successful, @em{false} if an error
-    occurred.}
+  @argument[argv]{a list of strings for the command line arguments}
+  @begin{return}
+    @em{True} if the parsing was successful, @em{false} if an error occurred.
+  @end{return}
   @begin{short}
     Parses the command line arguments, recognizing options which have been
     added to the option context.
@@ -848,13 +848,14 @@ More descriptions.
 
 (defun option-context-parse-strv (context arguments)
  #+liber-documentation
- "@version{#2024-11-19}
+ "@version{#2025-05-22}
   @argument[context]{a @type{g:option-context} instance}
-  @argument[arguments]{a list of strings with the command line arguments, which
+  @argument[arguments]{a list of strings for the command line arguments, which
     must be in UTF-8 on Windows, starting with GLib 2.62, @arg{arguments} can
     be @code{nil}, which matches the @fun{g:option-context-parse} function}
-  @return{@em{True} if the parsing was successful, @em{false} if an error
-    occurred.}
+  @begin{return}
+    @em{True} if the parsing was successful, @em{false} if an error occurred.
+  @end{return}
   @begin{short}
     Parses the command line arguments.
   @end{short}
@@ -903,7 +904,7 @@ More descriptions.
 (cffi:defcfun ("g_option_context_get_help_enabled" option-context-help-enabled)
     :boolean
  #+liber-documentation
- "@version{#2024-11-19}
+ "@version{#2025-05-22}
   @syntax{(g:option-context-help-enabled context) => enabled}
   @syntax{(setf (g:option-context-help-enabled context) enabled)}
   @argument[context]{a @type{g:option-context} instance}
@@ -936,7 +937,7 @@ More descriptions.
 (cffi:defcfun ("g_option_context_get_ignore_unkown_options"
                 option-context-ignore-unknown-options) :boolean
  #+liber-documentation
- "@version{#2024-11-19}
+ "@version{#2025-05-22}
   @syntax{(g:option-context-ignore-unknown-options context) => ignore}
   @syntax{(setf (g:option-context-ignore-unknown-options context) ignore)}
   @argument[context]{a @type{g:option-context} instance}
@@ -971,7 +972,7 @@ More descriptions.
 
 (defun option-context-help (context main &optional (group (cffi:null-pointer)))
  #+liber-documentation
- "@version{#2024-11-19}
+ "@version{#2025-05-22}
   @argument[context]{a @type{g:option-context} instance}
   @argument[main]{if @em{true}, only include the main group}
   @argument[group]{an optional @type{g:option-group} instance to create help
@@ -1013,7 +1014,7 @@ More descriptions.
 (cffi:defcfun ("g_option_context_get_strict_posix" option-context-strict-posix)
     :boolean
  #+liber-documentation
- "@version{#2024-11-19}
+ "@version{#2025-05-22}
   @argument[context]{a @type{g:option-context} instance}
   @argument[strict]{@em{true} if strict POSIX is enabled, @em{false} otherwise}
   @begin{short}
@@ -1059,10 +1060,10 @@ More descriptions.
 
 (defun option-context-add-main-entries (context entries domain)
  #+liber-documentation
- "@version{2024-11-19}
+ "@version{2025-05-22}
   @argument[context]{a @type{g:option-context} instance}
   @argument[entries]{a list of option entries}
-  @argument[domain]{a string with a translation domain to use for translating
+  @argument[domain]{a string for a translation domain to use for translating
     the @code{--help} output for the options in @arg{entries} with GNU gettext,
     or @code{nil}}
   @begin{short}
@@ -1133,7 +1134,7 @@ More descriptions.
 
 (cffi:defcfun ("g_option_context_add_group" option-context-add-group) :void
  #+liber-documentation
- "@version{#2024-11-19}
+ "@version{#2025-05-22}
   @argument[context]{a @type{g:option-context} instance}
   @argument[group]{a @type{g:option-group} instance to add}
   @begin{short}
@@ -1166,7 +1167,7 @@ More descriptions.
 (cffi:defcfun ("g_option_context_get_main_group" option-context-main-group)
     (:pointer (:struct option-group))
  #+liber-documentation
- "@version{2024-11-19}
+ "@version{2025-05-22}
   @syntax{(g:option-context-main-group context) => group}
   @syntax{(setf (g:option-context-main-group context) group)}
   @argument[context]{a @type{g:option-context} instance}
@@ -1197,25 +1198,27 @@ More descriptions.
     (:pointer (:struct option-group))
   (name :string)
   (description :string)
-  (help-description :string)
+  (help :string)
   (user-data :pointer)
   (destroy :pointer))
 
-(defun option-group-new (name description help-description)
+(defun option-group-new (name description help)
  #+liber-documentation
- "@version{2024-11-19}
-  @argument[name]{a string with the name for the option group, this is used to
+ "@version{2025-05-22}
+  @argument[name]{a string for the name for the option group, this is used to
     provide help for the options in this group with the @code{--help-name}
     option}
-  @argument[description]{a string with a description for this group to be shown
+  @argument[description]{a string for a description for this group to be shown
     in @code{--help} output, this string is translated using the translation
     domain or translation function of the group}
-  @argument[help-description]{a string with a description for the
-    @code{--help-name} option, this string is translated using the translation
-    domain or translation function of the group}
-  @return{The newly created option group. It should be added to a
+  @argument[help]{a string for a description of the @code{--help-name} option,
+    this string is translated using the translation domain or translation
+    function of the group}
+  @begin{return}
+    The newly created option group. It should be added to a
     @type{g:option-context} instance or freed with the
-    @fun{g:option-group-unref} function.}
+    @fun{g:option-group-unref} function.
+  @end{return}
   @begin{short}
     Creates a new @type{g:option-group} instance.
   @end{short}
@@ -1224,7 +1227,7 @@ More descriptions.
   @see-function{g:option-group-unref}"
   (%option-group-new (or name (cffi:null-pointer))
                      (or description (cffi:null-pointer))
-                     (or help-description (cffi:null-pointer))
+                     (or help (cffi:null-pointer))
                      (cffi:null-pointer)
                      (cffi:null-pointer)))
 
@@ -1237,9 +1240,9 @@ More descriptions.
 (cffi:defcfun ("g_option_group_ref" option-group-ref)
     (:pointer (:struct option-group))
  #+liber-documentation
- "@version{#2024-11-19}
+ "@version{#2025-05-22}
   @argument[group]{a @type{g:option-group} instance}
-  @return{The @type{g:option-group} instance.}
+  @return{The @type{g:option-group} instance with an additional reference.}
   @begin{short}
     Increments the reference count of @arg{group} by one.
   @end{short}
@@ -1254,7 +1257,7 @@ More descriptions.
 
 (cffi:defcfun ("g_option_group_unref" option-group-unref) :void
  #+liber-documentation
- "@version{#2024-11-19}
+ "@version{#2025-05-22}
   @argument[group]{a @type{g:option-group} instance}
   @begin{short}
     Decrements the reference count of @arg{group} by one.
@@ -1280,7 +1283,7 @@ More descriptions.
 
 (defun option-group-add-entries (group entries)
  #+liber-documentation
- "@version{2024-11-19}
+ "@version{2025-05-22}
   @argument[group]{a @type{g:option-group} instance}
   @argument[entries]{a list of option entries}
   @begin{short}
@@ -1497,7 +1500,7 @@ More descriptions.
 
 (defun option-group-set-translate-func (group func)
  #+liber-documentation
- "@version{2024-11-19}
+ "@version{2025-05-22}
   @argument[group]{a @type{g:option-group} instance}
   @argument[func]{a @symbol{g:translate-func} callback function}
   @begin{short}
@@ -1533,9 +1536,9 @@ More descriptions.
 (cffi:defcfun ("g_option_group_set_translation_domain"
                 option-group-set-translation-domain) :void
  #+liber-documentation
- "@version{2024-11-19}
+ "@version{2025-05-22}
   @argument[group]{a @type{g:option-group} instance}
-  @argument[domain]{a string with the translation domain to use}
+  @argument[domain]{a string for the translation domain to use}
   @begin{short}
     A convenience function to use GNU gettext for translating user visible
     strings.

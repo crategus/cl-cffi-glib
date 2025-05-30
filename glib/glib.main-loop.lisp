@@ -147,7 +147,7 @@
 
 (defconstant +priority-high+ -100
  #+liber-documentation
- "@version{2024-4-2}
+ "@version{2025-05-22}
   @variable-value{-100}
   @begin{short}
     Use this for high priority event sources.
@@ -167,7 +167,7 @@
 
 (defconstant +priority-default+ 0
  #+liber-documentation
- "@version{2024-4-2}
+ "@version{2025-05-22}
   @variable-value{0}
   @begin{short}
     Use this for default priority event sources.
@@ -190,7 +190,7 @@
 
 (defconstant +priority-high-idle+ 100
  #+liber-documentation
- "@version{2024-4-2}
+ "@version{2025-05-22}
   @variable-value{100}
   @begin{short}
     Use this for high priority idle functions.
@@ -212,7 +212,7 @@
 
 (defconstant +priority-default-idle+ 200
  #+liber-documentation
- "@version{2024-4-2}
+ "@version{2025-05-22}
   @variable-value{200}
   @begin{short}
     Use this for default priority idle functions.
@@ -233,7 +233,7 @@
 
 (defconstant +priority-low+ 300
  #+liber-documentation
- "@version{2024-4-2}
+ "@version{2025-05-22}
   @variable-value{300}
   @begin{short}
     Use this for very low priority background tasks.
@@ -253,7 +253,7 @@
 
 (defconstant +source-continue+ t
  #+liber-documentation
- "@version{2024-4-2}
+ "@version{2025-05-22}
   @variable-value{@em{true}}
   @begin{short}
     Use this constant as the return value of a @symbol{g:source-func} callback
@@ -274,7 +274,7 @@
 
 (defconstant +source-remove+ nil
  #+liber-documentation
- "@version{2024-4-2}
+ "@version{2025-05-22}
   @variable-value{@em{false}}
   @begin{short}
     Use this constant as the return value of a @symbol{g:source-func} callback
@@ -299,7 +299,10 @@
 (setf (liber:alias-for-type 'main-loop)
       "CStruct"
       (documentation 'main-loop 'type)
- "@version{2024-11-6}
+ "@version{2025-05-22}
+  @begin{declaration}
+(cffi:defcstruct main-loop)
+  @end{declaration}
   @begin{short}
     The main event loop manages all the available sources of events for GLib
     and GTK applications. These events can come from any number of different
@@ -353,7 +356,10 @@
 (setf (liber:alias-for-type 'main-context)
       "CStruct"
       (documentation 'main-context 'type)
- "@version{2024-11-6}
+ "@version{2025-05-22}
+  @begin{declaration}
+(cffi:defcstruct main-context)
+  @end{declaration}
   @begin{short}
     The @type{g:main-context} structure is an opaque data type representing a
     set of sources to be handled in a main loop.
@@ -387,7 +393,10 @@
 (setf (liber:alias-for-type 'source)
       "CStruct"
       (documentation 'source 'type)
- "@version{2024-11-6}
+ "@version{2025-05-22}
+  @begin{declaration}
+(cffi:defcstruct source)
+  @end{declaration}
   @begin{short}
     The @type{g:source} structure is an opaque data type representing an
     event source.
@@ -409,75 +418,6 @@
   (closure-callback :pointer)  ; no documentation
   (closure-marshal :pointer))  ; no documentation
 
-#+liber-documentation
-(setf (liber:alias-for-type 'source-funcs)
-      "CStruct"
-      (documentation 'source-funcs 'type)
- "@version{#2021-4-2}
-  @begin{short}
-    The @sym{source-funcs} structure contains a table of functions used to
-    handle event sources in a generic manner.
-  @end{short}
-
-  For idle sources, the @code{prepare} and @code{check} functions always return
-  @em{true} to indicate that the source is always ready to be processed. The
-  @code{prepare} function also returns a timeout value of 0 to ensure that the
-  @code{poll()} call does not block since that would be time wasted which could
-  have been spent running the idle function.
-
-  For timeout sources, the @code{prepare} and @code{check} functions both return
-  @em{true} if the timeout interval has expired. The @code{prepare} function
-  also returns a timeout value to ensure that the @code{poll()} call does not
-  block too long and miss the next timeout.
-
-  For file descriptor sources, the @code{prepare} function typically returns
-  @code{nil}, since it must wait until @code{poll()} has been called before it
-  knows whether any events need to be processed. It sets the returned timeout
-  to -1 to indicate that it does not mind how long the @code{poll()} call
-  blocks. In the @code{check} function, it tests the results of the
-  @code{poll()} call to see if the required condition has been met, and returns
-  @em{true} if so.
-  @begin{pre}
-(cffi:defcstruct source-funcs
-  (prepare :pointer)
-  (check :pointer)
-  (dispatch :pointer)
-  (finalize :pointer)
-  (closure-callback :pointer)
-  (closure-marshal :pointer))
-  @end{pre}
-  @begin[code]{table}
-    @begin[prepare (source timeout)]{entry}
-      Called before all the file descriptors are polled. If the source can
-      determine that it is ready here, without waiting for the results of the
-      @code{poll()} call, it should return @em{true}. It can also return a
-      @code{timeout} value which should be the maximum timeout (in milliseconds)
-      which should be passed to the @code{poll()} call. The actual timeout used
-      will be -1 if all sources returned -1, or it will be the minimum of all
-      the @code{timeout} values returned which were >= 0.
-    @end{entry}
-    @begin[check (source)]{entry}
-      Called after all the file descriptors are polled. The source should
-      return @em{true} if it is ready to be dispatched. Note that some time may
-      have passed since the previous @code{prepare} function was called, so the
-      source should be checked again here.
-    @end{entry}
-    @begin[dispatch (source callback user-data]{entry}
-      Called to dispatch the event source, after it has returned @em{true} in
-      either its @code{prepare} or its @code{check} function. The
-      @code{dispatch} function is passed in a callback function and data. The
-      callback function may be @code{NULL} if the source was never connected to
-      a callback using @fun{source-set-callback}. The @code{dispatch} function
-      should call the callback function with @arg{user-data} and whatever
-      additional parameters are needed for this type of event source.
-    @end{entry}
-    @begin[finalize (source)]{entry}
-      Called when the source is finalized.
-    @end{entry}
-  @end{table}
-  @see-type{source}
-  @see-function{source-set-callback}")
-
 ;;; ----------------------------------------------------------------------------
 ;;; GSourceCallbackFuncs                                    not exported
 ;;; ----------------------------------------------------------------------------
@@ -487,33 +427,13 @@
   (unref :pointer)
   (get :pointer))
 
-#+liber-documentation
-(setf (documentation 'source-callback-funcs 'type)
- "@version{#2021-4-2}
-  @begin{short}
-    The @sym{source-callback-funcs} structure contains functions for managing
-    callback objects.
-  @end{short}
-  @begin{pre}
-(cffi:defcstruct source-callback-funcs
-  (ref :pointer)
-  (unref :pointer)
-  (get :pointer))
-  @end{pre}
-  @begin[code]{table}
-    @entry[ref]{Called when a reference is added to the callback object.}
-    @entry[unref]{Called when a reference to the callback object is dropped.}
-    @entry[get]{Called to extract the callback function and data from the
-        callback object.}
-  @end{table}")
-
 ;;; ----------------------------------------------------------------------------
 ;;; g_main_loop_new
 ;;; ----------------------------------------------------------------------------
 
 (defun main-loop-new (context is-running)
  #+liber-documentation
- "@version{2024-11-6}
+ "@version{2025-05-22}
   @argument[context]{a @type{g:main-context} instance, if @code{nil}, the
     default context will be used}
   @argument[is-running]{set to @em{true} to indicate that the main loop is
@@ -547,9 +467,9 @@
 
 (cffi:defcfun ("g_main_loop_ref" main-loop-ref) (:pointer (:struct main-loop))
  #+liber-documentation
- "@version{2024-11-6}
+ "@version{2025-05-22}
   @argument[loop]{a @type{g:main-loop} instance}
-  @return{The @arg{loop} argument.}
+  @return{The @type{g:main-loop} instance with an additional reference.}
   @short{Increases the reference count on a main loop by one.}
   @see-type{g:main-loop}
   @see-function{g:main-loop-unref}"
@@ -563,7 +483,7 @@
 
 (cffi:defcfun ("g_main_loop_unref" main-loop-unref) :void
  #+liber-documentation
- "@version{2024-11-6}
+ "@version{2025-05-22}
   @argument[loop]{a @type{g:main-loop} instance}
   @begin{short}
     Decreases the reference count on a main loop by one.
@@ -581,7 +501,7 @@
 
 (cffi:defcfun ("g_main_loop_run" main-loop-run) :void
  #+liber-documentation
- "@version{2024-11-6}
+ "@version{2025-05-22}
   @argument[loop]{a @type{g:main-loop} instance}
   @begin{short}
     Runs a main loop until the @fun{g:main-loop-quit} function is called on the
@@ -601,7 +521,7 @@
 
 (cffi:defcfun ("g_main_loop_quit" main-loop-quit) :void
  #+liber-documentation
- "@version{2024-11-6}
+ "@version{2025-05-22}
   @argument[loop]{a @type{g:main-loop} instance}
   @begin{short}
     Stops a main loop from running.
@@ -621,7 +541,7 @@
 
 (cffi:defcfun ("g_main_loop_is_running" main-loop-is-running) :boolean
  #+liber-documentation
- "@version{2024-11-6}
+ "@version{2025-05-22}
   @argument[loop]{a @type{g:main-loop} instance}
   @return{@em{True} if the main loop is currently being run.}
   @begin{short}
@@ -641,7 +561,7 @@
 (cffi:defcfun ("g_main_loop_get_context" main-loop-context)
     (:pointer (:struct main-context))
  #+liber-documentation
- "@version{2024-11-6}
+ "@version{2025-05-22}
   @argument[loop]{a @type{g:main-loop} instance}
   @return{The @type{g:main-context} instance of @arg{loop}.}
   @short{Returns the context of the main loop.}
@@ -658,7 +578,7 @@
 (cffi:defcfun ("g_main_context_new" main-context-new)
     (:pointer (:struct main-context))
  #+liber-documentation
- "@version{2024-11-6}
+ "@version{2025-05-22}
   @return{The new @type{g:main-context} instance.}
   @short{Creates a new context.}
   @see-type{g:main-context}")
@@ -672,9 +592,9 @@
 (cffi:defcfun ("g_main_context_ref" main-context-ref)
     (:pointer (:struct main-context))
  #+liber-documentation
- "@version{2024-11-6}
+ "@version{2025-05-22}
   @argument[context]{a @type{g:main-context} instance}
-  @return{The @arg{context} argument.}
+  @return{The @type{g:main-context} instance with an additional reference.}
   @short{Increases the reference count on a context by one.}
   @see-type{g:main-context}
   @see-function{g:main-context-unref}"
@@ -688,7 +608,7 @@
 
 (cffi:defcfun ("g_main_context_unref" main-context-unref) :void
  #+liber-documentation
- "@version{2024-11-6}
+ "@version{2025-05-22}
   @argument[context]{a @type{g:main-context} instance}
   @begin{short}
     Decreases the reference count on a context by one.
@@ -707,7 +627,7 @@
 (cffi:defcfun ("g_main_context_default" main-context-default)
     (:pointer (:struct main-context))
  #+liber-documentation
- "@version{2024-11-6}
+ "@version{2025-05-22}
   @return{The @type{g:main-context} instance with the global default context.}
   @begin{short}
     Returns the global default context.
@@ -724,7 +644,7 @@
 
 (defun main-context-iteration (context block)
  #+liber-documentation
- "@version{#2024-11-6}
+ "@version{#2025-05-22}
   @argument[context]{a @type{g:main-context} instance, if @code{nil}, the
     default context will be used}
   @argument[block]{a boolean whether the call may block}
@@ -759,7 +679,7 @@
 
 (defun main-context-pending (context)
  #+liber-documentation
- "@version{#2024-11-6}
+ "@version{#2025-05-22}
   @argument[context]{a @type{g:main-context} instance, if @code{nil}, the
     default context will be used}
   @return{@em{True} if events are pending.}
@@ -778,7 +698,7 @@
 
 (defun main-context-find-source-by-id (context source)
  #+liber-documentation
- "@version{2024-11-6}
+ "@version{2025-05-22}
   @argument[context]{a @type{g:main-context} instance, if @code{nil}, the
     default context will be used}
   @argument[source]{an unsigned integer source ID, as returned by the
@@ -904,8 +824,10 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
  #+liber-documentation
  "@version{#2021-12-10}
   @argument[context]{a @type{main-context} instance}
-  @return{@em{True} if the operation succeeded, and this thread is now the
-    owner of @arg{context}.}
+  @begin{return}
+    @em{True} if the operation succeeded, and this thread is now the owner
+    of @arg{context}.
+  @end{return}
   @begin{short}
     Tries to become the owner of the specified context.
   @end{short}
@@ -942,7 +864,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 
 (cffi:defcfun ("g_main_context_is_owner" main-context-is-owner) :boolean
  #+liber-documentation
- "@version{2024-11-6}
+ "@version{2025-05-22}
   @argument[context]{a @type{g:main-context} instance}
   @return{@em{True} if the current thread is owner of @arg{context}.}
   @begin{short}
@@ -995,10 +917,14 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
   @argument[fds]{location to store an pointer to @type{poll-fd} records that
     need to be polled}
   @argument[n-fds]{length of @arg{fds}}
-  @return{The number of records actually stored in @arg{fds}, or, if more than
-  @arg{n-fds} records need to be stored, the number of records that need to be
-    stored.}
-  Determines information necessary to poll this main loop.
+  @begin{return}
+    The number of records actually stored in @arg{fds}, or, if more than
+    @arg{n-fds} records need to be stored, the number of records that need to
+    be stored.
+  @end{return}
+  @begin{short}
+    Determines information necessary to poll this main loop.
+  @end{short}
   @see-type{main-context}
   @see-function{main-context-check}
   @see-function{main-context-prepare}
@@ -1274,8 +1200,8 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 (cffi:defcfun ("g_timeout_source_new" timeout-source-new)
     (:pointer (:struct source))
  #+liber-documentation
- "@version{2024-11-6}
-  @argument[interval]{an integer with the timeout interval in milliseconds}
+ "@version{2025-05-22}
+  @argument[interval]{an integer for the timeout interval in milliseconds}
   @return{The newly created @type{g:source} timeout source.}
   @begin{short}
     Creates a new timeout source.
@@ -1296,8 +1222,8 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 (cffi:defcfun ("g_timeout_source_new_seconds" timeout-source-new-seconds)
     (:pointer (:struct source))
  #+liber-documentation
- "@version{2024-11-6}
-  @argument[interval]{an integer with the timeout interval in seconds}
+ "@version{2025-05-22}
+  @argument[interval]{an integer for the timeout interval in seconds}
   @return{The newly created @type{g:source} timeout source.}
   @begin{short}
     Creates a new timeout source.
@@ -1326,7 +1252,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 
 (defun timeout-add (interval func &key (priority +priority-default+))
  #+liber-documentation
- "@version{2025-3-1}
+ "@version{2025-05-22}
   @argument[interval]{an integer for the time between calls to @arg{func},
     in milliseconds}
   @argument[func]{a @symbol{g:source-func} callback function to call}
@@ -1375,19 +1301,19 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 
 (cffi:defcfun ("g_timeout_add_seconds_full" %timeout-add-seconds-full) :uint
   (priority :int)
-  (interval-seconds :uint)
-  (function :pointer)
+  (interval :uint)
+  (func :pointer)
   (data :pointer)
-  (destroy-notify :pointer))
+  (notify :pointer))
 
 (defun timeout-add-seconds (interval func
                             &key (priority +priority-default+))
  #+liber-documentation
- "@version{2024-11-6}
-  @argument[interval]{an unsigned integer with the time between calls to
+ "@version{2025-05-22}
+  @argument[interval]{an unsigned integer for the time between calls to
     @arg{func}, in seconds}
   @argument[func]{a @symbol{g:source-func} callback function to call}
-  @argument[priority]{an integer with the priority of the timeout source,
+  @argument[priority]{an integer for the priority of the timeout source,
     typically this will be in the range between @var{g:+priority-default+} and
     @var{g:+priority-high+} values}
   @return{The unsigned integer ID greater than 0 of the event source.}
@@ -1424,7 +1350,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 
 (cffi:defcfun ("g_idle_source_new" idle-source-new) (:pointer (:struct source))
  #+liber-documentation
- "@version{2024-11-6}
+ "@version{2025-05-22}
   @return{The newly created @type{g:source} idle source.}
   @begin{short}
     Creates a new idle source.
@@ -1451,9 +1377,9 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 
 (defun idle-add (func &key (priority +priority-default-idle+))
  #+liber-documentation
- "@version{2024-11-6}
+ "@version{2025-05-22}
   @argument[func]{a @symbol{g:source-func} callback function to call}
-  @argument[priority]{an integer with the priority of the idle source, typically
+  @argument[priority]{an integer for the priority of the idle source, typically
     this will be in the range between @var{g:+priority-default-idle+} and
     @var{g:+priority-high-idle+}}
   @return{The unsigned integer ID greater than 0 of the event source.}
@@ -1623,7 +1549,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 
 (defun source-attach (source context)
  #+liber-documentation
- "@version{2024-11-6}
+ "@version{2025-05-22}
   @argument[source]{a @type{g:source} instance}
   @argument[context]{a @type{g:main-context} instance, if @code{nil}, the
     default context will be used}
@@ -1651,7 +1577,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 
 (cffi:defcfun ("g_source_destroy" source-destroy) :void
  #+liber-documentation
- "@version{2024-11-6}
+ "@version{2025-05-22}
   @argument[source]{a @type{g:source} instance}
   @begin{short}
     Removes a source from its context, if any, and mark it as destroyed.
@@ -1670,7 +1596,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 
 (cffi:defcfun ("g_source_is_destroyed" source-is-destroyed) :boolean
  #+liber-documentation
- "@version{2024-11-6}
+ "@version{2025-05-22}
   @argument[source]{a @type{g:source} instance}
   @return{@em{True} if @arg{source} has been destroyed.}
   @begin{short}
@@ -1698,11 +1624,11 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 
 (cffi:defcfun ("g_source_get_priority" source-priority) :int
  #+liber-documentation
- "@version{2024-11-6}
+ "@version{2025-05-22}
   @syntax{(g:source-priority source) => priority}
   @syntax{(setf (g:source-priority source) => priority)}
   @argument[source]{a @type{g:source} instance}
-  @argument[priority]{an integer with the priority}
+  @argument[priority]{an integer for the priority}
   @begin{short}
     The @fun{g:source-priority} function gets the priority of the source.
   @end{short}
@@ -1729,7 +1655,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 
 (cffi:defcfun ("g_source_get_can_recurse" source-can-recurse) :boolean
  #+liber-documentation
- "@version{2024-11-6}
+ "@version{2025-05-22}
   @syntax{(g:source-can-recurse source) => can-recurse}
   @syntax{(setf g:source-can-recurse source) can-recurse)}
   @argument[source]{a @type{g:source} instance}
@@ -1754,7 +1680,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 
 (cffi:defcfun ("g_source_get_id" source-id) :uint
  #+liber-documentation
- "@version{2024-11-6}
+ "@version{2025-05-22}
   @argument[source]{a @type{g:source} instance}
   @return{The unsigned integer with the ID greater than 0 for @arg{source}.}
   @begin{short}
@@ -1784,11 +1710,11 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 
 (cffi:defcfun ("g_source_get_name" source-name) :string
  #+liber-documentation
- "@version{2024-11-6}
+ "@version{2025-05-22}
   @syntax{(g:source-name source) => name}
   @syntax{(setf (g:source-name source) name)}
   @argument[source]{a @type{g:source} instance}
-  @argument[name]{a string with the debug name for the source}
+  @argument[name]{a string for the debug name of the source}
   @begin{short}
     The @fun{g:source-name} function gets a name for the source, used in
     debugging and profiling.
@@ -1814,9 +1740,9 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 
 (cffi:defcfun ("g_source_set_name_by_id" source-set-name-by-id) :void
  #+liber-documentation
- "@version{2024-11-6}
-  @argument[source]{an integer with the source ID}
-  @argument[name]{a string with the debug name for the source}
+ "@version{2025-05-22}
+  @argument[source]{an integer for the source ID}
+  @argument[name]{a string for the debug name of the source}
   @begin{short}
     Sets the name of a source using its ID.
   @end{short}
@@ -1837,11 +1763,12 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 
 (defun source-context (source)
  #+liber-documentation
- "@version{2024-11-6}
+ "@version{2025-05-22}
   @argument[source]{a @type{g:source} instance}
-  @return{The @type{g:main-context} instance with which the source is
-    associated, or @code{nil} if the context has not yet been added to
-    a source.}
+  @begin{return}
+    The @type{g:main-context} instance with which the source is associated, or
+    @code{nil} if the context has not yet been added to a source.
+  @end{return}
   @begin{short}
     Gets the context with which the source is associated.
   @end{short}
@@ -1870,7 +1797,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 
 (defun source-set-callback (source func)
  #+liber-documentation
- "@version{2024-11-6}
+ "@version{2025-05-22}
   @argument[source]{a @type{g:source} instance}
   @argument[func]{a @symbol{g:source-func} callback function}
   @begin{short}
@@ -1900,7 +1827,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 (setf (liber:alias-for-symbol 'source-func)
       "Callback"
       (liber:symbol-documentation 'source-func)
- "@version{2024-11-6}
+ "@version{2025-05-22}
   @syntax{lambda () => result}
   @argument[result]{@em{false} if the source should be removed, the
     @var{g:+source-continue+} and @var{g:+source-remove+} constants are
@@ -1987,11 +1914,11 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 
 (cffi:defcfun ("g_source_get_ready_time" source-ready-time) :int64
  #+liber-documentation
- "@version{2024-11-6}
+ "@version{2025-05-20}
   @syntax{(g:source-ready-time source) => time}
   @syntax{(setf (g:source-readey-time source) time)}
   @argument[source]{a @type{g:source} instance}
-  @argument[time]{an integer with the monotonic time at which the source will
+  @argument[time]{an integer for the monotonic time at which the source will
     be ready, 0 for \"immediately\", -1 for \"never\"}
   @begin{short}
     The @fun{g:source-ready-time} function gets the \"ready time\" of the
@@ -2163,7 +2090,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 
 (cffi:defcfun ("g_source_add_child_source" source-add-child-source) :void
  #+liber-documentation
- "@version{#2024-11-6}
+ "@version{#2025-05-22}
   @argument[source]{a @type{g:source} instance}
   @argument[child]{a second @type{g:source} instance that @arg{source} should
     \"poll\"}
@@ -2191,7 +2118,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 
 (cffi:defcfun ("g_source_remove_child_source" source-remove-child-source) :void
  #+liber-documentation
- "@version{#2024-11-6}
+ "@version{#2025-05-22}
   @argument[source]{a @type{g:source} instance}
   @argument[child]{a @type{g:source} instance previously passed to the
     @fun{g:source-add-child-source} function}
@@ -2210,7 +2137,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 
 (cffi:defcfun ("g_source_get_time" source-time) :uint64
  #+liber-documentation
- "@version{2024-11-6}
+ "@version{2025-05-22}
   @argument[source]{a @type{g:source} instance}
   @return{The unsigned integer with the monotonic time in microseconds.}
   @begin{short}
@@ -2229,7 +2156,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 
 (cffi:defcfun ("g_source_remove" source-remove) :boolean
  #+liber-documentation
- "@version{2024-11-6}
+ "@version{2025-05-22}
   @argument[source]{an unsigned integer ID for the source to remove}
   @return{@em{True} if @arg{source} was found and removed.}
   @begin{short}

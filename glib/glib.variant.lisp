@@ -35,12 +35,8 @@
 ;;;
 ;;;     GVariant
 ;;;     GVariantClass
-;;;     GVariantIter
-;;;     GVariantBuilder
 ;;;     GVariantDict
-;;;     GVariantParseError
-;;;
-;;;     G_VARIANT_PARSE_ERROR
+;;;     GVariantIter
 ;;;
 ;;; Functions
 ;;;
@@ -139,28 +135,11 @@
 ;;;     g_variant_print
 ;;;     g_variant_print_string
 ;;;
-;;;     g_variant_iter_copy
-;;;     g_variant_iter_free
-;;;     g_variant_iter_init
-;;;     g_variant_iter_n_children
-;;;     g_variant_iter_new
-;;;     g_variant_iter_next_value
-;;;     g_variant_iter_next
-;;;     g_variant_iter_loop
-;;;
-;;;     G_VARIANT_BUILDER_INIT
-;;;     g_variant_builder_unref
-;;;     g_variant_builder_ref
-;;;     g_variant_builder_new
-;;;     g_variant_builder_init
-;;;     g_variant_builder_clear
-;;;     g_variant_builder_add_value
-;;;     g_variant_builder_add
-;;;     g_variant_builder_add_parsed
-;;;     g_variant_builder_end
-;;;     g_variant_builder_open
-;;;     g_variant_builder_close
-;;;
+;;;     g_variant_parse
+;;;     g_variant_new_parsed_va
+;;;     g_variant_new_parsed
+;;;     g_variant_parse_error_print_context
+
 ;;;     G_VARIANT_DICT_INIT
 ;;;     g_variant_dict_unref
 ;;;     g_variant_dict_ref
@@ -175,11 +154,14 @@
 ;;;     g_variant_dict_remove
 ;;;     g_variant_dict_end
 ;;;
-;;;     g_variant_parse
-;;;     g_variant_new_parsed_va
-;;;     g_variant_new_parsed
-;;;
-;;;     g_variant_parse_error_print_context
+;;;     g_variant_iter_copy
+;;;     g_variant_iter_free
+;;;     g_variant_iter_init
+;;;     g_variant_iter_n_children
+;;;     g_variant_iter_new
+;;;     g_variant_iter_next_value
+;;;     g_variant_iter_next
+;;;     g_variant_iter_loop
 ;;; ----------------------------------------------------------------------------
 
 (in-package :glib)
@@ -212,7 +194,7 @@
 (setf (liber:alias-for-symbol 'variant-class)
       "CEnum"
       (liber:symbol-documentation 'variant-class)
- "@version{2024-11-20}
+ "@version{2025-05-25}
   @begin{declaration}
 (cffi:defcenum variant-class
   (:boolean     #.(char-code #\b))
@@ -274,7 +256,10 @@
 (setf (liber:alias-for-symbol 'variant)
       "CStruct"
       (liber:symbol-documentation 'variant)
- "@version{2025-2-3}
+ "@version{2025-05-25}
+  @begin{declaration}
+(cffi:defcstruct variant)
+  @end{declaration}
   @begin{short}
     The @symbol{g:variant} structure is a variant datatype.
   @end{short}
@@ -341,162 +326,111 @@
 (export 'variant)
 
 ;;; ----------------------------------------------------------------------------
-;;; struct GVariantBuilder
-;;;
-;;; struct GVariantBuilder {
-;;; };
-;;;
-;;; A utility type for constructing container-type GVariant instances.
-;;;
-;;; This is an opaque structure and may only be accessed using the following
-;;; functions.
-;;;
-;;; GVariantBuilder is not threadsafe in any way. Do not attempt to access it
-;;; from more than one thread.
+;;; g:with-variant
 ;;; ----------------------------------------------------------------------------
 
-;;; ----------------------------------------------------------------------------
-;;; GVariantDict
-;;; ----------------------------------------------------------------------------
-
-(define-gboxed-opaque variant-dict "GVariantDict"
-  :export t
-  :type-initializer "g_variant_dict_get_type"
-  :alloc (%variant-dict-new (cffi:null-pointer)))
-
-#+liber-documentation
-(setf (liber:alias-for-class 'variant-dict)
-      "GBoxed"
-      (documentation 'variant-dict 'type)
- "@version{2024-11-20}
+(defmacro with-variant ((var vclass value) &body body)
+ #+liber-documentation
+ "@version{2025-05-26}
+  @syntax{(g:with-variant (var vclass value) body) => result}
+  @argument[var]{a @symbol{g:variant} instance to create and initialize}
+  @argument[vclass]{a @symbol{g:variant-class} value}
+  @argument[value]{a value corresponding to @arg{vclass} to set}
   @begin{short}
-    The @class{g:variant-dict} structure is a mutable interface to
-    @symbol{g:variant} dictionaries.
+    The @fun{g:with-variant} macro allocates a new @symbol{g:variant} instance,
+    initializes it with the given value and executes the body that uses
+    @arg{var}.
   @end{short}
-  It can be used for doing a sequence of dictionary lookups in an efficient
-  way on an existing @symbol{g:variant} dictionary or it can be used to
-  construct new dictionaries with a hashtable-like interface. It can also be
-  used for taking existing dictionaries and modifying them in order to create
-  new ones. The @class{g:variant-dict} structure can only be used with
-  @code{a(sv)} dictionaries.
+  This macro creates variants with a full reference using the
+  @fun{g:variant-ref-sink} function.
 
-  You allocate a @class{g:variant-dict} instance with the
-  @fun{g:variant-dict-new} function. The @fun{g:variant-dict-end} function is
-  used to convert the @class{g:variant-dict} instance back into a
-  @symbol{g:variant} dictionary type. This also implicitly frees all associated
-  memory.
-  @begin[Examples]{dictionary}
-    Using a  @class{g:variant-dict} instance:
-    @begin{pre}
-(defun add-to-count (orig)
-  (let* ((dict (g:variant-dict-new orig))
-         (variant (g:variant-dict-lookup-value dict \"count\")))
-    (when variant
-      (let ((value (1+ (g:variant-int32 variant))))
-        (g:variant-dict-insert-value dict \"count\" (g:variant-new-int32 value))
-        (g:variant-dict-end dict)))))
-    @end{pre}
+  After execution of the body the @fun{g:variant-unref} function is called on
+  @arg{var}. This clears the memory used by the variant.
+  @begin[Notes]{dictionary}
+    This macro can only be used to create and initialise variants for basic
+    types that have a @symbol{g:variant-class} value. The valid basic type
+    strings are @code{\"b\"}, @code{\"y\"}, @code{\"n\"}, @code{\"q\"},
+    @code{\"i\"}, @code{\"u\"}, @code{\"x\"}, @code{\"t\"}, @code{\"h\"},
+    @code{\"d\"}, @code{\"s\"}, @code{\"o\"}, and @code{\"g\"}.
   @end{dictionary}
-  @see-constructor{g:variant-dict-new}
-  @see-symbol{g:variant}")
+  @see-symbol{g:variant}
+  @see-symbol{g:variant-class}
+  @see-function{g:variant-ref-sink}
+  @see-function{g:variant-unref}"
+  (cond ((eq :boolean vclass)
+         `(let ((,var (variant-ref-sink (variant-new-boolean ,value))))
+            (unwind-protect
+              (progn ,@body))
+              (variant-unref ,var)))
+        ((eq :byte vclass)
+         `(let ((,var (variant-ref-sink (variant-new-byte ,value))))
+            (unwind-protect
+              (progn ,@body)
+              (variant-unref ,var))))
+        ((eq :int16 vclass)
+         `(let ((,var (variant-new-int16 ,value)))
+            (unwind-protect
+              (progn ,@body)
+              (variant-unref ,var))))
+        ((eq :uint16 vclass)
+         `(let ((,var (variant-new-uint16 ,value)))
+            (unwind-protect
+              (progn ,@body)
+              (variant-unref ,var))))
+        ((eq :int32 vclass)
+         `(let ((,var (variant-new-int32 ,value)))
+            (unwind-protect
+              (progn ,@body)
+              (variant-unref ,var))))
+        ((eq :uint32 vclass)
+         `(let ((,var (variant-new-uint32 ,value)))
+            (unwind-protect
+              (progn ,@body)
+              (variant-unref ,var))))
+        ((eq :int64 vclass)
+         `(let ((,var (variant-new-int64 ,value)))
+            (unwind-protect
+              (progn ,@body)
+              (variant-unref ,var))))
+        ((eq :uint64 vclass)
+         `(let ((,var (variant-new-uint64 ,value)))
+            (unwind-protect
+              (progn ,@body)
+              (variant-unref ,var))))
+        ((eq :handle vclass)
+         `(let ((,var (variant-new-handle ,value)))
+            (unwind-protect
+              (progn ,@body)
+              (variant-unref ,var))))
+        ((eq :double vclass)
+         `(let ((,var (variant-new-double ,value)))
+            (unwind-protect
+              (progn ,@body)
+              (variant-unref ,var))))
+        ((eq :string vclass)
+         `(let ((,var (variant-new-string ,value)))
+            (unwind-protect
+              (progn ,@body)
+              (variant-unref ,var))))
+        ((eq :object-path vclass)
+         `(let ((,var (variant-new-object-path ,value)))
+            (unwind-protect
+              (progn ,@body)
+              (variant-unref ,var))))
+        ((eq :variant vclass)
+         `(let ((,var (variant-new-variant ,value)))
+            (unwind-protect
+              (progn ,@body)
+              (variant-unref ,var))))
+        ((eq :signature vclass)
+         `(let ((,var (variant-new-signature ,value)))
+            (unwind-protect
+              (progn ,@body)
+              (variant-unref ,var))))
+        (t
+         (cl:error "G:WITH-VARIANT: Unknown variant type"))))
 
-(export 'variant-dict)
-
-;;; ----------------------------------------------------------------------------
-;;; enum GVariantParseError
-;;;
-;;; typedef enum {
-;;;   G_VARIANT_PARSE_ERROR_FAILED,
-;;;   G_VARIANT_PARSE_ERROR_BASIC_TYPE_EXPECTED,
-;;;   G_VARIANT_PARSE_ERROR_CANNOT_INFER_TYPE,
-;;;   G_VARIANT_PARSE_ERROR_DEFINITE_TYPE_EXPECTED,
-;;;   G_VARIANT_PARSE_ERROR_INPUT_NOT_AT_END,
-;;;   G_VARIANT_PARSE_ERROR_INVALID_CHARACTER,
-;;;   G_VARIANT_PARSE_ERROR_INVALID_FORMAT_STRING,
-;;;   G_VARIANT_PARSE_ERROR_INVALID_OBJECT_PATH,
-;;;   G_VARIANT_PARSE_ERROR_INVALID_SIGNATURE,
-;;;   G_VARIANT_PARSE_ERROR_INVALID_TYPE_STRING,
-;;;   G_VARIANT_PARSE_ERROR_NO_COMMON_TYPE,
-;;;   G_VARIANT_PARSE_ERROR_NUMBER_OUT_OF_RANGE,
-;;;   G_VARIANT_PARSE_ERROR_NUMBER_TOO_BIG,
-;;;   G_VARIANT_PARSE_ERROR_TYPE_ERROR,
-;;;   G_VARIANT_PARSE_ERROR_UNEXPECTED_TOKEN,
-;;;   G_VARIANT_PARSE_ERROR_UNKNOWN_KEYWORD,
-;;;   G_VARIANT_PARSE_ERROR_UNTERMINATED_STRING_CONSTANT,
-;;;   G_VARIANT_PARSE_ERROR_VALUE_EXPECTED,
-;;;   G_VARIANT_PARSE_ERROR_RECURSION
-;;; } GVariantParseError;
-;;;
-;;; Error codes returned by parsing text-format GVariants.
-;;;
-;;; G_VARIANT_PARSE_ERROR_FAILED
-;;;     generic error (unused)
-;;;
-;;; G_VARIANT_PARSE_ERROR_BASIC_TYPE_EXPECTED
-;;;     a non-basic GVariantType was given where a basic type was expected
-;;;
-;;; G_VARIANT_PARSE_ERROR_CANNOT_INFER_TYPE
-;;;     cannot infer the GVariantType
-;;;
-;;; G_VARIANT_PARSE_ERROR_DEFINITE_TYPE_EXPECTED
-;;;     an indefinite GVariantType was given where a definite type was expected
-;;;
-;;; G_VARIANT_PARSE_ERROR_INPUT_NOT_AT_END
-;;;     extra data after parsing finished
-;;;
-;;; G_VARIANT_PARSE_ERROR_INVALID_CHARACTER
-;;;     invalid character in number or unicode escape
-;;;
-;;; G_VARIANT_PARSE_ERROR_INVALID_FORMAT_STRING
-;;;     not a valid GVariant format string
-;;;
-;;; G_VARIANT_PARSE_ERROR_INVALID_OBJECT_PATH
-;;;     not a valid object path
-;;;
-;;; G_VARIANT_PARSE_ERROR_INVALID_SIGNATURE
-;;;     not a valid type signature
-;;;
-;;; G_VARIANT_PARSE_ERROR_INVALID_TYPE_STRING
-;;;     not a valid GVariant type string
-;;;
-;;; G_VARIANT_PARSE_ERROR_NO_COMMON_TYPE
-;;;     could not find a common type for array entries
-;;;
-;;; G_VARIANT_PARSE_ERROR_NUMBER_OUT_OF_RANGE
-;;;     the numerical value is out of range of the given type
-;;;
-;;; G_VARIANT_PARSE_ERROR_NUMBER_TOO_BIG
-;;;     the numerical value is out of range for any type
-;;;
-;;; G_VARIANT_PARSE_ERROR_TYPE_ERROR
-;;;     cannot parse as variant of the specified type
-;;;
-;;; G_VARIANT_PARSE_ERROR_UNEXPECTED_TOKEN
-;;;     an unexpected token was encountered
-;;;
-;;; G_VARIANT_PARSE_ERROR_UNKNOWN_KEYWORD
-;;;     an unknown keyword was encountered
-;;;
-;;; G_VARIANT_PARSE_ERROR_UNTERMINATED_STRING_CONSTANT
-;;;     unterminated string constant
-;;;
-;;; G_VARIANT_PARSE_ERROR_VALUE_EXPECTED
-;;;     no value given
-;;;
-;;; G_VARIANT_PARSE_ERROR_RECURSION
-;;;     variant was too deeply nested; GVariant is only guaranteed to handle
-;;;     nesting up to 64 levels (Since 2.64)
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_VARIANT_PARSE_ERROR
-;;;
-;;; #define G_VARIANT_PARSE_ERROR (g_variant_parser_get_error_quark ())
-;;;
-;;; Error domain for GVariant text format parsing. Specific error codes are not
-;;; currently defined for this domain. See GError for information on error
-;;; domains.
-;;; ----------------------------------------------------------------------------
+(export 'with-variant)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_variant_ref
@@ -504,7 +438,7 @@
 
 (cffi:defcfun ("g_variant_ref" variant-ref) (:pointer (:struct variant))
  #+liber-documentation
- "@version{2024-11-20}
+ "@version{2025-05-25}
   @argument[value]{a @symbol{g:variant} instance}
   @return{The same @symbol{g:variant} instance.}
   @short{Increases the reference count of @arg{value}.}
@@ -521,7 +455,7 @@
 
 (cffi:defcfun ("g_variant_unref" variant-unref) :void
  #+liber-documentation
- "@version{2024-11-20}
+ "@version{2025-05-25}
   @argument[value]{a @symbol{g:variant} instance}
   @begin{short}
     Decreases the reference count of @arg{value}.
@@ -541,7 +475,7 @@
 (cffi:defcfun ("g_variant_ref_sink" variant-ref-sink)
     (:pointer (:struct variant))
  #+liber-documentation
- "@version{2024-11-20}
+ "@version{2025-05-25}
   @argument[value]{a @symbol{g:variant} instance}
   @return{The same @symbol{g:variant} instance.}
   @begin{short}
@@ -581,7 +515,7 @@
 
 (cffi:defcfun ("g_variant_take_ref" variant-take-ref) (boxed variant-type)
  #+liber-documentation
- "@version{#2025-3-9}
+ "@version{#2025-05-25}
   @argument[value]{a @symbol{g:variant} instance}
   @return{The same @symbol{g:variant} instance.}
   @begin{short}
@@ -628,7 +562,7 @@
 
 (cffi:defcfun ("g_variant_is_floating" variant-is-floating) :boolean
  #+liber-documentation
- "@version{2024-11-20}
+ "@version{2025-05-25}
   @argument[value]{a @symbol{g:variant} instance}
   @return{The boolean whether @arg{value} is floating.}
   @begin{short}
@@ -654,7 +588,7 @@
 
 (cffi:defcfun ("g_variant_get_type" variant-type) (boxed variant-type)
  #+liber-documentation
- "@version{2024-11-20}
+ "@version{2025-05-25}
   @argument[value]{a @symbol{g:variant} instance}
   @return{The @class{g:variant-type} instance.}
   @begin{short}
@@ -673,7 +607,7 @@
 
 (cffi:defcfun ("g_variant_get_type_string" variant-type-string) :string
  #+liber-documentation
- "@version{2024-11-20}
+ "@version{2025-05-25}
   @argument[value]{a @symbol{g:variant} instance}
   @return{The variant type string for the variant type of @arg{value}.}
   @begin{short}
@@ -696,7 +630,7 @@
 
 (cffi:defcfun ("g_variant_is_of_type" variant-is-of-type) :boolean
  #+liber-documentation
- "@version{2024-11-20}
+ "@version{2025-05-25}
   @argument[value]{a @symbol{g:variant} instance}
   @argument[vtype]{a @class{g:variant-type} instance}
   @return{@em{True} if the variant type of @arg{value} matches @arg{vtype}.}
@@ -717,7 +651,7 @@
 
 (cffi:defcfun ("g_variant_is_container" variant-is-container) :boolean
  #+liber-documentation
- "@version{2024-11-20}
+ "@version{2025-05-25}
   @argument[value]{a @symbol{g:variant} instance}
   @return{@em{True} if @arg{value} is a container.}
   @begin{short}
@@ -734,11 +668,13 @@
 
 (cffi:defcfun ("g_variant_compare" variant-compare) :int
  #+liber-documentation
- "@version{2024-11-20}
+ "@version{2025-05-25}
   @argument[value1]{a basic-typed @symbol{g:variant} instance}
   @argument[value2]{a @symbol{g:variant} instance of the same type}
-  @return{The integer with a negative value if a < b, zero if a = b, positive
-    value if a > b.}
+  @begin{return}
+    The integer with a negative value if a < b, zero if a = b, positive value
+    if a > b.
+  @end{return}
   @begin{short}
     Compares @arg{value1} and @arg{value2}.
   @end{short}
@@ -772,7 +708,7 @@
 
 (cffi:defcfun ("g_variant_classify" variant-classify) variant-class
  #+liber-documentation
- "@version{2024-11-20}
+ "@version{2025-05-25}
   @argument[value]{a @symbol{g:variant} instance}
   @return{The @symbol{g:variant-class} value of @arg{value}.}
   @begin{short}
@@ -820,29 +756,58 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_variant_get ()
-;;;
-;;; void g_variant_get (GVariant *value, const gchar *format_string, ...);
-;;;
-;;; Deconstructs a GVariant instance.
-;;;
-;;; Think of this function as an analogue to scanf().
-;;;
-;;; The arguments that are expected by this function are entirely determined by
-;;; format_string. format_string also restricts the permissible types of value.
-;;; It is an error to give a value with an incompatible type. See the section on
-;;; GVariant Format Strings. Please note that the syntax of the format string is
-;;; very likely to be extended in the future.
-;;;
-;;; value :
-;;;     a GVariant instance
-;;;
-;;; format_string :
-;;;     a GVariant format string
-;;;
-;;; ... :
-;;;     arguments, as per format_string
+;;; g_variant_get
 ;;; ----------------------------------------------------------------------------
+
+(defun variant-get (value)
+ #+liber-documentation
+ "@version{2025-05-27}
+  @argument[value]{a @symbol{g:variant} instance}
+  @return{The value for the @symbol{g:variant} instance.}
+  @begin{short}
+    Returns the value for the variant.
+  @end{short}
+  @begin[Notes]{dictionary}
+    This function does not provide a general implementation for all variant
+    types. Instead, it only allows basic types that have a
+    @symbol{g:variant-class} value. An error condition is thrown for all other
+    variant types.
+  @end{dictionary}
+  @see-symbol{g:variant}
+  @see-symbol{g:variant-class}"
+  (let ((vclass (variant-classify value)))
+    (cond ((eq :boolean vclass)
+           (variant-boolean value))
+          ((eq :byte vclass)
+           (variant-byte value))
+          ((eq :int16 vclass)
+           (variant-int16 value))
+          ((eq :uint16 vclass)
+           (variant-uint16 value))
+          ((eq :int32 vclass)
+           (variant-int32 value))
+          ((eq :uint32 vclass)
+           (variant-uint32 value))
+          ((eq :int64 vclass)
+           (variant-int64 value))
+          ((eq :uint64 vclass)
+           (variant-uint64 value))
+          ((eq :handle vclass)
+           (variant-handle value))
+          ((eq :double vclass)
+           (variant-double value))
+          ((eq :string vclass)
+           (variant-string value))
+          ((eq :object-path vclass)
+           (variant-string value))
+          ((eq :signature vclass)
+           (variant-string value))
+          ((eq :variant vclass)
+           (variant-variant value))
+          (t
+           (cl:error "G:VARIANT-GET: Unknown variant type")))))
+
+(export 'variant-get)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_variant_get_va ()
@@ -969,7 +934,7 @@
 (cffi:defcfun ("g_variant_new_boolean" variant-new-boolean)
     (:pointer (:struct variant))
  #+liber-documentation
- "@version{2024-11-20}
+ "@version{2025-05-25}
   @argument[value]{a boolean value}
   @return{The floating reference to a new @symbol{g:variant} instance.}
   @begin{short}
@@ -994,7 +959,7 @@
 
 (cffi:defcfun ("g_variant_get_boolean" variant-boolean) :boolean
  #+liber-documentation
- "@version{2024-11-20}
+ "@version{2025-05-25}
   @argument[value]{a @symbol{g:variant} instance with a boolean value}
   @return{The boolean values @em{true} or @em{false}.}
   @short{Returns the boolean value of @arg{value}.}
@@ -1019,7 +984,7 @@
 (cffi:defcfun ("g_variant_new_byte" variant-new-byte)
     (:pointer (:struct variant))
  #+liber-documentation
- "@version{2024-11-20}
+ "@version{2025-05-25}
   @argument[value]{a @code{:uchar} value}
   @return{The floating reference to a new @symbol{g:variant} instance.}
   @short{Creates a new @symbol{g:variant} instance with the @code{:uchar}
@@ -1035,7 +1000,7 @@
 
 (cffi:defcfun ("g_variant_get_byte" variant-byte) :uchar
  #+liber-documentation
- "@version{#2024-11-20}
+ "@version{#2025-05-25}
   @argument[value]{a @symbol{g:variant} instance with a @code{:uchar} value}
   @return{The @code{:uchar} value.}
   @short{Returns the @code{:uchar} value of @arg{value}.}
@@ -1054,7 +1019,7 @@
 (cffi:defcfun ("g_variant_new_int16" variant-new-int16)
     (:pointer (:struct variant))
  #+liber-documentation
- "@version{2024-11-20}
+ "@version{2025-05-25}
   @argument[value]{a @code{:int16} value}
   @return{The floating reference to a new @symbol{g:variant} instance.}
   @short{Creates a new @symbol{g:variant} instance with the @code{:int16}
@@ -1070,7 +1035,7 @@
 
 (cffi:defcfun ("g_variant_get_int16" variant-int16) :int16
  #+liber-documentation
- "@version{#2024-11-20}
+ "@version{#2025-05-25}
   @argument[value]{a @symbol{g:variant} instance with a @code{:int16} value}
   @return{The @code{:int16} value.}
   @short{Returns the 16-bit signed integer of @arg{value}.}
@@ -1089,7 +1054,7 @@
 (cffi:defcfun ("g_variant_new_uint16" variant-new-uint16)
     (:pointer (:struct variant))
  #+liber-documentation
- "@version{2024-11-20}
+ "@version{2025-05-25}
   @argument[value]{a @code{:uint16} value}
   @return{The floating reference to a new @symbol{g:variant} instance.}
   @short{Creates a new @symbol{g:variant} instance with the @code{:uint16}
@@ -1105,7 +1070,7 @@
 
 (cffi:defcfun ("g_variant_get_uint16" variant-uint16) :uint16
  #+liber-documentation
- "@version{#2024-11-20}
+ "@version{#2025-05-25}
   @argument[value]{a @symbol{g:variant} instance with a @code{:uint16} value}
   @return{The @code{:uint16} value.}
   @short{Returns the 16-bit unsigned integer of @arg{value}.}
@@ -1124,7 +1089,7 @@
 (cffi:defcfun ("g_variant_new_int32" variant-new-int32)
     (:pointer (:struct variant))
  #+liber-documentation
- "@version{2024-11-20}
+ "@version{2025-05-25}
   @argument[value]{a @code{:int32} value}
   @return{The floating reference to a new @symbol{g:variant} instance.}
   @short{Creates a new @symbol{g:variant} instance with the @code{:int32}
@@ -1140,7 +1105,7 @@
 
 (cffi:defcfun ("g_variant_get_int32" variant-int32) :int32
  #+liber-documentation
- "@version{2024-11-20}
+ "@version{2025-05-25}
   @argument[value]{a @symbol{g:variant} instance with a @code{:int32} value}
   @return{The @code{:int32} value.}
   @short{Returns the 32-bit signed integer of @arg{value}.}
@@ -1159,7 +1124,7 @@
 (cffi:defcfun ("g_variant_new_uint32" variant-new-uint32)
     (:pointer (:struct variant))
  #+liber-documentation
- "@version{2024-11-20}
+ "@version{2025-05-25}
   @argument[value]{a @code{:uint32} value}
   @return{The floating reference to a new @symbol{g:variant} instance.}
   @short{Creates a new @symbol{g:variant} instance with the @code{:uint32}
@@ -1175,7 +1140,7 @@
 
 (cffi:defcfun ("g_variant_get_uint32" variant-uint32) :uint32
  #+liber-documentation
- "@version{#2024-11-20}
+ "@version{#2025-05-25}
   @argument[value]{a @symbol{g:variant} instance with a @code{:uint32} value}
   @return{The @code{:uint32} value.}
   @short{Returns the 32-bit unsigned integer of @arg{value}.}
@@ -1194,7 +1159,7 @@
 (cffi:defcfun ("g_variant_new_int64" variant-new-int64)
     (:pointer (:struct variant))
  #+liber-documentation
- "@version{2024-11-20}
+ "@version{2025-05-25}
   @argument[value]{a @code{:int64} value}
   @return{The floating reference to a new @symbol{g:variant} instance.}
   @begin{short}
@@ -1211,7 +1176,7 @@
 
 (cffi:defcfun ("g_variant_get_int64" variant-int64) :int64
  #+liber-documentation
- "@version{#2024-11-20}
+ "@version{#2025-05-25}
   @argument[value]{a @symbol{g:variant} instance with a @code{:int64} value}
   @return{The @code{:int64} value.}
   @begin{short}
@@ -1232,7 +1197,7 @@
 (cffi:defcfun ("g_variant_new_uint64" variant-new-uint64)
     (:pointer (:struct variant))
  #+liber-documentation
- "@version{2024-11-20}
+ "@version{2025-05-25}
   @argument[value]{a @code{:uint64} value}
   @return{The floating reference to a new @symbol{g:variant} instance.}
   @begin{short}
@@ -1249,7 +1214,7 @@
 
 (cffi:defcfun ("g_variant_get_uint64" variant-uint64) :uint64
  #+liber-documentation
- "@version{#2024-11-20}
+ "@version{#2025-05-25}
   @argument[value]{a @symbol{g:variant} instance with a @code{:uint64} value}
   @return{The @code{:uint64} value.}
   @begin{short}
@@ -1270,7 +1235,7 @@
 (cffi:defcfun ("g_variant_new_handle" variant-new-handle)
     (:pointer (:struct variant))
  #+liber-documentation
- "@version{2024-11-20}
+ "@version{2025-05-25}
   @argument[value]{a @code{:int32} value}
   @return{The floating reference to a new @symbol{g:variant} instance.}
   @begin{short}
@@ -1290,7 +1255,7 @@
 
 (cffi:defcfun ("g_variant_get_handle" variant-handle) :int32
  #+liber-documentation
- "@version{#2024-11-20}
+ "@version{#2025-05-25}
   @argument[value]{a @symbol{g:variant} instance with a handle}
   @return{The @code{:int32} value.}
   @begin{short}
@@ -1315,7 +1280,7 @@
 (cffi:defcfun ("g_variant_new_double" variant-new-double)
     (:pointer (:struct variant))
  #+liber-documentation
- "@version{2024-11-20}
+ "@version{2025-05-25}
   @argument[value]{a double float}
   @return{The floating reference to a @symbol{g:variant} instance.}
   @begin{short}
@@ -1332,7 +1297,7 @@
 
 (cffi:defcfun ("g_variant_get_double" variant-double) :double
  #+liber-documentation
- "@version{#2024-11-20}
+ "@version{#2025-05-25}
   @argument[value]{a @symbol{g:variant} instance for a double float}
   @return{The double float.}
   @begin{short}
@@ -1353,7 +1318,7 @@
 (cffi:defcfun ("g_variant_new_string" variant-new-string)
     (:pointer (:struct variant))
  #+liber-documentation
- "@version{2024-11-20}
+ "@version{2025-05-25}
   @argument[string]{a normal UTF-8 string}
   @return{The floating reference to a @symbol{g:variant} instance.}
   @begin{short}
@@ -1384,7 +1349,7 @@
 
 (defun variant-string (value)
  #+liber-documentation
- "@version{2024-11-20}
+ "@version{2025-05-25}
   @argument[value]{a @symbol{g:variant} instance with a string}
   @return{The constant string, UTF-8 encoded.}
   @begin{short}
@@ -1455,8 +1420,8 @@
 (cffi:defcfun ("g_variant_new_object_path" variant-new-object-path)
     (:pointer (:struct variant))
  #+liber-documentation
- "@version{#2024-11-20}
-  @argument[path]{a string with a D-Bus object path}
+ "@version{#2025-05-25}
+  @argument[path]{a string for a D-Bus object path}
   @return{The floating reference to a new @symbol{g:variant} instance.}
   @begin{short}
     Creates a @symbol{g:variant} instance with the D-Bus object path in
@@ -1476,8 +1441,8 @@
 
 (cffi:defcfun ("g_variant_is_object_path" variant-is-object-path) :boolean
  #+liber-documentation
- "@version{#2024-11-20}
-  @argument[string]{a string with a D-Bus object path}
+ "@version{#2025-05-25}
+  @argument[string]{a string for a D-Bus object path}
   @return{@em{True} if @arg{string} is a D-Bus object path.}
   @begin{short}
     Determines if a given @arg{string} is a valid D-Bus object path.
@@ -1502,8 +1467,8 @@
 (cffi:defcfun ("g_variant_new_signature" variant-new-signature)
     (:pointer (:struct variant))
  #+liber-documentation
- "@version{#2024-11-20}
-  @argument[signature]{a string with a signature}
+ "@version{#2025-05-25}
+  @argument[signature]{a string for a signature}
   @return{The floating reference to a new @symbol{g:variant} instance.}
   @begin{short}
     Creates a @symbol{g:variant} instance with a D-Bus type signature in
@@ -1523,7 +1488,7 @@
 
 (cffi:defcfun ("g_variant_is_signature" variant-is-signature) :boolean
  #+liber-documentation
- "@version{#2024-11-20}
+ "@version{#2025-05-25}
   @argument[string]{a normal C nul-terminated string}
   @return{@em{True} if @arg{string} is a D-Bus type signature.}
   @begin{short}
@@ -1548,7 +1513,7 @@
 (cffi:defcfun ("g_variant_new_variant" variant-new-variant)
     (:pointer (:struct variant))
  #+liber-documentation
- "@version{#2024-11-20}
+ "@version{#2025-05-25}
   @argument[value]{a @symbol{g:variant} instance}
   @return{The floating reference to a new @symbol{g:variant} instance.}
   @begin{short}
@@ -1680,6 +1645,12 @@
 ;;; Returns :
 ;;;     the item contained in the variant
 ;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("g_variant_get_variant" variant-variant)
+    (:pointer (:struct variant))
+  (value (:pointer (:struct variant))))
+
+(export 'variant-variant)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_variant_get_strv ()
@@ -1949,7 +1920,7 @@
 
 (defun variant-new-tuple (&rest items)
  #+liber-documentation
- "@version{2025-2-2}
+ "@version{2025-05-25}
   @argument[items]{@symbol{g:variant} instances with the items to make the tuple
     out of}
   @return{The new @symbol{g:variant} instance with the tuple.}
@@ -2415,7 +2386,7 @@
 
 (defun variant-new-from-bytes (vtype bytes &optional trusted)
  #+liber-documentation
- "@version{2025-05-04}
+ "@version{2025-05-25}
   @argument[vtype]{a @class{g:variant-type} instance, or a valid type string}
   @argument[bytes]{a @class{g:bytes} instance}
   @argument[trusted]{an optional boolean whether the contents of @arg{bytes}
@@ -2541,7 +2512,7 @@
 
 (cffi:defcfun ("g_variant_equal" variant-equal) :boolean
  #+liber-documentation
- "@version{#2024-11-20}
+ "@version{#2025-05-25}
   @argument[value1]{a @symbol{g:variant} instance}
   @argument[value2]{a @symbol{g:variant} instance}
   @return{@em{True} if @arg{value} and @arg{value} are equal.}
@@ -2564,7 +2535,7 @@
 
 (defun variant-print (value &optional (annotate nil))
  #+liber-documentation
- "@version{2024-11-20}
+ "@version{2025-05-25}
   @argument[value]{a @symbol{g:variant} instance}
   @argument[annotate]{@em{true} if type information should be included in the
     output}
@@ -2607,6 +2578,574 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
+;;; g_variant_parse
+;;; ----------------------------------------------------------------------------
+
+;; FIXME: Does not work for an argument non-nil for VTYPE
+
+(cffi:defcfun ("g_variant_parse" %variant-parse-1) (:pointer (:struct variant))
+  (vtype :pointer) ; must be the type :pointer
+  (text :string)
+  (limit :pointer)
+  (endptr :pointer)
+  (err :pointer))
+
+(cffi:defcfun ("g_variant_parse" %variant-parse-2) (:pointer (:struct variant))
+  (vtype (boxed variant-type))
+  (text :string)
+  (limit :pointer)
+  (endptr :pointer)
+  (err :pointer))
+
+(defun variant-parse (vtype text)
+ #+liber-documentation
+ "@version{2025-05-25}
+  @argument[vtype]{a @class{g:variant-type} instance, or a valid type string}
+  @argument[text]{a string containing a @symbol{g:variant} instance in text
+    form}
+  @return{The @symbol{g:variant} instance.}
+  @begin{short}
+    Parses a @symbol{g:variant} instance from a text representation.
+  @end{short}
+  If @arg{vtype} is non-@code{nil} then the value will be parsed to have that
+  type. This may result in additional parse errors, in the case that the parsed
+  value does not fit the variant type, but may also result in fewer errors, in
+  the case that the variant type would have been ambiguous, such as with empty
+  arrays.
+
+  In the event that the parsing is successful, the resulting @symbol{g:variant}
+  instance is returned. In case of any error, @code{nil} will be returned.
+
+  Officially, the language understood by the parser is any string produced by
+  the @fun{g:variant-print} function.
+  @begin[Examples]{dictionary}
+    @begin{pre}
+(g:variant-parse (g:variant-type-new \"b\") \"true\")
+=> #.(SB-SYS:INT-SAP #X7F99C4012440)
+(g:variant-print *) => \"true\"
+(g:variant-parse \"b\" \"false\")
+=> #.(SB-SYS:INT-SAP #X564C855E8690)
+(g:variant-print *) => \"false\"
+(g:variant-parse (g:variant-type-new \"i\") \"100\")
+=> #.(SB-SYS:INT-SAP #X7F99C4012CF0)
+(g:variant-print * nil) => \"100\"
+(g:variant-parse \"d\" \"100\")
+=> #.(SB-SYS:INT-SAP #X564C855F9900)
+(g:variant-print *) => \"100.0\"
+    @end{pre}
+  @end{dictionary}
+  @see-symbol{g:variant}
+  @see-function{g:variant-print}"
+  (with-error (err)
+    (cond ((stringp vtype)
+           (let ((vtype1 (variant-type-new vtype)))
+               (%variant-parse-2 vtype1
+                                 text
+                                 (cffi:null-pointer)
+                                 (cffi:null-pointer)
+                                 err)))
+          ((typep vtype 'variant-type)
+           (%variant-parse-2 vtype
+                             text
+                             (cffi:null-pointer)
+                             (cffi:null-pointer)
+                             err))
+          (t
+           (%variant-parse-1 (cffi:null-pointer)
+                             text
+                             (cffi:null-pointer)
+                             (cffi:null-pointer)
+                             err)))))
+
+(export 'variant-parse)
+
+;;; ----------------------------------------------------------------------------
+;;; g_variant_new_parsed_va ()
+;;;
+;;; GVariant * g_variant_new_parsed_va (const gchar *format, va_list *app);
+;;;
+;;; Parses format and returns the result.
+;;;
+;;; This is the version of g_variant_new_parsed() intended to be used from
+;;; libraries.
+;;;
+;;; The return value will be floating if it was a newly created GVariant
+;;; instance. In the case that format simply specified the collection of a
+;;; GVariant pointer (eg: format was "%*") then the collected GVariant pointer
+;;; will be returned unmodified, without adding any additional references.
+;;;
+;;; In order to behave correctly in all cases it is necessary for the calling
+;;; function to g_variant_ref_sink() the return result before returning control
+;;; to the user that originally provided the pointer. At this point, the caller
+;;; will have their own full reference to the result. This can also be done by
+;;; adding the result to a container, or by passing it to another
+;;; g_variant_new() call.
+;;;
+;;; format :
+;;;     a text format GVariant
+;;;
+;;; app :
+;;;     a pointer to a va_list
+;;;
+;;; Returns :
+;;;     a new, usually floating, GVariant
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_variant_new_parsed ()
+;;;
+;;; GVariant * g_variant_new_parsed (const gchar *format, ...);
+;;;
+;;; Parses format and returns the result.
+;;;
+;;; format must be a text format GVariant with one extension: at any point that
+;;; a value may appear in the text, a '%' character followed by a GVariant
+;;; format string (as per g_variant_new()) may appear. In that case, the same
+;;; arguments are collected from the argument list as g_variant_new() would
+;;; have collected.
+;;;
+;;; Consider this simple example:
+;;;
+;;; g_variant_new_parsed ("[('one', 1), ('two', %i), (%s, 3)]", 2, "three");
+;;;
+;;; In the example, the variable argument parameters are collected and filled
+;;; in as if they were part of the original string to produce the result of
+;;; [('one', 1), ('two', 2), ('three', 3)].
+;;;
+;;; This function is intended only to be used with format as a string literal.
+;;; Any parse error is fatal to the calling process. If you want to parse data
+;;; from untrusted sources, use g_variant_parse().
+;;;
+;;; You may not use this function to return, unmodified, a single GVariant
+;;; pointer from the argument list. ie: format may not solely be anything along
+;;; the lines of "%*", "%?", "%r", or anything starting with "%@".
+;;;
+;;; format :
+;;;     a text format GVariant
+;;;
+;;; ... :
+;;;     arguments as per format
+;;;
+;;; Returns :
+;;;     a new floating GVariant instance
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_variant_parse_error_print_context ()
+;;;
+;;; gchar *
+;;; g_variant_parse_error_print_context (GError *error,
+;;;                                      const gchar *source_str);
+;;;
+;;; Pretty-prints a message showing the context of a GVariant parse error
+;;; within the string for which parsing was attempted.
+;;;
+;;; The resulting string is suitable for output to the console or other
+;;; monospace media where newlines are treated in the usual way.
+;;;
+;;; The message will typically look something like one of the following:
+;;;
+;;; unterminated string constant:
+;;;   (1, 2, 3, 'abc
+;;;             ^^^^
+;;; or
+;;;
+;;; unable to find a common type:
+;;;   [1, 2, 3, 'str']
+;;;    ^        ^^^^^
+;;;
+;;; The format of the message may change in a future version.
+;;;
+;;; error must have come from a failed attempt to g_variant_parse() and
+;;; source_str must be exactly the same string that caused the error. If
+;;; source_str was not nul-terminated when you passed it to g_variant_parse()
+;;; then you must add nul termination before using this function.
+;;;
+;;; error :
+;;;     a GError from the GVariantParseError domain
+;;;
+;;; source_str :
+;;;     the string that was given to the parser
+;;;
+;;; Returns :
+;;;     the printed message.
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; GVariantDict
+;;; ----------------------------------------------------------------------------
+
+(define-gboxed-opaque variant-dict "GVariantDict"
+  :export t
+  :type-initializer "g_variant_dict_get_type"
+  :alloc (%variant-dict-new (cffi:null-pointer)))
+
+#+liber-documentation
+(setf (liber:alias-for-class 'variant-dict)
+      "GBoxed"
+      (documentation 'variant-dict 'type)
+ "@version{2025-05-25}
+  @begin{declaration}
+(define-gboxed-opaque variant-dict \"GVariantDict\"
+  :export t
+  :type-initializer \"g_variant_dict_get_type\"
+  :alloc (%variant-dict-new (cffi:null-pointer)))
+  @end{declaration}
+  @begin{short}
+    The @class{g:variant-dict} structure is a mutable interface to
+    @symbol{g:variant} dictionaries.
+  @end{short}
+  It can be used for doing a sequence of dictionary lookups in an efficient
+  way on an existing @symbol{g:variant} dictionary or it can be used to
+  construct new dictionaries with a hashtable-like interface. It can also be
+  used for taking existing dictionaries and modifying them in order to create
+  new ones. The @class{g:variant-dict} structure can only be used with
+  @code{a(sv)} dictionaries.
+
+  You allocate a @class{g:variant-dict} instance with the
+  @fun{g:variant-dict-new} function. The @fun{g:variant-dict-end} function is
+  used to convert the @class{g:variant-dict} instance back into a
+  @symbol{g:variant} dictionary type. This also implicitly frees all associated
+  memory.
+  @begin[Examples]{dictionary}
+    Using a  @class{g:variant-dict} instance:
+    @begin{pre}
+(defun add-to-count (orig)
+  (let* ((dict (g:variant-dict-new orig))
+         (variant (g:variant-dict-lookup-value dict \"count\")))
+    (when variant
+      (let ((value (1+ (g:variant-int32 variant))))
+        (g:variant-dict-insert-value dict \"count\" (g:variant-new-int32 value))
+        (g:variant-dict-end dict)))))
+    @end{pre}
+  @end{dictionary}
+  @see-constructor{g:variant-dict-new}
+  @see-symbol{g:variant}")
+
+(export 'variant-dict)
+
+;;; ----------------------------------------------------------------------------
+;;; G_VARIANT_DICT_INIT()
+;;;
+;;; #define G_VARIANT_DICT_INIT(asv) { { { asv, 3488698669u, { 0, } } } }
+;;;
+;;; A stack-allocated GVariantDict must be initialized if it is used together
+;;; with g_auto() to avoid warnings or crashes if function returns before
+;;; g_variant_dict_init() is called on the builder. This macro can be used as
+;;; initializer instead of an explicit zeroing a variable when declaring it and
+;;; a following g_variant_dict_init(), but it cannot be assigned to a variable.
+;;;
+;;; The passed asv has to live long enough for GVariantDict to gather the
+;;; entries from, as the gathering does not happen in the G_VARIANT_DICT_INIT()
+;;; call, but rather in functions that make sure that GVariantDict is valid. In
+;;; context where the initialization value has to be a constant expression, the
+;;; only possible value of asv is NULL. It is still possible to call
+;;; g_variant_dict_init() safely with a different asv right after the variable
+;;; was initialized with G_VARIANT_DICT_INIT().
+;;;
+;;; g_autoptr(GVariant) variant = get_asv_variant ();
+;;; g_auto(GVariantDict) dict = G_VARIANT_DICT_INIT (variant);
+;;;
+;;; asv :
+;;;     a GVariant*
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_variant_dict_unref ()
+;;;
+;;; void
+;;; g_variant_dict_unref (GVariantDict *dict);
+;;;
+;;; Decreases the reference count on dict .
+;;;
+;;; In the event that there are no more references, releases all memory
+;;; associated with the GVariantDict.
+;;;
+;;; Don't call this on stack-allocated GVariantDict instances or bad things
+;;; will happen.
+;;;
+;;; dict :
+;;;     a heap-allocated GVariantDict
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_variant_dict_ref ()
+;;;
+;;; GVariantDict *
+;;; g_variant_dict_ref (GVariantDict *dict);
+;;;
+;;; Increases the reference count on dict .
+;;;
+;;; Don't call this on stack-allocated GVariantDict instances or bad things
+;;; will happen.
+;;;
+;;; dict :
+;;;     a heap-allocated GVariantDict
+;;;
+;;; Returns :
+;;;     a new reference to dict
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_variant_dict_new
+;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("g_variant_dict_new" %variant-dict-new) :pointer
+  (from-asv (:pointer (:struct variant))))
+
+(cffi:defcfun ("g_variant_dict_new" variant-dict-new)
+    (boxed variant-dict :return)
+ #+liber-documentation
+ "@version{2025-05-25}
+  @argument[from-asv]{a @symbol{g:variant} instance for initialization the
+    dictionary}
+  @return{The newly created @class{g:variant-dict} instance.}
+  @begin{short}
+    Allocates and initialises a new @class{g:variant-dict} instance.
+  @end{short}
+  @see-class{g:variant-dict}
+  @see-symbol{g:variant}"
+  (from-asv (:pointer (:struct variant))))
+
+(export 'variant-dict-new)
+
+;;; ----------------------------------------------------------------------------
+;;; g_variant_dict_init ()                                 not needed
+;;;
+;;; void
+;;; g_variant_dict_init (GVariantDict *dict,
+;;;                      GVariant *from_asv);
+;;;
+;;; Initialises a GVariantDict structure.
+;;;
+;;; If from_asv is given, it is used to initialise the dictionary.
+;;;
+;;; This function completely ignores the previous contents of dict . On one
+;;; hand this means that it is valid to pass in completely uninitialised memory.
+;;; On the other hand, this means that if you are initialising over top of an
+;;; existing GVariantDict you need to first call g_variant_dict_clear() in
+;;; order to avoid leaking memory.
+;;;
+;;; You must not call g_variant_dict_ref() or g_variant_dict_unref() on a
+;;; GVariantDict that was initialised with this function. If you ever pass a
+;;; reference to a GVariantDict outside of the control of your own code then
+;;; you should assume that the person receiving that reference may try to use
+;;; reference counting; you should use g_variant_dict_new() instead of this
+;;; function.
+;;;
+;;; dict :
+;;;     a GVariantDict
+;;;
+;;; from_asv :
+;;;     the initial value for dict
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_variant_dict_clear ()                                not needed
+;;;
+;;; void
+;;; g_variant_dict_clear (GVariantDict *dict);
+;;;
+;;; Releases all memory associated with a GVariantDict without freeing the
+;;; GVariantDict structure itself.
+;;;
+;;; It typically only makes sense to do this on a stack-allocated GVariantDict
+;;; if you want to abort building the value part-way through. This function
+;;; need not be called if you call g_variant_dict_end() and it also does not
+;;; need to be called on dicts allocated with g_variant_dict_new
+;;; (see g_variant_dict_unref() for that).
+;;;
+;;; It is valid to call this function on either an initialised GVariantDict or
+;;; one that was previously cleared by an earlier call to g_variant_dict_clear()
+;;; but it is not valid to call this function on uninitialised memory.
+;;;
+;;; dict :
+;;;     a GVariantDict
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_variant_dict_contains
+;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("g_variant_dict_contains" variant-dict-contains) :boolean
+ #+liber-documentation
+ "@version{2025-05-25}
+  @argument[dict]{a @class{g:variant-dict} instance}
+  @argument[key]{a string for the key to look up in the dictionary}
+  @return{@em{True} if @arg{key} is in the dictionary.}
+  @begin{short}
+    Checks if the key exists in the dictionary.
+  @end{short}
+  @see-class{g:variant-dict}"
+  (dict (boxed variant-dict))
+  (key :string))
+
+(export 'variant-dict-contains)
+
+;;; ----------------------------------------------------------------------------
+;;; g_variant_dict_lookup ()
+;;;
+;;; gboolean
+;;; g_variant_dict_lookup (GVariantDict *dict,
+;;;                        const gchar *key,
+;;;                        const gchar *format_string,
+;;;                        ...);
+;;;
+;;; Looks up a value in a GVariantDict.
+;;;
+;;; This function is a wrapper around g_variant_dict_lookup_value() and
+;;; g_variant_get(). In the case that NULL would have been returned, this
+;;; function returns FALSE. Otherwise, it unpacks the returned value and
+;;; returns TRUE.
+;;;
+;;; format_string determines the C types that are used for unpacking the values
+;;; and also determines if the values are copied or borrowed, see the section
+;;; on GVariant format strings.
+;;;
+;;; dict :
+;;;     a GVariantDict
+;;;
+;;; key :
+;;;     the key to look up in the dictionary
+;;;
+;;; format_string :
+;;;     a GVariant format string
+;;;
+;;; ... :
+;;;     the arguments to unpack the value into
+;;;
+;;; Returns :
+;;;     TRUE if a value was unpacked
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_variant_dict_lookup_value
+;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("g_variant_dict_lookup_value" %variant-dict-lookup-value)
+    (:pointer (:struct variant))
+  (dict (boxed variant-dict))
+  (key :string)
+  (vtype (boxed variant-type)))
+
+(defun variant-dict-lookup-value (dict key &optional vtype)
+ #+liber-documentation
+ "@version{2025-05-25}
+  @argument[dict]{a @class{g:variant-dict} instance}
+  @argument[key]{a string for the key to look up in the dictionary}
+  @argument[vtype]{a @class{g:variant-type} instance for the expected type}
+  @begin{short}
+    Looks up a value in a @class{g:variant-dict} instance.
+  @end{short}
+  If @arg{key} is not found in the dictionary, @code{nil} is returned.
+
+  The @arg{vtype} string specifies what type of value is expected. If the value
+  associated with @arg{key} has a different type then @code{nil} is returned.
+
+  If the key is found and the value has the correct type, it is returned. If
+  @arg{vtype} was specified then any non-@code{nil} return value will have this
+  type.
+  @see-class{g:variant-dict}
+  @see-class{g:variant-type}"
+  (let ((vtype (if (stringp vtype)
+                   (variant-type-new vtype)
+                   vtype)))
+    (%variant-dict-lookup-value dict key vtype)))
+
+(export 'variant-dict-lookup-value)
+
+;;; ----------------------------------------------------------------------------
+;;; g_variant_dict_insert ()
+;;;
+;;; void
+;;; g_variant_dict_insert (GVariantDict *dict,
+;;;                        const gchar *key,
+;;;                        const gchar *format_string,
+;;;                        ...);
+;;;
+;;; Inserts a value into a GVariantDict.
+;;;
+;;; This call is a convenience wrapper that is exactly equivalent to calling
+;;; g_variant_new() followed by g_variant_dict_insert_value().
+;;;
+;;; dict :
+;;;     a GVariantDict
+;;;
+;;; key :
+;;;     the key to insert a value for
+;;;
+;;; format_string :
+;;;     a GVariant varargs format string
+;;;
+;;; ... :
+;;;     arguments, as per format_string
+;;; ----------------------------------------------------------------------------
+
+;;; ----------------------------------------------------------------------------
+;;; g_variant_dict_insert_value
+;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("g_variant_dict_insert_value" variant-dict-insert-value) :void
+ #+liber-documentation
+ "@version{2025-05-25}
+  @argument[dict]{a @class{g:variant-dict} instance}
+  @argument[key]{a string for the key to insert a value for}
+  @argument[value]{a @symbol{g:variant} instance for the value to insert}
+  @begin{short}
+    Inserts, or replaces, a key in a @class{g:variant-dict} instance.
+  @end{short}
+  @see-class{g:variant-dict}
+  @see-symbol{g:variant}"
+  (dict (boxed variant-dict))
+  (key :string)
+  (value (:pointer (:struct variant))))
+
+(export 'variant-dict-insert-value)
+
+;;; ----------------------------------------------------------------------------
+;;; g_variant_dict_remove
+;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("g_variant_dict_remove" variant-dict-remove) :boolean
+ #+liber-documentation
+ "@version{2025-05-25}
+  @argument[dict]{a @class{g:variant-dict} instance}
+  @argument[key]{a string for the key to remove}
+  @return{@em{True} if the key was found and removed.}
+  @begin{short}
+    Removes a key and its associated value from a @class{g:variant-dict}
+    instance.
+  @end{short}
+  @see-class{g:variant-dict}"
+  (dict (boxed variant-dict))
+  (key :string))
+
+(export 'variant-dict-remove)
+
+;;; ----------------------------------------------------------------------------
+;;; g_variant_dict_end
+;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("g_variant_dict_end" variant-dict-end)
+    (:pointer (:struct variant))
+ #+liber-documentation
+ "@version{2025-05-25}
+  @argument[dict]{a @class{g:variant-dict} instance}
+  @return{The new @symbol{g:variant} instance.}
+  @begin{short}
+    Returns the current value of @arg{dict} as a @symbol{g:variant} instance,
+    clearing it in the process.
+  @end{short}
+
+  It is not permissible to use @arg{dict} in any way after this call except for
+  reference counting operations.
+  @see-class{g:variant-dict}
+  @see-symbol{g:variant}"
+  (dict (boxed variant-dict)))
+
+(export 'variant-dict-end)
+
+;;; ----------------------------------------------------------------------------
 ;;; GVariantIter
 ;;; ----------------------------------------------------------------------------
 
@@ -2616,7 +3155,10 @@
 (setf (liber:alias-for-symbol 'variant-iter)
       "CStruct"
       (liber:symbol-documentation 'variant-iter)
- "@version{2025-05-04}
+ "@version{2025-05-25}
+  @begin{declaration}
+(cffi:defcstruct variant-iter)
+  @end{declaration}
   @begin{short}
     The @symbol{g:variant-iter} structure is an opaque data structure and can
     only be accessed using the following functions.
@@ -2912,826 +3454,6 @@
 ;;;
 ;;; Returns :
 ;;;     TRUE if a value was unpacked, or FALSE if there was no value
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_VARIANT_BUILDER_INIT()
-;;;
-;;; #define G_VARIANT_BUILDER_INIT(variant_type)
-;;;         { { { 2942751021u, variant_type, { 0, } } } }
-;;;
-;;; A stack-allocated GVariantBuilder must be initialized if it is used together
-;;; with g_auto() to avoid warnings or crashes if function returns before
-;;; g_variant_builder_init() is called on the builder. This macro can be used
-;;; as initializer instead of an explicit zeroing a variable when declaring it
-;;; and a following g_variant_builder_init(), but it cannot be assigned to a
-;;; variable.
-;;;
-;;; The passed variant_type should be a static GVariantType to avoid lifetime
-;;; issues, as copying the variant_type does not happen in the
-;;; G_VARIANT_BUILDER_INIT() call, but rather in functions that make sure that
-;;; GVariantBuilder is valid.
-;;;
-;;; g_auto(GVariantBuilder) builder
-;;;     = G_VARIANT_BUILDER_INIT (G_VARIANT_TYPE_BYTESTRING);
-;;;
-;;; variant_type :
-;;;     a const GVariantType*
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_variant_builder_unref ()
-;;;
-;;; void g_variant_builder_unref (GVariantBuilder *builder);
-;;;
-;;; Decreases the reference count on builder.
-;;;
-;;; In the event that there are no more references, releases all memory
-;;; associated with the GVariantBuilder.
-;;;
-;;; Don't call this on stack-allocated GVariantBuilder instances or bad things
-;;; will happen.
-;;;
-;;; builder :
-;;;     a GVariantBuilder allocated by g_variant_builder_new()
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_variant_builder_ref ()
-;;;
-;;; GVariantBuilder * g_variant_builder_ref (GVariantBuilder *builder);
-;;;
-;;; Increases the reference count on builder.
-;;;
-;;; Don't call this on stack-allocated GVariantBuilder instances or bad things
-;;; will happen.
-;;;
-;;; builder :
-;;;     a GVariantBuilder allocated by g_variant_builder_new()
-;;;
-;;; Returns :
-;;;     a new reference to builder
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_variant_builder_new ()
-;;;
-;;; GVariantBuilder * g_variant_builder_new (const GVariantType *type);
-;;;
-;;; Allocates and initialises a new GVariantBuilder.
-;;;
-;;; You should call g_variant_builder_unref() on the return value when it is no
-;;; longer needed. The memory will not be automatically freed by any other call.
-;;;
-;;; In most cases it is easier to place a GVariantBuilder directly on the stack
-;;; of the calling function and initialise it with g_variant_builder_init().
-;;;
-;;; type :
-;;;     a container type
-;;;
-;;; Returns :
-;;;     a GVariantBuilder
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_variant_builder_init ()
-;;;
-;;; void g_variant_builder_init (GVariantBuilder *builder,
-;;;                              const GVariantType *type);
-;;;
-;;; Initialises a GVariantBuilder structure.
-;;;
-;;; type must be non-NULL. It specifies the type of container to construct. It
-;;; can be an indefinite type such as G_VARIANT_TYPE_ARRAY or a definite type
-;;; such as "as" or "(ii)". Maybe, array, tuple, dictionary entry and
-;;; variant-typed values may be constructed.
-;;;
-;;; After the builder is initialised, values are added using
-;;; g_variant_builder_add_value() or g_variant_builder_add().
-;;;
-;;; After all the child values are added, g_variant_builder_end() frees the
-;;; memory associated with the builder and returns the GVariant that was
-;;; created.
-;;;
-;;; This function completely ignores the previous contents of builder. On one
-;;; hand this means that it is valid to pass in completely uninitialised memory.
-;;; On the other hand, this means that if you are initialising over top of an
-;;; existing GVariantBuilder you need to first call g_variant_builder_clear()
-;;; in order to avoid leaking memory.
-;;;
-;;; You must not call g_variant_builder_ref() or g_variant_builder_unref() on a
-;;; GVariantBuilder that was initialised with this function. If you ever pass a
-;;; reference to a GVariantBuilder outside of the control of your own code then
-;;; you should assume that the person receiving that reference may try to use
-;;; reference counting; you should use g_variant_builder_new() instead of this
-;;; function.
-;;;
-;;; builder :
-;;;     a GVariantBuilder
-;;;
-;;; type :
-;;;     a container type
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_variant_builder_clear ()
-;;;
-;;; void g_variant_builder_clear (GVariantBuilder *builder);
-;;;
-;;; Releases all memory associated with a GVariantBuilder without freeing the
-;;; GVariantBuilder structure itself.
-;;;
-;;; It typically only makes sense to do this on a stack-allocated
-;;; GVariantBuilder if you want to abort building the value part-way through.
-;;; This function need not be called if you call g_variant_builder_end() and it
-;;; also does not need to be called on builders allocated with
-;;; g_variant_builder_new (see g_variant_builder_unref() for that).
-;;;
-;;; This function leaves the GVariantBuilder structure set to all-zeros. It is
-;;; valid to call this function on either an initialised GVariantBuilder or one
-;;; that is set to all-zeros but it is not valid to call this function on
-;;; uninitialised memory.
-;;;
-;;; builder :
-;;;     a GVariantBuilder
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_variant_builder_add_value ()
-;;;
-;;; void g_variant_builder_add_value (GVariantBuilder *builder, GVariant *value)
-;;;
-;;; Adds value to builder.
-;;;
-;;; It is an error to call this function in any way that would create an
-;;; inconsistent value to be constructed. Some examples of this are putting
-;;; different types of items into an array, putting the wrong types or number
-;;; of items in a tuple, putting more than one value into a variant, etc.
-;;;
-;;; If value is a floating reference (see g_variant_ref_sink()), the builder
-;;; instance takes ownership of value.
-;;;
-;;; builder :
-;;;     a GVariantBuilder
-;;;
-;;; value :
-;;;     a GVariant
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_variant_builder_add ()
-;;;
-;;; void g_variant_builder_add (GVariantBuilder *builder,
-;;;                             const gchar *format_string,
-;;;                             ...);
-;;;
-;;; Adds to a GVariantBuilder.
-;;;
-;;; This call is a convenience wrapper that is exactly equivalent to calling
-;;; g_variant_new() followed by g_variant_builder_add_value().
-;;;
-;;; This function might be used as follows:
-;;;
-;;; GVariant *
-;;; make_pointless_dictionary (void)
-;;; {
-;;;   GVariantBuilder *builder;
-;;;   int i;
-;;;
-;;;   builder = g_variant_builder_new (G_VARIANT_TYPE_ARRAY);
-;;;   for (i = 0; i < 16; i++)
-;;;     {
-;;;       gchar buf[3];
-;;;
-;;;       sprintf (buf, "%d", i);
-;;;       g_variant_builder_add (builder, "{is}", i, buf);
-;;;     }
-;;;
-;;;   return g_variant_builder_end (builder);
-;;; }
-;;;
-;;; builder :
-;;;     a GVariantBuilder
-;;;
-;;; format_string :
-;;;     a GVariant varargs format string
-;;;
-;;; ... :
-;;;     arguments, as per format_string
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_variant_builder_add_parsed ()
-;;;
-;;; void g_variant_builder_add_parsed (GVariantBuilder *builder,
-;;;                                    const gchar *format,
-;;;                                    ...);
-;;;
-;;; Adds to a GVariantBuilder.
-;;;
-;;; This call is a convenience wrapper that is exactly equivalent to calling
-;;; g_variant_new_parsed() followed by g_variant_builder_add_value().
-;;;
-;;; This function might be used as follows:
-;;;
-;;; GVariant *
-;;; make_pointless_dictionary (void)
-;;; {
-;;;   GVariantBuilder *builder;
-;;;   int i;
-;;;
-;;;   builder = g_variant_builder_new (G_VARIANT_TYPE_ARRAY);
-;;;   g_variant_builder_add_parsed (builder, "{'width', <%i>}", 600);
-;;;   g_variant_builder_add_parsed (builder, "{'title', <%s>}", "foo");
-;;;   g_variant_builder_add_parsed (builder, "{'transparency', <0.5>}");
-;;;   return g_variant_builder_end (builder);
-;;; }
-;;;
-;;; builder :
-;;;     a GVariantBuilder
-;;;
-;;; format :
-;;;     a text format GVariant
-;;;
-;;; ... :
-;;;     arguments as per format
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_variant_builder_end ()
-;;;
-;;; GVariant * g_variant_builder_end (GVariantBuilder *builder);
-;;;
-;;; Ends the builder process and returns the constructed value.
-;;;
-;;; It is not permissible to use builder in any way after this call except for
-;;; reference counting operations (in the case of a heap-allocated
-;;; GVariantBuilder) or by reinitialising it with g_variant_builder_init() (in
-;;; the case of stack-allocated).
-;;;
-;;; It is an error to call this function in any way that would create an
-;;; inconsistent value to be constructed (ie: insufficient number of items
-;;; added to a container with a specific number of children required). It is
-;;; also an error to call this function if the builder was created with an
-;;; indefinite array or maybe type and no children have been added; in this
-;;; case it is impossible to infer the type of the empty array.
-;;;
-;;; builder :
-;;;     a GVariantBuilder
-;;;
-;;; Returns :
-;;;     a new, floating, GVariant
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_variant_builder_open ()
-;;;
-;;; void g_variant_builder_open (GVariantBuilder *builder,
-;;;                              const GVariantType *type);
-;;;
-;;; Opens a subcontainer inside the given builder. When done adding items to
-;;; the subcontainer, g_variant_builder_close() must be called.
-;;;
-;;; It is an error to call this function in any way that would cause an
-;;; inconsistent value to be constructed (ie: adding too many values or a value
-;;; of an incorrect type).
-;;;
-;;; builder :
-;;;     a GVariantBuilder
-;;;
-;;; type :
-;;;     a GVariantType
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_variant_builder_close ()
-;;;
-;;; void g_variant_builder_close (GVariantBuilder *builder);
-;;;
-;;; Closes the subcontainer inside the given builder that was opened by the
-;;; most recent call to g_variant_builder_open().
-;;;
-;;; It is an error to call this function in any way that would create an
-;;; inconsistent value to be constructed (ie: too few values added to the
-;;; subcontainer).
-;;;
-;;; builder :
-;;;     a GVariantBuilder
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; G_VARIANT_DICT_INIT()
-;;;
-;;; #define G_VARIANT_DICT_INIT(asv) { { { asv, 3488698669u, { 0, } } } }
-;;;
-;;; A stack-allocated GVariantDict must be initialized if it is used together
-;;; with g_auto() to avoid warnings or crashes if function returns before
-;;; g_variant_dict_init() is called on the builder. This macro can be used as
-;;; initializer instead of an explicit zeroing a variable when declaring it and
-;;; a following g_variant_dict_init(), but it cannot be assigned to a variable.
-;;;
-;;; The passed asv has to live long enough for GVariantDict to gather the
-;;; entries from, as the gathering does not happen in the G_VARIANT_DICT_INIT()
-;;; call, but rather in functions that make sure that GVariantDict is valid. In
-;;; context where the initialization value has to be a constant expression, the
-;;; only possible value of asv is NULL. It is still possible to call
-;;; g_variant_dict_init() safely with a different asv right after the variable
-;;; was initialized with G_VARIANT_DICT_INIT().
-;;;
-;;; g_autoptr(GVariant) variant = get_asv_variant ();
-;;; g_auto(GVariantDict) dict = G_VARIANT_DICT_INIT (variant);
-;;;
-;;; asv :
-;;;     a GVariant*
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_variant_dict_unref ()
-;;;
-;;; void
-;;; g_variant_dict_unref (GVariantDict *dict);
-;;;
-;;; Decreases the reference count on dict .
-;;;
-;;; In the event that there are no more references, releases all memory
-;;; associated with the GVariantDict.
-;;;
-;;; Don't call this on stack-allocated GVariantDict instances or bad things
-;;; will happen.
-;;;
-;;; dict :
-;;;     a heap-allocated GVariantDict
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_variant_dict_ref ()
-;;;
-;;; GVariantDict *
-;;; g_variant_dict_ref (GVariantDict *dict);
-;;;
-;;; Increases the reference count on dict .
-;;;
-;;; Don't call this on stack-allocated GVariantDict instances or bad things
-;;; will happen.
-;;;
-;;; dict :
-;;;     a heap-allocated GVariantDict
-;;;
-;;; Returns :
-;;;     a new reference to dict
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_variant_dict_new
-;;; ----------------------------------------------------------------------------
-
-(cffi:defcfun ("g_variant_dict_new" %variant-dict-new) :pointer
-  (from-asv (:pointer (:struct variant))))
-
-(cffi:defcfun ("g_variant_dict_new" variant-dict-new)
-    (boxed variant-dict :return)
- #+liber-documentation
- "@version{2024-11-20}
-  @argument[from-asv]{a @symbol{g:variant} instance with which to initialize the
-    dictionary}
-  @return{The newly created @class{g:variant-dict} instance.}
-  @begin{short}
-    Allocates and initialises a new @class{g:variant-dict} instance.
-  @end{short}
-  @see-class{g:variant-dict}
-  @see-symbol{g:variant}"
-  (from-asv (:pointer (:struct variant))))
-
-(export 'variant-dict-new)
-
-;;; ----------------------------------------------------------------------------
-;;; g_variant_dict_init ()                                 not needed
-;;;
-;;; void
-;;; g_variant_dict_init (GVariantDict *dict,
-;;;                      GVariant *from_asv);
-;;;
-;;; Initialises a GVariantDict structure.
-;;;
-;;; If from_asv is given, it is used to initialise the dictionary.
-;;;
-;;; This function completely ignores the previous contents of dict . On one
-;;; hand this means that it is valid to pass in completely uninitialised memory.
-;;; On the other hand, this means that if you are initialising over top of an
-;;; existing GVariantDict you need to first call g_variant_dict_clear() in
-;;; order to avoid leaking memory.
-;;;
-;;; You must not call g_variant_dict_ref() or g_variant_dict_unref() on a
-;;; GVariantDict that was initialised with this function. If you ever pass a
-;;; reference to a GVariantDict outside of the control of your own code then
-;;; you should assume that the person receiving that reference may try to use
-;;; reference counting; you should use g_variant_dict_new() instead of this
-;;; function.
-;;;
-;;; dict :
-;;;     a GVariantDict
-;;;
-;;; from_asv :
-;;;     the initial value for dict
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_variant_dict_clear ()                                not needed
-;;;
-;;; void
-;;; g_variant_dict_clear (GVariantDict *dict);
-;;;
-;;; Releases all memory associated with a GVariantDict without freeing the
-;;; GVariantDict structure itself.
-;;;
-;;; It typically only makes sense to do this on a stack-allocated GVariantDict
-;;; if you want to abort building the value part-way through. This function
-;;; need not be called if you call g_variant_dict_end() and it also does not
-;;; need to be called on dicts allocated with g_variant_dict_new
-;;; (see g_variant_dict_unref() for that).
-;;;
-;;; It is valid to call this function on either an initialised GVariantDict or
-;;; one that was previously cleared by an earlier call to g_variant_dict_clear()
-;;; but it is not valid to call this function on uninitialised memory.
-;;;
-;;; dict :
-;;;     a GVariantDict
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_variant_dict_contains
-;;; ----------------------------------------------------------------------------
-
-(cffi:defcfun ("g_variant_dict_contains" variant-dict-contains) :boolean
- #+liber-documentation
- "@version{2024-11-20}
-  @argument[dict]{a @class{g:variant-dict} instance}
-  @argument[key]{a string with the key to look up in the dictionary}
-  @return{@em{True} if @arg{key} is in the dictionary.}
-  @begin{short}
-    Checks if the key exists in the dictionary.
-  @end{short}
-  @see-class{g:variant-dict}"
-  (dict (boxed variant-dict))
-  (key :string))
-
-(export 'variant-dict-contains)
-
-;;; ----------------------------------------------------------------------------
-;;; g_variant_dict_lookup ()
-;;;
-;;; gboolean
-;;; g_variant_dict_lookup (GVariantDict *dict,
-;;;                        const gchar *key,
-;;;                        const gchar *format_string,
-;;;                        ...);
-;;;
-;;; Looks up a value in a GVariantDict.
-;;;
-;;; This function is a wrapper around g_variant_dict_lookup_value() and
-;;; g_variant_get(). In the case that NULL would have been returned, this
-;;; function returns FALSE. Otherwise, it unpacks the returned value and
-;;; returns TRUE.
-;;;
-;;; format_string determines the C types that are used for unpacking the values
-;;; and also determines if the values are copied or borrowed, see the section
-;;; on GVariant format strings.
-;;;
-;;; dict :
-;;;     a GVariantDict
-;;;
-;;; key :
-;;;     the key to look up in the dictionary
-;;;
-;;; format_string :
-;;;     a GVariant format string
-;;;
-;;; ... :
-;;;     the arguments to unpack the value into
-;;;
-;;; Returns :
-;;;     TRUE if a value was unpacked
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_variant_dict_lookup_value
-;;; ----------------------------------------------------------------------------
-
-(cffi:defcfun ("g_variant_dict_lookup_value" %variant-dict-lookup-value)
-    (:pointer (:struct variant))
-  (dict (boxed variant-dict))
-  (key :string)
-  (vtype (boxed variant-type)))
-
-(defun variant-dict-lookup-value (dict key &optional vtype)
- #+liber-documentation
- "@version{2024-11-20}
-  @argument[dict]{a @class{g:variant-dict} instance}
-  @argument[key]{a string with the key to look up in the dictionary}
-  @argument[vtype]{a @class{g:variant-type} instance with the expected type}
-  @begin{short}
-    Looks up a value in a @class{g:variant-dict} instance.
-  @end{short}
-  If @arg{key} is not found in the dictionary, @code{nil} is returned.
-
-  The @arg{vtype} string specifies what type of value is expected. If the value
-  associated with @arg{key} has a different type then @code{nil} is returned.
-
-  If the key is found and the value has the correct type, it is returned. If
-  @arg{vtype} was specified then any non-@code{nil} return value will have this
-  type.
-  @see-class{g:variant-dict}
-  @see-class{g:variant-type}"
-  (let ((vtype (if (stringp vtype)
-                   (variant-type-new vtype)
-                   vtype)))
-    (%variant-dict-lookup-value dict key vtype)))
-
-(export 'variant-dict-lookup-value)
-
-;;; ----------------------------------------------------------------------------
-;;; g_variant_dict_insert ()
-;;;
-;;; void
-;;; g_variant_dict_insert (GVariantDict *dict,
-;;;                        const gchar *key,
-;;;                        const gchar *format_string,
-;;;                        ...);
-;;;
-;;; Inserts a value into a GVariantDict.
-;;;
-;;; This call is a convenience wrapper that is exactly equivalent to calling
-;;; g_variant_new() followed by g_variant_dict_insert_value().
-;;;
-;;; dict :
-;;;     a GVariantDict
-;;;
-;;; key :
-;;;     the key to insert a value for
-;;;
-;;; format_string :
-;;;     a GVariant varargs format string
-;;;
-;;; ... :
-;;;     arguments, as per format_string
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_variant_dict_insert_value
-;;; ----------------------------------------------------------------------------
-
-(cffi:defcfun ("g_variant_dict_insert_value" variant-dict-insert-value) :void
- #+liber-documentation
- "@version{2024-11-20}
-  @argument[dict]{a @class{g:variant-dict} instance}
-  @argument[key]{a string with the key to insert a value for}
-  @argument[value]{a @symbol{g:variant} instance with the value to insert}
-  @begin{short}
-    Inserts, or replaces, a key in a @class{g:variant-dict} instance.
-  @end{short}
-  @see-class{g:variant-dict}
-  @see-symbol{g:variant}"
-  (dict (boxed variant-dict))
-  (key :string)
-  (value (:pointer (:struct variant))))
-
-(export 'variant-dict-insert-value)
-
-;;; ----------------------------------------------------------------------------
-;;; g_variant_dict_remove
-;;; ----------------------------------------------------------------------------
-
-(cffi:defcfun ("g_variant_dict_remove" variant-dict-remove) :boolean
- #+liber-documentation
- "@version{2024-11-20}
-  @argument[dict]{a @class{g:variant-dict} instance}
-  @argument[key]{a string with the key to remove}
-  @return{@em{True} if the key was found and removed.}
-  @begin{short}
-    Removes a key and its associated value from a @class{g:variant-dict}
-    instance.
-  @end{short}
-  @see-class{g:variant-dict}"
-  (dict (boxed variant-dict))
-  (key :string))
-
-(export 'variant-dict-remove)
-
-;;; ----------------------------------------------------------------------------
-;;; g_variant_dict_end
-;;; ----------------------------------------------------------------------------
-
-(cffi:defcfun ("g_variant_dict_end" variant-dict-end)
-    (:pointer (:struct variant))
- #+liber-documentation
- "@version{2024-11-20}
-  @argument[dict]{a @class{g:variant-dict} instance}
-  @return{The new @symbol{g:variant} instance.}
-  @begin{short}
-    Returns the current value of @arg{dict} as a @symbol{g:variant} instance,
-    clearing it in the process.
-  @end{short}
-
-  It is not permissible to use @arg{dict} in any way after this call except for
-  reference counting operations.
-  @see-class{g:variant-dict}
-  @see-symbol{g:variant}"
-  (dict (boxed variant-dict)))
-
-(export 'variant-dict-end)
-
-;;; ----------------------------------------------------------------------------
-;;; g_variant_parse
-;;; ----------------------------------------------------------------------------
-
-;; FIXME: Does not work for an argument non-nil for VTYPE
-
-(cffi:defcfun ("g_variant_parse" %variant-parse-1) (:pointer (:struct variant))
-  (vtype :pointer) ; must be the type :pointer
-  (text :string)
-  (limit :pointer)
-  (endptr :pointer)
-  (err :pointer))
-
-(cffi:defcfun ("g_variant_parse" %variant-parse-2) (:pointer (:struct variant))
-  (vtype (boxed variant-type))
-  (text :string)
-  (limit :pointer)
-  (endptr :pointer)
-  (err :pointer))
-
-(defun variant-parse (vtype text)
- #+liber-documentation
- "@version{2024-11-21}
-  @argument[vtype]{a @class{g:variant-type} instance, or a valid type string}
-  @argument[text]{a string containing a @symbol{g:variant} instance in text
-    form}
-  @return{The @symbol{g:variant} instance.}
-  @begin{short}
-    Parses a @symbol{g:variant} instance from a text representation.
-  @end{short}
-  If @arg{vtype} is non-@code{nil} then the value will be parsed to have that
-  type. This may result in additional parse errors, in the case that the parsed
-  value does not fit the variant type, but may also result in fewer errors, in
-  the case that the variant type would have been ambiguous, such as with empty
-  arrays.
-
-  In the event that the parsing is successful, the resulting @symbol{g:variant}
-  instance is returned. In case of any error, @code{nil} will be returned.
-
-  Officially, the language understood by the parser is any string produced by
-  the @fun{g:variant-print} function.
-  @begin[Examples]{dictionary}
-    @begin{pre}
-(g:variant-parse (g:variant-type-new \"b\") \"true\")
-=> #.(SB-SYS:INT-SAP #X7F99C4012440)
-(g:variant-print *) => \"true\"
-(g:variant-parse \"b\" \"false\")
-=> #.(SB-SYS:INT-SAP #X564C855E8690)
-(g:variant-print *) => \"false\"
-(g:variant-parse (g:variant-type-new \"i\") \"100\")
-=> #.(SB-SYS:INT-SAP #X7F99C4012CF0)
-(g:variant-print * nil) => \"100\"
-(g:variant-parse \"d\" \"100\")
-=> #.(SB-SYS:INT-SAP #X564C855F9900)
-(g:variant-print *) => \"100.0\"
-    @end{pre}
-  @end{dictionary}
-  @see-symbol{g:variant}
-  @see-function{g:variant-print}"
-  (with-error (err)
-    (cond ((stringp vtype)
-           (let ((vtype1 (variant-type-new vtype)))
-               (%variant-parse-2 vtype1
-                                 text
-                                 (cffi:null-pointer)
-                                 (cffi:null-pointer)
-                                 err)))
-          ((typep vtype 'variant-type)
-           (%variant-parse-2 vtype
-                             text
-                             (cffi:null-pointer)
-                             (cffi:null-pointer)
-                             err))
-          (t
-           (%variant-parse-1 (cffi:null-pointer)
-                             text
-                             (cffi:null-pointer)
-                             (cffi:null-pointer)
-                             err)))))
-
-(export 'variant-parse)
-
-;;; ----------------------------------------------------------------------------
-;;; g_variant_new_parsed_va ()
-;;;
-;;; GVariant * g_variant_new_parsed_va (const gchar *format, va_list *app);
-;;;
-;;; Parses format and returns the result.
-;;;
-;;; This is the version of g_variant_new_parsed() intended to be used from
-;;; libraries.
-;;;
-;;; The return value will be floating if it was a newly created GVariant
-;;; instance. In the case that format simply specified the collection of a
-;;; GVariant pointer (eg: format was "%*") then the collected GVariant pointer
-;;; will be returned unmodified, without adding any additional references.
-;;;
-;;; In order to behave correctly in all cases it is necessary for the calling
-;;; function to g_variant_ref_sink() the return result before returning control
-;;; to the user that originally provided the pointer. At this point, the caller
-;;; will have their own full reference to the result. This can also be done by
-;;; adding the result to a container, or by passing it to another
-;;; g_variant_new() call.
-;;;
-;;; format :
-;;;     a text format GVariant
-;;;
-;;; app :
-;;;     a pointer to a va_list
-;;;
-;;; Returns :
-;;;     a new, usually floating, GVariant
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_variant_new_parsed ()
-;;;
-;;; GVariant * g_variant_new_parsed (const gchar *format, ...);
-;;;
-;;; Parses format and returns the result.
-;;;
-;;; format must be a text format GVariant with one extension: at any point that
-;;; a value may appear in the text, a '%' character followed by a GVariant
-;;; format string (as per g_variant_new()) may appear. In that case, the same
-;;; arguments are collected from the argument list as g_variant_new() would
-;;; have collected.
-;;;
-;;; Consider this simple example:
-;;;
-;;; g_variant_new_parsed ("[('one', 1), ('two', %i), (%s, 3)]", 2, "three");
-;;;
-;;; In the example, the variable argument parameters are collected and filled
-;;; in as if they were part of the original string to produce the result of
-;;; [('one', 1), ('two', 2), ('three', 3)].
-;;;
-;;; This function is intended only to be used with format as a string literal.
-;;; Any parse error is fatal to the calling process. If you want to parse data
-;;; from untrusted sources, use g_variant_parse().
-;;;
-;;; You may not use this function to return, unmodified, a single GVariant
-;;; pointer from the argument list. ie: format may not solely be anything along
-;;; the lines of "%*", "%?", "%r", or anything starting with "%@".
-;;;
-;;; format :
-;;;     a text format GVariant
-;;;
-;;; ... :
-;;;     arguments as per format
-;;;
-;;; Returns :
-;;;     a new floating GVariant instance
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_variant_parse_error_print_context ()
-;;;
-;;; gchar *
-;;; g_variant_parse_error_print_context (GError *error,
-;;;                                      const gchar *source_str);
-;;;
-;;; Pretty-prints a message showing the context of a GVariant parse error
-;;; within the string for which parsing was attempted.
-;;;
-;;; The resulting string is suitable for output to the console or other
-;;; monospace media where newlines are treated in the usual way.
-;;;
-;;; The message will typically look something like one of the following:
-;;;
-;;; unterminated string constant:
-;;;   (1, 2, 3, 'abc
-;;;             ^^^^
-;;; or
-;;;
-;;; unable to find a common type:
-;;;   [1, 2, 3, 'str']
-;;;    ^        ^^^^^
-;;;
-;;; The format of the message may change in a future version.
-;;;
-;;; error must have come from a failed attempt to g_variant_parse() and
-;;; source_str must be exactly the same string that caused the error. If
-;;; source_str was not nul-terminated when you passed it to g_variant_parse()
-;;; then you must add nul termination before using this function.
-;;;
-;;; error :
-;;;     a GError from the GVariantParseError domain
-;;;
-;;; source_str :
-;;;     the string that was given to the parser
-;;;
-;;; Returns :
-;;;     the printed message.
 ;;; ----------------------------------------------------------------------------
 
 ;;; --- End of file glib.variant.lisp ------------------------------------------

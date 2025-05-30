@@ -235,10 +235,13 @@
 
            ;; Symbols from glib.variant.lisp
            #:variant
+           #:with-variant
            #:variant-class
            #:variant-dict
            #:variant-unref
            #:variant-ref
+           #:variant-get
+           #:variant-set
            #:variant-ref-sink
            #:variant-is-floating
            #:variant-take-ref
@@ -276,6 +279,7 @@
            #:variant-handle
            #:variant-double
            #:variant-string
+           #:variant-variant
            #:variant-new-from-bytes
            #:variant-equal
            #:variant-print
@@ -503,6 +507,7 @@
            #:object-has-reference
            #:object-pointer
            #:initially-unowned
+           #:callback
            #:type-is-object
            #:is-object
            #:object-class-find-property
@@ -1046,9 +1051,9 @@
            #:task-name
            #:task-report-error
            #:task-report-new-error
-           #:task-get-cancellable
-           #:task-get-context
-           #:task-get-source-object
+           #:task-cancellable
+           #:task-context
+           #:task-source-object
            #:task-return-boolean
            #:task-return-int
            #:task-return-pointer
@@ -1065,7 +1070,7 @@
            #:task-run-in-thread-sync
            #:task-threadfunc
            #:task-attach-source
-           #:task-task-is-valid
+           #:task-is-valid
            ))
 
 ;;; --- End of file glib-user.package.lisp -------------------------------------

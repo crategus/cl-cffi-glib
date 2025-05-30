@@ -64,7 +64,7 @@
 (setf (liber:alias-for-class 'bytes)
       "GBoxed"
       (documentation 'bytes 'type)
- "@version{2024-11-6}
+ "@version{2025-05-22}
   @begin{declaration}
 (define-gboxed-opaque bytes \"GBytes\"
   :export t
@@ -127,9 +127,9 @@
 
 (cffi:defcfun ("g_bytes_new" bytes-new) (boxed bytes :return)
  #+liber-documentation
- "@version{2024-11-6}
+ "@version{2025-05-22}
   @argument[data]{a pointer to the data to be used for the bytes}
-  @argument[size]{an integer with the size of @arg{data}}
+  @argument[size]{an integer for the size of @arg{data}}
   @return{The new @class{g:bytes} instance.}
   @short{Creates a new @class{g:bytes} instance from @arg{data}.}
   @see-class{g:bytes}"
@@ -268,13 +268,12 @@
 
 (defun bytes-data (bytes)
  #+liber-documentation
- "@version{2024-12-29}
+ "@version{2025-05-22}
+  @syntax{(g:bytes-data bytes) => data, size}
   @argument[bytes]{a @class{g:bytes} instance}
-  @begin{return}
-    @arg{data} -- a pointer to the byte data, or a @code{cffi:null-pointer}
-    value @br{}
-    @arg{size} -- an integer with the size of the byte data
-  @end{return}
+  @argument[data]{a pointer to the byte data, or a @code{cffi:null-pointer}
+    value}
+  @argument[size]{an integer for the size of the byte data}
   @begin{short}
     Get the byte data in the @class{g:bytes} instance.
   @end{short}
@@ -299,7 +298,7 @@
 
 (cffi:defcfun ("g_bytes_get_size" bytes-size) :size
  #+liber-documentation
- "@version{2024-11-6}
+ "@version{2025-05-22}
   @argument[bytes]{a @class{g:bytes} instance}
   @return{The integer with the size of the byte data.}
   @begin{short}

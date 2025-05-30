@@ -5,6 +5,78 @@
 
 ;;;     GVariant
 
+;;;     g:with-variant
+
+(test g-with-variant.1
+  (g:with-variant (var :boolean t)
+    (is-true (g:variant-get var))))
+
+(test g-with-variant.2
+  (g:with-variant (var :int16 #x7fff)
+    (is (= 32767 (g:variant-get var)))))
+
+(test g-with-variant.3
+  (g:with-variant (var :int16 #x-8000)
+    (is (= -32768 (g:variant-get var)))))
+
+(test g-with-variant.4
+  (g:with-variant (var :uint16 #xffff)
+    (is (= 65535 (g:variant-get var)))))
+
+(test g-with-variant.5
+  (g:with-variant (var :int32 #x7fffffff)
+    (is (= 2147483647 (g:variant-get var)))))
+
+(test g-with-variant.6
+  (g:with-variant (var :int32 #x-80000000)
+    (is (= -2147483648 (g:variant-get var)))))
+
+(test g-with-variant.7
+  (g:with-variant (var :uint32 #xffffffff)
+    (is (= 4294967295 (g:variant-get var)))))
+
+(test g-with-variant.5
+  (g:with-variant (var :int64 #x7fffffffffffffff)
+    (is (= 9223372036854775807 (g:variant-get var)))))
+
+(test g-with-variant.6
+  (g:with-variant (var :int64 #x-8000000000000000)
+    (is (= -9223372036854775808 (g:variant-get var)))))
+
+(test g-with-variant.7
+  (g:with-variant (var :uint64 #xffffffffffffffff)
+    (is (= 18446744073709551615 (g:variant-get var)))))
+
+(test g-with-variant.8
+  (g:with-variant (var :handle #x7fffffff)
+    (is (= 2147483647 (g:variant-get var)))))
+
+(test g-with-variant.9
+  (g:with-variant (var :double 99.99d99)
+    (is (= 9.999d100 (g:variant-get var)))))
+
+(test g-with-variant.10
+  (g:with-variant (var :string "This is a string.")
+    (is (string= "This is a string." (g:variant-get var)))))
+
+(test g-with-variant.11
+  (let ((path "/com/crategus/glib/test"))
+    (g:with-variant (var :object-path path)
+      (is-true (g:variant-is-object-path path))
+      (is (string= "/com/crategus/glib/test" (g:variant-get var))))))
+
+(test g-with-variant.12
+  (let ((signature "iii"))
+    (g:with-variant (var :signature signature)
+      (is-true (g:variant-is-signature signature))
+      (is (string= "iii" (g:variant-get var))))))
+
+(test g-with-variant.13
+  (g:with-variant (var1 :int16 100)
+    (g:with-variant (var2 :variant var1)
+      (is (= 100 (g:variant-get var1)))
+      (is (= 100 (g:variant-get (g:variant-get var2)))))))
+
 ;;;   g_variant_unref
 
 (test g-variant-unref
@@ -245,20 +317,6 @@
 ;;;     g_variant_iter_next
 ;;;     g_variant_iter_loop
 ;;;
-;;;     GVariantBuilder
-;;;
-;;;     g_variant_builder_unref
-;;;     g_variant_builder_ref
-;;;     g_variant_builder_new
-;;;     g_variant_builder_init
-;;;     g_variant_builder_clear
-;;;     g_variant_builder_add_value
-;;;     g_variant_builder_add
-;;;     g_variant_builder_add_parsed
-;;;     g_variant_builder_end
-;;;     g_variant_builder_open
-;;;     g_variant_builder_close
-
 ;;;     g_variant_dict_unref
 ;;;     g_variant_dict_ref
 
@@ -365,10 +423,6 @@
     (is (string= "{'count': <3>, 'second': <2>}"
                  (g:variant-print (add-to-count variant))))
     (is-false (g:variant-unref variant))))
-
-;;;     GVariantParseError
-;;;
-;;;     G_VARIANT_PARSE_ERROR
 
 ;;;     g_variant_parse
 
@@ -483,4 +537,4 @@
 ;;;     g_variant_new_parsed_va
 ;;;     g_variant_new_parsed
 
-;;; 2025-2-2
+;;; 2025-05-25
