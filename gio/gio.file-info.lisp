@@ -400,6 +400,11 @@
 ;;; Gets the icon for a file.
 ;;; ----------------------------------------------------------------------------
 
+(cffi:defcfun ("g_file_info_get_icon" file-info-icon) (gobject:object icon)
+  (info (gobject:object file-info)))
+
+(export 'file-info-icon)
+
 ;;; ----------------------------------------------------------------------------
 ;;; g_file_info_get_is_backup
 ;;;
