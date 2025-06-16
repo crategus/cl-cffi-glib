@@ -47,7 +47,7 @@
         (is (string= "long-name" glib::long-name))
         (is (= 108 glib::short-name))
         (is (equal '(:hidden) glib::flags))
-        (is (eq :int glib:: arg))
+        (is (eq :int glib::arg))
         (is (cffi:null-pointer-p glib::arg-data))
         (is (string= "" glib::description))
         (is (string= "" glib::arg-description))))))
