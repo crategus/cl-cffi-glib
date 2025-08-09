@@ -77,7 +77,6 @@
       @about-function{file-info-clear-status}
       @about-function{file-info-copy-into}
       @about-function{file-info-dup}
-      @about-function{file-info-access-date-time}
       @about-function{file-info-attribute-as-string}
       @about-function{file-info-attribute-boolean}
       @about-function{file-info-attribute-byte-string}
@@ -94,6 +93,7 @@
       @about-function{file-info-attribute-uint64}
       @about-function{file-info-set-attribute}
       @about-function{file-info-set-attribute-mask}
+      @about-function{file-info-access-date-time}
       @about-function{file-info-content-type}
       @about-function{file-info-creation-date-time}
       @about-function{file-info-deletion-date}
