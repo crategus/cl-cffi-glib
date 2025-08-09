@@ -77,7 +77,7 @@
 (setf (liber:alias-for-class 'list-model)
       "Interface"
       (documentation 'list-model 'type)
- "@version{2025-3-24}
+ "@version{2025-07-21}
   @begin{short}
     The @class{g:list-model} interface is an interface that represents a mutable
     list of @class{g:object} instances.
@@ -87,9 +87,10 @@
   lists of data, with support for updates.
 
   Each object in the list may also report changes in itself via some mechanism,
-  normally the @code{\"notify\"} signal. Taken together with the
-  @code{\"items-changed\"} signal, this provides for a list that can change its
-  membership, and in which the members can change their individual properties.
+  normally the @sig[g:object]{notify} signal. Taken together with the
+  @sig[g:list-model]{items-changed} signal, this provides for a list that can
+  change its embership, and in which the members can change their individual
+  properties.
 
   A good example would be the list of visible wireless network access points,
   where each access point can report dynamic properties such as signal strength.
@@ -123,21 +124,22 @@
   but typically it will be from the thread that owns the thread-default main
   context in effect at the time that the model was created.
   @begin[Signal Details]{dictionary}
-    @subheading{The \"items-changed\" signal}
+    @begin[list-model::items-changed]{signal}
       @begin{pre}
 lambda (model pos removed added)    :run-last
       @end{pre}
       @begin[code]{table}
         @entry[model]{The @class{g:list-model} instance that changed.}
-        @entry[pos]{The unsigned integer with the position at which @arg{model}
+        @entry[pos]{The unsigned integer for the position at which @arg{model}
           changed.}
-        @entry[removed]{The unsigned integer with the number of items removed.}
-        @entry[added]{The unsigned integer with the number of items added.}
+        @entry[removed]{The unsigned integer for the number of items removed.}
+        @entry[added]{The unsigned integer for the number of items added.}
       @end{table}
       This signal is emitted whenever items were added to or removed from
       @arg{model}. At @arg{pos}, removed items were removed and added items
       were added in their place. Note: If @arg{removed} is not equal
       @arg{added}, the positions of all later items in the model change.
+    @end{signal}
   @end{dictionary}
   @see-class{g:list-store}")
 

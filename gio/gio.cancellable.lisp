@@ -79,7 +79,7 @@
 
 #+liber-documentation
 (setf (documentation 'cancellable 'type)
- "@version{2025-05-27}
+ "@version{2025-06-29}
   @begin{short}
     The @class{gio:cancellable} object allows operations to be cancelled.
   @end{short}
@@ -87,13 +87,13 @@
   stack used throughout GIO to allow for cancellation of synchronous and
   asynchronous operations.
   @begin[Signal Details]{dictionary}
-    @subheading{The \"cancelled\" signal}
+    @begin[cancellable::cancelled]{signal}
       @begin{pre}
 lambda (cancellable)    :run-last
       @end{pre}
-      @begin[code]{table}
+      @begin[code]{simple-table}
         @entry[cancellable]{The @class{g:cancellable} object.}
-      @end{table}
+      @end{simple-table}
       Emitted when the operation has been cancelled. Can be used by
       implementations of cancellable operations. If the operation is cancelled
       from another thread, the signal will be emitted in the thread that
@@ -127,6 +127,7 @@ lambda (cancellable)    :run-last
       Note that the cancelled signal is emitted in the thread that the user
       cancelled from, which may be the main thread. So, the cancellable signal
       should not do something that can block.
+    @end{signal}
   @end{dictionary}
   @see-constructor{g:cancellable-new}
   @see-function{g:cancellable-connect}
@@ -293,15 +294,9 @@ lambda (cancellable)    :run-last
       "Callback"
       (liber:symbol-documentation 'cancellable-source-func)
  "@version{#2025-05-27}
-  @begin{declaration}
-lambda (cancellable) => result
-  @end{declaration}
-  @begin{values}
-    @begin[code]{table}
-    @entry[cancellable]{The @class{g:cancellable} object.}
-    @entry[result]{It should return @em{false} if the source should be removed.}
-    @end{table}
-  @end{values}
+  @syntax{lambda (cancellable} => result
+  @argument[cancellable]{a @class{g:cancellable} object}
+  @argument[result]{@em{false} if the source should be removed}
   @begin{short}
     This is the function type of the callback used for the @type{g:source}
     instance returned by the @fun{g:cancellable-source-new} function.

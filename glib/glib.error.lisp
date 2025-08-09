@@ -55,7 +55,7 @@
 (setf (liber:alias-for-class 'error)
       "GBoxed"
       (documentation 'error 'type)
- "@version{2025-05-18}
+ "@version{2025-07-05}
   @begin{declaration}
 (define-gboxed-opaque error \"GError\"
   :export t
@@ -67,11 +67,11 @@
     has occurred.
   @end{short}
   This boxed type is exported for use in signal handlers or callback functions,
-  that take a @class{g:error} instance as an argument.
+  that take a @class{glib:error} instance as an argument.
   @begin[Lisp implementation]{dictionary}
-    There are no exported functions for @class{g:error} instances. Errors from
-    C functions either create and signal an error condition, or the error is
-    ignored and a suitable value is returned from the Lisp function.
+    There are no exported functions for @class{glib:error} instances. Errors
+    from C functions either create and signal an error condition, or the error
+    is ignored and a suitable value is returned from the Lisp function.
   @end{dictionary}")
 
 (export 'error)

@@ -2,8 +2,8 @@
 ;;; gio.action-group.lisp
 ;;;
 ;;; The documentation in this file is taken from the GIO Reference Manual
-;;; Version 2.82 and modified to document the Lisp binding to the GIO library,
-;;; see <http://www.gtk.org>. The API documentation of the Lisp binding is
+;;; version 2.84 and modified to document the Lisp binding to the GIO library,
+;;; see <http://www.gtk.org>. The API documentation for the Lisp binding is
 ;;; available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
 ;;; Copyright (C) 2012 - 2025 Dieter Kaiser
@@ -93,7 +93,7 @@
 (setf (liber:alias-for-class 'action-group)
       "Interface"
       (documentation 'action-group 'type)
- "@version{2024-12-27}
+ "@version{2025-06-21}
   @begin{short}
     The @class{g:action-group} interface represents a group of actions.
   @end{short}
@@ -142,8 +142,11 @@
   @fun{g:action-group-query-action} virtual functions. The other virtual
   functions should not be implemented - their \"wrappers\" are actually
   implemented with calls to the @fun{g:action-group-query-action} function.
+
+
+
   @begin[Signal Details]{dictionary}
-    @subheading{The \"action-added\" signal}
+    @begin[action-group::action-added]{signal}
       @begin{pre}
 lambda (group name)    :detailed
       @end{pre}
@@ -153,7 +156,8 @@ lambda (group name)    :detailed
       @end{table}
       Signals that a new action was just added to the group. The signal is
       emitted after the action has been added and is now visible.
-    @subheading{The \"action-enabled-changed\" signal}
+    @end{signal}
+    @begin[action-group::action-enabled-changed]{signal}
       @begin{pre}
 lambda (group name enabled)    :detailed
       @end{pre}
@@ -163,7 +167,8 @@ lambda (group name enabled)    :detailed
         @entry[enabled]{The boolean whether the action is enabled or not.}
       @end{table}
       Signals that the enabled status of the named action has changed.
-    @subheading{The \"action-removed\" signal}
+    @end{signal}
+    @begin[action-group::action-removed]{signal}
       @begin{pre}
 lambda (group name)    :detailed
       @end{pre}
@@ -174,7 +179,8 @@ lambda (group name)    :detailed
       Signals that an action is just about to be removed from the group. This
       signal is emitted before the action is removed, so the action is still
       visible and can be queried from the signal handler.
-    @subheading{The \"action-state-changed\" signal}
+    @end{signal}
+    @begin[action-group::action-state-changed]{signal}
       @begin{pre}
 lambda (group name parameter)    :detailed
       @end{pre}
@@ -184,6 +190,7 @@ lambda (group name parameter)    :detailed
         @entry[parameter]{The new @symbol{g:variant} parameter for the state.}
       @end{table}
       Signals that the state of the named action has changed.
+    @end{signal}
   @end{dictionary}
   @see-class{g:simple-action-group}")
 
@@ -217,7 +224,7 @@ lambda (group name parameter)    :detailed
 
 (cffi:defcfun ("g_action_group_has_action" action-group-has-action) :boolean
  #+liber-documentation
- "@version{2025-2-3}
+ "@version{2025-02-03}
   @argument[group]{a @class{g:action-group} instance}
   @argument[name]{a string for the name of the action to check for}
   @return{The boolean whether the named action exists.}
@@ -237,7 +244,7 @@ lambda (group name parameter)    :detailed
 (cffi:defcfun ("g_action_group_get_action_enabled" action-group-action-enabled)
     :boolean
  #+liber-documentation
- "@version{2025-2-3}
+ "@version{2025-02-03}
   @argument[group]{a @class{g:action-group} instance}
   @argument[name]{a string for the name of the action to query}
   @return{The boolean whether or not the action is currently enabled.}
@@ -260,7 +267,7 @@ lambda (group name parameter)    :detailed
                 action-group-action-parameter-type)
     (glib:boxed glib:variant-type)
  #+liber-documentation
- "@version{2025-2-3}
+ "@version{2025-02-03}
   @argument[group]{a @class{g:action-group} instance}
   @argument[name]{a string for the name of the action to query}
   @return{The @class{g:variant-type} parameter type.}
@@ -296,7 +303,7 @@ lambda (group name parameter)    :detailed
 (cffi:defcfun ("g_action_group_get_action_state_type"
                 action-group-action-state-type) (glib:boxed glib:variant-type)
  #+liber-documentation
- "@version{2025-2-3}
+ "@version{2025-02-03}
   @argument[group]{a @class{g:action-group} instance}
   @argument[name]{a string for the name of the action to query}
   @return{The @class{g:variant-type} state type, if the action is stateful.}
@@ -338,11 +345,13 @@ lambda (group name parameter)    :detailed
                 action-group-action-state-hint)
     (:pointer (:struct glib:variant))
  #+liber-documentation
- "@version{2025-2-3}
+ "@version{2025-06-21}
   @argument[group]{a @class{g:action-group} instance}
   @argument[name]{a string for the name of the action to query}
-  @return{The @symbol{g:variant} parameter with the state range hint, or
-    @code{cffi:null-pointer}.}
+  @begin{return}
+    The @symbol{g:variant} parameter with the state range hint, or
+    @code{cffi:null-pointer}.
+  @end{return}
   @begin{short}
     Requests a hint about the valid range of values for the state of the named
     action within the action group.
@@ -374,11 +383,13 @@ lambda (group name parameter)    :detailed
 (cffi:defcfun ("g_action_group_get_action_state" action-group-action-state)
     (:pointer (:struct glib:variant))
  #+liber-documentation
- "@version{2025-2-3}
+ "@version{2025-06-21}
   @argument[group]{a @class{g:action-group} instance}
   @argument[name]{a string for the name of the action to query}
-  @return{The current @symbol{g:variant} parameter with the state of the action,
-    or a @code{cffi:null-pointer}.}
+  @begin{return}
+    The current @symbol{g:variant} parameter with the state of the action,
+    or a @code{cffi:null-pointer}.
+  @end{return}
   @begin{short}
     Queries the current state of the named action within the action group.
   @end{short}
@@ -400,7 +411,7 @@ lambda (group name parameter)    :detailed
 (cffi:defcfun ("g_action_group_change_action_state"
                 action-group-change-action-state) :void
  #+liber-documentation
- "@version{2025-2-3}
+ "@version{2025-02-03}
   @argument[group]{a @class{g:action-group} instance}
   @argument[name]{a string for the name of the action to request the change on}
   @argument[parameter]{a new @symbol{g:variant} parameter for the state}
@@ -430,7 +441,7 @@ lambda (group name parameter)    :detailed
 (cffi:defcfun ("g_action_group_activate_action" action-group-activate-action)
     :void
  #+liber-documentation
- "@version{2025-2-3}
+ "@version{2025-02-03}
   @argument[group]{a @class{g:action-group} instance}
   @argument[name]{a string for the name of the action to activate}
   @argument[parameter]{a @symbol{g:variant} parameter to the activation}
@@ -456,11 +467,11 @@ lambda (group name parameter)    :detailed
 
 (cffi:defcfun ("g_action_group_action_added" action-group-action-added) :void
  #+liber-documentation
- "@version{#2025-2-3}
+ "@version{#2025-06-22}
   @argument[group]{a @class{g:action-group} instance}
   @argument[name]{a string for the name of an action in the group}
   @begin{short}
-    Emits the @code{\"action-added\"} signal on the action group.
+    Emits the @sig[g:action-group]{action-added} signal on the action group.
   @end{short}
   This function should only be called by @class{g:action-group} implementations.
   @see-class{g:action-group}"
@@ -476,11 +487,11 @@ lambda (group name parameter)    :detailed
 (cffi:defcfun ("g_action_group_action_removed" action-group-action-removed)
     :void
  #+liber-documentation
- "@version{#2025-2-3}
+ "@version{#2025-06-22}
   @argument[group]{a @class{g:action-group} instance}
   @argument[name]{a string for the name of an action in the action group}
   @begin{short}
-    Emits the @code{\"action-removed\"} signal on the action group.
+    Emits the @sig[g:action-group]{action-removed} signal on the action group.
   @end{short}
   This function should only be called by @class{g:action-group} implementations.
   @see-class{g:action-group}"
@@ -496,12 +507,13 @@ lambda (group name parameter)    :detailed
 (cffi:defcfun ("g_action_group_action_enabled_changed"
                 action-group-action-enabled-changed) :void
  #+liber-documentation
- "@version{#2025-2-3}
+ "@version{#2025-06-22}
   @argument[group]{a @class{g:action-group} instance}
   @argument[name]{a string for the name of an action in the action group}
   @argument[enabled]{a boolean whether or not the action is now enabled}
   @begin{short}
-    Emits the @code{\"action-enabled-changed\"} signal on the action group.
+    Emits the @sig[g:action-group]{action-enabled-changed} signal on the action
+    group.
   @end{short}
   This function should only be called by @class{g:action-group}
   implementations.
@@ -519,13 +531,14 @@ lambda (group name parameter)    :detailed
 (cffi:defcfun ("g_action_group_action_state_changed"
                 action-group-action-state-changed) :void
  #+liber-documentation
- "@version{#2025-2-3}
+ "@version{#2025-02-03}
   @argument[group]{a @class{g:action-group} instance}
   @argument[name]{a string for the name of an action in the group}
   @argument[state]{a new @symbol{g:variant} parameter for the state of the
     named action}
   @begin{short}
-    Emits the @code{\"action-state-changed\"} signal on the action group.
+    Emits the @sig[g:action-group]{action-state-changed} signal on the action
+    group.
   @end{short}
   This function should only be called by @class{g:action-group} implementations.
   @see-class{g:action-group}

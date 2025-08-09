@@ -316,7 +316,7 @@
 (setf (liber:alias-for-symbol 'signal-flags)
       "Bitfield"
       (liber:symbol-documentation 'signal-flags)
- "@version{2024-12-4}
+ "@version{2025-07-12}
   @begin{declaration}
 (cffi:defbitfield signal-flags
   :run-first
@@ -330,7 +330,7 @@
   :deprecated)
   @end{declaration}
   @begin{values}
-    @begin[code]{table}
+    @begin[code]{simple-table}
       @entry[:run-first]{Invoke the object method handler in the first emission
         stage.}
       @entry[:run-last]{Invoke the object method handler in the third emission
@@ -340,8 +340,8 @@
       @entry[:no-recurse]{Signals being emitted for an object while currently
         being in emission for this very object will not be emitted recursively,
         but instead cause the first emission to be restarted.}
-      @entry[:detailed]{The signal supports @code{\"::detail\"} appendices to
-        the signal name upon handler connections and emissions.}
+      @entry[:detailed]{The signal supports @code{::detail} appendices to the
+        signal name upon handler connections and emissions.}
       @entry[:action]{Action signals are signals that may freely be emitted on
         alive objects from user code via the @fun{g:signal-emit} function and
         friends, without the need of being embedded into extra code that
@@ -353,7 +353,7 @@
         arguments, even if there are no signal handlers connected.}
       @entry[:deprecated]{The signal is deprecated and will be removed in a
         future version.}
-    @end{table}
+    @end{simple-table}
   @end{values}
   @begin{short}
     The signal flags are used to specify the behaviour of the signal, the
@@ -377,19 +377,19 @@
 (setf (liber:alias-for-symbol 'connect-flags)
       "Bitfield"
       (liber:symbol-documentation 'connect-flags)
- "@version{2024-12-4}
+ "@version{2025-07-12}
   @begin{declaration}
 (cffi:defbitfield connect-flags
   :after
   :swapped)
   @end{declaration}
   @begin{values}
-    @begin[code]{table}
+    @begin[code]{simple-table}
       @entry[:after]{Whether the handler should be called before or after the
         default handler of the signal.}
       @entry[:swapped]{Whether the instance and data should be swapped when
         calling the handler.}
-    @end{table}
+    @end{simple-table}
   @end{values}
   @begin{short}
     The connection flags are used to specify the behaviour of the connection

@@ -2,8 +2,8 @@
 ;;; gio.action-map.lisp
 ;;;
 ;;; The documentation in this file is taken from the GIO Reference Manual
-;;; Version 2.82 and modified to document the Lisp binding to the GIO library,
-;;; see <http://www.gtk.org>. The API documentation of the Lisp binding is
+;;; version 2.84 and modified to document the Lisp binding to the GIO library,
+;;; see <http://www.gtk.org>. The API documentation for the Lisp binding is
 ;;; available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
 ;;; Copyright (C) 2012 - 2025 Dieter Kaiser
@@ -72,7 +72,7 @@
 (setf (liber:alias-for-class 'action-map)
       "Interface"
       (documentation 'action-map 'type)
- "@version{2025-2-3}
+ "@version{2025-02-03}
   @begin{short}
     The @class{g:action-map} interface is implemented by @class{g:action-group}
     implementations that operate by containing a number of named
@@ -94,7 +94,7 @@
 (cffi:defcfun ("g_action_map_lookup_action" action-map-lookup-action)
     (gobject:object action)
  #+liber-documentation
- "@version{2025-2-3}
+ "@version{2025-02-03}
   @argument[map]{a @class{g:action-map} object}
   @argument[name]{a string for the name of an action}
   @return{The @class{g:action} object, or @code{nil}.}
@@ -121,7 +121,7 @@
 
 (defun action-map-add-action-entries (map entries)
  #+liber-documentation
- "@version{2024-5-14}
+ "@version{2024-05-14}
   @argument[map]{a @class{g:action-map} object}
   @argument[entries]{a list of descriptions for the actions}
   @begin{short}
@@ -200,7 +200,7 @@
 
 (cffi:defcfun ("g_action_map_add_action" action-map-add-action) :void
  #+liber-documentation
- "@version{2024-5-14}
+ "@version{2024-05-14}
   @argument[map]{a @class{g:action-map} object}
   @argument[action]{a @class{g:action} object}
   @begin{short}
@@ -222,7 +222,7 @@
 
 (cffi:defcfun ("g_action_map_remove_action" action-map-remove-action) :void
  #+liber-documentation
- "@version{2025-2-3}
+ "@version{2025-02-03}
   @argument[map]{a @class{g:action-map} object}
   @argument[name]{a string for the name of the action}
   @begin{short}

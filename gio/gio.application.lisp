@@ -149,7 +149,7 @@
 (setf (liber:alias-for-symbol 'application-flags)
       "GFlags"
       (liber:symbol-documentation 'application-flags)
- "@version{2025-2-3}
+ "@version{2025-02-03}
   @begin{declaration}
 (gobject:define-gflags \"GApplicationFlags\" application-flags
   (:export t
@@ -169,7 +169,7 @@
   (:replace 256))
   @end{declaration}
   @begin{values}
-    @begin[code]{table}
+    @begin[code]{simple-table}
       @entry[:flags-none]{Default flags, deprecated since 2.74.}
       @entry[:default-flags]{Default flags. Since 2.74}
       @entry[:is-service]{Run as a service. In this mode, registration fails if
@@ -205,7 +205,7 @@
       @entry[:replace]{Take over from another instance. This flag is usually
         set by passing the @code{--gapplication-replace} option on the command
         line.}
-    @end{table}
+    @end{simple-table}
   @end{values}
   @begin{short}
     Flags used to define the behaviour of a @class{g:application} instance.
@@ -255,7 +255,7 @@
 
 #+liber-documentation
 (setf (documentation 'application 'type)
- "@version{2025-2-3}
+ "@version{2025-06-22}
   @begin{short}
     The @class{g:application} class is the foundation of an application.
   @end{short}
@@ -291,7 +291,7 @@
   instance, possibly connecting signal handlers, then calling the
   @fun{g:application-run} function. All checks for uniqueness are done
   internally. If the application is the primary instance then the
-  @code{\"startup\"} signal is emitted and the main loop runs. If the
+  @sig[g:application]{startup} signal is emitted and the main loop runs. If the
   application is not the primary instance then a signal is sent to the primary
   instance and the @fun{g:application-run} function promptly returns.
 
@@ -333,8 +333,8 @@
     @item{by handling a command-line}
     @item{via activating an action}
   @end{itemize}
-  The @code{\"startup\"} signal lets you handle the application initialization
-  for all of these in a single place.
+  The @sig[g:application]{startup} signal lets you handle the application
+  initialization for all of these in a single place.
 
   Regardless of which of these entry points is used to start the application,
   the @class{g:application} instance passes some platform data from the
@@ -466,7 +466,7 @@
     @end{pre}
   @end{dictionary}
   @begin[Signal Details]{dictionary}
-    @subheading{The \"activate\" signal}
+    @begin[application::activate]{signal}
       @begin{pre}
 lambda (application)    :run-last
       @end{pre}
@@ -476,7 +476,8 @@ lambda (application)    :run-last
       @end{table}
       The signal is emitted on the primary instance when an activation occurs.
       See the @fun{g:application-activate} function.
-    @subheading{The \"command-line\" signal}
+    @end{signal}
+    @begin[application::command-line]{signal}
       @begin{pre}
 lambda (application cmdline)    :run-last
       @end{pre}
@@ -491,7 +492,8 @@ lambda (application cmdline)    :run-last
       The signal is emitted on the primary instance when a command line is not
       handled locally. See the @fun{g:application-run} function and the
       @class{g:application-command-line} documentation for more information.
-    @subheading{The \"handle-local-options\" signal}
+    @end{signal}
+    @begin[application::handle-local-options]{signal}
       @begin{pre}
 lambda (application options)    :run-last
       @end{pre}
@@ -543,7 +545,8 @@ lambda (application options)    :run-last
       You can override the @code{local_command_line()} virtual function if you
       need more powerful capabilities than what is provided here, but this
       should not normally be required.
-    @subheading{The \"name-lost\" signal}
+    @end{signal}
+    @begin[application::name-lost]{signal}
       @begin{pre}
 lambda (application)    :run-last
       @end{pre}
@@ -556,7 +559,8 @@ lambda (application)    :run-last
       instance has taken over. This can only happen if the application is using
       the @code{:allow-replacement} flag. The default handler for this signal
       calls the @fun{g:application-quit} function.
-    @subheading{The \"open\" signal}
+    @end{signal}
+    @begin[application::open]{signal}
       @begin{pre}
 lambda (application files nfiles hint)    :run-last
       @end{pre}
@@ -569,7 +573,8 @@ lambda (application files nfiles hint)    :run-last
       @end{table}
       The signal is emitted on the primary instance when there are files to
       open. See the @fun{g:application-open} function for more information.
-    @subheading{The \"shutdown\" signal}
+    @end{signal}
+    @begin[application::shutdown]{signal}
       @begin{pre}
 lambda (application)    :run-last
       @end{pre}
@@ -579,7 +584,8 @@ lambda (application)    :run-last
       @end{table}
       The signal is emitted only on the registered primary instance immediately
       after the main loop terminates.
-    @subheading{The \"startup\" signal}
+    @end{signal}
+    @begin[application::startup]{signal}
       @begin{pre}
 lambda (application)    :run-first
       @end{pre}
@@ -589,6 +595,7 @@ lambda (application)    :run-first
       @end{table}
       The signal is emitted on the primary instance immediately after
       registration. See the @fun{g:application-register} function.
+    @end{signal}
   @end{dictionary}
   @see-constructor{g:application-new}
   @see-slot{g:application-action-group}
@@ -624,7 +631,7 @@ lambda (application)    :run-first
 (setf (liber:alias-for-function 'application-action-group)
       "Accessor"
       (documentation 'application-action-group 'function)
- "@version{2025-2-3}
+ "@version{2025-02-03}
   @syntax{(setf (g:application-action-group object) group)}
   @argument[object]{a @class{g:application} instance}
   @argument[group]{a @class{g:action-group} instance, or @code{nil}}
@@ -691,7 +698,7 @@ lambda (application)    :run-first
 (setf (liber:alias-for-function 'application-flags)
       "Accessor"
       (documentation 'application-flags 'function)
- "@version{2025-2-3}
+ "@version{2025-02-03}
   @syntax{(g:application-flags object) => flags}
   @syntax{(setf (g:application-flags object) flags)}
   @argument[object]{a @class{g:application} instance}
@@ -755,7 +762,7 @@ lambda (application)    :run-first
 (setf (liber:alias-for-function 'application-is-busy)
       "Accessor"
       (documentation 'application-is-busy 'function)
- "@version{2025-2-3}
+ "@version{2025-02-03}
   @syntax{(g:application-is-busy object) => setting}
   @argument[object]{a @class{g:application} instance}
   @argument[setting]{@em{true} if the application is currenty marked as busy}
@@ -782,7 +789,7 @@ lambda (application)    :run-first
 (setf (liber:alias-for-function 'application-is-registered)
       "Accessor"
       (documentation 'application-is-registered 'function)
- "@version{2025-2-3}
+ "@version{2025-02-03}
   @syntax{(g:application-is-registered object) => setting}
   @argument[object]{a @class{g:application} instance}
   @argument[setting]{@em{true} if the application is registered}
@@ -807,7 +814,7 @@ lambda (application)    :run-first
 (setf (liber:alias-for-function 'application-is-remote)
       "Accessor"
       (documentation 'application-is-remote 'function)
- "@version{2025-2-3}
+ "@version{2025-02-03}
   @syntax{(g:application-is-remote object) => setting}
   @argument[object]{a @class{g:application} instance}
   @argument[setting]{@em{true} if the application is remote}
@@ -914,7 +921,7 @@ lambda (application)    :run-first
 
 (cffi:defcfun ("g_application_id_is_valid" application-id-is-valid) :boolean
  #+liber-documentation
- "@version{2025-2-3}
+ "@version{2025-02-03}
   @argument[id]{a string for a potential application identifier}
   @return{@em{True} if @arg{id} is a valid application ID.}
   @begin{short}
@@ -1039,7 +1046,7 @@ lambda (application)    :run-first
 
 (defun application-register (application)
  #+liber-documentation
- "@version{#2025-2-3}
+ "@version{#2025-06-22}
   @argument[application]{a @class{g:application} instance}
   @return{@em{True} if registration succeeded.}
   @begin{short}
@@ -1056,7 +1063,7 @@ lambda (application)    :run-first
   calling this function.
 
   If the application has already been registered then @em{true} is returned
-  with no work performed. The @code{\"startup\"} signal is emitted if
+  with no work performed. The @sig[g:application]{startup} signal is emitted if
   registration succeeds and the application is the primary instance. In the
   event of an error @em{false} is returned.
   @begin[Notes]{dictionary}
@@ -1077,7 +1084,7 @@ lambda (application)    :run-first
 
 (cffi:defcfun ("g_application_hold" application-hold) :void
  #+liber-documentation
- "@version{2025-2-3}
+ "@version{2025-02-03}
   @argument[application]{a @class{g:application} instance}
   @begin{short}
     Increases the use count of the application.
@@ -1098,7 +1105,7 @@ lambda (application)    :run-first
 
 (cffi:defcfun ("g_application_release" application-release) :void
  #+liber-documentation
- "@version{2025-2-3}
+ "@version{2025-02-03}
   @argument[application]{a @class{g:application} instance}
   @begin{short}
     Decrease the use count of the application.
@@ -1118,15 +1125,15 @@ lambda (application)    :run-first
 
 (cffi:defcfun ("g_application_quit" application-quit) :void
  #+liber-documentation
- "@version{#2025-2-3}
+ "@version{#2025-06-22}
   @argument[application]{a @class{g:application} instance}
   @begin{short}
     Immediately quits the application.
   @end{short}
   Upon return to the main loop, the @fun{g:application-run} function will
-  return, emitting only the @code{\"shutdown\"} signal before doing so. The hold
-  count is ignored. The result of calling the @fun{g:application-run} function
-  again after it returns is unspecified.
+  return, emitting only the @sig[g:application]{shutdown} signal before doing
+  so. The hold count is ignored. The result of calling the
+  @fun{g:application-run} function again after it returns is unspecified.
   @see-class{g:application}
   @see-function{g:application-run}"
   (application (gobject:object application)))
@@ -1139,14 +1146,14 @@ lambda (application)    :run-first
 
 (cffi:defcfun ("g_application_activate" application-activate) :void
  #+liber-documentation
- "@version{2025-2-3}
+ "@version{2025-06-22}
   @argument[application]{a @class{g:application} instance}
   @begin{short}
     Activates the application.
   @end{short}
-  In essence, this results in the @code{\"activate\"} signal being emitted in
-  the primary instance. The application must be registered before calling this
-  function.
+  In essence, this results in the @sig[g:application]{activate} signal being
+  emitted in the primary instance. The application must be registered before
+  calling this function.
   @see-class{g:application}"
   (application (gobject:object application)))
 
@@ -1164,19 +1171,20 @@ lambda (application)    :run-first
 
 (defun application-open (application files &optional (hint ""))
  #+liber-documentation
- "@version{2025-2-3}
+ "@version{2025-06-22}
   @argument[application]{a @class{g:application} instance}
   @argument[files]{a list of strings for the file names}
   @argument[hint]{an optional string for a hint or the default empty string
     \"\"}
   @begin{short}
-    This results in the @code{\"open\"} signal being emitted in the primary
-    instance.
+    This results in the @sig[g:application]{open} signal being emitted in the
+    primary instance.
   @end{short}
-  The @arg{hint} argument is simply passed through to the @code{\"open\"}
-  signal. It is intended to be used by applications that have multiple modes for
-  opening files, for example, \"view\" versus \"edit\". Unless you have a need
-  for this functionality, you should use an empty string \"\".
+  The @arg{hint} argument is simply passed through to the
+  @sig[g:application]{open} signal. It is intended to be used by applications
+  that have multiple modes for opening files, for example, \"view\" versus
+  \"edit\". Unless you have a need for this functionality, you should use an
+  empty string \"\".
 
   The application must be registered before calling this function and it must
   have the @code{:handles-open} flag set.
@@ -1200,7 +1208,7 @@ lambda (application)    :run-first
 (cffi:defcfun ("g_application_send_notification" application-send-notification)
     :void
  #+liber-documentation
- "@version{#2025-2-3}
+ "@version{#2025-02-03}
   @argument[application]{a @class{g:application} instance}
   @argument[id]{a string for the ID of the notification, or @code{nil}}
   @argument[notification]{a @class{g:notification} instance to send}
@@ -1240,7 +1248,7 @@ lambda (application)    :run-first
 (cffi:defcfun ("g_application_withdraw_notification"
                 application-withdraw-notification) :void
  #+liber-documentation
- "@version{#2025-2-3}
+ "@version{#2025-02-03}
   @argument[application]{a @class{g:application} instance}
   @argument[id]{a string for the ID of a previously sent notification}
   @begin{short}
@@ -1274,7 +1282,7 @@ lambda (application)    :run-first
 
 (defun application-run (application argv)
  #+liber-documentation
- "@version{2025-05-12}
+ "@version{2025-06-22}
   @argument[application]{a @class{g:application} instance}
   @argument[argv]{a list of strings for command line parameters, or @code{nil}}
   @return{The integer with the exit status.}
@@ -1293,24 +1301,25 @@ lambda (application)    :run-first
   The @class{g:application} instance will attempt to parse the command line
   arguments. You can add command line flags to the list of recognised options by
   way of the @fun{g:application-add-main-option-entries} function. After this,
-  the @code{\"handle-local-options\"} signal is emitted, from which the
-  application can inspect the values of its option entries.
+  the @sig[g:application]{handle-local-options} signal is emitted, from which
+  the application can inspect the values of its option entries.
 
-  The @code{\"handle-local-options\"} signal handler is a good place to handle
-  options such as @code{--version}, where an immediate reply from the local
-  process is desired, instead of communicating with an already-running instance.
-  A @code{\"handle-local-options\"} signal handler can stop further processing
-  by returning a non-negative value, which then becomes the exit status of the
-  process.
+  The @sig[g:application]{handle-local-options} signal handler is a good place
+  to handle options such as @code{--version}, where an immediate reply from the
+  local process is desired, instead of communicating with an already-running
+  instance. A @sig[g:application]{handle-local-options} signal handler can stop
+  further processing by returning a non-negative value, which then becomes the
+  exit status of the process.
 
   What happens next depends on the @symbol{g:application-flags} flags: if the
   @code{:handles-command-line} flag was specified then the remaining command
   line arguments are sent to the primary instance, where a
-  @code{\"command-line\"} signal is emitted. Otherwise, the remaining command
-  line arguments are assumed to be a list of files. If there are no files
-  listed, the application is activated via the @code{\"activate\"} signal. If
-  there are one or more files, and the @code{:handles-open} flag was specified
-  then the files are opened via the @code{\"open\"} signal.
+  @sig[g:application]{command-line} signal is emitted. Otherwise, the remaining
+  command line arguments are assumed to be a list of files. If there are no
+  files listed, the application is activated via the
+  @sig[g:application]{activate} signal. If there are one or more files, and the
+  @code{:handles-open} flag was specified then the files are opened via the
+  @sig[g:application]{open} signal.
 
   If you are interested in doing more complicated local handling of the
   command line then you should implement your own @class{g:application} subclass
@@ -1375,7 +1384,7 @@ lambda (application)    :run-first
 
 (defun application-add-main-option-entries (application entries)
  #+liber-documentation
- "@version{2025-2-3}
+ "@version{2025-06-22}
   @argument[application]{a @class{g:application} instance}
   @argument[entries]{a list of option entries, see the
     @fun{g:option-context-add-main-entries} function for a documentation of
@@ -1384,17 +1393,17 @@ lambda (application)    :run-first
     Adds main option entries to be handled by the application.
   @end{short}
   After the command line arguments are parsed, the
-  @code{\"handle-local-options\"} signal will be emitted. At this point, the
-  application can inspect the values pointed to by the @code{arg-data} field in
-  the given option entries.
+  @sig[g:application]{handle-local-options} signal will be emitted. At this
+  point, the application can inspect the values pointed to by the
+  @code{arg-data} field in the given option entries.
 
   Unlike the @type{g:option-context} implementation, the @class{g:application}
   class supports giving @code{nil} for the @code{arg-data} field for a
   non-callback option entry. This results in the argument in question being
   packed into a @class{g:variant-dict} parameter which is also passed to the
-  @code{\"handle-local-options\"} signal handler, where it can be inspected and
-  modified. If the @code{:handles-command-line} flag is set, then the resulting
-  dictionary is sent to the primary instance, where the
+  @sig[g:application]{handle-local-options} signal handler, where it can be
+  inspected and modified. If the @code{:handles-command-line} flag is set, then
+  the resulting dictionary is sent to the primary instance, where the
   @fun{g:application-command-line-options-dict} function will return it. This
   \"packing\" is done according to the type of the argument - booleans for
   normal flags, strings for strings, bytestrings for filenames, and so on. The
@@ -1416,8 +1425,8 @@ lambda (application)    :run-first
   as errors. Unrecognised options have never been ignored when the
   @code{:handles-command-line} flag is unset.
 
-  If the @code{\"handle-local-options\"} signal needs to see the list of
-  filenames, then the use of @code{G_OPTION_REMAINING} is recommended. If the
+  If the @sig[g:application]{handle-local-options} signal needs to see the list
+  of filenames, then the use of @code{G_OPTION_REMAINING} is recommended. If the
   @code{arg-data} field is @code{nil} then @code{G_OPTION_REMAINING} can be used
   as a key into the options dictionary. If you do use @code{G_OPTION_REMAINING}
   then you need to handle these arguments for yourself because once they are
@@ -1516,7 +1525,7 @@ lambda (application)    :run-first
 (defun application-add-main-option (application
                                     long short flags arg desc argdesc)
  #+liber-documentation
- "@version{2025-2-3}
+ "@version{2025-06-22}
   @argument[application]{a @class{g:application} instance}
   @argument[long]{a string for the long name of an option used to specify it
     in a command line}
@@ -1536,10 +1545,10 @@ lambda (application)    :run-first
   entry that has its the @code{arg-data} field set to @code{nil}.
 
   The parsed arguments will be packed into a @class{g:variant-dict} parameter
-  which is passed to the @code{\"handle-local-options\"} signal handler. If the
-  @code{:handles-command-line} flag is set, then it will also be sent to the
-  primary instance. See the @fun{g:application-add-main-option-entries} function
-  for more details.
+  which is passed to the @sig[g:application]{handle-local-options} signal
+  handler. If the @code{:handles-command-line} flag is set, then it will also
+  be sent to the primary instance. See the
+  @fun{g:application-add-main-option-entries} function for more details.
 
   See the @fun{g:option-group-add-entries} function for more documentation of
   the arguments.
@@ -1567,7 +1576,7 @@ lambda (application)    :run-first
 (cffi:defcfun ("g_application_add_option_group" application-add-option-group)
     :void
  #+liber-documentation
- "@version{#2025-2-3}
+ "@version{#2025-06-22}
   @argument[application]{a @class{g:application} instance}
   @argument[group]{a @type{g:option-group} instance}
   @begin{short}
@@ -1583,9 +1592,9 @@ lambda (application)    :run-first
   The reason for that is because, by the time the options arrive at the primary
   instance, it is typically too late to do anything with them. Taking the GTK
   option group as an example: GTK will already have been initialised by the time
-  the @code{\"command-line\"} signal handler runs. In the case that this is not
-  the first-running instance of the application, the existing instance may
-  already have been running for a very long time.
+  the @sig[g:application]{command-line} signal handler runs. In the case that
+  this is not the first-running instance of the application, the existing
+  instance may already have been running for a very long time.
 
   This means that the options from the @type{g:option-group} instance are only
   really usable in the case that the instance of the application being run is
@@ -1613,7 +1622,7 @@ lambda (application)    :run-first
 (cffi:defcfun ("g_application_set_option_context_parameter_string"
                 application-set-option-context-parameter-string) :void
  #+liber-documentation
- "@version{#2025-2-3}
+ "@version{#2025-02-03}
   @argument[application]{a @class{g:application} instance}
   @argument[parameter]{a string which is displayed in the first line of
     @code{--help} output}
@@ -1642,7 +1651,7 @@ lambda (application)    :run-first
 (cffi:defcfun ("g_application_set_option_context_summary"
                 application-set-option-context-summary) :void
  #+liber-documentation
- "@version{#2025-2-3}
+ "@version{#2025-02-03}
   @argument[application]{a @class{g:application} instance}
   @argument[summary]{a string to be shown in @code{--help} output before the
     list of options, or @code{nil}}
@@ -1664,7 +1673,7 @@ lambda (application)    :run-first
 (cffi:defcfun ("g_application_set_option_context_description"
                 application-set-option-context-description) :void
  #+liber-documentation
- "@version{#2025-2-3}
+ "@version{#2025-02-03}
   @argument[application]{a @class{g:application} instance}
   @argument[description]{a string to be shown in @code{--help} output after the
     list of options, or @code{nil}}
@@ -1693,7 +1702,7 @@ lambda (application)    :run-first
 (cffi:defcfun ("g_application_get_default" application-default)
     (gobject:object application)
  #+liber-documentation
- "@version{#2025-2-3}
+ "@version{#2025-02-03}
   @syntax{(g:application-default) => application}
   @syntax{(setf (g:application-default) application)}
   @argument[application]{a @class{g:application} instance to set as default,
@@ -1720,7 +1729,7 @@ lambda (application)    :run-first
 
 (cffi:defcfun ("g_application_mark_busy" application-mark-busy) :void
  #+liber-documentation
- "@version{#2025-2-3}
+ "@version{#2025-02-03}
   @argument[application]{a @class{g:application} instance}
   @begin{short}
     Increases the busy count of the application.
@@ -1742,7 +1751,7 @@ lambda (application)    :run-first
 
 (cffi:defcfun ("g_application_unmark_busy" application-unmark-busy) :void
  #+liber-documentation
- "@version{#2025-2-3}
+ "@version{#2025-02-03}
   @argument[application]{a @class{g:application} instance}
   @begin{short}
     Decreases the busy count of the application.
@@ -1763,7 +1772,7 @@ lambda (application)    :run-first
 (cffi:defcfun ("g_application_bind_busy_property"
                 application-bind-busy-property) :void
  #+liber-documentation
- "@version{#2025-2-3}
+ "@version{#2025-02-03}
   @argument[application]{a @class{g:application} instance}
   @argument[object]{a @class{g:object} instance}
   @argument[property]{a string for the name of a boolean property of
@@ -1790,7 +1799,7 @@ lambda (application)    :run-first
 (cffi:defcfun ("g_application_unbind_busy_property"
                 application-unbind-busy-property) :void
  #+liber-documentation
- "@version{#2025-2-3}
+ "@version{#2025-02-03}
   @argument[application]{a @class{g:application} instance}
   @argument[object]{a @class{g:object} instance}
   @argument[property]{a string for the name of a boolean property of

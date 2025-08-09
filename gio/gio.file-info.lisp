@@ -39,9 +39,6 @@
 ;;;     g_file_info_copy_into
 ;;;     g_file_info_dup
 ;;;
-;;;     g_file_info_get_access_date_time                    Since 2.70
-;;;     g_file_info_set_access_date_time                    Since 2.70
-;;;
 ;;;     g_file_info_get_attribute_as_string
 ;;;     g_file_info_get_attribute_boolean
 ;;;     g_file_info_get_attribute_byte_string
@@ -56,14 +53,23 @@
 ;;;     g_file_info_get_attribute_type
 ;;;     g_file_info_get_attribute_uint32
 ;;;     g_file_info_get_attribute_uint64
+
+;;;     g_file_info_get_access_date_time                    Since 2.70
+;;;     g_file_info_set_access_date_time                    Since 2.70
 ;;;     g_file_info_get_content_type
+;;;     g_file_info_set_content_type
 ;;;     g_file_info_get_creation_date_time                  Since 2.70
+;;;     g_file_info_set_creation_date_time                  Since 2.70
+
 ;;;     g_file_info_get_deletion_date
 ;;;     g_file_info_get_display_name
 ;;;     g_file_info_get_edit_name
 ;;;     g_file_info_get_etag
 ;;;     g_file_info_get_file_type
+
 ;;;     g_file_info_get_icon
+;;;     g_file_info_set_icon
+
 ;;;     g_file_info_get_is_backup
 ;;;     g_file_info_get_is_hidden
 ;;;     g_file_info_get_is_symlink
@@ -79,7 +85,6 @@
 ;;;     g_file_info_list_attributes
 ;;;     g_file_info_remove_attribute
 
-
 ;;;     g_file_info_set_attribute
 ;;;     g_file_info_set_attribute_boolean
 ;;;     g_file_info_set_attribute_byte_string
@@ -93,12 +98,11 @@
 ;;;     g_file_info_set_attribute_stringv
 ;;;     g_file_info_set_attribute_uint32
 ;;;     g_file_info_set_attribute_uint64
-;;;     g_file_info_set_content_type
-;;;     g_file_info_set_creation_date_time                  Since 2.70
+
 ;;;     g_file_info_set_display_name
 ;;;     g_file_info_set_edit_name
 ;;;     g_file_info_set_file_type
-;;;     g_file_info_set_icon
+
 ;;;     g_file_info_set_is_hidden
 ;;;     g_file_info_set_is_symlink
 ;;;     g_file_info_set_modification_date_time
@@ -178,61 +182,49 @@
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_file_info_clear_status
-;;;
-;;; Clears the status information from info.
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_file_info_clear_status" file-info-clear-status) :void
+ "@version{#2025-06-15}
+  @argument[info]{a @class{g:file-info} instance}
+  @short{Clears the status information from @arg{info}.}
+  @see-class{g:file-info}"
   (info (gobject:object file-info)))
 
 (export 'file-info-clear-status)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_file_info_copy_into
-;;;
-;;; First clears all of the [GFileAttribute][gio-GFileAttribute] of dest_info,
-;;; and then copies all of the file attributes from src_info to dest_info.
 ;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("g_file_info_copy_into" file-info-copy-into) :void
+ "@version{#2025-06-15}
+  @argument[src]{a @class{g:file-info} instance}
+  @argument[dest]{another @class{g:file-info} instance to copy attributes to}
+  @begin{short}
+    First clears all of the file attributes of @arg{dest}, and then copies all
+    of the file attributes from @arg{src} to @arg{dest}.
+  @end{short}
+  @see-class{g:file-info}"
+  (src (gobject:object file-info))
+  (dest (gobject:object file-info)))
+
+(export 'file-info-copy-into)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_file_info_dup
-;;;
-;;; Duplicates a file info structure.
 ;;; ----------------------------------------------------------------------------
 
-;;; ----------------------------------------------------------------------------
-;;; g_file_info_set_access_date_time
-;;;
-;;; Sets the G_FILE_ATTRIBUTE_TIME_ACCESS and
-;;; G_FILE_ATTRIBUTE_TIME_ACCESS_USEC attributes in the file info to the given
-;;; date/time value.
-;;;
-;;; Since 2.70
-;;; ----------------------------------------------------------------------------
-
-#+glib-2-70
-(defun (setf file-info-access-date-time) (value info)
-  (cffi:foreign-funcall "g_file_info_set_access_date_time"
-                        (gobject:object file-info) info
-                        glib:date-time value
-                        :void)
-  value)
-
-;;; ----------------------------------------------------------------------------
-;;; g_file_info_get_access_date_time
-;;;
-;;; Gets the access time of the current info and returns it as a GDateTime.
-;;;
-;;; Since 2.70
-;;; ----------------------------------------------------------------------------
-
-#+glib-2-70
-(cffi:defcfun ("g_file_info_get_access_date_time" file-info-access-date-time)
-    glib:date-time
+(cffi:defcfun ("g_file_info_dup" file-info-dup)
+    (gobject:object file-info :return)
+ "@version{#2025-06-15}
+  @argument[info]{a @class{g:file-info} instance}
+  @return{The new duplicate of @arg{info}.}
+  @short{Duplicates a file info.}
+  @see-class{g:file-info}"
   (info (gobject:object file-info)))
 
-#+glib-2-70
-(export 'file-info-access-date-time)
+(export 'file-info-dup)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_file_info_get_attribute_as_string
@@ -348,18 +340,101 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_file_info_get_content_type
-;;;
-;;; Gets the file’s content type.
+;;; g_file_info_get_access_date_time                        Since 2.70
+;;; g_file_info_set_access_date_time
 ;;; ----------------------------------------------------------------------------
+
+#+glib-2-70
+(defun (setf file-info-access-date-time) (value info)
+  (cffi:foreign-funcall "g_file_info_set_access_date_time"
+                        (gobject:object file-info) info
+                        glib:date-time value
+                        :void)
+  value)
+
+#+glib-2-70
+(cffi:defcfun ("g_file_info_get_access_date_time" file-info-access-date-time)
+    glib:date-time
+ "@version{#2025-06-16}
+  @syntax{(g:file-info-access-date-time info) => time}
+  @syntax{(setf (g:file-info-access-date-time info) time)}
+  @argument[info]{a @class{g:file-info} instance}
+  @argument[time]{an unsigned integer for the universal time}
+  @begin{short}
+    The @fun{g:file-info-access-date-time} function gets the access time of the
+    current @arg{info} and returns it as a Lisp universal time.
+  @end{short}
+  It is an error to call this function if the @class{g:file-info} instance does
+  not contain the @code{G_FILE_ATTRIBUTE_TIME_ACCESS} attribute. If the
+  @code{G_FILE_ATTRIBUTE_TIME_ACCESS_USEC} attribute is provided, the resulting
+  universal time will additionally have microsecond precision.
+
+  If nanosecond precision is needed, the
+  @code{G_FILE_ATTRIBUTE_TIME_ACCESS_NSEC} attribute must be queried separately
+  using the @fun{g:file-info-attribute-uint32} function.
+
+  The @setf{g:file-info-access-date-time} function sets the
+  @code{G_FILE_ATTRIBUTE_TIME_ACCESS} and
+  @code{G_FILE_ATTRIBUTE_TIME_ACCESS_USEC} attributes in the file info to the
+  given date/time value. The @code{G_FILE_ATTRIBUTE_TIME_ACCESS_NSEC} attribute
+  will be cleared.
+
+  Since 2.70
+  @see-class{g:file-info}"
+  (info (gobject:object file-info)))
+
+#+glib-2-70
+(export 'file-info-access-date-time)
+
+;;; ----------------------------------------------------------------------------
+;;; g_file_info_get_content_type
+;;; g_file_info_set_content_type
+;;; ----------------------------------------------------------------------------
+
+(defun (setf file-info-content-type) (value info)
+  (cffi:foreign-funcall "g_file_info_set_content_type"
+                        (gobject:object file-info) info
+                        :string value
+                        :void)
+  value)
+
+(cffi:defcfun ("g_file_info_get_content_type" file-info-content-type) :string
+ "@version{#2025-06-15}
+  @syntax{(g:file-info-content-type info) => ctype}
+  @syntax{(setf (g:file-info-content-type info) ctype)}
+  @argument[info]{a @class{g:file-info} instance}
+  @argument[ctype]{a string for the content type}
+  @begin{short}
+    The @fun{g:file-info-content-type} function gets the content type of the
+    file.
+  @end{short}
+  It is an error to call this function if @arg{info} does not contain the
+  @code{G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE} attribute.
+
+  The @setf{g:file-info-content-type} function sets the content type attribute
+  for a given @arg{info}.
+  @see-class{g:file-info}"
+  (info (gobject:object file-info)))
+
+(export 'file-info-content-type)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_file_info_get_creation_date_time
-;;;
-;;; Gets the creation time of the current info and returns it as a GDateTime.
-;;;
-;;; Since 2.70
+;;; g_file_info_set_creation_date_time
 ;;; ----------------------------------------------------------------------------
+
+(defun (setf file-info-creation-date-time) (value info)
+  (cffi:foreign-funcall "g_file_info_set_creation_data-time"
+                        (gobject:object file-info) info
+                        glib:date-time value
+                        :void)
+  value)
+
+(cffi:defcfun ("g_file_info_get_creation_date_time"
+               file-info-creation-date-time) glib:date-time
+  (info (gobject:object file-info)))
+
+(export 'file-info-creation-date-time)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_file_info_get_deletion_date
@@ -395,12 +470,30 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
+;;; g_file_info_set_icon
 ;;; g_file_info_get_icon
-;;;
-;;; Gets the icon for a file.
 ;;; ----------------------------------------------------------------------------
 
+(defun (setf file-info-icon) (icon info)
+  (cffi:foreign-funcall "g_file_info_set_icon"
+                        (gobject:object file-info) info
+                        (gobject:object icon) icon
+                        :void)
+  icon)
+
 (cffi:defcfun ("g_file_info_get_icon" file-info-icon) (gobject:object icon)
+ "@version{#2025-06-15}
+  @syntax{(g:file-info-icon info) => icon}
+  @syntax{(setf (g:file-info-icon info) icon)}
+  @argument[info]{a @class{g:file-info} object}
+  @argument[icon]{a @class{g:icon} instance }
+  @begin{short}
+    Gets or sets the icon for a given @arg{info}.
+  @end{short}
+  It is an error to call this if the @class{g:file-info} instance does not
+  contain @code{G_FILE_ATTRIBUTE_STANDARD_ICON}.
+  @see-class{g:file-info}
+  @see-class{g:icon}"
   (info (gobject:object file-info)))
 
 (export 'file-info-icon)
@@ -618,23 +711,6 @@
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_file_info_set_content_type
-;;;
-;;; Sets the content type attribute for a given GFileInfo. See
-;;; G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_file_info_set_creation_date_time
-;;;
-;;; Sets the G_FILE_ATTRIBUTE_TIME_CREATED and
-;;; G_FILE_ATTRIBUTE_TIME_CREATED_USEC attributes in the file info to the given
-;;; date/time value.
-;;;
-;;; Since 2.70
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
 ;;; g_file_info_set_display_name
 ;;;
 ;;; Sets the display name for the current GFileInfo. See
@@ -653,12 +729,6 @@
 ;;;
 ;;; Sets the file type in a GFileInfo to type. See
 ;;; G_FILE_ATTRIBUTE_STANDARD_TYPE.
-;;; ----------------------------------------------------------------------------
-
-;;; ----------------------------------------------------------------------------
-;;; g_file_info_set_icon
-;;;
-;;; Sets the icon for a given GFileInfo. See G_FILE_ATTRIBUTE_STANDARD_ICON.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------

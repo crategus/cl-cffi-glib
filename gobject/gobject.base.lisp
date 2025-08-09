@@ -183,7 +183,7 @@
 
 #+liber-documentation
 (setf (documentation 'object 'type)
- "@version{2024-12-14}
+ "@version{2025-06-22}
   @begin{short}
     The @class{g:object} class is the fundamental type providing the common
     attributes and methods for all object types in GTK, Pango and other
@@ -198,32 +198,33 @@
     during creation of an object. See the slot access functions for examples.
   @end{dictionary}
   @begin[Signal Details]{dictionary}
-    @subheading{The \"notify\" signal}
-    @begin{pre}
+    @begin[object::notify]{signal}
+      @begin{pre}
 lambda (object pspec)    :no-hooks
-    @end{pre}
-    @begin[code]{table}
-      @entry[object]{The @class{g:object} instance which received the signal.}
-      @entry[pspec]{The @symbol{g:param-spec} instance of the property which
-        changed.}
-    @end{table}
-    The signal is emitted on an object when one of its properties has been
-    changed. Note that getting this signal does not guarantee that the
-    value of the property has actually changed, it may also be emitted when
-    the setter for the property is called to reinstate the previous value.
-    This signal is typically used to obtain change notification for a single
-    property, by specifying the property name as a detail in the
-    @fun{g:signal-connect} function call, like this:
-    @begin{pre}
+      @end{pre}
+      @begin[code]{table}
+        @entry[object]{The @class{g:object} instance which received the signal.}
+        @entry[pspec]{The @symbol{g:param-spec} instance of the property which
+          changed.}
+      @end{table}
+      The signal is emitted on an object when one of its properties has been
+      changed. Note that getting this signal does not guarantee that the
+      value of the property has actually changed, it may also be emitted when
+      the setter for the property is called to reinstate the previous value.
+      This signal is typically used to obtain change notification for a single
+      property, by specifying the property name as a detail in the
+      @fun{g:signal-connect} function call, like this:
+      @begin{pre}
 (g:signal-connect switch \"notify::active\"
    (lambda (widget pspec)
      (declare (ignore pspec))
      (if (gtk:switch-active widget)
          (setf (gtk:label-label label) \"The Switch is ON\")
          (setf (gtk:label-label label) \"The Switch is OFF\"))))
-    @end{pre}
-    It is important to note that you must use canonical parameter names as
-    detail strings for the notify signal.
+      @end{pre}
+      It is important to note that you must use canonical parameter names as
+      detail strings for the notify signal.
+    @end{signal}
   @end{dictionary}
   @see-constructor{g:object-new}
   @see-slot{g:object-has-reference}
@@ -763,9 +764,9 @@ lambda ()
 
 (defun object-class-find-property (gtype name)
  #+liber-documentation
- "@version{2024-12-14}
+ "@version{2025-06-21}
   @argument[gtype]{a @class{g:type-t} type ID for an object class type}
-  @argument[name]{a string with the name of the property to look up}
+  @argument[name]{a string for the name of the property to look up}
   @begin{return}
     The @symbol{g:param-spec} instance for the property, or @code{nil} if
     the object class does not have a property of that name.
@@ -867,9 +868,9 @@ lambda ()
 
 (defun object-interface-find-property (gtype name)
  #+liber-documentation
- "@version{2024-12-14}
+ "@version{2025-06-21}
   @argument[gtype]{a @class{g:type-t} type ID for an interface type}
-  @argument[name]{a string with the name of a property to lookup}
+  @argument[name]{a string for the name of a property to lookup}
   @begin{return}
     The @symbol{g:param-spec} instance for the property of the interface type
     with, or @code{nil} if no such property exists.
@@ -916,10 +917,12 @@ lambda ()
 
 (defun object-interface-list-properties (gtype)
  #+liber-documentation
- "@version{2024-12-14}
-  @argument[gtype]{a @class{g:type-t} type ID of an interface type}
-  @return{The list of @symbol{g:param-spec} instances for all properties of an
-    interface type.}
+ "@version{2025-06-21}
+  @argument[gtype]{a @class{g:type-t} type ID for an interface type}
+  @begin{return}
+    The list of @symbol{g:param-spec} instances for all properties of an
+    interface type.
+  @end{return}
   @begin{short}
     Lists the properties of an interface type.
   @end{short}
@@ -957,8 +960,8 @@ lambda ()
 
 (defun object-new (gtype &rest args)
  #+liber-documentation
- "@version{2024-12-14}
-  @argument[gtype]{a @class{g:type-t} type ID of the @class{g:object} subtype
+ "@version{2025-06-21}
+  @argument[gtype]{a @class{g:type-t} type ID for the @class{g:object} subtype
     to instantiate}
   @argument[args]{pairs of a property keyword and value}
   @begin{short}
@@ -1125,12 +1128,12 @@ lambda ()
 
 (cffi:defcfun ("g_object_notify" object-notify) :void
  #+liber-documentation
- "@version{2025-05-09}
+ "@version{2025-06-22}
   @argument[object]{a @class{g:object} instance}
   @argument[name]{a string for the name of a property installed on the class
     of @arg{object}}
   @begin{short}
-    Emits a @code{\"notify\"} signal for the property on the object.
+    Emits a @sig[g:object]{notify} signal for the property on the object.
   @end{short}
   @see-class{g:object}"
   (object object)
@@ -1150,16 +1153,16 @@ lambda ()
 
 (cffi:defcfun ("g_object_freeze_notify" object-freeze-notify) :void
  #+liber-documentation
- "@version{2024-12-14}
+ "@version{2026-06-22}
   @argument[object]{a @class{g:object} instance}
   @begin{short}
     Increases the freeze count on the object.
   @end{short}
-  If the freeze count is non-zero, the emission of @code{\"notify\"} signals on
-  the object is stopped. The signals are queued until the freeze count is
-  decreased to zero. This is necessary for accessors that modify multiple
-  properties to prevent premature notification while the object is still being
-  modified.
+  If the freeze count is non-zero, the emission of @sig[g:object]{notify}
+  signals on the object is stopped. The signals are queued until the freeze
+  count is decreased to zero. This is necessary for accessors that modify
+  multiple properties to prevent premature notification while the object is
+  still being modified.
   @see-class{g:object}
   @see-function{g:object-thaw-notify}"
   (object object))
@@ -1172,15 +1175,15 @@ lambda ()
 
 (cffi:defcfun ("g_object_thaw_notify" object-thaw-notify) :void
  #+liber-documentation
- "@version{2024-12-14}
+ "@version{2025-06-22}
   @argument[object]{a @class{g:object} instance}
   @begin{short}
     Reverts the effect of a previous call to the @fun{g:object-freeze-notify}
     function.
   @end{short}
   The freeze count is decreased on the object and when it reaches zero, all
-  queued @code{\"notify\"} signals are emitted. It is an error to call this
-  function when the freeze count is zero.
+  queued @sig[g:object]{notify} signals are emitted. It is an error to call
+  this function when the freeze count is zero.
   @see-class{g:object}
   @see-function{g:object-freeze-notify}"
   (object object))
@@ -1218,11 +1221,11 @@ lambda ()
 
 (defun object-data (object key)
  #+liber-documentation
- "@version{2024-12-14}
+ "@version{2025-06-21}
   @syntax{(g:object-data object key) => data}
   @syntax{(setf (g:object-data object key) data)}
   @argument[object]{a @class{g:object} instance containing the associations}
-  @argument[key]{a string with the name of the key}
+  @argument[key]{a string for the name of the key}
   @argument[data]{any Lisp object as data to associate with that key}
   @begin{short}
     Each object carries around a table of associations from strings to pointers.
@@ -1299,7 +1302,7 @@ lambda ()
 
 (defun object-set-data-full (object key func)
  #+liber-documentation
- "@version{2025-3-1}
+ "@version{2025-03-01}
   @argument[object]{a @class{g:object} instance containing the associations}
   @argument[key]{a string for the name of the key}
   @argument[func]{a @symbol{g:destroy-notify} callback function}
@@ -1354,12 +1357,12 @@ lambda ()
 
 (defun object-property (object name &optional gtype)
  #+liber-documentation
- "@version{2024-12-14}
+ "@version{2026-06-21}
   @syntax{(g:object-property object name gtype) => value}
   @syntax{(setf (g:object-property object name gtype) value)}
   @argument[object]{a @class{g:object} instance}
-  @argument[name]{a string with the name of the property}
-  @argument[gtype]{an optional @class{g:type-t} type ID of the property}
+  @argument[name]{a string for the name of the property}
+  @argument[gtype]{an optional @class{g:type-t} type ID for the property}
   @argument[value]{a value for the property}
   @short{Accessor of the property of an object.}
   @begin[Examples]{dictionary}

@@ -1,12 +1,12 @@
 ;;; ----------------------------------------------------------------------------
 ;;; gio.menu-model.lisp
 ;;;
-;;; The documentation of this file is taken from the GIO Reference Manual
-;;; Version 2.82 and modified to document the Lisp binding to the GIO library.
-;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
-;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
+;;; The documentation in this file is taken from the GIO Reference Manual
+;;; version 2.84 and modified to document the Lisp binding to the GIO library,
+;;; see <http://www.gtk.org>. The API documentation for the Lisp binding is
+;;; available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2013 - 2024 Dieter Kaiser
+;;; Copyright (C) 2013 - 2025 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -87,7 +87,7 @@
 
 #+liber-documentation
 (setf (documentation 'menu-model 'type)
- "@version{2024-12-29}
+ "@version{2025-06-29}
   @begin{short}
     The @class{g:menu-model} class represents the contents of a menu -
     an ordered list of menu items.
@@ -194,16 +194,16 @@
   parameter. The menu item should be rendered as \"selected\" when the state of
   the action is equal to the target value of the menu item.
   @begin[Signal Details]{dictionary}
-    @subheading{The \"items-changed\" signal}
+    @begin[menu-model::items-changed]{signal}
       @begin{pre}
 lambda (model position removed added)   :run-last
       @end{pre}
-      @begin[code]{table}
+      @begin[code]{simple-table}
         @entry[model]{The @class{g:menu-model} object that is changing.}
         @entry[position]{The integer with the position of the change.}
         @entry[removed]{The integer with the number of items removed.}
         @entry[added]{The integer with the number of items added.}
-      @end{table}
+      @end{simple-table}
       Emitted when a change has occured to the menu. The only changes that can
       occur to a menu is that items are removed or added. Items may not change,
       except by being removed and added back in the same location. The signal
@@ -220,6 +220,7 @@ lambda (model position removed added)   :run-last
       Signal handlers may query the model, particularly the added items, and
       expect to see the results of the modification that is being reported. The
       signal is emitted after the modification.
+    @end{signal}
   @end{dictionary}
   @see-class{gtk:application}
   @see-class{g:action-group}")

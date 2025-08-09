@@ -621,10 +621,11 @@
            (type-register-static-simple
                (glib:gtype ,parent)
                ,gname
-               (cffi:foreign-slot-value query '(:struct type-query):class-size)
+               (cffi:foreign-slot-value query '(:struct type-query) :class-size)
                (cffi:callback class-init-cb)
                (cffi:foreign-slot-value query '(:struct type-query) :instance-size)
-               (cffi:callback instance-init-cb) nil))
+               (cffi:callback instance-init-cb)
+               nil))
          (add-interfaces ,gname)
          ;; Register Lisp symbol for GType
          (setf (glib:symbol-for-gtype ,gname) ',name))

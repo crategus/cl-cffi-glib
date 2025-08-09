@@ -133,7 +133,7 @@
 (setf (liber:alias-for-symbol 'app-info-create-flags)
       "GFlags"
       (liber:symbol-documentation 'app-info-create-flags)
- "@version{2025-05-01}
+ "@version{2025-06-29}
   @begin{declaration}
 (gobject:define-gflags \"GAppInfoCreateFlags\" app-info-create-flags
   (:export t
@@ -144,13 +144,13 @@
   (:supports-startup-notification #.(ash 1 2)))
   @end{declaration}
   @begin{values}
-    @begin[code]{table}
+    @begin[code]{simple-table}
       @entry[:none]{No flags set.}
       @entry[:needs-terminal]{Application opens in a terminal window.}
       @entry[:supports-uris]{Application supports URI arguments.}
       @entry[:supports-startup-notification]{Application supports startup
         notification.}
-    @end{table}
+    @end{simple-table}
   @end{values}
   @begin{short}
     Flags used when creating a @class{g:app-info} instance.
@@ -193,79 +193,82 @@
 
 #+liber-documentation
 (setf (documentation 'app-launch-context 'type)
- "@version{2025-05-01}
+ "@version{2025-06-29}
   @begin{short}
     Integrating the launch with the launching application.
   @end{short}
   This is used to handle for instance startup notification and launching the
   new application on the same screen as the launching window.
   @begin[Signal Details]{dictionary}
-    @subheading{The \"launch-failed\" signal}
+    @begin[app-launch-context::launch-failed]{signal}
       @begin{pre}
 lambda (context startup-notify-id)    :run-last
       @end{pre}
-      @begin[code]{table}
+      @begin[code]{simple-table}
         @entry[context]{The @class{g:app-launch-context} object emitting the
           signal.}
         @entry[startup-notify-id]{The string with the startup notification ID
           for the failed launch.}
-      @end{table}
+      @end{simple-table}
       The signal is emitted when a @class{g:app-info} launch fails. The startup
       notification ID is provided, so that the launcher can cancel the startup
       notification.
-   @subheading{The \"launch-started\" signal}
-     @begin{pre}
+    @end{signal}
+    @begin[app-launch-context::launch-started]{signal}
+      @begin{pre}
 lambda (context appinfo platform-data)    :run-first
-     @end{pre}
-     @begin[code]{table}
-       @entry[context]{The @class{g:app-launch-context} object emitting the
-         signal.}
-       @entry[appinfo]{The @class{g:app-info} instance that is about to be
-         launched.}
-       @entry[platform-data]{The @symbol{g:variant} parameter with additional
-         platform specific data for this launch. The argument can be
-         @code{NULL}.}
-     @end{table}
-     The signal is emitted when a @class{g:app-info} instance is about to be
-     launched. If non-@code{null} the @arg{platform-data} is a
-     @symbol{g:variant} dictionary mapping strings to variants, that is
-     @code{a{sv@}}, which contains additional, platform specific data about
-     this launch. On UNIX, at least the @code{startup-notification-id} keys
-     will be present.
+      @end{pre}
+      @begin[code]{simple-table}
+        @entry[context]{The @class{g:app-launch-context} object emitting the
+          signal.}
+        @entry[appinfo]{The @class{g:app-info} instance that is about to be
+          launched.}
+        @entry[platform-data]{The @symbol{g:variant} parameter with additional
+          platform specific data for this launch. The argument can be
+          @code{NULL}.}
+      @end{simple-table}
+      The signal is emitted when a @class{g:app-info} instance is about to be
+      launched. If non-@code{null} the @arg{platform-data} is a
+      @symbol{g:variant} dictionary mapping strings to variants, that is
+      @code{a{sv@}}, which contains additional, platform specific data about
+      this launch. On UNIX, at least the @code{startup-notification-id} keys
+      will be present.
 
-     The value of the @code{startup-notification-id} key (type @code{s}) is a
-     startup notification ID corresponding to the format from the startup
-     notification specification. It allows tracking the progress of the launchee
-     through startup.
+      The value of the @code{startup-notification-id} key (type @code{s}) is a
+      startup notification ID corresponding to the format from the startup
+      notification specification. It allows tracking the progress of the
+      launchee through startup.
 
-     It is guaranteed that this signal is followed by either a
-     @code{\"launched\"} or @code{\"launch-failed\"} signal.
+      It is guaranteed that this signal is followed by either a
+      @code{\"launched\"} or @code{\"launch-failed\"} signal.
 
-     Because a launch operation may involve spawning multiple instances of the
-     target application, you should expect this signal to be emitted multiple
-     times, one for each spawned instance.
+      Because a launch operation may involve spawning multiple instances of the
+      target application, you should expect this signal to be emitted multiple
+      times, one for each spawned instance.
 
-     The default handler is called after the handlers added via the
-     @fun{g:signal-connect} function.
+      The default handler is called after the handlers added via the
+      @fun{g:signal-connect} function.
 
-     Since 2.72
-    @subheading{The \"launched\" signal}
+      Since 2.72
+    @end{signal}
+    @begin[app-launch-context::launched]{signal}
       @begin{pre}
 lambda (context appinfo platform-data)    :run-last
       @end{pre}
-      @begin[code]{table}
+      @begin[code]{simple-table}
         @entry[context]{The @class{g:app-launch-context} object emitting the
           signal.}
         @entry[appinfo]{The @class{g:app-info} object that was just launched.}
         @entry[platform-data]{The @symbol{g:variant} parameter with additional
           platform specific data for this launch.}
-      @end{table}
+      @end{simple-table}
       The signal is emitted when a @class{g:app-info} object is successfully
       launched. The argument @arg{platform-data} is a @symbol{g:variant}
       dictionary mapping strings to variants, that is @code{a{sv@}}, which
       contains additional, platform-specific data about this launch. On UNIX,
       at least the @code{\"pid\"} and @code{\"startup-notification-id\"} keys
       will be present.
+    @end{signal}
   @end{dictionary}
   @see-construtor{g:app-launch-context-new}
   @see-class{g:app-info}
