@@ -50,17 +50,7 @@
 ;;;     g_file_info_copy_into
 ;;;     g_file_info_dup
 
-;;;     g_file_info_get_access_date_time                    Since 2.70
-;;;     g_file_info_set_access_date_time                    Since 2.70
-
-(test g-file-info-access-date-time
-  (glib-test:with-check-memory (info)
-    (is (typep (setf info (g:file-info-new)) 'g:file-info))
-    (is (= 0 (setf (g:file-info-access-date-time info) 0)))
-    (is (= 0 (g:file-info-access-date-time info)))))
-
 ;;;     g_file_info_get_attribute_as_string
-
 ;;;     g_file_info_get_attribute_boolean
 ;;;     g_file_info_get_attribute_byte_string
 ;;;     g_file_info_get_attribute_data
@@ -74,6 +64,23 @@
 ;;;     g_file_info_get_attribute_type
 ;;;     g_file_info_get_attribute_uint32
 ;;;     g_file_info_get_attribute_uint64
+
+;;;     g_file_info_get_access_date_time                    Since 2.70
+;;;     g_file_info_set_access_date_time                    Since 2.70
+
+(test g-file-info-access-date-time.1
+  (glib-test:with-check-memory (info)
+    (is (typep (setf info (g:file-info-new)) 'g:file-info))
+    (is (= 0 (setf (g:file-info-access-date-time info) 0)))
+    (is (= 0 (g:file-info-access-date-time info)))))
+
+(test g-file-info-access-date-time.2
+  (glib-test:with-check-memory (info)
+    (let ((utime (get-universal-time)))
+      (is (typep (setf info (g:file-info-new)) 'g:file-info))
+      (is (= utime (setf (g:file-info-access-date-time info) utime)))
+      (is (= utime (g:file-info-access-date-time info))))))
+
 ;;;     g_file_info_get_content_type
 ;;;     g_file_info_get_creation_date_time                  Since 2.70
 ;;;     g_file_info_get_deletion_date
