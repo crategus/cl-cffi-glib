@@ -1,12 +1,12 @@
 ;;; ----------------------------------------------------------------------------
 ;;; gio.emblem.lisp
 ;;;
-;;; The documentation of this file is taken from the GIO Reference Manual
-;;; Version 2.82 and modified to document the Lisp binding to the GIO library.
-;;; See <http://www.gtk.org>. The API documentation of the Lisp binding is
-;;; available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
+;;; The documentation in this file is taken from the GIO Reference Manual
+;;; version 2.84 and modified to document the Lisp binding to the GIO library,
+;;; see <http://www.gtk.org>. The API documentation for the Lisp binding is
+;;; available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2014 - 2024 Dieter Kaiser
+;;; Copyright (C) 2014 - 2025 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -74,7 +74,7 @@
 (setf (liber:alias-for-symbol 'emblem-origin)
       "GEnum"
       (liber:symbol-documentation 'emblem-origin)
- "@version{2024-10-23}
+ "@version{2025-08-23}
   @begin{declaration}
 (gobject:define-genum \"GEmblemOrigin\" emblem-origin
   (:export t
@@ -85,16 +85,16 @@
   :tag)
   @end{declaration}
   @begin{values}
-    @begin[code]{table}
+    @begin[code]{simple-table}
       @entry[:unkown]{Emblem of unknown origin.}
       @entry[:device]{Emblem adds device-specific information.}
       @entry[:livemetadata]{Emblem depicts live metadata, such as \"readonly\".}
       @entry[:tag]{Emblem comes from a user-defined tag, for example, set by
         nautilus (in the future).}
-    @end{table}
+    @end{simple-table}
   @end{values}
   @begin{short}
-    The @symbol{g:emblem-origin} enumeration is used to add information about
+    The @sym{g:emblem-origin} enumeration is used to add information about
     the origin of the emblem to a @class{g:emblem} object.
   @end{short}
   @see-class{g:emblem}")

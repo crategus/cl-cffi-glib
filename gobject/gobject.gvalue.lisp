@@ -1,12 +1,12 @@
 ;;; ----------------------------------------------------------------------------
 ;;; gobject.gvalue.lisp
 ;;;
-;;; The documentation of this file is taken from the GObject Reference Manual
-;;; Version 2.82 and modified to document the Lisp binding to the GObject
-;;; library. See <http://www.gtk.org>. The API documentation of the Lisp binding
-;;; is available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
+;;; The documentation in this file is taken from the GObject Reference Manual
+;;; version 2.84 and modified to document the Lisp binding to the GObject
+;;; library, see <http://www.gtk.org>. The API documentation for the Lisp
+;;; binding is available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2011 - 2024 Dieter Kaiser
+;;; Copyright (C) 2011 - 2025 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -72,17 +72,17 @@
 
 (defmacro with-value ((var &rest args) &body body)
  #+liber-documentation
- "@version{2024-12-21}
+ "@version{2025-08-23}
   @syntax{(g:with-value (gvalue) body) => result}
   @syntax{(g:with-value (gvalue gtype) body) => result}
   @syntax{(g:with-value (gvalue gtype value) body) => result}
-  @argument[gvalue]{a @symbol{g:value} instance to create and initialize}
-  @argument[gtype]{an optional @symbol{g:type-t} type ID}
+  @argument[gvalue]{a @sym{g:value} instance to create and initialize}
+  @argument[gtype]{an optional @sym{g:type-t} type ID}
   @argument[value]{an optional value corresponding to @arg{gtype} to set}
   @begin{short}
-    The @fun{g:with-value} macro allocates a new  @symbol{g:value}
-    instance, initializes it with the given values and executes the body that
-    uses @arg{gvalue}.
+    The @fun{g:with-value} macro allocates a new @sym{g:value} instance,
+    initializes it with the given values and executes the body that uses
+    @arg{gvalue}.
   @end{short}
   After execution of the body the @fun{g:value-unset} function is called on
   @arg{gvalue}. This clears the current value in @arg{gvalue}, unsets the
@@ -90,7 +90,7 @@
   @begin[Notes]{dictionary}
     The @arg{gvalue} parameter is initialized with the @fun{g:value-init}
     function and unset with the @fun{g:value-unset} function. The optional
-    @arg{value} ist set with the @fun{g:value-set} function.
+    @arg{value} is set with the @fun{g:value-set} function.
   @end{dictionary}
   @see-symbol{g:value}
   @see-function{g:value-init}
@@ -127,9 +127,9 @@
 
 (defmacro with-values (vars &body body)
  #+liber-documentation
- "@version{2024-12-21}
+ "@version{2025-08-23}
   @syntax{(g:with-values (gvalue1 gvalue2 ... gvaluen) body) => result}
-  @argument[gvalue1 ... gvaluen]{newly created @symbol{g:value} instances}
+  @argument[gvalue1 ... gvaluen]{newly created @sym{g:value} instances}
   @argument[body]{a body that uses the bindings @arg{gvalue1 ... gvaluen}}
   @begin{short}
     The @fun{g:with-values} macro creates new variable bindings and executes
@@ -216,20 +216,20 @@
 
 (defun value-get (gvalue &optional gtype)
  #+liber-documentation
- "@version{2024-12-21}
+ "@version{2025-08-23}
   @syntax{(g:value-get gvalue) => value)}
   @syntax{(setf (g:value-get gvalue) value)}
-  @argument[gvalue]{an initialized @symbol{g:value} instance}
+  @argument[gvalue]{an initialized @sym{g:value} instance}
   @argument[value]{a value which corresponds to the type of @arg{gvalue}}
   @begin{short}
-    The @fun{g:value-get} function parses the @symbol{g:value} instance and
-    returns the corresponding Lisp value.
+    The @fun{g:value-get} function parses the @sym{g:value} instance and returns
+    the corresponding Lisp value.
   @end{short}
   The @setf{g:value-get} function sets the value of an initialized
-  @symbol{g:value} instance.
+  @sym{g:value} instance.
 
   Use the @fun{g:value-set} function for initialization and setting a
-  @symbol{g:value} instance in one step.
+  @sym{g:value} instance in one step.
   @begin[Notes]{dictionary}
     This function replaces the @code{g_value_get_<type>()} funcions of the C
     API.
@@ -308,16 +308,16 @@
 
 (defun value-set (gvalue value gtype)
  #+liber-documentation
- "@version{2024-12-21}
-  @argument[gvalue]{a @symbol{g:value} instance to initialize and to set}
-  @argument[value]{a value to set as the value of the @symbol{g:value} instance}
-  @argument[gtype]{a @class{g:type-t} type ID for the @symbol{g:value} instance}
+ "@version{2025-08-23}
+  @argument[gvalue]{a @sym{g:value} instance to initialize and to set}
+  @argument[value]{a value to set as the value of the @sym{g:value} instance}
+  @argument[gtype]{a @class{g:type-t} type ID for the @sym{g:value} instance}
   @begin{short}
-    The @fun{g:value-set} function initializes the @symbol{g:value} instance
-    and sets the value.
+    The @fun{g:value-set} function initializes the @sym{g:value} instance and
+    sets the value.
   @end{short}
   Unlike the @setf{g:value-get} function, this function first intializies the
-  @symbol{g:value} instance for a value of @arg{gtype} type.
+  @sym{g:value} instance for a value of @arg{gtype} type.
   @begin[Notes]{dictionary}
     This function replaces the @code{g_value_set_<type>()} functions of the
     C API.
@@ -368,16 +368,16 @@
 (setf (liber:alias-for-symbol 'value)
       "CStruct"
       (liber:symbol-documentation 'value)
- "@version{2024-12-21}
+ "@version{2025-08-23}
   @begin{short}
-    The @symbol{g:value} structure is a variable container that consists of a
-    type identifier and a specific value of that type.
+    The @sym{g:value} structure is a variable container that consists of a type
+    identifier and a specific value of that type.
   @end{short}
-  The type identifier within a @symbol{g:value} instance determines the type of
-  the associated value. To create an undefined @symbol{g:value} instance, simply
-  create a zero-filled @symbol{g:value} instance. To initialize the
-  @symbol{g:value} instance, use the @fun{g:value-init} function. A
-  @symbol{g:value} instance cannot be used until it is initialized.
+  The type identifier within a @sym{g:value} instance determines the type of the
+  associated value. To create an undefined @sym{g:value} instance, simply create
+  a zero-filled @sym{g:value} instance. To initialize the
+  @sym{g:value} instance, use the @fun{g:value-init} function. A @sym{g:value}
+  instance cannot be used until it is initialized.
   @begin[Examples]{dictionary}
     These examples demonstrate some of the features.
     @begin{pre}
@@ -422,8 +422,8 @@
 
 (defun value-holds (gvalue gtype)
  #+liber-documentation
- "@version{2024-12-21}
-  @argument[gvalue]{a @symbol{g:value} instance}
+ "@version{2025-08-23}
+  @argument[gvalue]{a @sym{g:value} instance}
   @argument[gtype]{a @class{g:type-t} type ID}
   @return{@em{True} if @arg{gvalue} holds a value of @arg{gtype} type.}
   @begin{short}
@@ -448,8 +448,8 @@
 
 (defun value-type (gvalue)
  #+liber-documentation
- "@version{2024-12-21}
-  @argument[gvalue]{a @symbol{g:value} instance}
+ "@version{2025-08-23}
+  @argument[gvalue]{a @sym{g:value} instance}
   @return{The @class{g:type-t} type ID of @arg{gvalue}.}
   @begin{short}
     Get the type identifier of @arg{gvalue}.
@@ -473,8 +473,8 @@
 
 (defun value-type-name (gvalue)
  #+liber-documentation
- "@version{2024-12-21}
-  @argument[gvalue]{a @symbol{g:value} instance}
+ "@version{2025-08-23}
+  @argument[gvalue]{a @sym{g:value} instance}
   @return{The type name of @arg{gvalue}.}
   @begin{short}
     Gets the the type name of @arg{gvalue}.
@@ -499,9 +499,9 @@
 
 (defun type-is-value (gtype)
  #+liber-documentation
- "@version{2024-12-21}
+ "@version{2025-08-23}
   @argument[gtype]{a @class{g:type-t} type ID}
-  @return{Whether @arg{gtype} is suitable as a @symbol{g:value} instance type.}
+  @return{Whether @arg{gtype} is suitable as a @sym{g:value} instance type.}
   @begin{short}
     Checks whether the passed in @arg{gtype} ID can be used for the
     @fun{g:value-init} function.
@@ -543,11 +543,11 @@
 
  (defun value-init (gvalue &optional gtype)
  #+liber-documentation
- "@version{2024-12-21}
-  @argument[gvalue]{an uninitialized @symbol{g:value} instance}
+ "@version{2025-08-23}
+  @argument[gvalue]{an uninitialized @sym{g:value} instance}
   @argument[gtype]{an optional @class{g:type-t} type ID the @arg{gvalue}
     argument should hold values of, or the default @code{nil} value}
-  @return{The @symbol{g:value} instance that has been passed in.}
+  @return{The @sym{g:value} instance that has been passed in.}
   @begin{short}
     Sets @arg{gvalue} to zero and initializes it with the @arg{gtype} type.
   @end{short}
@@ -568,10 +568,10 @@
 
 (cffi:defcfun ("g_value_copy" value-copy) :void
  #+liber-documentation
- "@version{2024-12-21}
-  @argument[src]{an initialized @symbol{g:value} instance}
-  @argument[dest]{an initialized @symbol{g:value} instance of the same
-    type as @arg{src}}
+ "@version{2025-08-23}
+  @argument[src]{an initialized @sym{g:value} instance}
+  @argument[dest]{an initialized @sym{g:value} instance of the same type as
+    @arg{src}}
   @begin{short}
     Copies the value of @arg{src} into @arg{dest}.
   @end{short}
@@ -587,9 +587,9 @@
 
 (cffi:defcfun ("g_value_reset" value-reset) (:pointer (:struct value))
  #+liber-documentation
- "@version{2024-12-21}
-  @argument[gvalue]{an initialized @symbol{g:value} instance}
-  @return{The @symbol{g:value} instance that has been passed in.}
+ "@version{2025-08-23}
+  @argument[gvalue]{an initialized @sym{g:value} instance}
+  @return{The @sym{g:value} instance that has been passed in.}
   @begin{short}
     Clears the current value in @arg{gvalue} and resets it to the default value
     as if the value had just been initialized.
@@ -605,13 +605,13 @@
 
 (cffi:defcfun ("g_value_unset" value-unset) :void
  #+liber-documentation
- "@version{2024-12-21}
-  @argument[value]{an initialized @symbol{g:value} instance}
+ "@version{2025-08-23}
+  @argument[value]{an initialized @sym{g:value} instance}
   @begin{short}
     Clears the current value in @arg{gvalue} and \"unsets\" the type, this
     releases all resources associated with this @arg{gvalue} instance.
   @end{short}
-  An unset value is the same as an uninitialized (zero-filled) @symbol{g:value}
+  An unset value is the same as an uninitialized (zero-filled) @sym{g:value}
   instance.
   @see-symbol{g:value}"
   (gvalue (:pointer (:struct value))))
@@ -650,14 +650,14 @@
 
 (cffi:defcfun ("g_value_type_compatible" value-type-compatible) :boolean
  #+liber-documentation
- "@version{2024-12-21}
+ "@version{2025-08-23}
   @argument[src]{a @class{g:type-t} source type ID to be copied}
   @argument[dest]{a @class{g:type-t} destination type ID for copying}
   @return{@em{True} if the @fun{g:value-copy} function is possible with
     @arg{src} and @arg{dest}.}
   @begin{short}
-    Returns whether a @symbol{g:value} instance of type @arg{src} can be
-    copied into a @symbol{g:value} instance of type @arg{dest}.
+    Returns whether a @sym{g:value} instance of type @arg{src} can be copied
+    into a @sym{g:value} instance of type @arg{dest}.
   @end{short}
   @see-class{g:type-t}
   @see-symbol{g:value}
@@ -692,16 +692,14 @@
 
 (cffi:defcfun ("g_strdup_value_contents" strdup-value-contents) :string
  #+liber-documentation
- "@version{2024-12-21}
-  @argument[gvalue]{a @symbol{g:value} instance which contents are to be
-    described}
-  @return{The string with the contents of @arg{gvalue}.}
+ "@version{2025-08-23}
+  @argument[gvalue]{a @sym{g:value} instance which contents are to be described}
+  @return{The string for the contents of @arg{gvalue}.}
   @begin{short}
-    Return a string, which describes the contents of a @symbol{g:value}
-    instance.
+    Returns a string, which describes the contents of a @sym{g:value} instance.
   @end{short}
-  The main purpose of this function is to describe @symbol{g:value} contents
-  for debugging output, the way in which the contents are described may change
+  The main purpose of this function is to describe @sym{g:value} contents for
+  debugging output, the way in which the contents are described may change
   between different GLib versions.
   @begin[Examples]{dictionary}
     @begin{pre}
