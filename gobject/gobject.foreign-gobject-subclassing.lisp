@@ -58,8 +58,8 @@
 ;; Definition of a vtable for subclassing an interface
 
 (defstruct vtable-info
-  gtype-name
-  cstruct-name
+  gname
+  cname
   methods)
 
 (defstruct vtable-method-info
@@ -120,6 +120,8 @@
 
 ;;; ----------------------------------------------------------------------------
 
+;; TODO: Consider to use the install-vtable function
+
 (defun interface-init (iface data)
   (destructuring-bind (class-name interface-name)
       (prog1
@@ -127,7 +129,7 @@
         (glib:free-stable-pointer data))
     (declare (ignorable class-name))
     (let* ((vtable (get-vtable-info interface-name))
-           (vtable-cstruct (when vtable (vtable-info-cstruct-name vtable))))
+           (vtable-cstruct (when vtable (vtable-info-cname vtable))))
       (when vtable
         (iter (for method in (vtable-info-methods vtable))
               (for cb = (cffi:get-callback
@@ -202,15 +204,15 @@
       (rest item)
       (list (first item) :pointer)))
 
-(defmacro define-vtable ((gtype-name name) &body items)
-  (let ((cstruct-name (intern (format nil "~A-VTABLE" (symbol-name name))))
+(defmacro define-vtable ((gname name) &body items)
+  (let ((cname (intern (format nil "~A-VTABLE" (symbol-name name))))
         (methods (vtable-methods name items)))
    `(progn
-      (cffi:defcstruct ,cstruct-name
+      (cffi:defcstruct ,cname
                        ,@(mapcar #'vtable-item->cstruct-item items))
-      (setf (get-vtable-info ,gtype-name)
-            (make-vtable-info :gtype-name ,gtype-name
-                              :cstruct-name ',cstruct-name
+      (setf (get-vtable-info ,gname)
+            (make-vtable-info :gname ,gname
+                              :cname ',cname
                               :methods
                               (list ,@(mapcar #'make-load-form methods))))
     ,@(iter (for method in methods)
@@ -421,30 +423,22 @@
 (defun object-property-get (instance property-id g-value pspec)
   (declare (ignore property-id))
   (let* ((object (get-gobject-for-pointer instance))
-
          (property-name (cffi:foreign-slot-value pspec
                                                  '(:struct param-spec)
                                                  :name))
-
          (property-type (cffi:foreign-slot-value pspec
                                                  '(:struct param-spec)
                                                  :value-type))
-
          (gname (glib:gtype-name
                         (cffi:foreign-slot-value pspec
                                                  '(:struct param-spec)
                                                  :owner-type)))
-
          (subclass-info (get-subclass-info gname))
-
          (property-info (find property-name
                               (subclass-info-properties subclass-info)
                               :test 'string= :key 'first))
-
          (property-get-fn (third property-info)))
-
     (assert (fourth property-info))
-
     (let ((value (restart-case
                    (funcall property-get-fn object)
                    (return-from-property-getter (value)
@@ -490,6 +484,22 @@
 
 ;;; ----------------------------------------------------------------------------
 
+(defun install-vtable (gname)
+    (let* ((class (type-class-ref gname))
+           (vtable (get-vtable-info gname))
+           (vtable-cstruct (when vtable (vtable-info-cname vtable))))
+      (when vtable
+        (iter (for method in (vtable-info-methods vtable))
+              (for cb = (cffi:get-callback
+                            (vtable-method-info-callback-name method)))
+              (for slot-name = (vtable-method-info-slot-name method))
+              (setf (cffi:foreign-slot-value class
+                                            `(:struct ,vtable-cstruct)
+                                             slot-name)
+                    cb)))))
+
+;;; ----------------------------------------------------------------------------
+
 (defgeneric object-class-init (subclass class data))
 
 (defmethod object-class-init (subclass class data)
@@ -504,7 +514,9 @@
     (iter (for property in (subclass-info-properties subclass-info))
           (for pspec = (property->param-spec property))
           (for property-id from 123) ; FIXME: This is a magic number!?
-          (%object-class-install-property class property-id pspec))))
+          (%object-class-install-property class property-id pspec))
+    ;; Install the vtable for the subclass
+    (install-vtable gname)))
 
 (cffi:defcallback class-init-cb :void
                   ((class :pointer) (data :pointer))
@@ -512,22 +524,6 @@
     (object-class-init (find-class subclass) class data)))
 
 (export 'object-class-init)
-
-;;; ----------------------------------------------------------------------------
-
-(defun install-vtable (gname)
-    (let* ((class (type-class-ref gname))
-           (vtable (get-vtable-info gname))
-           (vtable-cstruct (when vtable (vtable-info-cstruct-name vtable))))
-      (when vtable
-        (iter (for method in (vtable-info-methods vtable))
-              (for cb = (cffi:get-callback
-                            (vtable-method-info-callback-name method)))
-              (for slot-name = (vtable-method-info-slot-name method))
-              (setf (cffi:foreign-slot-value class
-                                            `(:struct ,vtable-cstruct)
-                                             slot-name)
-                    cb)))))
 
 ;;; ----------------------------------------------------------------------------
 
@@ -580,7 +576,6 @@
                                           (export t)
                                           interfaces)
                                     (&rest properties))
-
   (let ((props (mapcar #'parse-property properties))
         (parent (cond ((stringp superclass)
                         superclass)
@@ -588,9 +583,7 @@
                        "GObject")
                       (t
                        (gobject-class-gname (find-class superclass))))))
-
     (setf properties (filter-properties-to-register properties))
-
     `(progn
        ;; Store the definition as subclass-info
        (setf (get-subclass-info ,gname)
@@ -610,7 +603,6 @@
                      props))
          (:gname . ,gname)
          (:metaclass gobject-class))
-
        ;; Register the class
        (glib-init:at-init (',name)
          (log-for :subclass
@@ -629,7 +621,6 @@
          (add-interfaces ,gname)
          ;; Register Lisp symbol for GType
          (setf (glib:symbol-for-gtype ,gname) ',name))
-
        ;; Initializer for the instance of the subclass
        (defmethod initialize-instance :before ((object ,name) &key pointer)
          (log-for :subclass
@@ -642,7 +633,6 @@
            (setf (object-pointer object)
                  (call-gobject-constructor ,gname nil nil)
                  (object-has-reference object) t)))
-
        ;; Export the accessible symbols
        ,@(when export
            (cons `(export ',name
@@ -655,8 +645,7 @@
                                               (symbol-package name))
                                      (find-package
                                        ,(package-name (symbol-package name)))))
-                          props)))
-)))
+                          props))))))
 
 (export 'define-gobject-subclass)
 
