@@ -93,8 +93,7 @@
           (for str in values)
           (setf (cffi:mem-aref result :pointer i)
                 (cffi:foreign-funcall "g_strdup"
-                                      (:string
-                                       :free-to-foreign (strv-type-ftf type))
+                                      (:string :free-to-foreign t)
                                       str
                                       :pointer)))
     (setf (cffi:mem-aref result :pointer n) (cffi:null-pointer))

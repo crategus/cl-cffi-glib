@@ -270,8 +270,7 @@
 ;;; G_TYPE_FUNDAMENTAL_MAX                                  not exported
 ;;; ----------------------------------------------------------------------------
 
-(defconstant +type-fundamental-max+
-             #.(ash 255 +type-fundamental-shift+))
+(defconstant +type-fundamental-max+ (ash 255 +type-fundamental-shift+))
 
 ;;; ----------------------------------------------------------------------------
 
