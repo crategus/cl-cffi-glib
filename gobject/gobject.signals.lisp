@@ -975,12 +975,12 @@
 
 (defun signal-connect (instance signal handler &key after)
  #+liber-documentation
- "@version{2025-1-4}
+ "@version{2025-08-31}
   @argument[instance]{a @class{g:object} instance to connect to}
   @argument[signal]{a string of the form @code{\"signal-name::detail\"}}
   @argument[handler]{a Lisp callback function to connect}
   @argument[after]{if @em{true} the handler is called after the default handler}
-  @return{The unsigned long integer with the handler ID.}
+  @return{The unsigned long integer for the handler ID.}
   @begin{short}
     Connects a Lisp callback function to a signal for a particular object.
   @end{short}
@@ -1022,7 +1022,9 @@
     @end{pre}
   @end{dictionary}
   @see-class{g:object}"
-  (let ((instance (object-pointer instance)))
+  (let ((instance (if (cffi:pointerp instance)
+                      instance
+                      (object-pointer instance))))
     (%signal-connect-closure instance
                              signal
                              (create-closure-for-instance instance handler)
