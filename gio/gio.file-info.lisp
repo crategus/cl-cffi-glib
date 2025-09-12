@@ -247,9 +247,10 @@
 ;;; boolean value, FALSE will be returned.
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcfun ("g_file_info_get-attribute_boolean"
+(cffi:defcfun ("g_file_info_get_attribute_boolean"
                file-info-attribute-boolean) :boolean
-  (info (gobject:object file-info)))
+  (info (gobject:object file-info))
+  (attribute :string))
 
 (export 'file-info-attribute-boolean)
 

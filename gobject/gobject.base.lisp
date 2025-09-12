@@ -565,19 +565,19 @@ lambda (object pspec)    :no-hooks
                             (class-slots class)
                             :key 'slot-definition-initargs
                             :test 'member))
-          (when (and slot (typep slot 'gobject-effective-slot-definition)))
-          (typecase slot
-           (gobject-prop-effective-slot-definition
-            (push (gobject-prop-effective-slot-definition-prop-name slot)
-                  arg-names)
-            (push arg-value arg-values)
-            ;; TODO: The list is always filled with NIL values. Why?
-            (push (gobject-effective-slot-definition-prop-type slot)
-                  arg-types))
-           (gobject-func-effective-slot-definition
-            (push (gobject-func-effective-slot-definition-setter-func slot)
-                  nc-setters)
-            (push arg-value nc-arg-values))))
+          (when (and slot (typep slot 'gobject-effective-slot-definition))
+            (typecase slot
+              (gobject-prop-effective-slot-definition
+               (push (gobject-prop-effective-slot-definition-prop-name slot)
+                     arg-names)
+               (push arg-value arg-values)
+	       ;; TODO: The list is always filled with NIL values. Why?
+               (push (gobject-effective-slot-definition-prop-type slot)
+                     arg-types))
+              (gobject-func-effective-slot-definition
+               (push (gobject-func-effective-slot-definition-setter-func slot)
+                     nc-setters)
+               (push arg-value nc-arg-values)))))
     (let ((object (call-gobject-constructor (gobject-class-gname class)
                                             arg-names
                                             arg-values
