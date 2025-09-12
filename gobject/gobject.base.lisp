@@ -565,7 +565,6 @@ lambda (object pspec)    :no-hooks
                             (class-slots class)
                             :key 'slot-definition-initargs
                             :test 'member))
-          (when (and slot (typep slot 'gobject-effective-slot-definition)))
           (typecase slot
            (gobject-prop-effective-slot-definition
             (push (gobject-prop-effective-slot-definition-prop-name slot)
