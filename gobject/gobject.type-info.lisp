@@ -151,7 +151,8 @@
 
 (in-package :gobject)
 
-(defconstant +type-fundamental-shift+ 2)
+(eval-when (:load-toplevel :compile-toplevel :execute)
+(defconstant +type-fundamental-shift+ 2))
 
 ;;; ----------------------------------------------------------------------------
 ;;; G_TYPE_GTYPE

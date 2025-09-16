@@ -959,8 +959,8 @@
 
 (cffi:defcfun ("g_variant_get_boolean" variant-boolean) :boolean
  #+liber-documentation
- "@version{2025-05-25}
-  @argument[value]{a @symbol{g:variant} instance with a boolean value}
+ "@version{2025-08-27}
+  @argument[value]{a @sym{g:variant} instance for a boolean value}
   @return{The boolean values @em{true} or @em{false}.}
   @short{Returns the boolean value of @arg{value}.}
   It is an error to call this function with a value of any type other than
@@ -1349,8 +1349,8 @@
 
 (defun variant-string (value)
  #+liber-documentation
- "@version{2025-05-25}
-  @argument[value]{a @symbol{g:variant} instance with a string}
+ "@version{2025-08-27}
+  @argument[value]{a @sym{g:variant} instance for a string}
   @return{The constant string, UTF-8 encoded.}
   @begin{short}
     Returns the string value of @arg{value}.

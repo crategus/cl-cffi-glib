@@ -549,18 +549,20 @@ object3:propertyC -> object1:propertyA
                                   transform-to
                                   transform-from)
  #+liber-documentation
- "@version{2024-12-7}
+ "@version{2025-08-30}
   @argument[source]{a @class{g:object} source instance}
-  @argument[source-prop]{a string with the property on @arg{source} to bind}
+  @argument[source-prop]{a string for the property on @arg{source} to bind}
   @argument[target]{a @class{g:object} target instance}
-  @argument[target-prop]{a string with the property on @arg{target} to bind}
-  @argument[flags]{a @symbol{g:binding-flags} value to pass to the binding}
-  @argument[transform-to]{a @symbol{g:binding-transform-func} callback function
+  @argument[target-prop]{a string for the property on @arg{target} to bind}
+  @argument[flags]{a @sym{g:binding-flags} value to pass to the binding}
+  @argument[transform-to]{a @sym{g:binding-transform-func} callback function
     from the source to the target, or @code{nil} to use the default}
-  @argument[transform-form]{a @symbol{g:binding-transform-func} callback
-    function from the target to the source, or @code{nil} to use the default}
-  @return{The @class{g:binding} object representing the binding between
-    @arg{source} and @arg{target}.}
+  @argument[transform-from]{a @sym{g:binding-transform-func} callback function
+    from the target to the source, or @code{nil} to use the default}
+  @begin{return}
+    The @class{g:binding} object representing the binding between @arg{source}
+    and @arg{target}.
+  @end{return}
   @begin{short}
     Complete version of the @fun{g:object-bind-property} function.
   @end{short}

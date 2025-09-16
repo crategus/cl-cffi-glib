@@ -1282,10 +1282,10 @@ lambda (application)    :run-first
 
 (defun application-run (application argv)
  #+liber-documentation
- "@version{2025-06-22}
+ "@version{2025-08-27}
   @argument[application]{a @class{g:application} instance}
   @argument[argv]{a list of strings for command line parameters, or @code{nil}}
-  @return{The integer with the exit status.}
+  @return{The integer for the exit status.}
   @begin{short}
     Runs the application.
   @end{short}
