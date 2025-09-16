@@ -1,9 +1,10 @@
 *.tmp
 *.gresource
-doc/**/*.html
-doc/**/*.css
-doc/**/*.ico
-doc/**/*.xml
+doc/pages/*
+doc/single-page/*
+doc/index.*
+doc/lambda.icon
+generate-book.lisp
 test/rtest-templates.lisp
 TODO
 test/report/*.html

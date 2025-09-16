@@ -1,7 +1,7 @@
 ;;; ----------------------------------------------------------------------------
-;;; liber.lisp
+;;; generate-html.lisp
 ;;;
-;;; Copyright (C) 2022 - 2025 Dieter Kaiser
+;;; Copyright (C) 2025 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -22,19 +22,15 @@
 ;;; DEALINGS IN THE SOFTWARE.
 ;;; ----------------------------------------------------------------------------
 
-#-liber-documentation
-(push :liber-documentation *features*)
-
-(asdf:load-system :liber)
+(asdf:load-system :liber/generate)
 (asdf:load-system :cl-cffi-glib :force t)
 
-(defpackage :liber-glib
+(defpackage :glib-documentation
   (:use :common-lisp)
-  (:import-from :liber)
   (:export :generate-html
            :generate-html-single-page))
 
-(in-package :liber-glib)
+(in-package :glib-documentation)
 
 (unexport 'glib:allocate-stable-pointer :glib)
 (unexport 'glib:free-stable-pointer :glib)
@@ -92,40 +88,45 @@
 (unexport 'gobject:*debug-subclass* :gobject)
 (unexport 'gobject:*gobject-debug* :gobject)
 
-;;; ---------------------------------------------------------------------------
+;;; ----------------------------------------------------------------------------
 
 (defun generate-html ()
   (let* ((base (asdf:component-pathname (asdf:find-system :cl-cffi-glib)))
-         (output-directory (merge-pathnames "../books/cl-cffi-glib/" base)))
-    (format t "Generate HTML to ~a~%" output-directory)
+         (output (merge-pathnames "doc/" base)))
     (liber:generate-html-documentation
       '(:glib :gobject :gio)
-      output-directory
+      base
+      output
       :author "Crategus"
       :author-url "http://www.crategus.com"
       :index-title "cl-cffi-glib API documentation"
       :heading "cl-cffi-glib"
       :css "crategus.css"
+      :icon "lambda.icon"
       :single-page-p nil
       :paginate-section-p nil
       :include-slot-definitions-p t
-      :include-internal-symbols-p nil)))
+      :include-internal-symbols-p nil
+      :delete-tmp-files-p t
+      :verbose t)))
 
 (defun generate-html-single-page ()
   (let* ((base (asdf:component-pathname (asdf:find-system :cl-cffi-glib)))
-         (output-directory
-             (merge-pathnames "../books/cl-cffi-glib/single-page/" base)))
-    (format t "Generate Single PAGE HTML to ~a~%" output-directory)
+         (output (merge-pathnames "doc/single-page/" base)))
     (liber:generate-html-documentation
       '(:glib :gobject :gio)
-      output-directory
+      base
+      output
       :author "Crategus"
       :author-url "http://www.crategus.com"
       :index-title "cl-cffi-glib API documentation (single page)"
       :heading "cl-cffi-glib"
       :css "crategus.css"
+      :icon "lambda.icon"
       :single-page-p t
       :include-slot-definitions-p t
-      :include-internal-symbols-p nil)))
+      :include-internal-symbols-p nil
+      :delete-tmp-files-p t
+      :verbose t)))
 
-;;; --- End of file liber.lisp -------------------------------------------------
+;;; --- End of file generate-html.lisp -----------------------------------------
