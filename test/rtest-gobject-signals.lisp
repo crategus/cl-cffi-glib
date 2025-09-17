@@ -320,22 +320,18 @@
                                             nil))))
 
 (test g-signal-has-handler-pending.2
-  (let* ((action (make-instance 'g:simple-action))
-         (signal-id (g:signal-lookup "notify" "GSimpleAction"))
-         handler-id)
-
+  (let ((action (make-instance 'g:simple-action))
+        (signal-id (g:signal-lookup "notify" "GSimpleAction")))
     ;; No signal handler for the signal "notify::enabled"
     (is-false (g:signal-has-handler-pending action
                                             signal-id
                                             "enabled"
                                             t))
     ;; Install a handler for the signal
-    (is (integerp (setf handler-id
-                        (g:signal-connect action "notify::enabled"
-                                          (lambda (object pspec)
-                                            (declare (ignore object pspec))
-                                            t)))))
-
+    (is (integerp (g:signal-connect action "notify::enabled"
+                                    (lambda (object pspec)
+                                      (declare (ignore object pspec))
+                                      t))))
     ;; Signal handler for the signal "notify::enabled"
     (is-true (g:signal-has-handler-pending action
                                            signal-id
@@ -398,4 +394,4 @@
 ;;;     g_signal_accumulator_true_handled
 ;;;     g_clear_signal_handler
 
-;;; 2024-6-20
+;;; 2025-09-17

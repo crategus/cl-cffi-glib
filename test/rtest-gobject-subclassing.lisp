@@ -122,7 +122,7 @@
 
 (test check-implementation-clock3
   (let ((info (gobject::get-subclass-info "Clock3"))
-        (clock nil) (pspec nil))
+        (clock nil))
     ;; Check subclass-info
     (is (string= "Clock3" (gobject::subclass-info-gname info)))
     (is (eq 'clock3 (gobject::subclass-info-class info)))
@@ -138,9 +138,7 @@
     ;; Slot TIMEZONE is not registered to GTK
     (is-false (g:object-class-find-property "Clock3" "timezone"))
     ;; Get GParamSpec for registered LOCATION property
-    (is (cffi:pointerp (setf pspec
-                             (g:object-class-find-property "Clock3"
-                                                           "location"))))
+    (is (cffi:pointerp (g:object-class-find-property "Clock3" "location")))
     ;; TIMEZONE is not registered as property
     (signals (error) (g:object-property clock "timezone"))
     (is (typep (clock3-timezone clock) 'local-time::timezone))
@@ -165,8 +163,9 @@
 
 (defmethod g:object-class-init :after
            ((subclass (eql (find-class 'clock4))) class data)
+  (declare (ignore class data))
   (when *verbose-gobject-subclassing*
-    (format t "in CLASS-INIT for ~a~%" subclass)))
+    (format t "~&in CLASS-INIT for ~a~%" subclass)))
 
 (test clock4-class
   ;; Check type
@@ -260,6 +259,7 @@
 
 (defmethod g:object-class-init :after
            ((subclass (eql (find-class 'clock5))) class data)
+  (declare (ignore class data))
   (when *verbose-gobject-subclassing*
     (format t "~&in G:OBJECT-CLASS-INIT for ~a~%" subclass)))
 
@@ -336,7 +336,7 @@
 
 (test check-implementation-clock5
   (let ((info (gobject::get-subclass-info "Clock5"))
-        (clock nil) (pspec nil))
+        (clock nil))
     ;; Check subclass-info
     (is (string= "Clock5" (gobject::subclass-info-gname info)))
     (is (eq 'clock5 (gobject::subclass-info-class info)))
@@ -353,9 +353,7 @@
     ;; Slot TIMEZONE is not registered to GTK
     (is-false (g:object-class-find-property "Clock5" "timezone"))
     ;; Get GParamSpec for registered LOCATION property
-    (is (cffi:pointerp (setf pspec
-                             (g:object-class-find-property "Clock5"
-                                                           "location"))))
+    (is (cffi:pointerp (g:object-class-find-property "Clock5" "location")))
     ;; TIMEZONE is not registered as property
     (signals (error) (g:object-property clock "timezone"))
     (is (typep (clock5-timezone clock) 'local-time::timezone))
@@ -364,4 +362,4 @@
     (is (string= "UTC" (g:object-property clock "location")))
     (is (string= "abc" (setf (clock5-location clock) "abc")))))
 
-;;; 2025-3-8
+;;; 2025-09-17

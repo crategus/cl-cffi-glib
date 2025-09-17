@@ -13,7 +13,7 @@
 ;;;     g_param_spec_boolean
 
 (test g-param-spec-boolean
-  (cffi:with-foreign-object (pspec '(:struct g:param-spec-boolean))
+  (let (pspec)
     ;; Create a GParamSpecBoolean
     (is (g:is-param-spec (setf pspec
                                (g:param-spec-boolean "myBoolean"
@@ -54,13 +54,14 @@
 
 (test g-param-spec-char-struct
   (is (= 16 (cffi:foreign-type-size '(:struct g:param-spec-char))))
-  (is (equal '(:PARENT-INSTANCE :MINIMUM :MAXIMUM :DEFAULT-VALUE)
-             (cffi:foreign-slot-names '(:struct g:param-spec-char)))))
+  (is (equal '(:DEFAULT-VALUE :MAXIMUM :MINIMUM :PARENT-INSTANCE)
+             (sort (cffi:foreign-slot-names '(:struct g:param-spec-char))
+                   #'string<))))
 
 ;;;     g_param_spec_char
 
 (test g-param-spec-char
-  (cffi:with-foreign-object (pspec '(:struct g:param-spec-char))
+  (let (pspec)
     ;; Create a GParamSpecChar
     (is (g:is-param-spec (setf pspec
                                (g:param-spec-char "myChar"
@@ -120,13 +121,14 @@
 
 (test g-param-spec-uchar-struct
   (is (= 16 (cffi:foreign-type-size '(:struct g:param-spec-uchar))))
-  (is (equal '(:PARENT-INSTANCE :MINIMUM :MAXIMUM :DEFAULT-VALUE)
-             (cffi:foreign-slot-names '(:struct g:param-spec-uchar)))))
+  (is (equal '(:DEFAULT-VALUE :MAXIMUM :MINIMUM :PARENT-INSTANCE)
+             (sort (cffi:foreign-slot-names '(:struct g:param-spec-uchar))
+                   #'string<))))
 
 ;;;     g_param_spec_uchar
 
 (test g-param-spec-uchar
-  (cffi:with-foreign-object (pspec '(:struct g:param-spec-uchar))
+  (let (pspec)
     ;; Create a GParamSpecUChar
     (is (g:is-param-spec (setf pspec
                                (g:param-spec-uchar "myUChar"
@@ -180,13 +182,14 @@
 
 (test g-param-spec-int-struct
   (is (= 24 (cffi:foreign-type-size '(:struct g:param-spec-int))))
-  (is (equal '(:PARENT-INSTANCE :MINIMUM :MAXIMUM :DEFAULT-VALUE)
-             (cffi:foreign-slot-names '(:struct g:param-spec-int)))))
+  (is (equal '(:DEFAULT-VALUE :MAXIMUM :MINIMUM :PARENT-INSTANCE)
+             (sort (cffi:foreign-slot-names '(:struct g:param-spec-int))
+                   #'string<))))
 
 ;;;   g_param_spec_int
 
 (test g-param-spec-int
-  (cffi:with-foreign-object (pspec '(:struct g:param-spec-int))
+  (let (pspec)
     ;; Create a GParamSpecInt
     (is (g:is-param-spec (setf pspec
                                (g:param-spec-int "myInteger"
@@ -238,13 +241,14 @@
 
 (test g-param-spec-uint-struct
   (is (= 24 (cffi:foreign-type-size '(:struct g:param-spec-uint))))
-  (is (equal '(:PARENT-INSTANCE :MINIMUM :MAXIMUM :DEFAULT-VALUE)
-             (cffi:foreign-slot-names '(:struct g:param-spec-uint)))))
+  (is (equal '(:DEFAULT-VALUE :MAXIMUM :MINIMUM :PARENT-INSTANCE)
+             (sort (cffi:foreign-slot-names '(:struct g:param-spec-uint))
+                   #'string<))))
 
 ;;;     g_param_spec_uint
 
 (test g-param-spec-uint
-  (cffi:with-foreign-object (pspec '(:struct g:param-spec-uint))
+  (let (pspec)
     ;; Create a GParamSpecInt
     (is (g:is-param-spec (setf pspec
                                (g:param-spec-uint "myUnsignedInteger"
@@ -298,13 +302,14 @@
   (is (= 32 (cffi:foreign-type-size '(:struct g:param-spec-long))))
   #+windows
   (is (= 24 (cffi:foreign-type-size '(:struct g:param-spec-long))))
-  (is (equal '(:PARENT-INSTANCE :MINIMUM :MAXIMUM :DEFAULT-VALUE)
-             (cffi:foreign-slot-names '(:struct g:param-spec-long)))))
+  (is (equal '(:DEFAULT-VALUE :MAXIMUM :MINIMUM :PARENT-INSTANCE)
+             (sort (cffi:foreign-slot-names '(:struct g:param-spec-long))
+                   #'string<))))
 
 ;;;     g_param_spec_long
 
 (test g-param-spec-long
-  (cffi:with-foreign-object (pspec '(:struct g:param-spec-long))
+  (let (pspec)
     ;; Create a GParamSpecInt
     (is (g:is-param-spec (setf pspec
                                (g:param-spec-long "myLong"
@@ -359,55 +364,56 @@
   (is (= 32 (cffi:foreign-type-size '(:struct g:param-spec-ulong))))
   #+windows
   (is (= 24 (cffi:foreign-type-size '(:struct g:param-spec-ulong))))
-  (is (equal '(:PARENT-INSTANCE :MINIMUM :MAXIMUM :DEFAULT-VALUE)
-             (cffi:foreign-slot-names '(:struct g:param-spec-ulong)))))
+  (is (equal '(:DEFAULT-VALUE :MAXIMUM :MINIMUM :PARENT-INSTANCE)
+             (sort (cffi:foreign-slot-names '(:struct g:param-spec-ulong))
+                   #'string<))))
 
 ;;;     g_param_spec_ulong
 
 (test g-param-spec-ulong
-  (cffi:with-foreign-objects ((pspec '(:struct g:param-spec-ulong))
-                              (value '(:struct g:value)))
-    ;; Initialize a GValue for further checks
-    (is (cffi:pointerp (g:value-init value "gulong")))
-    ;; Create a GParamSpecInt
-    (is (cffi:pointerp (setf pspec
-                        (g:param-spec-ulong "myUnsignedLong"
-                                            "myULong"
-                                            "Documentation"
-                                            50
-                                            150
-                                            100
-                                            '(:readable :writable)))))
-    ;; Check type
-    (is-true (g:type-is-param (g:type-from-instance pspec)))
-    (is-true (g:is-param-spec pspec))
-    (is (eq (g:gtype "GParamULong") (g:param-spec-type pspec)))
-    (is (string= "GParamULong" (g:param-spec-type-name pspec)))
-    (is (eq (g:gtype "gulong") (g:param-spec-value-type pspec)))
-    ;; Check default value
-    (is (eq (g:gtype "gulong")
-            (g:value-type (g:param-spec-default-value pspec))))
-    (is-true (g:value-get (g:param-spec-default-value pspec)))
-    (is-false (g:param-value-set-default pspec value))
-    (is (= 100 (g:value-get value))) ; the default value is 100
-    ;; Validate a value
-    (is (= 0 (setf (g:value-ulong value) 0)))
-    (is-true (g:param-value-validate pspec value))
-    (is (= 50 (g:value-get value)))
-    (is (= 200 (setf (g:value-ulong value) 200)))
-    (is-true (g:param-value-validate pspec value))
-    (is (= 150 (g:value-get value)))
-    ;; More checks for a default value
-    (is-false (g:param-value-defaults pspec value))
-    (is-false (g:param-value-set-default pspec value))
-    (is-true (g:param-value-defaults pspec value))
-    ;; Check infos about the parameter
-    (is (string= "myUnsignedLong" (g:param-spec-name pspec)))
-    (is (string= "myULong" (g:param-spec-nick pspec)))
-    (is (string= "Documentation" (g:param-spec-blurb pspec)))
-    ;; Unset the GValue
-    (is-false (g:value-unset value))
-    (is-false (g:param-spec-unref pspec))))
+  (let (pspec)
+    (cffi:with-foreign-object (value '(:struct g:value))
+      ;; Initialize a GValue for further checks
+      (is (cffi:pointerp (g:value-init value "gulong")))
+      ;; Create a GParamSpecInt
+      (is (cffi:pointerp (setf pspec
+                          (g:param-spec-ulong "myUnsignedLong"
+                                              "myULong"
+                                              "Documentation"
+                                              50
+                                              150
+                                              100
+                                              '(:readable :writable)))))
+      ;; Check type
+      (is-true (g:type-is-param (g:type-from-instance pspec)))
+      (is-true (g:is-param-spec pspec))
+      (is (eq (g:gtype "GParamULong") (g:param-spec-type pspec)))
+      (is (string= "GParamULong" (g:param-spec-type-name pspec)))
+      (is (eq (g:gtype "gulong") (g:param-spec-value-type pspec)))
+      ;; Check default value
+      (is (eq (g:gtype "gulong")
+              (g:value-type (g:param-spec-default-value pspec))))
+      (is-true (g:value-get (g:param-spec-default-value pspec)))
+      (is-false (g:param-value-set-default pspec value))
+      (is (= 100 (g:value-get value))) ; the default value is 100
+      ;; Validate a value
+      (is (= 0 (setf (g:value-ulong value) 0)))
+      (is-true (g:param-value-validate pspec value))
+      (is (= 50 (g:value-get value)))
+      (is (= 200 (setf (g:value-ulong value) 200)))
+      (is-true (g:param-value-validate pspec value))
+      (is (= 150 (g:value-get value)))
+      ;; More checks for a default value
+      (is-false (g:param-value-defaults pspec value))
+      (is-false (g:param-value-set-default pspec value))
+      (is-true (g:param-value-defaults pspec value))
+      ;; Check infos about the parameter
+      (is (string= "myUnsignedLong" (g:param-spec-name pspec)))
+      (is (string= "myULong" (g:param-spec-nick pspec)))
+      (is (string= "Documentation" (g:param-spec-blurb pspec)))
+      ;; Unset the GValue
+      (is-false (g:value-unset value))
+      (is-false (g:param-spec-unref pspec)))))
 
 ;;;     g_value_set_ulong
 ;;;     g_value_get_ulong
@@ -423,55 +429,56 @@
 
 (test g-param-spec-int64-struct
   (is (= 32 (cffi:foreign-type-size '(:struct g:param-spec-int64))))
-  (is (equal '(:PARENT-INSTANCE :MINIMUM :MAXIMUM :DEFAULT-VALUE)
-             (cffi:foreign-slot-names '(:struct g:param-spec-int64)))))
+  (is (equal '(:DEFAULT-VALUE :MAXIMUM :MINIMUM :PARENT-INSTANCE)
+             (sort (cffi:foreign-slot-names '(:struct g:param-spec-int64))
+                   #'string<))))
 
 ;;;     g_param_spec_int64
 
 (test g-param-spec-int64
-  (cffi:with-foreign-objects ((pspec '(:struct g:param-spec-int64))
-                              (value '(:struct g:value)))
-    ;; Initialize a GValue for further checks
-    (is (cffi:pointerp (g:value-init value "gint64")))
-    ;; Create a GParamSpecInt
-    (is (cffi:pointerp (setf pspec
-                        (g:param-spec-int64 "myInt64"
-                                            "myInt64"
-                                            "Documentation"
-                                            50
-                                            150
-                                            100
-                                            '(:readable :writable)))))
-    ;; Check type
-    (is-true (g:type-is-param (g:type-from-instance pspec)))
-    (is-true (g:is-param-spec pspec))
-    (is (eq (g:gtype "GParamInt64") (g:param-spec-type pspec)))
-    (is (string= "GParamInt64" (g:param-spec-type-name pspec)))
-    (is (eq (g:gtype "gint64") (g:param-spec-value-type pspec)))
-    ;; Check default value
-    (is (eq (g:gtype "gint64")
-            (g:value-type (g:param-spec-default-value pspec))))
-    (is-true (g:value-get (g:param-spec-default-value pspec)))
-    (is-false (g:param-value-set-default pspec value))
-    (is (= 100 (g:value-get value))) ; the default value is 100
-    ;; Validate a value
-    (is (= 0 (setf (g:value-int64 value) 0)))
-    (is-true (g:param-value-validate pspec value))
-    (is (= 50 (g:value-get value)))
-    (is (= 200 (setf (g:value-int64 value) 200)))
-    (is-true (g:param-value-validate pspec value))
-    (is (= 150 (g:value-get value)))
-    ;; More checks for a default value
-    (is-false (g:param-value-defaults pspec value))
-    (is-false (g:param-value-set-default pspec value))
-    (is-true (g:param-value-defaults pspec value))
-    ;; Check infos about the parameter
-    (is (string= "myInt64" (g:param-spec-name pspec)))
-    (is (string= "myInt64" (g:param-spec-nick pspec)))
-    (is (string= "Documentation" (g:param-spec-blurb pspec)))
-    ;; Unset the GValue
-    (is-false (g:value-unset value))
-    (is-false (g:param-spec-unref pspec))))
+  (let (pspec)
+    (cffi:with-foreign-object (value '(:struct g:value))
+      ;; Initialize a GValue for further checks
+      (is (cffi:pointerp (g:value-init value "gint64")))
+      ;; Create a GParamSpecInt
+      (is (cffi:pointerp (setf pspec
+                          (g:param-spec-int64 "myInt64"
+                                              "myInt64"
+                                              "Documentation"
+                                              50
+                                              150
+                                              100
+                                              '(:readable :writable)))))
+      ;; Check type
+      (is-true (g:type-is-param (g:type-from-instance pspec)))
+      (is-true (g:is-param-spec pspec))
+      (is (eq (g:gtype "GParamInt64") (g:param-spec-type pspec)))
+      (is (string= "GParamInt64" (g:param-spec-type-name pspec)))
+      (is (eq (g:gtype "gint64") (g:param-spec-value-type pspec)))
+      ;; Check default value
+      (is (eq (g:gtype "gint64")
+              (g:value-type (g:param-spec-default-value pspec))))
+      (is-true (g:value-get (g:param-spec-default-value pspec)))
+      (is-false (g:param-value-set-default pspec value))
+      (is (= 100 (g:value-get value))) ; the default value is 100
+      ;; Validate a value
+      (is (= 0 (setf (g:value-int64 value) 0)))
+      (is-true (g:param-value-validate pspec value))
+      (is (= 50 (g:value-get value)))
+      (is (= 200 (setf (g:value-int64 value) 200)))
+      (is-true (g:param-value-validate pspec value))
+      (is (= 150 (g:value-get value)))
+      ;; More checks for a default value
+      (is-false (g:param-value-defaults pspec value))
+      (is-false (g:param-value-set-default pspec value))
+      (is-true (g:param-value-defaults pspec value))
+      ;; Check infos about the parameter
+      (is (string= "myInt64" (g:param-spec-name pspec)))
+      (is (string= "myInt64" (g:param-spec-nick pspec)))
+      (is (string= "Documentation" (g:param-spec-blurb pspec)))
+      ;; Unset the GValue
+      (is-false (g:value-unset value))
+      (is-false (g:param-spec-unref pspec)))))
 
 ;;;     g_value_set_int64
 ;;;     g_value_get_int64
@@ -487,55 +494,56 @@
 
 (test g-param-spec-uint64-struct
   (is (= 32 (cffi:foreign-type-size '(:struct g:param-spec-uint64))))
-  (is (equal '(:PARENT-INSTANCE :MINIMUM :MAXIMUM :DEFAULT-VALUE)
-             (cffi:foreign-slot-names '(:struct g:param-spec-uint64)))))
+  (is (equal '(:DEFAULT-VALUE :MAXIMUM :MINIMUM :PARENT-INSTANCE)
+             (sort (cffi:foreign-slot-names '(:struct g:param-spec-uint64))
+                   #'string<))))
 
 ;;;     g_param_spec_uint64
 
 (test g-param-spec-uint64
-  (cffi:with-foreign-objects ((pspec '(:struct g:param-spec-uint64))
-                              (value '(:struct g:value)))
-    ;; Initialize a GValue for further checks
-    (is (cffi:pointerp (g:value-init value "guint64")))
-    ;; Create a GParamSpecInt
-    (is (cffi:pointerp (setf pspec
-                        (g:param-spec-uint64 "myUsignedInt64"
-                                             "myUInt64"
-                                             "Documentation"
-                                             50
-                                             150
-                                             100
-                                             '(:readable :writable)))))
-    ;; Check type
-    (is-true (g:type-is-param (g:type-from-instance pspec)))
-    (is-true (g:is-param-spec pspec))
-    (is (eq (g:gtype "GParamUInt64") (g:param-spec-type pspec)))
-    (is (string= "GParamUInt64" (g:param-spec-type-name pspec)))
-    (is (eq (g:gtype "guint64") (g:param-spec-value-type pspec)))
-    ;; Check default value
-    (is (eq (g:gtype "guint64")
-            (g:value-type (g:param-spec-default-value pspec))))
-    (is-true (g:value-get (g:param-spec-default-value pspec)))
-    (is-false (g:param-value-set-default pspec value))
-    (is (= 100 (g:value-get value))) ; the default value is 100
-    ;; Validate a value
-    (is (= 0 (setf (g:value-uint64 value) 0)))
-    (is-true (g:param-value-validate pspec value))
-    (is (= 50 (g:value-get value)))
-    (is (= 200 (setf (g:value-uint64 value) 200)))
-    (is-true (g:param-value-validate pspec value))
-    (is (= 150 (g:value-get value)))
-    ;; More checks for a default value
-    (is-false (g:param-value-defaults pspec value))
-    (is-false (g:param-value-set-default pspec value))
-    (is-true (g:param-value-defaults pspec value))
-    ;; Check infos about the parameter
-    (is (string= "myUsignedInt64" (g:param-spec-name pspec)))
-    (is (string= "myUInt64" (g:param-spec-nick pspec)))
-    (is (string= "Documentation" (g:param-spec-blurb pspec)))
-    ;; Unset the GValue
-    (is-false (g:value-unset value))
-    (is-false (g:param-spec-unref pspec))))
+  (let (pspec)
+    (cffi:with-foreign-object (value '(:struct g:value))
+      ;; Initialize a GValue for further checks
+      (is (cffi:pointerp (g:value-init value "guint64")))
+      ;; Create a GParamSpecInt
+      (is (cffi:pointerp (setf pspec
+                          (g:param-spec-uint64 "myUsignedInt64"
+                                               "myUInt64"
+                                               "Documentation"
+                                               50
+                                               150
+                                               100
+                                               '(:readable :writable)))))
+      ;; Check type
+      (is-true (g:type-is-param (g:type-from-instance pspec)))
+      (is-true (g:is-param-spec pspec))
+      (is (eq (g:gtype "GParamUInt64") (g:param-spec-type pspec)))
+      (is (string= "GParamUInt64" (g:param-spec-type-name pspec)))
+      (is (eq (g:gtype "guint64") (g:param-spec-value-type pspec)))
+      ;; Check default value
+      (is (eq (g:gtype "guint64")
+              (g:value-type (g:param-spec-default-value pspec))))
+      (is-true (g:value-get (g:param-spec-default-value pspec)))
+      (is-false (g:param-value-set-default pspec value))
+      (is (= 100 (g:value-get value))) ; the default value is 100
+      ;; Validate a value
+      (is (= 0 (setf (g:value-uint64 value) 0)))
+      (is-true (g:param-value-validate pspec value))
+      (is (= 50 (g:value-get value)))
+      (is (= 200 (setf (g:value-uint64 value) 200)))
+      (is-true (g:param-value-validate pspec value))
+      (is (= 150 (g:value-get value)))
+      ;; More checks for a default value
+      (is-false (g:param-value-defaults pspec value))
+      (is-false (g:param-value-set-default pspec value))
+      (is-true (g:param-value-defaults pspec value))
+      ;; Check infos about the parameter
+      (is (string= "myUsignedInt64" (g:param-spec-name pspec)))
+      (is (string= "myUInt64" (g:param-spec-nick pspec)))
+      (is (string= "Documentation" (g:param-spec-blurb pspec)))
+      ;; Unset the GValue
+      (is-false (g:value-unset value))
+      (is-false (g:param-spec-unref pspec)))))
 
 ;;;     g_value_set_uint64
 ;;;     g_value_get_uint64
@@ -551,55 +559,56 @@
 
 (test g-param-spec-float-struct
   (is (= 24 (cffi:foreign-type-size '(:struct g:param-spec-float))))
-  (is (equal '(:PARENT-INSTANCE :MINIMUM :MAXIMUM :DEFAULT-VALUE :EPSILON)
-             (cffi:foreign-slot-names '(:struct g:param-spec-float)))))
+  (is (equal '(:DEFAULT-VALUE :EPSILON :MAXIMUM :MINIMUM :PARENT-INSTANCE)
+             (sort (cffi:foreign-slot-names '(:struct g:param-spec-float))
+                   #'string<))))
 
 ;;;     g_param_spec_float
 
 (test g-param-spec-float
-  (cffi:with-foreign-objects ((pspec '(:struct g:param-spec-float))
-                              (value '(:struct g:value)))
-    ;; Initialize a GValue for further checks
-    (is (cffi:pointerp (g:value-init value "gfloat")))
-    ;; Create a GParamSpecInt
-    (is (cffi:pointerp (setf pspec
-                        (g:param-spec-float "myFloat"
-                                            "myFloat"
-                                            "Documentation"
-                                            50.0
-                                            150.0
-                                            100.0
-                                            '(:readable :writable)))))
-    ;; Check type
-    (is-true (g:type-is-param (g:type-from-instance pspec)))
-    (is-true (g:is-param-spec pspec))
-    (is (eq (g:gtype "GParamFloat") (g:param-spec-type pspec)))
-    (is (string= "GParamFloat" (g:param-spec-type-name pspec)))
-    (is (eq (g:gtype "gfloat") (g:param-spec-value-type pspec)))
-    ;; Check the default value
-    (is (eq (g:gtype "gfloat")
-            (g:value-type (g:param-spec-default-value pspec))))
-    (is-true (g:value-get (g:param-spec-default-value pspec)))
-    (is-false (g:param-value-set-default pspec value))
-    (is (= 100 (g:value-get value))) ; the default value is 100
-    ;; Validate a value
-    (is (= 0 (setf (g:value-float value) 0.0)))
-    (is-true (g:param-value-validate pspec value))
-    (is (= 50 (g:value-get value)))
-    (is (= 200 (setf (g:value-float value) 200.0)))
-    (is-true (g:param-value-validate pspec value))
-    (is (= 150 (g:value-get value)))
-    ;; More checks for a default value
-    (is-false (g:param-value-defaults pspec value))
-    (is-false (g:param-value-set-default pspec value))
-    (is-true (g:param-value-defaults pspec value))
-    ;; Check infos about the parameter
-    (is (string= "myFloat" (g:param-spec-name pspec)))
-    (is (string= "myFloat" (g:param-spec-nick pspec)))
-    (is (string= "Documentation" (g:param-spec-blurb pspec)))
-    ;; Unset the GValue
-    (is-false (g:value-unset value))
-    (is-false (g:param-spec-unref pspec))))
+  (let (pspec)
+    (cffi:with-foreign-object (value '(:struct g:value))
+      ;; Initialize a GValue for further checks
+      (is (cffi:pointerp (g:value-init value "gfloat")))
+      ;; Create a GParamSpecInt
+      (is (cffi:pointerp (setf pspec
+                          (g:param-spec-float "myFloat"
+                                              "myFloat"
+                                              "Documentation"
+                                              50.0
+                                              150.0
+                                              100.0
+                                              '(:readable :writable)))))
+      ;; Check type
+      (is-true (g:type-is-param (g:type-from-instance pspec)))
+      (is-true (g:is-param-spec pspec))
+      (is (eq (g:gtype "GParamFloat") (g:param-spec-type pspec)))
+      (is (string= "GParamFloat" (g:param-spec-type-name pspec)))
+      (is (eq (g:gtype "gfloat") (g:param-spec-value-type pspec)))
+      ;; Check the default value
+      (is (eq (g:gtype "gfloat")
+              (g:value-type (g:param-spec-default-value pspec))))
+      (is-true (g:value-get (g:param-spec-default-value pspec)))
+      (is-false (g:param-value-set-default pspec value))
+      (is (= 100 (g:value-get value))) ; the default value is 100
+      ;; Validate a value
+      (is (= 0 (setf (g:value-float value) 0.0)))
+      (is-true (g:param-value-validate pspec value))
+      (is (= 50 (g:value-get value)))
+      (is (= 200 (setf (g:value-float value) 200.0)))
+      (is-true (g:param-value-validate pspec value))
+      (is (= 150 (g:value-get value)))
+      ;; More checks for a default value
+      (is-false (g:param-value-defaults pspec value))
+      (is-false (g:param-value-set-default pspec value))
+      (is-true (g:param-value-defaults pspec value))
+      ;; Check infos about the parameter
+      (is (string= "myFloat" (g:param-spec-name pspec)))
+      (is (string= "myFloat" (g:param-spec-nick pspec)))
+      (is (string= "Documentation" (g:param-spec-blurb pspec)))
+      ;; Unset the GValue
+      (is-false (g:value-unset value))
+      (is-false (g:param-spec-unref pspec)))))
 
 ;;;     g_value_set_float
 ;;;     g_value_get_float
@@ -615,55 +624,56 @@
 
 (test g-param-spec-double-struct
   (is (= 40 (cffi:foreign-type-size '(:struct g:param-spec-double))))
-  (is (equal '(:PARENT-INSTANCE :MINIMUM :MAXIMUM :DEFAULT-VALUE :EPSILON)
-             (cffi:foreign-slot-names '(:struct g:param-spec-double)))))
+  (is (equal '(:DEFAULT-VALUE :EPSILON :MAXIMUM :MINIMUM :PARENT-INSTANCE)
+             (sort (cffi:foreign-slot-names '(:struct g:param-spec-double))
+                   #'string<))))
 
 ;;;     g_param_spec_double
 
 (test g-param-spec-double
-  (cffi:with-foreign-objects ((pspec '(:struct g:param-spec-double))
-                              (value '(:struct g:value)))
-    ;; Initialize a GValue for further checks
-    (is (cffi:pointerp (g:value-init value "gdouble")))
-    ;; Create a GParamSpecDouble
-    (is (cffi:pointerp (setf pspec
-                        (g:param-spec-double "myDouble"
-                                             "myDouble"
-                                             "Documentation"
-                                             50.0d0
-                                             150.0d0
-                                             100.0d0
-                                             '(:readable :writable)))))
-    ;; Check type
-    (is-true (g:type-is-param (g:type-from-instance pspec)))
-    (is-true (g:is-param-spec pspec))
-    (is (eq (g:gtype "GParamDouble") (g:param-spec-type pspec)))
-    (is (string= "GParamDouble" (g:param-spec-type-name pspec)))
-    (is (eq (g:gtype "gdouble") (g:param-spec-value-type pspec)))
-    ;; Check default value
-    (is (eq (g:gtype "gdouble")
-            (g:value-type (g:param-spec-default-value pspec))))
-    (is-true (g:value-get (g:param-spec-default-value pspec)))
-    (is-false (g:param-value-set-default pspec value))
-    (is (= 100 (g:value-get value))) ; the default value is 100
-    ;; Validate a value
-    (is (= 0 (setf (g:value-double value) 0.0d0)))
-    (is-true (g:param-value-validate pspec value))
-    (is (= 50 (g:value-get value)))
-    (is (= 200 (setf (g:value-double value) 200.0d0)))
-    (is-true (g:param-value-validate pspec value))
-    (is (= 150 (g:value-get value)))
-    ;; More checks for a default value
-    (is-false (g:param-value-defaults pspec value))
-    (is-false (g:param-value-set-default pspec value))
-    (is-true (g:param-value-defaults pspec value))
-    ;; Check infos about the parameter
-    (is (string= "myDouble" (g:param-spec-name pspec)))
-    (is (string= "myDouble" (g:param-spec-nick pspec)))
-    (is (string= "Documentation" (g:param-spec-blurb pspec)))
-    ;; Unset the GValue
-    (is-false (g:value-unset value))
-    (is-false (g:param-spec-unref pspec))))
+  (let (pspec)
+    (cffi:with-foreign-object (value '(:struct g:value))
+      ;; Initialize a GValue for further checks
+      (is (cffi:pointerp (g:value-init value "gdouble")))
+      ;; Create a GParamSpecDouble
+      (is (cffi:pointerp (setf pspec
+                          (g:param-spec-double "myDouble"
+                                               "myDouble"
+                                               "Documentation"
+                                               50.0d0
+                                               150.0d0
+                                               100.0d0
+                                               '(:readable :writable)))))
+      ;; Check type
+      (is-true (g:type-is-param (g:type-from-instance pspec)))
+      (is-true (g:is-param-spec pspec))
+      (is (eq (g:gtype "GParamDouble") (g:param-spec-type pspec)))
+      (is (string= "GParamDouble" (g:param-spec-type-name pspec)))
+      (is (eq (g:gtype "gdouble") (g:param-spec-value-type pspec)))
+      ;; Check default value
+      (is (eq (g:gtype "gdouble")
+              (g:value-type (g:param-spec-default-value pspec))))
+      (is-true (g:value-get (g:param-spec-default-value pspec)))
+      (is-false (g:param-value-set-default pspec value))
+      (is (= 100 (g:value-get value))) ; the default value is 100
+      ;; Validate a value
+      (is (= 0 (setf (g:value-double value) 0.0d0)))
+      (is-true (g:param-value-validate pspec value))
+      (is (= 50 (g:value-get value)))
+      (is (= 200 (setf (g:value-double value) 200.0d0)))
+      (is-true (g:param-value-validate pspec value))
+      (is (= 150 (g:value-get value)))
+      ;; More checks for a default value
+      (is-false (g:param-value-defaults pspec value))
+      (is-false (g:param-value-set-default pspec value))
+      (is-true (g:param-value-defaults pspec value))
+      ;; Check infos about the parameter
+      (is (string= "myDouble" (g:param-spec-name pspec)))
+      (is (string= "myDouble" (g:param-spec-nick pspec)))
+      (is (string= "Documentation" (g:param-spec-blurb pspec)))
+      ;; Unset the GValue
+      (is-false (g:value-unset value))
+      (is-false (g:param-spec-unref pspec)))))
 
 ;;;     g_value_set_double
 ;;;     g_value_get_double
@@ -679,48 +689,49 @@
 
 (test g-param-spec-enum-struct
   (is (= 24 (cffi:foreign-type-size '(:struct g:param-spec-enum))))
-  (is (equal '(:PARENT-INSTANCE :ENUM-CLASS :DEFAULT-VALUE)
-             (cffi:foreign-slot-names '(:struct g:param-spec-enum)))))
+  (is (equal '(:DEFAULT-VALUE :ENUM-CLASS :PARENT-INSTANCE)
+             (sort (cffi:foreign-slot-names '(:struct g:param-spec-enum))
+                   #'string<))))
 
 ;;;     g_param_spec_enum
 
 (test g-param-spec-enum
-  (cffi:with-foreign-objects ((pspec '(:struct g:param-spec-enum))
-                              (value '(:struct g:value)))
-    ;; Initialize a GValue for further checks
-    (is (cffi:pointerp (g:value-init value "GEmblemOrigin")))
-    ;; Create a GParamSpec
-    (is (cffi:pointerp (setf pspec
-                             (g:param-spec-enum "myEnumeration"
-                                                "myEnum"
-                                                "Documentation"
-                                                "GEmblemOrigin"
-                                                0 ; for :unkown
-                                                '(:readable :writable)))))
-    ;; Check type
-    (is-true (g:type-is-param (g:type-from-instance pspec)))
-    (is-true (g:is-param-spec pspec))
-    (is (eq (g:gtype "GParamEnum") (g:param-spec-type pspec)))
-    (is (string= "GParamEnum" (g:param-spec-type-name pspec)))
-    (is (eq (g:gtype "GEmblemOrigin") (g:param-spec-value-type pspec)))
-    ;; Check the default value
-    (is (eq (g:gtype "GEmblemOrigin")
-            (g:value-type (g:param-spec-default-value pspec))))
-    (is-true (g:value-get (g:param-spec-default-value pspec)))
-    (is-false (g:param-value-set-default pspec value))
-    (is (eq :unknown
-            (g:value-get value))) ; the default value is :empty
-    ;; More checks for a default value
-    (is-true (g:param-value-defaults pspec value))
-    (is-false (g:param-value-set-default pspec value))
-    (is-true (g:param-value-defaults pspec value))
-    ;; Check the infos about the parameter
-    (is (string= "myEnumeration" (g:param-spec-name pspec)))
-    (is (string= "myEnum" (g:param-spec-nick pspec)))
-    (is (string= "Documentation" (g:param-spec-blurb pspec)))
-    ;; Unset the GValue
-    (is-false (g:value-unset value))
-    (is-false (g:param-spec-unref pspec))))
+  (let (pspec)
+    (cffi:with-foreign-object (value '(:struct g:value))
+      ;; Initialize a GValue for further checks
+      (is (cffi:pointerp (g:value-init value "GEmblemOrigin")))
+      ;; Create a GParamSpec
+      (is (cffi:pointerp (setf pspec
+                               (g:param-spec-enum "myEnumeration"
+                                                  "myEnum"
+                                                  "Documentation"
+                                                  "GEmblemOrigin"
+                                                  0 ; for :unkown
+                                                  '(:readable :writable)))))
+      ;; Check type
+      (is-true (g:type-is-param (g:type-from-instance pspec)))
+      (is-true (g:is-param-spec pspec))
+      (is (eq (g:gtype "GParamEnum") (g:param-spec-type pspec)))
+      (is (string= "GParamEnum" (g:param-spec-type-name pspec)))
+      (is (eq (g:gtype "GEmblemOrigin") (g:param-spec-value-type pspec)))
+      ;; Check the default value
+      (is (eq (g:gtype "GEmblemOrigin")
+              (g:value-type (g:param-spec-default-value pspec))))
+      (is-true (g:value-get (g:param-spec-default-value pspec)))
+      (is-false (g:param-value-set-default pspec value))
+      (is (eq :unknown
+              (g:value-get value))) ; the default value is :empty
+      ;; More checks for a default value
+      (is-true (g:param-value-defaults pspec value))
+      (is-false (g:param-value-set-default pspec value))
+      (is-true (g:param-value-defaults pspec value))
+      ;; Check the infos about the parameter
+      (is (string= "myEnumeration" (g:param-spec-name pspec)))
+      (is (string= "myEnum" (g:param-spec-nick pspec)))
+      (is (string= "Documentation" (g:param-spec-blurb pspec)))
+      ;; Unset the GValue
+      (is-false (g:value-unset value))
+      (is-false (g:param-spec-unref pspec)))))
 
 ;;;     g_value_set_enum
 ;;;     g_value_get_enum
@@ -739,48 +750,49 @@
 
 (test g-param-spec-flags-struct
   (is (= 24 (cffi:foreign-type-size '(:struct g:param-spec-flags))))
-  (is (equal '(:PARENT-INSTANCE :FLAGS-CLASS :DEFAULT-VALUE)
-             (cffi:foreign-slot-names '(:struct g:param-spec-flags)))))
+  (is (equal '(:DEFAULT-VALUE :FLAGS-CLASS :PARENT-INSTANCE)
+             (sort (cffi:foreign-slot-names '(:struct g:param-spec-flags))
+                   #'string<))))
 
 ;;;     g_param_spec_flags
 
 (test g-param-spec-flags
-  (cffi:with-foreign-objects ((pspec '(:struct g:param-spec-flags))
-                              (value '(:struct g:value)))
-    ;; Initialize a GValue for further checks
-    (is (cffi:pointerp (g:value-init value "GApplicationFlags")))
-    ;; Create a GParamSpec
-    (is (cffi:pointerp (setf pspec
-                        (g:param-spec-flags "myFlags"
-                                            "myFlags"
-                                            "Documentation"
-                                            "GApplicationFlags"
-                                            1 ; for :is-service
-                                            '(:readable :writable)))))
-    ;; Check type
-    (is-true (g:type-is-param (g:type-from-instance pspec)))
-    (is-true (g:is-param-spec pspec))
-    (is (eq (g:gtype "GParamFlags") (g:param-spec-type pspec)))
-    (is (string= "GParamFlags" (g:param-spec-type-name pspec)))
-    (is (eq (g:gtype "GApplicationFlags") (g:param-spec-value-type pspec)))
-    ;; Check the default value
-    (is (eq (g:gtype "GApplicationFlags")
-            (g:value-type (g:param-spec-default-value pspec))))
-    (is (equal '(:is-service)
-               (g:value-get (g:param-spec-default-value pspec))))
-    (is-false (g:param-value-set-default pspec value))
-    (is (equal '(:is-service) (g:value-get value))) ; default value
-    ;; More checks for a default value
-    (is-true (g:param-value-defaults pspec value))
-    (is-false (g:param-value-set-default pspec value))
-    (is-true (g:param-value-defaults pspec value))
-    ;; Check the infos about the parameter
-    (is (string= "myFlags" (g:param-spec-name pspec)))
-    (is (string= "myFlags" (g:param-spec-nick pspec)))
-    (is (string= "Documentation" (g:param-spec-blurb pspec)))
-    ;; Unset the GValue
-    (is-false (g:value-unset value))
-    (is-false (g:param-spec-unref pspec))))
+  (let (pspec)
+    (cffi:with-foreign-object (value '(:struct g:value))
+      ;; Initialize a GValue for further checks
+      (is (cffi:pointerp (g:value-init value "GApplicationFlags")))
+      ;; Create a GParamSpec
+      (is (cffi:pointerp (setf pspec
+                          (g:param-spec-flags "myFlags"
+                                              "myFlags"
+                                              "Documentation"
+                                              "GApplicationFlags"
+                                              1 ; for :is-service
+                                              '(:readable :writable)))))
+      ;; Check type
+      (is-true (g:type-is-param (g:type-from-instance pspec)))
+      (is-true (g:is-param-spec pspec))
+      (is (eq (g:gtype "GParamFlags") (g:param-spec-type pspec)))
+      (is (string= "GParamFlags" (g:param-spec-type-name pspec)))
+      (is (eq (g:gtype "GApplicationFlags") (g:param-spec-value-type pspec)))
+      ;; Check the default value
+      (is (eq (g:gtype "GApplicationFlags")
+              (g:value-type (g:param-spec-default-value pspec))))
+      (is (equal '(:is-service)
+                 (g:value-get (g:param-spec-default-value pspec))))
+      (is-false (g:param-value-set-default pspec value))
+      (is (equal '(:is-service) (g:value-get value))) ; default value
+      ;; More checks for a default value
+      (is-true (g:param-value-defaults pspec value))
+      (is-false (g:param-value-set-default pspec value))
+      (is-true (g:param-value-defaults pspec value))
+      ;; Check the infos about the parameter
+      (is (string= "myFlags" (g:param-spec-name pspec)))
+      (is (string= "myFlags" (g:param-spec-nick pspec)))
+      (is (string= "Documentation" (g:param-spec-blurb pspec)))
+      ;; Unset the GValue
+      (is-false (g:value-unset value))
+      (is-false (g:param-spec-unref pspec)))))
 
 ;;;     g_value_set_flags
 ;;;     g_value_get_flags
@@ -800,48 +812,49 @@
 
 (test g-param-spec-string-struct
   (is (= 40 (cffi:foreign-type-size '(:struct g:param-spec-string))))
-  (is (equal '(:PARENT-INSTANCE :DEFAULT-VALUE :CSET-FIRST :CSET-NTH :SUBSTITUTOR
-               :FLAGS-FOR-NULL)
-             (cffi:foreign-slot-names '(:struct g:param-spec-string)))))
+  (is (equal '(:CSET-FIRST :CSET-NTH :DEFAULT-VALUE :FLAGS-FOR-NULL
+               :PARENT-INSTANCE :SUBSTITUTOR)
+             (sort (cffi:foreign-slot-names '(:struct g:param-spec-string))
+                   #'string<))))
 
 ;;;     g_param_spec_string
 
 (test g-param-spec-string
-  (cffi:with-foreign-objects ((pspec '(:struct g:param-spec-string))
-                              (value '(:struct g:value)))
-    ;; Initialize a GValue for further checks
-    (is (cffi:pointerp (g:value-init value "gchararray")))
-    ;; Create a GParamSpec
-    (is (cffi:pointerp (setf pspec
-                        (g:param-spec-string "myString"
-                                             "myString"
-                                             "Documentation"
-                                             "string"
-                                             '(:readable :writable)))))
-    ;; Check type
-    (is-true (g:type-is-param (g:type-from-instance pspec)))
-    (is-true (g:is-param-spec pspec))
-    (is (eq (g:gtype "GParamString") (g:param-spec-type pspec)))
-    (is (string= "GParamString" (g:param-spec-type-name pspec)))
-    (is (eq (g:gtype "gchararray") (g:param-spec-value-type pspec)))
-    ;; Check the default value
-    (is (eq (g:gtype "gchararray")
-            (g:value-type (g:param-spec-default-value pspec))))
-    (is (string= "string"
-                 (g:value-get (g:param-spec-default-value pspec))))
-    (is-false (g:param-value-set-default pspec value))
-    (is (string= "string" (g:value-get value)))
-    ;; More checks for a default value
-    (is-true (g:param-value-defaults pspec value))
-    (is-false (g:param-value-set-default pspec value))
-    (is-true (g:param-value-defaults pspec value))
-    ;; Check the infos about the parameter
-    (is (string= "myString" (g:param-spec-name pspec)))
-    (is (string= "myString" (g:param-spec-nick pspec)))
-    (is (string= "Documentation" (g:param-spec-blurb pspec)))
-    ;; Unset the GValue
-    (is-false (g:value-unset value))
-    (is-false (g:param-spec-unref pspec))))
+  (let (pspec)
+    (cffi:with-foreign-object (value '(:struct g:value))
+      ;; Initialize a GValue for further checks
+      (is (cffi:pointerp (g:value-init value "gchararray")))
+      ;; Create a GParamSpec
+      (is (cffi:pointerp (setf pspec
+                          (g:param-spec-string "myString"
+                                               "myString"
+                                               "Documentation"
+                                               "string"
+                                               '(:readable :writable)))))
+      ;; Check type
+      (is-true (g:type-is-param (g:type-from-instance pspec)))
+      (is-true (g:is-param-spec pspec))
+      (is (eq (g:gtype "GParamString") (g:param-spec-type pspec)))
+      (is (string= "GParamString" (g:param-spec-type-name pspec)))
+      (is (eq (g:gtype "gchararray") (g:param-spec-value-type pspec)))
+      ;; Check the default value
+      (is (eq (g:gtype "gchararray")
+              (g:value-type (g:param-spec-default-value pspec))))
+      (is (string= "string"
+                   (g:value-get (g:param-spec-default-value pspec))))
+      (is-false (g:param-value-set-default pspec value))
+      (is (string= "string" (g:value-get value)))
+      ;; More checks for a default value
+      (is-true (g:param-value-defaults pspec value))
+      (is-false (g:param-value-set-default pspec value))
+      (is-true (g:param-value-defaults pspec value))
+      ;; Check the infos about the parameter
+      (is (string= "myString" (g:param-spec-name pspec)))
+      (is (string= "myString" (g:param-spec-nick pspec)))
+      (is (string= "Documentation" (g:param-spec-blurb pspec)))
+      ;; Unset the GValue
+      (is-false (g:value-unset value))
+      (is-false (g:param-spec-unref pspec)))))
 
 ;;;     g_value_set_string
 ;;;     g_value_get_string
@@ -863,40 +876,40 @@
 ;;;     g_param_spec_param
 
 (test g-param-spec-param
-  (cffi:with-foreign-objects ((pspec '(:struct g:param-spec-param))
-                              (value '(:struct g:value)))
-    ;; Initialize a GValue for further checks
-    (is (cffi:pointerp (g:value-init value "GParamParam")))
-    ;; Create a GParamSpec
-    (is (cffi:pointerp (setf pspec
-                        (g:param-spec-param "myParameter"
-                                            "myParam"
-                                            "Documentation"
-                                            "GParamBoolean"
-                                            '(:readable :writable)))))
-    ;; Check type
-    (is-true (g:type-is-param (g:type-from-instance pspec)))
-    (is-true (g:is-param-spec pspec))
-    (is (eq (g:gtype "GParamParam") (g:param-spec-type pspec)))
-    (is (string= "GParamParam" (g:param-spec-type-name pspec)))
-    (is (eq (g:gtype "GParamBoolean") (g:param-spec-value-type pspec)))
-    ;; Check the default value
-    (is (eq (g:gtype "GParamBoolean")
-            (g:value-type (g:param-spec-default-value pspec))))
-;    (is-false (g:value-get (g-param-spec-default-value pspec)))
-;    (is-false (g-param-value-set-default pspec value))
-;    (is (string= "string" (g:value-get value)))
-    ;; More checks for a default value
-;    (is-true (g-param-value-defaults pspec value))
-;    (is-false (g-param-value-set-default pspec value))
-;    (is-true (g-param-value-defaults pspec value))
-    ;; Check the infos about the parameter
-    (is (string= "myParameter" (g:param-spec-name pspec)))
-    (is (string= "myParam" (g:param-spec-nick pspec)))
-    (is (string= "Documentation" (g:param-spec-blurb pspec)))
-    ;; Unset the GValue
-    (is-false (g:value-unset value))
-    (is-false (g:param-spec-unref pspec))))
+  (let (pspec)
+    (cffi:with-foreign-object (value '(:struct g:value))
+      ;; Initialize a GValue for further checks
+      (is (cffi:pointerp (g:value-init value "GParamParam")))
+      ;; Create a GParamSpec
+      (is (cffi:pointerp (setf pspec
+                          (g:param-spec-param "myParameter"
+                                              "myParam"
+                                              "Documentation"
+                                              "GParamBoolean"
+                                              '(:readable :writable)))))
+      ;; Check type
+      (is-true (g:type-is-param (g:type-from-instance pspec)))
+      (is-true (g:is-param-spec pspec))
+      (is (eq (g:gtype "GParamParam") (g:param-spec-type pspec)))
+      (is (string= "GParamParam" (g:param-spec-type-name pspec)))
+      (is (eq (g:gtype "GParamBoolean") (g:param-spec-value-type pspec)))
+      ;; Check the default value
+      (is (eq (g:gtype "GParamBoolean")
+              (g:value-type (g:param-spec-default-value pspec))))
+;     (is-false (g:value-get (g-param-spec-default-value pspec)))
+;     (is-false (g-param-value-set-default pspec value))
+;     (is (string= "string" (g:value-get value)))
+      ;; More checks for a default value
+;     (is-true (g-param-value-defaults pspec value))
+;     (is-false (g-param-value-set-default pspec value))
+;     (is-true (g-param-value-defaults pspec value))
+      ;; Check the infos about the parameter
+      (is (string= "myParameter" (g:param-spec-name pspec)))
+      (is (string= "myParam" (g:param-spec-nick pspec)))
+      (is (string= "Documentation" (g:param-spec-blurb pspec)))
+      ;; Unset the GValue
+      (is-false (g:value-unset value))
+      (is-false (g:param-spec-unref pspec)))))
 
 ;;;     g_value_set_param
 ;;;     g_value_get_param
@@ -922,32 +935,32 @@
 ;;;     g_param_spec_boxed
 
 (test g-param-spec-boxed
-  (cffi:with-foreign-objects ((pspec '(:struct g:param-spec-boxed))
-                              (value '(:struct g:value)))
-    ;; Initialize a GValue for further checks
-    (is (cffi:pointerp (g:value-init value "GParamBoxed")))
-    ;; Create a GParamSpec
-    (is (cffi:pointerp (setf pspec
-                             (g:param-spec-boxed "myBoxed"
-                                                 "myBoxed"
-                                                 "Documentation"
-                                                 "GBytes"
-                                                 '(:readable :writable)))))
-    ;; Check type
-    (is-true (g:type-is-param (g:type-from-instance pspec)))
-    (is-true (g:is-param-spec pspec))
-    (is (eq (g:gtype "GParamBoxed") (g:param-spec-type pspec)))
-    (is (string= "GParamBoxed" (g:param-spec-type-name pspec)))
-    (is (eq (g:gtype "GBytes") (g:param-spec-value-type pspec)))
-    ;; Check the default value
-    ;  no default value
-    ;; Check the infos about the parameter
-    (is (string= "myBoxed" (g:param-spec-name pspec)))
-    (is (string= "myBoxed" (g:param-spec-nick pspec)))
-    (is (string= "Documentation" (g:param-spec-blurb pspec)))
-    ;; Unset the GValue
-    (is-false (g:value-unset value))
-    (is-false (g:param-spec-unref pspec))))
+  (let (pspec)
+    (cffi:with-foreign-object (value '(:struct g:value))
+      ;; Initialize a GValue for further checks
+      (is (cffi:pointerp (g:value-init value "GParamBoxed")))
+      ;; Create a GParamSpec
+      (is (cffi:pointerp (setf pspec
+                               (g:param-spec-boxed "myBoxed"
+                                                   "myBoxed"
+                                                   "Documentation"
+                                                   "GBytes"
+                                                   '(:readable :writable)))))
+      ;; Check type
+      (is-true (g:type-is-param (g:type-from-instance pspec)))
+      (is-true (g:is-param-spec pspec))
+      (is (eq (g:gtype "GParamBoxed") (g:param-spec-type pspec)))
+      (is (string= "GParamBoxed" (g:param-spec-type-name pspec)))
+      (is (eq (g:gtype "GBytes") (g:param-spec-value-type pspec)))
+      ;; Check the default value
+      ;  no default value
+      ;; Check the infos about the parameter
+      (is (string= "myBoxed" (g:param-spec-name pspec)))
+      (is (string= "myBoxed" (g:param-spec-nick pspec)))
+      (is (string= "Documentation" (g:param-spec-blurb pspec)))
+      ;; Unset the GValue
+      (is-false (g:value-unset value))
+      (is-false (g:param-spec-unref pspec)))))
 
 ;;;     g_value_set_boxed
 ;;;     g_value_set_static_boxed
@@ -1004,7 +1017,7 @@
 ;;;     g_param_spec_gtype
 
 (test g-param-spec-gtype
-  (cffi:with-foreign-object (pspec '(:struct g:param-spec-gtype))
+  (let (pspec)
     ;; Create a GParamSpecGtype
     (is (g:is-param-spec (setf pspec
                                (g:param-spec-gtype "myGType"
@@ -1039,4 +1052,4 @@
 ;;;     g_value_set_variant
 ;;;     g_value_take_variant
 
-;;; 2024-12-22
+;;; 2025-09-17

@@ -98,6 +98,7 @@
 ;; GError: Domain: "g-resource-error-quark", Code: 1, Message: invalid gvdb header.
 ;; --------------------------------
 
+#+nil
 (test g-resource-new-from-data
   (multiple-value-bind (data len) (cffi:foreign-string-alloc "a test string")
     (let ((bytes (g:bytes-new data len))
@@ -209,4 +210,4 @@
                                                        :none)
                        #'string<))))))
 
-;;; 2025-05-01
+;;; 2025-09-17

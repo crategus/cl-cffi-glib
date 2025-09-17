@@ -8,7 +8,26 @@
 ;;; --- Types and Values -------------------------------------------------------
 
 ;;;     GOptionArg
+
 ;;;     GOptionFlags
+
+(test g-option-flags
+  ;; Get values
+  (is (=   0 (cffi:foreign-bitfield-value 'g:option-flags :none)))
+  (is (=   1 (cffi:foreign-bitfield-value 'g:option-flags :hidden)))
+  (is (=   2 (cffi:foreign-bitfield-value 'g:option-flags :in-main)))
+  (is (=   4 (cffi:foreign-bitfield-value 'g:option-flags :reverse)))
+  (is (=   8 (cffi:foreign-bitfield-value 'g:option-flags :no-arg)))
+  (is (=  16 (cffi:foreign-bitfield-value 'g:option-flags :filename)))
+  (is (=  32 (cffi:foreign-bitfield-value 'g:option-flags :optional-arg)))
+  (is (=  64 (cffi:foreign-bitfield-value 'g:option-flags :noalias)))
+  (is (= 128 (cffi:foreign-bitfield-value 'g:option-flags :deprecated)))
+  ;; Get symbols
+  (is (equal '(:HIDDEN :IN-MAIN :REVERSE :NO-ARG :FILENAME :OPTIONAL-ARG
+               :NOALIAS :DEPRECATED)
+             (cffi:foreign-bitfield-symbols 'g:option-flags
+                                            (+ 1 2 4 8 16 32 64 128)))))
+
 ;;;     GOptionContext
 
 ;;;     GOptionEntry
@@ -445,7 +464,7 @@ Anwendungsoptionen:
 "Usage:
   glib-test [OPTION…] Description
 
-Test Group:
+Application Options:
   -a, --long-name-1                      Description1
   -b, --long-name-2=a string             Description2
   -c, --long-name-3=an integer           Description3
@@ -679,4 +698,4 @@ Anwendungsoptionen:
             ;; Show the help output
             (format t "~&~%~a~%" (g:option-context-help context t))))))
 
-;;; 2025-05-25
+;;; 2025-09-17
