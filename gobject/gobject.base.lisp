@@ -123,7 +123,7 @@
     (remhash (cffi:pointer-address ptr) gobjects-strong-table))
 
   (defun list-gobject-for-pointer-strong ()
-    (iter (for (key value) in-hashtable gobjects-strong-table)
+    (iter (for (nil value) in-hashtable gobjects-strong-table)
           (collect value)))
 
   (defun get-gobject-for-pointer-weak (ptr)
@@ -134,7 +134,7 @@
     (remhash (cffi:pointer-address ptr) gobjects-weak-table))
 
   (defun list-gobject-for-pointer-weak ()
-    (iter (for (key value) in-hashtable gobjects-weak-table)
+    (iter (for (nil value) in-hashtable gobjects-weak-table)
           (collect value)))
 
   (defun get-gobject-for-pointer (ptr)
@@ -571,7 +571,7 @@ lambda (object pspec)    :no-hooks
                (push (gobject-prop-effective-slot-definition-prop-name slot)
                      arg-names)
                (push arg-value arg-values)
-	       ;; TODO: The list is always filled with NIL values. Why?
+           ;; TODO: The list is always filled with NIL values. Why?
                (push (gobject-effective-slot-definition-prop-type slot)
                      arg-types))
               (gobject-func-effective-slot-definition

@@ -157,7 +157,7 @@
 (defgeneric get-gvalue-for-type (gvalue gtype))
 
 (defmethod get-gvalue-for-type :around (gvalue gtype)
-  (declare (ignorable gtype))
+  (declare (ignorable gvalue gtype))
   (assert (typep gtype '(or glib:gtype nil)))
   (call-next-method))
 

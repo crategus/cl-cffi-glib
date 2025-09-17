@@ -242,6 +242,7 @@
 (defgeneric object-instance-init (subclass instance class))
 
 (defmethod object-instance-init (subclass instance class)
+  (declare (ignorable subclass))
   (unless (or *current-creating-object*
               *currently-making-object-p*
               (get-gobject-for-pointer instance))
@@ -503,6 +504,7 @@
 (defgeneric object-class-init (subclass class data))
 
 (defmethod object-class-init (subclass class data)
+  (declare (ignorable subclass data))
   (let* ((gname (glib:gtype-name (type-from-class class)))
          (subclass-info (get-subclass-info gname)))
     ;; Initialize the getter and setter methods for the object class

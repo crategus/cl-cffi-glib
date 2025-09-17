@@ -1,7 +1,7 @@
 ;;; ----------------------------------------------------------------------------
 ;;; glib.gtype.lisp
 ;;;
-;;; Copyright (C) 2011 - 2024 Dieter Kaiser
+;;; Copyright (C) 2011 - 2025 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -76,12 +76,12 @@
   (defun invalidate-gtypes ()
     (bt:with-lock-held (*gtype-lock*)
       (clrhash id-to-gtype-table)
-      (iter (for (name gtype) in-hashtable name-to-gtype-table)
+      (iter (for (nil gtype) in-hashtable name-to-gtype-table)
             (setf (gtype-%id gtype) nil))))
 
   ;; For debugging purposes
   (defun get-name-to-gtypes ()
-    (iter (for (name gtype) in-hashtable name-to-gtype-table)
+    (iter (for (name nil) in-hashtable name-to-gtype-table)
           (collect name)))
   (defun get-id-to-gtypes ()
     (iter (for (id gtype) in-hashtable id-to-gtype-table)
@@ -328,7 +328,7 @@
 
   ;; For debugging purposes
   (defun list-symbol-for-gtype ()
-    (iter (for (key symbol) in-hashtable symbol-for-gtype)
+    (iter (for (nil symbol) in-hashtable symbol-for-gtype)
           (collect symbol))))
 
 ;;; --- End of file glib.gtype.lisp --------------------------------------------
