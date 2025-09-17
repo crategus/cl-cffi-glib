@@ -205,30 +205,33 @@
 ;;;-----------------------------------------------------------------------------
 
 (cffi:defbitfield option-flags
-  :none
-  :hidden
-  :in-main
-  :reverse
-  :no-arg
-  :filename
-  :optional-arg
-  :noalias)
+  (:none 0)
+  (:hidden #.(ash 1 0))
+  (:in-main #.(ash 1 1))
+  (:reverse #.(ash 1 2))
+  (:no-arg #.(ash 1 3))
+  (:filename #.(ash 1 4))
+  (:optional-arg #.(ash 1 5))
+  (:noalias #.(ash 1 6))
+  #+glib-2-84
+  (:deprecated #.(ash 1 7)))
 
 #+liber-documentation
 (setf (liber:alias-for-symbol 'option-flags)
       "Bitfield"
       (liber:symbol-documentation 'option-flags)
- "@version{2025-05-22}
+ "@version{2025-09-17}
   @begin{declaration}
 (cffi:defbitfield option-flags
-  :none
-  :hidden
-  :in-main
-  :reverse
-  :no-arg
-  :filename
-  :optional-arg
-  :noalias)
+  (:none 0)
+  (:hidden       #.(ash 1 0))
+  (:in-main      #.(ash 1 1))
+  (:reverse      #.(ash 1 2))
+  (:no-arg       #.(ash 1 3))
+  (:filename     #.(ash 1 4))
+  (:optional-arg #.(ash 1 5))
+  (:noalias      #.(ash 1 6))
+  (:deprecated   #.(ash 1 7)))
   @end{declaration}
   @begin{values}
     @begin[code]{table}
@@ -254,6 +257,10 @@
         is necessary to model some legacy command line interface. It is not
         safe to use this option, unless all option groups are under your direct
         control.}
+      @entry[:deprecated]{This flag marks the option as deprecated in
+        @code{--help} output. You should update the description of the option
+        to describe what the user should do in response to the deprecation, for
+        instance remove the option, or replace it with another one. Since 2.84}
     @end{table}
   @end{values}
   @short{Flags which modify individual options.}
