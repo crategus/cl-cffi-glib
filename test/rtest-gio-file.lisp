@@ -78,6 +78,7 @@
       (is (string= (namestring path) (g:file-get-parse-name file)))
       (is (string= (namestring path)
                    (cffi:convert-from-foreign file 'g:file-as-namestring)))
+      (is (cffi:null-pointer-p (cffi:convert-to-foreign nil 'g:file-as-namestring)))
       (is-false (cffi:convert-from-foreign nil 'g:file-as-namestring))
       (is-false (cffi:convert-from-foreign (cffi:null-pointer)
                                            'g:file-as-namestring)))))
