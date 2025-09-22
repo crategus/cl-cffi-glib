@@ -107,7 +107,7 @@
 
       (is (<= 3944380000 (g:file-info-modification-date-time info)))
       (is (string= "rtest-gio-file.lisp" (g:file-info-name info)))
-      (is (= 8335 (g:file-info-size info))))))
+      (is (= 8420 (g:file-info-size info))))))
 
 ;;;     g_file_info_get_sort_order
 ;;;     g_file_info_get_symbolic_icon
@@ -273,4 +273,4 @@
 ;;;     g_file_info_set_symlink_target
 ;;;     g_file_info_unset_attribute_mask
 
-;;; 2025-3-27
+;;; 2025-09-22
