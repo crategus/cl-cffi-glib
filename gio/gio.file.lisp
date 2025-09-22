@@ -150,10 +150,12 @@
   (:simple-parser file-as-namestring))
 
 (defmethod cffi:translate-to-foreign (value (type file-as-namestring-type))
-  (gobject:object-pointer
-      (cffi:foreign-funcall "g_file_parse_name"
-                            :string (namestring value)
-                            (gobject:object :return))))
+  (if value
+      (gobject:object-pointer
+          (cffi:foreign-funcall "g_file_parse_name"
+                                :string (namestring value)
+                                (gobject:object :return)))
+      (cffi:null-pointer)))
 
 (defmethod cffi:translate-from-foreign (value (type file-as-namestring-type))
   (when value
@@ -170,7 +172,7 @@
 (setf (liber:alias-for-class 'file-as-namestring)
       "Type"
       (documentation 'file-as-namestring 'type)
- "@version{2024-12-28}
+ "@version{2025-09-22}
   @begin{short}
     The @class{g:file-as-namestring} type specifier represents and performs
     automatic conversion between a Lisp namestring and a @class{g:file} object
@@ -180,6 +182,9 @@
   object using the @fun{g:file-parse-name} function. The conversion from a
   @class{g:file} object back to a Lisp namestring is done with the
   @fun{g:file-get-parse-name} function.
+
+  The @code{nil} value is converted to a foreign @code{(cffi:null-pointer)}
+  value and vice versa.
   @begin[Examples]{dictionary}
     Conversion of a Lisp namestring to @class{g:file} object and back:
     @begin{pre}
@@ -189,6 +194,10 @@
 => #.(SB-SYS:INT-SAP #X60BCAD6BD5B0)
 (cffi:convert-from-foreign * 'g:file-as-namestring)
 => \"/home/lisp/github/glib/gio/gio.file.lisp\"
+(cffi:convert-to-foreign nil 'g:file-as-namestring)
+=> #.(SB-SYS:INT-SAP #X00000000)
+(cffi:convert-from-foreign * 'g:file-as-namestring)
+=> NIL
     @end{pre}
   @end{dictionary}
   @see-class{g:file}")
