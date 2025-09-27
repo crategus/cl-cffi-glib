@@ -27,34 +27,166 @@
                  ("title" "gchararray" DIALOG-TITLE T NIL))
                (gobject::filter-properties-to-register properties)))))
 
+;;; --- parse-property ---------------------------------------------------------
+
+;; #S(GOBJECT::GOBJECT-PROPERTY
+;;    :NAME USE-HEADER-BAR
+;;    :ACCESSOR DIALOG-USE-HEADER-BAR
+;;    :READABLE T
+;;    :WRITABLE T
+;;    :GNAME "use-header-bar"
+;;    :GTYPE "gint")
+(test parse-gobject-property
+  (let* ((property '(use-header-bar
+                     dialog-use-header-bar
+                     "use-header-bar" "gint" t t))
+         (prop (gobject::parse-property property)))
+    (is (typep prop 'gobject::gobject-property))
+    (is (eq 'use-header-bar (gobject::gobject-property-name prop)))
+    (is (eq 'dialog-use-header-bar (gobject::gobject-property-accessor prop)))
+    (is-true (gobject::gobject-property-readable prop))
+    (is-true (gobject::gobject-property-writable prop))
+    (is (string= "use-header-bar" (gobject::gobject-property-gname prop)))
+    (is (string= "gint" (gobject::gobject-property-gtype prop)))))
+
+;; #S(GOBJECT::CFFI-PROPERTY
+;;    :NAME FILENAME
+;;    :ACCESSOR FILE-CHOOSER-FILENAME
+;;    :READABLE T
+;;    :WRITABLE T
+;;    :CTYPE (:STRING :FREE-FROM-FOREIGN T :FREE-TO-FOREIGN T)
+;;    :READER "gtk_file_chooser_get_filename"
+;;    :WRITER "gtk_file_chooser_set_filename")
+(test parse-cffi-property
+  (let* ((property '(:cffi filename
+                     file-chooser-filename
+                     (:string :free-from-foreign t
+                              :free-to-foreign t)
+                     "gtk_file_chooser_get_filename"
+                     "gtk_file_chooser_set_filename"))
+         (prop (gobject::parse-property property)))
+    (is (typep prop 'gobject::cffi-property))
+    (is (eq 'filename (gobject::cffi-property-name prop)))
+    (is (eq 'file-chooser-filename (gobject::cffi-property-accessor prop)))
+    (is-true (gobject::cffi-property-readable prop))
+    (is-true (gobject::cffi-property-writable prop))
+    (is (equal '(:STRING :FREE-FROM-FOREIGN T :FREE-TO-FOREIGN T)
+               (gobject::cffi-property-ctype prop)))
+    (is (string= "gtk_file_chooser_get_filename"
+                 (gobject::cffi-property-reader prop)))
+    (is (string= "gtk_file_chooser_set_filename"
+                 (gobject::cffi-property-writer prop)))))
+
+;; #S(GOBJECT::CL-PROPERTY
+;;    :NAME POSITION
+;;    :ACCESSOR NIL
+;;    :READABLE NIL
+;;    :WRITABLE NIL
+;;    :ARGS (:INITFORM :BOTTOM :INITARG POSITION)))
+(test parse-cl-property
+  (let* ((property '(:cl position
+                     :initform :bottom
+                     :initarg position))
+         (prop (gobject::parse-property property)))
+    (is (typep prop 'gobject::cl-property))
+    (is (eq 'position (gobject::cl-property-name prop)))
+    (is (equal '(:INITFORM :BOTTOM :INITARG POSITION)
+               (gobject::cl-property-args prop)))))
+
 ;;; ----------------------------------------------------------------------------
 
-;;; GIcon Inferface
+;; This is the code for exporting the symbols for the accesors of a property
+(defun export-accessors (property)
+  `(export
+     ',(intern
+         (typecase property
+          (gobject::cl-property
+           (symbol-name
+             (or (getf (gobject::cl-property-args property) :reader)
+                 (getf (gobject::cl-property-args property) :writer)
+                 (getf (gobject::cl-property-args property) :accessor))))
+          (gobject::cffi-property
+           (symbol-name
+             (gobject::cffi-property-accessor property)))
+          (t
+           (symbol-name (gobject::gobject-property-accessor property)))))))
 
-;;; struct GioIconIface {
-;;;   GTypeInterface g_iface;
-;;;   guint (* hash) (
-;;;     GIcon* icon
-;;;   );
-;;;   gboolean (* equal) (
-;;;     GIcon* icon1,
-;;;     GIcon* icon2
-;;;   );
-;;;   gboolean (* to_tokens) (
-;;;     GIcon* icon,
-;;;     GPtrArray* tokens,
-;;;     gint* out_version
-;;;   );
-;;;   GIcon* (* from_tokens) (
-;;;     gchar** tokens,
-;;;     gint num_tokens,
-;;;     gint version,
-;;;     GError** error
-;;;   );
-;;;   GVariant* (* serialize) (
-;;;     GIcon* icon
-;;;   );
-;;; }
+(test export-gobject-property-accessors.1
+  (let* ((property '(use-header-bar
+                     dialog-use-header-bar
+                     "use-header-bar" "gint" t t))
+         (prop (gobject::parse-property property)))
+    (is (equal '(EXPORT 'DIALOG-USE-HEADER-BAR)
+               (export-accessors prop)))))
+
+(test export-gobject-property-accessors.2
+  (let* ((property '(use-header-bar
+                     %dialog-use-header-bar
+                     "use-header-bar" "gint" t t))
+         (prop (gobject::parse-property property)))
+    (is (equal '(EXPORT '%DIALOG-USE-HEADER-BAR)
+               (export-accessors prop)))))
+
+(test export-cffi-property-accessors.1
+  (let* ((property '(:cffi filename
+                     file-chooser-filename
+                     (:string :free-from-foreign t
+                              :free-to-foreign t)
+                     "gtk_file_chooser_get_filename"
+                     "gtk_file_chooser_set_filename"))
+         (prop (gobject::parse-property property)))
+    (is (equal '(EXPORT 'FILE-CHOOSER-FILENAME)
+               (export-accessors prop)))))
+
+(test export-cffi-property-accessors.2
+  (let* ((property '(:cffi filename
+                     %file-chooser-filename
+                     (:string :free-from-foreign t
+                              :free-to-foreign t)
+                     "gtk_file_chooser_get_filename"
+                     "gtk_file_chooser_set_filename"))
+         (prop (gobject::parse-property property)))
+    (is (equal '(EXPORT '%FILE-CHOOSER-FILENAME)
+               (export-accessors prop)))))
+
+(test export-cl-property-accessors.1
+  (let* ((property '(:cl position
+                     :accessor dialog-position
+                     :initform :bottom
+                     :initarg position))
+         (prop (gobject::parse-property property)))
+    (is (equal '(EXPORT 'DIALOG-POSITION)
+               (export-accessors prop)))))
+
+(test export-cl-property-accessors.2
+  (let* ((property '(:cl position
+                     :accessor %dialog-position
+                     :initform :bottom
+                     :initarg position))
+         (prop (gobject::parse-property property)))
+    (is (equal '(EXPORT '%DIALOG-POSITION)
+               (export-accessors prop)))))
+
+(test export-cl-property-accessors.3
+  (let* ((property '(:cl position
+                     :initform :bottom
+                     :initarg position))
+         (prop (gobject::parse-property property)))
+    (is (equal '(EXPORT 'NIL)
+               (export-accessors prop)))))
+
+(test export-cl-property-accessors.4
+  (let* ((property '(:cl position
+                     :writer dialog-writer
+                     :reader dialog-reader
+                     :initform :bottom
+                     :initarg position))
+         (prop (gobject::parse-property property)))
+    ;; TODO: Only the reader is exported. See documentation in the code.
+    (is (equal '(EXPORT 'dialog-reader)
+               (export-accessors prop)))))
+
+;;; ----------------------------------------------------------------------------
 
 ;;; We must define a vtable to use the GIcon interface in a subclass
 ;;; We do not override any of the virtual functions, but define the correct
@@ -362,4 +494,4 @@
     (is (string= "UTC" (g:object-property clock "location")))
     (is (string= "abc" (setf (clock5-location clock) "abc")))))
 
-;;; 2025-09-17
+;;; 2025-09-27
