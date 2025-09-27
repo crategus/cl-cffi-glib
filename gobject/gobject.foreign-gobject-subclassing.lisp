@@ -507,7 +507,7 @@
   (declare (ignorable subclass data))
   (let* ((gname (glib:gtype-name (type-from-class class)))
          (subclass-info (get-subclass-info gname)))
-    ;; Initialize the getter and setter methods for the object class
+    ;; Initialize getter and setter methods for the object class
     (setf (object-class-get-property class)
           (cffi:callback c-object-property-get)
           (object-class-set-property class)
@@ -517,7 +517,7 @@
           (for pspec = (property->param-spec property))
           (for property-id from 123) ; FIXME: This is a magic number!?
           (%object-class-install-property class property-id pspec))
-    ;; Install the vtable for the subclass
+    ;; Install vtable for the subclass
     (install-vtable gname)))
 
 (cffi:defcallback class-init-cb :void
@@ -529,7 +529,7 @@
 
 ;;; ----------------------------------------------------------------------------
 
-;; Filter the properties that we will register
+;; Filter properties that we will register
 (defun filter-properties-to-register (properties)
   (iter (for property in properties)
         (when (or (eq :cl (first property))
@@ -558,8 +558,6 @@
                       ;; Get default value from GParamSpec for initialization
                       (default (value-get (param-spec-default-value pspec))))
                  `(:initform ,default)))))
-        ;; Does this work? We do not use the code at this time, but check this
-        ;; more carefully
         ((cffi-property-p property)
          `(,(property-name property)
            :accessor ,(property-accessor property)
@@ -572,6 +570,8 @@
         ((cl-property-p property)
          `(,(property-name property)
            ,@(cl-property-args property)))))
+
+;;; ----------------------------------------------------------------------------
 
 (defmacro define-gobject-subclass (gname name
                                     (&key (superclass 'object)
@@ -607,9 +607,6 @@
          (:metaclass gobject-class))
        ;; Register the class
        (glib-init:at-init (',name)
-         (log-for :subclass
-                  "Debug subclass: Registering GObject type ~A for type ~A~%"
-                  ',name ,gname)
          (cffi:with-foreign-object (query '(:struct type-query))
            (type-query (glib:gtype ,parent) query)
            (type-register-static-simple
@@ -625,29 +622,48 @@
          (setf (glib:symbol-for-gtype ,gname) ',name))
        ;; Initializer for the instance of the subclass
        (defmethod initialize-instance :before ((object ,name) &key pointer)
-         (log-for :subclass
-                  ":subclass INITIAlIZE-INSTANCE :before ~A :pointer ~A~%"
-                  object pointer)
          (unless (or pointer
                      (and (slot-boundp object 'pointer)
                           (object-pointer object)))
-           (log-for :subclass ":subclass calling g-object-constructor~%")
            (setf (object-pointer object)
                  (call-gobject-constructor ,gname nil nil)
                  (object-has-reference object) t)))
-       ;; Export the accessible symbols
+       ;; Export accessible symbols
        ,@(when export
            (cons `(export ',name
                            (find-package
                              ,(package-name (symbol-package name))))
                  (mapcar (lambda (property)
-                           `(export ',(intern (format nil "~A-~A"
-                                                      (symbol-name name)
-                                                      (property-name property))
-                                              (symbol-package name))
-                                     (find-package
-                                       ,(package-name (symbol-package name)))))
-                          props))))))
+                          `(export
+                            ',(intern
+                                (typecase property
+                                  ;; This code stems from an issue reported by
+                                  ;; André A. Gomes:
+                                  ;; (https://github.com/crategus/cl-cffi-glib/issues/8)
+                                  ;; TODO:
+                                  ;; It exports a writer, or a reader, or an
+                                  ;; accessor method. However, multiple methods
+                                  ;; can be defined for a slot. Therefore,
+                                  ;; further code modification is necessary.
+                                  ;; This would require more effort.
+                                  ;; Alternatively, the user can manually export
+                                  ;; additional symbols. This would require a
+                                  ;; corresponding documentation of the macro.
+                                  (cl-property
+                                   (symbol-name
+                                     (or (getf (cl-property-args property) :reader)
+                                         (getf (cl-property-args property) :writer)
+                                         (getf (cl-property-args property) :accessor))))
+                                  (cffi-property
+                                    (symbol-name
+                                      (cffi-property-accessor property)))
+                                  (t
+                                   (symbol-name
+                                     (gobject-property-accessor property))))
+                                (symbol-package name))
+                             (find-package
+                              ,(package-name (symbol-package name)))))
+                         props))))))
 
 (export 'define-gobject-subclass)
 
