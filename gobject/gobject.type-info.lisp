@@ -289,7 +289,7 @@
 (setf (liber:alias-for-class 'type-t)
       "Type"
       (documentation 'type-t 'type)
- "@version{2024-12-8}
+ "@version{2024-12-08}
   @begin{short}
     The @class{g:type-t} type specifier represents the unique @code{GType}
     identifier of a registered type.
@@ -398,7 +398,7 @@ ID     NAME               CFFI type      Lisp type
 (setf (liber:alias-for-symbol 'type-class)
       "CStruct"
       (liber:symbol-documentation 'type-class)
- "@version{2024-12-8}
+ "@version{2024-12-08}
   @begin{declaration}
 (cffi:defcstruct type-class
   (:type type-t))
@@ -422,7 +422,7 @@ ID     NAME               CFFI type      Lisp type
 (setf (liber:alias-for-symbol 'type-interface)
       "CStruct"
       (liber:symbol-documentation 'type-interface)
- "@version{2024-12-8}
+ "@version{2024-12-08}
   @begin{declaration}
 (cffi:defcstruct type-interface
   (:type type-t)
@@ -447,7 +447,7 @@ ID     NAME               CFFI type      Lisp type
 (setf (liber:alias-for-symbol 'type-instance)
       "CStruct"
       (liber:symbol-documentation 'type-instance)
- "@version{2024-12-8}
+ "@version{2024-12-08}
   @begin{declaration}
 (cffi:defcstruct type-instance
   (:class (:pointer (:struct type-class))))
@@ -544,7 +544,7 @@ ID     NAME               CFFI type      Lisp type
 #+nil
 (defun type-make-fundamental (x)
  #+liber-documentation
- "@version{#2020-11-1}
+ "@version{#2020-11-01}
   @argument[x]{a fundamental type number}
   @return{The @class{g:type-t} type ID.}
   @begin{short}
@@ -578,7 +578,7 @@ ID     NAME               CFFI type      Lisp type
 
 (defun type-is-abstract (gtype)
  #+liber-documentation
- "@version{2024-12-8}
+ "@version{2024-12-08}
   @argument[gtype]{a @class{g:type-t} type ID}
   @return{@em{True} if @arg{gtype} is an abstract type.}
   @begin{short}
@@ -603,7 +603,7 @@ ID     NAME               CFFI type      Lisp type
 
 (defun type-is-derived (gtype)
  #+liber-documentation
- "@version{2024-12-8}
+ "@version{2024-12-08}
   @argument[gtype]{a @class{g:type-t} type ID}
   @return{@em{True} if @arg{gtype} is a dervied type.}
   @begin{short}
@@ -630,7 +630,7 @@ ID     NAME               CFFI type      Lisp type
 
 (defun type-is-fundamental (gtype)
  #+liber-documentation
- "@version{2024-12-8}
+ "@version{2024-12-08}
   @argument[gtype]{a @class{g:type-t} type ID}
   @return{@em{True} if @arg{gtype} is a fundamental type.}
   @begin{short}
@@ -658,7 +658,7 @@ ID     NAME               CFFI type      Lisp type
 
 (defun type-is-value-type (gtype)
  #+liber-documentation
- "@version{2024-12-8}
+ "@version{2024-12-08}
   @argument[gtype]{a @class{g:type-t} type ID}
   @return{@em{True} if @arg{gtype} is a value type.}
   @begin{short}
@@ -686,7 +686,7 @@ ID     NAME               CFFI type      Lisp type
 #+nil
 (defun type-has-value-table (gtype)
  #+liber-documentation
- "@version{#2020-11-1}
+ "@version{#2020-11-01}
   @argument[type]{a @class{g:type-t} type ID}
   @return{@em{True} if @arg{gtype} has a @code{GTypeValueTable}.}
   @begin{short}
@@ -713,7 +713,7 @@ ID     NAME               CFFI type      Lisp type
 
 (defun type-is-classed (gtype)
  #+liber-documentation
- "@version{2024-12-8}
+ "@version{2024-12-08}
   @argument[gtype]{a @class{g:type-t} type ID}
   @return{@em{True} if @arg{gtype} is a classed type.}
   @short{Checks if @arg{gtype} is a classed type.}
@@ -747,7 +747,7 @@ ID     NAME               CFFI type      Lisp type
 #+nil
 (defun type-is-derivable (gtype)
  #+liber-documentation
- "@version{#2020-11-1}
+ "@version{#2020-11-01}
   @argument[gtype]{a @class{g:type-t} type ID}
   @return{@em{True} if @arg{gtype} is a derivable type.}
   @begin{short}
@@ -766,7 +766,7 @@ ID     NAME               CFFI type      Lisp type
 #+nil
 (defun type-is-deep-derivable (gtype)
  #+liber-documentation
- "@version{#2020-11-1}
+ "@version{#2020-11-01}
   @argument[gtype]{a @class{g:type-t} type ID}
   @return{@em{True} if @arg{gtype} is a deep derivable type.}
   @begin{short}
@@ -784,7 +784,7 @@ ID     NAME               CFFI type      Lisp type
 
 (defun type-is-interface (gtype)
  #+liber-documentation
- "@version{2024-12-8}
+ "@version{2024-12-08}
   @argument[gtype]{a @class{g:type-t} type ID}
   @return{@em{True} if @arg{gtype} is an interface type.}
   @begin{short}
@@ -814,7 +814,7 @@ ID     NAME               CFFI type      Lisp type
 
 (defun type-from-instance (instance)
  #+liber-documentation
- "@version{2025-1-4}
+ "@version{2025-01-04}
   @argument[instance]{a valid @symbol{g:type-instance} instance}
   @return{The @class{g:type-t} type ID of @arg{instance}.}
   @short{Gets the type identifier from a given instance.}
@@ -846,7 +846,7 @@ ID     NAME               CFFI type      Lisp type
 
 (defun type-from-class (class)
  #+liber-documentation
- "@version{2025-1-4}
+ "@version{2025-01-04}
   @argument[class]{a valid @symbol{g:type-class} instance}
   @return{The @class{g:type-t} type ID of @arg{class}.}
   @short{Gets the type identifier from a given class instance.}
@@ -870,7 +870,7 @@ ID     NAME               CFFI type      Lisp type
 
 (defun type-from-interface (iface)
  #+liber-documentation
- "@version{2025-1-4}
+ "@version{2025-01-04}
   @argument[iface]{a valid @symbol{g:type-interface} instance}
   @return{The @class{g:type-t} type ID of @arg{iface}.}
   @short{Gets the type identifier from a given interface instance.}
@@ -894,7 +894,7 @@ ID     NAME               CFFI type      Lisp type
 
 (defun type-instance-class (instance)
  #+liber-documentation
- "@version{2024-12-8}
+ "@version{2024-12-08}
   @argument[instance]{a @symbol{g:type-instance} instance}
   @return{The @symbol{g:type-class} instance of @arg{instance}.}
   @begin{short}
@@ -952,7 +952,7 @@ ID     NAME               CFFI type      Lisp type
 
 (defun type-check-instance-type (instance gtype)
  #+liber-documentation
- "@version{2024-12-8}
+ "@version{2024-12-08}
   @argument[instance]{a @symbol{g:type-instance} instance}
   @argument[gtype]{a @class{g:type-t} type ID to be checked}
   @return{@em{True} on success.}
@@ -998,7 +998,7 @@ ID     NAME               CFFI type      Lisp type
 
 (defun type-check-class-type (class gtype)
  #+liber-documentation
- "@version{2024-12-8}
+ "@version{2024-12-08}
   @argument[class]{a @symbol{g:type-class} instance}
   @argument[gtype]{a @class{g:type-t} type ID to be checked}
   @return{@em{True} on success.}
@@ -1046,9 +1046,9 @@ ID     NAME               CFFI type      Lisp type
 
 (defun type-name (gtype)
  #+liber-documentation
- "@version{2024-12-8}
+ "@version{2025-09-27}
   @argument[gtype]{a @class{g:type-t} type ID to return the type name for}
-  @return{The string with the type name, or @code{nil}.}
+  @return{The string for the type name, or @code{nil}.}
   @begin{short}
     Get the unique name that is assigned to a type ID.
   @end{short}
@@ -1083,7 +1083,7 @@ ID     NAME               CFFI type      Lisp type
 
 (cffi:defcfun ("g_type_parent" type-parent) type-t
  #+liber-documentation
- "@version{2024-12-8}
+ "@version{2024-12-08}
   @argument[gtype]{a derived @class{g:type-t} type ID}
   @return{The parent @class{g:type-t} type ID of @arg{gtype}.}
   @begin{short}
@@ -1116,7 +1116,7 @@ ID     NAME               CFFI type      Lisp type
 
 (defun type-children (gtype)
  #+liber-documentation
- "@version{2024-12-8}
+ "@version{2024-12-08}
   @argument[gtype]{a @class{g:type-t} parent type ID}
   @return{The list of @class{g:type-t} child type IDs.}
   @short{Returns a list of type IDs, listing the child types of @arg{gtype}.}
@@ -1145,9 +1145,9 @@ ID     NAME               CFFI type      Lisp type
 
 (cffi:defcfun ("g_type_depth" type-depth) :uint
  #+liber-documentation
- "@version{2024-12-8}
+ "@version{2025-09-27}
   @argument[gtype]{a @class{g:type-t} type ID}
-  @return{The unsigned integer with the depth of @arg{gtype}.}
+  @return{The unsigned integer for the depth of @arg{gtype}.}
   @begin{short}
     Returns the length of the ancestry of the passed in @arg{gtype}.
   @end{short}
@@ -1170,7 +1170,7 @@ ID     NAME               CFFI type      Lisp type
 
 (cffi:defcfun ("g_type_next_base" type-next-base) type-t
  #+liber-documentation
- "@version{2024-12-8}
+ "@version{2024-12-08}
   @argument[leaf]{a @class{g:type-t} type ID descendant of @arg{root} and the
     type to be returned}
   @argument[root]{a @class{g:type-t} type ID immediate parent of the returned
@@ -1209,7 +1209,7 @@ ID     NAME               CFFI type      Lisp type
 
 (defun type-is-a (gtype is-a-type)
  #+liber-documentation
- "@version{2024-12-8}
+ "@version{2024-12-08}
   @argument[gtype]{a @class{g:type-t} type ID to check anchestry for}
   @argument[is-a-type]{a @class{g:type-t} type ID with the possible anchestor
     of @arg{gtype} or the interface that @arg{gtype} could conform to}
@@ -1244,7 +1244,7 @@ ID     NAME               CFFI type      Lisp type
 
 (defun type-class-ref (gtype)
  #+liber-documentation
- "@version{2024-12-8}
+ "@version{2024-12-08}
   @argument[gtype]{a @class{g:type-t} type ID of a classed type}
   @return{The pointer to the @symbol{g:type-class} instance for the given
     @arg{gtype}.}
@@ -1286,7 +1286,7 @@ ID     NAME               CFFI type      Lisp type
 
 (defun type-class-peek (gtype)
  #+liber-documentation
- "@version{2024-12-8}
+ "@version{2024-12-08}
   @argument[gtype]{a @class{g:type-t} type ID of a classed type}
   @begin{return}
     The @symbol{g:type-class} instance for the given @arg{gtype} type ID or
@@ -1327,7 +1327,7 @@ ID     NAME               CFFI type      Lisp type
 (cffi:defcfun ("g_type_class_peek_static" type-class-peek-static)
     (:pointer (:struct type-class))
  #+liber-documentation
- "@version{#2013-4-1}
+ "@version{#2013-04-01}
   @argument[gtype]{a type ID of a classed type}
   @begin{return}
     The @symbol{type-class} instance for the given @arg{gtype} ID or
@@ -1346,7 +1346,7 @@ ID     NAME               CFFI type      Lisp type
 
 (cffi:defcfun ("g_type_class_unref" type-class-unref) :void
  #+liber-documentation
- "@version{2024-12-8}
+ "@version{2024-12-08}
   @argument[class]{a pointer to the @symbol{g:type-class} instance to
     unreference}
   @begin{short}
@@ -1367,7 +1367,7 @@ ID     NAME               CFFI type      Lisp type
 (cffi:defcfun ("g_type_class_peek_parent" type-class-peek-parent)
     (:pointer (:struct type-class))
  #+liber-documentation
- "@version{#2025-3-27}
+ "@version{#2025-03-27}
   @argument[class]{a @symbol{g:type-class} instance to retrieve the parent
     class for}
   @return{The parent class of @arg{class}.}
@@ -1400,7 +1400,7 @@ ID     NAME               CFFI type      Lisp type
 #+nil
 (cffi:defcfun ("g_type_class_add_private" type-class-add-private) :void
  #+liber-documentation
- "@version{#2014-4-1}
+ "@version{#2014-04-01}
   @argument[class]{class structure for an instantiatable type}
   @argument[private-size]{size of private structure}
   @begin{short}
@@ -1483,7 +1483,7 @@ ID     NAME               CFFI type      Lisp type
 
 (defun type-interface-peek (class itype)
  #+liber-documentation
- "@version{2024-12-8}
+ "@version{2024-12-08}
   @argument[class]{a @symbol{g:type-class} instance}
   @argument[itype]{a @class{g:type-t} interface type ID which this @arg{class}
     conforms to}
@@ -1529,7 +1529,7 @@ ID     NAME               CFFI type      Lisp type
 
 (defun type-default-interface-ref (gtype)
  #+liber-documentation
- "@version{2024-12-8}
+ "@version{2024-12-08}
   @argument[gtype]{a @class{g:type-t} interface type ID}
   @return{The pointer to the default @code{vtable} for the interface of type
     @arg{gtype}, or @code{nil} if @arg{gtype} is not an interface type.}
@@ -1575,7 +1575,7 @@ ID     NAME               CFFI type      Lisp type
 
 (defun type-default-interface-peek (gtype)
 #+liber-documentation
- "@version{2024-12-8}
+ "@version{2024-12-08}
   @argument[gtype]{a @class{g:type-t} interface type ID}
   @begin{return}
     The default @code{vtable} for the interface of type @arg{gtype}, @code{nil}
@@ -1603,7 +1603,7 @@ ID     NAME               CFFI type      Lisp type
 (cffi:defcfun ("g_type_default_interface_unref" type-default-interface-unref)
     :void
  #+liber-documentation
- "@version{2024-12-8}
+ "@version{2024-12-08}
   @argument[iface]{a pointer to the default @code{vtable} instance for an
     interface, as returned by the @fun{g:type-default-interface-ref} function}
   @begin{short}
@@ -1629,7 +1629,7 @@ ID     NAME               CFFI type      Lisp type
 
 (defun type-interfaces (gtype)
  #+liber-documentation
- "@version{2024-12-8}
+ "@version{2024-12-08}
   @argument[gtype]{a @class{g:type-t} type ID to list interface types for}
   @return{The list of @class{g:type-t} interface type IDs.}
   @begin{short}
@@ -1666,7 +1666,7 @@ ID     NAME               CFFI type      Lisp type
 
 (defun type-interface-prerequisites (itype)
  #+liber-documentation
- "@version{2024-12-8}
+ "@version{2024-12-08}
   @argument[itype]{a @class{g:type-t} interface type ID}
   @begin{return}
     The list of @class{g:type-t} type IDs containing the prerequisites of
@@ -1722,11 +1722,11 @@ ID     NAME               CFFI type      Lisp type
 
 (defun type-qdata (gtype quark)
  #+liber-documentation
- "@version{2023-12-8}
+ "@version{2025-09-27}
   @syntax{(g:type-qdata type quark) => data}
   @syntax{(setf (g:type-qdata type quark) data)}
   @argument[gtype]{a @class{g:type-t} type ID}
-  @argument[quark]{a @type{g:quark-as-string} ID to identify the data}
+  @argument[quark]{a string for the ID to identify the data}
   @argument[data]{the data}
   @begin{short}
     The @fun{g:type-qdata} function obtains data which has previously been
@@ -1745,8 +1745,7 @@ ID     NAME               CFFI type      Lisp type
 (g:type-qdata \"gboolean\" \"mydata\") => NIL
     @end{pre}
   @end{dictionary}
-  @see-class{g:type-t}
-  @see-type{g:quark-as-string}"
+  @see-class{g:type-t}"
   (let ((ptr (%type-get-qdata gtype quark)))
     (when (not (cffi:null-pointer-p ptr))
       (glib:get-stable-pointer-value ptr))))
@@ -1876,7 +1875,7 @@ ID     NAME               CFFI type      Lisp type
 (cffi:defcfun ("g_type_interface_add_prerequisite"
                 type-interface-add-prerequisite) :void
  #+liber-documentation
- "@version{#2013-6-11}
+ "@version{#2013-06-11}
   @argument[interface-type]{a @class{g:type-t} type ID of an interface type}
   @argument[prerequisite-type]{a @class{g:type-t} type ID of an interface or
     instantiatable type}
@@ -1911,7 +1910,7 @@ ID     NAME               CFFI type      Lisp type
 #+nil
 (cffi:defcfun ("g_type_fundamental_next" type-fundamental-next) :size
  #+liber-documentation
- "@version{#2013-6-17}
+ "@version{#2013-06-17}
   @begin{return}
     The nextmost fundamental type ID to be registered, or 0 if the type
     system ran out of fundamental type IDs.
@@ -1927,7 +1926,7 @@ ID     NAME               CFFI type      Lisp type
 
 (cffi:defcfun ("g_type_fundamental" type-fundamental) type-t
  #+liber-documentation
- "@version{2024-12-8}
+ "@version{2024-12-08}
   @argument[gtype]{a valid @class{g:type-t} type ID}
   @return{The fundamental @class{g:type-t} type ID of the @arg{gtype} argument.}
   @begin{short}
@@ -2007,7 +2006,7 @@ ID     NAME               CFFI type      Lisp type
 (cffi:defcfun ("g_type_value_table_peek" type-value-table-peek)
     (:pointer (:struct type-value-table))
  #+liber-documentation
- "@version{#2013-6-11}
+ "@version{#2013-06-11}
   @argument[type]{a @class{g:type-t} type ID}
   @begin{return}
     Location of the @symbol{g:type-value-table} associated with @arg{type} or
@@ -2029,7 +2028,7 @@ ID     NAME               CFFI type      Lisp type
 
 (defun type-ensure (gtype)
  #+liber-documentation
- "@version{2024-8-12}
+ "@version{2024-08-12}
   @argument[gtype]{a @class{g:type-t} type ID}
   @return{The @arg{gtype} type ID, or @code{nil}.}
   @begin{short}

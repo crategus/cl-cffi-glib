@@ -495,7 +495,7 @@
 
 (cffi:defcfun ("g_closure_ref" closure-ref) (:pointer (:struct closure))
  #+liber-documentation
- "@version{#2013-6-12}
+ "@version{#2013-06-12}
   @argument[closure]{@symbol{closure} to increment the reference count on}
   @return{The @arg{closure} passed in, for convenience.}
   Increments the reference count on a @arg{closure} to force it staying alive
@@ -510,7 +510,7 @@
 
 (cffi:defcfun ("g_closure_sink" closure-sink) :void
  #+liber-documentation
- "@version{#2013-6-12}
+ "@version{#2013-06-12}
   @argument[closure]{@symbol{closure} to decrement the initial reference count
     on, if it is still being held}
   @begin{short}
@@ -564,7 +564,7 @@
 
 (cffi:defcfun ("g_closure_unref" closure-unref) :void
  #+liber-documentation
- "@version{#2013-6-12}
+ "@version{#2013-06-12}
   @argument[closure]{@symbol{closure} to decrement the reference count on}
   Decrements the reference count of a @arg{closure} after it was previously
   incremented by the same caller. If no other callers are using the
@@ -608,7 +608,7 @@
 
 (cffi:defcfun ("g_closure_invalidate" closure-invalidate) :void
  #+liber-documentation
- "@version{#2013-6-12}
+ "@version{#2013-06-12}
   @argument[closure]{@symbol{closure} to invalidate}
   @begin{short}
     Sets a flag on the @arg{closure} to indicate that its calling environment
@@ -636,7 +636,7 @@
 (cffi:defcfun ("g_closure_add_finalize_notifier" closure-add-finalize-notifier)
     :void
  #+liber-documentation
- "@version{#2013-6-12}
+ "@version{#2013-06-12}
   @argument[closure]{a @symbol{closure}}
   @argument[notify-data]{data to pass to @arg{notify-func}}
   @argument[notify-func]{the callback function to register}
@@ -661,7 +661,7 @@
 (cffi:defcfun ("g_closure_add_invalidate_notifier"
                closure-add-invalidate-notifier) :void
  #+liber-documentation
- "@version{#2013-6-12}
+ "@version{#2013-06-12}
   @argument[closure]{a @symbol{closure}}
   @argument[notify-data]{data to pass to @arg{notify-func}}
   @argument[notify-func]{the callback function to register}
@@ -728,7 +728,7 @@
 (cffi:defcfun ("g_closure_new_simple" closure-new-simple)
     (:pointer (:struct closure))
  #+liber-documentation
- "@version{#2013-6-12}
+ "@version{#2013-06-12}
   @argument[sizeof-closure]{the size of the structure to allocate, must be at
     least @code{sizeof (GClosure)}}
   @argument[data]{data to store in the data field of the newly allocated
@@ -782,7 +782,7 @@
 
 (cffi:defcfun ("g_closure_set_marshal" closure-set-marshal) :void
  #+liber-documentation
- "@version{#2013-6-12}
+ "@version{#2013-06-12}
   @argument[closure]{a @symbol{closure}}
   @argument[marshal]{a @code{GClosureMarshal} function}
   @begin{short}

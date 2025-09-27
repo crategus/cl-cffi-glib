@@ -246,13 +246,13 @@ lambda (object pspec)    :no-hooks
 (setf (liber:alias-for-function 'object-has-reference)
       "Accessor"
       (documentation 'object-has-reference 'function)
- "@version{2024-12-14}
+ "@version{2025-09-27}
   @syntax{(g:object-has-reference object) => has-reference}
   @argument[object]{a @class{g:object} instance}
   @argument[has-reference]{@em{true} when registering @arg{object}}
   @begin{short}
-    Accessor of the @slot[g:object]{has-reference} slot of the @class{g:object}
-    class.
+    The accessor for the @slot[g:object]{has-reference} slot of the
+    @class{g:object} class.
   @end{short}
   The slot is set to @em{true} when registering an object during creation.
   @see-class{g:object}")
@@ -267,15 +267,14 @@ lambda (object pspec)    :no-hooks
 (setf (liber:alias-for-function 'object-pointer)
       "Accessor"
       (documentation 'object-pointer 'function)
- "@version{2024-12-14}
+ "@version{2025-09-27}
   @syntax{(g:object-pointer object) => pointer}
   @argument[object]{a @class{g:object} instance}
   @argument[pointer]{a foreign pointer to the C instance of @arg{object}}
   @begin{short}
-    Accessor of the @slot[g:object]{pointer} slot of the @class{g:object} class.
+    The accessor for the @slot[g:object]{pointer} slot of the @class{g:object}
+    class returns the foreign C pointer of a @class{g:object} instance.
   @end{short}
-  The @fun{g:object-pointer} function gets the foreign C pointer of a
-  @class{g:object} instance.
   @begin[Examples]{dictionary}
     @begin{pre}
 (setq label (make-instance 'gtk:label)) => #<GTK:LABEL {E2DB181@}>
@@ -1036,9 +1035,9 @@ lambda ()
 
 (defun object-ref-count (object)
  #+liber-documentation
- "@version{2024-12-14}
+ "@version{2025-09-27}
   @argument[object]{a @class{g:object} instance}
-  @return{The integer with the reference count of @arg{object}.}
+  @return{The integer for the reference count of @arg{object}.}
   @short{Returns the reference count of the object.}
   @begin[Notes]{dictionary}
     This function is a Lisp extension. It can be used in test files to check
@@ -1357,14 +1356,14 @@ lambda ()
 
 (defun object-property (object name &optional gtype)
  #+liber-documentation
- "@version{2026-06-21}
+ "@version{2025-09-27}
   @syntax{(g:object-property object name gtype) => value}
   @syntax{(setf (g:object-property object name gtype) value)}
   @argument[object]{a @class{g:object} instance}
   @argument[name]{a string for the name of the property}
   @argument[gtype]{an optional @class{g:type-t} type ID for the property}
   @argument[value]{a value for the property}
-  @short{Accessor of the property of an object.}
+  @short{Gets or sets the property of an object.}
   @begin[Examples]{dictionary}
     Setting and retrieving the
     @slot[gtk:settings]{gtk-application-prefer-dark-theme} setting.

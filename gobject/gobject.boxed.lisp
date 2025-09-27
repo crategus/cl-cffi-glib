@@ -103,7 +103,7 @@
 
 (defun type-is-boxed (gtype)
  #+liber-documentation
- "@version{2024-4-6}
+ "@version{2024-04-06}
   @argument[gtype]{a @class{g:type-t} type ID}
   @return{@em{True} if @arg{gtype} is a \"GBoxed\" type.}
   @begin{short}
@@ -154,7 +154,7 @@
 
 (defun boxed-copy (gtype boxed)
  #+liber-documentation
- "@version{#2013-6-10}
+ "@version{#2013-06-10}
   @argument[boxed-type]{the type of @arg{src-boxed}}
   @argument[src-boxed]{the boxed structure to be copied}
   @return{The newly created copy of the boxed structure.}
@@ -173,7 +173,7 @@
 
 (cffi:defcfun ("g_boxed_free" boxed-free) :void
  #+liber-documentation
- "@version{#2013-6-10}
+ "@version{#2013-06-10}
   @argument[boxed-type]{the type of boxed}
   @argument[boxed]{the boxed structure to be freed}
   Free the boxed structure @arg{boxed} which is of type @arg{boxed-type}."
@@ -189,7 +189,7 @@
 (cffi:defcfun ("g_boxed_type_register_static" g-boxed-type-register-static)
     type-t
  #+liber-documentation
- "@version{#2013-6-10}
+ "@version{#2013-06-10}
   @argument[name]{name of the new boxed type}
   @argument[copy-fn]{boxed structure copy function}
   @argument[free-fn]{boxed structure free function}
@@ -213,7 +213,7 @@
 (cffi:defcfun ("g_pointer_type_register_static" g-pointer-type-register-static)
     type-t
  #+liber-documentation
- "@version{#2013-6-10}
+ "@version{#2013-06-10}
   @argument[name]{the name of the new pointer type}
   @return{The new @code{\"gpointer\"} derived type ID for @arg{name}.}
   @begin{short}

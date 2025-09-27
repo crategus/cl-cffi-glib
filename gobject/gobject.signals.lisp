@@ -426,7 +426,7 @@
 
 #+liber-documentation
 (setf (documentation 'signal-query 'type)
- "@version{2024-12-4}
+ "@version{2025-09-27}
   @begin{declaration}
 (defstruct signal-query
   signal-id
@@ -439,9 +439,9 @@
   @end{declaration}
   @begin{values}
     @begin[code]{table}
-      @entry[signal-id]{The unsinged integer with the signal ID of the signal
+      @entry[signal-id]{The unsinged integer for the signal ID of the signal
         being queried, or 0 if the signal to be queried was unknown.}
-      @entry[signal-name]{The string with the signal name.}
+      @entry[signal-name]{The string for the signal name.}
       @entry[owner-type]{The interface/instance @class{g:object} type that this
         signal can be emitted for.}
       @entry[signal-flags]{The signal flags of type @symbol{g:signal-flags}.}
@@ -449,7 +449,7 @@
         callbacks.}
       @entry[param-types]{The list with the individual parameter types for user
         callbacks.}
-      @entry[signal-detail]{The string with the signal detail.}
+      @entry[signal-detail]{The string for the signal detail.}
     @end{table}
   @end{values}
   @begin{short}
@@ -496,20 +496,20 @@
 #+liber-documentation
 (setf (documentation (liber:slot-documentation "signal-id" 'signal-query) t)
  "The @code{signal-id} slot (Read) @br{}
-  The unsinged integer with the signal ID of the signal being queried, or 0
+  The unsigned integer for the signal ID of the signal being queried, or 0
   if the signal to be queried was unknown.")
 
 #+liber-documentation
 (setf (liber:alias-for-function 'signal-query-signal-id)
       "Accessor"
       (documentation 'signal-query-signal-id 'function)
- "@version{2024-12-4}
+ "@version{2025-09-27}
   @syntax{(g:signal-query-signal-id instance) => id}
   @argument[instance]{a @struct{g:signal-query} instance}
-  @argument[id]{an unsigned integer with the signal ID of the signal being
+  @argument[id]{an unsigned integer for the signal ID of the signal being
     queried, or 0 if the signal to be queried was unknown}
   @begin{short}
-    Accessor of the @slot[g:signal-query]{signal-id} slot of the
+    The accessor for the @slot[g:signal-query]{signal-id} slot of the
     @class{g:signal-query} structure.
   @end{short}
   See the @fun{g:signal-query} function.
@@ -523,12 +523,12 @@
 (setf (liber:alias-for-function 'signal-query-signal-name)
       "Accessor"
       (documentation 'signal-query-signal-name 'function)
- "@version{2024-12-4}
+ "@version{2025-09-27}
   @syntax{(g:signal-query-signal-name instance) => name}
   @argument[instance]{a @struct{g:signal-query} instance}
-  @argument[name]{a string with the signal name}
+  @argument[name]{a string for the signal name}
   @begin{short}
-    Accessor of the @slot[g:signal-query]{signal-name} slot of the
+    The accessor for the @slot[g:signal-query]{signal-name} slot of the
     @class{g:signal-query} structure.
   @end{short}
   See the @fun{g:signal-query} function.
@@ -542,13 +542,13 @@
 (setf (liber:alias-for-function 'signal-query-owner-type)
       "Accessor"
       (documentation 'signal-query-owner-type 'function)
- "@version{2024-12-4}
+ "@version{2025-09-27}
   @syntax{(g:signal-query-owner-type instance) => owner-type}
   @argument[instance]{a @struct{g:signal-query} instance}
   @argument[owner-type]{a @class{g:type-t} type ID that this signal can be
     emitted for}
   @begin{short}
-    Accessor of the @slot[g:signal-query]{owner-type} slot of the
+    The accessor for the @slot[g:signal-query]{owner-type} slot of the
     @class{g:signal-query} structure.
   @end{short}
   See the @fun{g:signal-query} function.
@@ -563,12 +563,12 @@
 (setf (liber:alias-for-function 'signal-query-signal-flags)
       "Accessor"
       (documentation 'signal-query-signal-flags 'function)
- "@version{2024-12-4}
+ "@version{2025-09-27}
   @syntax{(g:signal-query-signal-flags instance) => flags}
   @argument[instance]{a @struct{g:signal-query} instance}
-  @argument[flags]{a @symbol{g:signal-flags} value with the signal flags}
+  @argument[flags]{a @symbol{g:signal-flags} value for the signal flags}
   @begin{short}
-    Accessor of the @slot[g:signal-query]{signal-flags} slot of the
+    The accessor for the @slot[g:signal-query]{signal-flags} slot of the
     @class{g:signal-query} structure.
   @end{short}
   See the @fun{g:signal-query} function.
@@ -583,13 +583,13 @@
 (setf (liber:alias-for-function 'signal-query-return-type)
       "Accessor"
       (documentation 'signal-query-return-type 'function)
- "@version{2024-12-4}
+ "@version{2025-09-27}
   @syntax{(g:signal-query-return-type instance) => return-type}
   @argument[instance]{a @struct{g:signal-query} instance}
   @argument[return-type]{a @class{g:type-t} type ID with the return type for
     user callbacks}
   @begin{short}
-    Accessor of the @slot[g:signal-query]{return-type} slot of the
+    The accessor for the @slot[g:signal-query]{return-type} slot of the
     @class{g:signal-query} structure.
   @end{short}
   See the @fun{g:signal-query} function.
@@ -604,13 +604,13 @@
 (setf (liber:alias-for-function 'signal-query-param-types)
       "Accessor"
       (documentation 'signal-query-param-types 'function)
- "@version{2024-12-4}
+ "@version{2025-09-27}
   @syntax{(g:signal-query-param-types instance) => param-types}
   @argument[instance]{a @struct{g:signal-query} instance}
   @argument[param-types]{a list with the individual parameter @class{g:type-t}
     type IDs for user callbacks}
   @begin{short}
-    Accessor of the @slot[g:signal-query]{param-types} slot of the
+    The accessor for the @slot[g:signal-query]{param-types} slot of the
     @class{g:signal-query} structure.
   @end{short}
   See the @fun{g:signal-query} function.
@@ -625,12 +625,12 @@
 (setf (liber:alias-for-function 'signal-query-signal-detail)
       "Accessor"
       (documentation 'signal-query-signal-detail 'function)
- "@version{2024-12-4}
+ "@version{2025-09-27}
   @syntax{(g:signal-query-signal-detail instance) => detail}
   @argument[instance]{a @struct{g:signal-query} instance}
-  @argument[detail]{a string with the signal detail}
+  @argument[detail]{a string for the signal detail}
   @begin{short}
-    Accessor of the @slot[g:signal-query]{signal-detail} slot of the
+    The accessor for the @slot[g:signal-query]{signal-detail} slot of the
     @class{g:signal-query} structure.
   @end{short}
   See the @fun{g:signal-query} function.
@@ -684,8 +684,8 @@
 
 (defun signal-query (id)
  #+liber-documentation
- "@version{2024-6-19}
-  @argument[id]{an unsigned integer with the signal ID of the signal to query
+ "@version{2025-09-27}
+  @argument[id]{an unsigned integer for the signal ID of the signal to query
     information for}
   @return{The @struct{g:signal-query} instance with the signal info.}
   @begin{short}
@@ -727,10 +727,10 @@
 
 (cffi:defcfun ("g_signal_lookup" signal-lookup) :uint
  #+liber-documentation
- "@version{2024-6-19}
-  @argument[name]{a string with the name of the signal}
+ "@version{2025-09-27}
+  @argument[name]{a string for the name of the signal}
   @argument[itype]{a @class{g:type-t} type ID that the signal operates on}
-  @return{The unsigned integer with the identifying number of the signal, or 0
+  @return{The unsigned integer for the identifying number of the signal, or 0
     if no signal was found.}
   @begin{short}
     Given the name of the signal and the type of object it connects to, gets
@@ -763,9 +763,9 @@
 
 (cffi:defcfun ("g_signal_name" signal-name) :string
  #+liber-documentation
- "@version{2024-6-19}
-  @argument[id]{an unsigned integer with the identifying number of the signal}
-  @return{The string with the signal name, or @code{nil} if the signal number
+ "@version{2025-09-27}
+  @argument[id]{an unsigned integer for the identifying number of the signal}
+  @return{The string for the signal name, or @code{nil} if the signal number
     was invalid.}
   @begin{short}
     Given the identifier of the signal, finds its name.
@@ -807,9 +807,9 @@
 
 (defun signal-list-ids (itype)
  #+liber-documentation
- "@version{2024-6-19}
+ "@version{2025-09-27}
   @argument[itype]{a @class{g:type-t} type ID}
-  @return{The list of unsigned integer with the signal IDs.}
+  @return{The list of unsigned integer for the signal IDs.}
   @begin{short}
     Lists the signals by ID that a certain instance or interface type created.
   @end{short}
@@ -899,10 +899,10 @@
 
 (defun signal-emit (instance detailed &rest args)
  #+liber-documentation
- "@version{2024-12-21}
+ "@version{2025-09-27}
   @argument[instance]{a @class{g:object} instance the signal is being emitted
     on}
-  @argument[detailed]{a string with the detailed signal name}
+  @argument[detailed]{a string for the detailed signal name}
   @argument[args]{parameters to be passed to the signal}
   @return{The return value of the signal.}
   @short{Emits a signal.}
@@ -1080,7 +1080,7 @@
 
 (cffi:defcfun ("g_signal_handler_block" signal-handler-block) :void
  #+liber-documentation
- "@version{2024-6-19}
+ "@version{2024-06-19}
   @argument[instance]{a @class{g:object} instance to block the signal handler
     of}
   @argument[handler-id]{an unsigned integer handler ID of the handler to be
@@ -1108,7 +1108,7 @@
 
 (cffi:defcfun ("g_signal_handler_unblock" signal-handler-unblock) :void
  #+liber-documentation
- "@version{2024-6-19}
+ "@version{2024-06-19}
   @argument[instance]{a @class{g:object} instance to unblock the signal
     handler of}
   @argument[handler-id]{an unsigned integer handler ID of the handler to be
@@ -1141,10 +1141,10 @@
 
 (cffi:defcfun ("g_signal_handler_disconnect" signal-handler-disconnect) :void
  #+liber-documentation
- "@version{2024-6-19}
+ "@version{2025-09-27}
   @argument[instance]{a @class{g:object} instance to remove the signal handler
     from}
-  @argument[handler-id]{an unsigned long integer with the handler ID of the
+  @argument[handler-id]{an unsigned long integer for the handler ID of the
     handler to be disconnected}
   @begin{short}
     Disconnects a handler from an instance so it will not be called during any
@@ -1177,12 +1177,12 @@
 
 (defun signal-handler-find (instance signal-id)
  #+liber-documentation
- "@version{2024-12-4}
+ "@version{2025-09-27}
   @argument[instance]{a @class{g:object} instance owning the signal handler
     to be found}
-  @argument[signal-id]{an unsigned integer with a signal ID the handler has to
+  @argument[signal-id]{an unsigned integer for a signal ID the handler has to
     be connected to}
-  @return{The unsigned integer with a valid non-0 signal handler ID for a
+  @return{The unsigned integer for a valid non-0 signal handler ID for a
     successful match.}
   @begin{short}
     Finds the first signal handler that matches the given @arg{signal-id}.
@@ -1246,10 +1246,10 @@
 (cffi:defcfun ("g_signal_handler_is_connected" signal-handler-is-connected)
     :boolean
  #+liber-documentation
- "@version{2024-6-19}
+ "@version{2025-09-27}
   @argument[instance]{a @class{g:object} instance where a signal handler is
     sought}
-  @argument[handler-id]{an unsigned long integer with the handler ID}
+  @argument[handler-id]{an unsigned long integer for the handler ID}
   @return{The boolean whether @arg{handler-id} identifies a handler connected to
     @arg{instance}.}
   @begin{short}
@@ -1294,11 +1294,11 @@
 (cffi:defcfun ("g_signal_has_handler_pending" signal-has-handler-pending)
     :boolean
  #+liber-documentation
- "@version{2024-6-20}
+ "@version{2025-09-27}
   @argument[instance]{a @class{g:object} instance whose signal handlers are
     sought}
-  @argument[id]{an unsigned integer with the signal ID}
-  @argument[detail]{a string with the detail of a signal name}
+  @argument[id]{an unsigned integer for the signal ID}
+  @argument[detail]{a string for the detail of a signal name}
   @argument[may-be-blocked]{a boolean whether blocked handlers should count as
     match}
   @return{@em{True} if a handler is connected to the signal, @em{false}
@@ -1344,7 +1344,7 @@
 
 (cffi:defcfun ("g_signal_stop_emission_by_name" signal-stop-emission) :void
  #+liber-documentation
- "@version{2024-6-19}
+ "@version{2024-06-19}
   @argument[instance]{a @class{g:object} instance whose signal handlers you
     wish to stop}
   @argument[detailed]{a string of the form @code{\"signal-name::detail\"}}

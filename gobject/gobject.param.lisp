@@ -177,7 +177,7 @@
 (setf (liber:alias-for-symbol 'param-spec-boolean)
       "CStruct"
       (liber:symbol-documentation 'param-spec-boolean)
- "@version{2024-9-13}
+ "@version{2024-09-13}
   @begin{declaration}
 (cffi:defcstruct param-spec-boolean
   (:parent-instance (:pointer (:struct param-spec)))
@@ -205,10 +205,10 @@
 (cffi:defcfun ("g_param_spec_boolean" param-spec-boolean)
     (:pointer (:struct param-spec-boolean))
  #+liber-documentation
- "@version{2024-9-13}
-  @argument[name]{a string with the canonical name}
-  @argument[nick]{a string with the nick name}
-  @argument[blurb]{a string with the description}
+ "@version{2025-09-27}
+  @argument[name]{a string for the canonical name}
+  @argument[nick]{a string for the nick name}
+  @argument[blurb]{a string for the description}
   @argument[default]{a boolean with the default value}
   @argument[flags]{a @symbol{g:param-flags} value}
   @return{The newly created @symbol{g:param-spec-boolean} parameter
@@ -243,7 +243,7 @@
 
 (cffi:defcfun ("g_value_get_boolean" value-boolean) :boolean
  #+liber-documentation
- "@version{2024-9-13}
+ "@version{2024-09-13}
   @syntax{(g:value-boolean gvalue) => value}
   @syntax{(setf (g:value-boolan gvalue) value)}
   @argument[gvalue]{a @symbol{g:value} instance of @code{\"gboolean\"} type}
@@ -273,7 +273,7 @@
 (setf (liber:alias-for-symbol 'param-spec-char)
       "CStruct"
       (liber:symbol-documentation 'param-spec-char)
- "@version{2024-9-13}
+ "@version{2025-09-27}
   @begin{declaration}
 (cffi:defcstruct param-spec-char
   (:parent-instance (:pointer (:struct param-spec)))
@@ -284,9 +284,9 @@
   @begin{values}
     @begin[code]{table}
       @entry[:parent-instance]{The private @symbol{g:param-spec} portion.}
-      @entry[:minimum]{The 8-bit integer with the minimum value.}
-      @entry[:maximum]{The 8-bit integer with the maximum value.}
-      @entry[:default-value]{The 8-bit integer with the default value.}
+      @entry[:minimum]{The 8-bit integer for the minimum value.}
+      @entry[:maximum]{The 8-bit integer for the maximum value.}
+      @entry[:default-value]{The 8-bit integer for the default value.}
     @end{table}
   @end{values}
   @begin{short}
@@ -305,13 +305,13 @@
 (cffi:defcfun ("g_param_spec_char" param-spec-char)
     (:pointer (:struct param-spec-char))
  #+liber-documentation
- "@version{2024-9-13}
-  @argument[name]{a string with the canonical name}
-  @argument[nick]{a string with the nick name}
-  @argument[blurb]{a string with the description}
-  @argument[minimum]{an 8-bit integer with the minimum value}
-  @argument[maximum]{an 8-bit integer with the maximum value}
-  @argument[default]{an 8-bit integer with the default value}
+ "@version{2025-09-27}
+  @argument[name]{a string for the canonical name}
+  @argument[nick]{a string for the nick name}
+  @argument[blurb]{a string for the description}
+  @argument[minimum]{an 8-bit integer for the minimum value}
+  @argument[maximum]{an 8-bit integer for the maximum value}
+  @argument[default]{an 8-bit integer for the default value}
   @argument[flags]{a @symbol{g:param-flags} value}
   @return{The newly created @symbol{g:param-spec-char} parameter specification.}
   @begin{short}
@@ -346,11 +346,11 @@
 
 (cffi:defcfun ("g_value_get_char" value-char) :int8
  #+liber-documentation
- "@version{2024-9-13}
+ "@version{2025-09-27}
   @syntax{(g:value-char gvalue) => value}
   @syntax{(setf (g:value-char gvalue) value)}
   @argument[gvalue]{a @symbol{g:value} instance of @code{\"gchar\"} type}
-  @argument[value]{an 8-bit integer with the character value}
+  @argument[value]{an 8-bit integer for the character value}
   @begin{short}
     The @fun{g:value-char} function gets the contents of a @symbol{g:value}
     instance of @code{\"gchar\"} type.
@@ -382,11 +382,11 @@
 
 (cffi:defcfun ("g_value_get_schar" value-schar) :int8
  #+liber-documentation
- "@version{2024-9-13}
+ "@version{2025-09-27}
   @syntax{(g:value-schar gvalue) => value}
   @syntax{(setf (g:value-schar gvalue) value)}
   @argument[gvalue]{a @symbol{g:value} instance of @code{\"gchar\"} type}
-  @argument[value]{an integer with the character value}
+  @argument[value]{an integer for the character value}
   @begin{short}
     The @fun{g:value-schar} function gets the contents of a @symbol{g:value}
     of @code{\"gchar\"} type.
@@ -412,7 +412,7 @@
 (setf (liber:alias-for-symbol 'param-spec-uchar)
       "CStruct"
       (liber:symbol-documentation 'param-spec-uchar)
- "@version{2024-9-13}
+ "@version{2025-09-27}
   @begin{declaration}
 (cffi:defcstruct param-spec-uchar
   (:parent-instance (:pointer (:struct param-spec)))
@@ -423,9 +423,9 @@
   @begin{values}
     @begin[code]{table}
       @entry[:parent-instance]{The private @symbol{g:param-spec} portion.}
-      @entry[:minimum]{The unsigned 8-bit integer with the minimum value.}
-      @entry[:maximum]{The unsigned 8-bit integer with the maximum value.}
-      @entry[:default-value]{The unsigned 8-bit integer with the default value.}
+      @entry[:minimum]{The unsigned 8-bit integer for the minimum value.}
+      @entry[:maximum]{The unsigned 8-bit integer for the maximum value.}
+      @entry[:default-value]{The unsigned 8-bit integer for the default value.}
     @end{table}
   @end{values}
   @begin{short}
@@ -444,13 +444,13 @@
 (cffi:defcfun ("g_param_spec_uchar" param-spec-uchar)
     (:pointer (:struct param-spec-uchar))
  #+liber-documentation
- "@version{2024-9-13}
-  @argument[name]{a string with the canonical name}
-  @argument[nick]{a string with the nick name}
-  @argument[blurb]{a string with the description}
-  @argument[minimum]{an unsigned 8-bit integer with the minimum value}
-  @argument[maximum]{an unsigned 8-bit integer with the maximum value}
-  @argument[default]{an unsigned 8-bit integer with the default value}
+ "@version{2025-09-27}
+  @argument[name]{a string for the canonical name}
+  @argument[nick]{a string for the nick name}
+  @argument[blurb]{a string for the description}
+  @argument[minimum]{an unsigned 8-bit integer for the minimum value}
+  @argument[maximum]{an unsigned 8-bit integer for the maximum value}
+  @argument[default]{an unsigned 8-bit integer for the default value}
   @argument[flags]{a @symbol{g:param-flags} value}
   @return{The newly created @symbol{g:param-spec-uchar} parameter
     specification.}
@@ -486,11 +486,11 @@
 
 (cffi:defcfun ("g_value_get_uchar" value-uchar) :uint8
  #+liber-documentation
- "@version{2024-9-13}
+ "@version{2025-09-27}
   @syntax{(g:value-uchar gvalue) => value}
   @syntax{(setf (g:value-uchar gvalue) value)}
   @argument[gvalue]{a @symbol{g:value} instance of @code{\"guchar\"} type}
-  @argument[value]{an unsigned 8-bit integer with the unsigned character value}
+  @argument[value]{an unsigned 8-bit integer for the unsigned character value}
   @begin{short}
     The @fun{g:value-uchar} function gets the contents of a @symol{g:value}
     instance of @code{\"guchar\"} type.
@@ -516,7 +516,7 @@
 (setf (liber:alias-for-symbol 'param-spec-int)
       "CStruct"
       (liber:symbol-documentation 'param-spec-int)
- "@version{2024-12-22}
+ "@version{2025-09-27}
   @begin{declaration}
 (cffi:defcstruct param-spec-int
   (:parent-instance (:pointer (:struct param-spec)))
@@ -527,9 +527,9 @@
   @begin{values}
     @begin[code]{table}
       @entry[:parent-instance]{Private @symbol{g:param-spec} portion.}
-      @entry[:minimum]{The integer with the minimum value.}
-      @entry[:maximum]{The integer with the maximum value.}
-      @entry[:default-value]{The integer with the default value.}
+      @entry[:minimum]{The integer for the minimum value.}
+      @entry[:maximum]{The integer for the maximum value.}
+      @entry[:default-value]{The integer for the default value.}
     @end{table}
   @end{values}
   @begin{short}
@@ -548,13 +548,13 @@
 (cffi:defcfun ("g_param_spec_int" param-spec-int)
     (:pointer (:struct param-spec-int))
  #+liber-documentation
- "@version{2024-12-22}
-  @argument[name]{a string with the canonical name}
-  @argument[nick]{a string with the nick name}
-  @argument[blurb]{a string with the description}
-  @argument[minimum]{an integer with the minimum value}
-  @argument[maximum]{an integer with the maximum value}
-  @argument[default]{an integer with the default value}
+ "@version{2025-09-27}
+  @argument[name]{a string for the canonical name}
+  @argument[nick]{a string for the nick name}
+  @argument[blurb]{a string for the description}
+  @argument[minimum]{an integer for the minimum value}
+  @argument[maximum]{an integer for the maximum value}
+  @argument[default]{an integer for the default value}
   @argument[flags]{a @symbol{g:param-flags} value}
   @return{The newly created @symbol{g:param-spec-int} parameter specification.}
   @begin{short}
@@ -619,7 +619,7 @@
 (setf (liber:alias-for-symbol 'param-spec-uint)
       "CStruct"
       (liber:symbol-documentation 'param-spec-uint)
- "@version{2024-12-22}
+ "@version{2025-09-27}
   @begin{declaration}
 (cffi:defcstruct param-spec-uint
   (:parent-instance (:pointer (:struct param-spec)))
@@ -630,9 +630,9 @@
   @begin{values}
     @begin[code]{table}
       @entry[:parent-instance]{Private @symbol{g:param-spec} portion.}
-      @entry[:minimum]{The unsigned integer with the minimum value.}
-      @entry[:maximum]{The unsigned integer with the maximum value.}
-      @entry[:default-value]{The unsigned integer with the default value.}
+      @entry[:minimum]{The unsigned integer for the minimum value.}
+      @entry[:maximum]{The unsigned integer for the maximum value.}
+      @entry[:default-value]{The unsigned integer for the default value.}
     @end{table}
   @end{values}
   @begin{short}
@@ -651,13 +651,13 @@
 (cffi:defcfun ("g_param_spec_uint" param-spec-uint)
     (:pointer (:struct param-spec-uint))
  #+liber-documentation
- "@version{2024-12-22}
-  @argument[name]{a string with the canonical name}
-  @argument[nick]{a string with the nick name}
-  @argument[blurb]{a string with the description}
-  @argument[minimum]{an unsigned integer with the minimum value}
-  @argument[maximum]{an unsigned integer with the maximum value}
-  @argument[default]{an unsigned integer with default value}
+ "@version{2025-09-27}
+  @argument[name]{a string for the canonical name}
+  @argument[nick]{a string for the nick name}
+  @argument[blurb]{a string for the description}
+  @argument[minimum]{an unsigned integer for the minimum value}
+  @argument[maximum]{an unsigned integer for the maximum value}
+  @argument[default]{an unsigned integer for default value}
   @argument[flags]{a @symbol{g:param-flags} value}
   @return{The newly created @symbol{g:param-spec-uint} parameter specification.}
   @begin{short}
@@ -722,7 +722,7 @@
 (setf (liber:alias-for-symbol 'param-spec-long)
       "CStruct"
       (liber:symbol-documentation 'param-spec-long)
- "@version{2024-12-22}
+ "@version{2025-09-27}
   @begin{declaration}
 (cffi:defcstruct param-spec-long
   (:parent-instance (:pointer (:struct param-spec)))
@@ -733,9 +733,9 @@
   @begin{values}
     @begin[code]{table}
       @entry[:parent-instance]{Private @symbol{g:param-spec} portion.}
-      @entry[:minimum]{The long integer with the minimum value.}
-      @entry[:maximum]{The long integer with the maximum value.}
-      @entry[:default-value]{The long integer with the default value.}
+      @entry[:minimum]{The long integer for the minimum value.}
+      @entry[:maximum]{The long integer for the maximum value.}
+      @entry[:default-value]{The long integer for the default value.}
     @end{table}
   @end{values}
   @begin{short}
@@ -754,13 +754,13 @@
 (cffi:defcfun ("g_param_spec_long" param-spec-long)
     (:pointer (:struct param-spec-long))
  #+liber-documentation
- "@version{2024-12-22}
-  @argument[name]{a string with the canonical name}
-  @argument[nick]{a string with the nick name}
-  @argument[blurb]{a string with the description}
-  @argument[minimum]{a long integer with the minimum value}
-  @argument[maximum]{a long integer with the maximum value}
-  @argument[default]{a long integer with the default value}
+ "@version{2025-09-27}
+  @argument[name]{a string for the canonical name}
+  @argument[nick]{a string for the nick name}
+  @argument[blurb]{a string for the description}
+  @argument[minimum]{a long integer for the minimum value}
+  @argument[maximum]{a long integer for the maximum value}
+  @argument[default]{a long integer for the default value}
   @argument[flags]{a @symbol{g:param-flags} value}
   @return{The newly created @symbol{g:param-spec-long} parameter specification.}
   @begin{short}
@@ -825,7 +825,7 @@
 (setf (liber:alias-for-symbol 'param-spec-ulong)
       "CStruct"
       (liber:symbol-documentation 'param-spec-ulong)
- "@version{2024-12-22}
+ "@version{2025-09-27}
   @begin{declaration}
 (cffi:defcstruct param-spec-ulong
   (:parent-instance (:pointer (:struct param-spec)))
@@ -836,9 +836,9 @@
   @begin{values}
      @begin[code]{table}
        @entry[:parent-instance]{Private @symbol{g:param-spec} portion.}
-      @entry[:minimum]{The unsigned long integer with the minimum value.}
-      @entry[:maximum]{The unsigned long integer with the maximum value.}
-      @entry[:default-value]{The unsigned long integer with the default value.}
+      @entry[:minimum]{The unsigned long integer for the minimum value.}
+      @entry[:maximum]{The unsigned long integer for the maximum value.}
+      @entry[:default-value]{The unsigned long integer for the default value.}
     @end{table}
   @end{values}
   @begin{short}
@@ -857,13 +857,13 @@
 (cffi:defcfun ("g_param_spec_ulong" param-spec-ulong)
     (:pointer (:struct param-spec-ulong))
  #+liber-documentation
- "@version{2024-12-22}
-  @argument[name]{a string with the canonical name}
-  @argument[nick]{a string with the nick name}
-  @argument[blurb]{a string with the description}
-  @argument[minimum]{an unsigned long integer with the minimum value}
-  @argument[maximum]{an unsigned long integer with the maximum value}
-  @argument[default]{an unsigned long integer with the default value}
+ "@version{2025-09-27}
+  @argument[name]{a string for the canonical name}
+  @argument[nick]{a string for the nick name}
+  @argument[blurb]{a string for the description}
+  @argument[minimum]{an unsigned long integer for the minimum value}
+  @argument[maximum]{an unsigned long integer for the maximum value}
+  @argument[default]{an unsigned long integer for the default value}
   @argument[flags]{a @symbol{g:param-flags} value}
   @return{The newly created @symbol{g:param-spec-ulong} parameter
     specification.}
@@ -929,7 +929,7 @@
 (setf (liber:alias-for-symbol 'param-spec-int64)
       "CStruct"
       (liber:symbol-documentation 'param-spec-int64)
- "@version{2024-12-22}
+ "@version{2025-09-27}
   @begin{declaration}
 (cffi:defcstruct param-spec-int64
   (:parent-instance (:pointer (:struct param-spec)))
@@ -940,9 +940,9 @@
   @begin{values}
     @begin[code]{table}
       @entry[:parent-instance]{Private @symbol{g:param-spec} portion.}
-      @entry[:minimum]{The 64-bit integer with the value.}
-      @entry[:maximum]{The 64-bit integer with the maximum value.}
-      @entry[:default-value]{The 64-bit integer with the default value.}
+      @entry[:minimum]{The 64-bit integer for the value.}
+      @entry[:maximum]{The 64-bit integer for the maximum value.}
+      @entry[:default-value]{The 64-bit integer for the default value.}
     @end{table}
   @end{values}
   @begin{short}
@@ -961,13 +961,13 @@
 (cffi:defcfun ("g_param_spec_int64" param-spec-int64)
     (:pointer (:struct param-spec-int64))
  #+liber-documentation
- "@version{2024-12-22}
-  @argument[name]{a string with the canonical name}
-  @argument[nick]{a string with the nick name}
-  @argument[blurb]{a string with the description}
-  @argument[minimum]{a 64-bit integer with the minimum value}
-  @argument[maximum]{a 64-bit integer with the maximum value}
-  @argument[default]{a 64-bit- integer with the default value}
+ "@version{2025-09-27}
+  @argument[name]{a string for the canonical name}
+  @argument[nick]{a string for the nick name}
+  @argument[blurb]{a string for the description}
+  @argument[minimum]{a 64-bit integer for the minimum value}
+  @argument[maximum]{a 64-bit integer for the maximum value}
+  @argument[default]{a 64-bit- integer for the default value}
   @argument[flags]{a @symbol{g:param-flags} value}
   @return{The newly created @symbol{g:param-spec-int64} parameter
     specification.}
@@ -1033,7 +1033,7 @@
 (setf (liber:alias-for-symbol 'param-spec-uint64)
       "CStruct"
       (liber:symbol-documentation 'param-spec-uint64)
- "@version{2024-12-22}
+ "@version{2025-09-27}
   @begin{declaration}
 (cffi:defcstruct param-spec-uint64
   (:parent-instance (:pointer (:struct param-spec)))
@@ -1044,10 +1044,9 @@
   @begin{values}
     @begin[code]{table}
       @entry[:parent-instance]{Private @symbol{g:param-spec} portion.}
-      @entry[:minimum]{The unsigned 64-bit integer with the minimum value.}
-      @entry[:maximum]{The unsigned 64-bit integer with the maximum value.}
-      @entry[:default-value]{The unsigned 64-bit integer with the default
-        value.}
+      @entry[:minimum]{The unsigned 64-bit integer for the minimum value.}
+      @entry[:maximum]{The unsigned 64-bit integer for the maximum value.}
+      @entry[:default-value]{The unsigned 64-bit integer for the default value.}
     @end{table}
   @end{values}
   @begin{short}
@@ -1066,13 +1065,13 @@
 (cffi:defcfun ("g_param_spec_uint64" param-spec-uint64)
     (:pointer (:struct param-spec-uint64))
  #+liber-documentation
- "@version{2024-12-22}
-  @argument[name]{a string with the canonical name}
-  @argument[nick]{a string with the nick name}
-  @argument[blurb]{a string with the description}
-  @argument[minimum]{an unsigned 64-bit integer with the minimum value}
-  @argument[maximum]{an unsigned 64-bit integer with the maximum value}
-  @argument[default]{an unsigned 64-bit integer with the default value}
+ "@version{2025-09-27}
+  @argument[name]{a string for the canonical name}
+  @argument[nick]{a string for the nick name}
+  @argument[blurb]{a string for the description}
+  @argument[minimum]{an unsigned 64-bit integer for the minimum value}
+  @argument[maximum]{an unsigned 64-bit integer for the maximum value}
+  @argument[default]{an unsigned 64-bit integer for the default value}
   @argument[flags]{a @symbol{g:param-flags} value}
   @return{The newly created @symbol{g:param-spec-uint64} parameter
     specification.}
@@ -1174,13 +1173,13 @@
 (cffi:defcfun ("g_param_spec_float" param-spec-float)
     (:pointer (:struct param-spec-float))
  #+liber-documentation
- "@version{2024-12-22}
-  @argument[name]{a string with the canonical name}
-  @argument[nick]{a string with the nick name}
-  @argument[blurb]{a string with the description}
-  @argument[minimum]{a float with the minimum value}
-  @argument[maximum]{a float with the maximum value}
-  @argument[default]{a float with the default value}
+ "@version{2025-09-27}
+  @argument[name]{a string for the canonical name}
+  @argument[nick]{a string for the nick name}
+  @argument[blurb]{a string for the description}
+  @argument[minimum]{a float for the minimum value}
+  @argument[maximum]{a float for the maximum value}
+  @argument[default]{a float for the default value}
   @argument[flags]{a @symbol{g:param-flags} value}
   @return{The newly created @symbol{g:param-spec-float} parameter
     specification.}
@@ -1247,7 +1246,7 @@
 (setf (liber:alias-for-symbol 'param-spec-double)
       "CStruct"
       (liber:symbol-documentation 'param-spec-double)
- "@version{2024-12-12}
+ "@version{2025-09-27}
   @begin{declaration}
 (cffi:defcstruct param-spec-double
   (:parent-instance (:pointer (:struct param-spec)))
@@ -1259,9 +1258,9 @@
   @begin{values}
     @begin[code]{table}
       @entry[:parent-instance]{Private @symbol{g:param-spec} portion.}
-      @entry[:minimum]{The double float with the minimum value.}
-      @entry[:maximum]{The double float with the maximum value.}
-      @entry[:default-value]{The double float with the default value.}
+      @entry[:minimum]{The double float for the minimum value.}
+      @entry[:maximum]{The double float for the maximum value.}
+      @entry[:default-value]{The double float for the default value.}
       @entry[:epsilon]{The double float, values closer than epsilon will
         be considered identical, the default value is 1e-90.}
     @end{table}
@@ -1353,7 +1352,7 @@
 (setf (liber:alias-for-symbol 'param-spec-enum)
       "CStruct"
       (liber:symbol-documentation 'param-spec-enum)
- "@version{2024-12-22}
+ "@version{2025-09-27}
   @begin{declaration}
 (cffi:defcstruct param-spec-enum
   (:parent-instance (:pointer (:struct param-spec)))
@@ -1365,7 +1364,7 @@
       @entry[:parent-instance]{Private @symbol{g:param-spec} portion.}
       @entry[:enum-class]{The @symbol{g:enum-class} class instance for the
         enum.}
-      @entry[:default-value]{The integer with the default value.}
+      @entry[:default-value]{The integer for the default value.}
     @end{table}
   @end{values}
   @begin{short}
@@ -1388,13 +1387,13 @@
 (cffi:defcfun ("g_param_spec_enum" param-spec-enum)
     (:pointer (:struct param-spec-enum))
  #+liber-documentation
- "@version{2024-12-22}
-  @argument[name]{a string with the canonical name}
-  @argument[nick]{a string with the nick name}
-  @argument[blurb]{a string with the description}
+ "@version{2025-09-27}
+  @argument[name]{a string for the canonical name}
+  @argument[nick]{a string for the nick name}
+  @argument[blurb]{a string for the description}
   @argument[gtype]{a @class{g:type-t} type ID derived from the @code{\"GEnum\"}
     type}
-  @argument[default]{an integer with the default value}
+  @argument[default]{an integer for the default value}
   @argument[flags]{a @symbol{g:param-flags} value}
   @return{The newly created @symbol{g:param-spec-enum} parameter specification.}
   @begin{short}
@@ -1473,7 +1472,7 @@
 (setf (liber:alias-for-symbol 'param-spec-flags)
       "CStruct"
       (liber:symbol-documentation 'param-spec-flags)
- "@version{2024-12-22}
+ "@version{2025-09-27}
   @begin{pre}
 (cffi:defcstruct param-spec-flags
   (:parent-instance (:pointer (:struct param-spec)))
@@ -1485,7 +1484,7 @@
       @entry[:parent-instance]{Private @symbol{g:param-spec} portion.}
       @entry[:flags-class]{The @symbol{g:flags-class} class instance for the
         flags.}
-      @entry[:default-value]{The unsigned integer with the default value.}
+      @entry[:default-value]{The unsigned integer for the default value.}
     @end{table}
   @end{values}
   @begin{short}
@@ -1504,13 +1503,13 @@
 (cffi:defcfun ("g_param_spec_flags" param-spec-flags)
     (:pointer (:struct param-spec-flags))
  #+liber-documentation
- "@version{2024-12-22}
-  @argument[name]{a string with the canonical name}
-  @argument[nick]{a string with the nick name}
-  @argument[blurb]{a string with the description}
+ "@version{2025-09-27}
+  @argument[name]{a string for the canonical name}
+  @argument[nick]{a string for the nick name}
+  @argument[blurb]{a string for the description}
   @argument[gtype]{a @class{g:type-t} type ID derived from the @code{\"GFlags\"}
     type}
-  @argument[default]{an unsigned integer with the default value}
+  @argument[default]{an unsigned integer for the default value}
   @argument[flags]{a @symbol{g:param-flags} value}
   @return{The newly created @symbol{g:param-spec-flags} parameter
     specification.}
@@ -1552,12 +1551,12 @@
 
 (defun value-flags (gvalue)
  #+liber-documentation
- "@version{2024-12-22}
+ "@version{2025-09-27}
   @syntax{(g:value-flags gvalue) => value}
   @syntax{(setf (g:value-flags gvalue) value)}
   @argument[gvalue]{a @symbol{g:value} instance whose type is derived from
     @code{\"GFlags\"}}
-  @argument[value]{a list with keywords or an unsigned integer with the flags
+  @argument[value]{a list with keywords or an unsigned integer for the flags
     value}
   @begin{short}
     Flags contents of @arg{gvalue}.
@@ -1597,7 +1596,7 @@
 (setf (liber:alias-for-symbol 'param-spec-string)
       "CStruct"
       (liber:symbol-documentation 'param-spec-string)
- "@version{2024-12-22}
+ "@version{2025-09-27}
   @begin{declaration}
 (cffi:defcstruct param-spec-string
   (:parent-instance (:pointer (:struct param-spec)))
@@ -1610,12 +1609,12 @@
   @begin{values}
     @begin[code]{table}
       @entry[:parent-instance]{Private @symbol{g:param-spec} portion.}
-      @entry[:default-value]{The string with the default value.}
+      @entry[:default-value]{The string for the default value.}
       @entry[:cset-frist]{The string containing the allowed values for the
         first byte.}
       @entry[:cset-nth]{The string containing the allowed values for the
         subsequent bytes.}
-      @entry[:substitutor]{The character with the replacement byte for bytes
+      @entry[:substitutor]{The character for the replacement byte for bytes
         which do not match @code{:cset-first} or @code{cset-nth}.}
       @entry[:flags-for-null]{The unsigned integer whether to replace empty
         string by @code{nil} and @code{nil} strings by an empty string.}
@@ -1637,11 +1636,11 @@
 (cffi:defcfun ("g_param_spec_string" param-spec-string)
     (:pointer (:struct param-spec-string))
  #+liber-documentation
- "@version{2024-12-22}
-  @argument[name]{a string with the canonical name}
-  @argument[nick]{a string with the nick name}
-  @argument[blurb]{a string with the description}
-  @argument[default]{a string with default value}
+ "@version{2025-09-27}
+  @argument[name]{a string for the canonical name}
+  @argument[nick]{a string for the nick name}
+  @argument[blurb]{a string for the description}
+  @argument[default]{a string for default value}
   @argument[flags]{a @symbol{g:param-flags} value}
   @return{The newly created @symbol{g:param-spec-string} parameter
     specification.}
@@ -1729,10 +1728,10 @@
 (cffi:defcfun ("g_param_spec_param" param-spec-param)
     (:pointer (:struct param-spec-param))
  #+liber-documentation
- "@version{2024-12-22}
-  @argument[name]{a string with the canonical name}
-  @argument[nick]{a string with the nick name}
-  @argument[blurb]{a string with the description}
+ "@version{2025-09-27}
+  @argument[name]{a string for the canonical name}
+  @argument[nick]{a string for the nick name}
+  @argument[blurb]{a string for the description}
   @argument[gtype]{a @class{g:type-t} type ID derived from the @code{\"GParam\"}
     type}
   @argument[flags]{a @symbol{g:param-flags} value}
@@ -1822,10 +1821,10 @@
 (cffi:defcfun ("g_param_spec_boxed" param-spec-boxed)
     (:pointer (:struct param-spec-boxed))
  #+liber-documentation
- "@version{2024-12-22}
-  @argument[name]{a string with the canonical name}
-  @argument[nick]{a string with the nick name}
-  @argument[blurb]{a string with the description}
+ "@version{2025-09-27}
+  @argument[name]{a string for the canonical name}
+  @argument[nick]{a string for the nick name}
+  @argument[blurb]{a string for the description}
   @argument[gtype]{a @code{\"GBoxed\"} derived type of this property}
   @argument[flags]{a @symbol{g:param-flags} value}
   @return{The newly created @symbol{g:param-spec-boxed} parameter
@@ -1970,10 +1969,10 @@
 (cffi:defcfun ("g_param_spec_pointer" param-spec-pointer)
     (:pointer (:struct param-spec-pointer))
  #+liber-documentation
- "@version{#2024-12-22}
-  @argument[name]{a string with the canonical name}
-  @argument[nick]{a string with the nick name}
-  @argument[blurb]{a string with the description}
+ "@version{#2025-09-27}
+  @argument[name]{a string for the canonical name}
+  @argument[nick]{a string for the nick name}
+  @argument[blurb]{a string for the description}
   @argument[flags]{a @symbol{g:param-flags} value}
   @return{The newly created @symbol{g:param-spec-pointer} parameter
     specification.}
@@ -2059,10 +2058,10 @@
 (cffi:defcfun ("g_param_spec_object" param-spec-object)
     (:pointer (:struct param-spec-object))
  #+liber-documentation
- "@version{#2024-12-22}
-  @argument[name]{a string with the canonical name}
-  @argument[nick]{a string with the nick name}
-  @argument[blurb]{a string with the description}
+ "@version{#2025-09-27}
+  @argument[name]{a string for the canonical name}
+  @argument[nick]{a string for the nick name}
+  @argument[blurb]{a string for the description}
   @argument[gtype]{a @code{\"GObject\"} derived type of this property}
   @argument[flags]{a @symbol{g:param-flags} value}
   @return{The newly created @symbol{g:param-spec-object} parameter
@@ -2330,10 +2329,10 @@
 (cffi:defcfun ("g_param_spec_gtype" param-spec-gtype)
     (:pointer (:struct param-spec-gtype))
  #+liber-documentation
- "@version{2024-12-22}
-  @argument[name]{a string with the canonical name}
-  @argument[nick]{a string with the nick name}
-  @argument[blurb]{a string with the description}
+ "@version{2025-09-27}
+  @argument[name]{a string for the canonical name}
+  @argument[nick]{a string for the nick name}
+  @argument[blurb]{a string for the description}
   @argument[is-a-type]{a @class{g:type-t} type ID whose subtypes are allowed as
     values of the property (use the \"void\" type for any type)}
   @argument[flags]{a @symbol{g:param-flags} value}

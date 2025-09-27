@@ -461,9 +461,9 @@
 
 (cffi:defcfun ("g_param_spec_get_name" param-spec-name) :string
  #+liber-documentation
- "@version{2024-12-22}
+ "@version{2025-09-27}
   @argument[pspec]{a valid @symbol{g:param-spec} instance}
-  @return{The string with the name of @arg{pspec}.}
+  @return{The string for the name of @arg{pspec}.}
   @begin{short}
     Gets the name of a @symbol{g:param-spec} instance.
   @end{short}
@@ -487,9 +487,9 @@
 
 (cffi:defcfun ("g_param_spec_get_nick" param-spec-nick) :string
  #+liber-documentation
- "@version{2024-12-22}
+ "@version{2025-09-27}
   @argument[pspec]{a valid @symbol{g:param-spec} instance}
-  @return{The string with the nickname of @arg{pspec}.}
+  @return{The string for the nickname of @arg{pspec}.}
   @short{Get the nickname of a @symbol{g:param-spec} instance.}
   @see-symbol{g:param-spec}"
   (pspec (:pointer (:struct param-spec))))
@@ -502,9 +502,9 @@
 
 (cffi:defcfun ("g_param_spec_get_blurb" param-spec-blurb) :string
  #+liber-documentation
- "@version{2024-12-22}
+ "@version{2025-09-27}
   @argument[pspec]{a valid @symbol{g:param-spec} instance}
-  @return{The string with the short description of @arg{pspec}.}
+  @return{The string for the short description of @arg{pspec}.}
   @short{Gets the short description of a @symbol{g:param-spec} instance.}
   @see-symbol{g:param-spec}"
   (pspec (:pointer (:struct param-spec))))
@@ -517,12 +517,12 @@
 
 (cffi:defcfun ("g_param_spec_internal" param-spec-internal) :pointer
  #+liber-documentation
- "@version{2024-12-22}
+ "@version{2025-09-27}
   @argument[ptype]{a @class{g:type-t} type ID for the property, must be
     derived from the @code{\"GParam\"} type}
-  @argument[name]{a string with the canonical name of the property}
-  @argument[nick]{a string with the nickname of the property}
-  @argument[blurb]{a string with a short description of the property}
+  @argument[name]{a string for the canonical name of the property}
+  @argument[nick]{a string for the nickname of the property}
+  @argument[blurb]{a string for a short description of the property}
   @argument[flags]{a combination of flags from the @symbol{g:param-flags}
     bitfield}
   @return{The newly allocated @symbol{g:param-spec} instance.}

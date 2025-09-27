@@ -90,7 +90,7 @@
 (setf (liber:alias-for-symbol 'binding-flags)
       "GFlags"
       (liber:symbol-documentation 'binding-flags)
- "@version{2024-6-18}
+ "@version{2024-06-18}
   @begin{declaration}
 (define-gflags \"GBindingFlags\" binding-flags
   (:export t
@@ -151,7 +151,7 @@
 
 #+liber-documentation
 (setf (documentation 'binding 'type)
- "@version{2024-12-7}
+ "@version{2024-12-07}
   @begin{short}
     The @class{g:binding} object is the representation of a binding between a
     property on a @class{g:object} instance, or source, and another property on
@@ -243,14 +243,15 @@ object3:propertyC -> object1:propertyA
 (setf (liber:alias-for-function 'binding-flags)
       "Accessor"
       (documentation 'binding-flags 'function)
- "@version{2024-12-7}
+ "@version{2025-09-27}
   @syntax{(g:binding-flags object) => flags}
   @argument[object]{a @class{g:binding} object}
   @argument[flags]{a @symbol{g:binding-flags} value used by the binding}
   @begin{short}
-    Accessor of the @slot[g:binding]{flags} slot of the @class{g:binding} class.
+    The accessor for the @slot[g:binding]{flags} slot of the @class{g:binding}
+    class retrieves the flags passed when constructing the @class{g:binding}
+    object.
   @end{short}
-  Retrieves the flags passed when constructing the @class{g:binding} object.
   @see-class{g:binding}
   @see-symbol{g:binding-flags}")
 
@@ -266,15 +267,15 @@ object3:propertyC -> object1:propertyA
 (setf (liber:alias-for-function 'binding-source)
       "Accessor"
       (documentation 'binding-source 'function)
- "@version{2024-12-7}
+ "@version{2025-09-27}
   @syntax{(g:binding-source object) => source}
   @argument[object]{a @class{g:binding} object}
   @argument[source]{a @class{g:object} source instance}
   @begin{short}
-    Accessor of the @slot[g:binding]{source} slot of the @class{g:binding}
-    class.
+    The accessor for the @slot[g:binding]{source} slot of the @class{g:binding}
+    class retrieves the @class{g:object} instance used as the source of the
+    binding.
   @end{short}
-  Retrieves the @class{g:object} instance used as the source of the binding.
   @begin[Warning]{dictionary}
     This function is deprecated since 2.68. Use the @fun{g:binding-dup-source}
     function for a safer version of this function.
@@ -297,15 +298,15 @@ object3:propertyC -> object1:propertyA
 (setf (liber:alias-for-function 'binding-source-property)
       "Accessor"
       (documentation 'binding-source-property 'function)
- "@version{2024-12-7}
+ "@version{2025-09-27}
   @syntax{(g:binding-source-property object) => property}
   @argument[object]{a @class{g:binding} object}
-  @argument[property]{a string with the name of the source property}
+  @argument[property]{a string for the name of the source property}
   @begin{short}
-    Accessor of the @slot[g:binding]{source-property} slot of the
-    @class{g:binding} class.
+    The accessor for the @slot[g:binding]{source-property} slot of the
+    @class{g:binding} class retrieves the name of the property of the source
+    used for the binding.
   @end{short}
-  Retrieves the name of the property of the source used for the binding.
   @see-class{g:binding}")
 
 ;;; --- g:binding-target -------------------------------------------------------
@@ -320,15 +321,15 @@ object3:propertyC -> object1:propertyA
 (setf (liber:alias-for-function 'binding-target)
       "Accessor"
       (documentation 'binding-target 'function)
- "@version{2024-12-7}
+ "@version{2025-09-27}
   @syntax{(g:binding-target object) => target}
   @argument[object]{a @class{g:binding} object}
   @argument[target]{a @class{g:object} target instance}
   @begin{short}
-    Accessor of the @slot[g:binding]{target} slot of the @class{g:binding}
-    class.
+    The accessor for the @slot[g:binding]{target} slot of the @class{g:binding}
+    class retrieves the @class{g:object} instance used as the target of the
+    binding.
   @end{short}
-  Retrieves the @class{g:object} instance used as the target of the binding.
   @begin[Warning]{dictionary}
     This function is deprecated since 2.68. Use the @fun{g:binding-dup-target}
     function for a safer version of this function.
@@ -351,15 +352,15 @@ object3:propertyC -> object1:propertyA
 (setf (liber:alias-for-function 'binding-target-property)
       "Accessor"
       (documentation 'binding-target-property 'function)
- "@version{2024-12-7}
+ "@version{2025-09-27}
   @syntax{(g:binding-target-property object) => property}
   @argument[object]{a @class{g:binding} object}
-  @argument[property]{a string with the name of the target property}
+  @argument[property]{a string for the name of the target property}
   @begin{short}
-    Accessor of the @slot[g:binding]{target-property} slot of the
-    @class{g:binding} class.
+    The accessor for the @slot[g:binding]{target-property} slot of the
+    @class{g:binding} class retrieves the name of the property of the target
+    used for the binding.
   @end{short}
-  Retrieves the name of the property of the target used for the binding.
   @see-class{g:binding}")
 
 ;;; ----------------------------------------------------------------------------
@@ -370,7 +371,7 @@ object3:propertyC -> object1:propertyA
 (cffi:defcfun ("g_binding_dup_source" binding-dup-source)
     (object binding :return)
  #+liber-documentation
- "@version{2024-12-7}
+ "@version{2024-12-07}
   @argument[binding]{a @class{g:binding} object}
   @return{The @class{g:object} source instance, or @code{nil} if the source
     does not exist any more.}
@@ -397,7 +398,7 @@ object3:propertyC -> object1:propertyA
 (cffi:defcfun ("g_binding_dup_target" binding-dup-target)
     (object binding :return)
  #+liber-documentation
- "@version{2024-12-7}
+ "@version{2024-12-07}
   @argument[binding]{a @class{g:binding} object}
   @return{The @class{g:object} target instance, or @code{nil} if the target
     does not exist any more.}
@@ -422,7 +423,7 @@ object3:propertyC -> object1:propertyA
 
 (cffi:defcfun ("g_binding_unbind" binding-unbind) :void
  #+liber-documentation
- "@version{2024-12-7}
+ "@version{2024-12-07}
   @argument[binding]{a @class{g:binding} object}
   @begin{short}
     Explicitly releases the binding between the source and the target property
@@ -443,11 +444,11 @@ object3:propertyC -> object1:propertyA
 
 (cffi:defcfun ("g_object_bind_property" object-bind-property) (object binding)
  #+liber-documentation
- "@version{2024-12-7}
+ "@version{2025-09-27}
   @argument[source]{a @class{g:object} source instance}
-  @argument[source-prop]{a string with the property on @arg{source} to bind}
+  @argument[source-prop]{a string for the property on @arg{source} to bind}
   @argument[target]{a @class{g:object} target instance}
-  @argument[target-prop]{a string with the property on @arg{target} to bind}
+  @argument[target-prop]{a string for the property on @arg{target} to bind}
   @argument[flags]{a @symbol{g:binding-flags} value to pass to the binding}
   @begin{return}
     The @class{g:binding} instance representing the binding between the two
@@ -500,7 +501,7 @@ object3:propertyC -> object1:propertyA
 (setf (liber:alias-for-symbol 'binding-transform-func)
       "Callback"
       (liber:symbol-documentation 'binding-transform-func)
- "@version{2024-12-7}
+ "@version{2024-12-07}
   @syntax{lambda (binding from to) => result}
   @argument[binding]{a @class{g:binding} object}
   @argument[from]{a @symbol{g:value} instance in which to store the value to

@@ -1,12 +1,12 @@
 ;;; ----------------------------------------------------------------------------
 ;;; gobject.enumeration.lisp
 ;;;
-;;; The documentation of this file is taken from the GObject Reference Manual
-;;; Version 2.80 and modified to document the Lisp binding to the GObject
-;;; library. See <http://www.gtk.org>. The API documentation of the Lisp
-;;; binding is available from <http://www.crategus.com/books/cl-cffi-gtk4/>.
+;;; The documentation in this file is taken from the GObject Reference Manual
+;;; version 2.84 and modified to document the Lisp binding to the GObject
+;;; library, see <http://www.gtk.org>. The API documentation for the Lisp
+;;; binding is available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2011 - 2024 Dieter Kaiser
+;;; Copyright (C) 2011 - 2025 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -179,7 +179,7 @@
 (setf (liber:alias-for-symbol 'enum-value)
       "CStruct"
       (liber:symbol-documentation 'enum-value)
- "@version{2024-6-9}
+ "@version{2024-06-09}
   @begin{declaration}
 (cffi:defcstruct enum-value
   (:value :int)
@@ -215,7 +215,7 @@
 (setf (liber:alias-for-symbol 'enum-class)
       "CStruct"
       (liber:symbol-documentation 'enum-class)
- "@version{2024-6-9}
+ "@version{2024-06-09}
   @begin{declaration}
 (cffi:defcstruct enum-class
   (:type-class (:pointer (:struct type-class)))
@@ -266,9 +266,9 @@
 #+nil
 (defun enum-class-type-name (class)
  #+liber-documentation
- "@version{#2022-12-29}
+ "@version{#2025-09-27}
   @argument[class]{a @symbol{g:enum-class} instance}
-  @return{The string with the type name.}
+  @return{The string for the type name.}
   @begin{short}
     Get the type name from a given @symbol{g:enum-class} instance.
   @end{short}
@@ -283,7 +283,7 @@
 
 (defun type-is-enum (gtype)
  #+liber-documentation
- "@version{2024-6-9}
+ "@version{2024-06-09}
   @argument[gtype]{a @class{g:type-t} type ID}
   @return{@em{True} if @arg{gtype} is a @code{\"GEnum\"} type.}
   @begin{short}
@@ -434,7 +434,7 @@
 (setf (liber:alias-for-symbol 'flags-value)
       "CStruct"
       (liber:symbol-documentation 'flags-value)
- "@version{2024-6-9}
+ "@version{2024-06-09}
   @begin{declaration}
 (cffi:defcstruct flags-value
   (:value :uint)
@@ -469,7 +469,7 @@
 (setf (liber:alias-for-symbol 'flags-class)
       "CStruct"
       (liber:symbol-documentation 'flags-class)
- "@version{2024-6-9}
+ "@version{2024-06-09}
   @begin{declaration}
 (cffi:defcstruct flags-class
   (:type-class (:pointer (:struct type-class)))
@@ -501,7 +501,7 @@
 
 (defun type-is-flags (gtype)
  #+liber-documentation
- "@version{2024-6-9}
+ "@version{2024-06-09}
   @argument[type]{a @class{g:type-t} type ID}
   @return{@em{True} if @arg{type} is a @code{\"GFlags\"} type.}
   @begin{short}
@@ -559,7 +559,7 @@
 #+nil
 (cffi:defcfun ("g_enum_register_static" enum-register-static) type-t
  #+liber-documentation
- "@version{#2013-6-10}
+ "@version{#2013-06-10}
   @argument[name]{a string used as the name of the new type}
   @argument[static-values]{an array of @symbol{enum-value} structs for the
     possible enumeration values. The array is terminated by a struct with all
@@ -583,7 +583,7 @@
 #+nil
 (cffi:defcfun ("g_flags_register_static" flags-register-static) type-t
  #+liber-documentation
- "@version{#2013-6-10}
+ "@version{#2013-06-10}
   @argument[name]{a string used as the name of the new type}
   @argument[static-values]{an array of @symbol{flags-value} structs for the
     possible flags values. The array is terminated by a struct with all members
