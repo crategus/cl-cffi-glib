@@ -120,19 +120,17 @@
 (setf (liber:alias-for-function 'permission-allowed)
       "Accessor"
       (documentation 'permission-allowed 'function)
- "@version{2025-05-26}
+ "@version{2025-09-27}
   @syntax{(g:permission-allowed object) => allowed}
   @argument[object]{a @class{g:permission} object}
   @argument[allowed]{a boolean whether the caller currently has permission to
     perform the action}
   @begin{short}
-    Accessor of the @slot[g:permission]{allowed} slot of the
-    @class{g:permission} class.
+    The accessor for the @slot[g:permission]{allowed} slot of the
+    @class{g:permission} class returns whether the caller currently has
+    permission to perform the action that the @class{g:permission} object
+    represents the permission to perform.
   @end{short}
-  The @fun{g:permission-allowed} function gets the value of the property. This
-  property is @em{true} if the caller currently has permission to perform the
-  action that the @class{g:permission} object represents the permission to
-  perform.
   @see-class{g:permission}")
 
 ;;; --- g:permission-can-acquire -----------------------------------------------
@@ -148,18 +146,16 @@
 (setf (liber:alias-for-function 'permission-can-acquire)
       "Accessor"
       (documentation 'permission-can-acquire 'function)
- "@version{2025-05-26}
+ "@version{2025-09-27}
   @syntax{(g:permission-can-acquire object) => can-acquire}
   @argument[object]{a @class{g:permission} object}
   @argument[can-acquire]{a boolean whether it is generally possible to acquire
     the permission}
   @begin{short}
-    Accessor of the @slot[g:permission]{can-acquire} slot of the
-    @class{g:permission} class.
+    The accessor for the @slot[g:permission]{can-acquire} slot of the
+    @class{g:permission} class returns whether it is generally possible to
+    acquire the permission by calling the @fun{g:permission-acquire} function.
   @end{short}
-  The @fun{g:permission-can-acquire} function gets the value of the property.
-  This property is @em{true} if it is generally possible to acquire the
-  permission by calling the @fun{g:permission-acquire} function.
   @see-class{g:permission}
   @see-function{g:permission-acquire}")
 
@@ -176,18 +172,16 @@
 (setf (liber:alias-for-function 'permission-can-release)
       "Accessor"
       (documentation 'permission-can-release 'function)
- "@version{2025-06-26}
+ "@version{2025-09-27}
   @syntax{(g:permission-can-release object) => can-release}
   @argument[object]{a @class{g:permission} object}
   @argument[can-release]{a boolean whether it is generally possible to release
     the permission}
   @begin{short}
-    Accessor of the @slot[g:permission]{can-release} slot of the
-    @class{g:permission} class.
+    The accessor for the @slot[g:permission]{can-release} slot of the
+    @class{g:permission} class returns whether it is generally possible to
+    release the permission by calling the @fun{g:permission-release} function.
   @end{short}
-  The @fun{g:permission-can-release} function gets the value of the property.
-  This property is @em{true} if it is generally possible to release the
-  permission by calling the @fun{g:permission-release} function.
   @see-class{g:permission}
   @see-function{g:permission-release}")
 

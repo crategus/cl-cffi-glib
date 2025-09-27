@@ -148,10 +148,10 @@
 (cffi:defcfun ("g_content_type_get_description" content-type-description)
     (:string :free-from-foreign t)
  #+liber-documentation
- "@version{2025-05-01}
+ "@version{2025-09-27}
   @argument[ctype]{a content type string}
   @begin{return}
-    The string with a short description of the content type.
+    The string for a short description of the content type.
   @end{return}
   @begin{short}
     Gets the human readable description of the content type.
@@ -173,10 +173,10 @@
 
 (cffi:defcfun ("g_content_type_get_mime_type" content-type-mime-type) :string
  #+liber-documentation
- "@version{2025-05-01}
+ "@version{2025-09-27}
   @argument[ctype]{a content type string}
   @begin{return}
-    The string with the registered MIME type for the given @arg{ctype}, or
+    The string for the registered MIME type for the given @arg{ctype}, or
     @code{nil} if unknown.
   @end{return}
   @begin{short}
@@ -277,10 +277,10 @@
 (cffi:defcfun ("g_content_type_get_generic_icon_name"
                 content-type-generic-icon-name) (:string :free-from-foreign t)
  #+liber-documentation
- "@version{2025-05-01}
+ "@version{2025-09-27}
   @argument[ctype]{a content type string}
   @begin{return}
-    The string with the registered generic icon name for the given @arg{ctype},
+    The string for the registered generic icon name for the given @arg{ctype},
     or @code{nil} if unknown.
   @end{return}
   @begin{short}
@@ -330,9 +330,9 @@
 (cffi:defcfun ("g_content_type_from_mime_type" content-type-from-mime-type)
     :string
  #+liber-documentation
- "@version{2025-05-01}
+ "@version{2025-09-27}
   @argument[mimetype]{a MIME type string}
-  @return{The string with the content type or @code{nil}.}
+  @return{The string for the content type or @code{nil}.}
   @begin{short}
     Tries to find a content type based on the MIME type name.
   @end{short}"

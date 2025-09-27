@@ -761,11 +761,11 @@ baker_bake_cake_sync (Baker               *self,
 
 (cffi:defcfun ("g_task_get_priority" task-priority) :int
  #+liber-documentation
- "@version{#2023-7-13}
+ "@version{#2025-09-27}
   @syntax{(g:task-priority task) => priority}
   @syntax{(setf (g:task-priority task) priority)}
   @argument[task]{a @class{g:task} instance}
-  @argument[priority]{an integer with the priority of the request}
+  @argument[priority]{an integer for the priority of the request}
   @begin{short}
     The @sym{g:task-priority} function gets the priority of the task.
   @end{short}
@@ -794,23 +794,21 @@ baker_bake_cake_sync (Baker               *self,
 
 (cffi:defcfun ("g_task_get_check_cancellable" task-check-cancellable) :boolean
  #+liber-documentation
- "@version{#2023-7-13}
+ "@version{#2025-09-27}
   @syntax{(g:task-check-cancellable task) => cancellable}
   @syntax{(setf (g:task-cancellable task) cancellable)}
   @argument[task]{a @class{g:task} instance}
   @argument[cancellable]{a boolean whether @arg{task} will check the state of
     its @class{g:cancellable} instance for you}
   @begin{short}
-    The @sym{g:task-check-cancellable} function gets the check-cancellable flag
-    of @arg{task}.
+    Gets or sets the check-cancellable flag of @arg{task}.
   @end{short}
-  The @sym{(setf g:task-check-cancellable)} function sets or clears the
-  check-cancellable flag. If this is @em{true}, the default, then the
-  @fun{g:task-propagate-pointer} function, etc, and the @fun{g:task-had-error}
-  function will check the @class{g:cancellable} instance of @arg{task} first,
-  and if it has been cancelled, then they will consider the task to have
-  returned an \"Operation was cancelled\" error, regardless of any other error
-  or return value the task may have had.
+  If this is @em{true}, the default, then the @fun{g:task-propagate-pointer}
+  function, and so on, and the @fun{g:task-had-error} function will check the
+  @class{g:cancellable} instance of @arg{task} first, and if it has been
+  cancelled, then they will consider the task to have returned an \"Operation
+  was cancelled\" error, regardless of any other error or return value the task
+  may have had.
 
   If @arg{cancellable} is @em{false}, then @arg{task} will not check the
   cancellable itself, and it is up to the owner of @arg{task} to do this, for
@@ -1062,20 +1060,20 @@ The value is a NUL terminated UTF-8 string.
 ;;;     an error code.
 ;;;
 ;;; format :
-;;;     a string with format characters.
+;;;     a string for format characters.
 ;;;
 ;;; ... :
 ;;;     a list of values to insert into format .
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_task_get_cancellable ()
+;;; g_task_get_cancellable
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_tast_get_cancellable" task-cancellable)
     (gobject:object cancellable)
  #+liber-documentation
- "@version{#2023-7-13}
+ "@version{#2025-09-27}
   @argument[task]{a @class{g:task} instance}
   @return{The @class{g:cancellable} instance of @arg{task}.}
   @begin{short}
@@ -1088,21 +1086,21 @@ The value is a NUL terminated UTF-8 string.
 (export 'task-cancellable)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_task_get_context ()
+;;; g_task_get_context
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_task_get_context" task-context)
     (:pointer (:struct glib:main-context))
  #+liber-documentation
- "@version{#2023-7-13}
+ "@version{#2025-09-27}
   @argument[task]{a @class{g:task} instance}
   @return{The @type{g:main-context} instance of @arg{task}.}
   @begin{short}
     Gets the @type{g:main-context} instance that @arg{task} will return its
-    result in
+    result in.
   @end{short}
   That is, the context that was the thread-default main context at the point
-  when task was created.
+  when @arg{task} was created.
 
   This will always return a non-NULL value, even if the context of the task is
   the default @type{g:main-context} instance.
@@ -1136,14 +1134,14 @@ The value is a NUL terminated UTF-8 string.
 (export 'task-source-object)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_task_return_boolean ()
+;;; g_task_return_boolean
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_task_return_boolean" task-return-boolean) :void
  #+liber-documentation
- "@version{#2023-7-13}
+ "@version{#2025-09-27}
   @argument[task]{a @class{g:task} instance}
-  @argument[result]{a boolean result of a task function}
+  @argument[result]{a boolean for the result of a task function}
   @begin{short}
     Sets the result of the @class{g:task} instance to @arg{result} and
     completes the task.
@@ -1309,7 +1307,7 @@ The value is a NUL terminated UTF-8 string.
 ;;;     an error code.
 ;;;
 ;;; format :
-;;;     a string with format characters.
+;;;     a string for format characters.
 ;;;
 ;;; ... :
 ;;;     a list of values to insert into format .

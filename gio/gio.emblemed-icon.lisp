@@ -99,16 +99,16 @@
 (setf (liber:alias-for-function 'emblemed-icon-gicon)
       "Accessor"
       (documentation 'emblemed-icon-gicon 'function)
- "@version{2024-10-23}
+ "@version{2025-09-27}
   @syntax{(g:emblemed-icon-gicon object) => gicon}
-  @syntax{(setf (g:emblemend-icon-gicon object) gicon)}
   @argument[object]{a @class{g:emblemed-icon} object}
   @argument[gicon]{a @class{g:icon} object to attach emblems to}
   @begin{short}
-    Accessor of the @slot[g:emblemed-icon]{gicon} slot of the
-    @class{g:emblemed-icon} class.
+    The accessor for the @slot[g:emblemed-icon]{gicon} slot of the
+    @class{g:emblemed-icon} class returns the icon to attach emblems to.
   @end{short}
   @see-class{g:emblemed-icon}
+  @see-class{g:icon}
   @see-function{g:emblemed-icon-icon}")
 
 (export 'emblemed-icon-gicon)

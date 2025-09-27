@@ -255,7 +255,7 @@
 
 #+liber-documentation
 (setf (documentation 'application 'type)
- "@version{2025-06-22}
+ "@version{2025-09-27}
   @begin{short}
     The @class{g:application} class is the foundation of an application.
   @end{short}
@@ -568,8 +568,8 @@ lambda (application files nfiles hint)    :run-last
         @entry[application]{The @class{g:application} instance which received
           the signal.}
         @entry[files]{The C array of @class{g:file} objects.}
-        @entry[nfiles]{The integer with the length of @arg{files}.}
-        @entry[hint]{The string with a hint provided by the calling instance.}
+        @entry[nfiles]{The integer for the length of @arg{files}.}
+        @entry[hint]{The string for a hint provided by the calling instance.}
       @end{table}
       The signal is emitted on the primary instance when there are files to
       open. See the @fun{g:application-open} function for more information.
@@ -631,13 +631,14 @@ lambda (application)    :run-first
 (setf (liber:alias-for-function 'application-action-group)
       "Accessor"
       (documentation 'application-action-group 'function)
- "@version{2025-02-03}
+ "@version{2025-09-27}
   @syntax{(setf (g:application-action-group object) group)}
   @argument[object]{a @class{g:application} instance}
   @argument[group]{a @class{g:action-group} instance, or @code{nil}}
   @begin{short}
-    Accessor of the @slot[g:application]{action-group} slot of the
-    @class{g:application} class.
+    The accessor for the @slot[g:application]{action-group} slot of the
+    @class{g:application} class sets the group of actions that the application
+    exports.
   @end{short}
   This used to be how actions were associated with a @class{g:application}
   instance. Now there is the @class{g:action-map} interface for that.
@@ -666,18 +667,16 @@ lambda (application)    :run-first
 (setf (liber:alias-for-function 'application-application-id)
       "Accessor"
       (documentation 'application-application-id 'function)
- "@version{2025-05-12}
+ "@version{2025-09-27}
   @syntax{(g:application-application-id object) => id}
   @syntax{(setf (g:application-application-id object) id)}
   @argument[object]{a @class{g:application} instance}
   @argument[id]{a string for the identifier of the application}
   @begin{short}
-    Accessor of the @slot[g:application]{application-id} slot of the
-    @class{g:application} class.
+    The accessor for the @slot[g:application]{application-id} slot of the
+    @class{g:application} class gets or sets the unique identifier for the
+    application.
   @end{short}
-  The @fun{g:application-application-id} function gets the unique identifier for
-  the application. The @setf{g:application-application-id} function sets the
-  unique identifier.
 
   The application ID can only be modified if the application has not yet been
   registered. The application ID must be valid. See the
@@ -691,24 +690,22 @@ lambda (application)    :run-first
 (setf (documentation (liber:slot-documentation "flags" 'application) t)
  "The @code{flags} property of type @symbol{g:application-flags}
   (Read / Write) @br{}
-  Flags specifying the behaviour of the application. @br{}
+  The flags specifying the behaviour of the application. @br{}
   Default value: @code{'()}")
 
 #+liber-documentation
 (setf (liber:alias-for-function 'application-flags)
       "Accessor"
       (documentation 'application-flags 'function)
- "@version{2025-02-03}
+ "@version{2025-09-27}
   @syntax{(g:application-flags object) => flags}
   @syntax{(setf (g:application-flags object) flags)}
   @argument[object]{a @class{g:application} instance}
   @argument[flags]{a @symbol{g:application-flags} value for the application}
   @begin{short}
-    Accessor of the @slot[g:application]{flags} slot of the
-    @class{g:application} class.
+    The accessor for the @slot[g:application]{flags} slot of the
+    @class{g:application} class gets or sets the flags for the application.
   @end{short}
-  The @fun{g:application-flags} function gets the flags for the application.
-  The @setf{g:application-flags} function sets the flags.
 
   The flags can only be modified if the application has not yet been registered.
   See the @symbol{g:application-flags} documentation.
@@ -722,25 +719,23 @@ lambda (application)    :run-first
                                                'application) t)
  "The @code{inactivity-timeout} property of type @code{:uint}
   (Read / Write) @br{}
-  Time in milliseconds to stay alive after becoming idle. @br{}
+  The time in milliseconds to stay alive after becoming idle. @br{}
   Default value: 0")
 
 #+liber-documentation
 (setf (liber:alias-for-function 'application-inactivity-timeout)
       "Accessor"
       (documentation 'application-inactivity-timeout 'function)
- "@version{2025-05-12}
+ "@version{2025-09-27}
   @syntax{(g:application-inactivity-timeout object) => timeout}
   @syntax{(setf (g:application-inactivity-timeout object) timeout)}
   @argument[object]{a @class{g:application} instance}
   @argument[timeout]{an unsigned integer for the timeout in milliseconds}
   @begin{short}
-    Accessor of the @slot[g:application]{inactivity-timeout} slot of the
-    @class{g:application} class.
+    The accessor for the @slot[g:application]{inactivity-timeout} slot of the
+    @class{g:application} class gets or sets the inactivity timeout for the
+    application.
   @end{short}
-  The @fun{g:application-inactivity-timeout} function gets the current
-  inactivity timeout for the application. The
-  @setf{g:application-inactivity-timeout} function sets the inactivity timeout.
 
   This is the amount of time in milliseconds after the last call to the
   @fun{g:application-release} function before the application stops running.
@@ -762,17 +757,16 @@ lambda (application)    :run-first
 (setf (liber:alias-for-function 'application-is-busy)
       "Accessor"
       (documentation 'application-is-busy 'function)
- "@version{2025-02-03}
+ "@version{2025-09-27}
   @syntax{(g:application-is-busy object) => setting}
   @argument[object]{a @class{g:application} instance}
   @argument[setting]{@em{true} if the application is currenty marked as busy}
   @begin{short}
-    Accessor of the @slot[g:application]{is-busy} slot of the
-    @class{g:application} class.
+    The accessor for the @slot[g:application]{is-busy} slot of the
+    @class{g:application} class returns the current busy state of the
+    application, as set through the @fun{g:application-mark-busy} or
+    @fun{g:application-bind-busy-property} functions.
   @end{short}
-  Gets the current busy state of the application, as set through the
-  @fun{g:application-mark-busy} or @fun{g:application-bind-busy-property}
-  functions.
   @see-class{g:application}
   @see-function{g:application-mark-busy}
   @see-function{g:application-bind-busy-property}")
@@ -789,16 +783,16 @@ lambda (application)    :run-first
 (setf (liber:alias-for-function 'application-is-registered)
       "Accessor"
       (documentation 'application-is-registered 'function)
- "@version{2025-02-03}
+ "@version{2025-09-27}
   @syntax{(g:application-is-registered object) => setting}
   @argument[object]{a @class{g:application} instance}
   @argument[setting]{@em{true} if the application is registered}
   @begin{short}
-    Accessor of the @slot[g:application]{is-registered} slot of the
-    @class{g:application} class.
+    The accessor for the @slot[g:application]{is-registered} slot of the
+    @class{g:application} class returns whether the application is registered.
   @end{short}
-  Checks if the application is registered. An application is registered if the
-  @fun{g:application-register} function has been successfully called.
+  An application is registered if the @fun{g:application-register} function has
+  been successfully called.
   @see-class{g:application}
   @see-function{g:application-register}")
 
@@ -814,20 +808,21 @@ lambda (application)    :run-first
 (setf (liber:alias-for-function 'application-is-remote)
       "Accessor"
       (documentation 'application-is-remote 'function)
- "@version{2025-02-03}
+ "@version{2025-09-27}
   @syntax{(g:application-is-remote object) => setting}
   @argument[object]{a @class{g:application} instance}
   @argument[setting]{@em{true} if the application is remote}
   @begin{short}
-    Accessor of the @slot[g:application]{is-remote} slot of the
-    @class{g:application} class.
+    The accessor for the @slot[g:application]{is-remote} slot of the
+    @class{g:application} class returns whether the application is remote.
   @end{short}
-  Checks if the application is remote. If the application is remote then it
-  means that another instance of the application already exists, the 'primary'
-  instance. Calls to perform actions on the application will result in the
-  actions being performed by the primary instance. The value of this property
-  cannot be accessed before the @fun{g:application-register} function has been
-  called. See the @fun{g:application-is-registered} function.
+
+  If the application is remote then it means that another instance of the
+  application already exists, the 'primary' instance. Calls to perform actions
+  on the application will result in the actions being performed by the primary
+  instance. The value of this property cannot be accessed before the
+  @fun{g:application-register} function has been called. See the
+  @fun{g:application-is-registered} function.
   @see-class{g:application}
   @see-function{g:application-register}
   @see-function{g:application-is-registered}")
@@ -846,18 +841,16 @@ lambda (application)    :run-first
 (setf (liber:alias-for-function 'application-resource-base-path)
       "Accessor"
       (documentation 'application-resource-base-path 'function)
- "@version{2025-05-12}
+ "@version{2025-09-27}
   @syntax{(g:application-resource-base-path object) => path}
   @syntax{(setf (g:application-resource-base-path object) path)}
   @argument[object]{a @class{g:application} instance}
   @argument[path]{a string for the resource base path to use}
   @begin{short}
-    Accessor of the @slot[g:application]{resource-base-path} slot of the
-    @class{g:application} class.
+    The accessor for the @slot[g:application]{resource-base-path} slot of the
+    @class{g:application} class gets or sets the resource base path of the
+    application.
   @end{short}
-  The @fun{g:application-resource-base-path} function gets the resource base
-  path of the application. The @setf{g:application-resource-base-path} function
-  sets or unsets the resource base path.
 
   The resource base path is used to automatically load various application
   resources such as menu layouts and action descriptions. The various types of
@@ -898,19 +891,18 @@ lambda (application)    :run-first
 (setf (liber:alias-for-function 'application-version)
       "Accessor"
       (documentation 'application-version 'function)
- "@version{2025-05-12}
+ "@version{2025-09-27}
   @syntax{(g:application-version object) => version}
   @syntax{(setf (g:application-version object) version)}
   @argument[object]{a @class{g:application} instance}
   @argument[version]{a string for the version number of the application}
   @begin{short}
-    Accessor of the @slot[g:application]{version} slot of the
-    @class{g:application} class.
+    The accessor for the @slot[g:application]{version} slot of the
+    @class{g:application} class gets or sets the version of the application.
   @end{short}
-  The @fun{g:application-version} function gets the version of the application.
-  The @setf{g:application-version} function sets the version. This will be used
-  to implement a @code{--version} command line argument. The application version
-  can only be modified if the application has not yet been registered.
+  This will be used to implement a @code{--version} command line argument. The
+  application version can only be modified if the application has not yet been
+  registered.
 
   Since 2.80
   @see-class{g:application}")
@@ -1702,18 +1694,14 @@ lambda (application)    :run-first
 (cffi:defcfun ("g_application_get_default" application-default)
     (gobject:object application)
  #+liber-documentation
- "@version{#2025-02-03}
+ "@version{#2025-09-27}
   @syntax{(g:application-default) => application}
   @syntax{(setf (g:application-default) application)}
   @argument[application]{a @class{g:application} instance to set as default,
     or @code{nil}}
   @begin{short}
-    Accessor of the default application for the process.
+    Gets or sets the default application for the process.
   @end{short}
-  The @fun{g:application-default} function returns the default application
-  instance for this process. The @fun{(setf g:application-default)} function
-  sets or unsets the default application.
-
   Normally there is only one application per process and it becomes the default
   when it is created. You can exercise more control over this by using this
   function.

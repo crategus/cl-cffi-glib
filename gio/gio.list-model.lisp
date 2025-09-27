@@ -159,7 +159,7 @@ lambda (model pos removed added)    :run-last
 (setf (liber:alias-for-symbol 'list-model-vtable)
       "VTable"
       (liber:symbol-documentation 'list-model-vtable)
- "@version{2025-3-24}
+ "@version{2025-03-24}
   @begin{declaration}
 (gobject:define-vtable (\"GListModel\" list-model)
   (:skip parent-instance (:struct gobject:type-interface))
@@ -228,7 +228,7 @@ lambda (model pos removed added)    :run-last
 (setf (liber:alias-for-function 'list-model-get-item-type-impl)
       "Generic"
       (documentation 'list-model-get-item-type-impl 'function)
- "@version{2025-3-24}
+ "@version{2025-03-24}
   @argument[model]{a @class{g:object} instance}
   @return{The @class{g:type-t} type ID for the items contained in @arg{model}.}
   @begin{short}
@@ -247,9 +247,9 @@ lambda (model pos removed added)    :run-last
 (setf (liber:alias-for-function 'list-model-get-n-items-impl)
       "Generic"
       (documentation 'list-model-get-n-items-impl 'function)
- "@version{2025-3-24}
+ "@version{2025-09-27}
   @argument[model]{a @class{g:object} instance}
-  @return{The unsigned integer with the number of items in @arg{model}.}
+  @return{The unsigned integer for the number of items in @arg{model}.}
   @begin{short}
     Method called from the @fun{g:list-model-n-items} function for a
     subclass of the @class{g:list-model} interface.
@@ -266,7 +266,7 @@ lambda (model pos removed added)    :run-last
 (setf (liber:alias-for-function 'list-model-get-item-impl)
       "Generic"
       (documentation 'list-model-get-item-impl 'function)
- "@version{2025-3-24}
+ "@version{2025-03-24}
   @argument[model]{a @class{g:object} instance}
   @argument[pos]{an unsigned integer for the postion of the item to fetch}
   @return{The @class{g:object} instance at @arg{pos}.}
@@ -291,7 +291,7 @@ lambda (model pos removed added)    :run-last
 
 (cffi:defcfun ("g_list_model_get_item_type" list-model-item-type) gobject:type-t
  #+liber-documentation
- "@version{2025-3-24}
+ "@version{2025-03-24}
   @argument[model]{a @class{g:list-model} object}
   @return{The @class{g:type-t} type ID of the items contained in @arg{model}.}
   @begin{short}
@@ -312,9 +312,9 @@ lambda (model pos removed added)    :run-last
 
 (cffi:defcfun ("g_list_model_get_n_items" list-model-n-items) :uint
  #+liber-documentation
- "@version{2025-3-24}
+ "@version{2025-09-27}
   @argument[model]{a @class{g:list-model} object}
-  @return{The integer with the number of items in @arg{model}.}
+  @return{The integer for the number of items in @arg{model}.}
   @begin{short}
     Gets the number of items in the list model.
   @end{short}
@@ -337,7 +337,7 @@ lambda (model pos removed added)    :run-last
 (cffi:defcfun ("g_list_model_get_object" list-model-item)
     (gobject:object :return)
  #+liber-documentation
- "@version{2025-3-24}
+ "@version{2025-03-24}
   @argument[model]{a @class{g:list-model} object}
   @argument[pos]{an unsigned integer for the position of the item to fetch}
   @return{The @class{g:object} instance at @arg{pos}.}
@@ -362,7 +362,7 @@ lambda (model pos removed added)    :run-last
 
 (cffi:defcfun ("g_list_model_items_changed" list-model-items-changed) :void
  #+liber-documentation
- "@version{2025-3-24}
+ "@version{2025-03-24}
   @argument[model]{a @class{g:list-model} object}
   @argument[pos]{an unsigned integer for the position at which @arg{model}
     changed}

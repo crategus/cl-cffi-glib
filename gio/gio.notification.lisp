@@ -156,8 +156,8 @@
 (cffi:defcfun ("g_notification_new" notification-new)
     (gobject:object notification :return)
  #+liber-documentation
- "@version{2024-12-28}
-  @argument[title]{a string with the title of the notification}
+ "@version{2025-09-27}
+  @argument[title]{a string for the title of the notification}
   @return{The new @class{g:notification} instance.}
   @begin{short}
     Creates a new notification with @arg{title} as its title.
@@ -178,9 +178,9 @@
 
 (cffi:defcfun ("g_notification_set_title" notification-set-title) :void
  #+liber-documentation
- "@version{2024-12-28}
+ "@version{2025-09-27}
   @argument[notification]{a @class{g:notification} instance}
-  @argument[title]{a string with the new title for the notification}
+  @argument[title]{a string for the new title for the notification}
   @begin{short}
     Sets the title of the notification.
   @end{short}
@@ -196,9 +196,9 @@
 
 (cffi:defcfun ("g_notification_set_body" notification-set-body) :void
  #+liber-documentation
- "@version{2024-12-28}
+ "@version{2025-09-27}
   @argument[notification]{a @class{g:notification} instance}
-  @argument[body]{a string with the body for the notification, or @code{nil}}
+  @argument[body]{a string for the body for the notification, or @code{nil}}
   @begin{short}
     Sets the body of the notification.
   @end{short}
@@ -259,9 +259,9 @@
 (cffi:defcfun ("g_notification_set_default_action"
                 notification-set-default-action) :void
  #+liber-documentation
- "@version{2024-12-28}
+ "@version{2025-09-27}
   @argument[notifiaction]{a @class{g:notification} instance}
-  @argument[action]{a string with a detailed action name}
+  @argument[action]{a string for a detailed action name}
   @begin{short}
     Sets the default action of the notification to @arg{action}.
   @end{short}
@@ -353,10 +353,10 @@
 
 (cffi:defcfun ("g_notification_add_button" notification-add-button) :void
  #+liber-documentation
- "@version{2024-12-28}
+ "@version{2025-09-27}
   @argument[notification]{a @class{g:notification} instance}
-  @argument[label]{a string with the label of the button}
-  @argument[action]{a string with the detailed action name}
+  @argument[label]{a string for the label of the button}
+  @argument[action]{a string for the detailed action name}
   @begin{short}
     Adds a button to the notification that activates the action in
     @arg{action} when clicked.

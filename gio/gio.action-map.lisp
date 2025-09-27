@@ -121,7 +121,7 @@
 
 (defun action-map-add-action-entries (map entries)
  #+liber-documentation
- "@version{2024-05-14}
+ "@version{2025-09-27}
   @argument[map]{a @class{g:action-map} object}
   @argument[entries]{a list of descriptions for the actions}
   @begin{short}
@@ -131,7 +131,7 @@
   Each action in the @arg{entries} list is constructed from the following
   parameters:
   @begin[code]{table}
-    @entry[name]{The string with the name of the action.}
+    @entry[name]{The string for the name of the action.}
     @entry[activate]{The callback function to connect to the @code{\"activate\"}
       signal of the action. This can be @code{nil} for stateful actions, in
       which case the default handler is used. For boolean-stated actions with

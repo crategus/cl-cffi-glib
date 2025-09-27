@@ -149,7 +149,7 @@
 
 #+liber-documentation
 (setf (documentation 'settings 'type)
- "@version{2025-3-12}
+ "@version{2025-03-12}
   @begin{short}
     The @class{g:settings} class provides a convenient API for storing and
     retrieving application settings.

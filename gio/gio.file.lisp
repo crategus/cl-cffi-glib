@@ -292,9 +292,9 @@
                file-new-for-commandline-arg-and-cwd)
     (gobject:object file :return)
  #+liber-documentation
- "@version{2024-10-12}
+ "@version{2025-09-27}
   @argument[arg]{a command line string}
-  @argument[cwd]{a string with the current working directory of the command
+  @argument[cwd]{a string for the current working directory of the command
     line}
   @return{The new @class{g:file} object.}
   @begin{short}
@@ -381,8 +381,8 @@
 (cffi:defcfun ("g_file_parse_name" file-parse-name)
     (gobject:object file :return)
  #+liber-documentation
- "@version{2024-10-12}
-  @argument[parsename]{a string with a file name or path to be parsed}
+ "@version{2025-09-27}
+  @argument[parsename]{a string for a file name or path to be parsed}
   @return{The new @class{g:file} object.}
   @begin{short}
     Constructs a @class{g:file} object with the given @arg{parsename}, that is,

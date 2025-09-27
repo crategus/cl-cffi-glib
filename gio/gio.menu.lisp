@@ -168,10 +168,10 @@
 
 (defun menu-insert (menu pos label action)
  #+liber-documentation
- "@version{2024-12-30}
+ "@version{2025-09-27}
   @argument[menu]{a @class{g:menu} object}
-  @argument[pos]{an integer with the position at which to insert the menu item}
-  @argument[label]{a string with the section label, or @code{nil}}
+  @argument[pos]{an integer for the position at which to insert the menu item}
+  @argument[label]{a string for the section label, or @code{nil}}
   @argument[action]{a detailed action string, or @code{nil}}
   @begin{short}
     Convenience function for inserting a normal menu item into the menu.
@@ -199,9 +199,9 @@
 
 (defun menu-prepend (menu label action)
  #+liber-documentation
- "@version{2024-12-30}
+ "@version{2025-09-27}
   @argument[menu]{a @class{g:menu} object}
-  @argument[label]{a string with the section label, or @code{nil}}
+  @argument[label]{a string for the section label, or @code{nil}}
   @argument[action]{a detailed action string, or @code{nil}}
   @begin{short}
     Convenience function for prepending a normal menu item to the start of the
@@ -229,9 +229,9 @@
 
 (defun menu-append (menu label action)
  #+liber-documentation
- "@version{2024-12-30}
+ "@version{2025-09-27}
   @argument[menu]{a @class{g:menu} object}
-  @argument[label]{a string with the section label, or @code{nil}}
+  @argument[label]{a string for the section label, or @code{nil}}
   @argument[action]{a detailed action string, or @code{nil}}
   @begin{short}
     Convenience function for appending a normal menu item to the end of the
@@ -257,9 +257,9 @@
 
 (cffi:defcfun ("g_menu_insert_item" menu-insert-item) :void
  #+liber-documentation
- "@version{2024-12-30}
+ "@version{2025-09-27}
   @argument[menu]{a @class{g:menu} object}
-  @argument[pos]{an integer with the position at which to insert @arg{item}}
+  @argument[pos]{an integer for the position at which to insert @arg{item}}
   @argument[item]{a @class{g:menu-item} object to insert}
   @begin{short}
     Inserts a menu item into the menu.
@@ -345,10 +345,10 @@
 
 (defun menu-insert-section (menu pos label section)
  #+liber-documentation
- "@version{2024-12-30}
+ "@version{2025-09-27}
   @argument[menu]{a @class{g:menu} object}
-  @argument[pos]{an integer with the position at which to insert @arg{section}}
-  @argument[label]{a string with the section label, or @code{nil}}
+  @argument[pos]{an integer for the position at which to insert @arg{section}}
+  @argument[label]{a string for the section label, or @code{nil}}
   @argument[section]{a @class{g:menu-model} object with the items of the
     section}
   @begin{short}
@@ -378,9 +378,9 @@
 
 (defun menu-prepend-section (menu label section)
  #+liber-documentation
- "@version{2024-12-30}
+ "@version{2025-09-27}
   @argument[menu]{a @class{g:menu} object}
-  @argument[label]{a string with the section label, or @code{nil}}
+  @argument[label]{a string for the section label, or @code{nil}}
   @argument[section]{a @class{g:menu-model} object with the items of the
     section}
   @begin{short}
@@ -409,9 +409,9 @@
 
 (defun menu-append-section (menu label section)
  #+liber-documentation
- "@version{2024-12-30}
+ "@version{2025-09-27}
   @argument[menu]{a @class{g:menu} object}
-  @argument[label]{a string with the section label, or @code{nil}}
+  @argument[label]{a string for the section label, or @code{nil}}
   @argument[section]{a @class{g:menu-model} object with the items of the
     section}
   @begin{short}
@@ -444,10 +444,10 @@
 
 (defun menu-insert-submenu (menu pos label submenu)
  #+liber-documentation
- "@version{2024-12-30}
+ "@version{2025-09-27}
   @argument[menu]{a @class{g:menu} object}
-  @argument[pos]{an integer with the position at which to insert @arg{submenu}}
-  @argument[label]{a string with the section label, or @code{nil}}
+  @argument[pos]{an integer for the position at which to insert @arg{submenu}}
+  @argument[label]{a string for the section label, or @code{nil}}
   @argument[submenu]{a @class{g:menu-model} object with the items of the
     submenu}
   @begin{short}
@@ -477,9 +477,9 @@
 
 (defun menu-append-submenu (menu label submenu)
  #+liber-documentation
- "@version{2024-12-30}
+ "@version{2025-09-27}
   @argument[menu]{a @class{g:menu} object}
-  @argument[label]{a string with the section label, or @code{nil}}
+  @argument[label]{a string for the section label, or @code{nil}}
   @argument[submenu]{a @class{g:menu-model} object with the items of the
     submenu}
   @begin{short}
@@ -508,9 +508,9 @@
 
 (defun menu-prepend-submenu (menu label submenu)
  #+liber-documentation
- "@version{2024-12-30}
+ "@version{2025-09-27}
   @argument[menu]{a @class{g:menu} object}
-  @argument[label]{a string with the section label, or @code{nil}}
+  @argument[label]{a string for the section label, or @code{nil}}
   @argument[submenu]{a @class{g:menu-model} object with the items of the
     submenu}
   @begin{short}
@@ -534,9 +534,9 @@
 
 (cffi:defcfun ("g_menu_remove" menu-remove) :void
  #+liber-documentation
- "@version{2024-12-30}
+ "@version{2025-09-27}
   @argument[menu]{a @class{g:menu} object}
-  @argument[pos]{an integer with the position of the menu item to remove}
+  @argument[pos]{an integer for the position of the menu item to remove}
   @begin{short}
     Removes an item from the menu.
   @end{short}
@@ -603,8 +603,8 @@
 
 (defun menu-item-new (label action)
  #+liber-documentation
- "@version{2024-12-30}
-  @argument[label]{a string with the section label, or @code{nil}}
+ "@version{2025-09-27}
+  @argument[label]{a string for the section label, or @code{nil}}
   @argument[action]{a detailed action string, or @code{nil}}
   @return{The new @class{g:menu-item} object.}
   @begin{short}
@@ -634,8 +634,8 @@
 
 (defun menu-item-new-section (label section)
  #+liber-documentation
- "@version{2024-12-30}
-  @argument[label]{a string with the section label, or @code{nil}}
+ "@version{2025-09-27}
+  @argument[label]{a string for the section label, or @code{nil}}
   @argument[section]{a @class{g:menu-model} object with the menu items of the
     section}
   @return{The new @class{g:menu-item} object.}
@@ -717,8 +717,8 @@
 
 (defun menu-item-new-submenu (label submenu)
  #+liber-documentation
- "@version{2024-12-30}
-  @argument[label]{a string with the section label, or @code{nil}}
+ "@version{2025-09-27}
+  @argument[label]{a string for the section label, or @code{nil}}
   @argument[submenu]{a @class{g:menu-model} object with the menu items of the
     submenu}
   @return{The new @class{g:menu-item} object.}
@@ -742,9 +742,9 @@
 (cffi:defcfun ("g_menu_item_new_from_model" menu-item-new-from-model)
     (gobject:object menu-item :return)
  #+liber-documentation
- "@version{2024-12-30}
+ "@version{2025-09-27}
   @argument[model]{a @class{g:menu-model} object}
-  @argument[index]{an integer with the index of a menu item in @arg{model}}
+  @argument[index]{an integer for the index of a menu item in @arg{model}}
   @return{The new @class{g:menu-item} object.}
   @begin{short}
     Creates a @class{g:menu-item} object as an exact copy of an existing menu
@@ -770,9 +770,9 @@
 
 (defun menu-item-set-label (item label)
  #+liber-documentation
- "@version{2024-12-30}
+ "@version{2025-09-27}
   @argument[item]{a @class{g:menu-item} object}
-  @argument[label]{a string with the @code{\"label\"} attribute to set, or
+  @argument[label]{a string for the @code{\"label\"} attribute to set, or
     @code{nil}}
   @begin{short}
     Sets or unsets the @code{\"label\"} attribute of the menu item.
@@ -827,9 +827,9 @@
 
 (defun menu-item-set-action-and-target-value (item action value)
  #+liber-documentation
- "@version{2024-12-30}
+ "@version{2025-09-27}
   @argument[item]{a @class{g:menu-item} object}
-  @argument[action]{a string with the name of the @code{\"action\"} attribute
+  @argument[action]{a string for the name of the @code{\"action\"} attribute
     for this menu item}
   @argument[value]{a @symbol{g:variant} parameter to use as the action target}
   @begin{short}
@@ -992,12 +992,12 @@
 
 (defun menu-item-attribute-value (item attribute &optional (vtype nil))
  #+liber-documentation
- "@version{2024-12-30}
+ "@version{2025-09-27}
   @syntax{(g:menu-item-attribute-value item attribute) => value}
   @syntax{(g:menu-item-attribute-value item attribute vtype) => value}
   @syntax{(setf (g:menu-item-attribute-value item attribute) value)}
   @argument[item]{a @class{g:menu-item} object}
-  @argument[attribute]{a string with the attribute name}
+  @argument[attribute]{a string for the attribute name}
   @argument[vtype]{an optional expected @class{g:variant-type} parameter type
     or a type string for the the attribute}
   @argument[value]{a @symbol{g:variant} parameter to use as the value, or
@@ -1060,11 +1060,11 @@
 (cffi:defcfun ("g_menu_item_get_link" menu-item-link)
     (gobject:object menu-model :return)
  #+liber-documentation
- "@version{2024-12-31}
+ "@version{2025-09-27}
   @syntax{(g:menu-item-link item link) => model}
   @syntax{(setf (g:menu-item-link item link) model)}
   @argument[item]{a @class{g:menu-item} object}
-  @argument[link]{a string with the type of link to establish or unset}
+  @argument[link]{a string for the type of link to establish or unset}
   @argument[model]{a @class{g:menu-model} object to link to, or @code{nil} to
     unset}
   @begin{short}

@@ -193,7 +193,7 @@
 
 #+liber-documentation
 (setf (documentation 'app-launch-context 'type)
- "@version{2025-06-29}
+ "@version{2025-09-27}
   @begin{short}
     Integrating the launch with the launching application.
   @end{short}
@@ -207,7 +207,7 @@ lambda (context startup-notify-id)    :run-last
       @begin[code]{simple-table}
         @entry[context]{The @class{g:app-launch-context} object emitting the
           signal.}
-        @entry[startup-notify-id]{The string with the startup notification ID
+        @entry[startup-notify-id]{The string for the startup notification ID
           for the failed launch.}
       @end{simple-table}
       The signal is emitted when a @class{g:app-info} launch fails. The startup
@@ -378,9 +378,9 @@ lambda (context appinfo platform-data)    :run-last
 
 (cffi:defcfun ("g_app_info_get_name" app-info-name) :string
  #+liber-documentation
- "@version{2025-05-01}
+ "@version{2025-09-27}
   @argument[appinfo]{a @class{g:app-info} instance}
-  @return{The string with the the name of the application for @arg{appinfo}.}
+  @return{The string for for the name of the application for @arg{appinfo}.}
   @begin{short}
     Gets the installed name of the application.
   @end{short}
@@ -396,10 +396,10 @@ lambda (context appinfo platform-data)    :run-last
 
 (cffi:defcfun ("g_app_info_get_display_name" app-info-display-name) :string
  #+liber-documentation
- "@version{2025-05-01}
+ "@version{2025-09-27}
   @argument[appinfo]{a @class{g:app-info} instance}
   @begin{return}
-    The string with the the display name of the application for @arg{appinfo},
+    The string for the the display name of the application for @arg{appinfo},
     or the name of the application if no display name is available.
   @end{return}
   @begin{short}
@@ -1483,12 +1483,12 @@ lambda (context appinfo platform-data)    :run-last
 (cffi:defcfun ("g_app_launch_context_get_startup_notify_id"
                 app-launch-context-startup-notify-id) :string
  #+liber-documentation
- "@version{#2025-05-01}
+ "@version{#2025-09-27}
   @argument[context]{a @class{g:app-launch-context} instance}
   @argument[appinfo]{a @class{g:app-info} instance}
   @argument[files]{a list of @class{g:file} objects}
   @begin{return}
-    The string with a startup notification ID for the application, or
+    The string for a startup notification ID for the application, or
     @code{nil} if not supported.
   @end{return}
   @begin{short}

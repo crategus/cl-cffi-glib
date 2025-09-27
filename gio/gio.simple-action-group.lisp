@@ -102,9 +102,9 @@
 (cffi:defcfun ("g_simple_action_group_lookup" simple-action-group-lookup)
     (gobject:object action)
  #+liber-documentation
- "@version{#2024-12-27}
+ "@version{#2025-09-27}
   @argument[group]{a @class{g:simple-action-group} instance}
-  @argument[name]{a string with the name of an action}
+  @argument[name]{a string for the name of an action}
   @return{The @class{g:action} instance, or @code{nil}.}
   @begin{short}
     Looks up the action with the name @arg{name} in the action group.
@@ -157,9 +157,9 @@
 
 (cffi:defcfun ("g_simple_action_group_remove" simple-action-group-remove) :void
  #+liber-documentation
- "@version{#2024-12-27}
+ "@version{#2025-09-27}
   @argument[group]{a @class{g:simple-action-group} instance}
-  @argument[name]{a string with the name of the action}
+  @argument[name]{a string for the name of the action}
   @begin{short}
     Removes the named action from the action group.
   @end{short}

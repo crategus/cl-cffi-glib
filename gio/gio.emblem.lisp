@@ -149,14 +149,17 @@
 (setf (liber:alias-for-function 'emblem-icon)
       "Accessor"
       (documentation 'emblem-icon 'function)
- "@version{2024-10-23}
+ "@version{2025-09-27}
+  @syntax{(g:emblem-icon object) => icon}
   @argument[object]{a @class{g:emblem} object from which the icon should be
     extracted}
+  @argument[icon]{a @class{g:icon} object}
   @begin{short}
-    Accessor of the @slot[G:emblem]{icon} slot of the @class{g:emblem} class.
+    The accessor for the @slot[g:emblem]{icon} slot of the @class{g:emblem}
+    class returns the icon from the emblem.
   @end{short}
-  The @fun{g:emblem-icon} function gives back the icon from the emblem.
-  @see-class{g:emblem}")
+  @see-class{g:emblem}
+  @see-class{g:icon}")
 
 ;;; --- g:emblem-origin --------------------------------------------------------
 
@@ -171,13 +174,16 @@
 (setf (liber:alias-for-function 'emblem-origin)
       "Accessor"
       (documentation 'emblem-origin 'function)
- "@version{204-10-23}
+ "@version{2025-09-27}
+  @syntax{(g:emblem-origin object) => origin}
   @argument[object]{a @class{g:emblem} object}
+  @argument[origin]{a @sym{g:emblem-origin} value}
   @begin{short}
-    Accessor of the @slot[g:emblem]{origin} slot of the @class{g:emblem} class.
+    The accessor for the @slot[g:emblem]{origin} slot of the @class{g:emblem}
+    class returns the origin of the emblem.
   @end{short}
-  The @fun{g:emblem-origin} function gets the origin of the emblem.
-  @see-class{g:emblem}")
+  @see-class{g:emblem}
+  @see-symbol{g:emblem-origin}")
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_emblem_new

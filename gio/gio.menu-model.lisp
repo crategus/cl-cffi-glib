@@ -87,7 +87,7 @@
 
 #+liber-documentation
 (setf (documentation 'menu-model 'type)
- "@version{2025-06-29}
+ "@version{2025-09-27}
   @begin{short}
     The @class{g:menu-model} class represents the contents of a menu -
     an ordered list of menu items.
@@ -200,9 +200,9 @@ lambda (model position removed added)   :run-last
       @end{pre}
       @begin[code]{simple-table}
         @entry[model]{The @class{g:menu-model} object that is changing.}
-        @entry[position]{The integer with the position of the change.}
-        @entry[removed]{The integer with the number of items removed.}
-        @entry[added]{The integer with the number of items added.}
+        @entry[position]{The integer for the position of the change.}
+        @entry[removed]{The integer for the number of items removed.}
+        @entry[added]{The integer for the number of items added.}
       @end{simple-table}
       Emitted when a change has occured to the menu. The only changes that can
       occur to a menu is that items are removed or added. Items may not change,
@@ -289,9 +289,9 @@ lambda (model position removed added)   :run-last
 
 (cffi:defcfun ("g_menu_model_get_n_items" menu-model-n-items) :int
  #+liber-documentation
- "@version{#2024-12-29}
+ "@version{#2025-09-27}
   @argument[model]{a @class{g:menu-model} object}
-  @return{The integer with the number of items in @arg{model}.}
+  @return{The integer for the number of items in @arg{model}.}
   @begin{short}
     Query the number of items in the menu model.
   @end{short}
@@ -308,13 +308,13 @@ lambda (model position removed added)   :run-last
                menu-model-item-attribute-value)
     (:pointer (:struct glib:variant))
  #+liber-documentation
- "@version{#2024-12-30}
+ "@version{#2025-09-27}
   @argument[model]{a @class{g:menu-model} object}
-  @argument[index]{an integer with the index of the item}
-  @argument[attribute]{a string with the attribute to query}
-  @argument[vtype]{a @class{g:variant-type} parameter type with the expected
+  @argument[index]{an integer for the index of the item}
+  @argument[attribute]{a string for the attribute to query}
+  @argument[vtype]{a @class{g:variant-type} parameter type for the expected
     type of the attribute, of @code{nil}}
-  @return{The @symbol{g:variant} parameter with the value of the attribute.}
+  @return{The @symbol{g:variant} parameter for the value of the attribute.}
   @begin{short}
     Queries the item at position @arg{index} in @arg{model} for the attribute
     specified by @arg{attribute}.
@@ -349,10 +349,10 @@ lambda (model position removed added)   :run-last
 (cffi:defcfun ("g_menu_model_get_item_link" menu-model-item-link)
     (gobject:object menu-model :return)
  #+liber-documentation
- "@version{#2024-12-30}
+ "@version{#2025-09-27}
   @argument[model]{a @class{g:menu-model} object}
-  @argument[index]{an integer with the index of the item}
-  @argument[link]{an string with the link to query}
+  @argument[index]{an integer for the index of the item}
+  @argument[link]{an string for the link to query}
   @return{The linked @class{g:menu-model} object, or @code{nil}.}
   @begin{short}
     Queries the item at position @arg{index} in @arg{model} for the link
@@ -375,9 +375,9 @@ lambda (model position removed added)   :run-last
                menu-model-iterate-item-attributes)
     (gobject:object menu-attribute-iter :return)
  #+liber-documentation
- "@version{#2024-12-30}
+ "@version{#2025-09-27}
   @argument[model]{a @class{g:menu-model} object}
-  @argument[index]{an integer with the index of the item}
+  @argument[index]{an integer for the index of the item}
   @return{The new @class{g:menu-attribute-iter} object.}
   @begin{short}
     Creates a @class{g:menu-attribute-iter} object to iterate over the
@@ -397,9 +397,9 @@ lambda (model position removed added)   :run-last
 (cffi:defcfun ("g_menu_model_iterate_item_links" menu-model-iterate-item-links)
     (gobject:object menu-link-iter :return)
  #+liber-documentation
- "@version{#2024-12-30}
+ "@version{#2025-09-27}
   @argument[model]{a @class{g:menu-model} object}
-  @argument[index]{an integer with the index of the item}
+  @argument[index]{an integer for the index of the item}
   @return{The new @class{g:menu-link-iter} object.}
   @begin{short}
     Creates a @class{g:menu-link-iter} object to iterate over the links of the
@@ -418,11 +418,11 @@ lambda (model position removed added)   :run-last
 
 (cffi:defcfun ("g_menu_model_items_changed" menu-model-items-changed) :void
  #+liber-documentation
- "@version{#2024-12-30}
+ "@version{#2025-09-27}
   @argument[model]{a @class{g:menu-model} object}
-  @argument[pos]{an integer with the position of the change}
-  @argument[removed]{an integer with the number of items removed}
-  @argument[added]{an integer with the number of items added}
+  @argument[pos]{an integer for the position of the change}
+  @argument[removed]{an integer for the number of items removed}
+  @argument[added]{an integer for the number of items added}
   @begin{short}
     Requests emission of the @code{\"items-changed\"} signal on @arg{model}.
   @end{short}
@@ -484,9 +484,9 @@ lambda (model position removed added)   :run-last
 (cffi:defcfun ("g_menu_attribute_iter_get_name" menu-attribute-iter-name)
     :string
  #+liber-documentation
- "@version{#2024-12-30}
+ "@version{#2025-09-27}
   @argument[iter]{a @class{g:menu-attribute-iter} object}
-  @return{The string with the name of the attribute.}
+  @return{The string for the name of the attribute.}
   @begin{short}
     Gets the name of the attribute at the current iterator position, as a
     string.
@@ -553,9 +553,9 @@ lambda (model position removed added)   :run-last
 
 (cffi:defcfun ("g_menu_link_iter_get_name" menu-link-iter-name) :string
  #+liber-documentation
- "@version{#2024-12-30}
+ "@version{#2025-09-27}
   @argument[iter]{a @class{g:menu-link-iter} object}
-  @return{The string with the name of the link.}
+  @return{The string for the name of the link.}
   @begin{short}
     Gets the name of the link at the current iterator position, as a string.
   @end{short}

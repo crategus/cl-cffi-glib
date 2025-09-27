@@ -170,17 +170,17 @@
 (setf (liber:alias-for-function 'property-action-enabled)
       "Accessor"
       (documentation 'property-action-enabled 'function)
- "@version{2024-12-29}
+ "@version{2025-09-27}
   @syntax{(g:property-action-enabled object) => enabled}
   @argument[object]{a @class{g:property-action} object}
   @argument[enabled]{a boolean whether the action is enabled}
   @begin{short}
-    Accessor of the @slot[g:property-action]{enabled} slot of the
-    @class{g:property-action} class.
+    The accessor for the @slot[g:property-action]{enabled} slot of the
+    @class{g:property-action} class returns whether the action is currently
+    enabled.
   @end{short}
-  If the action is currently enabled. If the action is disabled then calls to
-  the @fun{g:action-activate} and @fun{g:action-change-state} functions have
-  no effect. @br{}
+  If the action is disabled then calls to the @fun{g:action-activate} and
+  @fun{g:action-change-state} functions have no effect.
   @see-class{g:property-action}
   @see-function{g:action-activate}
   @see-function{g:action-change-state}")
@@ -200,15 +200,18 @@
 (setf (liber:alias-for-function 'property-action-invert-boolean)
       "Accessor"
       (documentation 'property-action-invert-boolean 'function)
- "@version{2024-12-29}
+ "@version{2025-09-27}
   @syntax{(g:property-action-invert-boolean object) => invert}
   @argument[object]{a @class{g:property-action} object}
   @argument[invert]{a boolean whether the state of the action will be the
     negation}
   @begin{short}
-    If @em{true}, the state of the action will be the negation of the property
-    value, provided the property is boolean.
+    The accessor for the @slot[g:property-action]{invert-boolean} slot of the
+    @class{g:property-action} class returns whether the state of the action will
+    be the negation of the property value.
   @end{short}
+  If @em{true}, the state of the action will be the negation of the property
+  value, provided the property is boolean.
   @see-class{g:property-action}")
 
 ;;;--- g:property-action-name --------------------------------------------------
@@ -225,14 +228,16 @@
 (setf (liber:alias-for-function 'property-action-name)
       "Accessor"
       (documentation 'property-action-name 'function)
- "@version{2024-12-29}
+ "@version{2025-09-27}
   @syntax{(g:property-action-name object) => name}
   @argument[object]{a @class{g:property-action} object}
-  @argument[name]{a string with the name of the action}
+  @argument[name]{a string for the name of the action}
   @begin{short}
-    The name of the action. This is mostly meaningful for identifying the
-    action once it has been added to a @class{g:action-map} instance.
+    The accessor for the @slot[g:property-action]{name} slot of the
+    @class{g:property-action} class returns the name of the action.
   @end{short}
+  This is mostly meaningful for identifying the action once it has been added
+  to a @class{g:action-map} instance.
   @see-class{g:property-action}
   @see-class{g:action-map}")
 
@@ -270,12 +275,14 @@
 (setf (liber:alias-for-function 'property-action-parameter-type)
       "Accessor"
       (documentation 'property-action-parameter-type 'function)
- "@version{2024-12-29}
+ "@version{2025-09-27}
   @syntax{(g:property-action-parameter-type object) => type}
   @argument[object]{a @class{g:property-action} object}
   @argument[type]{a @class{g:variant-type} parameter type}
   @begin{short}
-    The type of the parameter that must be given when activating the action.
+    The accessor for the @slot[g:property-action]{parameter-type} slot of the
+    @class{g:property-action} class returns the type of the parameter that must
+    be given when activating the action.
   @end{short}
   @begin[Examples]{dictionary}
     @begin{pre}
@@ -328,13 +335,14 @@
 (setf (liber:alias-for-function 'property-action-state)
       "Accessor"
       (documentation 'property-action-state 'function)
- "@version{2024-12-29}
+ "@version{2025-0ß9-27}
   @syntax{(property-action-state object) => state}
   @argument[object]{a @class{g:property-action} object}
   @argument[state]{a @symbol{g:variant} parameter for the state of the action}
   @begin{short}
-    The state of the action, or the @code{cffi:null-pointer} value if the action
-    is stateless.
+    The accessor for the @slot[g:property-action]{state} slot of the
+    @class{g:property-action} class returns the state of the action, or the
+    @code{cffi:null-pointer} value if the action is stateless.
   @end{short}
   @see-class{g:property-action}
   @see-symbol{g:variant}")
@@ -351,14 +359,15 @@
 (setf (liber:alias-for-function 'property-action-state-type)
       "Accessor"
       (documentation 'property-action-state-type 'function)
- "@version{2024-12-29}
+ "@version{2025-09-27}
   @syntax{(g:property-action-state-type object) => type}
   @argument[object]{a @class{g:property-action} object}
   @argument[type]{a @class{g:variant-type} parameter type for the state type of
     the action}
   @begin{short}
-    The variant parameter type of the state that the action has, or @code{nil}
-    if the action is stateless.
+    The accessor for the @slot[g:property-action]{state-type} slot of the
+    @class{g:property-action} class returns the variant parameter type of the
+    state that the action has, or @code{nil} if the action is stateless.
   @end{short}
   @see-class{g:property-action}
   @see-class{g:variant-type}")
@@ -370,10 +379,10 @@
 (cffi:defcfun ("g_property_action_new" property-action-new)
     (gobject:object property-action)
  #+liber-documentation
- "@version{2024-12-29}
-  @argument[name]{a string with the name of the action to create}
+ "@version{2025-09-27}
+  @argument[name]{a string for the name of the action to create}
   @argument[object]{a @class{g:object} instance that has the property to wrap}
-  @argument[property]{a string with the name of the property}
+  @argument[property]{a string for the name of the property}
   @return{The new @class{g:property-action} object.}
   @begin{short}
     Creates an action corresponding to the value of @arg{property} on the

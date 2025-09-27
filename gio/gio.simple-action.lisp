@@ -173,19 +173,19 @@ lambda (action value)    :run-last
 (setf (liber:alias-for-function 'simple-action-enabled)
       "Accessor"
       (documentation 'simple-action-enabled 'function)
- "@version{2024-12-29}
+ "@version{2025-09-27}
   @syntax{(g:simple-action-enabled object) => enabled}
   @syntax{(setf (g:simple-action-enabled object) enabled)}
   @argument[object]{a @class{g:simple-action} object}
   @argument[enabled]{a boolean whether the action is enabled}
   @begin{short}
-    Accessor of the @slot[g:simple-action]{enabled} slot of the
-    @class{g:simple-action} class.
+    The accessor for the @slot[g:simple-action]{enabled} slot of the
+    @class{g:simple-action} class gets or sets whether the action is enabled.
   @end{short}
-  Sets the action as enabled or not. An action must be enabled in order to be
-  activated or in order to have its state changed from outside callers. This
-  should only be called by the implementor of the action. Users of the action
-  should not attempt to modify its enabled flag.
+  An action must be enabled in order to be activated or in order to have its
+  state changed from outside callers. This should only be called by the
+  implementor of the action. Users of the action should not attempt to modify
+  its enabled flag.
   @see-class{g:simple-action}")
 
 ;;; --- g:simple-action-name ---------------------------------------------------
@@ -202,16 +202,16 @@ lambda (action value)    :run-last
 (setf (liber:alias-for-function 'simple-action-name)
       "Accessor"
       (documentation 'simple-action-name 'function)
- "@version{2024-12-29}
+ "@version{2025-09-27}
   @syntax{(g:simple-action-name object) => name}
   @argument[object]{a @class{g:simple-action} object}
-  @argument[name]{a string with the name of the action}
+  @argument[name]{a string for the name of the action}
   @begin{short}
-    Accessor of the @slot[g:simple-action]{name} slot of the
-    @class{g:simple-action} class.
+    The accessor for the @slot[g:simple-action]{name} slot of the
+    @class{g:simple-action} class returns the name of the action.
   @end{short}
-  The name of the action. This is mostly meaningful for identifying the action
-  once it has been added to a @class{g:action-map} instance.
+  This is mostly meaningful for identifying the action once it has been added
+  to a @class{g:action-map} instance.
   @see-class{g:simple-action}
   @see-class{g:action-map}")
 
@@ -228,15 +228,15 @@ lambda (action value)    :run-last
 (setf (liber:alias-for-function 'simple-action-parameter-type)
       "Accessor"
       (documentation 'simple-action-parameter-type 'function)
- "@version{2024-12-29}
+ "@version{2025-09-27}
   @syntax{(g:simple-action-parameter-type object) => vtype}
   @argument[object]{a @class{g:simple-action} object}
   @argument[vtype]{a @class{g:variant-type} parameter type}
   @begin{short}
-    Accessor of the @slot[g:simple-action]{parameter-type} slot of the
-    @class{g:simple-action} class.
+    The accessor for the @slot[g:simple-action]{parameter-type} slot of the
+    @class{g:simple-action} class returns the type of the parameter that must
+    be given when activating the action.
   @end{short}
-  The type of the parameter that must be given when activating the action.
   @see-class{g:simple-action}
   @see-class{g:variant-type}")
 
@@ -253,21 +253,20 @@ lambda (action value)    :run-last
 (setf (liber:alias-for-function 'simple-action-state)
       "Accessor"
       (documentation 'simple-action-state 'function)
- "@version{2024-12-29}
+ "@version{2025-09-27}
   @syntax{(g:simple-action-state object) => value}
   @syntax{(setf (g:simple-action-state object) value)}
   @argument[object]{a @class{g:simple-action} object}
   @argument[value]{a @symbol{g:variant} parameter for the state}
   @begin{short}
-    Accessor of the @slot[g:simple-action]{state} slot of the
-    @class{g:simple-action} class.
+    The accessor for the @slot[g:simple-action]{state} slot of the
+    @class{g:simple-action} class gets or sets the state of the action.
   @end{short}
-  Sets the state of the action to @arg{value}. This directly updates the
-  @slot[g:simple-action]{state} property to the given @arg{value}. This should
-  only be called by the implementor of the action. Users of the action should
-  not attempt to directly modify the @slot[g:simple-action]{state} property.
-  Instead, they should call the @fun{g:action-change-state} function to request
-  the change.
+  This directly updates the @slot[g:simple-action]{state} property to the given
+  @arg{value}. This should only be called by the implementor of the action.
+  Users of the action should not attempt to directly modify the
+  @slot[g:simple-action]{state} property. Instead, they should call the
+  @fun{g:action-change-state} function to request the change.
   @see-class{g:simple-action}
   @see-symbol{g:variant}
   @see-function{g:action-change-state}")
@@ -284,16 +283,15 @@ lambda (action value)    :run-last
 (setf (liber:alias-for-function 'simple-action-state-type)
       "Accessor"
       (documentation 'simple-action-state-type 'function)
- "@version{2024-12-29}
+ "@version{2025-09-27}
   @syntax{(g:simple-action-state-type object) => vtype}
   @argument[object]{a @class{g:simple-action} object}
   @argument[vtype]{a @class{g:variant-type} parameter type}
   @begin{short}
-    Accessor of the @slot[g:simple-action]{state-type} slot of the
-    @class{g:simple-action} class.
+    The accessor for the @slot[g:simple-action]{state-type} slot of the
+    @class{g:simple-action} class returns the type of the state that the action
+    has, or @code{nil} if the action is stateless.
   @end{short}
-  The type of the state that the action has, or @code{nil} if the action is
-  stateless.
   @see-class{g:simple-action}
   @see-class{g:variant-type}")
 
@@ -303,8 +301,8 @@ lambda (action value)    :run-last
 
 (defun simple-action-new (name vtype)
  #+liber-documentation
- "@version{2024-12-29}
-  @argument[name]{a string with the name of the action}
+ "@version{2025-09-27}
+  @argument[name]{a string for the name of the action}
   @argument[vtype]{a @class{g:variant-type} parameter type or a type string for
     the parameter to the activate function}
   @return{The new @class{g:simple-action} object.}
@@ -358,8 +356,8 @@ lambda (action value)    :run-last
 
 (defun simple-action-new-stateful (name vtype state)
  #+liber-documentation
- "@version{2024-12-29}
-  @argument[name]{a string with the name of the action}
+ "@version{2025-09-27}
+  @argument[name]{a string for the name of the action}
   @argument[vtype]{a @class{g:variant-type} parameter type or a type string for
     the parameter to the activate function}
   @argument[state]{a @symbol{g:variant} parameter for the initial state of the

@@ -98,16 +98,15 @@
 (setf (liber:alias-for-function 'file-icon-file)
       "Accessor"
       (documentation 'file-icon-file 'function)
- "@version{2024-10-23}
+ "@version{2025-09-27}
   @syntax{(g:file-icon-file object) => file}
   @argument[object]{a @class{g:file-icon} object}
   @argument[file]{a @class{g:file} object}
   @begin{short}
-    Accessor of the @slot[g:file-icon]{file} slot of the @class{g:file-icon}
-    class.
+    The accessor for the @slot[g:file-icon]{file} slot of the
+    @class{g:file-icon} class returns the @class{g:file} object associated with
+    the given icon.
   @end{short}
-  The @fun{g:file-icon-file} function gets the @class{g:file} object associated
-  with the given icon.
   @see-class{g:file-icon}
   @see-class{g:file}")
 

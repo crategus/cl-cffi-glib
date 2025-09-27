@@ -88,7 +88,7 @@
 
 #+liber-documentation
 (setf (documentation 'list-store 'type)
- "@version{2025-3-24}
+ "@version{2025-03-24}
   @begin{short}
     The @class{g:list-store} object is an implementation of the
     @class{g:list-model} interface that stores all items in memory.
@@ -119,16 +119,16 @@
 (setf (liber:alias-for-function 'list-store-item-type)
       "Accessor"
       (documentation 'list-store-item-type 'function)
- "@version{2025-3-24}
+ "@version{2025-09-27}
   @syntax{(g:list-store-item-type object) => gtype}
   @argument[object]{a @class{g:list-store} object}
   @argument[gtype]{a @class{g:type-t} type ID}
   @begin{short}
-    Accessor of the @slot[g:list-store]{item-type} slot of the
-    @class{g:list-store} class.
+    The accessor for the @slot[g:list-store]{item-type} slot of the
+    @class{g:list-store} class returns the type of items contained in the list
+    store.
   @end{short}
-  The type of items contained in the list store. Items must be subclasses of
-  the @class{g:object} class.
+  Items must be subclasses of the @class{g:object} class.
   @begin[Notes]{dictionary}
     This function is equivalent to the @fun{g:list-model-item-type} function.
   @end{dictionary}
@@ -157,14 +157,15 @@
 (setf (liber:alias-for-function 'list-store-n-items)
       "Accessor"
       (documentation 'list-store-n-items 'function)
- "@version{2025-4-26}
+ "@version{2025-09-27}
   @syntax{(g:list-store-n-items object) => n-items}
   @argument[object]{a @class{g:list-store} object}
   @argument[n-items]{an unsigned integer for the number of items contained in
     the list store}
   @begin{short}
-    Accessor of the @slot[g:list-store]{n-items} slot of the
-    @class{g:list-store} class.
+    The accessor for the @slot[g:list-store]{n-items} slot of the
+    @class{g:list-store} class returns the number of items contained in the
+    list store.
   @end{short}
   @begin[Notes]{dictionary}
     This function is equivalent to the @fun{g:list-model-n-items} function.
@@ -181,7 +182,7 @@
 (cffi:defcfun ("g_list_store_new" list-store-new)
     (gobject:object list-store :return)
  #+liber-documentation
- "@version{2025-4-11}
+ "@version{2025-04-11}
   @argument[gtype]{a @class{g:type-t} type ID for the items in the list}
   @return{The new @class{g:list-store} object.}
   @begin{short}
@@ -213,7 +214,7 @@
 
 (cffi:defcfun ("g_list_store_append" list-store-append) :void
  #+liber-documentation
- "@version{2025-4-26}
+ "@version{2025-04-26}
   @argument[store]{a @class{g:list-store} object}
   @argument[item]{a @class{g:object} object for the new item}
   @begin{short}
@@ -237,7 +238,7 @@
 
 (cffi:defcfun ("g_list_store_insert" list-store-insert) :void
  #+liber-documentation
- "@version{2025-4-26}
+ "@version{2025-04-26}
   @argument[store]{a @class{g:list-store} object}
   @argument[pos]{an unsigned integer for the position at which to insert the
     new item}
@@ -280,7 +281,7 @@
 (setf (liber:alias-for-symbol 'compare-data-func)
       "Callback"
       (liber:symbol-documentation 'compare-data-func)
- "@version{2025-3-24}
+ "@version{2025-03-24}
   @syntax{lambda (a b) => result}
   @argument[a]{a @class{g:object} instance}
   @argument[b]{a @class{g:object} instance to compare with}
@@ -308,12 +309,12 @@
 
 (defun list-store-insert-sorted (store item func)
  #+liber-documentation
- "@version{2025-3-24}
+ "@version{2025-09-27}
   @argument[store]{a @class{g:list-store} object}
   @argument[item]{a @class{g:object} object}
   @argument[func]{a @symbol{g:compare-data-func} callback function}
   @begin{return}
-    The unsigned integer with the position at which @arg{item} was inserted.
+    The unsigned integer for the position at which @arg{item} was inserted.
   @end{return}
   @begin{short}
     Inserts the item into the list store at a position to be determined by the
@@ -339,7 +340,7 @@
 
 (cffi:defcfun ("g_list_store_remove" list-store-remove) :void
  #+liber-documentation
- "@version{2025-4-26}
+ "@version{2025-04-26}
   @argument[store]{a @class{g:list-store} object}
   @argument[pos]{an unsigned integer for the position of the item that is to
     be removed}
@@ -362,7 +363,7 @@
 
 (cffi:defcfun ("g_list_store_remove_all" list-store-remove-all) :void
  #+liber-documentation
- "@version{2025-3-24}
+ "@version{2025-03-24}
   @argument[store]{a @class{g:list-store} object}
   @short{Removes all items from the list store.}
   @see-class{g:list-store}"
@@ -383,7 +384,7 @@
 
 (defun list-store-splice (store pos n &rest additions)
  #+liber-documentation
- "@version{2025-4-26}
+ "@version{2025-04-26}
   @argument[store]{a @class{g:list-store} object}
   @argument[pos]{an unsigned integer for the position at which to make the
     change}
@@ -429,7 +430,7 @@
 
 (defun list-store-sort (store func)
  #+liber-documentation
- "@version{2025-3-24}
+ "@version{2025-03-24}
   @argument[store]{a @class{g:list-store} object}
   @argument[func]{a @symbol{g:compare-data-func} callback function for sorting}
   @begin{short}
@@ -455,11 +456,11 @@
 
 (defun list-store-find (store item)
  #+liber-documentation
- "@version{2025-4-26}
+ "@version{2025-05-09-27}
   @argument[store]{a @class{g:list-store} object}
   @argument[item]{a @class{g:object} instance for the item}
   @begin{return}
-    The unsigned integer with the first position of the item, if it was found,
+    The unsigned integer for the first position of the item, if it was found,
     otherwise @code{nil}.
   @end{return}
   @begin{short}
@@ -502,7 +503,7 @@
 (setf (liber:alias-for-symbol 'equal-func-full)
       "Callback"
       (liber:symbol-documentation 'equal-func-full)
- "@version{2025-3-24}
+ "@version{2025-03-24}
   @syntax{lambda (a b) => result}
   @argument[a]{a @class{g:object} instance}
   @argument[b]{a @class{g:object} instance to compare with}
@@ -538,12 +539,12 @@
 #+glib-2-74
 (defun list-store-find-with-equal-func (store item func)
  #+liber-documentation
- "@version{2025-4-26}
+ "@version{2025-09-27}
   @argument[store]{a @class{g:list-store} object}
   @argument[item]{a @class{g:object} instance}
   @argument[func]{a @symbol{g:equal-func-full} callback function}
   @begin{return}
-    The unsigned integer with the first position of the item, if it was found,
+    The unsigned integer for the first position of the item, if it was found,
     otherwise @code{nil}.
   @end{return}
   @begin{short}

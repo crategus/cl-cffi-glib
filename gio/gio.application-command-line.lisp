@@ -2,8 +2,8 @@
 ;;; gio.application-command-line.lisp
 ;;;
 ;;; The documentation in this file is taken from the GIO Reference Manual
-;;; Version 2.82 and modified to document the Lisp binding to the GIO library,
-;;; see <http://www.gtk.org>. The API documentation of the Lisp binding is
+;;; version 2.84 and modified to document the Lisp binding to the GIO library,
+;;; see <http://www.gtk.org>. The API documentation for the Lisp binding is
 ;;; available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
 ;;; Copyright (C) 2020 - 2025 Dieter Kaiser
@@ -97,7 +97,7 @@
 
 #+liber-documentation
 (setf (documentation 'application-command-line 'type)
- "@version{2025-2-3}
+ "@version{2025-02-03}
   @begin{short}
     The @class{g:application-command-line} class represents a command line
     invocation of an application.
@@ -255,7 +255,7 @@
 
 (defun application-command-line-arguments (cmdline)
  #+liber-documentation
- "@version{2025-2-3}
+ "@version{2025-02-03}
   @argument[cmdline]{a @class{g:application-command-line} instance}
   @return{The list of strings containing the command line arguments.}
   @begin{short}
@@ -281,9 +281,9 @@
 
 (cffi:defcfun ("g_application_command_line_get_cwd"
                 application-command-line-cwd) :string
- "@version{2025-2-3}
+ "@version{2025-09-27}
   @argument[cmdline]{a @class{g:application-command-line} instance}
-  @return{The string with the current directory, or @code{nil}.}
+  @return{The string for the current directory, or @code{nil}.}
   @begin{short}
     Gets the working directory of the command line invocation.
   @end{short}
@@ -309,7 +309,7 @@
 (cffi:defcfun ("g_application_command_line_get_environ"
                 application-command-line-environ)
     (glib:strv-t :free-from-foreign nil)
- "@version{2025-2-3}
+ "@version{2025-02-03}
   @argument[cmdline]{a @class{g:application-command-line} instance}
   @return{The list of strings with the environment strings, or @code{nil} if they
     were not sent.}
@@ -341,7 +341,7 @@
                 application-command-line-options-dict)
     (glib:boxed glib:variant-dict)
  #+liber-documentation
- "@version{#2025-2-3}
+ "@version{#2025-02-03}
   @argument[cmdline]{a @class{g:application-command-line} instance}
   @return{The @class{g:variant-dict} instance with the options.}
   @begin{short}
@@ -377,7 +377,7 @@
                 application-command-line-create-file-for-arg)
     (gobject:object file)
  #+liber-documentation
- "@version{#2025-2-3}
+ "@version{#2025-02-03}
   @argument[cmdline]{a @class{g:application-command-line} instance}
   @argument[arg]{a string for an argument from @arg{cmdline}}
   @return{The new @class{g:file} object.}
@@ -402,11 +402,12 @@
 
 (cffi:defcfun ("g_application_command_line_getenv"
                 application-command-line-getenv) :string
- "@version{#2025-2-3}
+ "@version{#2025-09-27}
   @argument[cmdline]{a @class{g:application-command-line} instance}
   @argument[name]{a string for the environment variable to get}
-  @return{The string with the value of the variable, or @code{nil} if unset or
-    unsent.}
+  @begin{return}
+    The string for the value of the variable, or @code{nil} if unset or unsent.
+  @end{return}
   @begin{short}
     Gets the value of a particular environment variable of the command line
     invocation, as would be returned by the @code{g_getenv()} function.
@@ -437,7 +438,7 @@
 (cffi:defcfun ("g_application_command_line_get_platform_data"
                 application-command-line-platform-data)
     (:pointer (:struct glib:variant))
- "@version{2025-2-3}
+ "@version{2025-02-03}
   @argument[cmdline]{a @class{g:application-command-line} instance}
   @return{The @symbol{g:variant} dictionary with the platform data, or a
     @code{cffi:null-pointer} value.}
@@ -470,19 +471,15 @@
 (cffi:defcfun ("g_application_command_line_get_exit_status"
                 application-command-line-exit-status) :int
  #+liber-documentation
- "@version{#2025-2-3}
+ "@version{#2025-09-27}
   @syntax{(application-command-line-exit-status cmdline) => status}
   @syntax{(setf (application-command-line-exit-status cmdline) status)}
   @argument[cmdline]{a @class{g:application-command-line} instance}
-  @argument[status]{an integer with the exit status}
+  @argument[status]{an integer for the exit status}
   @begin{short}
-    Accessor of the exit status of a @class{g:application-command-line}
-    instance.
+    Gets or sets the exit status that will be used when the invoking process
+    exits.
   @end{short}
-  The @fun{g:application-command-line-exit-status} function gets the exit status
-  of @arg{cmdline}. The @setf{g:application-command-line-exit-status} function
-  sets the exit status that will be used when the invoking process exits.
-
   The return value of the @code{\"command-line\"} signal is passed to this
   function when the handler returns. This is the usual way of setting the exit
   status.

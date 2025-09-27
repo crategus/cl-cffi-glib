@@ -93,7 +93,7 @@
 (setf (liber:alias-for-class 'action-group)
       "Interface"
       (documentation 'action-group 'type)
- "@version{2025-06-21}
+ "@version{2025-09-27}
   @begin{short}
     The @class{g:action-group} interface represents a group of actions.
   @end{short}
@@ -142,9 +142,6 @@
   @fun{g:action-group-query-action} virtual functions. The other virtual
   functions should not be implemented - their \"wrappers\" are actually
   implemented with calls to the @fun{g:action-group-query-action} function.
-
-
-
   @begin[Signal Details]{dictionary}
     @begin[action-group::action-added]{signal}
       @begin{pre}
@@ -152,7 +149,7 @@ lambda (group name)    :detailed
       @end{pre}
       @begin[code]{table}
         @entry[group]{The @class{g:action-group} instance that changed.}
-        @entry[name]{The string with the name of the action.}
+        @entry[name]{The string for the name of the action.}
       @end{table}
       Signals that a new action was just added to the group. The signal is
       emitted after the action has been added and is now visible.
@@ -163,7 +160,7 @@ lambda (group name enabled)    :detailed
       @end{pre}
       @begin[code]{table}
         @entry[group]{The @class{g:action-group} instance that changed.}
-        @entry[name]{The string with the name of the action.}
+        @entry[name]{The string for the name of the action.}
         @entry[enabled]{The boolean whether the action is enabled or not.}
       @end{table}
       Signals that the enabled status of the named action has changed.
@@ -174,7 +171,7 @@ lambda (group name)    :detailed
       @end{pre}
       @begin[code]{table}
         @entry[group]{The @class{g:action-group} instance that changed.}
-        @entry[name]{The string with the name of the action.}
+        @entry[name]{The string for the name of the action.}
       @end{table}
       Signals that an action is just about to be removed from the group. This
       signal is emitted before the action is removed, so the action is still
@@ -186,7 +183,7 @@ lambda (group name parameter)    :detailed
       @end{pre}
       @begin[code]{table}
         @entry[group]{The @class{g:action-group} instance that changed.}
-        @entry[name]{The string with the name of the action.}
+        @entry[name]{The string for the name of the action.}
         @entry[parameter]{The new @symbol{g:variant} parameter for the state.}
       @end{table}
       Signals that the state of the named action has changed.

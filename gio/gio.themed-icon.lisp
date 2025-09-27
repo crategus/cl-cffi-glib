@@ -116,14 +116,13 @@
 (setf (liber:alias-for-function 'themed-icon-name)
       "Accessor"
       (documentation 'themed-icon-name 'function)
- "@version{2024-10-23}
+ "@version{2025-09-27}
   @syntax{(g:themed-icon-name object) => name}
-  @syntax{(setf (g:themed-icon-name object) name)}
   @argument[object]{a @class{g:themed-icon} object}
-  @argument[name]{a string with the icon name}
+  @argument[name]{a string for the icon name}
   @begin{short}
-    Accessor of the @slot[g:themed-icon]{name} slot of the @class{g:themed-icon}
-    class.
+    The accessor for the @slot[g:themed-icon]{name} slot of the
+    @class{g:themed-icon} class returns the icon name.
   @end{short}
   @see-class{g:themed-icon}")
 
@@ -139,16 +138,15 @@
 (setf (liber:alias-for-function 'themed-icon-names)
       "Accessor"
       (documentation 'themed-icon-names 'function)
- "@version{2024-10-23}
+ "@version{2025-09-27}
   @syntax{(g:themed-icon-names object) => names}
-  @syntax{(setf (g:themed-icon-names object) names)}
   @argument[object]{a @class{g:themed-icon} object}
   @argument[names]{a list of strings with icon names}
   @begin{short}
-    Accessor of the @slot[g:themed-icon]{names} slot of the
-    @class{g:themed-icon} class.
+    The accessor for the @slot[g:themed-icon]{names} slot of the
+    @class{g:themed-icon} class returns the names of icons from within
+    @arg{object}.
   @end{short}
-  Gets the names of icons from within @arg{object}.
   @see-class{g:themed-icon}")
 
 ;;; --- g:themed-icon-use-default-fallbacks ------------------------------------
@@ -166,18 +164,17 @@
 (setf (liber:alias-for-function 'themed-icon-use-default-fallbacks)
       "Accessor"
       (documentation 'themed-icon-use-default-fallbacks 'function)
- "@version{2024-10-23}
+ "@version{2025-09-27}
   @syntax{(g:themed-icon-use-default-fallbacks object) => setting}
-  @syntax{(setf (g:themed-icon-use-default-fallbacks object) setting)}
   @argument[object]{a @class{g:themed-icon} object}
   @argument[setting]{a boolean whether to use default fallbacks}
   @begin{short}
-    Accessor of the @slot[g:themed-icon]{use-default-fallbacks} slot of the
-    @class{g:themed-icon} class.
+    The accessor for the @slot[g:themed-icon]{use-default-fallbacks} slot of the
+    @class{g:themed-icon} class returns whether to use the default fallbacks
+    found by shortening the icon name at '-' characters.
   @end{short}
-  Whether to use the default fallbacks found by shortening the icon name at '-'
-  characters. If the @code{names} list has more than one element, ignores
-  any past the first.
+  If the @code{names} list has more than one element, ignores any past the
+  first.
   @begin[Examples]{dictionary}
     For example, if the icon name was @code{\"gnome-dev-cdrom-audio\"}, the list
     would become
@@ -242,7 +239,7 @@
 
 (defun themed-icon-new-with-default-fallbacks (name)
  #+liber-documentation
- "@version{2025-3-2}
+ "@version{2025-03-02}
   @argument[name]{a string containing an icon name}
   @return{The new @class{g:themed-icon} object.}
   @begin{short}
@@ -277,9 +274,9 @@
 
 (cffi:defcfun ("g_themed_icon_prepend_name" themed-icon-prepend-name) :void
  #+liber-documentation
- "@version{2024-10-23}
+ "@version{2025-09-27}
   @argument[icon]{a @class{g:themed-icon} object}
-  @argument[name]{a string with the name of the icon to prepend to list of
+  @argument[name]{a string for the name of the icon to prepend to list of
     icons from within @arg{icon}}
   @begin{short}
     Prepend a name to the list of icons from within @arg{icon}.
@@ -300,9 +297,9 @@
 
 (cffi:defcfun ("g_themed_icon_append_name" themed-icon-append-name) :void
  #+liber-documentation
- "@version{2024-10-23}
+ "@version{2025-09-27}
   @argument[icon]{a @class{g:themed-icon} object}
-  @argument[name]{a string with the name of the icon to append to list of icons
+  @argument[name]{a string for the name of the icon to append to list of icons
     from within @arg{icon}}
   @begin{short}
     Append a name to the list of icons from within @arg{icon}.
