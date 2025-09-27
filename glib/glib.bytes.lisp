@@ -268,7 +268,7 @@
 
 (defun bytes-data (bytes)
  #+liber-documentation
- "@version{2025-05-22}
+ "@version{2025-09-27}
   @syntax{(g:bytes-data bytes) => data, size}
   @argument[bytes]{a @class{g:bytes} instance}
   @argument[data]{a pointer to the byte data, or a @code{cffi:null-pointer}
@@ -282,7 +282,7 @@
 
   A @code{cffi:null-pointer} value may be returned if the @arg{size} value is 0.
   This is not guaranteed, as the @class{g:bytes} instance may represent an empty
-  string with @arg{data} not a @code{cffi:null-pointer} value and the @arg{size}
+  string for @arg{data} not a @code{cffi:null-pointer} value and the @arg{size}
   value as 0. A @code{cffi:null-pointer} value will not be returned if the
   @arg{size} value is non-zero.
   @see-class{g:bytes}"
@@ -298,9 +298,9 @@
 
 (cffi:defcfun ("g_bytes_get_size" bytes-size) :size
  #+liber-documentation
- "@version{2025-05-22}
+ "@version{2025-09-27}
   @argument[bytes]{a @class{g:bytes} instance}
-  @return{The integer with the size of the byte data.}
+  @return{The integer for the size of the byte data.}
   @begin{short}
     Get the size of the byte data in the @class{g:bytes} instance.
   @end{short}

@@ -266,7 +266,7 @@
 (cffi:defcfun ("g_variant_type_checked_" variant-type-checked)
     (boxed variant-type)
  #+liber-documentation
- "@version{#2021-7-31}
+ "@version{#2021-07-31}
   @argument[string]{a well-formed @class{variant-type} type string}
   @return{The @class{variant-type} instance.}
   @begin{short}
@@ -636,9 +636,9 @@
 
 (cffi:defcfun ("g_variant_type_hash" variant-type-hash) :uint
  #+liber-documentation
- "@version{2025-05-23}
+ "@version{2025-09-27}
   @argument[vtype]{a @class{g:variant-type} instance}
-  @return{The unsigned integer with the hash value.}
+  @return{The unsigned integer for the hash value.}
   @begin{short}
     The has value of the given variant type.
   @end{short}
@@ -814,9 +814,9 @@
 
 (cffi:defcfun ("g_variant_type_n_items" variant-type-n-items) :size
  #+liber-documentation
- "@version{2025-05-23}
+ "@version{2025-09-27}
   @argument[vtype]{a tuple or dictionary entry @class{g:variant-type} instance}
-  @return{The integer with the number of items in @arg{vtype}.}
+  @return{The integer for the number of items in @arg{vtype}.}
   @begin{short}
     Determines the number of items contained in a tuple or dictionary entry
     @arg{vtype}.

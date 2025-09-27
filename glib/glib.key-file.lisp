@@ -752,9 +752,9 @@ Booleans=true;false;true;true
 
 (cffi:defcfun ("g_key_file_get_start_group" key-file-start-group) :string
  #+liber-documentation
- "@version{2025-05-23}
+ "@version{2025-09-27}
   @argument[keyfile]{a @type{g:key-file} instance}
-  @return{The string with the start group of the key file.}
+  @return{The string for the start group of the key file.}
   @begin{short}
     Returns the name of the start group of the key file.
   @end{short}
@@ -1020,13 +1020,13 @@ Booleans=true;false;true;true
 
 (defun key-file-locale-for-key (keyfile group key &optional locale)
  #+liber-documentation
- "@version{2025-05-23}
+ "@version{2025-09-27}
   @argument[keyfile]{a @symbol{g:key-file} instance}
   @argument[group]{a string for the group name}
   @argument[key]{a string for the key}
   @argument[locale]{a string for the locale identifier}
   @begin{return}
-    The string with the locale from the file, or @code{nil} if the key was not
+    The string for the locale from the file, or @code{nil} if the key was not
     found or the entry in the file was untranslated.
   @end{return}
   @begin{short}
@@ -1069,22 +1069,19 @@ Booleans=true;false;true;true
 
 (defun key-file-boolean (keyfile group key)
  #+liber-documentation
- "@version{2025-05-23}
+ "@version{2025-09-27}
+  @syntax{(g:key-file-boolean keyfile group key) => value}
+  @syntax{(setf (g:key-file-boolean keyfile group key) value)}
   @argument[keyfile]{a @symbol{g:key-file} instance}
   @argument[group]{a string for the group name}
   @argument[key]{a string for the key}
-  @begin{return}
-    The boolean with the value associated with the key, or @code{nil} if the
-    key was not found or could not be parsed.
-  @end{return}
+  @argument[value]{a boolean for the value associated with the key}
   @begin{short}
-    The @fun{g:key-file-boolean} function returns the value associated with
-    @arg{key} under @arg{group} as a boolean.
+    Gets or sets the value associated with @arg{key} under @arg{group} as a
+    boolean.
   @end{short}
-  The @setf{g:key-file-boolean} function associates a new boolean value with
-  @arg{key} under @arg{group}. If @arg{key} cannot be found then it is created.
-
-  If @arg{key} cannot be found then @code{nil} is returned. Likewise, if the
+  If @arg{key} cannot be found when it is set, the key is created. If @arg{key}
+  cannot be found when it is retrieved, @code{nil} is returned. Likewise, if the
   value associated with @arg{key} cannot be interpreted as a boolean then
   @code{nil} is returned.
   @see-symbol{g:key-file}"
@@ -1115,22 +1112,20 @@ Booleans=true;false;true;true
 
 (defun key-file-integer (keyfile group key)
  #+liber-documentation
- "@version{2025-05-23}
+ "@version{2025-09-27}
+  @syntax{(g:key-file-integer keyfile group key) => value}
+  @syntax{(setf (g:key-file-integer keyfile group key) value)}
   @argument[keyfile]{a @symbol{g:key-file} instance}
   @argument[group]{a string for the group name}
   @argument[key]{a string for the key}
-  @begin{return}
-    The integer with the value associated with the key as an integer, or 0 if
-    the key was not found or could not be parsed.
-  @end{return}
+  @argument[value]{an integer for the value associated with the key as an
+    integer}
   @begin{short}
-    The @fun{g:key-file-integer} function returns the value associated with
-    @arg{key} under @arg{group} as an integer.
+    Gets or sets the value associated with @arg{key} under @arg{group} as an
+    integer.
   @end{short}
-  The @setf{g:key-file-integer} function associates a new integer with @arg{key}
-  under @arg{group}. If @arg{key} cannot be found then it is created.
-
-  If @arg{key} cannot be found then 0 is returned. Likewise, if the value
+  If @arg{key} cannot be found when it is set, the key is created. If @arg{key}
+  cannot be found when it is retrieved, 0 is returned. Likewise, if the value
   associated with @arg{key} cannot be interpreted as an integer then 0 is
   returned.
   @see-symbol{g:key-file}"
@@ -1160,26 +1155,25 @@ Booleans=true;false;true;true
 
 (defun key-file-int64 (keyfile group key)
  #+liber-documentation
- "@version{2025-05-23}
+ "@version{2025-09-27}
+  @syntax{(g:key-file-int64 keyfile group key) => value}
+  @syntax{(setf (g:key-file-int64 keyfile group key) value)}
   @argument[keyfile]{a @symbol{g:key-file} instance}
   @argument[group]{a string for the group name}
   @argument[key]{a string for the key}
-  @begin{return}
-    The integer with the value associated with the key as an integer, or 0 if
-    the key was not found or could not be parsed. This is similar to the
-    @fun{g:key-file-integer} function but can return 64-bit results without
-    truncation.
-  @end{return}
+  @argument[value]{an integer for the value associated with the key as an
+    integer}
   @begin{short}
-    The @fun{g:key-file-int64} function returns the value associated with
-    @arg{key} under @arg{group} as an integer.
+    Gets or sets the value associated with @arg{key} under @arg{group} as an
+    integer.
   @end{short}
-  The @setf{g:key-file-int64} function associates a new integer with @arg{key}
-  under @arg{group}. If @arg{key} cannot be found then it is created.
-
-  If @arg{key} cannot be found then 0 is returned. Likewise, if the value
+  If @arg{key} cannot be found when it is set, the key is created. If @arg{key}
+  cannot be found when it is retrieved, 0 is returned. Likewise, if the value
   associated with @arg{key} cannot be interpreted as an integer then 0 is
   returned.
+
+  This is similar to the @fun{g:key-file-integer} function but can return 64-bit
+  results without truncation.
   @see-symbol{g:key-file}
   @see-function{g:key-file-integer}"
   (with-ignore-error (err)
@@ -1208,26 +1202,25 @@ Booleans=true;false;true;true
 
 (defun key-file-uint64 (keyfile group key)
  #+liber-documentation
- "@version{2025-05-23}
+ "@version{2025-09-27}
+  @syntax{(g:key-file-uint64 keyfile group key) => value}
+  @syntax{(setf (g:key-file-uint64 keyfile group key) value)}
   @argument[keyfile]{a @symbol{g:key-file} instance}
   @argument[group]{a string for the group name}
   @argument[key]{a string for the key}
-  @begin{return}
-    The integer with the value associated with the key as an integer, or 0 if
-    the key was not found or could not be parsed. This is similar to the
-    @fun{g:key-file-integer} function but can return 64-bit results without
-    truncation.
-  @end{return}
+  @argument[value]{an integer for the value associated with the key as an
+    integer}
   @begin{short}
-    The @fun{g:key-file-uint64} function returns the value associated with
-    @arg{key} under @arg{group} as an integer.
+    Gets or sets the value associated with @arg{key} under @arg{group} as an
+    integer.
   @end{short}
-  The @setf{g:key-file-uint64} function associates a new integer with @arg{key}
-  under @arg{group}. If @arg{key} cannot be found then it is created.
-
-  If @arg{key} cannot be found then 0 is returned. Likewise, if the value
+  If @arg{key} cannot be found when it is set, the key is created. If @arg{key}
+  cannot be found when it is retrieved, 0 is returned. Likewise, if the value
   associated with @arg{key} cannot be interpreted as an integer then 0 is
   returned.
+
+  This is similar to the @fun{g:key-file-integer} function but can return 64-bit
+  results without truncation.
   @see-symbol{g:key-file}
   @see-function{g:key-file-integer}"
   (with-ignore-error (err)
@@ -1257,26 +1250,23 @@ Booleans=true;false;true;true
 
 (defun key-file-double (keyfile group key)
  #+liber-documentation
- "@version{2025-05-23}
+ "@version{2025-09-27}
+  @syntax{(g:key-file-double keyfile group key) => value}
+  @syntax{(setf (g:key-file-double keyfile grop key) value)}
   @argument[keyfile]{a @symbol{g:key-file} instance}
   @argument[group]{a string for the group name}
   @argument[key]{a string for the key}
-  @begin{return}
-    The double float with the value associated with the key as a double float,
-    or 0.0 if the key was not found or could not be parsed.
-  @end{return}
+  @argument[value]{a number coerced to a double float for the value associated
+    with the key as a double float}
   @begin{short}
-    The @fun{g:key-file-double} function returns the value associated with
-    @arg{key} under @arg{group} as a double float.
+    Gets or sets the value associated with @arg{key} under @arg{group} as a
+    double float.
   @end{short}
   If @arg{group} is @code{nil}, the start group is used.
-
-  The @setf{g:key-file-double} function associates a new double float with
-  @arg{key} under @arg{group}. If @arg{key} cannot be found then it is created.
-
-  If @arg{key} cannot be found then 0.0 is returned. Likewise, if the value
-  associated with @arg{key} cannot be interpreted as a double float then 0.0
-  is returned.
+  If @arg{key} cannot be found when it is set, the key is created. If @arg{key}
+  cannot be found when it is retrieved, 0.0d0 is returned. Likewise, if the
+  value associated with @arg{key} cannot be interpreted as a double float then
+  0.0d0 is returned.
   @see-symbol{g:key-file}"
   (with-ignore-error (err)
     (%key-file-double keyfile group key err)))

@@ -95,7 +95,7 @@
 (setf (liber:alias-for-symbol 'gtype)
       "Struct"
       (liber:symbol-documentation 'gtype)
- "@version{2024-12-8}
+ "@version{2024-12-08}
   @begin{short}
     The @symbol{g:gtype} structure represents the unique identifier of a
     registered foreign @code{GType} type on the Lisp side.
@@ -127,9 +127,9 @@
 
 #+liber-documentation
 (setf (documentation 'gtype-name 'function)
- "@version{2024-12-8}
+ "@version{2025-09-27}
   @argument[instance]{a @symbol{g:gtype} instance}
-  @return{The string with the name of the @code{GType} type.}
+  @return{The string for the name of the @code{GType} type.}
   @begin{short}
     Returns the name of the @code{GType} type.
   @end{short}
@@ -150,7 +150,7 @@
 
 (defun gtype-id (instance)
  #+liber-documentation
- "@version{2024-12-8}
+ "@version{2024-12-08}
   @argument[instance]{a @symbol{g:gtype} instance}
   @return{The integer for the unique identifier of the @code{GType} type.}
   @begin{short}
@@ -261,7 +261,7 @@
 
 #+liber-documentation
 (setf (documentation 'gtype 'function)
- "@version{2024-12-8}
+ "@version{2024-12-08}
   @argument[thing]{a string, an integer, or an @symbol{g:gtype} instance}
   @return{The @symbol{g:gtype} instance for @arg{thing}.}
   @begin{short}
@@ -292,7 +292,7 @@
 
   (defun symbol-for-gtype (name-or-gtype)
     #+liber-documentation
-    "@version{2024-12-8}
+    "@version{2024-12-08}
      @argument[name-or-gtype]{a string or a @symbol{g:gtype} instance
        representing a valid @code{GType} type}
      @return{The Lisp symbol representing the @code{GType} type.}

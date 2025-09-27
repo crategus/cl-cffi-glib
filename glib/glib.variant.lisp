@@ -668,11 +668,11 @@
 
 (cffi:defcfun ("g_variant_compare" variant-compare) :int
  #+liber-documentation
- "@version{2025-05-25}
+ "@version{2025-09-27}
   @argument[value1]{a basic-typed @symbol{g:variant} instance}
   @argument[value2]{a @symbol{g:variant} instance of the same type}
   @begin{return}
-    The integer with a negative value if a < b, zero if a = b, positive value
+    The integer for a negative value if a < b, zero if a = b, positive value
     if a > b.
   @end{return}
   @begin{short}

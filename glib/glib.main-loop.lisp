@@ -739,7 +739,7 @@
                 main-context-find-source-by-user-data)
     (:pointer (:struct source))
  #+liber-documentation
- "@version{#2013-4-9}
+ "@version{#2013-04-09}
   @argument[context]{a @type{main-context} object}
   @argument[user-data]{the user data for the callback}
   @return{The source, if one was found, otherwise @code{null-pointer}.}
@@ -759,7 +759,7 @@
                 main-context-find-source-by-funcs-user-data)
     (:pointer (:struct source))
  #+liber-documentation
- "@version{#2013-4-4}
+ "@version{#2013-04-04}
   @argument[context]{a @type{main-context} object, if @code{null-pointer},
     the default context will be used}
   @argument[funcs]{the source funcs passed to @fun{source-new}}
@@ -886,9 +886,9 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 
 (cffi:defcfun ("g_main_context_prepare" main-context-prepare) :boolean
  #+liber-documentation
- "@version{#2021-4-9}
+ "@version{#2025-09-27}
   @argument[context]{a @type{main-context} instance}
-  @argument[priority]{location to store a foreign integer with the priority of
+  @argument[priority]{location to store a foreign integer for the priority of
     highest priority source already ready}
   @return{@em{True} if some source is ready to be dispatched prior to polling.}
   @begin{short}
@@ -909,10 +909,10 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 
 (cffi:defcfun ("g_main_context_query" main-context-query) :int
  #+liber-documentation
- "@version{#2021-4-9}
+ "@version{#2025-09-27}
   @argument[context]{a @type{main-context} instance}
-  @argument[max-priority]{an integer with the maximum priority source to check}
-  @argument[timeout]{location to store a foreign integer with the timeout to be
+  @argument[max-priority]{an integer for the maximum priority source to check}
+  @argument[timeout]{location to store a foreign integer for the timeout to be
     used in polling}
   @argument[fds]{location to store an pointer to @type{poll-fd} records that
     need to be polled}
@@ -941,9 +941,9 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 
 (cffi:defcfun ("g_main_context_check" main-context-check) :int
  #+liber-documentation
- "@version{#2021-4-9}
+ "@version{#2025-09-27}
   @argument[context]{a @type{main-context} instance}
-  @argument[max-priority]{an integer with the maximum numerical priority of
+  @argument[max-priority]{an integer for the maximum numerical priority of
     sources to check}
   @argument[fds]{a pointer with the location of an array of @type{poll-fd}'s
     that was passed to the last call to @fun{main-context-query}}
@@ -985,7 +985,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 
 (cffi:defcfun ("g_main_context_set_poll_func" main-context-set-poll-func) :void
  #+liber-documentation
- "@version{#2021-4-9}
+ "@version{#2021-04-09}
   @argument[context]{a @type{main-context} instance}
   @argument[func]{the function to call to poll all file descriptors}
   @begin{short}
@@ -1008,7 +1008,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 (cffi:defcfun ("g_main_context_get_poll_func" main-context-get-poll-func)
     :pointer
  #+liber-documentation
- "@version{#2021-4-9}
+ "@version{#2021-04-09}
   @argument[context]{a @type{main-context} instance}
   @return{The poll function.}
   @begin{short}
@@ -1024,12 +1024,12 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 
 (cffi:defcfun ("g_main_context_add_poll" main-context-add-poll) :void
  #+liber-documentation
- "@version{#2021-4-9}
+ "@version{#2025-09-29}
   @argument[context]{a @type{main-context} instance or @code{null-pointer}
     for the default context}
   @argument[fd]{a @type{poll-fd} instance holding information about a file
     descriptor to watch}
-  @argument[priority]{an integer with the priority for this file descriptor
+  @argument[priority]{an integer for the priority for this file descriptor
     which should be the same as the priority used for the functin
     @fun{source-attach} to ensure that the file descriptor is polled whenever
     the results may be needed}
@@ -1053,7 +1053,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 
 (cffi:defcfun ("g_main_context_remove_poll" main-context-remove-poll) :void
  #+liber-documentation
- "@version{#2021-4-9}
+ "@version{#2021-04-09}
   @argument[context]{a @type{main-context} instance}
   @argument[fd]{a @type{poll-fd} descriptor previously added with the
     @fun{main-context-add-poll} function}
@@ -1073,8 +1073,8 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 
 (cffi:defcfun ("g_main_depth" main-depth) :int
  #+liber-documentation
- "@version{#2021-12-10}
-  @return{An integer with the main loop recursion level in the current thread.}
+ "@version{#2025-09-27}
+  @return{The integer for the main loop recursion level in the current thread.}
   @begin{short}
     Returns the depth of the stack of calls to the @fun{main-context-dispatch}
     function on any context in the current thread.
@@ -1411,7 +1411,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 
 (cffi:defcfun ("g_idle_remove_by_data" idle-remove-by-data) :boolean
  #+liber-documentation
- "@version{#2013-1-1}
+ "@version{#2013-01-01}
   @argument[data]{the data for the idle source's callback.}
   @return{TRUE if an idle source was found and removed.}
   @short{Removes the idle function with the given data.}"
@@ -1445,7 +1445,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 
 (cffi:defcfun ("g_source_new" source-new) (:pointer (:struct source))
  #+liber-documentation
- "@version{#2021-4-10}
+ "@version{#2021-04-10}
   @argument[source-funcs]{a @type{source-funcs} instance containing functions
     that implement the sources behavior}
   @argument[struct-size]{size of the @type{source} structure to create}
@@ -1502,7 +1502,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 
 (cffi:defcfun ("g_source_set_funcs" source-set-funcs) :void
  #+liber-documentation
- "@version{#2013-7-21}
+ "@version{#2013-07-21}
   @argument[source]{a @type{source} instance}
   @argument[funcs]{the new @type{source-funcs}}
   @begin{short}
@@ -1680,9 +1680,9 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 
 (cffi:defcfun ("g_source_get_id" source-id) :uint
  #+liber-documentation
- "@version{2025-05-22}
+ "@version{2025-09-27}
   @argument[source]{a @type{g:source} instance}
-  @return{The unsigned integer with the ID greater than 0 for @arg{source}.}
+  @return{The unsigned integer for the ID greater than 0 for @arg{source}.}
   @begin{short}
     Returns the numeric ID for a particular source.
   @end{short}
@@ -2051,7 +2051,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 
 (cffi:defcfun ("g_source_add_poll" source-add-poll) :void
  #+liber-documentation
- "@version{#2021-4-9}
+ "@version{#2021-04-09}
   @argument[source]{a @type{source} instance}
   @argument[fd]{a @type{poll-fd} instance holding information about a file
     descriptor to watch}
@@ -2075,7 +2075,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 
 (cffi:defcfun ("g_source_remove_poll" source-remove-poll) :void
  #+liber-documentation
- "@version{#2013-5-13}
+ "@version{#2013-05-13}
   @argument[source]{a @type{source} structure}
   @argument[fd]{a @type{poll-fd} structure previously passed to the
     @fun{source-add-poll} function}
@@ -2137,9 +2137,9 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 
 (cffi:defcfun ("g_source_get_time" source-time) :uint64
  #+liber-documentation
- "@version{2025-05-22}
+ "@version{2025-09-27}
   @argument[source]{a @type{g:source} instance}
-  @return{The unsigned integer with the monotonic time in microseconds.}
+  @return{The unsigned integer for the monotonic time in microseconds.}
   @begin{short}
     Gets the time to be used when checking this source.
   @end{short}
@@ -2183,7 +2183,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 (cffi:defcfun ("g_source_remove_by_funcs_user_data"
                 source-remove-by-funcs-user-data) :boolean
  #+liber-documentation
- "@version{#2013-4-9}
+ "@version{#2013-04-09}
   @argument[funcs]{The @arg{source-funcs} passed to @fun{source-new}}
   @argument[user-data]{the user data for the callback}
   @return{@em{True} if a source was found and removed.}
@@ -2204,7 +2204,7 @@ if (g_atomic_int_dec_and_test (&tasks_remaining))
 (cffi:defcfun ("g_source_remove_by_user_data" source-remove-by-user-data)
     :boolean
  #+liber-documentation
- "@version{#2013-4-9}
+ "@version{#2013-04-09}
   @argument[user-data]{the @arg{user-data} for the callback}
   @return{@em{True} if a source was found and removed.}
   @begin{short}

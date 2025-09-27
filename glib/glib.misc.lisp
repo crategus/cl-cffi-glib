@@ -93,9 +93,9 @@
           (for str in values)
           (setf (cffi:mem-aref result :pointer i)
                 (cffi:foreign-funcall "g_strdup"
-		  ;madhu 250512 was (:string :free-to-foreign (strv-type-ftf type)) but ccl rightly throws an error because the type is  (or nil t)
+          ;madhu 250512 was (:string :free-to-foreign (strv-type-ftf type)) but ccl rightly throws an error because the type is  (or nil t)
                                       (:string
-				       :free-to-foreign t)
+                       :free-to-foreign t)
                                       str
                                       :pointer)))
     (setf (cffi:mem-aref result :pointer n) (cffi:null-pointer))
@@ -569,12 +569,12 @@
 
 (cffi:defcfun ("g_get_application_name" application-name) :string
  #+liber-documentation
- "@version{2025-05-19}
+ "@version{2025-09-27}
   @syntax{(g:application-name) => name}
   @syntax{(setf (g:application-name) name)}
   @argument[name]{a string for the localized name of the application}
   @begin{short}
-    Accessor of a human readable name for the application.
+    Gets or sets a human readable name for the application.
   @end{short}
   This name should be localized if possible, and is intended for display to the
   user. Contrast with the @fun{g:prgname} function, which gets a non-localized
@@ -603,12 +603,12 @@
 
 (cffi:defcfun ("g_get_prgname" prgname) :string
  #+liber-documentation
- "@version{2025-05-19}
+ "@version{2025-09-27}
   @syntax{(g:prgname) => prgname}
   @syntax{(setf (g:prgname) prgname)}
   @argument[prgname]{a string for the name of the program}
   @begin{short}
-    Accessor of the name of the program.
+    Gets or sets the name of the program.
   @end{short}
   This name should not be localized, contrast with the @fun{g:application-name}
   function. If you are using GDK or GTK the program name is set in the

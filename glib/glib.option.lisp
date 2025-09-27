@@ -1067,7 +1067,7 @@ More descriptions.
 
 (defun option-context-add-main-entries (context entries domain)
  #+liber-documentation
- "@version{2025-05-22}
+ "@version{2025-09-27}
   @argument[context]{a @type{g:option-context} instance}
   @argument[entries]{a list of option entries}
   @argument[domain]{a string for a translation domain to use for translating
@@ -1093,7 +1093,7 @@ More descriptions.
    ...)
   @end{pre}
   @begin[code]{table}
-    @entry[long-name]{The string with the long name of an option can be used to
+    @entry[long-name]{The string for the long name of an option can be used to
       specify it in a command line as @code{--long-name}. Every option must
       have a long name. To resolve conflicts if multiple option groups contain
       the same long name, it is also possible to specify the option as
@@ -1111,11 +1111,11 @@ More descriptions.
       type of the location depends on the @arg{arg} type. If the @arg{arg} type
       is @code{:string} or @code{:filename} the location will contain a newly
       allocated string if the option was given.}
-    @entry[description]{The string with the description for the option in
+    @entry[description]{The string for the description for the option in
       @code{--help} output. The description is translated using the
       @code{translate-func} callback function of the group, see the
       @fun{g:option-group-set-translation-domain} function.}
-    @entry[arg-description]{The string with the placeholder to use for the
+    @entry[arg-description]{The string for the placeholder to use for the
       extra argument parsed by the option in @code{--help} output. The
       @arg{arg-description} argument is translated using the
       @code{translate-func} callback function of the group, see the
@@ -1290,7 +1290,7 @@ More descriptions.
 
 (defun option-group-add-entries (group entries)
  #+liber-documentation
- "@version{2025-05-22}
+ "@version{2025-09-27}
   @argument[group]{a @type{g:option-group} instance}
   @argument[entries]{a list of option entries}
   @begin{short}
@@ -1311,7 +1311,7 @@ More descriptions.
    ...)
   @end{pre}
   @begin[code]{table}
-    @entry[long-name]{The string with the long name of an option can be used to
+    @entry[long-name]{The string for the long name of an option can be used to
       specify it in a command line as @code{--long-name}. Every option must
       have a long name. To resolve conflicts if multiple option groups contain
       the same long name, it is also possible to specify the option as
@@ -1329,11 +1329,11 @@ More descriptions.
       type of the location depends on the @arg{arg} type. If @arg{arg} type is
       @code{:string} or @code{:filename} the location will contain a newly
       allocated string if the option was given.}
-    @entry[description]{The string with the description for the option in
+    @entry[description]{The string for the description for the option in
       @code{--help} output. The description is translated using the
       @code{translate-func} of the group, see the
       @fun{g:option-group-set-translation-domain} function.}
-    @entry[arg-description]{The string with the placeholder to use for the
+    @entry[arg-description]{The string for the placeholder to use for the
       extra argument parsed by the option in @code{--help} output. The
       @arg{arg-description} is translated using the @code{translate-func} of
       the group, see the @fun{g:option-group-set-translation-domain} function.}
