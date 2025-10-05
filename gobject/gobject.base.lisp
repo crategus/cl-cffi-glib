@@ -157,6 +157,119 @@
   (value (:struct value)))
 
 ;;; ----------------------------------------------------------------------------
+;;; GObjectClass
+;;; ----------------------------------------------------------------------------
+
+;; TODO: Consider to remove the keyword definition for the slots
+
+(cffi:defcstruct object-class
+  ;; Class type
+  (:type-class (:pointer (:struct type-class)))
+  ;; Virtual functions
+  (:construct-properties :pointer)
+  (:constructor :pointer)
+  (:set-property :pointer)
+  (:get-property :pointer)
+  (:dispose :pointer)
+  (:finalize :pointer)
+  (:dispatch-properties-changed :pointer)
+  (:notify :pointer)
+  (:constructed :pointer)
+  ;; Private
+  (:pdummy :pointer :count 7))
+
+#+liber-documentation
+(setf (liber:alias-for-symbol 'object-class)
+      "CStruct"
+      (liber:symbol-documentation 'object-class)
+ "@version{2025-10-04}
+  @begin{declaration}
+(cffi:defcstruct object-class
+  ;; Class type
+  (type-class (:pointer (:struct type-class)))
+  ;; Private
+  (construct-properties :pointer)
+  ;; Virtual functions
+  (constructor :pointer)
+  (set-property :pointer)
+  (get-property :pointer)
+  (dispose :pointer)
+  (finalize :pointer)
+  (dispatch-properties-changed :pointer)
+  (notify :pointer)
+  (constructed :pointer)
+  ;; Private
+  (pdummy :pointer :count 7))
+  @end{declaration}
+  @begin{values}
+    @begin[code]{simple-table}
+      @entry[type-class]{The parent class.}
+      @entry[constructor]{The constructor function is called by the
+        @fun{g:object-new} constructor to complete the object initialization
+        after all the construction properties are set. The first thing a
+        constructor implementation must do is chain up to the constructor of
+        the parent class. Overriding constructor should be rarely needed, for
+        example, to handle construct properties, or to implement singletons.}
+      @entry[set-property]{The generic setter for all properties of this type.
+        Should be overridden for every type with properties. If implementations
+        of @code{set-property} do not emit property change notification
+        explicitly, this will be done implicitly by the type system. However, if
+        the notify signal is emitted explicitly, the type system will not emit
+        it a second time.}
+      @entry[get-property]{The generic getter for all properties of this type.
+        Should be overridden for every type with properties.}
+      @entry[dispose]{The dispose function is supposed to drop all references
+        to other objects, but keep the instance otherwise intact, so that client
+        method invocations still work. It may be run multiple times (due to
+        reference loops). Before returning, dispose should chain up to the
+        dispose method of the parent class.}
+      @entry[finalize]{Instance finalization function, should finish the
+        finalization of the instance begun in dispose and chain up to the
+        finalize method of the parent class.}
+      @entry[dispatch-properties-changed]{Emits property change notification
+        for a bunch of properties. Overriding @code{dispatch-properties-changed}
+        should be rarely needed.}
+      @entry[notify]{The class closure for the notify signal.}
+      @entry[constructed]{The constructed function is called by the
+        @fun{g:object-new} as the final step of the object creation process. At
+        the point of the call, all construction properties have been set on the
+        object. The purpose of this call is to allow for object initialisation
+        steps that can only be performed after construction properties have been
+        set. Implementors of the @code{constructed} virtual function should
+        chain up to the constructed call of their parent class to allow it to
+        complete its initialisation.}
+    @end{simple-table}
+  @end{values}
+  @begin{short}
+    The class structure for the @class{g:object} class.
+  @end{short}
+  @begin[Notes]{dictionary}
+    The @symbol{g:object-class} structure is used internally to implement the
+    Lisp API. The main purpose for the Lisp API user is to use the size of the
+    @symbol{g:object-class} structure and the documentation to implement virtual
+    function tables for subclasses of the @class{g:object} class.
+  @end{dictionary}
+  @see-class{g:object}
+  @see-function{g:object-new}")
+
+(export 'object-class)
+
+;; Accessors for the slots of the GObjectClass structure
+(defun object-class-get-property (class)
+  (cffi:foreign-slot-value class '(:struct object-class) :get-property))
+
+(defun (setf object-class-get-property) (value class)
+  (setf (cffi:foreign-slot-value class '(:struct object-class) :get-property)
+        value))
+
+(defun object-class-set-property (class)
+  (cffi:foreign-slot-value class '(:struct object-class) :set-property))
+
+(defun (setf object-class-set-property) (value class)
+  (setf (cffi:foreign-slot-value class '(:struct object-class) :set-property)
+        value))
+
+;;; ----------------------------------------------------------------------------
 ;;; GObject
 ;;; ----------------------------------------------------------------------------
 
@@ -613,38 +726,6 @@ lambda (object pspec)    :no-hooks
         (iter (for i from 0 below count)
               (for gvalue = (cffi:mem-aptr aptr-values '(:struct value) i))
               (value-unset gvalue))))))
-
-;;; ----------------------------------------------------------------------------
-;;; GObjectClass                                            not exported
-;;; ----------------------------------------------------------------------------
-
-(cffi:defcstruct object-class
-  (:type-class (:pointer (:struct type-class)))
-  (:construct-properties :pointer)
-  (:constructor :pointer)
-  (:set-property :pointer)
-  (:get-property :pointer)
-  (:dispose :pointer)
-  (:finalize :pointer)
-  (:dispatch-properties-changed :pointer)
-  (:notify :pointer)
-  (:constructed :pointer)
-  (:pdummy :pointer :count 7))
-
-;; Accessors for the slots of the GObjectClass structure
-(defun object-class-get-property (class)
-  (cffi:foreign-slot-value class '(:struct object-class) :get-property))
-
-(defun (setf object-class-get-property) (value class)
-  (setf (cffi:foreign-slot-value class '(:struct object-class) :get-property)
-        value))
-
-(defun object-class-set-property (class)
-  (cffi:foreign-slot-value class '(:struct object-class) :set-property))
-
-(defun (setf object-class-set-property) (value class)
-  (setf (cffi:foreign-slot-value class '(:struct object-class) :set-property)
-        value))
 
 ;;; ----------------------------------------------------------------------------
 ;;; GObjectConstructParam                                   not exported

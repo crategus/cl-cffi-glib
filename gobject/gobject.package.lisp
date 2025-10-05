@@ -432,6 +432,7 @@
     @end{subsection}
   @end{section}
   @begin[GObject]{section}
+    @about-symbol{object-class}
     @about-class{object}
     @about-generic{object-has-reference}
     @about-generic{object-pointer}

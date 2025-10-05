@@ -503,6 +503,7 @@
            #:value-take-variant
 
            ;; Symbols from gobject.base.lisp
+           #:object-class
            #:object
            #:object-has-reference
            #:object-pointer
