@@ -201,6 +201,31 @@
   (:skip from-tokens :pointer)
   (:skip serialize :pointer))
 
+(test define-vtable-for-gicon
+  (is (= 56 (cffi:foreign-type-size '(:struct icon-vtable))))
+  (is (equal '(PROGN
+ (CFFI:DEFCSTRUCT ICON-VTABLE
+   (PARENT-INSTANCE (:STRUCT GOBJECT:TYPE-INTERFACE))
+   (HASH :POINTER)
+   (EQUAL :POINTER)
+   (TO-TOKENS :POINTER)
+   (FROM-TOKENS :POINTER)
+   (SERIALIZE :POINTER))
+ (SETF (GOBJECT::GET-VTABLE-INFO "GIcon")
+         (GOBJECT::MAKE-VTABLE-INFO :GNAME "GIcon" :CNAME 'ICON-VTABLE :METHODS
+                                    (LIST))))
+             (macroexpand '(gobject:define-vtable ("GIcon" icon)
+  (:skip parent-instance (:struct g:type-interface))
+  ;; Methods of the GIcon interface
+  (:skip hash :pointer)
+  (:skip equal :pointer)
+  (:skip to-tokens :pointer)
+  (:skip from-tokens :pointer)
+  (:skip serialize :pointer))))))
+
+;;; ----------------------------------------------------------------------------
+
+
 ;;; ----------------------------------------------------------------------------
 
 ;;     Define a Clock3
