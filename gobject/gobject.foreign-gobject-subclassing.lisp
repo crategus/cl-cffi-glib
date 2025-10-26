@@ -665,6 +665,4 @@
                               ,(package-name (symbol-package name)))))
                          props))))))
 
-(export 'define-gobject-subclass)
-
 ;;; --- End of file gobject.foreign-gobject-subclassing.lisp -------------------
