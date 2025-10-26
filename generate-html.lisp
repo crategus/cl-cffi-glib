@@ -65,8 +65,6 @@
 (unexport 'gobject:define-gflags :gobject)
 (unexport 'gobject:define-ginterface :gobject)
 (unexport 'gobject:define-gobject :gobject)
-(unexport 'gobject:define-gobject-subclass :gobject)
-(unexport 'gobject:define-vtable :gobject)
 (unexport 'gobject:enum-item-name :gobject)
 (unexport 'gobject:enum-item-nick :gobject)
 (unexport 'gobject:enum-item-value :gobject)
