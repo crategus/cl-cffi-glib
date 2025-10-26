@@ -293,8 +293,8 @@ lambda (cancellable)    :run-last
 (setf (liber:alias-for-symbol 'cancellable-source-func)
       "Callback"
       (liber:symbol-documentation 'cancellable-source-func)
- "@version{#2025-05-27}
-  @syntax{lambda (cancellable} => result
+ "@version{#2025-10-26}
+  @syntax{lambda (cancellable) => result}
   @argument[cancellable]{a @class{g:cancellable} object}
   @argument[result]{@em{false} if the source should be removed}
   @begin{short}
@@ -423,15 +423,16 @@ lambda (cancellable)    :run-last
 
 (defun cancellable-connect (cancellable func)
  #+liber-documentation
- "@version{2025-05-27}
+ "@version{2025-10-26}
   @argument[cancellable]{a @class{g:cancellable} object}
   @argument[func]{a @symbol{g:callback} callback function}
   @begin{return}
-    The ID of the signal handler or 0 if @arg{cancellable} has already been
-    cancelled.
+    The unsigned integer for the ID of the signal handler or 0 if
+    @arg{cancellable} has already been cancelled.
   @end{return}
   @begin{short}
-    Convenience function to connect to the @code{\"cancelled\"} signal.
+    Convenience function to connect to the @sig[g:cancellable]{cancelled}
+    signal.
   @end{short}
   Also handles the race condition that may happen if the cancellable is
   cancelled right before connecting.
@@ -440,7 +441,7 @@ lambda (cancellable)    :run-last
   of the connect if cancellable is already cancelled, or when cancellable is
   cancelled in some thread.
 
-  See the @code{\"cancelled\"} signal for details on how to use this.
+  See the @sig[g:cancellable]{cancelled} signal for details on how to use this.
   @see-class{g:cancellable}"
   (let ((ptr (glib:allocate-stable-pointer func)))
     (%cancellable-connect cancellable
@@ -456,7 +457,7 @@ lambda (cancellable)    :run-last
 
 (cffi:defcfun ("g_cancellable_disconnect" cancellable-disconnect) :void
  #+liber-documentation
- "@version{2025-05-27}
+ "@version{2025-10-26}
   @argument[cancellable]{a @class{g:cancellable} object}
   @argument[id]{an unsigned integer for the handler ID of the handler to be
     disconnected, or 0}
@@ -466,16 +467,18 @@ lambda (cancellable)    :run-last
   @end{short}
   Additionally, in the event that a signal handler is currently running, this
   call will block until the handler has finished. Calling this function from a
-  @code{\"cancelled\"} signal handler will therefore result in a deadlock.
+  @sig[g:cancellable]{cancelled} signal handler will therefore result in a
+  deadlock.
 
   This avoids a race condition where a thread cancels at the same time as the
   cancellable operation is finished and the signal handler is removed. See the
-  @code{\"cancelled\"} signal handler for details on how to use this.
+  @sig[g:cancellable]{cancelled} signal handler for details on how to use this.
 
   If @arg{cancellable} is @code{nil} or @arg{ID} is 0 this function does
   nothing.
   @see-class{g:cancellable}
-  @see-symbol{g:object}"
+  @see-symbol{g:object}
+  @see-function{g:signal-handler-disconnect}"
   (cancellable (gobject:object cancellable))
   (id :ulong))
 
@@ -487,11 +490,11 @@ lambda (cancellable)    :run-last
 
 (cffi:defcfun ("g_cancellable_cancel" cancellable-cancel) :void
  #+liber-documentation
- "@version{2025-05-27}
+ "@version{2025-10-26}
   @argument[cancellable]{a @class{g:cancellable} object}
   @begin{short}
     Will set @arg{cancellable} to cancelled, and will emit the
-    @code{\"cancelled\"} signal.
+    @sig[g:cancellable]{cancelled} signal.
   @end{short}
   However, see the warning about race conditions in the documentation for that
   signal if you are planning to connect to it.

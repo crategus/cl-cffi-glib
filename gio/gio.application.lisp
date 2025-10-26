@@ -1274,7 +1274,7 @@ lambda (application)    :run-first
 
 (defun application-run (application argv)
  #+liber-documentation
- "@version{2025-08-27}
+ "@version{2025-10-19}
   @argument[application]{a @class{g:application} instance}
   @argument[argv]{a list of strings for command line parameters, or @code{nil}}
   @return{The integer for the exit status.}
@@ -1304,14 +1304,14 @@ lambda (application)    :run-first
   exit status of the process.
 
   What happens next depends on the @symbol{g:application-flags} flags: if the
-  @code{:handles-command-line} flag was specified then the remaining command
-  line arguments are sent to the primary instance, where a
+  @val[g:application-flags]{:handles-command-line} flag was specified then the
+  remaining command line arguments are sent to the primary instance, where a
   @sig[g:application]{command-line} signal is emitted. Otherwise, the remaining
   command line arguments are assumed to be a list of files. If there are no
   files listed, the application is activated via the
   @sig[g:application]{activate} signal. If there are one or more files, and the
-  @code{:handles-open} flag was specified then the files are opened via the
-  @sig[g:application]{open} signal.
+  @val[g:application-flags]{:handles-open} flag was specified then the files are
+  opened via the @sig[g:application]{open} signal.
 
   If you are interested in doing more complicated local handling of the
   command line then you should implement your own @class{g:application} subclass
@@ -1324,11 +1324,11 @@ lambda (application)    :run-first
   the default main context is iterated until the use count falls to zero, at
   which point 0 is returned.
 
-  If the @code{:is-service} flag is set, then the service will run for as much
-  as 10 seconds with a use count of zero while waiting for the message that
-  caused the activation to arrive. After that, if the use count falls to zero
-  the application will exit immediately, except in the case that the
-  @fun{g:application-inactivity-timeout} function is in use.
+  If the @val[g:application-flags]{:is-service} flag is set, then the service
+  will run for as much as 10 seconds with a use count of zero while waiting for
+  the message that caused the activation to arrive. After that, if the use count
+  falls to zero the application will exit immediately, except in the case that
+  the @fun{g:application-inactivity-timeout} function is in use.
 
   This function sets the program name with the @fun{g:prgname} function, if not
   already set, to the basename of the first value of the command line arguments.
@@ -1337,20 +1337,21 @@ lambda (application)    :run-first
   main context for the duration that the application is running.
 
   Applications that are not explicitly flagged as services or launchers, that
-  is, neither the @code{:is-service} or the @code{:is-launcher} values are
-  given as flags, will check, from the default handler for the
-  @code{local_command_line()} virtual function, if the
-  @code{--gapplication-service} option was given in the command line. If this
-  flag is present then normal command line processing is interrupted and the
-  @code{:is-service} flag is set. This provides a \"compromise\" solution
-  whereby running an application directly from the command line will invoke it
-  in the normal way, which can be useful for debugging, while still allowing
-  applications to be D-Bus activated in service mode. The D-Bus service file
-  should invoke the executable with the @code{--gapplication-service} option as
-  the sole command line argument. This approach is suitable for use by most
-  graphical applications but should not be used from applications like editors
-  that need precise control over when processes invoked via the command line
-  will exit and what their exit status will be.
+  is, neither the @val[g:application-flags]{:is-service} or the
+  @val[g:application-flags]{:is-launcher} values are given as flags, will check,
+  from the default handler for the @code{local_command_line()} virtual function,
+  if the @code{--gapplication-service} option was given in the command line. If
+  this flag is present then normal command line processing is interrupted and
+  the @val[g:application-flags]{:is-service} flag is set. This provides a
+  \"compromise\" solution whereby running an application directly from the
+  command line will invoke it in the normal way, which can be useful for
+  debugging, while still allowing applications to be D-Bus activated in service
+  mode. The D-Bus service file should invoke the executable with the
+  @code{--gapplication-service} option as the sole command line argument. This
+  approach is suitable for use by most graphical applications but should not be
+  used from applications like editors that need precise control over when
+  processes invoked via the command line will exit and what their exit status
+  will be.
   @see-class{g:application}
   @see-symbol{g:application-flags}
   @see-function{g:prgname}
@@ -1517,7 +1518,7 @@ lambda (application)    :run-first
 (defun application-add-main-option (application
                                     long short flags arg desc argdesc)
  #+liber-documentation
- "@version{2025-06-22}
+ "@version{2025-10-19}
   @argument[application]{a @class{g:application} instance}
   @argument[long]{a string for the long name of an option used to specify it
     in a command line}
@@ -1538,8 +1539,8 @@ lambda (application)    :run-first
 
   The parsed arguments will be packed into a @class{g:variant-dict} parameter
   which is passed to the @sig[g:application]{handle-local-options} signal
-  handler. If the @code{:handles-command-line} flag is set, then it will also
-  be sent to the primary instance. See the
+  handler. If the @val[g:application-flags]{:handles-command-line} flag is set,
+  then it will also be sent to the primary instance. See the
   @fun{g:application-add-main-option-entries} function for more details.
 
   See the @fun{g:option-group-add-entries} function for more documentation of

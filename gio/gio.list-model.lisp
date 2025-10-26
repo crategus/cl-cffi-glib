@@ -77,14 +77,15 @@
 (setf (liber:alias-for-class 'list-model)
       "Interface"
       (documentation 'list-model 'type)
- "@version{2025-07-21}
+ "@version{2025-10-25}
   @begin{short}
     The @class{g:list-model} interface is an interface that represents a mutable
     list of @class{g:object} instances.
   @end{short}
   Its main intention is as a model for various widgets in user interfaces, such
   as list views, but it can also be used as a convenient method of returning
-  lists of data, with support for updates.
+  lists of data, with support for updates. The @class{g:list-store} class
+  implements the interface for storing @class{g:object} items.
 
   Each object in the list may also report changes in itself via some mechanism,
   normally the @sig[g:object]{notify} signal. Taken together with the
@@ -136,9 +137,9 @@ lambda (model pos removed added)    :run-last
         @entry[added]{The unsigned integer for the number of items added.}
       @end{table}
       This signal is emitted whenever items were added to or removed from
-      @arg{model}. At @arg{pos}, removed items were removed and added items
-      were added in their place. Note: If @arg{removed} is not equal
-      @arg{added}, the positions of all later items in the model change.
+      @arg{model}. At @arg{pos}, @arg{removed} items were removed and
+      @arg{added} items were added in their place. Note: If @arg{removed} is not
+      equal @arg{added}, the positions of all later items in the model change.
     @end{signal}
   @end{dictionary}
   @see-class{g:list-store}")
@@ -159,14 +160,14 @@ lambda (model pos removed added)    :run-last
 (setf (liber:alias-for-symbol 'list-model-vtable)
       "VTable"
       (liber:symbol-documentation 'list-model-vtable)
- "@version{2025-03-24}
+ "@version{2025-10-25}
   @begin{declaration}
 (gobject:define-vtable (\"GListModel\" list-model)
   (:skip parent-instance (:struct gobject:type-interface))
   ;; Methods of the GListModel interface
-  (get-item-type                               ; virtual function
-     (gobject:type-t                           ; return type
-       (model (gobject:object list-model))))   ; argument
+  (get-item-type                                ; virtual function
+      (gobject:type-t                           ; return type
+       (model (gobject:object list-model))))    ; argument
   (get-n-items (:uint
                 (model (gobject:object list-model))))
   (get-item (gobject:object
@@ -177,21 +178,21 @@ lambda (model pos removed added)    :run-last
     @begin[code]{table}
       @entry[get-item-type]{Virtual function called by the
         @fun{g:list-model-item-type} function. You must implement the
-        @fun{g:list-model-get-item-type-impl} method, when subclassing from
-        the @class{g:list-model} interface.}
+        @fun{g:list-model-get-item-type-impl} method, when subclassing from the
+        interface.}
       @entry[get-n-items]{Virtual function called by the
         @fun{g:list-model-n-items} function. You must implement the
         @fun{g:list-model-get-n-items-impl} method, when subclassing from the
-        @class{g:list-model} interface.}
+        interface.}
       @entry[get-item]{Virtual function called by the @fun{g:list-model-item}
         function. You must implement the @fun{g:list-model-get-item-impl}
-        method, when subclassing from the @class{g:list-model} interface.}
+        method, when subclassing from the interface.}
     @end{table}
   @end{values}
   The virtual function table for the @class{g:list-model} interface.
   @begin[Examples]{dictionary}
-    Simple example of subclassing the @class{g:list-model} interface. The
-    model is internally represented as a Lisp list.
+    Simple example of subclassing the @class{g:list-model} interface. The model
+    is internally represented as a Lisp list.
     @begin{pre}
 ;; Simple implementation which uses a Lisp list
 (gobject:define-gobject-subclass \"CLListStore\" cl-list-store

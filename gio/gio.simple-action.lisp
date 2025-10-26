@@ -356,7 +356,7 @@ lambda (action value)    :run-last
 
 (defun simple-action-new-stateful (name vtype state)
  #+liber-documentation
- "@version{2025-09-27}
+ "@version{2025-10-08}
   @argument[name]{a string for the name of the action}
   @argument[vtype]{a @class{g:variant-type} parameter type or a type string for
     the parameter to the activate function}
