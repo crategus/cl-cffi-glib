@@ -46,7 +46,7 @@
 ;;;     g_permission_release
 ;;;     g_permission_release_async
 ;;;     g_permission_release_finish
-;;;     g_permission_impl_update                            not implemented
+;;;     g_permission_impl_update
 ;;;
 ;;; Properties
 ;;;
@@ -84,7 +84,7 @@
 
 #+liber-documentation
 (setf (documentation 'permission 'type)
- "@version{2025-05-26}
+ "@version{2025-10-25}
   @begin{short}
     The @class{g:permission} class represents the status of the permission of
     the caller to perform a certain action.
@@ -104,6 +104,65 @@
   @see-class{g:simple-permission}")
 
 ;;; ----------------------------------------------------------------------------
+
+#+liber-documentation
+(setf (liber:alias-for-symbol 'permission-vtable)
+      "VTable"
+      (liber:symbol-documentation 'permission-vtable)
+ "@version{2025-10-25}
+  @begin{declaration}
+(gobject:define-vtable (\"Permission\" permission)
+  ;; Parent class
+  (:skip parent-instance (:struct gobject:object-class))
+  ;; Virtual methods
+  (acquire        (:boolean
+                   (permission (g:object g:permission))
+                   (cancellable (g:object g:cancellable))
+                   (error :pointer)))
+  (acquire-async  (:void
+                   (permission (g:object g:permission))
+                   (cancellable (g:object g:cancellable))
+                   (callback :pointer)
+                   (data :pointer)))
+  (acquire-finish (:boolean
+                   (permission (g:object g:permission))
+                   (result :pointer)
+                   (err :pointer)))
+  (release        (:boolean
+                   (permission (g:object g:permission))
+                   (cancellable (g:object g:cancellable))
+                   (err :pointer)))
+  (release-async  (:void
+                   (permission (g:object g:permission))
+                   (cancellable (g:object g:cancellable))
+                   (callback :pointer)
+                   (data :pointer)))
+  (release-finish (:boolean
+                   (permission (g:object g:permission))
+                   (result :pointer)
+                   (err :pointer)))
+  (:skip none :pointer))
+  @end{declaration}
+  @begin{values}
+    @begin[code]{simple-table}
+      @entry[acquire]{Attempts to acquire the permission.}
+      @entry[acquire-async]{Attempts to asynchronously acquire the permission.}
+      @entry[acquire-finish]{Collects the result of attempting to acquire the
+        permission.}
+      @entry[release]{Attempts to release the permission.}
+      @entry[release-async]{Attempts to asynchronously release the permission.}
+      @entry[release-finish]{Collects the result of attempting to release the
+        permission.}
+    @end{simple-table}
+  @end{values}
+  @begin{short}
+    The virtual function table for the @class{g:permission} class.
+  @end{short}
+  @see-class{g:permission}")
+
+(export 'permission-vtable)
+
+;;; ----------------------------------------------------------------------------
 ;;; Property and Accessor Details
 ;;; ----------------------------------------------------------------------------
 
@@ -113,7 +172,7 @@
 (setf (documentation (liber:slot-documentation "allowed" 'permission) t)
  "The @code{allowed} property of type @code{:boolean} (Read) @br{}
   @em{True} if the caller currently has permission to perform the action that
-  the @class{g:permission} object represents the permission to perform. @br{}
+  the permission represents to perform. @br{}
   Default value: @em{false}")
 
 #+liber-documentation
@@ -138,8 +197,7 @@
 #+liber-documentation
 (setf (documentation (liber:slot-documentation "can-acquire" 'permission) t)
  "The @code{can-acquire} property of type @code{:boolean} (Read) @br{}
-  @em{True} if it is generally possible to acquire the permission by calling
-  the @fun{g:permission-acquire} function. @br{}
+  @em{True} if it is generally possible to acquire the permission. @br{}
   Default value: @em{false}")
 
 #+liber-documentation
@@ -164,8 +222,7 @@
 #+liber-documentation
 (setf (documentation (liber:slot-documentation "can-release" 'permission) t)
  "The @code{can-release} property of type @code{:boolean} (Read) @br{}
-  @em{True} if it is generally possible to release the permission by calling
-  the @fun{g:permission-release} function. @br{}
+  @em{True} if it is generally possible to release the permission. @br{}
   Default value: @em{false}")
 
 #+liber-documentation
@@ -196,7 +253,7 @@
 
 (defun permission-acquire (permission &optional (cancellable nil))
  #+liber-documentation
- "@version{#2025-05-26}
+ "@version{2025-10-25}
   @argument[permission]{a @class{g:permission} object}
   @argument[cancellable]{a @class{g:cancellable} instance, or @code{nil}}
   @return{@em{True} if the permission was successfully acquired.}
@@ -234,7 +291,7 @@
 
 (defun permission-acquire-async (permission cancellable func)
  #+liber-documentation
- "@version{#2025-05-26}
+ "@version{2025-10-25}
   @argument[permission]{a @class{g:permission} object}
   @argument[cancellable]{a @class{g:cancellable} object, can be @code{nil}}
   @argument[func]{a @symbol{g:async-ready-callback} callback function to
@@ -269,7 +326,7 @@
 
 (defun permission-acquire-finish (permission result)
  #+liber-documentation
- "@version{#2025-05-26}
+ "@version{2025-10-25}
   @argument[permission]{a @class{g:permission} object}
   @argument[result]{a @class{g:async-result} object}
   @return{@em{True} if the permission was successfully acquired.}
@@ -299,7 +356,7 @@
 
 (defun permission-release (permission &optional (cancellable nil))
  #+liber-documentation
- "@version{#2025-05-26}
+ "@version{2025-10-25}
   @argument[permission]{a @class{g:permission} object}
   @argument[cancellable]{a @class{g:cancellable} instance, or @code{nil}}
   @return{@em{True} if the permission was successfully released.}
@@ -337,7 +394,7 @@
 
 (defun permission-release-async (permission cancellable func)
  #+liber-documentation
- "@version{#2025-05-26}
+ "@version{2025-10-25}
   @argument[permission]{a @class{g:permission} object}
   @argument[cancellable]{a @class{g:cancellable} object, can be @code{nil}}
   @argument[func]{a @symbol{g:async-ready-callback} callback function to
@@ -372,7 +429,7 @@
 
 (defun permission-release-finish (permission result)
  #+liber-documentation
- "@version{#2025-05-26}
+ "@version{2025-10-25}
   @argument[permission]{a @class{g:permission} object}
   @argument[result]{a @class{g:async-result} object}
   @return{@em{True} if the permission was successfully released.}
@@ -392,31 +449,32 @@
 (export 'permission-release-finish)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_permission_impl_update ()
-;;;
-;;; void
-;;; g_permission_impl_update (GPermission *permission,
-;;;                           gboolean allowed,
-;;;                           gboolean can_acquire,
-;;;                           gboolean can_release);
-;;;
-;;; This function is called by the GPermission implementation to update the
-;;; properties of the permission. You should never call this function except
-;;; from a GPermission implementation.
-;;;
-;;; GObject notify signals are generated, as appropriate.
-;;;
-;;; permission :
-;;;     a GPermission instance
-;;;
-;;; allowed :
-;;;     the new value for the 'allowed' property
-;;;
-;;; can_acquire :
-;;;     the new value for the 'can-acquire' property
-;;;
-;;; can_release :
-;;;     the new value for the 'can-release' property
+;;; g_permission_impl_update
 ;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("g_permission_impl_update" permission-impl-update) :void
+ "@version{2025-10-25}
+  @argument[permission]{a @class{g:permission} object}
+  @argument[allowed]{a boolean for the new value for the
+    @slot[g:permission]{allowed} property}
+  @argument[can-aquire]{a boolean for the new value for the
+    @slot[g:permission]{can-aquire} property}
+  @argument[can-release]{a boolean for new new value for the
+    @slot[g:permission]{can-release} property}
+  @begin{short}
+    This function is called by the @class{g:permission} implementation to update
+    the properties of the permission.
+  @end{short}
+  You should never call this function except from a @class{g:permission}
+  implementation.
+
+  GObject notify signals are generated, as appropriate.
+  @see-class{g:permission}"
+  (permission (gobject:object permission))
+  (allowed :boolean)
+  (can-aquire :boolean)
+  (can-release :boolean))
+
+(export 'permission-impl-update)
 
 ;;; --- End of file gio.permission.lisp ----------------------------------------
