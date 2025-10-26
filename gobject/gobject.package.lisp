@@ -42,14 +42,14 @@
            #:set-gvalue
 
            #:create-fn-ref
-
            #:define-cb-methods
-           #:define-vtable
 
            #:define-genum
            #:define-gflags
            #:define-ginterface
            #:define-gobject
+           #:define-gobject-subclass
+           #:define-vtable
 
            #:get-gtype-definition
 
@@ -596,6 +596,10 @@
     @about-function{object-bind-property}
     @about-symbol{binding-transform-func}
     @about-function{object-bind-property-full}
+  @end{section}
+  @begin[Subclassing from GObject]{section}
+    @about-macro{define-gobject-subclass}
+    @about-macro{define-vtable}
   @end{section}")
 
 ;;; --- End of file gobject.package.lisp ---------------------------------------

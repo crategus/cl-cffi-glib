@@ -1,84 +1,84 @@
 Content from the GIO Reference Manual for Version 2.84
 
-    *   - needs update
-    +   - work needed
-    %   - not fully implemented
-    &   - objects and structures are implemented, some functions are missing
-   (**) - deprecated
+    .   needs proofreading
+    *   needs update
+    +   needs work
+    %   not fully implemented
+    &   objects and structures are implemented, but functions are missing
 
 File Operations
 
-  gio.file-lisp                - File and Directory Handling          GIO 2.82%.
-  gio.file-info.lisp           - File Information and Attributes      GIO 2.84 +
+  gio.file-lisp                  File and Directory Handling         GIO 2.84 %
+  gio.file-info.lisp             File Information and Attributes     GIO 2.84 +
 
 Asynchronous I/O
 
-  gio.cancellable.lisp         - Thread-safe Cancellation Stack       GIO 2.84 .
-  gio.async-result.lisp        - Asynchronous Function Results        GIO 2.84 .
-  gio.task.lisp                - Cancellable task and result          GIO 2.82 +
+  gio.cancellable.lisp           Thread-safe Cancellation Stack      GIO 2.84 .
+  gio.async-result.lisp          Asynchronous Function Results       GIO 2.84 .
+  gio.task.lisp                  Cancellable task and result         GIO 2.84 +
 
 File types and applications
 
-  gio.content-type.lisp        - Platform-specific content typing     GIO 2.84
-  gio.app-info.lisp            - GAppInfo                             GIO 2.84
+  gio.content-type.lisp          Platform-specific content typing    GIO 2.84
+  gio.app-info.lisp              GAppInfo                            GIO 2.84
 
-  not implemented              - GAppInfoMonitor
-  not implemented              - GDesktopAppInfo
+  not implemented                GAppInfoMonitor
+  not implemented                GDesktopAppInfo
 
 Icons
 
-  gio.icon.lisp                - GIcon                                GIO 2.82
-  gio.file-icon.lisp           - GFileIcon                            GIO 2.82
-  not implemented              - GBytesIcon
-  gio.loadable-icon.lisp       - GLoadableIcon                        GIO 2.82 &
-  gio.themed-icon.lisp         - GThemedIcon                          GIO 2.82
-  gio.emblem.lisp              - An object for emblems                GIO 2.82
-  gio.emblemed-icon.lisp       - Icon with emblems                    GIO 2.82
+  gio.icon.lisp                  GIcon                               GIO 2.84
+  gio.file-icon.lisp             GFileIcon                           GIO 2.84
+  not implemented                GBytesIcon
+  gio.loadable-icon.lisp         GLoadableIcon                       GIO 2.84 &
+  gio.themed-icon.lisp           GThemedIcon                         GIO 2.84
+  gio.emblem.lisp                An object for emblems               GIO 2.84
+  gio.emblemed-icon.lisp         Icon with emblems                   GIO 2.84
 
 Settings
 
-  gio.settings.lisp            - GSettings                            GIO 2.84 +
+  gio.settings.lisp              GSettings                           GIO 2.84 +
 
   GSettingsBackend - Interface for settings backend implementations
   GSettingsSchema - Loading of GSettings schemas
 
 Resources
 
-  gio.resource.lisp            - GResource                          - GIO 2.84
+  gio.resource.lisp              GResource                           GIO 2.84
 
 Permissions
 
-  gio.permission.lisp          - GPermission                        - GIO 2.84 .
-  gio.simple-permission.lisp   - GSimplePermission                  - GIO 2.84 .
+  gio.permission.lisp            GPermission                         GIO 2.84 .
+  gio.simple-permission.lisp     GSimplePermission                   GIO 2.84 .
 
 Data Models
 
-  gio.list-model.lisp          - GListModel                         - GIO 2.84
-  gio.list-store.lisp          - GListStore                         - GIO 2.84
+  gio.list-model.lisp            GListModel                          GIO 2.84
+  gio.list-store.lisp            GListStore                          GIO 2.84
 
 Application support
 
-  gio.application.lisp         - GApplication                       - GIO 2.84&.
-  gio.appliation-command-line  - GApplicationCommandLine            - GIO 2.82&.
-  gio.action-group.lisp        - GActionGroup                       - GIO 2.82 .
-  gio.action-map.lisp          - GActionMap                         - GIO 2.82 .
-  gio.simple-action-group.lisp - GSimpleActionGroup                 - GIO 2.82 .
-  gio.action.lisp              - GAction                            - GIO 2.82 .
-  gio.simple-action.lisp       - GSimpleAction                      - GIO 2.82 .
-  gio.property-action.lisp     - GPropertyAction                    - GIO 2.82 .
+  gio.application.lisp           GApplication                        GIO 2.84 &.
+  gio.appliation-command-line    GApplicationCommandLine             GIO 2.84 &.
+  gio.action-group.lisp          GActionGroup                        GIO 2.84 .
+  gio.action-map.lisp            GActionMap                          GIO 2.84 .
+  gio.simple-action-group.lisp   GSimpleActionGroup                  GIO 2.84 .
+  gio.action.lisp                GAction                             GIO 2.84 .
+  gio.simple-action.lisp         GSimpleAction                       GIO 2.84 .
+  gio.property-action.lisp       GPropertyAction                     GIO 2.84 .
 
-  not implemented              - GRemoteActionGroup
-  not implemented              - GActionGroup exporter
-  not implemented              - GDBusActionGroup
+  not implemented                GRemoteActionGroup
+  not implemented                GActionGroup exporter
+  not implemented                GDBusActionGroup
 
-  not implemented              - GMemoryMonitor
+  not implemented                GMemoryMonitor
 
-  gio.menu-model.lisp          - GMenuModel                         - GIO 2.82 .
-  gio.menu.lisp                - GMenu                              - GIO 2.82 .
+  gio.menu-model.lisp            GMenuModel                          GIO 2.84 .
+  gio.menu.lisp                  GMenu                               GIO 2.84 .
 
-  not implemented              - GMenuModel exporter
-  not implemented              - GDBusMenuModel
+  not implemented                GMenuModel exporter
+  not implemented                GDBusMenuModel
 
-  gio.notification.lisp        - GNotification                      - GIO 2.82&.
+  gio.notification.lisp          GNotification                       GIO 2.84 &.
 
-2025-05-30
+2025-10-25

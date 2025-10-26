@@ -348,6 +348,7 @@
   @end{section}
   @begin[Permissions]{section}
     @begin[GPermission]{subsection}
+      @about-symbol{permission-vtable}
       @about-class{permission}
       @about-generic{permission-allowed}
       @about-generic{permission-can-acquire}

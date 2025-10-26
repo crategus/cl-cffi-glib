@@ -718,6 +718,7 @@
 
            ;; Symbols from gio.permission.lisp
            #:permission
+           #:permission-vtable
            #:permission-allowed
            #:permission-can-acquire
            #:permission-can-release
