@@ -657,6 +657,7 @@ baker_bake_cake_sync (Baker               *self,
   (callback :pointer)
   (data :pointer))
 
+#+nil
 (defun task-new (source cancellable func)
  #+liber-documentation
  "@version{#2025-05-28}
@@ -685,10 +686,65 @@ baker_bake_cake_sync (Baker               *self,
   on have been destroyed. If you do not want this behavior, you can use the
   @fun{g:task-set-check-cancellable} function to change it.
   @see-class{g:task}"
-  (%task-new (if source (gobject:object-pointer source) (cffi:null-pointer))
-             (or cancellable (cffi:null-pointer))
-             (cffi:callback async-ready-callback)
-             (glib:allocate-stable-pointer func)))
+  (if func
+      (%task-new (if source (gobject:object-pointer source) (cffi:null-pointer))
+                 (or cancellable (cffi:null-pointer))
+                 (cffi:callback async-ready-callback)
+                 (glib:allocate-stable-pointer func))
+      (%task-new (if source (gobject:object-pointer source) (cffi:null-pointer))
+                 (or cancellable (cffi:null-pointer))
+                 (cffi:null-pointer)
+                 (cffi:null-pointer))))
+
+(defun task-new (source cancellable func)
+ #+liber-documentation
+ "@version{#2025-05-28}
+  @argument[source]{a @class{g:object} instance that owns this task, or
+    @code{nil}}
+  @argument[canellable]{an optional @class{g:cancellable} instance, @code{nil}
+    to ignore}
+  @argument[func]{a @symbol{g:async-ready-callback} callback function}
+  @return{The newly created @class{g:task} instance.}
+  @begin{short}
+    Creates a @class{g:task} instance acting on @arg{source}, which will
+    eventually be used to invoke callback in the current thread-default main
+    context.
+  @end{short}
+
+  Call this in the \"start\" method of your asynchronous method, and pass the
+  @class{g:task} instance around throughout the asynchronous operation. You can
+  use the @fun{g:task-set-task-data} function to attach task-specific data to
+  the object, which you can retrieve later via the @fun{g:task-get-task-data}
+  function.
+
+  By default, if @arg{cancellable} is cancelled, then the return value of the
+  task will always be @code{G_IO_ERROR_CANCELLED}, even if the task had already
+  completed before the cancellation. This allows for simplified handling in
+  cases where cancellation may imply that other objects that the task depends
+  on have been destroyed. If you do not want this behavior, you can use the
+  @fun{g:task-set-check-cancellable} function to change it.
+  @see-class{g:task}"
+  (cond ((cffi:pointerp func)
+         (%task-new (if source
+                        (gobject:object-pointer source)
+                        (cffi:null-pointer))
+                    (or cancellable (cffi:null-pointer))
+                    func
+                    (cffi:null-pointer)))
+        (func
+         (%task-new (if source
+                        (gobject:object-pointer source)
+                        (cffi:null-pointer))
+                    (or cancellable (cffi:null-pointer))
+                    (cffi:callback async-ready-callback)
+                    (glib:allocate-stable-pointer func)))
+        (t
+         (%task-new (if source
+                        (gobject:object-pointer source)
+                        (cffi:null-pointer))
+                    (or cancellable (cffi:null-pointer))
+                    (cffi:null-pointer)
+                    (cffi:null-pointer)))))
 
 (export 'task-new)
 
@@ -1345,6 +1401,16 @@ The value is a NUL terminated UTF-8 string.
 ;;; Returns :
 ;;;     the task result, or FALSE on error
 ;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("g_task_propagate_boolean" %task-propagate-boolean) :boolean
+  (task (gobject:object task))
+  (err :pointer))
+
+(defun task-propagate-boolean (task)
+  (glib:with-error (err)
+    (%task-propagate-boolean task err)))
+
+(export 'task-propagate-boolean)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_task_propagate_int ()
