@@ -1,24 +1,30 @@
-Content from the GObject 2.80 Reference Manual
+Content from the GObject 2.86 Reference Manual
 
-  gobject.type-info.lisp   - Type Information                  - GObject 2.82 .
+    .   needs proofreading
+    *   needs update
+    +   needs work
+    %   not fully implemented
+    &   objects and structures are implemented, but functions are missing
 
-  * not implemented *      - GTypePlugin
-  * not implemented *      - GTypeModule
+  gobject.type-info.lisp     Type Information                    GObject 2.82 *
 
-  gobject.base.lisp        - GObject                           - GObject 2.84
-  gobject.enumeration.lisp - Enumeration and Flag Types        - GObject 2.66
-  gobject.boxed.lisp       - Boxed Types                       - GObject 2.66
-  gobject.g-value.lisp     - Generic values                    - GObject 2.82 .
-  gobject.param.lisp       - Parameters and Values             - GObject 2.82 .
-  gobject.param-spec.lisp  - GParamSpec                        - GObject 2.82 .
+  not implemented            GTypePlugin
+  not implemented            GTypeModule
 
-  * not implemented *      - Varargs Value Collection
+  gobject.base.lisp          GObject                             GObject 2.84 *
+  gobject.enumeration.lisp   Enumeration and Flag Types          GObject 2.66 *
+  gobject.boxed.lisp         Boxed Types                         GObject 2.66 *
+  gobject.g-value.lisp       Generic values                      GObject 2.82 *
+  gobject.param.lisp         Parameters and Values               GObject 2.82 *
+  gobject.param-spec.lisp    GParamSpec                          GObject 2.82 *
 
-  gobject.signals.lisp     - Signals                           - GObject 2.82 .
-  gobject.closures.lisp    - Closures                          - GObject 2.82 .
+  not implemented            Varargs Value Collection
 
-  * not implemented *      - Value arrays
+  gobject.signals.lisp       Signals                             GObject 2.82 *
+  gobject.closures.lisp      Closures                            GObject 2.82 *
 
-  gobject.binding.lisp     - GBinding                          - GObject 2.82 .
+  not implemented            Value arrays
 
-2024-12-22
+  gobject.binding.lisp       GBinding                            GObject 2.82 *
+
+2025-11-02

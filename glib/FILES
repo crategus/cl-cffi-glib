@@ -1,18 +1,19 @@
-Content from the Glib Reference Manual for Version 2.84
+Content from the Glib 2.86 Reference Manual
 
-    *   - needs update
-    %   - not fully implemented
-    &   - objects and structures are implemented, some functions are missing
-   (**) - deprecated
+    .   needs proofreading
+    *   needs update
+    +   needs work
+    %   not fully implemented
+    &   objects and structures are implemented, but functions are missing
 
-  glib.version.lisp            - Version Information               - Glib 2.84
-  glib.misc.lisp               - Basic Types                       - Glib 2.84
-  glib.main-loop.lisp          - The Main Event Loop               - Glib 2.84
-  glib.error.lisp              - Error Reporting                   - Glib 2.84
-  glib.bytes.lisp              - arrays of bytes                   - Glib 2.84
-  glib.option.lisp             - parses command line options       - Glib 2.84
-  glib.key-file.lisp           - parses .ini-like config files     - Glib 2.84
-  glib.variant-type.lisp       - GVariantType                      - Glib 2.84
-  glib.variant.lisp            - GVariant                          - Glib 2.84
+  glib.version.lisp              Version Information                Glib 2.84 *
+  glib.misc.lisp                 Basic Types                        Glib 2.84 *
+  glib.main-loop.lisp            The Main Event Loop                Glib 2.84 *
+  glib.error.lisp                Error Reporting                    Glib 2.84 *
+  glib.bytes.lisp                Arrays of bytes                    Glib 2.84 *
+  glib.option.lisp               Parses command line options        Glib 2.84 *
+  glib.key-file.lisp             Parses .ini-like config files      Glib 2.84 *
+  glib.variant-type.lisp         GVariantType                       Glib 2.84 *
+  glib.variant.lisp              GVariant                           Glib 2.84 *
 
-2025-05-25
+2025-11-02
