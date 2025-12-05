@@ -414,6 +414,13 @@
 
 ;; TODO: Improve the documentation
 
+;; TODO: Implement the constructor
+;; Boxed type needed for the implementation of GtkCalendar
+(define-gboxed-opaque date-time "GDateTime"
+  :export t
+  :type-initializer "g_date_time_get_type"
+  :alloc (cl:error "GDateTime cannot be created from the Lisp side."))
+
 (cffi:define-foreign-type date-time-type ()
   ()
   (:actual-type :pointer)
