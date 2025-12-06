@@ -91,67 +91,63 @@
 
 (test g-date-time
   (let ((utime (get-universal-time))
-        (ptr nil))
-    (is (cffi:pointerp (setf ptr
-                             (cffi:convert-to-foreign utime 'g:date-time))))
+        date)
+    (is (typep (setf date
+                     (cffi:convert-to-foreign utime 'g:date-time)) 'g:date-time))
     (is (= utime
-           (cffi:convert-from-foreign ptr 'g:date-time)))))
+           (cffi:convert-from-foreign date 'g:date-time)))))
 
 (test g-date-time.2
-  (let ((utime (encode-universal-time 0 0 0 1 1 1970))
+  (let ((utime (encode-universal-time 0 0 0 1 1 1970 -1))
         ctime)
-    (is (cffi:pointerp (setf ctime
-                             (cffi:convert-to-foreign utime 'g:date-time))))
+    (is (typep (setf ctime
+                     (cffi:convert-to-foreign utime 'g:date-time)) 'g:date-time))
     (is (= utime (cffi:convert-from-foreign ctime 'g:date-time)))
     (is (= 1970 (cffi:foreign-funcall "g_date_time_get_year"
-                                      :pointer ctime
+                                      (g:boxed g:date-time) ctime
                                       :int)))
     (is (= 1 (cffi:foreign-funcall "g_date_time_get_month"
-                                   :pointer ctime
+                                   (g:boxed g:date-time) ctime
                                    :int)))
     (is (= 1 (cffi:foreign-funcall "g_date_time_get_day_of_month"
-                                   :pointer ctime
+                                   (g:boxed g:date-time) ctime
                                    :int)))
     (is (= 0 (cffi:foreign-funcall "g_date_time_get_hour"
-                                   :pointer ctime
+                                   (g:boxed g:date-time) ctime
                                    :int)))
     (is (= 0 (cffi:foreign-funcall "g_date_time_get_minute"
-                                   :pointer ctime
+                                   (g:boxed g:date-time) ctime
                                    :int)))
     (is (= 0 (cffi:foreign-funcall "g_date_time_get_second"
-                                   :pointer ctime
+                                   (g:boxed g:date-time) ctime
                                    :int)))))
 
-;; FIXME: We have a difference of one hour. This might be a problem of
-;; different timezones (GMT and UTC?). What is the more correct implementation?!
-
 (test g-date-time.3
-  (let ((utime (encode-universal-time 25 40 14 20 5 2025))
+  (let ((utime (encode-universal-time 25 40 14 20 5 2025 -1))
         ctime)
-    (is (cffi:pointerp (setf ctime
-                             (cffi:convert-to-foreign utime 'g:date-time))))
+    (is (typep (setf ctime
+                     (cffi:convert-to-foreign utime 'g:date-time)) 'g:date-time))
     (is (= utime (cffi:convert-from-foreign ctime 'g:date-time)))
     (is (= 0 (cffi:foreign-funcall "g_date_time_get_utc_offset"
-                                   :pointer ctime
+                                   (g:boxed g:date-time) ctime
                                    :int64)))
     (is (= 2025 (cffi:foreign-funcall "g_date_time_get_year"
-                                      :pointer ctime
+                                      (g:boxed g:date-time) ctime
                                       :int)))
     (is (= 5 (cffi:foreign-funcall "g_date_time_get_month"
-                                   :pointer ctime
+                                   (g:boxed g:date-time) ctime
                                    :int)))
     (is (= 20 (cffi:foreign-funcall "g_date_time_get_day_of_month"
-                                    :pointer ctime
+                                    (g:boxed g:date-time) ctime
                                     :int)))
-    ;; One hour difference from the universal time
-    (is (= 13 (cffi:foreign-funcall "g_date_time_get_hour"
-                                    :pointer ctime
+    (is (= 14 (cffi:foreign-funcall "g_date_time_get_hour"
+                                    (g:boxed g:date-time) ctime
                                     :int)))
     (is (= 40 (cffi:foreign-funcall "g_date_time_get_minute"
-                                    :pointer ctime
+                                    (g:boxed g:date-time) ctime
                                     :int)))
     (is (= 25 (cffi:foreign-funcall "g_date_time_get_second"
-                                    :pointer ctime
+                                    (g:boxed g:date-time) ctime
                                     :int)))))
 
 ;;;     gunichar
@@ -195,4 +191,4 @@
 (test g-prgname
   (is (string= "glib-test" (g:prgname))))
 
-;;; 2025-05-19
+;;; 2025-12-05

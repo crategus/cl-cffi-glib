@@ -2,7 +2,7 @@
 ;;; glib.misc.lisp
 ;;;
 ;;; The documentation in this file is taken from the GLib Reference Manual
-;;; version 2.84 and modified to document the Lisp binding to the GLib library,
+;;; version 2.86 and modified to document the Lisp binding to the GLib library,
 ;;; see <http://www.gtk.org>. The API documentation for the Lisp binding is
 ;;; available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
@@ -430,13 +430,14 @@
   (defmethod cffi:translate-to-foreign (value (type date-time-type))
     (cffi:foreign-funcall "g_date_time_new_from_unix_utc"
                           :int64 (- value offset)
-                          :pointer))
+                          (boxed date-time)))
 
   (defmethod cffi:translate-from-foreign (value (type date-time-type))
-    (+ offset
-       (cffi:foreign-funcall "g_date_time_to_unix"
-                             :pointer value
-                             :int64))))
+    (let ((ptr (if (cffi:pointerp value) value (glib:pointer value))))
+      (+ offset
+         (cffi:foreign-funcall "g_date_time_to_unix"
+                               :pointer ptr
+                               :int64)))))
 
 #+liber-documentation
 (setf (liber:alias-for-class 'date-time)
