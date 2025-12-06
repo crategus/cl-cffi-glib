@@ -2,7 +2,7 @@
 ;;; gio.file-info.lisp
 ;;;
 ;;; The documentation in this file is taken from the GIO Reference Manual
-;;; version 2.84 and modified to document the Lisp binding to the GIO library,
+;;; version 2.86 and modified to document the Lisp binding to the GIO library,
 ;;; see <http://www.gtk.org>. The API documentation for the Lisp binding is
 ;;; available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
@@ -347,16 +347,16 @@
 
 #+glib-2-70
 (defun (setf file-info-access-date-time) (value info)
-  (cffi:foreign-funcall "g_file_info_set_access_date_time"
-                        (gobject:object file-info) info
-                        glib:date-time value
-                        :void)
-  value)
+  (let ((date (cffi:convert-to-foreign value 'glib:date-time)))
+    (cffi:foreign-funcall "g_file_info_set_access_date_time"
+                          (gobject:object file-info) info
+                          (glib:boxed glib:date-time) date
+                          :void)
+    value))
 
 #+glib-2-70
-(cffi:defcfun ("g_file_info_get_access_date_time" file-info-access-date-time)
-    glib:date-time
- "@version{#2025-06-16}
+(defun file-info-access-date-time (info)
+ "@version{2025-12-05}
   @syntax{(g:file-info-access-date-time info) => time}
   @syntax{(setf (g:file-info-access-date-time info) time)}
   @argument[info]{a @class{g:file-info} instance}
@@ -382,7 +382,11 @@
 
   Since 2.70
   @see-class{g:file-info}"
-  (info (gobject:object file-info)))
+  (cffi:convert-from-foreign
+      (cffi:foreign-funcall "g_file_info_get_access_date_time"
+                            (gobject:object file-info) info
+                            (glib:boxed glib:date-time))
+      'glib:date-time))
 
 #+glib-2-70
 (export 'file-info-access-date-time)
