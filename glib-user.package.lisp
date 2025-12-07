@@ -33,7 +33,7 @@
            #:check-version
            #:cl-cffi-glib-build-info
 
-           ;; Symbbols from glib.quark.lisp
+           ;; Symbols from glib.quark.lisp
            #:quark-as-string
 
            ;; Symbols from glib.misc.lisp

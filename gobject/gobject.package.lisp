@@ -454,8 +454,8 @@
     @about-symbol{destroy-notify}
     @about-function{object-set-data-full}
     @about-function{object-property}
-    @about-function{object-class-init}
-    @about-function{object-instance-init}
+    @about-generic{object-class-init}
+    @about-generic{object-instance-init}
     @about-function{object-install-vtable}
   @end{section}
   @begin[Signals]{section}
