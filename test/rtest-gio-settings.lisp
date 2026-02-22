@@ -113,6 +113,36 @@
                         "settings-schema" "GSettingsSchema" T NIL)))
              (gobject:get-gtype-definition "GSettings"))))
 
+
+;;; --- Get Schema Source -------------------------------------------------------
+
+;;;     g_settings_schema_source_default
+
+(test g-settings-schema-source-default
+  (is (typep (g:settings-schema-source-default) 'g:settings-schema-source)))
+
+;;;     g_settings_schema_source_new_from_directory
+;;;     g_settings_schema_source_lookup
+
+(test g-settings-schema-source-lookup
+    (let ((source (settings-schema-source-new-from-directory "resource/" nil)))
+    (is (typep source 'g:settings-schema-source))
+    (is (typep (g:settings-schema-source-lookup source "com.crategus.rtest" t)
+               'g:settings-schema))
+    (is (typep (g:settings-schema-source-lookup source "com.crategus.rtest" nil)
+               'g:settings-schema))
+    (is-false (g:settings-schema-source-lookup source "com.crategus.test" t))
+    (is-false (g:settings-schema-source-lookup source "com.crategus.test" nil))))
+
+;;;     g_settings_schema_source_list-schemas
+
+#+nil
+(test g-settings-schema-source-list-schemas
+  (let ((source (g:settings-schema-source-default)))
+    (is-false (multiple-value-list
+                  (g:settings-schema-source-list-schemas source nil)))
+))
+
 ;;; --- Signals ----------------------------------------------------------------
 
 ;;;     change-event
@@ -140,34 +170,6 @@
     (is (string= "com.crategus.rtest" (g:settings-schema settings)))
     (is (string= "com.crategus.rtest" (g:settings-schema-id settings)))
     (is (typep (g:settings-settings-schema settings) 'g:settings-schema))))
-
-;;; Functions
-
-;;;     g_settings_schema_source_default
-
-(test g-settings-schema-source-default
-  (is (typep (g:settings-schema-source-default) 'g:settings-schema-source)))
-
-;;;     g_settings_schema_source_lookup
-
-(test g-settings-schema-source-lookup
-  (let ((source (g:settings-schema-source-default)))
-    (is (typep source 'g:settings-schema-source))
-    (is (typep (g:settings-schema-source-lookup source "com.crategus.rtest" t)
-               'g:settings-schema))
-    (is (typep (g:settings-schema-source-lookup source "com.crategus.rtest" nil)
-               'g:settings-schema))
-    (is-false (g:settings-schema-source-lookup source "com.crategus.test" t))
-    (is-false (g:settings-schema-source-lookup source "com.crategus.test" nil))))
-
-;;;     g_settings_schema_source_list-schemas
-
-#+nil
-(test g-settings-schema-source-list-schemas
-  (let ((source (g:settings-schema-source-default)))
-    (is-false (multiple-value-list
-                  (g:settings-schema-source-list-schemas source nil)))
-))
 
 ;;;     g_settings_new
 
