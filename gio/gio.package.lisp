@@ -2,11 +2,11 @@
 ;;; gio.package.lisp
 ;;;
 ;;; The documentation in this file is taken from the GIO Reference Manual
-;;; version 2.84 and modified to document the Lisp binding to the GIO library,
+;;; version 2.88 and modified to document the Lisp binding to the GIO library,
 ;;; see <http://www.gtk.org>. The API documentation for the Lisp binding is
 ;;; available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2012 - 2025 Dieter Kaiser
+;;; Copyright (C) 2012 - 2026 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -63,54 +63,52 @@
       @about-type{file-as-namestring}
       @about-function{file-new-for-path}
       @about-function{file-new-for-uri}
-      @about-function{file-new-for-commandline-arg}
-      @about-function{file-new-for-commandline-arg-and-cwd}
-      @about-function{file-query-info}
       @about-function{file-parse-name}
       @about-function{file-basename}
       @about-function{file-path}
       @about-function{file-uri}
       @about-function{file-get-parse-name}
+      @about-function{file-query-info}
+      @about-function{file-set-attributes-from-info}
     @end{subsection}
     @begin[GFileInfo]{subsection}
       @about-symbol{file-attribute-type}
       @about-symbol{file-attribute-status}
       @about-class{file-info}
       @about-function{file-info-new}
-      @about-function{file-info-clear-status}
-      @about-function{file-info-copy-into}
       @about-function{file-info-dup}
-      @about-function{file-info-attribute}
-      @about-function{file-info-attribute-as-string}
-      @about-function{file-info-attribute-data}
-      @about-function{file-info-attribute-file-path}
+      @about-function{file-info-copy-into}
+      @about-function{file-info-clear-status}
       @about-function{file-info-attribute-status}
-      @about-function{file-info-attribute-type}
-      @about-function{file-info-set-attribute-mask}
-      @about-function{file-info-unset-attribute-mask}
-      @about-function{file-info-access-date-time}
-      @about-function{file-info-content-type}
-      @about-function{file-info-creation-date-time}
-      @about-function{file-info-deletion-date}
-      @about-function{file-info-display-name}
-      @about-function{file-info-edit-name}
-      @about-function{file-info-etag}
-      @about-function{file-info-file-type}
-      @about-function{file-info-icon}
-      @about-function{file-info-is-backup}
-      @about-function{file-info-is-hidden}
-      @about-function{file-info-is-symlink}
-      @about-function{file-info-modification-date-time}
-      @about-function{file-info-modification-time}
-      @about-function{file-info-name}
-      @about-function{file-info-size}
-      @about-function{file-info-sort-order}
-      @about-function{file-info-symbolic-icon}
-      @about-function{file-info-symlink-target}
       @about-function{file-info-has-namespace}
       @about-function{file-info-has-attribute}
       @about-function{file-info-remove-attribute}
       @about-function{file-info-list-attributes}
+      @about-function{file-info-attribute-type}
+      @about-function{file-info-attribute}
+      @about-function{file-info-attribute-data}
+      @about-function{file-info-attribute-as-string}
+      @about-function{file-info-is-hidden}
+      @about-function{file-info-is-backup}
+      @about-function{file-info-is-symlink}
+      @about-function{file-info-name}
+      @about-function{file-info-display-name}
+      @about-function{file-info-edit-name}
+      @about-function{file-info-icon}
+      @about-function{file-info-symbolic-icon}
+      @about-function{file-info-content-type}
+      @about-function{file-info-size}
+      @about-function{file-info-creation-date-time}
+      @about-function{file-info-access-date-time}
+      @about-function{file-info-modification-date-time}
+      @about-function{file-info-deletion-date}
+      @about-function{file-info-etag}
+      @about-function{file-info-file-type}
+      @about-function{file-info-sort-order}
+      @about-function{file-info-symlink-target}
+      @about-function{file-info-attribute-file-path}
+      @about-function{file-info-set-attribute-mask}
+      @about-function{file-info-unset-attribute-mask}
     @end{subsection}
   @end{section}
   @begin[Asynchronous I/O]{section}
@@ -172,7 +170,7 @@
       @about-function{task-run-in-thread-sync}
       @about-symbol{task-thread-func}
       @about-function{task-attach-source}
-      @about-function{task-task-is-valid}
+      @about-function{task-is-valid}
     @end{subsection}
   @end{section}
   @begin[File types and applications]{section}
@@ -309,9 +307,29 @@
     @end{subsection}
   @end{section}
   @begin[Settings]{section}
+    @begin[GSettingsSchema]{subsection}
+      @about-class{settings-schema-source}
+      @about-function{settings-schema-source-default}
+      @about-function{settings-schema-source-lookup}
+      @about-function{settings-schema-source-list-schemas}
+      @about-class{settings-schema-key}
+      @about-function{settings-schema-key-default-value}
+      @about-function{settings-schema-key-description}
+      @about-function{settings-schema-key-name}
+      @about-function{settings-schema-key-range}
+      @about-function{settings-schema-key-summary}
+      @about-function{settings-schema-key-value-type}
+      @about-function{settings-schema-key-range-check}
+      @about-class{settings-schema}
+      @about-function{settings-schema-get-id}
+      @about-function{settings-schema-key}
+      @about-function{settings-schema-path}
+      @about-function{settings-schema-has-key}
+      @about-function{settings-schema-list-children}
+      @about-function{settings-schema-list-keys}
+    @end{subsection}
     @begin[GSettings]{subsection}
       @about-symbol{settings-bind-flags}
-      @about-class{settings-schema}
       @about-class{settings}
       @about-generic{settings-backend}
       @about-generic{settings-delay-apply}
@@ -328,8 +346,9 @@
       @about-function{settings-apply}
       @about-function{settings-delay}
       @about-function{settings-bind}
+      @about-symbol{settings-bind-get-mapping}
+      @about-symbol{settings-bind-set-mapping}
       @about-function{settings-bind-with-mapping}
-      @about-function{settings-bind-with-mapping-closures}
       @about-function{settings-bind-writable}
       @about-function{settings-unbind}
       @about-function{settings-create-action}

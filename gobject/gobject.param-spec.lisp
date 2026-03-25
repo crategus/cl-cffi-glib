@@ -65,6 +65,32 @@
 (glib-init:at-init ()
   (setf (glib:symbol-for-gtype "GParam") 'param))
 
+#+liber-documentation
+(setf (liber:alias-for-symbol 'param)
+      "Type"
+      (liber:symbol-documentation 'param)
+ "@version{2026-03-25}
+  @begin{short}
+    The @sym{g:param} type specifier represents the fundamental
+    @code{\"GParam\"} type.
+  @end{short}
+  @begin[Examples]{dictionary}
+    @begin{pre}
+(g:symbol-for-gtype \"GParam\")
+=> GOBJECT:PARAM
+=> T
+(g:param-spec-int \"name\" \"nick\" \"blurb\" 0 100 50 :readable)
+=> #.(SB-SYS:INT-SAP #X5DEC9A4A41C0)
+(g:type-from-instance *)
+=> #<GTYPE :name \"GParamInt\" :id 103270782157856>
+(g:symbol-for-gtype (g:type-fundamental *))
+=> GOBJECT:PARAM
+=> T
+    @end{pre}
+  @end{dictionary}
+  @see-class{g:type-t}
+  @see-function{g:symbol-for-gtype}")
+
 (export 'param)
 
 ;;; ----------------------------------------------------------------------------

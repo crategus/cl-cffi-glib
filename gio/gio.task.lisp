@@ -2,11 +2,11 @@
 ;;; gio.task.lisp
 ;;;
 ;;; The documentation in this file is taken from the GIO Reference Manual
-;;; version 2.84 and modified to document the Lisp binding to the GIO library,
+;;; version 2.88 and modified to document the Lisp binding to the GIO library,
 ;;; see <http://www.gtk.org>. The API documentation for the Lisp binding is
 ;;; available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2023 - 2025 Dieter Kaiser
+;;; Copyright (C) 2023 - 2026 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -1669,7 +1669,7 @@ The value is a NUL terminated UTF-8 string.
 ;;;     the callback to invoke when source triggers
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcfun ("g_task_attach_source" %task-attach-source) :void
+(cffi:defcfun ("g_task_attach_source" task-attach-source) :void
   (task (gobject:object task))
   (source (:pointer (:struct glib:source)))
   (func :pointer))

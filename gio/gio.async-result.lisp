@@ -169,16 +169,16 @@ int main (int argc, void *argv[])
 (setf (liber:alias-for-symbol 'async-ready-callback)
       "Callback"
       (liber:symbol-documentation 'async-ready-callback)
- "@version{#2025-05-27}
+ "@version{#2026-03-25}
   @begin{declaration}
 lambda (source result)
   @end{declaration}
   @begin{values}
-    @begin[code]{table}
+    @begin[code]{simple-table}
       @entry[source]{The @class{g:object} instance the asynchronous operation
         was started with.}
       @entry[result]{The @class{g:async-result} object.}
-    @end{table}
+    @end{simple-table}
   @end{values}
   @begin{short}
     Type definition for a function that will be called back when an asynchronous

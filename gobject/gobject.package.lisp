@@ -2,11 +2,11 @@
 ;;; gobject.package.lisp
 ;;;
 ;;; The documentation in this file is taken from the GObject Reference Manual
-;;; version 2.84 and modified to document the Lisp binding to the GObject
+;;; version 2.88 and modified to document the Lisp binding to the GObject
 ;;; library, see <http://www.gtk.org>. The API documentation for the Lisp
 ;;; binding is available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2011 - 2025 Dieter Kaiser
+;;; Copyright (C) 2011 - 2026 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -31,7 +31,8 @@
   (:use :closer-common-lisp :iterate) ; :closer-common-lisp includes :cl
   (:import-from :glib
                 ;;Symbols from glib.gtype.lisp
-                #:*warn-unknown-gtype*)
+                #:*warn-unknown-gtype*
+                #:boxed)
   (:import-from :cffi)
   (:import-from :closer-mop)
   (:import-from :trivial-garbage)
@@ -220,9 +221,11 @@
     @begin[Types and functions for enumeration and flags types]{subsection}
       @about-symbol{enum-class}
       @about-symbol{enum-value}
+      @about-symbol{enum}
       @about-function{type-is-enum}
       @about-symbol{flags-class}
       @about-symbol{flags-value}
+      @about-symbol{flags}
       @about-function{type-is-flags}
     @end{subsection}
     @begin[Introduction to boxed types]{subsection}
@@ -249,35 +252,8 @@
       @code{GBoxedFreeFunc} is @code{g_bytes_unref()}.
     @end{subsection}
     @begin[Functions for boxed types]{subsection}
+      @about-symbol{boxed}
       @about-function{type-is-boxed}
-      @about-function{boxed-copy}
-      @about-function{boxed-free}
-      @about-function{boxed-type-register-static}
-      @about-function{pointer-type-register-static}
-      @about-function{type-hash-table}
-      @about-function{type-date}
-      @about-function{type-gstring}
-      @about-function{type-strv}
-      @about-function{type-regex}
-      @about-function{type-match-info}
-      @about-function{type-array}
-      @about-function{type-byte-array}
-      @about-function{type-ptr-array}
-      @about-function{type-bytes}
-      @about-function{type-variant-type}
-      @about-function{type-error}
-      @about-function{type-date-time}
-      @about-function{type-time-zone}
-      @about-function{type-io-channel}
-      @about-function{type-io-condition}
-      @about-function{type-variant-builder}
-      @about-function{type-key-file}
-      @about-function{type-main-context}
-      @about-function{type-main-loop}
-      @about-function{type-markup-parse-context}
-      @about-function{type-source}
-      @about-function{type-polled}
-      @about-function{type-thread}
     @end{subsection}
   @end{section}
   @begin[Generic Values]{section}
@@ -325,6 +301,7 @@
     @begin[Functions for GParamSpec]{subsection}
       @about-symbol{param-flags}
       @about-symbol{param-spec}
+      @about-symbol{param}
       @about-function{type-is-param}
       @about-function{is-param-spec}
       @about-function{param-spec-type}

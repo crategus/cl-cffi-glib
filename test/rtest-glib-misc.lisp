@@ -130,7 +130,7 @@
            (cffi:convert-from-foreign date 'g:date-time)))))
 
 (test g-date-time.2
-  (let ((utime (encode-universal-time 0 0 0 1 1 1970 -1))
+  (let ((utime (encode-universal-time 0 0 0 1 1 1970 0))
         ctime)
     (is (typep (setf ctime
                      (cffi:convert-to-foreign utime 'g:date-time)) 'g:date-time))
@@ -155,7 +155,7 @@
                                    :int)))))
 
 (test g-date-time.3
-  (let ((utime (encode-universal-time 25 40 14 20 5 2025 -1))
+  (let ((utime (encode-universal-time 25 40 14 20 5 2025 0))
         ctime)
     (is (typep (setf ctime
                      (cffi:convert-to-foreign utime 'g:date-time)) 'g:date-time))
@@ -223,4 +223,4 @@
 (test g-prgname
   (is (string= "glib-test" (g:prgname))))
 
-;;; 2025-12-28
+;;; 2026-03-21

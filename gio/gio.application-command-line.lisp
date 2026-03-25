@@ -377,7 +377,7 @@
                 application-command-line-create-file-for-arg)
     (gobject:object file)
  #+liber-documentation
- "@version{#2025-02-03}
+ "@version{#2026-03-19}
   @argument[cmdline]{a @class{g:application-command-line} instance}
   @argument[arg]{a string for an argument from @arg{cmdline}}
   @return{The new @class{g:file} object.}
@@ -385,12 +385,8 @@
     Creates a @class{g:file} object corresponding to a filename that was given
     as part of the invocation of the command line.
   @end{short}
-  This differs from the @fun{g:file-new-for-commandline-arg} function in that
-  it resolves relative pathnames using the current working directory of the
-  invoking process rather than the local process.
   @see-class{g:application-command-line}
-  @see-class{g:file}
-  @see-function{g:file-new-for-commandline-arg}"
+  @see-class{g:file}"
   (cmdline (gobject:object application-command-line))
   (arg :string))
 

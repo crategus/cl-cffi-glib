@@ -383,9 +383,11 @@
            ;; Symbols from gobject.enumeration.lisp
            #:enum-class
            #:enum-value
+           #:enum
            #:type-is-enum
            #:flags-class
            #:flags-value
+           #:flags
            #:type-is-flags
 
            ;; Symbols from gobject.boxed.lisp
@@ -423,6 +425,7 @@
            ;; Symbols from gobject.param-spec.lisp
            #:param-spec
            #:param-flags
+           #:param
            #:type-is-param
            #:is-param-spec
            #:param-spec-type
@@ -698,11 +701,25 @@
 
            ;; Symbols from gio.settings.lisp
            #:settings-bind-flags
-           #:settings-schema
            #:settings-schema-source
            #:settings-schema-source-default
            #:settings-schema-source-lookup
            #:settings-schema-source-list-schemas
+           #:settings-schema-key
+           #:settings-schema-key-default-value
+           #:settings-schema-key-description
+           #:settings-schema-key-name
+           #:settings-schema-key-range
+           #:settings-schema-key-summary
+           #:settings-schema-key-value-type
+           #:settings-schema-key-range-check
+           #:settings-schema
+           #:settings-schema-get-id
+           #:settings-schema-key
+           #:settings-schema-path
+           #:settings-schema-has-key
+           #:settings-schema-list-children
+           #:settings-schema-list-keys
            #:settings
            #:settings-backend
            #:settings-delay-apply
@@ -713,14 +730,13 @@
            #:settings-settings-schema
            #:settings-new
            #:settings-new-with-path
-           #:settings-list-relocatable-schemas
-           #:settings-list-schemas
            #:settings-sync
            #:settings-unbind
            #:settings-apply
            #:settings-bind
+           #:settings-bind-get-mapping
+           #:settings-bind-set-mapping
            #:settings-bind-with-mapping
-           #:settings-bind-with-mapping-closures
            #:settings-bind-writable
            #:settings-create-action
            #:settings-delay
@@ -1012,14 +1028,15 @@
            #:file-as-namestring
            #:file-new-for-path
            #:file-new-for-uri
-           #:file-new-for-commandline-arg
-           #:file-new-for-commandline-arg-and-cwd
            #:file-parse-name
            #:file-basename
            #:file-path
            #:file-uri
            #:file-get-parse-name
            #:file-query-info
+           #:file-query-writable-namespaces
+           #:file-query-settable-attributes
+           #:file-set-attributes-from-info
 
            ;; Symbols from gio.file-info.lisp
            #:file-info

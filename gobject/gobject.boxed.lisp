@@ -2,11 +2,11 @@
 ;;; gobject.boxed.lisp
 ;;;
 ;;; The documentation in this file is taken from the GObject Reference Manual
-;;; version 2.84 and modified to document the Lisp binding to the GObject
+;;; version 2.88 and modified to document the Lisp binding to the GObject
 ;;; library, see <http://www.gtk.org>. The API documentation for the Lisp
 ;;; binding is available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2011 - 2025 Dieter Kaiser
+;;; Copyright (C) 2011 - 2026 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -103,12 +103,19 @@
 
 (defun type-is-boxed (gtype)
  #+liber-documentation
- "@version{2024-04-06}
+ "@version{2025-03-25}
   @argument[gtype]{a @class{g:type-t} type ID}
-  @return{@em{True} if @arg{gtype} is a \"GBoxed\" type.}
+  @return{@em{True} if @arg{gtype} is a @code{\"GBoxed\"} type.}
   @begin{short}
-    Checks whether @arg{gtype} is a \"GBoxed\" type.
+    Checks whether @arg{gtype} is a @code{\"GBoxed\"} type.
   @end{short}
+  @begin[Examples]{dictionary}
+    @begin{pre}
+(g:type-is-boxed \"GBoxed\") => T
+(g:type-is-boxed \"GBytes\") => T
+(g:type-is-boxed \"GApplication\") => NIL
+    @end{pre}
+  @end{dictionary}
   @see-class{g:type-t}"
   (eq (type-fundamental gtype) (glib:gtype "GBoxed")))
 

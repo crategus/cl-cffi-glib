@@ -1,7 +1,7 @@
 ;;; ----------------------------------------------------------------------------
 ;;; cl-cffi-glib.asd
 ;;;
-;;; Copyright (C) 2011 - 2024 Dieter Kaiser
+;;; Copyright (C) 2011 - 2026 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -78,37 +78,38 @@
     :components
     ((:file "gio.package")
      ;; Application information and launch contexts
-     (:file "gio.content-type")        ; Platform-specific content typing
-     (:file "gio.app-info")            ; Application information, launch context
+     (:file "gio.content-type")
+     (:file "gio.app-info")
      ;; Icons
-     (:file "gio.icon")                ; Interface for icons
-     (:file "gio.loadable-icon")       ; Interface for loadable icons
-     (:file "gio.file-icon")           ; Icons pointing to an image file
-     (:file "gio.themed-icon")         ; Icon theming support
-     (:file "gio.emblemed-icon")       ; Icon with emblems
-     (:file "gio.emblem")              ; An object for emblems
+     (:file "gio.icon")
+     (:file "gio.loadable-icon")
+     (:file "gio.file-icon")
+     (:file "gio.themed-icon")
+     (:file "gio.emblemed-icon")
+     (:file "gio.emblem")
      ;; Settings
+     (:file "gio.settings-schema")
      (:file "gio.settings")
      ;; Resources
-     (:file "gio.resource")            ; Resource framework
+     (:file "gio.resource")
      ;; Permissions
-     (:file "gio.permission")          ; Permission to perform a certain action
-     (:file "gio.simple-permission")   ; Trivial implementation of GPermission
+     (:file "gio.permission")
+     (:file "gio.simple-permission")
      ;; Data models
-     (:file "gio.list-model")          ; Interface for dynamic list of objects
-     (:file "gio.list-store")          ; Implementation of GListModel
+     (:file "gio.list-model")
+     (:file "gio.list-store")
      ;; Application support
-     (:file "gio.action")              ; An action interface
-     (:file "gio.action-group")        ; A group of actions
-     (:file "gio.action-map")          ; Interface for action containers
-     (:file "gio.simple-action")       ; Simple GAction implementation
-     (:file "gio.property-action")     ; A GAction reflecting a GObject property
-     (:file "gio.simple-action-group") ; Simple GActionGroup implementation
-     (:file "gio.application")         ; Core application class
-     (:file "gio.application-command-line") ; Command-line invocation
-     (:file "gio.menu-model")          ; Representing the contents of a menu
-     (:file "gio.menu")                ; Simple implementation of GMenuModel
-     (:file "gio.notification")        ; User Notifications, pop up messages
+     (:file "gio.action")
+     (:file "gio.action-group")
+     (:file "gio.action-map")
+     (:file "gio.simple-action")
+     (:file "gio.property-action")
+     (:file "gio.simple-action-group")
+     (:file "gio.application")
+     (:file "gio.application-command-line")
+     (:file "gio.menu-model")
+     (:file "gio.menu")
+     (:file "gio.notification")
      ;; File Operations
      (:file "gio.file")
      (:file "gio.file-info")
@@ -117,8 +118,7 @@
      (:file "gio.async-result")
      (:file "gio.task")
     ))
-    (:file "glib-user.package")
-    )
+    (:file "glib-user.package"))
   :in-order-to ((asdf:test-op (test-op "cl-cffi-glib/test")))
   :defsystem-depends-on (:cl-cffi-glib-init)
   :depends-on (:iterate
@@ -180,6 +180,7 @@
      (:file "rtest-gio-emblemed-icon")
      (:file "rtest-gio-emblem")
      ;; Settings
+     (:file "rtest-gio-settings-schema")
      (:file "rtest-gio-settings")
      ;; Resources
      (:file "rtest-gio-resource")

@@ -1,7 +1,7 @@
 ;;; ----------------------------------------------------------------------------
 ;;; glib.boxed-type.lisp
 ;;;
-;;; Copyright (C) 2011 - 2024 Dieter Kaiser
+;;; Copyright (C) 2011 - 2026 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -161,6 +161,28 @@
 ;; Register Lisp symbol for fundamental "GBoxed" type
 (glib-init:at-init ()
   (setf (glib:symbol-for-gtype "GBoxed") 'boxed))
+
+#+liber-documentation
+(setf (liber:alias-for-symbol 'boxed)
+      "Type"
+      (liber:symbol-documentation 'boxed)
+ "@version{2026-03-25}
+  @begin{short}
+    The @sym{g:boxed} type specifier represents the fundamental
+    @code{\"GBoxed\"} type.
+  @end{short}
+  @begin[Examples]{dictionary}
+    @begin{pre}
+(g:symbol-for-gtype \"GBoxed\")
+=> GLIB:BOXED
+=> T
+(g:symbol-for-gtype (g:type-fundamental \"GBytes\"))
+=> GLIB:BOXED
+=> T
+    @end{pre}
+  @end{dictionary}
+  @see-class{g:type-t}
+  @see-function{g:symbol-for-gtype}")
 
 (export 'boxed)
 

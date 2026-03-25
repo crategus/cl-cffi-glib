@@ -5,6 +5,43 @@
 
 ;;; --- Types and Values -------------------------------------------------------
 
+;;;     GFileType
+
+(test g-file-type
+  ;; Check type
+  (is (g:type-is-enum "GFileType"))
+  ;; Check type initializer
+  (is (eq (g:gtype "GFileType")
+          (g:gtype (cffi:foreign-funcall "g_file_type_get_type" :size))))
+  ;; Check registered symbol
+  (is (eq 'gio:file-type
+          (glib:symbol-for-gtype "GFileType")))
+  ;; Check names
+  (is (equal '("G_FILE_TYPE_UNKNOWN" "G_FILE_TYPE_REGULAR"
+               "G_FILE_TYPE_DIRECTORY" "G_FILE_TYPE_SYMBOLIC_LINK"
+               "G_FILE_TYPE_SPECIAL" "G_FILE_TYPE_SHORTCUT"
+               "G_FILE_TYPE_MOUNTABLE")
+             (glib-test:list-enum-item-names "GFileType")))
+  ;; Check values
+  (is (equal '(0 1 2 3 4 5 6)
+             (glib-test:list-enum-item-values "GFileType")))
+  ;; Check nick names
+  (is (equal '("unknown" "regular" "directory" "symbolic-link" "special"
+               "shortcut" "mountable")
+             (glib-test:list-enum-item-nicks "GFileType")))
+  ;; Check enum definition
+  (is (equal '(GOBJECT:DEFINE-GENUM "GFileType" GIO:FILE-TYPE
+                                    (:EXPORT T
+                                     :TYPE-INITIALIZER "g_file_type_get_type")
+                                    (:UNKNOWN 0)
+                                    (:REGULAR 1)
+                                    (:DIRECTORY 2)
+                                    (:SYMBOLIC-LINK 3)
+                                    (:SPECIAL 4)
+                                    (:SHORTCUT 5)
+                                    (:MOUNTABLE 6))
+             (gobject:get-gtype-definition "GFileType"))))
+
 ;;;     GFileQueryInfoFlags
 
 (test g-file-query-info-flags
@@ -15,8 +52,7 @@
           (glib:symbol-for-gtype "GFileQueryInfoFlags")))
   ;; Check type initializer
   (is (eq (g:gtype "GFileQueryInfoFlags")
-          (g:gtype (cffi:foreign-funcall "g_file_query_info_flags_get_type"
-                                         :size))))
+          (g:gtype (cffi:foreign-funcall "g_file_query_info_flags_get_type" :size))))
   ;; Check names
   (is (equal '("G_FILE_QUERY_INFO_NONE" "G_FILE_QUERY_INFO_NOFOLLOW_SYMLINKS")
              (glib-test:list-flags-item-names "GFileQueryInfoFlags")))
@@ -69,28 +105,26 @@
 #-windows
 (test g-file-as-namestring
   (glib-test:with-check-memory (file)
-    (let ((path (glib-sys:sys-path "test/rtest-gio-file.lisp")))
+    (let ((path (glib-sys:sys-path "test/resource/rtest-gio-file.txt")))
       (is (cffi:pointerp (setf file
-                               (cffi:convert-to-foreign path
-                                                        'g:file-as-namestring))))
-      (is (string= "rtest-gio-file.lisp" (g:file-basename file)))
+                               (cffi:convert-to-foreign path 'g:file-as-namestring))))
+      (is (string= "rtest-gio-file.txt" (g:file-basename file)))
       (is (string= (namestring path) (g:file-path file)))
       (is (string= (namestring path) (g:file-get-parse-name file)))
       (is (string= (namestring path)
                    (cffi:convert-from-foreign file 'g:file-as-namestring)))
       (is (cffi:null-pointer-p (cffi:convert-to-foreign nil 'g:file-as-namestring)))
       (is-false (cffi:convert-from-foreign nil 'g:file-as-namestring))
-      (is-false (cffi:convert-from-foreign (cffi:null-pointer)
-                                           'g:file-as-namestring)))))
+      (is-false (cffi:convert-from-foreign (cffi:null-pointer) 'g:file-as-namestring)))))
 
 ;;;     g_file_new_for_path
 
 #-windows
 (test g-file-new-for-path
   (glib-test:with-check-memory (file)
-    (let ((path (glib-sys:sys-path "test/rtest-gio-file.lisp")))
+    (let ((path (glib-sys:sys-path "test/resource/rtest-gio-file.txt")))
       (is (typep (setf file (g:file-new-for-path path)) 'g:object))
-      (is (string= "rtest-gio-file.lisp" (g:file-basename file)))
+      (is (string= "rtest-gio-file.txt" (g:file-basename file)))
       (is (string= (namestring path) (g:file-path file))))))
 
 ;;;     g_file_new_for_uri
@@ -103,42 +137,23 @@
       (is (string= path (g:file-uri file))))))
 
 ;;;     g_file_new_for_commandline_arg
-
-(test g-file-new-for-commandline-arg
-  (glib-test:with-check-memory ()
-    (is (typep (g:file-new-for-commandline-arg "commandline") 'g:object))))
-
 ;;;     g_file_new_for_commandline_arg_and_cwd
-
-(test g-file-new-for-commandline-arg-and-cwd
-  (glib-test:with-check-memory ()
-    (is (typep (g:file-new-for-commandline-arg-and-cwd "commandline" "directory")
-               'g:object))))
-
-;;;     g_file_query_info
-
-#-windows
-(test g-file-query-info
-  (glib-test:with-check-memory (file info)
-    (let ((path (glib-sys:sys-path "test/rtest-gio-file.lisp")))
-      (is (typep (setf file (g:file-new-for-path path)) 'g:object))
-      (is (typep (setf info (g:file-query-info file "*" :none)) 'g:file-info)))))
 
 ;;;     g_file_parse_name
 
 #-windows
 (test g-file-parse-name.1
   (glib-test:with-check-memory (file)
-    (setf file (g:file-parse-name "/home/dieter/path.lisp"))
-    (is (string= "/home/dieter/path.lisp" (g:file-path file)))
-    (is (string= "file:///home/dieter/path.lisp" (g:file-uri file)))))
+    (setf file (g:file-parse-name "/home/crategus/path.lisp"))
+    (is (string= "/home/crategus/path.lisp" (g:file-path file)))
+    (is (string= "file:///home/crategus/path.lisp" (g:file-uri file)))))
 
 #+windows
 (test g-file-parse-name.1
   (glib-test:with-check-memory (file)
-    (setf file (g:file-parse-name "/home/dieter/path.lisp"))
-    (is (string= "\\home\\dieter\\path.lisp" (g:file-path file)))
-    (is (string= "file:///home/dieter/path.lisp" (g:file-uri file)))))
+    (setf file (g:file-parse-name "/home/crategus/path.lisp"))
+    (is (string= "\\home\\crategus\\path.lisp" (g:file-path file)))
+    (is (string= "file:///home/crategus/path.lisp" (g:file-uri file)))))
 
 #-windows
 (test g-file-parse-name.2
@@ -158,7 +173,7 @@
 
 (test g-file-basename.1
   (glib-test:with-check-memory (file)
-    (setf file (g:file-parse-name "/home/dieter/path.lisp"))
+    (setf file (g:file-parse-name "/home/crategus/path.lisp"))
     (is (string= "path.lisp" (g:file-basename file)))))
 
 #-windows
@@ -178,14 +193,14 @@
 #-windows
 (test g-file-path.1
   (glib-test:with-check-memory (file)
-    (setf file (g:file-parse-name "/home/dieter/path.lisp"))
-    (is (string= "/home/dieter/path.lisp" (g:file-path file)))))
+    (setf file (g:file-parse-name "/home/crategus/path.lisp"))
+    (is (string= "/home/crategus/path.lisp" (g:file-path file)))))
 
 #+windows
 (test g-file-path.1
   (glib-test:with-check-memory (file)
-    (setf file (g:file-parse-name "/home/dieter/path.lisp"))
-    (is (string= "\\home\\dieter\\path.lisp" (g:file-path file)))))
+    (setf file (g:file-parse-name "/home/crategus/path.lisp"))
+    (is (string= "\\home\\crategus\\path.lisp" (g:file-path file)))))
 
 (test g-file-path.2
   (glib-test:with-check-memory (file)
@@ -236,4 +251,112 @@
     (setf file (g:file-parse-name "http://crategus.com"))
     (is (string= "http://crategus.com/" (g:file-get-parse-name file)))))
 
-;;; 2024-12-28
+;;;     g_file_query_info
+
+#-windows
+(test g-file-query-info.1
+  (glib-test:with-check-memory (file info)
+    (let ((path (glib-sys:sys-path "test/resource/rtest-gio-file.txt")))
+      (is (typep (setf file (g:file-new-for-path path)) 'g:object))
+      (is (typep (setf info (g:file-query-info file "*" :none)) 'g:file-info))
+      ;; Get standard attributes
+      (is (equal '("standard::type"
+                   "standard::is-hidden"
+                   "standard::is-backup"
+                   "standard::is-symlink"
+                   "standard::name"
+                   "standard::display-name"
+                   "standard::edit-name"
+                   "standard::copy-name"
+                   "standard::icon"
+                   "standard::content-type"
+                   "standard::fast-content-type"
+                   "standard::size"
+                   "standard::allocated-size"
+                   "standard::symbolic-icon")
+                 (g:file-info-list-attributes info "standard"))))))
+
+#+windows
+(test g-file-query-info.1
+  (glib-test:with-check-memory (file info)
+    (let ((path (glib-sys:sys-path "test/resource/rtest-gio-file.txt")))
+      (is (typep (setf file (g:file-new-for-path path)) 'g:object))
+      (is (typep (setf info (g:file-query-info file "*" :none)) 'g:file-info))
+      ;; Get standard attributes
+      (is (equal '("standard::type"
+                   "standard::is-hidden"
+                   "standard::is-backup"
+                   "standard::is-symlink"
+                   "standard::name"
+                   "standard::display-name"
+                   "standard::edit-name"
+                   "standard::copy-name"
+                   "standard::icon"
+                   "standard::content-type"
+                   "standard::fast-content-type"
+                   "standard::size"
+                   "standard::allocated-size"
+                   "standard::symbolic-icon")
+                 (g:file-info-list-attributes info "standard"))))))
+
+#-windows
+(test g-file-query-info.2
+  (glib-test:with-check-memory (file info)
+    (let ((path (glib-sys:sys-path "test/resource/rtest-gio-file.txt")))
+      (is (typep (setf file (g:file-new-for-path path)) 'g:object))
+      (is (typep (setf info (g:file-query-info file "standard::*" :none)) 'g:file-info))
+      ;; Get standard attributes
+      (is (equal '("standard::type"
+                   "standard::is-hidden"
+                   "standard::is-backup"
+                   "standard::is-symlink"
+                   "standard::name"
+                   "standard::display-name"
+                   "standard::edit-name"
+                   "standard::copy-name"
+                   "standard::icon"
+                   "standard::content-type"
+                   "standard::fast-content-type"
+                   "standard::size"
+                   "standard::allocated-size"
+                   "standard::symbolic-icon")
+                 (g:file-info-list-attributes info))))))
+
+#+windows
+(test g-file-query-info.2
+  (glib-test:with-check-memory (file info)
+    (let ((path (glib-sys:sys-path "test/resource/rtest-gio-file.txt")))
+      (is (typep (setf file (g:file-new-for-path path)) 'g:object))
+      (is (typep (setf info (g:file-query-info file "standard::*" :none)) 'g:file-info))
+      ;; Get standard attributes
+      (is (equal '("standard::type"
+                   "standard::is-hidden"
+                   "standard::is-backup"
+                   "standard::is-symlink"
+                   "standard::name"
+                   "standard::display-name"
+                   "standard::edit-name"
+                   "standard::copy-name"
+                   "standard::icon"
+                   "standard::content-type"
+                   "standard::fast-content-type"
+                   "standard::size"
+                   "standard::allocated-size"
+                   "standard::symbolic-icon")
+                 (g:file-info-list-attributes info))))))
+
+(test g-file-query-info.3
+  (is-false (g:file-query-info (g:file-parse-name "") "*" :none)))
+
+;;;     g_file_set_attributes_from_info
+
+(test g-file-set-attributes-from-info
+  (glib-test:with-check-memory (file info)
+    (let ((path (glib-sys:sys-path "test/resource/rtest-gio-file.txt"))
+          info1)
+      (is (typep (setf file (g:file-new-for-path path)) 'g:object))
+      (is (typep (setf info (g:file-query-info file "*" :none)) 'g:file-info))
+      (is (typep (setf info1 (g:file-info-new)) 'g:file-info))
+      (is-true (g:file-set-attributes-from-info file info1 :none)))))
+
+;;; 2026-03-22

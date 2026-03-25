@@ -2,11 +2,11 @@
 ;;; gio.settings.lisp
 ;;;
 ;;; The documentation in this file is taken from the GIO Reference Manual
-;;; version 2.86 and modified to document the Lisp binding to the GIO library,
+;;; version 2.88 and modified to document the Lisp binding to the GIO library,
 ;;; see <http://www.gtk.org>. The API documentation for the Lisp binding is
 ;;; available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2025 Dieter Kaiser
+;;; Copyright (C) 2025 - 2026 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -30,25 +30,9 @@
 ;;; Types and Values
 ;;;
 ;;;     GSettings
-;;;     GSettingsSchema
-;;;     GSettingsSchemaSource
 ;;;     GSettingsBindFlags
 ;;;
-;;; Accessors
-;;;
-;;;
 ;;; Functions
-;;;
-;;;     g_settings_schema_source_default
-;;;     g_settings_schema_source_lookup
-;;;     g_settings_schema_source_list_schemas
-;;;
-;;;     g_settings_schema_get_id
-;;;     g_settings_schema_get_key
-;;;     g_settings_schema_get_path
-;;;     g_settings_schema_has_key
-;;;     g_settings_schema_list_children
-;;;     g_settings_schema_list_keys
 ;;;
 ;;;     g_settings_new
 ;;;     g_settings_new_full
@@ -56,8 +40,8 @@
 ;;;     g_settings_new_with_backend_and_path
 ;;;     g_settings_new_with_path
 ;;;
-;;;     g_settings_list_schemas
-;;;     g_settings_list_relocatable_schemas
+;;;     g_settings_list_schemas                             Deprecated 2.40
+;;;     g_settings_list_relocatable_schemas                 Deprecated 2.40
 ;;;     g_settings_sync
 ;;;
 ;;;     g_settings_apply
@@ -72,17 +56,17 @@
 ;;;     g_settings_create_action
 
 ;;;     g_settings_is_writable
-;;;     g_settings_list_keys
+;;;     g_settings_list_keys                                Deprecated 2.46
 
 ;;;     g_settings_reset
 ;;;     g_settings_revert
 ;;;
 ;;;     g_settings_list_children
 ;;;     g_settings_get_child
-;;;     g_settings_get_has_unapplied
-;;;     g_settings_get_mapped
-;;;     g_settings_get_range
-;;;     g_settings_range_check
+;;;     g_settings_get_has_unapplied                        Accessor
+;;;     g_settings_get_mapped                               not implemented
+;;;     g_settings_get_range                                Deprecated 2.40
+;;;     g_settings_range_check                              Deprecated 2.40
 
 ;;;     g_settings_get_value
 ;;;     g_settings_set_value
@@ -196,101 +180,6 @@
   These flags determine in which direction the binding works. The default is to
   synchronize in both directions.
   @see-class{g:settings}")
-
-;;; ----------------------------------------------------------------------------
-;;; GSettingsSchema
-;;; ----------------------------------------------------------------------------
-
-(glib:define-gboxed-opaque settings-schema "GSettingsSchema"
-  :export t
-  :type-initializer "g_settings_schema_get_type"
-  :alloc (error "GSettingsSchema cannot be created from the Lisp side"))
-
-#+liber-documentation
-(setf (liber:alias-for-class 'settings-schema)
-      "GBoxed"
-      (documentation 'settings-schema 'type)
- "@version{2025-12-24}
-  @begin{declaration}
-(glib:define-gboxed-opaque settings-schema \"GSettingsSchema\"
-  :export t
-  :type-initializer \"g_settings_schema_get_type\"
-  :alloc (error \"GSettingsSchema cannot be created from the Lisp side\"))
-  @end{declaration}
-  @begin{short}
-    The GSettingsSchemaSource and GSettingsSchema APIs provide a mechanism for
-    advanced control over the loading of schemas and a mechanism for
-    introspecting their content.
-  @end{short}
-  @see-class{g:settings}")
-
-;;;     g_settings_schema_get_id
-;;;     g_settings_schema_get_key
-;;;     g_settings_schema_get_path
-;;;     g_settings_schema_has_key
-;;;     g_settings_schema_list_children
-;;;     g_settings_schema_list_keys
-
-;;; ----------------------------------------------------------------------------
-;;; GSettingsSchemaSource
-;;; ----------------------------------------------------------------------------
-
-(glib:define-gboxed-opaque settings-schema-source "GSettingsSchemaSource"
-  :export t
-  :type-initializer "g_settings_schema_source_get_type"
-  :alloc (error "GSettingsSchemaSource cannot be created from the Lisp side"))
-
-;;; ----------------------------------------------------------------------------
-;;; g_settings_schema_source_default
-;;; ----------------------------------------------------------------------------
-
-(cffi:defcfun ("g_settings_schema_source_get_default"
-               settings-schema-source-default)
-    (glib:boxed settings-schema-source))
-
-(export 'settings-schema-source-default)
-
-;;; ----------------------------------------------------------------------------
-;;; g_settings_schema_source_lookup
-;;; ----------------------------------------------------------------------------
-
-(cffi:defcfun ("g_settings_schema_source_lookup" settings-schema-source-lookup)
-    (glib:boxed settings-schema :return)
-  (source (glib:boxed settings-schema-source))
-  (schema-id :string)
-  (recursive :boolean))
-
-(export 'settings-schema-source-lookup)
-
-;;; ----------------------------------------------------------------------------
-;;; g_settings_schema_source_list_schemas
-;;; ----------------------------------------------------------------------------
-
-;; FIXME: Does not work.
-;;  --------------------------------
-;;  G-SETTINGS-SCHEMA-SOURCE-LIST-SCHEMAS in GIO-SETTINGS []:
-;;       Unexpected Error: #<BABEL-ENCODINGS:INVALID-UTF8-STARTER-BYTE {1002934BD3}>
-;; Illegal :UTF-8 character starting at position 1..
-;;  --------------------------------
-
-
-(cffi:defcfun ("g_settings_schema_source_list_schemas"
-               %settings-schema-source-list-schemas) :void
-  (source (glib:boxed settings-schema-source))
-  (recursive :boolean)
-  (non-relocatable :pointer)
-  (relocatable :pointer))
-
-#+nil
-(defun settings-schema-source-list-schemas (source recursive)
-  (cffi:with-foreign-objects ((ptr1 'glib:strv-t) (ptr2 'glib:strv-t))
-    (%settings-schema-source-list-schemas source recursive ptr1 ptr2)
-    (values (cffi:convert-from-foreign ptr1 'glib:strv-t)
-            ptr2 ;(cffi:convert-from-foreign ptr2 'glib:strv-t))))
-)))
-
-#+nil
-(export 'settings-schema-source-list-schemas)
 
 ;;; ----------------------------------------------------------------------------
 ;;; GioSettings
@@ -875,11 +764,11 @@ lambda (settings key)     :run-first
 
 (cffi:defcfun ("g_settings_new" settings-new) (gobject:object settings :return)
  #+liber-documentation
- "@version{2025-12-29}
-  @argument[schema-id]{a string for the ID of the schema}
+ "@version{2026-03-25}
+  @argument[id]{a string for the ID of the schema}
   @begin{short}
     Creates a new @class{g:settings} object with the schema specified by
-    @arg{schema-id}.
+    @arg{id}.
   @end{short}
   It is an error for the schema to not exist. Schemas are an essential part of
   a program, as they provide type information. If schemas need to be dynamically
@@ -891,8 +780,9 @@ lambda (settings key)     :run-first
   the thread-default @code{GMainContext} in effect at the time of the call to
   the @fun{g:settings-new} function. The new @class{g:settings} object will hold
   a reference on the context.
-  @see-class{g:settings}"
-  (schema-id :string))
+  @see-class{g:settings}
+  @see-function{g:settings-schema-source-lookup}"
+  (id :string))
 
 (export 'settings-new)
 
@@ -923,12 +813,12 @@ lambda (settings key)     :run-first
 (cffi:defcfun ("g_settings_new_with_path" settings-new-with-path)
     (gobject:object settings :return)
  #+liber-documentation
- "@version{#2025-12-25}
-  @argument[schema-id]{a string for the ID of the schema}
+ "@version{#2026-03-25}
+  @argument[id]{a string for the ID of the schema}
   @argument[path]{a string for the path to use}
   @begin{short}
     Creates a new @class{g:settings} object with the relocatable schema
-    specified by @arg{schema-id} and a given @arg{path}.
+    specified by @arg{id} and a given @arg{path}.
   @end{short}
   You only need to do this if you want to directly create a settings object with
   a schema that does not have a specified path of its own. That is quite rare.
@@ -938,63 +828,115 @@ lambda (settings key)     :run-first
   path. A valid path begins and ends with / and does not contain two consecutive
   / characters.
   @see-class{g:settings}"
-  (schema-id :string)
+  (id :string)
   (path :string))
 
 (export 'settings-new-with-path)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_settings_list_schemas
-;;;
-;;; Deprecated 2.40
+;;; g_settings_list_schemas                                 Deprecated 2.40
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcfun ("g_settings_list_schemas" settings-list-schemas) glib:strv-t)
-
-(export 'settings-list-schemas)
-
 ;;; ----------------------------------------------------------------------------
-;;; g_settings_list_relocatable_schemas
-;;;
-;;; Deprecated 2.40
+;;; g_settings_list_relocatable_schemas                     Deprecated 2.40
 ;;; ----------------------------------------------------------------------------
-
-(cffi:defcfun ("g_settings_list_relocatable_schemas"
-               settings-list-relocatable-schemas) glib:strv-t)
-
-(export 'settings-list-relocatable-schemas)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_settings_sync
-;;;
-;;; Ensures that all pending operations are complete for the default backend.
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcfun ("g_settings_sync" settings-sync) :void)
+(cffi:defcfun ("g_settings_sync" settings-sync) :void
+ #+liber-documentation
+ "@version{#2026-03-25}
+  @begin{short}
+    Ensures that all pending operations are complete for the default backend.
+  @end{short}
+  Writes made to a @class{g:settings} object are handled asynchronously. For
+  this reason, it is very unlikely that the changes have it to disk by the time
+  the @setf{g:settings-value} function returns.
+
+  This call will block until all of the writes have made it to the backend.
+  Since the main loop is not running, no change notifications will be dispatched
+  during this call, but some may be queued by the time the call is done.
+  @see-class{g:settings}
+  @see-function{g:settings-value}")
 
 (export 'settings-sync)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_settings_apply
-;;;
-;;; Applies any changes that have been made to the settings. This function does
-;;; nothing unless settings is in ‘delay-apply’ mode; see g_settings_delay().
-;;; In the normal case settings are always applied immediately.
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_settings_apply" settings-apply) :void
+ #+liber-documentation
+ "@version{#2026-03-25}
+  @argument[settings]{a @class{g:settings} object}
+  @begin{short}
+    Applies any changes that have been made to the settings.
+  @end{short}
+  This function does nothing unless @arg{settings} is in \"delay-apply\" mode.
+  In the normal case settings are always applied immediately.
+  @see-class{g:settings}
+  @see-function{g:settings-delay}"
   (settings (gobject:object settings)))
 
 (export 'settings-apply)
 
 ;;; ----------------------------------------------------------------------------
+;;; g_settings_delay
+;;; ----------------------------------------------------------------------------
+
+(cffi:defcfun ("g_settings_delay" settings-delay) :void
+ #+liber-documentation
+ "@version{#2026-03-25}
+  @argument[settings]{a @class{g:settings} object}
+  @begin{short}
+    Changes the @class{g:settings} object into \"delay-apply\" mode.
+  @end{short}
+  In this mode, changes to settings are not immediately propagated to the
+  backend, but kept locally until the @fun{g:settings-apply} function is called.
+  @see-class{g:settings}
+  @see-function{g:settings-apply}"
+  (settings (gobject:object settings)))
+
+(export 'settings-delay)
+
+;;; ----------------------------------------------------------------------------
 ;;; g_settings_bind
-;;;
-;;; Create a binding between the key in the settings object and the property
-;;; property of object.
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_settings_bind" settings-bind) :void
+ #+liber-documentation
+  "@version{#2026-03-25}
+  @argument[settings]{a @class{g:settings} object}
+  @argument[key]{a string for the key to bind}
+  @argument[object]{a @class{g:object} object for the object with the property
+    to bind}
+  @argument[property]{a string for the name of the property to bind}
+  @argument[flags]{a @symbol{g:settings-bind-flags} value for the binding}
+  @begin{short}
+    Create a binding between @arg{key} in the settings object and the property
+    @arg{property} of @arg{object}.
+  @end{short}
+  The binding uses the default GIO mapping functions to map between the settings
+  and property values. These functions handle booleans, numeric types and string
+  types in a straightforward way. Use the @fun{g:settings-bind-with-mapping}
+  function if you need a custom mapping, or map between types that are not
+  supported by the default mapping functions.
+
+  Unless the flags include @val[g:settings-bind-flags]{no-sensitivity}, this
+  function also establishes a binding between the writability of key and the
+  sensitive property of object, if @arg{object} has a boolean property by that
+  name. See the @fun{g:settings-bind-writable} function for more details about
+  writable bindings.
+
+  Note that the lifecycle of the binding is tied to @arg{object}, and that you
+  can have only one binding per object property. If you bind the same property
+  twice on the same object, the second binding overrides the first one.
+  @see-class{g:settings}
+  @see-symbol{g:settings-bind-flags}
+  @see-function{g:settings-bind-with-mapping}
+  @see-function{g:settings-bind-writable}"
   (settings (gobject:object settings))
   (key :string)
   (object gobject:object)
@@ -1007,53 +949,78 @@ lambda (settings key)     :run-first
 ;;; GSettingsBindGetMapping
 ;;; ----------------------------------------------------------------------------
 
-#+nil
-(cffi:defcallback settings-bind-get-mapping :boolean
-    ((value (:pointer (:struct gobject:value)))
-     (variant (:pointer (:struct glib:variant)))
-     (data :pointer))
-  (let ((func (glib:get-stable-pointer-value data)))
-    (declare (type function func))
-    (unwind-protect
-      (funcall func value variant)
-      (glib:free-stable-pointer data))))
+#+liber-documentation
+(setf (liber:alias-for-symbol 'settings-bind-get-mapping)
+      "Callback"
+      (liber:symbol-documentation 'settings-bind-get-mapping)
+ "@version{#2026-03-25}
+  @begin{declaration}
+lambda (value variant) => result
+  @end{declaration}
+  @begin{values}
+    @begin[code]{simple-table}
+      @entry[value]{a @symbol{g:value} instance for the property value}
+      @entry[variant]{a @symbol{g:variant} instance to map to the property
+        value}
+      @entry[result]{@em{True} if the conversion succeeded, @em{false} in case
+        of an error.}
+    @end{simple-table}
+  @end{values}
+  @begin{short}
+    The type for the callback function that is used to convert from the
+    @class{g:settings} object to an object property with the
+    @fun{g:settings-bind-with-mapping} function.
+  @end{short}
+  The value is already initialized to hold values of the appropriate type.
+  @see-class{g:settings}
+  @see-symbol{g:value}
+  @see-symbol{g:variant}
+  @see-function{g:settings-bind-with-mapping}")
 
-#+nil
 (export 'settings-bind-get-mapping)
 
 ;;; ----------------------------------------------------------------------------
 ;;; GSettingsBindSetMapping
 ;;; ----------------------------------------------------------------------------
 
-#+nil
-(cffi:defcallback settings-bind-set-mapping (:pointer (:struct glib:variant))
-    ((value (:pointer (:struct gobject:value)))
-     (vtype (glib:boxed glib:variant-type))
-     (data :pointer))
-  (let ((func (glib:get-stable-pointer-value data)))
-    (declare (type function func))
-    (unwind-protect
-      (funcall func value vtype)
-      (glib:free-stable-pointer data))))
+#+liber-documentation
+(setf (liber:alias-for-symbol 'settings-bind-set-mapping)
+      "Callback"
+      (liber:symbol-documentation 'settings-bind-set-mapping)
+ "@version{#2026-03-25}
+  @begin{declaration}
+lambda (value vtype) => result
+  @end{declaration}
+  @begin{values}
+    @begin[code]{simple-table}
+      @entry[value]{a @symbol{g:value} instance for the property value}
+      @entry[vtype]{a @class{g:variant-type} instance for the expected type
+        of the result}
+      @entry[result]{The new @symbol{g:variant} instance holding the date from
+        @arg{value}, or @code{nil} in case of an error.}
+    @end{simple-table}
+  @end{values}
+  @begin{short}
+    The type for the callback function that is used to convert from the
+    @class{g:settings} object to an object property with the
+    @fun{g:settings-bind-with-mapping} function.
+  @end{short}
+  The value is already initialized to hold values of the appropriate type.
+  @see-class{g:settings}
+  @see-symbol{g:value}
+  @see-symbol{g:variant}
+  @see-function{g:settings-bind-with-mapping}")
 
-#+nil
-(export 'settings-bind-get-mapping)
+(export 'settings-bind-set-mapping)
 
-;;; ----------------------------------------------------------------------------
-;;; g_settings_bind_with_mapping_closures
-;;;
-;;; Version of g_settings_bind_with_mapping() using closures instead of
-;;; callbacks for easier binding in other languages.
-;;;
-;;; since: 2.82
-;;; ----------------------------------------------------------------------------
 ;;; ----------------------------------------------------------------------------
 ;;; g_settings_bind_with_mapping
-;;;
-;;; Create a binding between the key in the settings object and the property
-;;; property of object.
 ;;; ----------------------------------------------------------------------------
 
+;; TODO: This implementation requieres GLIB 2.82. The variant without closures
+;; is not implemented.
+
+#+glib-2-82
 (cffi:defcfun ("g_settings_bind_with_mapping_closures"
                %settings-bind-with-mapping-closures) :void
   (settings (gobject:object settings))
@@ -1064,8 +1031,37 @@ lambda (settings key)     :run-first
   (get-mapping :pointer)
   (set-mapping :pointer))
 
+#+glib-2-82
 (defun settings-bind-with-mapping
        (settings key object property flags get-mapping set-mapping)
+ #+liber-documentation
+ "@version{#2026-03-25}
+  @argument[settings]{a @class{g:settings} object}
+  @argument[key]{a string for the key to bind}
+  @argument[object]{a @class{g:object} object with the property to bind}
+  @argument[property]{a string for the name of the property to bind}
+  @argument[flags]{a @symbol{g:settings-bind-flags} value for the binding}
+  @argument[get-mapping]{a @symbol{g:settings-bind-get-mapping} callback
+    function that gets called to convert values from @arg{settings} to
+    @arg{object}, or @code{nil} to use the default GIO mapping}
+  @argument[set-mapping]{a @symbol{g:settings-bind-set-mapping} callback
+    function that gets called to convert values from @arg{object} to
+    @arg{settings}, or @code{nil} to use the default GIO mapping}
+  @begin{short}
+    Create a binding between @arg{key} in the settings object and the property
+    @arg{property} of @arg{object}.
+  @end{short}
+  The binding uses the provided mapping functions to map between settings and
+  property values.
+
+  Note that the lifecycle of the binding is tied to @arg{object}, and that you
+  can have only one binding per object property. If you bind the same property
+  twice on the same object, the second binding overrides the first one.
+  @begin[Notes]{dictionary}
+    This function is available since GIO 2.82. It uses closures to implement
+    the mapping. This is not available in ealier version of GIO.
+  @end{dictionary}
+  @see-class{g:settings}"
   (let ((object (gobject:object-pointer object)))
     (%settings-bind-with-mapping-closures
             settings
@@ -1080,17 +1076,39 @@ lambda (settings key)     :run-first
                 (gobject:create-closure-for-instance object set-mapping)
                 (cffi:null-pointer)))))
 
+#+glib-2-82
 (export 'settings-bind-with-mapping)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_settings_bind_writable
-;;;
-;;; Create a binding between the writability of key in the settings object and
-;;; the property property of object. The property must be boolean; “sensitive”
-;;; or “visible” properties of widgets are the most likely candidates.
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_settings_bind_writable" settings-bind-writable) :void
+ #+liber-documentation
+ "@version{#2026-03-25}
+  @argument[settings]{a @class{g:settings} object}
+  @argument[key]{a string for the key to bind}
+  @argument[object]{a @class{g:object} object with the property to bind}
+  @argument[property]{a string for the name of the boolean property to bind}
+  @argument[inverted]{a boolean whether to invert the value}
+  @begin{short}
+    Create a binding between the writability of @arg{key} in the settings object
+    and the property property of @arg{object}.
+  @end{short}
+  The property must be boolean. The @code{\"sensitive\"} or @code{\"visible\"}
+  properties of widgets are the most likely candidates.
+
+  Writable bindings are always uni-directional. Changes of the writability of
+  the setting will be propagated to the object property, not the other way.
+
+  When the inverted argument is @em{true}, the binding inverts the value as it
+  passes from the setting to the object, that is, @arg{property} will be set to
+  @em{true} if the key is not writable.
+
+  Note that the lifecycle of the binding is tied to @arg{object}, and that you
+  can have only one binding per object property. If you bind the same property
+  twice on the same object, the second binding overrides the first one.
+  @see-class{g:settings}"
   (settings (gobject:object settings))
   (key :string)
   (object gobject:object)
@@ -1101,11 +1119,19 @@ lambda (settings key)     :run-first
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_settings_unbind
-;;;
-;;; Removes an existing binding for property on object.
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_settings_unbind" settings-unbind) :void
+ #+liber-documentation
+ "@version{#2026-03-25}
+  @argument[object]{a @class{g:object} object with the property to unbind}
+  @argument[property]{a string for the property whose binding is removed}
+  @begin{short}
+    Removes an existing binding for @arg{property} on @arg{object}.
+  @end{short}
+  Note that bindings are automatically removed when the object is finalized, so
+  it is rarely necessary to call this function.
+  @see-class{g:settings}"
   (object gobject:object)
   (property :string))
 
@@ -1113,12 +1139,30 @@ lambda (settings key)     :run-first
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_settings_create_action
-;;;
-;;; Creates a GAction corresponding to a given GSettings key.
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_settings_create_action" settings-create-action)
     (gobject:object action)
+ #+liber-documentation
+ "@version{#2026-03-25}
+  @argument[settings]{a @class{g:settings} instance}
+  @argument[key]{a string for the name of a key in @arg{settings}}
+  @return{The new @class{g:action} instance.}
+  @begin{short}
+    Creates a @class{g:action} instance corresponding to a given @arg{key}.
+  @end{short}
+  The action has the same name as the key.
+
+  The value of the key becomes the state of the action and the action is enabled
+  when the key is writable. Changing the state of the action results in the key
+  being written to. Changes to the value or writability of the key cause
+  appropriate change notifications to be emitted for the action.
+
+  For boolean valued keys, action activations take no parameter and result in
+  the toggling of the value. For all other types, activations take the new value
+  for the key, which must have the correct type.
+  @see-class{g:settings}
+  @see-class{g:action}"
   (settings (gobject:object settings))
   (key :string))
 
@@ -1126,69 +1170,59 @@ lambda (settings key)     :run-first
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_settings_is_writable
-;;;
-;;; Finds out if a key can be written or not.
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_settings_is_writable" settings-is-writable) :boolean
+ #+liber-documentation
+ "@version{#2026-03-25}
+  @argument[settings]{a @class{g:settings} instance}
+  @argument[key]{a string for the name of a key in @arg{settings}}
+  @return{The boolean whether @arg{key} is writable.}
+  @begin{short}
+    Finds out if a key can be written.
+  @end{short}
+  @see-class{g:settings}"
   (settings (gobject:object settings))
-  (name :string))
+  (key :string))
 
 (export 'settings-is-writable)
 
-
 ;;; ----------------------------------------------------------------------------
-;;; g_settings_list_keys
-;;;
-;;; Introspects the list of keys on settings.
-;;;
-;;; deprecated: 2.46
+;;; g_settings_list_keys                                    Deprecated 2.46
 ;;; ----------------------------------------------------------------------------
-
-(cffi:defcfun ("g_settings_list_keys" settings-list-keys)
-    (glib:strv-t :free-from-foreign t)
-  (settings (gobject:object settings)))
-
-(export 'settings-list-keys)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_settings_get_has_unapplied                            Accessor
-;;;
-;;; Returns whether the GSettings object has any unapplied changes. This can
-;;; only be the case if it is in ‘delayed-apply’ mode.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_settings_get_mapped
-;;;
-;;; Gets the value that is stored at key in settings, subject to
-;;; application-level validation/mapping.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_settings_get_range
-;;;
-;;; Queries the range of a key.
-;;;
-;;; deprecated: 2.40
+;;; g_settings_get_range                                    Deprecated 2.40
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
-;;; g_settings_range_check
-;;;
-;;; Checks if the given value is of the correct type and within the permitted
-;;; range for key.
-;;;
-;;; deprecated: 2.40
+;;; g_settings_range_check                                  Deprecated 2.40
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_settings_reset
-;;;
-;;; Resets key to its default value.
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_settings_reset" settings-reset) :void
+ #+liber-documentation
+ "@version{#2026-03-25}
+  @argument[settings]{a @class{g:settings} instance}
+  @argument[key]{a string for the name of a key in @arg{settings}}
+  @begin{short}
+    Resets @arg{key} to its default value.
+  @end{short}
+  This call resets the key, as much as possible, to its default value. That
+  might be the value specified in the schema or the one set by the
+  administrator.
+  @see-class{g:settings}"
   (settings (gobject:object settings))
   (key :string))
 
@@ -1196,50 +1230,70 @@ lambda (settings key)     :run-first
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_settings_revert
-;;;
-;;; Reverts all non-applied changes to the settings. This function does nothing
-;;; unless settings is in ‘delay-apply’ mode; see g_settings_delay(). In the
-;;; normal case settings are always applied immediately.
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_settings_revert" settings-revert) :void
+ #+liber-documentation
+ "@version{#2026-03-25}
+  @argument[settings]{a @class{g:settings} instance}
+  @begin{short}
+    Reverts all unapplied changes to the settings.
+  @end{short}
+  This function does nothing unless settings is in \"delay-apply\" mode. In the
+  normal case settings are always applied immediately.
+
+  Change notifications will be emitted for affected keys.
+  @see-class{g:settings}"
   (settings (gobject:object settings)))
 
 (export 'settings-revert)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_settings_delay
-;;;
-;;; Changes the GSettings object into ‘delay-apply’ mode. In this mode, changes
-;;; to settings are not immediately propagated to the backend, but kept locally
-;;; until g_settings_apply() is called.
-;;; ----------------------------------------------------------------------------
-
-(cffi:defcfun ("g_settings_delay" settings-delay) :void
-  (settings (gobject:object settings)))
-
-(export 'settings-delay)
-
-;;; ----------------------------------------------------------------------------
 ;;; g_settings_list_children
-;;;
-;;; Gets the list of children on settings.
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_settings_list_children" settings-list-children)
     (glib:strv-t :free-from-foreign t)
+ #+liber-documentation
+ "@version{#2026-03-25}
+  @argument[settings]{a @class{g:settings} instance}
+  @begin{short}
+    Gets the list of children on @arg{settings}.
+  @end{short}
+  The list is exactly the list of strings for which it is not an error to call
+  the @fun{g:settings-child} function.
+
+  There is little reason to call this function from \"normal\" code, since you
+  should already know what children are in your schema. This function may still
+  be useful there for introspection reasons, however.
+  @see-class{g:settings}
+  @see-function{g:settings-child}"
   (settings (gobject:object settings)))
 
 (export 'settings-list-children)
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_settings_get_child
-;;;
-;;; Creates a child settings object which has a base path of base-path/name`,
-;;; wherebase-pathis the base path ofsettings`.
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcfun ("g_settings_get_child" settings-child) (gobject:object settings)
+(cffi:defcfun ("g_settings_get_child" settings-child)
+    (gobject:object settings :return)
+ #+liber-documentation
+ "@version{#2026-03-25}
+  @argument[settings]{a @class{g:settings} instance}
+  @argument[name]{a string for the name of the child schema}
+  @return{The new @class{g:settings} instance for the chils settings object.}
+  @begin{short}
+    Creates a child settings object which has a base path of
+    @code{base-path/name}, where @code{base-path} is the base path of settings
+    and @code{name} is as specified by the caller.
+  @end{short}
+  The schema for the child settings object must have been declared in the schema
+  of @arg{settings} using a @code{<child>} element.
+
+  The created child settings object will inherit the \"delay-apply\" mode from
+  @arg{settings}.
+  @see-class{g:settings}"
   (settings (gobject:object settings))
   (name :string))
 
@@ -1248,9 +1302,6 @@ lambda (settings key)     :run-first
 ;;; ----------------------------------------------------------------------------
 ;;; g_settings_get_value
 ;;; g_settings_set_value
-;;;
-;;; Gets the value that is stored in settings for key.
-;;; Sets key in settings to value.
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf settings-value) (value settings key)
@@ -1263,6 +1314,20 @@ lambda (settings key)     :run-first
 
 (cffi:defcfun ("g_settings_get_value" settings-value)
     (:pointer (:struct glib:variant))
+ #+liber-documentation
+ "@version{#2026-03-25}
+  @syntax{(g:settings-value settings key) => value}
+  @syntax{(setf (g:settings-value settings key) value)}
+  @argument[settings]{a @class{g:settings} instance}
+  @argument[key]{a string for the name of a key in @arg{settings}}
+  @argument[value]{a @symbol{g:variant} instance of the correct type}
+  @begin{short}
+    Gets or sets the value that is stored in @arg{settings} for @arg{key}.
+  @end{short}
+  It is a programmer error to give a key that is not contained in the schema
+  for @arg{settings}.
+  @see-class{g:settings}
+  @see-symbol{g:variant}"
   (settings (gobject:object settings))
   (key :string))
 
@@ -1270,12 +1335,41 @@ lambda (settings key)     :run-first
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_settings_get_default_value
-;;;
-;;; Gets the “default value” of a key.
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_settings_get_default_value" settings-default-value)
     (:pointer (:struct glib:variant))
+ #+liber-documentation
+ "@version{#2026-03-25}
+  @argument[settings]{a @class{g:settings} instance}
+  @argument[key]{a string for the name of a key in @arg{settings}}
+  @return{The new @symbol{g:variant} instance for the default value.}
+  @begin{short}
+    Gets the default value of a key.
+  @end{short}
+  This is the value that would be read if the @fun{g:settings-reset} function
+  were to be called on the key.
+
+  Note that this may be a different value than returned by the
+  @fun{g:settings-schema-key-default-value} function if the system administrator
+  has provided a default value.
+
+  Comparing the return values of the @fun{g:settings-default-value} function and
+  the @fun{g:settings-value} function is not sufficient for determining if a
+  value has been set because the user may have explicitly set the value to
+  something that happens to be equal to the default. The difference here is that
+  if the default changes in the future, the user’s key will still be set.
+
+  This function may be useful for adding an indication to a UI of what the
+  default value was before the user set it.
+
+  It is a programmer error to give a key that is not contained in the schema
+  for @arg{settings}.
+  @see-class{g:settings}
+  @see-symbol{g:variant}
+  @see-function{g:settings-reset}
+  @see-function{g:settings-value}
+  @see-function{g:settings-schema-key-default-value}"
   (settings (gobject:object settings))
   (key :string))
 
@@ -1283,12 +1377,38 @@ lambda (settings key)     :run-first
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_settings_get_user_value
-;;;
-;;; Checks the “user value” of a key, if there is one.
 ;;; ----------------------------------------------------------------------------
 
 (cffi:defcfun ("g_settings_get_user_value" settings-user-value)
     (:pointer (:struct glib:variant))
+ #+liber-documentation
+ "@version{#2026-03-25}
+  @argument[settings]{a @class{g:settings} instance}
+  @argument[key]{a string for the name of a key in @arg{settings}}
+  @return{The new @symbol{g:variant} instance for the user value, if set.}
+  @begin{short}
+    Checks the user value of a key, if there is one.
+  @end{short}
+  The user value of a key is the last value that was set by the user.
+
+  After calling the @fun{g:settings-reset} function this function should always
+  return @code{nil}, assuming something is not wrong with the system
+  configuration.
+
+  It is possible that the @fun{g:settings-value} function will return a
+  different value than this function. This can happen in the case that the user
+  set a value for a key that was subsequently locked down by the system
+  administrator — this function will return the user’s old value.
+
+  This function may be useful for adding a \"reset\" option to a UI or for
+  providing indication that a particular value has been changed.
+
+  It is a programmer error to give a key that is not contained in the schema
+  for @arg{settings}.
+  @see-class{g:settings}
+  @see-symbol{g:variant}
+  @see-function{g:settings-reset}
+  @see-function{g:settings-value}"
   (settings (gobject:object settings))
   (key :string))
 
@@ -1297,17 +1417,11 @@ lambda (settings key)     :run-first
 ;;; ----------------------------------------------------------------------------
 ;;; g_settings_get
 ;;; g_settings_set
-;;;
-;;; Gets the value that is stored at key in settings.
-;;; Sets key in settings to value.
 ;;; ----------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------
 ;;; g_settings_get_boolean
 ;;; g_settings_set_boolean
-;;;
-;;; Gets the value that is stored at key in settings.
-;;; Sets key in settings to value.
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf settings-boolean) (value settings key)
@@ -1319,6 +1433,19 @@ lambda (settings key)     :run-first
     value))
 
 (cffi:defcfun ("g_settings_get_boolean" settings-boolean) :boolean
+ #+liber-documentation
+ "@version{#2026-03-24}
+  @syntax{(g:settings-boolean settings) => value}
+  @syntax{(setf (g:settings-boolean settings) value)}
+  @argument[settings]{a @class{g:settings} object}
+  @argument[key]{a string for the key to get the value for}
+  @argument[value]{a boolean for the value}
+  @begin{short}
+    Gets or sets the value that is stored at @arg{key} in @arg{settings}.
+  @end{short}
+  It is a programmer error to give a key that is not specified as having an
+  \"b\" type in the schema for settings.
+  @see-class{g:settings}"
   (settings (gobject:object settings))
   (key :string))
 
@@ -1327,9 +1454,6 @@ lambda (settings key)     :run-first
 ;;; ----------------------------------------------------------------------------
 ;;; g_settings_get_int
 ;;; g_settings_set_int
-;;;
-;;; Gets the value that is stored at key in settings.
-;;; Sets key in settings to value.
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf settings-int) (value settings key)
@@ -1341,6 +1465,19 @@ lambda (settings key)     :run-first
     value))
 
 (cffi:defcfun ("g_settings_get_int" settings-int) :int
+ #+liber-documentation
+ "@version{#2026-03-24}
+  @syntax{(g:settings-int settings) => value}
+  @syntax{(setf (g:settings-int settings) value)}
+  @argument[settings]{a @class{g:settings} object}
+  @argument[key]{a string for the key to get the value for}
+  @argument[value]{an integer for the value}
+  @begin{short}
+    Gets or sets the value that is stored at @arg{key} in @arg{settings}.
+  @end{short}
+  It is a programmer error to give a key that is not specified as having an
+  \"i\" type in the schema for settings.
+  @see-class{g:settings}"
   (settings (gobject:object settings))
   (key :string))
 
@@ -1349,9 +1486,6 @@ lambda (settings key)     :run-first
 ;;; ----------------------------------------------------------------------------
 ;;; g_settings_get_int64
 ;;; g_settings_set_int64
-;;;
-;;; Gets the value that is stored at key in settings.
-;;; Sets key in settings to value.
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf settings-int64) (value settings key)
@@ -1363,6 +1497,19 @@ lambda (settings key)     :run-first
     value))
 
 (cffi:defcfun ("g_settings_get_int64" settings-int64) :int64
+ #+liber-documentation
+ "@version{#2026-03-24}
+  @syntax{(g:settings-int64 settings) => value}
+  @syntax{(setf (g:settings-int64 settings) value)}
+  @argument[settings]{a @class{g:settings} object}
+  @argument[key]{a string for the key to get the value for}
+  @argument[value]{an unsigned 64-bit integer for the value}
+  @begin{short}
+    Gets or sets the value that is stored at @arg{key} in @arg{settings}.
+  @end{short}
+  It is a programmer error to give a key that is not specified as having an
+  \"x\" type in the schema for settings.
+  @see-class{g:settings}"
   (settings (gobject:object settings))
   (key :string))
 
@@ -1371,9 +1518,6 @@ lambda (settings key)     :run-first
 ;;; ----------------------------------------------------------------------------
 ;;; g_settings_get_uint
 ;;; g_settings_set_uint
-;;;
-;;; Gets the value that is stored at key in settings.
-;;; Sets key in settings to value.
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf settings-uint) (value settings key)
@@ -1385,6 +1529,19 @@ lambda (settings key)     :run-first
     value))
 
 (cffi:defcfun ("g_settings_get_uint" settings-uint) :uint
+ #+liber-documentation
+ "@version{#2026-03-24}
+  @syntax{(g:settings-uint settings) => value}
+  @syntax{(setf (g:settings-uint settings) value)}
+  @argument[settings]{a @class{g:settings} object}
+  @argument[key]{a string for the key to get the value for}
+  @argument[value]{an unsigned integer for the value}
+  @begin{short}
+    Gets or sets the value that is stored at @arg{key} in @arg{settings}.
+  @end{short}
+  It is a programmer error to give a key that is not specified as having an
+  \"u\" type in the schema for settings.
+  @see-class{g:settings}"
   (settings (gobject:object settings))
   (key :string))
 
@@ -1393,9 +1550,6 @@ lambda (settings key)     :run-first
 ;;; ----------------------------------------------------------------------------
 ;;; g_settings_get_uint64
 ;;; g_settings_set_uint64
-;;;
-;;; Gets the value that is stored at key in settings.
-;;; Sets key in settings to value.
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf settings-uint64) (value settings key)
@@ -1407,6 +1561,19 @@ lambda (settings key)     :run-first
     value))
 
 (cffi:defcfun ("g_settings_get_uint64" settings-uint64) :uint64
+ #+liber-documentation
+ "@version{#2026-03-24}
+  @syntax{(g:settings-unit64 settings) => value}
+  @syntax{(setf (g:settings-uint64 settings) value)}
+  @argument[settings]{a @class{g:settings} object}
+  @argument[key]{a string for the key to get the value for}
+  @argument[value]{an unsigned 64-bit integer for the value}
+  @begin{short}
+    Gets or sets the value that is stored at @arg{key} in @arg{settings}.
+  @end{short}
+  It is a programmer error to give a key that is not specified as having an
+  @code{\"t\"} type in the schema for settings.
+  @see-class{g:settings}"
   (settings (gobject:object settings))
   (key :string))
 
@@ -1415,10 +1582,6 @@ lambda (settings key)     :run-first
 ;;; ----------------------------------------------------------------------------
 ;;; g_settings_get_double
 ;;; g_settings_set_double
-;;;
-;;; Gets the value that is stored at key in settings.
-;;;
-;;; Sets key in settings to value.
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf settings-double) (value settings key)
@@ -1430,6 +1593,19 @@ lambda (settings key)     :run-first
     value))
 
 (cffi:defcfun ("g_settings_get_double" settings-double) :double
+ #+liber-documentation
+ "@version{#2026-03-24}
+  @syntax{(g:settings-double settings) => value}
+  @syntax{(setf (g:settings-double settings) value)}
+  @argument[settings]{a @class{g:settings} object}
+  @argument[key]{a string for the key to get the value for}
+  @argument[value]{a number coerced to a double float for the value}
+  @begin{short}
+    Gets or sets the value that is stored at @arg{key} in @arg{settings}.
+  @end{short}
+  It is a programmer error to give a key that is not specified as having an
+  @code{\"d\"} type in the schema for settings.
+  @see-class{g:settings}"
   (settings (gobject:object settings))
   (key :string))
 
@@ -1438,9 +1614,6 @@ lambda (settings key)     :run-first
 ;;; ----------------------------------------------------------------------------
 ;;; g_settings_get_string
 ;;; g_settings_set_string
-;;;
-;;; Gets the value that is stored at key in settings.
-;;; Sets key in settings to value.
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf settings-string) (value settings key)
@@ -1452,6 +1625,19 @@ lambda (settings key)     :run-first
     value))
 
 (cffi:defcfun ("g_settings_get_string" settings-string) :string
+ #+liber-documentation
+ "@version{#2026-03-24}
+  @syntax{(g:settings-string settings) => value}
+  @syntax{(setf (g:settings-string settings) value)}
+  @argument[settings]{a @class{g:settings} object}
+  @argument[key]{a string for the key to get the value for}
+  @argument[value]{a string for the value}
+  @begin{short}
+    Gets or sets the value that is stored at @arg{key} in @arg{settings}.
+  @end{short}
+  It is a programmer error to give a key that is not specified as having an
+  @code{\"s\"} type in the schema for settings.
+  @see-class{g:settings}"
   (settings (gobject:object settings))
   (key :string))
 
@@ -1460,9 +1646,6 @@ lambda (settings key)     :run-first
 ;;; ----------------------------------------------------------------------------
 ;;; g_settings_get_strv
 ;;; g_settings_set_strv
-;;;
-;;; A convenience variant of g_settings_get() for string arrays.
-;;; Sets key in settings to value.
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf settings-strv) (value settings key)
@@ -1475,6 +1658,20 @@ lambda (settings key)     :run-first
 
 (cffi:defcfun ("g_settings_get_strv" settings-strv)
     (glib:strv-t :free-from-foreign t)
+ #+liber-documentation
+ "@version{#2026-03-24}
+  @syntax{(g:settings-strv settings) => value}
+  @syntax{(setf (g:settings-strv settings) value)}
+  @argument[settings]{a @class{g:settings} object}
+  @argument[key]{a string for the key to get the value for}
+  @argument[value]{a list of strings that is stored at @arg{key} in
+    @arg{settings}}
+  @begin{short}
+    Gets or sets the value that is stored at @arg{key} in @arg{settings}.
+  @end{short}
+  It is a programmer error to give a key that is not specified as having an
+  @code{\"as\"} type in the schema for settings.
+  @see-class{g:settings}"
   (settings (gobject:object settings))
   (key :string))
 
@@ -1483,12 +1680,6 @@ lambda (settings key)     :run-first
 ;;; ----------------------------------------------------------------------------
 ;;; g_settings_get_enum
 ;;; g_settings_set_enum
-;;;
-;;; Gets the value that is stored in settings for key and converts it to the
-;;; enum value that it represents.
-;;;
-;;; Looks up the enumerated type nick for value and writes it to key, within
-;;; settings.
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf settings-enum) (value settings key)
@@ -1500,6 +1691,27 @@ lambda (settings key)     :run-first
     value))
 
 (cffi:defcfun ("g_settings_get_enum" settings-enum) :int
+ #+liber-documentation
+ "@version{#2026-03-24}
+  @syntax{(g:settings-enum settings) => value}
+  @syntax{(setf (g:settings-enum settings) value)}
+  @argument[settings]{a @class{g:settings} object}
+  @argument[key]{a string for the key to get the value for}
+  @argument[value]{an integer for the value}
+  @begin{short}
+    Gets or sets the value that is stored in @arg{settings} for @arg{key} and
+    converts it to the enum value that it represents.
+  @end{short}
+  In order to use this function the type of the value must be a string and it
+  must be marked in the schema file as an enumerated type.
+
+  It is a programmer error to give a key that is not contained in the schema
+  for settings or is not marked as an enumerated type.
+
+  If the value stored in the configuration database is not a valid value for
+  the enumerated type then this function will return the default value.
+
+  @see-class{g:settings}"
   (settings (gobject:object settings))
   (key :string))
 
@@ -1508,12 +1720,6 @@ lambda (settings key)     :run-first
 ;;; ----------------------------------------------------------------------------
 ;;; g_settings_get_flags
 ;;; g_settings_set_flags
-;;;
-;;; Gets the value that is stored in settings for key and converts it to the
-;;; flags value that it represents.
-;;;
-;;; Looks up the flags type nicks for the bits specified by value, puts them in
-;;; an array of strings and writes the array to key, within settings.
 ;;; ----------------------------------------------------------------------------
 
 (defun (setf settings-flags) (value settings key)
@@ -1525,6 +1731,26 @@ lambda (settings key)     :run-first
     value))
 
 (cffi:defcfun ("g_settings_get_flags" settings-flags) :uint
+ #+liber-documentation
+ "@version{#2026-03-24}
+  @syntax{(g:settings-flags settings) => value}
+  @syntax{(setf (g:settings-flags settings) value)}
+  @argument[settings]{a @class{g:settings} object}
+  @argument[key]{a string for the key to get the value for}
+  @argument[value]{an unsigned integer for the value}
+  @begin{short}
+    Gets or sets the value that is stored in @arg{settings} for @arg{key} and
+    converts it to the flags value that it represents.
+  @end{short}
+  In order to use this function the type of the value must be an array of
+  strings and it must be marked in the schema file as a flags type.
+
+  It is a programmer error to give a key that is not contained in the schema
+  for settings or is not marked as a flags type.
+
+  If the value stored in the configuration database is not a valid value for
+  the flags type then this function will return the default value.
+  @see-class{g:settings}"
   (settings (gobject:object settings))
   (key :string))
 

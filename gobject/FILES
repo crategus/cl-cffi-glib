@@ -1,4 +1,4 @@
-Content from the GObject 2.86 Reference Manual
+Content from the GObject 2.88 Reference Manual
 
     .   needs proofreading
     *   needs update
@@ -12,11 +12,11 @@ Content from the GObject 2.86 Reference Manual
   not implemented            GTypeModule
 
   gobject.base.lisp          GObject                             GObject 2.84 *
-  gobject.enumeration.lisp   Enumeration and Flag Types          GObject 2.66 *
-  gobject.boxed.lisp         Boxed Types                         GObject 2.66 *
+  gobject.enumeration.lisp   Enumeration and Flag Types          GObject 2.88 .
+  gobject.boxed.lisp         Boxed Types                         GObject 2.88 .
   gobject.gvalue.lisp        Generic values                      GObject 2.86 .
   gobject.param.lisp         Parameters and Values               GObject 2.86 .
-  gobject.param-spec.lisp    GParamSpec                          GObject 2.82 *
+  gobject.param-spec.lisp    GParamSpec                          GObject 2.88 .
 
   not implemented            Varargs Value Collection
 
@@ -27,4 +27,4 @@ Content from the GObject 2.86 Reference Manual
 
   gobject.binding.lisp       GBinding                            GObject 2.82 *
 
-2025-12-31
+2026-03-25

@@ -41,31 +41,6 @@
                                      (:INVERT-BOOLEAN 16))
              (gobject:get-gtype-definition "GSettingsBindFlags"))))
 
-;;;     GSettingsSchema
-
-(test g-settings-schema-boxed
-  ;; Check type
-  (is (g:type-is-boxed "GSettingsSchema"))
-  ;; Check type initializer
-  (is (eq (g:gtype "GSettingsSchema")
-          (g:gtype (cffi:foreign-funcall "g_settings_schema_get_type" :size))))
-  ;; Check registered name
-  (is (eq 'g:settings-schema
-          (glib:symbol-for-gtype "GSettingsSchema"))))
-
-;;;     GSettingsSchemaSource
-
-(test g-settings-schema-source-boxed
-  ;; Check type
-  (is (g:type-is-boxed "GSettingsSchemaSource"))
-  ;; Check type initializer
-  (is (eq (g:gtype "GSettingsSchemaSource")
-          (g:gtype (cffi:foreign-funcall "g_settings_schema_source_get_type"
-                                         :size))))
-  ;; Check registered name
-  (is (eq 'g:settings-schema-source
-          (glib:symbol-for-gtype "GSettingsSchemaSource"))))
-
 ;;;     GSettings
 
 (test g-settings-class
@@ -143,32 +118,6 @@
 
 ;;; Functions
 
-;;;     g_settings_schema_source_default
-
-(test g-settings-schema-source-default
-  (is (typep (g:settings-schema-source-default) 'g:settings-schema-source)))
-
-;;;     g_settings_schema_source_lookup
-
-(test g-settings-schema-source-lookup
-  (let ((source (g:settings-schema-source-default)))
-    (is (typep source 'g:settings-schema-source))
-    (is (typep (g:settings-schema-source-lookup source "com.crategus.rtest" t)
-               'g:settings-schema))
-    (is (typep (g:settings-schema-source-lookup source "com.crategus.rtest" nil)
-               'g:settings-schema))
-    (is-false (g:settings-schema-source-lookup source "com.crategus.test" t))
-    (is-false (g:settings-schema-source-lookup source "com.crategus.test" nil))))
-
-;;;     g_settings_schema_source_list-schemas
-
-#+nil
-(test g-settings-schema-source-list-schemas
-  (let ((source (g:settings-schema-source-default)))
-    (is-false (multiple-value-list
-                  (g:settings-schema-source-list-schemas source nil)))
-))
-
 ;;;     g_settings_new
 
 (test g-settings-new
@@ -244,7 +193,5 @@
 ;;;     g_settings_set_uint
 ;;;     g_settings_set_uint64
 ;;;     g_settings_set_value
-;;;
-;;;
 
-;;; 2025-12-24
+;;; 2026-03-24

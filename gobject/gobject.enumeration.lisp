@@ -2,11 +2,11 @@
 ;;; gobject.enumeration.lisp
 ;;;
 ;;; The documentation in this file is taken from the GObject Reference Manual
-;;; version 2.84 and modified to document the Lisp binding to the GObject
+;;; version 2.88 and modified to document the Lisp binding to the GObject
 ;;; library, see <http://www.gtk.org>. The API documentation for the Lisp
 ;;; binding is available at <http://www.crategus.com/books/cl-cffi-gtk4/>.
 ;;;
-;;; Copyright (C) 2011 - 2025 Dieter Kaiser
+;;; Copyright (C) 2011 - 2026 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -73,6 +73,28 @@
 ;; Register Lisp symbol for fundamental "GEnum" type
 (glib-init:at-init ()
   (setf (glib:symbol-for-gtype "GEnum") 'enum))
+
+#+liber-documentation
+(setf (liber:alias-for-symbol 'enum)
+      "Type"
+      (liber:symbol-documentation 'enum)
+ "@version{2026-03-25}
+  @begin{short}
+    The @sym{g:enum} type specifier represents the fundamental
+    @code{\"GEnum\"} type.
+  @end{short}
+  @begin[Examples]{dictionary}
+    @begin{pre}
+(g:symbol-for-gtype \"GEnum\")
+=> GOBJECT:ENUM
+=> T
+(g:symbol-for-gtype (g:type-fundamental \"GFileType\"))
+=> GOBJECT:ENUM
+=> T
+    @end{pre}
+  @end{dictionary}
+  @see-class{g:type-t}
+  @see-function{g:symbol-for-gtype}")
 
 (export 'enum)
 
@@ -328,6 +350,28 @@
 ;; Register Lisp symbol for fundamental "GFlags" type
 (glib-init:at-init ()
   (setf (glib:symbol-for-gtype "GFlags") 'flags))
+
+#+liber-documentation
+(setf (liber:alias-for-symbol 'flags)
+      "Type"
+      (liber:symbol-documentation 'flags)
+ "@version{2026-03-25}
+  @begin{short}
+    The @sym{g:flags} type specifier represents the fundamental
+    @code{\"GFlags\"} type.
+  @end{short}
+  @begin[Examples]{dictionary}
+    @begin{pre}
+(g:symbol-for-gtype \"GFlags\")
+=> GOBJECT:FLAGS
+=> T
+(g:symbol-for-gtype (g:type-fundamental \"GApplicationFlags\"))
+=> GOBJECT:FLAGS
+=> T
+    @end{pre}
+  @end{dictionary}
+  @see-class{g:type-t}
+  @see-function{g:symbol-for-gtype}")
 
 (export 'flags)
 

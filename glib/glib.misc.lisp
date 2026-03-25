@@ -436,7 +436,9 @@
   (:actual-type :pointer)
   (:simple-parser date-time))
 
-(let ((offset (encode-universal-time 0 0 0 1 1 1970)))
+(let (;; Offset between 1970-01-01 00:00:00 UTC Unix time
+      ;; and 1900-01-01 00:00:00 UTC Lisp time
+      (offset (encode-universal-time 0 0 0 1 1 1970 0)))
   (defmethod cffi:translate-to-foreign (value (type date-time-type))
     (cffi:foreign-funcall "g_date_time_new_from_unix_utc"
                           :int64 (- value offset)

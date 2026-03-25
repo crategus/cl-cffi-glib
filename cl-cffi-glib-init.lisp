@@ -202,8 +202,6 @@
 (push-library-version-features glib
                                +glib-init-major-version+
                                +glib-init-minor-version+
-  2 64    ; Since 2020-02-27
-  2 66    ; Since 2020-09-10
   2 68    ; Since 2021-03-18
   2 70    ; Since 2021-09-17
   2 72    ; Since 2022-03-17
@@ -216,7 +214,7 @@
   2 86    ; Since 2025-09-05
 )
 
-(require-library-version "GLib" 2 64
+(require-library-version "GLib" 2 68
                          +glib-init-major-version+
                          +glib-init-minor-version+)
 

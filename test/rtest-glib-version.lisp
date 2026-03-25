@@ -5,8 +5,8 @@
 
 (test push-library-version-features
   (is (member :glib      *features*))
-  #+glib-2-64
-  (is (member :glib-2-64 *features*)))
+  #+glib-2-68
+  (is (member :glib-2-68 *features*)))
 
 #+crategus
 (test check-glib-version
@@ -17,7 +17,7 @@
   (is-true (integerp glib:+major-version+))
   (is-true (integerp glib:+minor-version+))
   (is-true (integerp glib:+micro-version+))
-  (is-false (glib:check-version 2 64 0))
+  (is-false (glib:check-version 2 68 0))
   (is (string= "GLib version too old (micro mismatch)"
                (glib:check-version 2 99 0))))
 
@@ -29,4 +29,4 @@
       (is-false (glib:cl-cffi-glib-build-info s))
       (is (stringp result)))))
 
-;;; 2025-11-02
+;;; 2026-03-22
