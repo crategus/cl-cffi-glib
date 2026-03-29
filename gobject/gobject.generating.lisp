@@ -223,8 +223,9 @@
            :allocation :gobject-property
            :prop-type ,(gobject-property-gtype property)
            :accessor ,(property-accessor property)
-           :initarg ,(intern (string-upcase (property-name property))
-                             (find-package :keyword))
+           ,@(when (not (null (gobject-property-writable property)))
+               `(:initarg ,(intern (string-upcase (property-name property))
+                                   (find-package :keyword))))
            :prop-name ,(gobject-property-gname property)))
         ((cffi-property-p property)
          `(,(property-name property)

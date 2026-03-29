@@ -125,9 +125,13 @@
   (iter (with slots = (class-slots class))
         (for (arg-name arg-value) on initargs by #'cddr)
         (for slot = (find arg-name slots :key #'slot-definition-initargs
-                                         :test 'member))
-        (unless (and slot (typep slot 'gobject-effective-slot-definition))
-          (nconcing (list arg-name arg-value)))))
+                                         :test #'member))
+        (typecase slot
+          (null (error 'property-unwritable-error
+                       :property-name arg-name
+                       :class-name (class-name class)))
+          (gobject-effective-slot-definition nil)
+          (t (nconcing (list arg-name arg-value))))))
 
 ;; Check if BASE-CLASS or a subclass of BASE-CLASS is on the list of
 ;; direct superclasses of INITARGS. This is not true for an interface
