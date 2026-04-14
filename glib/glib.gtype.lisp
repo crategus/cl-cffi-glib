@@ -92,10 +92,10 @@
 ;;; ----------------------------------------------------------------------------
 
 #+liber-documentation
-(setf (liber:alias-for-symbol 'gtype)
+(setf (liber:alias-for-class 'gtype)
       "Struct"
-      (liber:symbol-documentation 'gtype)
- "@version{2024-12-08}
+      (documentation 'gtype 'type)
+ "@version{2026-03-26}
   @begin{short}
     The @symbol{g:gtype} structure represents the unique identifier of a
     registered foreign @code{GType} type on the Lisp side.

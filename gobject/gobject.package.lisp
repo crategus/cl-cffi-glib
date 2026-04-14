@@ -126,7 +126,7 @@
     @end{subsection}
     @begin[Types and functions for type information]{subsection}
       @about-class{type-t}
-      @about-symbol{glib:gtype}
+      @about-struct{glib:gtype}
       @about-function{glib:gtype-name}
       @about-function{glib:gtype-id}
       @about-function{glib:gtype}
