@@ -161,9 +161,8 @@ int main (int argc, void *argv[])
      (data :pointer))
   (let ((func (glib:get-stable-pointer-value data)))
     (declare (type function func))
-    (unwind-protect
-      (funcall func source result))
-      (glib:free-stable-pointer data)))
+    (unwind-protect (funcall func source result)
+      (glib:free-stable-pointer data))))
 
 #+liber-documentation
 (setf (liber:alias-for-symbol 'async-ready-callback)
