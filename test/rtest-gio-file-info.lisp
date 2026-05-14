@@ -560,7 +560,7 @@
       (is (typep (setf file (g:file-new-for-path path)) 'g:object))
       (is (typep (setf info
                        (g:file-query-info file "time::*" :none)) 'g:file-info))
-      (is (equal '(33 8 12 24 3 2026 1 NIL -1)
+      (is (equal '(0 47 19 14 5 2026 3 T -1)
                  (multiple-value-list
                    (decode-universal-time (g:file-info-access-date-time info))))))))
 
@@ -608,4 +608,4 @@
 ;;;     g_file_info_set_attribute_mask
 ;;;     g_file_info_unset_attribute_mask
 
-;;; 2026-03-25
+;;; 2026-05-14

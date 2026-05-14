@@ -1,5 +1,5 @@
 ;;; ----------------------------------------------------------------------------
-;;; gio.settings.lisp
+;;; gio.settings-schema.lisp
 ;;;
 ;;; The documentation in this file is taken from the GIO Reference Manual
 ;;; version 2.88 and modified to document the Lisp binding to the GIO library,
@@ -37,7 +37,7 @@
 ;;;
 ;;;     g_settings_schema_source_default
 ;;;     g_settings_schema_source_lookup
-;;;     g_settings_schema_source_list_schemas
+;;;     g_settings_schema_source_list_schemas               not implemented
 ;;;
 ;;;     g_settings_schema_key_get_default_value
 ;;;     g_settings_schema_key_get_description
@@ -504,12 +504,13 @@
 (export 'settings-schema-source-lookup)
 
 ;;; ----------------------------------------------------------------------------
-;;; g_settings_schema_source_list_schemas
+;;; g_settings_schema_source_list_schemas                   not implemented
 ;;; ----------------------------------------------------------------------------
 
-;; TODO: Check and implement memory management. The caller takes ownership of
-;; the returned string arrays.
+;; No longer works with GLIB 2.88. We get a memory default.
+;; The array of pointer to strings no longer ends with NULL.
 
+#+nil
 (cffi:defcfun ("g_settings_schema_source_list_schemas"
                %settings-schema-source-list-schemas) :void
   (source (glib:boxed settings-schema-source))
@@ -517,6 +518,7 @@
   (non-relocatable :pointer)
   (relocatable :pointer))
 
+#+nil
 (defun settings-schema-source-list-schemas (source recursive)
  #+liber-documentation
  "@version{2026-03-24}
@@ -557,6 +559,7 @@
                   (collect (cffi:convert-from-foreign
                                (cffi:mem-ref strptr :pointer) :string))))))
 
+#+nil
 (export 'settings-schema-source-list-schemas)
 
 ;;; --- End of file gio.settings-schema.lisp -----------------------------------

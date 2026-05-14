@@ -11,7 +11,7 @@
 #+crategus
 (test check-glib-version
   (is (= 2 glib:+major-version+))
-  (is (= 86 glib:+minor-version+)))
+  (is (= 88 glib:+minor-version+)))
 
 (test g-check-version
   (is-true (integerp glib:+major-version+))
@@ -29,4 +29,4 @@
       (is-false (glib:cl-cffi-glib-build-info s))
       (is (stringp result)))))
 
-;;; 2026-03-22
+;;; 2026-05-14

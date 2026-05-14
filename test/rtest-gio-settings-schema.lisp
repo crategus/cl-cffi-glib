@@ -61,7 +61,10 @@
 
 ;;;     g_settings_schema_source_list-schemas
 
-#+crategus
+;; No longer works with GLIB 2.88. We get a memory default.
+;; The array of pointer to strings no longer ends with NULL.
+
+#+nil
 (test g-settings-schema-source-list-schemas
   (let ((source (g:settings-schema-source-default)))
     (is (equal '("com.crategus.pinus" "com.crategus.pinus")
@@ -110,4 +113,4 @@
     (is-false (g:settings-schema-list-children schema))
     (is (equal '("transition" "font") (g:settings-schema-list-keys schema)))))
 
-;;; 2026-03-25
+;;; 2026-05-14

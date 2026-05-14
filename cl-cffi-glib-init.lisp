@@ -1,7 +1,7 @@
 ;;; ----------------------------------------------------------------------------
 ;;; glib.init.lisp
 ;;;
-;;; Copyright (C) 2011 - 2025 Dieter Kaiser
+;;; Copyright (C) 2011 - 2026 Dieter Kaiser
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a
 ;;; copy of this software and associated documentation files (the "Software"),
@@ -212,6 +212,7 @@
   2 82    ; Since 2024-08-26
   2 84    ; Since 2025-03-06
   2 86    ; Since 2025-09-05
+  2 88    ; Since 2026-03-16
 )
 
 (require-library-version "GLib" 2 68
