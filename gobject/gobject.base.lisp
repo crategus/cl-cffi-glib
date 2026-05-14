@@ -1342,7 +1342,7 @@ lambda ()
 
 (cffi:defcfun ("g_object_freeze_notify" object-freeze-notify) :void
  #+liber-documentation
- "@version{2026-06-22}
+ "@version{2025-06-22}
   @argument[object]{a @class{g:object} instance}
   @begin{short}
     Increases the freeze count on the object.
