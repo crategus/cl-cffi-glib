@@ -2532,13 +2532,13 @@
 ;;; g_variant_print
 ;;; ----------------------------------------------------------------------------
 
-(cffi:defcfun ("g_variant_print" %variant-print) (:string :free-from-foreign t)
+(cffi:defcfun ("g_variant_print" %variant-print) :string
   (value (:pointer (:struct variant)))
   (annotate :boolean))
 
 (defun variant-print (value &optional (annotate nil))
  #+liber-documentation
- "@version{2025-05-25}
+ "@version{2026-07-14}
   @argument[value]{a @symbol{g:variant} instance}
   @argument[annotate]{@em{true} if type information should be included in the
     output}
