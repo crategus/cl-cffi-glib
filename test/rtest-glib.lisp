@@ -10,6 +10,7 @@
            #:list-children
            #:list-interfaces
            #:list-properties
+           #:list-param-flags
            #:list-interface-prerequisites
            #:list-interface-properties
            #:list-signals
@@ -117,6 +118,13 @@
                                   (g:type-parent gtype)))
                         :test #'string=)
         #'string<))
+
+(defun list-param-flags (gtype name)
+  (let ((pspec (g:object-class-find-property gtype name)))
+    (sort (set-difference
+              (cffi:foreign-slot-value pspec '(:struct g:param-spec) :flags)
+              (list :lax-validation :static-name :static-nick :static-blurb))
+          (lambda (x y) (string< (symbol-name x) (symbol-name y))))))
 
 (defun list-interface-prerequisites (gtype)
   (mapcar #'g:type-name
@@ -226,4 +234,4 @@
                  ,strong
                  (set-difference ,lptr2 ,lptr1 :test #'eq))))))))
 
-;;; 2024-12-16
+;;; 2026-08-30
