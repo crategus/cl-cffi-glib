@@ -58,6 +58,10 @@
 ;;; GStrv
 ;;; ----------------------------------------------------------------------------
 
+;; Note: The default values for the :string type are:
+;;     free-from-foreign nil
+;;     free-to-foreign t
+
 (cffi:define-foreign-type strv-type ()
   ((free-from-foreign :initarg :free-from-foreign
                       :initform nil
