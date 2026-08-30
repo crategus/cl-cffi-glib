@@ -527,10 +527,11 @@ lambda (object pspec)    :no-hooks
       (gobject-gc-hooks-lock (bt:make-recursive-lock "gobject-gc-hooks-lock")))
 
   (defun dispose-carefully (pointer)
-    (handler-case
-      (register-gobject-for-gc pointer)
-      (error (err)
-        (format t "Error in DISPOSE-CAREFULLY: ~a~%" err))))
+    (let ((out *standard-output*))
+      (handler-case
+        (register-gobject-for-gc pointer)
+        (error (err)
+          (format out "Error in DISPOSE-CAREFULLY: ~a~%" err)))))
 
   (defmethod release ((obj object))
     (tg:cancel-finalization obj)
@@ -539,14 +540,17 @@ lambda (object pspec)    :no-hooks
       (dispose-carefully ptr)))
 
   (defun activate-gc-hooks ()
-    (bt:with-recursive-lock-held (gobject-gc-hooks-lock)
-      (when gobject-gc-hooks
-        (iter (for pointer in gobject-gc-hooks)
-              (%object-remove-toggle-ref pointer
-                                         (cffi:callback toggle-notify)
-                                         (cffi:null-pointer)))
-        (setf gobject-gc-hooks nil)))
-    nil)
+    (let ((out *standard-output*))
+      (bt:with-recursive-lock-held (gobject-gc-hooks-lock)
+        (when gobject-gc-hooks
+          (iter (for pointer in gobject-gc-hooks)
+                (when *verbose-gc-for-weak-pointers*
+                  (format out "call OBJECT-REMOVE-TOGGLE-REF for ~a~%" pointer))
+                (%object-remove-toggle-ref pointer
+                                           (cffi:callback toggle-notify)
+                                           (cffi:null-pointer)))
+          (setf gobject-gc-hooks nil)))
+      nil))
 
   (defun register-gobject-for-gc (pointer)
     (bt:with-recursive-lock-held (gobject-gc-hooks-lock)
@@ -736,7 +740,9 @@ lambda (object pspec)    :no-hooks
              :property-name name
              :class-name (type-name gtype)))
     (when (and assert-writable
-               (not (%param-spec-writable pspec)))
+               (or (not (%param-spec-writable pspec))
+                   ;; Add test for :construct-only. Since 2026-05-16
+                   (%param-spec-constructor-only pspec)))
       (error 'property-unwritable-error
              :property-name name
              :class-name (type-name gtype)))
