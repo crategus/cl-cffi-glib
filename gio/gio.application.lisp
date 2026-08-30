@@ -1448,11 +1448,12 @@ lambda (application)    :run-first
   (argc :int)
   (argv glib:strv-t))
 
-(defun application-run (application argv)
+(defun application-run (application &optional argv)
  #+liber-documentation
- "@version{2025-10-19}
+ "@version{2026-06-17}
   @argument[application]{a @class{g:application} instance}
-  @argument[argv]{a list of strings for command line parameters, or @code{nil}}
+  @argument[argv]{an optional list of strings for command line parameters, or
+    the @code{nil} default value}
   @return{The integer for the exit status.}
   @begin{short}
     Runs the application.
@@ -1475,9 +1476,9 @@ lambda (application)    :run-first
   The @sig[g:application]{handle-local-options} signal handler is a good place
   to handle options such as @code{--version}, where an immediate reply from the
   local process is desired, instead of communicating with an already-running
-  instance. A @sig[g:application]{handle-local-options} signal handler can stop
-  further processing by returning a non-negative value, which then becomes the
-  exit status of the process.
+  instance. The @sig[g:application]{handle-local-options} signal handler can
+  stop further processing by returning a non-negative value, which then becomes
+  the exit status of the process.
 
   What happens next depends on the @symbol{g:application-flags} flags: if the
   @val[g:application-flags]{:handles-command-line} flag was specified then the
