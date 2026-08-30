@@ -544,8 +544,6 @@ lambda (object pspec)    :no-hooks
       (bt:with-recursive-lock-held (gobject-gc-hooks-lock)
         (when gobject-gc-hooks
           (iter (for pointer in gobject-gc-hooks)
-                (when *verbose-gc-for-weak-pointers*
-                  (format out "call OBJECT-REMOVE-TOGGLE-REF for ~a~%" pointer))
                 (%object-remove-toggle-ref pointer
                                            (cffi:callback toggle-notify)
                                            (cffi:null-pointer)))
