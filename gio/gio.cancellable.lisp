@@ -284,6 +284,7 @@ lambda (cancellable)    :run-last
 (cffi:defcallback cancellable-source-func :boolean
     ((cancellable (gobject:object cancellable))
      (data :pointer))
+  (declare (type cffi:foreign-pointer data))
   (let ((func (glib:get-stable-pointer-value data)))
     (declare (type function func))
     (restart-case

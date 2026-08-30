@@ -1625,18 +1625,19 @@ The value is a NUL terminated UTF-8 string.
 ;;;     task 's GCancellable, or NULL
 ;;; ----------------------------------------------------------------------------
 
+;; Doesn't get a compiler note
+;(defun sap-test2 (ptr fun)
+;  (declare (type system-area-pointer ptr)
+;       (type (function (system-area-pointer) fixnum) fun))
+;  (funcall fun ptr))
+
 (cffi:defcallback task-thread-func :void
     ((task (gobject:object task))
      (source :pointer)
      (data :pointer)
      (cancellable (gobject:object cancellable)))
   (let ((func (glib:get-stable-pointer-value (task-task-data task))))
-    (declare (type cffi:foreign-pointer source)
-             (type cffi:foreign-pointer data)
-             (type (function (task
-                              cffi:foreign-pointer
-                              cffi:foreign-pointer
-                              cancellable) nil) func))
+    (declare (type function func))
       (funcall func task source data cancellable)))
 
 (export 'task-thread-func)

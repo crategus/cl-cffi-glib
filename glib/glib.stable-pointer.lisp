@@ -52,7 +52,7 @@
     (allocate-stable-pointer (cffi:null-pointer)))
 
   ;; Frees the stable pointer previously allocated by allocate-stable-pointer
-  (declaim (ftype (function (cffi:foreign-pointer) t) free-stable-pointer))
+  (declaim (ftype (function (cffi:foreign-pointer)) free-stable-pointer))
   (defun free-stable-pointer (pointer)
     (declare (type cffi:foreign-pointer pointer))
     (decf stable-pointers-counter)
@@ -60,7 +60,8 @@
 
   ;; Returns the objects that is referenced by stable pointer previously
   ;; allocated by allocate-stable-pointer. May be called any number of times.
-  (declaim (ftype (function (cffi:foreign-pointer) t) get-stable-pointer-value))
+  (declaim (ftype (function (cffi:foreign-pointer)) get-stable-pointer-value))
+  (declaim (ftype (function (cffi:foreign-pointer) integer) cffi:pointer-address))
   (defun get-stable-pointer-value (pointer)
     (declare (type cffi:foreign-pointer pointer))
     (let ((ptrid (cffi:pointer-address pointer)))
